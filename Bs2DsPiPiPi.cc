@@ -56,22 +56,20 @@ using namespace RooStats;
 
 int main() {
 
-bool MC = false; 
+bool MC = true;
 
  TChain* tree = 0;
 
         tree=new TChain("Bs2Dspipipi_Ds2KKpi_Tuple/DecayTree");
 //tree=new TChain("DecayTree");
         //tree->Add("/auto/data/kecke/B2DKPiPi/Data2012/Bs2DsKpipi_fullSelectionBDT.root");
-        tree->Add("/auto/data/kecke/B2DKPiPi/12U-3pi-PID/*.root");
-        tree->Add("/auto/data/kecke/B2DKPiPi/12D-3pi-PID/*.root");
-        //tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Norm/11-U/*.root");
-        //tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Norm/11-D/*.root");
-	 //tree->Add("/auto/data/dargent/Bs2DsKpipi/Data_PID/11D_3pi/*.root");
- 	 //tree->Add("/auto/data/dargent/Bs2DsKpipi/Data_PID/11U_3pi/*.root");
+      //  tree->Add("/auto/data/kecke/B2DKPiPi/12U-3pi-PID/*.root");
+      //  tree->Add("/auto/data/kecke/B2DKPiPi/12D-3pi-PID/*.root");
+        tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Norm/11-U/*.root");
+        tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Norm/11-D/*.root");
+	// tree->Add("/auto/data/dargent/Bs2DsKpipi/Data_PID/11D_3pi/*.root");
+ 	// tree->Add("/auto/data/dargent/Bs2DsKpipi/Data_PID/11U_3pi/*.root");
 	//tree->Add("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Bs2Dspipipi_with_BDT_variables_S21_PID.root");
-        //tree->Add("/auto/data/kecke/B2DKPiPi/MC2012/mc2012_Ds2KKpi_preselected.root");
-        //tree->Add("/auto/data/kecke/B2DKPiPi/MC2011/mc2011_Ds2KKpi_preselected.root");
 
 
 
@@ -326,7 +324,8 @@ TH1D* mass_peak_Ds = new TH1D("D_{s} candidates", ";m(KK#pi) [MeV];Entries", 75,
 TFile* output = 0;
 
         //Bs2Dspipipi normalization case
-        output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Bs2Dspipipi_with_BDT_variables_S21_PID.root","RECREATE");
+       // output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data2011_Bs2Dspipipi_with_BDT_variables_S21_PID.root","RECREATE");
+        output = new TFile("/auto/data/kecke/B2DPiPiPi/MC2011/mc2011_Bs2Dspipipi_with_BDT_variables_S21_PID.root","RECREATE");
 
 
         TTree* summary_tree = tree->CloneTree(0);
@@ -447,14 +446,15 @@ for(int i=0; i< numEvents; i++)
 	//ds fd chi2 cut
 	if(Ds_FDCHI2_OWNPV<36) continue;
 
+if(!MC){
 	//loose pid requirements
-	if(K_minus_fromDs_PIDK<-10) continue;
-	if(K_plus_fromDs_PIDK<-10) continue;
+	if(K_minus_fromDs_PIDK<-5) continue;
+	if(K_plus_fromDs_PIDK<-5) continue;
 	if(pi_plus2_PIDK>10) continue;
 	if(pi_minus_fromDs_PIDK>10) continue;
 	if(pi_plus1_PIDK>10) continue;
 	if(pi_minus_PIDK>10) continue;
-
+}
 	//cuts on Xd candidates-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	//Xd daughter tracks
@@ -525,11 +525,11 @@ for(int i=0; i< numEvents; i++)
         //Bs->DsDs suppression
         if(TMath::Abs((pi_plus1 + pi_plus2 + pi_minus).M() - massDs) < 20) continue;
 
-        //Bs->DsKKpi suppression
-        if(pi_minus_PIDK > 0) continue;
+        //Bs->DsKpipi suppression
+if(!MC){
         if(pi_plus1_PIDK > 0) continue;
         if(pi_plus2_PIDK > 0) continue;
-
+}
         //Bs->D^-Kpipi suppression
         if( TMath::Abs((K_plus_fromDs + Kminus_asPiminus_MissID + pi_minus_fromDs).M() - massDminus) < 20 && (K_minus_fromDs_PIDK < 10) ) continue;
 
@@ -611,9 +611,9 @@ for(int i=0; i< numEvents; i++)
 
 
 mass_peak_Bs->Draw("E1");
-c->Print("eps/mass_Bs_preSel_12Data_3pi.eps");
+c->Print("eps/mass_Bs_preSel_11MC_3pi.eps");
 mass_peak_Ds->Draw("E1");
-c->Print("eps/mass_Ds_preSel_12Data_3pi.eps");
+c->Print("eps/mass_Ds_preSel_11MC_3pi.eps");
 
 summary_tree->Write();
 output->Close();

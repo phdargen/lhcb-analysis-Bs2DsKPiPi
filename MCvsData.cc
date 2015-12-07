@@ -65,7 +65,7 @@ TTree *datatree = (TTree*)datafile->Get("DecayTree");
 
 TChain* datatree = 0;
 datatree=new TChain("DecayTree");
-datatree->Add("/auto/data/kecke/B2DKPiPi/Data2011/data_Bs_11_final_sweight.root");
+datatree->Add("/auto/data/kecke/B2DKPiPi/Data2012/data_Bs_12_final_sweight.root");
 
 TChain* mctree = 0;
 mctree=new TChain("DecayTree");

@@ -56,15 +56,15 @@ using namespace RooStats;
 int main() {
 
     //specifiy decay channel of Ds
-    bool Ds2KKpi = false;
+    bool Ds2KKpi = true;
     bool Ds2Kpipi = false;
-    bool Ds2pipipi = true;
+    bool Ds2pipipi = false;
 
     //MC or Data?
-    bool MC = false;
+    bool MC = true;
 
     //which year?
-    bool sevenTeV = false; //for 2011 = true , for 2012 = false 
+    bool sevenTeV = true; //for 2011 = true , for 2012 = false 
 
     TChain* tree = 0;
 	
@@ -482,12 +482,14 @@ tree -> SetBranchAddress( "pi_minus_fromDs_PT" , &pi_minus_fromDs_PT );
 tree -> SetBranchAddress( "K_plus_PT" , &K_plus_PT );
 tree -> SetBranchAddress( "pi_minus_PT" , &pi_minus_PT );
 tree -> SetBranchAddress( "pi_plus_PT" , &pi_plus_PT );
-if(Ds2Kpipi || Ds2KKpi || (Ds2pipipi && sevenTeV))  tree -> SetBranchAddress( "K_1_1270_plus_DOCA1" ,&K_1_1270_plus_DOCA1 );
+if((Ds2Kpipi && sevenTeV) || Ds2KKpi || (Ds2pipipi && sevenTeV))  tree -> SetBranchAddress( "K_1_1270_plus_DOCA1" ,&K_1_1270_plus_DOCA1 );
 if(Ds2pipipi && (!sevenTeV))  tree -> SetBranchAddress( "K_1_1270_plus_DOCA" ,&K_1_1270_plus_DOCA );
+if(Ds2Kpipi && (!sevenTeV))  tree -> SetBranchAddress( "K_1_1270_plus_DOCA" ,&K_1_1270_plus_DOCA );
 tree -> SetBranchAddress( "K_1_1270_plus_DOCA2" ,&K_1_1270_plus_DOCA2 );
 tree -> SetBranchAddress( "K_1_1270_plus_DOCA3" ,&K_1_1270_plus_DOCA3 );
-if(Ds2Kpipi || Ds2KKpi || (Ds2pipipi && sevenTeV))  tree -> SetBranchAddress( "Ds_DOCA1" ,&Ds_DOCA1);
+if((Ds2Kpipi && sevenTeV) || Ds2KKpi || (Ds2pipipi && sevenTeV))   tree -> SetBranchAddress( "Ds_DOCA1" ,&Ds_DOCA1);
 if(Ds2pipipi && (!sevenTeV))tree -> SetBranchAddress( "Ds_DOCA" ,&Ds_DOCA);
+if(Ds2Kpipi && (!sevenTeV))tree -> SetBranchAddress( "Ds_DOCA" ,&Ds_DOCA);
 tree -> SetBranchAddress( "Ds_DOCA2" ,&Ds_DOCA2);
 tree -> SetBranchAddress( "Ds_DOCA3" ,&Ds_DOCA3);
 tree -> SetBranchAddress( "pi_minus_fromDs_TRACK_CHI2NDOF" , &pi_minus_fromDs_TRACK_CHI2NDOF );
@@ -728,8 +730,8 @@ for(int i=0; i< numEvents; i++)
 	//ds daughters pt cut
 
 	//ds daughters doca cut
-	if(Ds2Kpipi || Ds2KKpi) if(Ds_DOCA1> 0.5) continue;
-	if(Ds2pipipi) if(Ds_DOCA> 0.5) continue;
+	if((Ds2Kpipi && sevenTeV) || Ds2KKpi || (Ds2pipipi && sevenTeV)) if(Ds_DOCA1> 0.5) continue;
+	if((Ds2pipipi && (!sevenTeV)) || (Ds2Kpipi && (!sevenTeV))) if(Ds_DOCA> 0.5) continue;
 	if(Ds_DOCA2> 0.5) continue;
 	if(Ds_DOCA3> 0.5) continue;
 
@@ -753,8 +755,8 @@ if(!MC){
 	//cuts on Xs candidates
 	
 	//Xs DOCA cut
-	if(Ds2Kpipi || Ds2KKpi) if(K_1_1270_plus_DOCA1> 0.4) continue;
-	if(Ds2pipipi) if(K_1_1270_plus_DOCA> 0.4) continue;
+	if((Ds2Kpipi && sevenTeV) || Ds2KKpi || (Ds2pipipi && sevenTeV)) if(K_1_1270_plus_DOCA1> 0.4) continue;
+	if((Ds2pipipi && (!sevenTeV)) || (Ds2Kpipi && (!sevenTeV))) if(K_1_1270_plus_DOCA> 0.4) continue;
 	if(K_1_1270_plus_DOCA2> 0.4) continue;
 	if(K_1_1270_plus_DOCA3> 0.4) continue;
 
@@ -831,9 +833,11 @@ if(!MC){
 
 	//charmless suppression
 	if(Ds_FDCHI2_ORIVX < 9) continue;
-if(!MC){
+
 	//Bs->DsDs suppression
 	if(TMath::Abs((K_plus + pi_plus + pi_minus).M() - massDs) < 20) continue;
+
+if(!MC){
 
 	//Bs->DsKKpi suppression
 	if(pi_minus_PIDK > 0) continue;
