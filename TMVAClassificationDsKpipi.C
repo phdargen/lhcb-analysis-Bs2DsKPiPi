@@ -51,20 +51,13 @@
 
 void TMVAClassification( TString myMethodList = "BDTG" )
 {
-   // The explicit loading of the shared libTMVA is done in TMVAlogon.C, defined in .rootrc
-   // if you use your private .rootrc, or run from a different directory, please copy the
-   // corresponding lines from .rootrc
+   TChain* background = new TChain("DecayTree");
+   background->Add("/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_forBDT.root");
+   background->Add("/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_forBDT.root");
 
-   // methods to be processed can be given as an argument; use format:
-   //
-   // mylinux~> root -l TMVAClassification.C\(\"myMethod1,myMethod2,myMethod3\"\)
-   //
-   // if you like to use a method via the plugin mechanism, we recommend using
-   //
-   // mylinux~> root -l TMVAClassification.C\(\"P_myMethod\"\)
-   // (an example is given for using the BDT as plugin (see below),
-   // but of course the real application is when you write your own
-   // method based)
+   TChain* signal = new TChain("DecayTree");
+   signal->Add("/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_forBDT.root");
+   signal->Add("/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_forBDT.root");
 
    //---------------------------------------------------------------
    // This loads the library
@@ -160,48 +153,35 @@ void TMVAClassification( TString myMethodList = "BDTG" )
    TString outfileName( "TMVA_Bs2DsKpipi_2012Ana.root" );
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
 
-   // Create the factory object. Later you can choose the methods
-   // whose performance you'd like to investigate. The factory is 
-   // the only TMVA object you have to interact with
-   //
-   // The first argument is the base of the name of all the
-   // weightfiles in the directory weight/
-   //
-   // The second argument is the output file for the training results
-   // All TMVA output can be suppressed by removing the "!" (not) in
-   // front of the "Silent" argument in the option string
+   // Create the factory object. 
    TMVA::Factory *factory = new TMVA::Factory( "TMVAClassification", outputFile,
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" );
 
-   // If you wish to modify default settings
-   // (please check "src/Config.h" to see all available global options)
-   //    (TMVA::gConfig().GetVariablePlotting()).fTimesRMS = 8.0;
-   //    (TMVA::gConfig().GetIONames()).fWeightFileDir = "myWeightDirectory";
-
    // Define the input variables that shall be used for the MVA training
-   // note that you may also use variable expressions, such as: "3*var1/var2*abs(var3)"
-   // [all types of expressions that can also be parsed by TTree::Draw( "expression" )]
-  // factory->AddVariable( "log(Bs_PT)","Bs ln(p_t)","ln(MeV)", 'D' );
+   //factory->AddVariable( "Bs_PT","Bs p_t","MeV", 'D' );
    factory->AddVariable( "Bs_ENDVERTEX_CHI2", "Bs Vertex fit", "", 'D' );
-   factory->AddVariable( "log_XsDaughters_min_PT := log(XsDaughters_min_PT)","X_{s} daughters ln(p_{t})", "ln(MeV)", 'F' );
-   factory->AddVariable( "log_DsDaughters_min_PT := log(DsDaughters_min_PT)","D_{s} daughters ln(p_{t})", "ln(MeV)", 'F' );
+   //factory->AddVariable( "log_XsDaughters_min_PT := log(XsDaughters_min_PT)","X_{s} daughters ln(p_{t})", "ln(MeV)", 'F' );
+   //factory->AddVariable( "log_DsDaughters_min_PT := log(DsDaughters_min_PT)","D_{s} daughters ln(p_{t})", "ln(MeV)", 'F' );
    factory->AddVariable( "log_XsDaughters_min_IPCHI2 := log(XsDaughters_min_IPCHI2)","X_{s} daughters min ln(IP#chi^{2})", "", 'F' );
    factory->AddVariable( "log_DsDaughters_min_IPCHI2 := log(DsDaughters_min_IPCHI2)","D_{s} daughters min ln(IP#chi^{2})", "", 'F' );
-   factory->AddVariable( "log_XsDaughters_max_IPCHI2 := log(XsDaughters_max_IPCHI2)","X_{s} daughters max ln(IP#chi^{2})", "", 'F' );
-   factory->AddVariable( "log_DsDaughters_max_IPCHI2 := log(DsDaughters_max_IPCHI2)","D_{s} daughters max ln(IP#chi^{2})", "", 'F' );
+   //factory->AddVariable( "log_XsDaughters_max_IPCHI2 := log(XsDaughters_max_IPCHI2)","X_{s} daughters max ln(IP#chi^{2})", "", 'F' );
+   //factory->AddVariable( "log_DsDaughters_max_IPCHI2 := log(DsDaughters_max_IPCHI2)","D_{s} daughters max ln(IP#chi^{2})", "", 'F' );
    factory->AddVariable( "Xs_max_DOCA","X_{s} max DOCA", "mm", 'F' );
    factory->AddVariable( "log_Bs_FDCHI2_OWNPV := log(Bs_FDCHI2_OWNPV)","B_{s} ln(FD #chi^{2})", "", 'D' );
    factory->AddVariable( "log_Ds_FDCHI2_ORIVX := log(Ds_FDCHI2_ORIVX)","D_{s} FD significance", "", 'D' );
 
    factory->AddVariable( "log_Bs_IPCHI2_OWNPV := log(Bs_IPCHI2_OWNPV)","B_{s} ln(IP #chi^{2})", "", 'D' );
-   factory->AddVariable( "log_K_1_1270_plus_IPCHI2_OWNPV := log(K_1_1270_plus_IPCHI2_OWNPV)","X_{s} ln(IP #chi^{2})", "", 'D' );
+   //factory->AddVariable( "log_K_1_1270_plus_IPCHI2_OWNPV := log(K_1_1270_plus_IPCHI2_OWNPV)","X_{s} ln(IP #chi^{2})", "", 'D' );
+
 
 
    //investigate possible variables
-/*
+
    //DIRA variables
-   factory->AddVariable( "log(Bs_DIRA_OWNPV)","ln(B_{s} DIRA)","", 'D' );
-   factory->AddVariable( "log(Ds_DIRA_OWNPV)","ln(D^{-}_{s} DIRA)","", 'D' );
+   factory->AddVariable( "log_Bs_DIRA := log(1-Bs_DIRA_OWNPV)","ln(1 - B_{s} DIRA)","", 'D' );
+   factory->AddVariable( "log_Ds_DIRA := log(1-Ds_DIRA_OWNPV)","ln(1 - D_{s} DIRA)","", 'D' );
+
+/*
 */
 /*
    //pseudo rapidity variables
@@ -216,7 +196,7 @@ void TMVAClassification( TString myMethodList = "BDTG" )
 */
 
    //track chi2
-   factory->AddVariable( "max_TrackChi2","max(track #chi^{2})","", 'F' );
+   //factory->AddVariable( "max_TrackChi2","max(track #chi^{2})","", 'F' );
   // factory->AddVariable( "min_TrackChi2","min(track #chi^{2})","", 'F' );
 
    //cone pt asy
@@ -228,44 +208,17 @@ void TMVAClassification( TString myMethodList = "BDTG" )
    factory->AddVariable( "pi_minus_ptasy_1.00","#pi^{-} cone p_{t} asy","", 'D' );
 
    factory->AddVariable("max_ghostProb := max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb)))))","","",'D');
-   //factory->AddVariable("min_ghostProb := min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb)))))","","",'D');
-
-
-   // You can add so-called "Spectator variables", which are not used in the MVA training,
-   // but will appear in the final "TestTree" produced by TMVA. This TestTree will contain the
-   // input variables, the response values of all trained MVAs, and the spectator variables
-/*   factory->AddSpectator( "mBs",  "Bs Mass", "[MeV]", 'F' );
-   factory->AddSpectator( "phi",  "Helicity Angle phi", "", 'F' );
-   factory->AddSpectator( "theta1",  "Helicity Angle theta1", "", 'F' );
-   factory->AddSpectator( "theta2",  "Helicity Angle theta2", "", 'F' );*/
-
-   // Read training and test data
-   // (it is also possible to use ASCII format as input -> see TMVA Users Guide)
-/*   TString fnameData = "Bs2PhiPhi_Data2011_preselected_Background.root";
-   TString fnameMC = "Bs2PhiPhi_MC2011_preselected.root";*/
-   //TString fname = "tmva_class_example.root"
-  /* if (gSystem->AccessPathName( fnameData ))  // file does not exist in local directory
-      gSystem->Exec("wget http://root.cern.ch/files/tmva_class_example.root");*/
    
- //  TFile *inputBG = TFile::Open( "/auto/data/dargent/Bs2DsKpipi/data/data2011_Ds2KKpi_with_BDT_variables_S21_PID.root" );
-  // TFile *inputSignal = TFile::Open( "/auto/data/dargent/Bs2DsKpipi/data/mc_Ds2KKpi_with_BDT_variables_S21_PID.root" );
+   factory->AddVariable( "cos := cos( max(max(angK,angPip),angPim))   ", "cos(max[#theta_{Ds h}])", "", 'F' );
 
-   TFile *inputBG = TFile::Open( "/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_with_BDT_variables_S21_PID.root" );
-   TFile *inputSignal = TFile::Open( "/auto/data/kecke/B2DKPiPi/mc_Ds2KKpi_with_BDT_variables.root" );
-   //TFile *inputSignal = TFile::Open( "/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_with_BDT_variables.root" );
+   //factory->AddVariable( "K_plus_PIDK","K^{+} PIDK","", 'D' );
 
-  // TFile *input = TFile::Open("tmva_class_example.root");
-  // TFile *inputBG =new TFile(fnameData);
-  // TFile *inputSignal =new TFile( fnameMC );
+   //factory->AddVariable( "Ds_FDsig := (Ds_ENDVERTEX_Z - Ds_ORIVX_Z) / sqrt( pow(Ds_ENDVERTEX_ZERR,2) + pow(Ds_ORIVX_ZERR,2) )","D_{s} FD significance", "", 'D' );
+  //factory->AddVariable( "Bs_RFD := sqrt((Bs_ENDVERTEX_X - Bs_OWNPV_X)*(Bs_ENDVERTEX_X - Bs_OWNPV_X) + (Bs_ENDVERTEX_Y - Bs_OWNPV_Y) * (Bs_ENDVERTEX_Y - Bs_OWNPV_Y))","B_{s} RFD", "", 'D' );
 
-   std::cout << "--- TMVAClassification       : Using input files: " << inputBG->GetName() << "and" << inputSignal->GetName() << std::endl;
-   
-   // --- Register the training and test trees
+  //factory->AddVariable( "Ds_RFD := sqrt((Ds_ENDVERTEX_X - Ds_OWNPV_X)*(Ds_ENDVERTEX_X - Ds_OWNPV_X) + (Ds_ENDVERTEX_Y - Ds_OWNPV_Y) * (Ds_ENDVERTEX_Y - Ds_OWNPV_Y))","D_{s} RFD", "", 'D' );
 
-   TTree *signal     = (TTree*)inputSignal->Get("DecayTree");
-   TTree *background = (TTree*)inputBG->Get("DecayTree");
-  // TTree *background2 = (TTree*)inputBG2->Get("DecayTree");
-   
+
    // global event weights per tree (see below for setting event-wise weights)
    Double_t signalWeight     = 1.0;
    Double_t backgroundWeight = 1.0;
@@ -273,75 +226,18 @@ void TMVAClassification( TString myMethodList = "BDTG" )
    // You can add an arbitrary number of signal or background trees
    factory->AddSignalTree    ( signal,     signalWeight     );
    factory->AddBackgroundTree( background, backgroundWeight );
-   //factory->AddBackgroundTree( background2, backgroundWeight );
-   
-   // To give different trees for training and testing, do as follows:
-    //   factory->AddSignalTree( signalTrainingTree, signalTrainWeight, "Training" );
-   //    factory->AddSignalTree( signalTestTree,     signalTestWeight,  "Test" );
-   
-   // Use the following code instead of the above two or four lines to add signal and background
-   // training and test events "by hand"
-   // NOTE that in this case one should not give expressions (such as "var1+var2") in the input
-   //      variable definition, but simply compute the expression before adding the event
-   //
-   //     // --- begin ----------------------------------------------------------
-   //     std::vector<Double_t> vars( 4 ); // vector has size of number of input variables
-   //     Float_t  treevars[4], weight;
-   //     
-   //     // Signal
-   //     for (UInt_t ivar=0; ivar<4; ivar++) signal->SetBranchAddress( Form( "var%i", ivar+1 ), &(treevars[ivar]) );
-   //     for (UInt_t i=0; i<signal->GetEntries(); i++) {
-   //        signal->GetEntry(i);
-   //        for (UInt_t ivar=0; ivar<4; ivar++) vars[ivar] = treevars[ivar];
-   //        // add training and test events; here: first half is training, second is testing
-   //        // note that the weight can also be event-wise
-   //        if (i < signal->GetEntries()/2.0) factory->AddSignalTrainingEvent( vars, signalWeight );
-   //        else                              factory->AddSignalTestEvent    ( vars, signalWeight );
-   //     }
-   //   
-   //     // Background (has event weights)
-   //     background->SetBranchAddress( "weight", &weight );
-   //     for (UInt_t ivar=0; ivar<4; ivar++) background->SetBranchAddress( Form( "var%i", ivar+1 ), &(treevars[ivar]) );
-   //     for (UInt_t i=0; i<background->GetEntries(); i++) {
-   //        background->GetEntry(i);
-   //        for (UInt_t ivar=0; ivar<4; ivar++) vars[ivar] = treevars[ivar];
-   //        // add training and test events; here: first half is training, second is testing
-   //        // note that the weight can also be event-wise
-   //        if (i < background->GetEntries()/2) factory->AddBackgroundTrainingEvent( vars, backgroundWeight*weight );
-   //        else                                factory->AddBackgroundTestEvent    ( vars, backgroundWeight*weight );
-   //     }
-         // --- end ------------------------------------------------------------
-   //
-   // --- end of tree registration 
-
-   // Set individual event weights (the variables must exist in the original TTree)
-	 //factory->SetSignalWeightExpression("weight");
-   //    for signal    : factory->SetSignalWeightExpression    ("weight1*weight2");
-   //    for background: factory->SetBackgroundWeightExpression("weight1*weight2");
-  // factory->SetBackgroundWeightExpression( "weight" );
+  
    // Apply additional cuts on the signal and background samples (can be different)
    TCut mycuts = "Bs_MM > 5300 && Bs_MM < 5420 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1"; 
   //&& min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 &&  min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1";
-   TCut mycutb = "Bs_MM > 5450 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1 ";
+   TCut mycutb = "Bs_MM > 5600 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1 && abs(Ds_MM - 1969) < 40   ";
    //&& min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 &&  min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1";
 
    // Tell the factory how to use the training and testing events
-   //
-   // If no numbers of events are given, half of the events in the tree are used 
-   // for training, and the other half for testing:
-   //    factory->PrepareTrainingAndTestTree( mycut, "SplitMode=random:!V" );
-   // To also specify the number of testing events, use:
-   //    factory->PrepareTrainingAndTestTree( mycut,
-   //                                         "NSigTrain=3000:NBkgTrain=3000:NSigTest=3000:NBkgTest=3000:SplitMode=Random:!V" );
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
                                         "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" );
 
    // ---- Book MVA methods
-   //
-   // Please lookup the various method configuration options in the corresponding cxx files, eg:
-   // src/MethoCuts.cxx, etc, or here: http://tmva.sourceforge.net/optionRef.html
-   // it is possible to preset ranges in the option string in which the cut optimisation should be done:
-   // "...:CutRangeMin[2]=-1:CutRangeMax[2]=1"...", where [2] is the third input variable
 
    // Cut optimisation
    if (Use["Cuts"])

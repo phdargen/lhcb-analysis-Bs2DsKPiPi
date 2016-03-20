@@ -40,15 +40,15 @@ void TMVAClassificationApplication( TString myMethodList = "BDTG" )
    //---------------------------------------------------------------
 
    TChain* theTree = new TChain("DecayTree");
-   //theTree->Add("/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_forBDT.root");
-   //theTree->Add("/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_forBDT.root");
-   //theTree->Add("/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_forBDT.root");
-   theTree->Add("/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_forBDT.root");
+   theTree->Add("/auto/data/dargent/Bs2DsKpipi/preselection_norm/data2011_Ds2KKpi_forBDT.root");
+   //theTree->Add("/auto/data/dargent/Bs2DsKpipi/preselection_norm/data2012_Ds2KKpi_forBDT.root");
+   //theTree->Add("/auto/data/dargent/Bs2DsKpipi/preselection_norm/mc11_Ds2KKpi_forBDT.root");
+   //theTree->Add("/auto/data/dargent/Bs2DsKpipi/preselection_norm/mc12_Ds2KKpi_forBDT.root");
 
-   //TFile *hFile = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/data11_Ds2KKpi_BDT.root","RECREATE");
-   //TFile *hFile = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/data12_Ds2KKpi_BDT.root","RECREATE");
-   //TFile *hFile = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_BDT.root","RECREATE");
-   TFile *hFile = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_BDT.root","RECREATE");
+   TFile *hFile = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection_norm/data11_Ds2KKpi_BDT.root","RECREATE");
+   //TFile *hFile = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection_norm/data12_Ds2KKpi_BDT.root","RECREATE");
+   //TFile *hFile = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection_norm/mc11_Ds2KKpi_BDT.root","RECREATE");
+   //TFile *hFile = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection_norm/mc12_Ds2KKpi_BDT.root","RECREATE");
    TTree* tree = theTree->CloneTree(0);
 
    // This loads the library
@@ -278,17 +278,17 @@ void TMVAClassificationApplication( TString myMethodList = "BDTG" )
 
    theTree->SetBranchAddress( "Bs_PT", &myVar1 );
    theTree->SetBranchAddress( "Bs_ENDVERTEX_CHI2",&myVar2 );
-   theTree->SetBranchAddress( "XsDaughters_min_PT", &myVar3 );
+   theTree->SetBranchAddress( "XdDaughters_min_PT", &myVar3 );
    theTree->SetBranchAddress( "DsDaughters_min_PT", &myVar4 );
-   theTree->SetBranchAddress( "XsDaughters_min_IPCHI2", &myVar5 );
+   theTree->SetBranchAddress( "XdDaughters_min_IPCHI2", &myVar5 );
    theTree->SetBranchAddress( "DsDaughters_min_IPCHI2", &myVar6 );
-   theTree->SetBranchAddress( "XsDaughters_max_IPCHI2", &myVar7 );
+   theTree->SetBranchAddress( "XdDaughters_max_IPCHI2", &myVar7 );
    theTree->SetBranchAddress( "DsDaughters_max_IPCHI2", &myVar8 );
-   theTree->SetBranchAddress( "Xs_max_DOCA", &myVar9 );
+   theTree->SetBranchAddress( "Xd_max_DOCA", &myVar9 );
    theTree->SetBranchAddress( "Bs_FDCHI2_OWNPV", &myVar10 );
    theTree->SetBranchAddress( "Ds_FDCHI2_ORIVX", &myVar11 );
    theTree->SetBranchAddress( "Bs_IPCHI2_OWNPV", &myVar12 );
-   theTree->SetBranchAddress( "K_1_1270_plus_IPCHI2_OWNPV", &myVar13 );
+   theTree->SetBranchAddress( "a_1_1260_plus_IPCHI2_OWNPV", &myVar13 );
    theTree->SetBranchAddress( "Bs_DIRA_OWNPV", &myVar14 );
    theTree->SetBranchAddress( "Ds_DIRA_OWNPV", &myVar15 );
    theTree->SetBranchAddress( "Bs_ETA", &myVar16 );
@@ -296,21 +296,21 @@ void TMVAClassificationApplication( TString myMethodList = "BDTG" )
    theTree->SetBranchAddress( "K_plus_fromDs_ETA", &myVar18 );
    theTree->SetBranchAddress( "K_minus_fromDs_ETA", &myVar19 );
    theTree->SetBranchAddress( "pi_minus_fromDs_ETA", &myVar20 );
-   theTree->SetBranchAddress( "K_plus_ETA", &myVar21 );
-   theTree->SetBranchAddress( "pi_plus_ETA", &myVar22 );
+   theTree->SetBranchAddress( "pi_plus1_ETA", &myVar21 );
+   theTree->SetBranchAddress( "pi_plus2_ETA", &myVar22 );
    theTree->SetBranchAddress( "pi_minus_ETA", &myVar23 );
    theTree->SetBranchAddress( "max_TrackChi2", &myVar24 );
    theTree->SetBranchAddress( "K_plus_fromDs_ptasy_1.00", &myVar26 );
    theTree->SetBranchAddress( "K_minus_fromDs_ptasy_1.00", &myVar27 );
    theTree->SetBranchAddress( "pi_minus_fromDs_ptasy_1.00", &myVar28 );
-   theTree->SetBranchAddress( "K_plus_ptasy_1.00", &myVar29 );
-   theTree->SetBranchAddress( "pi_plus_ptasy_1.00", &myVar30 );
+   theTree->SetBranchAddress( "pi_plus1_ptasy_1.00", &myVar29 );
+   theTree->SetBranchAddress( "pi_plus2_ptasy_1.00", &myVar30 );
    theTree->SetBranchAddress( "pi_minus_ptasy_1.00", &myVar31 );
    theTree->SetBranchAddress( "K_plus_fromDs_TRACK_GhostProb", &myVar32 );
    theTree->SetBranchAddress( "K_minus_fromDs_TRACK_GhostProb", &myVar33 );
    theTree->SetBranchAddress( "pi_minus_fromDs_TRACK_GhostProb", &myVar34 );
-   theTree->SetBranchAddress( "K_plus_TRACK_GhostProb", &myVar35 );
-   theTree->SetBranchAddress( "pi_plus_TRACK_GhostProb", &myVar36 );
+   theTree->SetBranchAddress( "pi_plus1_TRACK_GhostProb", &myVar35 );
+   theTree->SetBranchAddress( "pi_plus2_TRACK_GhostProb", &myVar36 );
    theTree->SetBranchAddress( "pi_minus_TRACK_GhostProb", &myVar37 );
    theTree->SetBranchAddress( "angK", &myVar38 );
    theTree->SetBranchAddress( "angPip", &myVar39 );
