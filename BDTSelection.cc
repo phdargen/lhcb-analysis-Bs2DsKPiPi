@@ -1,7 +1,6 @@
 //offline selection of BDT variables for Bs->DsKpipi
 //philippe d'argent & matthieu kecke
 
-
 #include <cmath>
 #include <iostream>
 #include <TChain.h>
@@ -20,40 +19,11 @@
 #include <THStack.h>
 #include "TRandom3.h"
 #include <sstream>
-#include <RooDataSet.h>
-#include "RooGaussModel.h"
-#include "RooExponential.h"
-#include "RooChebychev.h"
-#include "RooAddModel.h"
-#include "RooPolynomial.h"
-#include "RooTruthModel.h"
-#include "RooFitResult.h"
-#include "RooDecay.h"
-#include "RooPlot.h"
-#include "RooGaussian.h"
-#include "RooDstD0BG.h"
-#include "RooAddPdf.h"
-#include "RooExtendPdf.h"
-#include "RooDataHist.h"
-#include "RooCBShape.h"
-#include "RooCategory.h"
-#include "RooFormulaVar.h"
-#include "RooSimultaneous.h"
-#include "RooHist.h"
-#include "RooStats/SPlot.h"
-#include "RooTreeDataStore.h"
-#include "RooRealVar.h"
-#include "RooDataSet.h"
-#include "RooConstVar.h"
-#ifndef __CINT__
-#include "RooGlobalFunc.h"
-#endif
+
 
 using namespace std;
-// using namespace RooFit
-using namespace RooStats;
 
-int main() {
+int preselect() {
 
     //specifiy decay channel of Ds
     bool Ds2KKpi = true;
@@ -61,7 +31,11 @@ int main() {
     bool Ds2pipipi = false;
 
     //MC or Data?
-    bool MC = true;
+    bool MC = false;
+
+    //Bkg sample?
+    bool Ds3piBkg = false;
+    bool Dsstar3piBkg = false;
 
     //which year?
     bool sevenTeV = true; //for 2011 = true , for 2012 = false 
@@ -72,20 +46,28 @@ int main() {
     if(Ds2KKpi){
 	tree=new TChain("Bs2DsKpipi_Ds2KKpi_Tuple/DecayTree");
 	if((!MC) && (sevenTeV)){
-	tree->Add("/auto/data/dargent/Bs2DsKpipi/Data_PID/11D/*.root");
-	tree->Add("/auto/data/dargent/Bs2DsKpipi/Data_PID/11U/*.root");
+		tree->Add("/auto/data/dargent/Bs2DsKpipi/Data_PID/11D/*.root");
+		tree->Add("/auto/data/dargent/Bs2DsKpipi/Data_PID/11U/*.root");
 	}
-	if((!MC) && (!sevenTeV)){
+	else if((!MC) && (!sevenTeV)){
 		tree->Add("/auto/data/kecke/B2DKPiPi/12D-PID/*.root");
 		tree->Add("/auto/data/kecke/B2DKPiPi/12U-PID/*.root");
 	}
-	if((MC) && (!sevenTeV)){
+	else if((MC) && (Ds3piBkg)){
+		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Bkg/Ds3pi-U/*.root");
+		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Bkg/Ds3pi-D/*.root");
+	}
+	else if((MC) && (Dsstar3piBkg)){
+		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Bkg/Dst3pi-U/*.root");
+		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Bkg/Dst3pi-D/*.root");
+	}
+	else if((MC) && (!sevenTeV)){
 		tree->Add("/auto/data/kecke/B2DKPiPi/12D-MC/*.root");
 		tree->Add("/auto/data/kecke/B2DKPiPi/12U-MC/*.root");
 	}
-	if((MC) && (sevenTeV)){
-	tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/11U/*.root");
-	tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/11D/*.root");
+	else if((MC) && (sevenTeV)){
+		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/11U/*.root");
+		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/11D/*.root");
 	}
     }
 
@@ -166,6 +148,7 @@ int main() {
     tree->SetBranchStatus( "*IPCHI2_OWNPV", 1 );
     tree->SetBranchStatus( "*FDCHI2_OWNPV",1 );
     tree->SetBranchStatus( "*OWNPV*", 1 );
+    tree->SetBranchStatus( "*ORIVX*", 1 );
     tree->SetBranchStatus( "*DIRA_OWNPV",1);
     tree->SetBranchStatus( "*ENDVERTEX_CHI2",1 );
     tree->SetBranchStatus( "*ENDVERTEX*",1 );
@@ -177,11 +160,14 @@ int main() {
     tree->SetBranchStatus( "*nDOF",1 );
     tree->SetBranchStatus( "*status",1 );
     tree->SetBranchStatus( "*ctau",1 );
+    tree->SetBranchStatus( "*ID*",1 );
 
     if(!MC)tree->SetBranchStatus("*TRUE*",0) ;
-    else tree->SetBranchStatus("*TRUE*",1) ;
-
-
+    else {
+    	tree->SetBranchStatus("*TRUE*",1) ;
+    	tree->SetBranchStatus("Bs_BKGCAT",1);
+    }
+	
 
 //define variables
 TLorentzVector K_plus_fromDs;
@@ -329,12 +315,16 @@ Double_t Bs_ENDVERTEX_CHI2;
 Int_t Bs_ENDVERTEX_NDOF;
 
 Double_t Bs_TAU;
+Double_t Ds_TAU;
 
 Int_t Bs_TRUEID;
 Int_t Ds_TRUEID;
 Int_t K_plus_TRUEID;
 Int_t pi_plus_TRUEID;
 Int_t pi_minus_TRUEID;
+Int_t K_plus_fromDs_TRUEID;
+Int_t K_minus_fromDs_TRUEID;
+Int_t pi_minus_fromDs_TRUEID;
 
 Bool_t Bs_L0Global_TIS;
 Bool_t Bs_L0HadronDecision_TOS;
@@ -387,7 +377,7 @@ if(Ds2KKpi){
 	tree -> SetBranchAddress( "K_plus_fromDs_TRACK_CHI2NDOF" , &K_plus_fromDs_TRACK_CHI2NDOF );
 	tree -> SetBranchAddress( "K_plus_fromDs_IPCHI2_OWNPV" ,&K_plus_fromDs_IPCHI2_OWNPV );
 	tree -> SetBranchAddress( "K_plus_fromDs_PIDK" , &K_plus_fromDs_PIDK );
-
+	tree -> SetBranchAddress( "K_plus_fromDs_TRUEID" , &K_plus_fromDs_TRUEID );
 }
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -402,6 +392,7 @@ if(Ds2Kpipi || Ds2KKpi){
 	tree -> SetBranchAddress( "K_minus_fromDs_TRACK_CHI2NDOF" , &K_minus_fromDs_TRACK_CHI2NDOF );
 	tree -> SetBranchAddress( "K_minus_fromDs_PIDK" , &K_minus_fromDs_PIDK );
 	tree -> SetBranchAddress( "K_minus_fromDs_PIDp" , &K_minus_fromDs_PIDp );
+	tree -> SetBranchAddress( "K_minus_fromDs_TRUEID" , &K_minus_fromDs_TRUEID );
 }
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -447,8 +438,10 @@ tree -> SetBranchAddress( "Ds_TRUEID" , &Ds_TRUEID );
 tree -> SetBranchAddress( "K_plus_TRUEID" , &K_plus_TRUEID );
 tree -> SetBranchAddress( "pi_plus_TRUEID" , &pi_plus_TRUEID );
 tree -> SetBranchAddress( "pi_minus_TRUEID" , &pi_minus_TRUEID );
+tree -> SetBranchAddress( "pi_minus_fromDs_TRUEID" , &pi_minus_fromDs_TRUEID );
 
 tree -> SetBranchAddress("Bs_TAU" , &Bs_TAU );
+tree -> SetBranchAddress("Ds_TAU" , &Ds_TAU );
 
 //link variables to tree branches
 tree -> SetBranchAddress( "Bs_MM" , &Bs_MM );
@@ -565,10 +558,12 @@ THStack *all = new THStack("all","all candidates");
 	TFile* output = 0;
 
 	// Ds2KKpi case
-	if(Ds2KKpi && (!MC) && sevenTeV) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_with_BDT_variables_S21_PID.root","RECREATE");
-	if(Ds2KKpi && (!MC) && (!sevenTeV)) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_with_BDT_variables_S21_PID.root","RECREATE");
-	if(Ds2KKpi && MC && (!sevenTeV)) output = new TFile("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_with_BDT_variables.root","RECREATE");
-	if(Ds2KKpi && MC && sevenTeV) output = new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_with_BDT_variables.root","RECREATE");
+	if(Ds2KKpi && (!MC) && sevenTeV) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_with_BDT_variables_S21_PID.root","RECREATE");
+	else if(Ds2KKpi && (!MC) && (!sevenTeV)) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_with_BDT_variables_S21_PID.root","RECREATE");
+	else if(Ds2KKpi && MC && Ds3piBkg) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/bkg_Ds3pi.root","RECREATE");
+	else if(Ds2KKpi && MC && Dsstar3piBkg) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/bkg_Dsstar3pi.root","RECREATE");
+	else if(Ds2KKpi && MC && (!sevenTeV)) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_with_BDT_variables.root","RECREATE");
+	else if(Ds2KKpi && MC && sevenTeV) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_with_BDT_variables.root","RECREATE");
 
 	//Ds2Kpipi case
 	if(Ds2Kpipi && (!MC) && sevenTeV) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2Kpipi_with_BDT_variables_S21_PID.root","RECREATE");
@@ -595,7 +590,7 @@ THStack *all = new THStack("all","all candidates");
 	float Xs_max_DOCA = 0;
 	float max_TrackChi2 = 0;
 	float min_TrackChi2 = 0;
-
+	int resonant = 0 ;
 
 	summary_tree->Branch("DsDaughters_min_IPCHI2",&DsDaughters_min_IPCHI2,"DsDaughters_min_IPCHI2/F");
         summary_tree->Branch("XsDaughters_min_IPCHI2",&XsDaughters_min_IPCHI2,"XsDaughters_min_IPCHI2/F");
@@ -606,6 +601,7 @@ THStack *all = new THStack("all","all candidates");
 	summary_tree->Branch("Xs_max_DOCA",&Xs_max_DOCA,"Xs_max_DOCA/F");
 	summary_tree->Branch("max_TrackChi2",&max_TrackChi2,"max_Track_Chi2/F");
 	summary_tree->Branch("min_TrackChi2",&min_TrackChi2,"min_Track_Chi2/F");
+	summary_tree->Branch("resonant",&resonant,"resonant/I");
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -627,7 +623,6 @@ for(int i=0; i< numEvents; i++)
 	{
 	if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEvents << endl;
 	tree->GetEntry(i);
-
 
 	//define the Lorentz vectors
 	pi_minus_fromDs.SetXYZM(pi_minus_fromDs_PX,pi_minus_fromDs_PY,pi_minus_fromDs_PZ,massPion);
@@ -655,10 +650,10 @@ for(int i=0; i< numEvents; i++)
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//trigger selection
 	//L0 stage
-	if((!Bs_L0Global_TIS) && (!Bs_L0HadronDecision_TOS)) continue;
+	//if((!Bs_L0Global_TIS) && (!Bs_L0HadronDecision_TOS)) continue;
 
 	//HLT 1 stage
-	if(!Bs_Hlt1TrackAllL0Decision_TOS) continue;
+	//if(!Bs_Hlt1TrackAllL0Decision_TOS) continue;
 
 	//HLT2 stage
 	if((!Bs_Hlt2Topo2BodyBBDTDecision_TOS) &&  (!Bs_Hlt2Topo3BodyBBDTDecision_TOS) && (!Bs_Hlt2Topo4BodyBBDTDecision_TOS)) continue;
@@ -670,7 +665,7 @@ for(int i=0; i< numEvents; i++)
 		if(K_plus_fromDs_TRACK_CHI2NDOF> 4) continue;
 		if(K_plus_fromDs_IPCHI2_OWNPV< 4) continue; 
 		if((pi_minus_fromDs_PT + K_minus_fromDs_PT + K_plus_fromDs_PT) < 1800) continue;
-		if(K_plus_fromDs_PIDK<-10) continue;
+		if(!MC)if(K_plus_fromDs_PIDK<-10) continue;
 	}
 
 	if(Ds2Kpipi){
@@ -682,7 +677,7 @@ for(int i=0; i< numEvents; i++)
 		if(pi_plus_fromDs_P<1000) continue;
 		if(pi_plus_fromDs_TRACK_CHI2NDOF> 4) continue;
 		if(pi_plus_fromDs_IPCHI2_OWNPV< 4) continue;
-		if(pi_plus_fromDs_PIDK>10) continue;
+		if(!MC)if(pi_plus_fromDs_PIDK>10) continue;
 	}
 
 	if(Ds2KKpi || Ds2Kpipi){
@@ -690,7 +685,7 @@ for(int i=0; i< numEvents; i++)
 		if(K_minus_fromDs_P<1000) continue;
 		if(K_minus_fromDs_TRACK_CHI2NDOF> 4) continue;
 		if(K_minus_fromDs_IPCHI2_OWNPV< 4) continue;
-		if(K_minus_fromDs_PIDK<-10) continue;
+		if(!MC)if(K_minus_fromDs_PIDK<-10) continue;
 	}
 
 	if(Ds2pipipi){
@@ -698,7 +693,7 @@ for(int i=0; i< numEvents; i++)
 		if(pi_minus2_fromDs_P<1000) continue;
 		if(pi_minus2_fromDs_TRACK_CHI2NDOF> 4) continue;
 		if(pi_minus2_fromDs_IPCHI2_OWNPV< 4) continue;
-		if(pi_minus2_fromDs_PIDK>10) continue;
+		if(!MC)if(pi_minus2_fromDs_PIDK>10) continue;
 		if((pi_minus_fromDs_PT + pi_minus2_fromDs_PT + pi_plus_fromDs_PT) < 1800) continue;
 	}
 
@@ -746,7 +741,7 @@ for(int i=0; i< numEvents; i++)
 
 	//loose pid requirements
 if(!MC){
-	if(K_plus_PIDK<8) continue;
+	if(K_plus_PIDK<-5) continue;
 	if(pi_minus_fromDs_PIDK>10) continue;
 	if(pi_plus_PIDK>10) continue;
 	if(pi_minus_PIDK>10) continue;
@@ -821,18 +816,34 @@ if(!MC){
 if(!MC){
 	//implement PID requirements on Ds daughters
 	if(Ds2KKpi){
+		resonant = 0;
+		if( TMath::Abs(((K_plus_fromDs + K_minus_fromDs).M() - massPhi)) < 20) resonant = 1; 
+		else if(TMath::Abs(((pi_minus_fromDs + K_plus_fromDs).M() - massKstar)) < 75) {
+			if((K_plus_fromDs_PIDK>-5 && K_minus_fromDs_PIDK>-5) ) resonant = 1;
+			else continue;
+		}  		
+		else{
+			if((K_plus_fromDs_PIDK>0 && K_minus_fromDs_PIDK>0) ) resonant = 0;
+			else continue;
+		}
+
+		/*
 		//cut for non PhiPi, but K*K candidates
 		if( TMath::Abs(((K_plus_fromDs + K_minus_fromDs).M() - massPhi)) > 20 && TMath::Abs(((pi_minus_fromDs + K_plus_fromDs).M() - massKstar)) < 75 && (K_plus_fromDs_PIDK<0 || K_minus_fromDs_PIDK<0) ) continue;
 
 		//cut for non resonant candidates
 		if( TMath::Abs(((K_plus_fromDs + K_minus_fromDs).M() - massPhi)) > 20 && TMath::Abs(((pi_minus_fromDs + K_plus_fromDs).M() - massKstar)) > 75 && (K_plus_fromDs_PIDK<5 || K_minus_fromDs_PIDK<5) ) continue;
+		*/
 	}
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 }
+
+	//if(Ds_TAU < 0) continue;
+
 	//rejection cuts for peaking background
 
 	//charmless suppression
-	if(Ds_FDCHI2_ORIVX < 9) continue;
+	//if(Ds_FDCHI2_ORIVX < 2) continue;
 
 	//Bs->DsDs suppression
 	if(TMath::Abs((K_plus + pi_plus + pi_minus).M() - massDs) < 20) continue;
@@ -840,7 +851,7 @@ if(!MC){
 if(!MC){
 
 	//Bs->DsKKpi suppression
-	if(pi_minus_PIDK > 0) continue;
+	if(pi_minus_PIDK > 5) continue;
 
 	if(Ds2KKpi){
 		if(TMath::Abs(((K_plus_fromDs + K_minus_fromDs).M() - massPhi)) > 20){
@@ -857,9 +868,12 @@ if(!MC){
 	if(MC){
 		if(TMath::Abs(Bs_TRUEID) != 531) continue;
 		if(TMath::Abs(Ds_TRUEID) != 431) continue;
-		if(TMath::Abs(K_plus_TRUEID) != 321) continue;
-		if(TMath::Abs(pi_plus_TRUEID) != 211) continue;
-		if(TMath::Abs(pi_minus_TRUEID) != 211) continue;
+		if(!Ds3piBkg)if(!Dsstar3piBkg)if(TMath::Abs(K_plus_TRUEID) != 321) continue;
+		if(!Ds3piBkg)if(!Dsstar3piBkg)if(TMath::Abs(pi_plus_TRUEID) != 211) continue;
+		if(!Ds3piBkg)if(!Dsstar3piBkg)if(TMath::Abs(pi_minus_TRUEID) != 211) continue;
+		if(TMath::Abs(K_plus_fromDs_TRUEID) != 321) continue;
+		if(TMath::Abs(pi_minus_fromDs_TRUEID) != 211) continue;
+		if(TMath::Abs(K_minus_fromDs_TRUEID) != 321) continue;
 	}
 
 	//fill all sorts of histrograms
@@ -1099,8 +1113,389 @@ if(Ds2KKpi){
 	c->Print(cstringAllDistribution);
 }
 
+cout << "New file contains " << summary_tree->GetEntries() << " events" <<  endl;
 summary_tree->Write();
 output->Close();	
 
 return 0;
+}
+
+void chooseBestPV(string fit, string input, string output){
+ 
+    ///Read file
+    TChain* tree=new TChain("DecayTree");
+    tree->Add(input.c_str());
+    
+    ///momenta
+    int nPV;
+    float chi2[100], ndof[100];
+
+    float B_M[100] ,K1_M[100] , B_TAU[100];
+    float K_PX[100], K_PY[100], K_PZ[100], K_PE[100];
+    float pip_PX[100], pip_PY[100], pip_PZ[100], pip_PE[100];
+    float pim_PX[100], pim_PY[100], pim_PZ[100], pim_PE[100];
+    float Ds_Kp_PX[100], Ds_Kp_PY[100], Ds_Kp_PZ[100], Ds_Kp_PE[100];
+    float Ds_pip_PX[100], Ds_pip_PY[100], Ds_pip_PZ[100], Ds_pip_PE[100];
+    float Ds_Km_PX[100], Ds_Km_PY[100], Ds_Km_PZ[100], Ds_Km_PE[100];
+
+    tree->SetBranchAddress(("Bs_"+fit+"_nPV").c_str(),&nPV);
+    tree->SetBranchAddress(("Bs_"+fit+"_chi2").c_str(),&chi2);
+    tree->SetBranchAddress(("Bs_"+fit+"_nDOF").c_str(),&ndof);
+
+    tree->SetBranchAddress(("Bs_"+fit+"_M").c_str(),&B_M);
+    tree->SetBranchAddress(("Bs_"+fit+"_ctau").c_str(),&B_TAU);
+
+    tree->SetBranchAddress(("Bs_"+fit+"_K_1_1270_plus_Kplus_PX").c_str(),&K_PX);
+    tree->SetBranchAddress(("Bs_"+fit+"_K_1_1270_plus_Kplus_PY").c_str(),&K_PY);
+    tree->SetBranchAddress(("Bs_"+fit+"_K_1_1270_plus_Kplus_PZ").c_str(),&K_PZ); 
+    tree->SetBranchAddress(("Bs_"+fit+"_K_1_1270_plus_Kplus_PE").c_str(),&K_PE); 
+
+    tree->SetBranchAddress(("Bs_"+fit+"_K_1_1270_plus_piplus_PX").c_str(),&pip_PX);
+    tree->SetBranchAddress(("Bs_"+fit+"_K_1_1270_plus_piplus_PY").c_str(),&pip_PY);
+    tree->SetBranchAddress(("Bs_"+fit+"_K_1_1270_plus_piplus_PZ").c_str(),&pip_PZ); 
+    tree->SetBranchAddress(("Bs_"+fit+"_K_1_1270_plus_piplus_PE").c_str(),&pip_PE); 
+
+    tree->SetBranchAddress(("Bs_"+fit+"_K_1_1270_plus_piplus_0_PX").c_str(),&pim_PX);
+    tree->SetBranchAddress(("Bs_"+fit+"_K_1_1270_plus_piplus_0_PY").c_str(),&pim_PY);
+    tree->SetBranchAddress(("Bs_"+fit+"_K_1_1270_plus_piplus_0_PZ").c_str(),&pim_PZ); 
+    tree->SetBranchAddress(("Bs_"+fit+"_K_1_1270_plus_piplus_0_PE").c_str(),&pim_PE); 
+
+    tree->SetBranchAddress(("Bs_"+fit+"_D_splus_Kplus_PX").c_str(),&Ds_Kp_PX);
+    tree->SetBranchAddress(("Bs_"+fit+"_D_splus_Kplus_PY").c_str(),&Ds_Kp_PY);
+    tree->SetBranchAddress(("Bs_"+fit+"_D_splus_Kplus_PZ").c_str(),&Ds_Kp_PZ); 
+    tree->SetBranchAddress(("Bs_"+fit+"_D_splus_Kplus_PE").c_str(),&Ds_Kp_PE); 
+
+    tree->SetBranchAddress(("Bs_"+fit+"_D_splus_piplus_PX").c_str(),&Ds_pip_PX);
+    tree->SetBranchAddress(("Bs_"+fit+"_D_splus_piplus_PY").c_str(),&Ds_pip_PY);
+    tree->SetBranchAddress(("Bs_"+fit+"_D_splus_piplus_PZ").c_str(),&Ds_pip_PZ); 
+    tree->SetBranchAddress(("Bs_"+fit+"_D_splus_piplus_PE").c_str(),&Ds_pip_PE); 
+
+    tree->SetBranchAddress(("Bs_"+fit+"_D_splus_Kplus_0_PX").c_str(),&Ds_Km_PX);
+    tree->SetBranchAddress(("Bs_"+fit+"_D_splus_Kplus_0_PY").c_str(),&Ds_Km_PY);
+    tree->SetBranchAddress(("Bs_"+fit+"_D_splus_Kplus_0_PZ").c_str(),&Ds_Km_PZ); 
+    tree->SetBranchAddress(("Bs_"+fit+"_D_splus_Kplus_0_PE").c_str(),&Ds_Km_PE); 
+
+    ///create new tree
+    TFile* f = new TFile(output.c_str(),"RECREATE");
+    TTree* new_tree = tree->CloneTree();;    
+    double DTF_Bs_M, DTF_Bs_MM, DTF_Ds_M, DTF_chi2, DTF_Bs_TAU; 
+    double DTF_Bs_PX, DTF_Bs_PY, DTF_Bs_PZ, DTF_Bs_PE;      
+    double DTF_Kplus_PX, DTF_Kplus_PY, DTF_Kplus_PZ, DTF_Kplus_PE;      
+    double DTF_piplus_PX, DTF_piplus_PY, DTF_piplus_PZ, DTF_piplus_PE;      
+    double DTF_piminus_PX, DTF_piminus_PY, DTF_piminus_PZ, DTF_piminus_PE;
+
+    double DTF_Ds_Kplus_PX, DTF_Ds_Kplus_PY, DTF_Ds_Kplus_PZ, DTF_Ds_Kplus_PE;      
+    double DTF_Ds_piplus_PX, DTF_Ds_piplus_PY, DTF_Ds_piplus_PZ, DTF_Ds_piplus_PE;      
+    double DTF_Ds_Kminus_PX, DTF_Ds_Kminus_PY, DTF_Ds_Kminus_PZ, DTF_Ds_Kminus_PE; 
+    double DTF_Ds_PX, DTF_Ds_PY, DTF_Ds_PZ, DTF_Ds_PE;      
+
+    TBranch* Bra_DTF_Bs_M = new_tree->Branch((fit+"_Bs_M").c_str(), &DTF_Bs_M, (fit+"_Bs_M/D").c_str());
+    TBranch* Bra_DTF_Bs_MM = new_tree->Branch((fit+"_Bs_MM").c_str(), &DTF_Bs_MM, (fit+"_Bs_MM/D").c_str());
+    TBranch* Bra_DTF_Bs_TAU = new_tree->Branch((fit+"_TAU").c_str(), &DTF_Bs_TAU, (fit+"_TAU/D").c_str());
+    TBranch* Bra_DTF_Ds_M = new_tree->Branch((fit+"_Ds_M").c_str(), &DTF_Ds_M,  (fit+"_Ds_M/D").c_str());
+    TBranch* Bra_DTF_chi2 = new_tree->Branch((fit+"_chi2").c_str(), &DTF_chi2,  (fit+"_chi2/D").c_str());
+
+    TBranch* Bra_DTF_Bs_PX = new_tree->Branch((fit+"_Bs_PX").c_str(), &DTF_Bs_PX, (fit+"_Bs_PX/D").c_str());
+    TBranch* Bra_DTF_Bs_PY = new_tree->Branch((fit+"_Bs_PY").c_str(), &DTF_Bs_PY, (fit+"_Bs_PY/D").c_str());
+    TBranch* Bra_DTF_Bs_PZ = new_tree->Branch((fit+"_Bs_PZ").c_str(), &DTF_Bs_PZ, (fit+"_Bs_PZ/D").c_str());
+    TBranch* Bra_DTF_Bs_PE = new_tree->Branch((fit+"_Bs_PE").c_str(), &DTF_Bs_PE, (fit+"_Bs_PE/D").c_str());
+
+    TBranch* Bra_DTF_Kplus_PX = new_tree->Branch((fit+"_Kplus_PX").c_str(), &DTF_Kplus_PX, (fit+"_Kplus_PX/D").c_str());
+    TBranch* Bra_DTF_Kplus_PY = new_tree->Branch((fit+"_Kplus_PY").c_str(), &DTF_Kplus_PY, (fit+"_Kplus_PY/D").c_str());
+    TBranch* Bra_DTF_Kplus_PZ = new_tree->Branch((fit+"_Kplus_PZ").c_str(), &DTF_Kplus_PZ, (fit+"_Kplus_PZ/D").c_str());
+    TBranch* Bra_DTF_Kplus_PE = new_tree->Branch((fit+"_Kplus_PE").c_str(), &DTF_Kplus_PE, (fit+"_Kplus_PE/D").c_str());
+
+    TBranch* Bra_DTF_piplus_PX = new_tree->Branch((fit+"_piplus_PX").c_str(), &DTF_piplus_PX, (fit+"_piplus_PX/D").c_str());
+    TBranch* Bra_DTF_piplus_PY = new_tree->Branch((fit+"_piplus_PY").c_str(), &DTF_piplus_PY, (fit+"_piplus_PY/D").c_str());
+    TBranch* Bra_DTF_piplus_PZ = new_tree->Branch((fit+"_piplus_PZ").c_str(), &DTF_piplus_PZ, (fit+"_piplus_PZ/D").c_str());
+    TBranch* Bra_DTF_piplus_PE = new_tree->Branch((fit+"_piplus_PE").c_str(), &DTF_piplus_PE, (fit+"_piplus_PE/D").c_str());
+
+    TBranch* Bra_DTF_piminus_PX = new_tree->Branch((fit+"_piminus_PX").c_str(), &DTF_piminus_PX, (fit+"_piminus_PX/D").c_str());
+    TBranch* Bra_DTF_piminus_PY = new_tree->Branch((fit+"_piminus_PY").c_str(), &DTF_piminus_PY, (fit+"_piminus_PY/D").c_str());
+    TBranch* Bra_DTF_piminus_PZ = new_tree->Branch((fit+"_piminus_PZ").c_str(), &DTF_piminus_PZ, (fit+"_piminus_PZ/D").c_str());
+    TBranch* Bra_DTF_piminus_PE = new_tree->Branch((fit+"_piminus_PE").c_str(), &DTF_piminus_PE, (fit+"_piminus_PE/D").c_str());
+
+    TBranch* Bra_DTF_Ds_Kplus_PX = new_tree->Branch((fit+"_Ds_Kplus_PX").c_str(), &DTF_Ds_Kplus_PX, (fit+"_Ds_Kplus_PX/D").c_str());
+    TBranch* Bra_DTF_Ds_Kplus_PY = new_tree->Branch((fit+"_Ds_Kplus_PY").c_str(), &DTF_Ds_Kplus_PY, (fit+"_Ds_Kplus_PY/D").c_str());
+    TBranch* Bra_DTF_Ds_Kplus_PZ = new_tree->Branch((fit+"_Ds_Kplus_PZ").c_str(), &DTF_Ds_Kplus_PZ, (fit+"_Ds_Kplus_PZ/D").c_str());
+    TBranch* Bra_DTF_Ds_Kplus_PE = new_tree->Branch((fit+"_Ds_Kplus_PE").c_str(), &DTF_Ds_Kplus_PE, (fit+"_Ds_Kplus_PE/D").c_str());
+
+    TBranch* Bra_DTF_Ds_piplus_PX = new_tree->Branch((fit+"_Ds_piplus_PX").c_str(), &DTF_Ds_piplus_PX, (fit+"_Ds_piplus_PX/D").c_str());
+    TBranch* Bra_DTF_Ds_piplus_PY = new_tree->Branch((fit+"_Ds_piplus_PY").c_str(), &DTF_Ds_piplus_PY, (fit+"_Ds_piplus_PY/D").c_str());
+    TBranch* Bra_DTF_Ds_piplus_PZ = new_tree->Branch((fit+"_Ds_piplus_PZ").c_str(), &DTF_Ds_piplus_PZ, (fit+"_Ds_piplus_PZ/D").c_str());
+    TBranch* Bra_DTF_Ds_piplus_PE = new_tree->Branch((fit+"_Ds_piplus_PE").c_str(), &DTF_Ds_piplus_PE, (fit+"_Ds_piplus_PE/D").c_str());
+
+    TBranch* Bra_DTF_Ds_Kminus_PX = new_tree->Branch((fit+"_Ds_Kminus_PX").c_str(), &DTF_Ds_Kminus_PX, (fit+"_Ds_Kminus_PX/D").c_str());
+    TBranch* Bra_DTF_Ds_Kminus_PY = new_tree->Branch((fit+"_Ds_Kminus_PY").c_str(), &DTF_Ds_Kminus_PY, (fit+"_Ds_Kminus_PY/D").c_str());
+    TBranch* Bra_DTF_Ds_Kminus_PZ = new_tree->Branch((fit+"_Ds_Kminus_PZ").c_str(), &DTF_Ds_Kminus_PZ, (fit+"_Ds_Kminus_PZ/D").c_str());
+    TBranch* Bra_DTF_Ds_Kminus_PE = new_tree->Branch((fit+"_Ds_Kminus_PE").c_str(), &DTF_Ds_Kminus_PE, (fit+"_Ds_Kminus_PE/D").c_str());
+
+    TBranch* Bra_DTF_Ds_PX = new_tree->Branch((fit+"_Ds_PX").c_str(), &DTF_Ds_PX, (fit+"_Ds_PX/D").c_str());
+    TBranch* Bra_DTF_Ds_PY = new_tree->Branch((fit+"_Ds_PY").c_str(), &DTF_Ds_PY, (fit+"_Ds_PY/D").c_str());
+    TBranch* Bra_DTF_Ds_PZ = new_tree->Branch((fit+"_Ds_PZ").c_str(), &DTF_Ds_PZ, (fit+"_Ds_PZ/D").c_str());
+    TBranch* Bra_DTF_Ds_PE = new_tree->Branch((fit+"_Ds_PE").c_str(), &DTF_Ds_PE, (fit+"_Ds_PE/D").c_str());
+
+   ///loop over events
+    int numEvents = tree->GetEntries();
+    
+    for(int i=0; i< numEvents; i++)
+    {	
+	if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEvents << endl;
+	tree->GetEntry(i);
+
+	///find best PV
+	int best=0;
+	double tmp=chi2[0]/ndof[0];
+	if (0ul == (i % 10000ul))cout << "nPV= " << nPV << endl;
+	if (0ul == (i % 10000ul))cout << "first= " << tmp << endl;
+
+	for(int j=1; j<nPV ;j++){
+                if (0ul == (i % 10000ul))cout << j << "_chi2= " << chi2[j]/ndof[j] << endl;
+		if(chi2[j]/ndof[j]< tmp){
+			 tmp = chi2[j]/ndof[j];
+			 best=j;
+		}
+	}
+
+	if (0ul == (i % 10000ul)){
+		cout << "best= " << tmp << endl;
+		cout << endl ;
+		cout << endl ;
+	}
+
+        TLorentzVector K_P(K_PX[best],K_PY[best],K_PZ[best],K_PE[best]);
+        TLorentzVector pip_P(pip_PX[best],pip_PY[best],pip_PZ[best],pip_PE[best]);
+        TLorentzVector pim_P(pim_PX[best],pim_PY[best],pim_PZ[best],pim_PE[best]);
+
+        TLorentzVector Ds_Kp_P(Ds_Kp_PX[best],Ds_Kp_PY[best],Ds_Kp_PZ[best],Ds_Kp_PE[best]);
+        TLorentzVector Ds_pip_P(Ds_pip_PX[best],Ds_pip_PY[best],Ds_pip_PZ[best],Ds_pip_PE[best]);
+        TLorentzVector Ds_Km_P(Ds_Km_PX[best],Ds_Km_PY[best],Ds_Km_PZ[best],Ds_Km_PE[best]);
+
+	TLorentzVector Ds_P = Ds_Kp_P + Ds_Km_P + Ds_pip_P;
+	TLorentzVector B_P = K_P + pip_P + pim_P + Ds_P;
+
+
+	///Fill branches
+	DTF_Bs_M = B_M[best];
+	DTF_Bs_MM = B_P.M();
+	//if(DTF_Bs_M<4000. || DTF_Bs_M>6000.)continue;
+	DTF_Bs_TAU = B_TAU[best];
+	DTF_chi2 = tmp;
+	DTF_Ds_M = Ds_P.M();
+
+	DTF_Bs_PX = B_P.X();
+	DTF_Bs_PY = B_P.Y();
+	DTF_Bs_PZ = B_P.Z();
+	DTF_Bs_PE = B_P.E();
+
+	DTF_Ds_PX = Ds_P.X();
+	DTF_Ds_PY = Ds_P.Y();
+	DTF_Ds_PZ = Ds_P.Z();
+	DTF_Ds_PE = Ds_P.E();
+
+	DTF_Kplus_PX = K_PX[best];
+	DTF_Kplus_PY = K_PY[best];
+	DTF_Kplus_PZ = K_PZ[best];
+	DTF_Kplus_PE = K_PE[best];
+
+	DTF_piplus_PX = pip_PX[best];
+	DTF_piplus_PY = pip_PY[best];
+	DTF_piplus_PZ = pip_PZ[best];
+	DTF_piplus_PE = pip_PE[best];
+
+	DTF_piminus_PX = pim_PX[best];
+	DTF_piminus_PY = pim_PY[best];
+	DTF_piminus_PZ = pim_PZ[best];
+	DTF_piminus_PE = pim_PE[best];
+
+	DTF_Ds_Kplus_PX = Ds_Kp_PX[best];
+	DTF_Ds_Kplus_PY = Ds_Kp_PY[best];
+	DTF_Ds_Kplus_PZ = Ds_Kp_PZ[best];
+	DTF_Ds_Kplus_PE = Ds_Kp_PE[best];
+
+	DTF_Ds_piplus_PX = Ds_pip_PX[best];
+	DTF_Ds_piplus_PY = Ds_pip_PY[best];
+	DTF_Ds_piplus_PZ = Ds_pip_PZ[best];
+	DTF_Ds_piplus_PE = Ds_pip_PE[best];
+
+	DTF_Ds_Kminus_PX = Ds_Km_PX[best];
+	DTF_Ds_Kminus_PY = Ds_Km_PY[best];
+	DTF_Ds_Kminus_PZ = Ds_Km_PZ[best];
+	DTF_Ds_Kminus_PE = Ds_Km_PE[best];
+
+        Bra_DTF_Bs_M->Fill();
+        Bra_DTF_Bs_MM->Fill();
+        Bra_DTF_Bs_TAU->Fill();
+	Bra_DTF_Ds_M->Fill();
+        Bra_DTF_chi2->Fill();
+
+        Bra_DTF_Bs_PX->Fill();
+        Bra_DTF_Bs_PY->Fill();
+        Bra_DTF_Bs_PZ->Fill();
+        Bra_DTF_Bs_PE->Fill();
+
+        Bra_DTF_Ds_PX->Fill();
+        Bra_DTF_Ds_PY->Fill();
+        Bra_DTF_Ds_PZ->Fill();
+        Bra_DTF_Ds_PE->Fill();
+
+        Bra_DTF_Kplus_PX->Fill();
+        Bra_DTF_Kplus_PY->Fill();
+        Bra_DTF_Kplus_PZ->Fill();
+        Bra_DTF_Kplus_PE->Fill();
+
+        Bra_DTF_piplus_PX->Fill();
+        Bra_DTF_piplus_PY->Fill();
+        Bra_DTF_piplus_PZ->Fill();
+        Bra_DTF_piplus_PE->Fill();
+
+        Bra_DTF_piminus_PX->Fill();
+        Bra_DTF_piminus_PY->Fill();
+        Bra_DTF_piminus_PZ->Fill();
+        Bra_DTF_piminus_PE->Fill();
+
+        Bra_DTF_Ds_Kplus_PX->Fill();
+        Bra_DTF_Ds_Kplus_PY->Fill();
+        Bra_DTF_Ds_Kplus_PZ->Fill();
+        Bra_DTF_Ds_Kplus_PE->Fill();
+
+        Bra_DTF_Ds_piplus_PX->Fill();
+        Bra_DTF_Ds_piplus_PY->Fill();
+        Bra_DTF_Ds_piplus_PZ->Fill();
+        Bra_DTF_Ds_piplus_PE->Fill();
+
+        Bra_DTF_Ds_Kminus_PX->Fill();
+        Bra_DTF_Ds_Kminus_PY->Fill();
+        Bra_DTF_Ds_Kminus_PZ->Fill();
+        Bra_DTF_Ds_Kminus_PE->Fill();
+
+     }
+
+    new_tree->Write();
+    f->Close();
+}
+
+void addVarsForBDT(string input, string output){
+	
+    ///Load file
+    TChain* tree=new TChain("DecayTree");
+    tree->Add(input.c_str());
+	
+    ///Reconstructed momenta
+    double K_rec[4]; 
+    double pip_rec[4]; 
+    double pim_rec[4]; 
+    double Ds_rec[4];
+    double gp[6];
+
+    tree->SetBranchAddress("K_plus_PX",&K_rec[0]);
+    tree->SetBranchAddress("K_plus_PY",&K_rec[1]);
+    tree->SetBranchAddress("K_plus_PZ",&K_rec[2]); 
+    tree->SetBranchAddress("K_plus_PE",&K_rec[3]); 
+
+    tree->SetBranchAddress("pi_plus_PX",&pip_rec[0]);
+    tree->SetBranchAddress("pi_plus_PY",&pip_rec[1]);
+    tree->SetBranchAddress("pi_plus_PZ",&pip_rec[2]); 
+    tree->SetBranchAddress("pi_plus_PE",&pip_rec[3]); 
+
+    tree->SetBranchAddress("pi_minus_PX",&pim_rec[0]);
+    tree->SetBranchAddress("pi_minus_PY",&pim_rec[1]);
+    tree->SetBranchAddress("pi_minus_PZ",&pim_rec[2]); 
+    tree->SetBranchAddress("pi_minus_PE",&pim_rec[3]); 
+    
+    tree->SetBranchAddress("Ds_PX",&Ds_rec[0]);
+    tree->SetBranchAddress("Ds_PY",&Ds_rec[1]);
+    tree->SetBranchAddress("Ds_PZ",&Ds_rec[2]); 
+    tree->SetBranchAddress("Ds_PE",&Ds_rec[3]);
+
+    tree->SetBranchAddress( "K_plus_fromDs_TRACK_GhostProb", &gp[0] );
+    tree->SetBranchAddress( "K_minus_fromDs_TRACK_GhostProb", &gp[1] );
+    tree->SetBranchAddress( "pi_minus_fromDs_TRACK_GhostProb", &gp[2] );
+    tree->SetBranchAddress( "K_plus_TRACK_GhostProb", &gp[3] );
+    tree->SetBranchAddress( "pi_plus_TRACK_GhostProb", &gp[4] );
+    tree->SetBranchAddress( "pi_minus_TRACK_GhostProb", &gp[5] );
+
+    ///Create output file
+    TFile* outputFile = new TFile(output.c_str(),"RECREATE");
+
+    TTree* new_tree = tree->CloneTree();//CopyTree();    
+    double angK,angPip, angPim, maxCos, maxGP;
+
+    TBranch* Bra_angK = new_tree->Branch("angK", &angK, "angK/D");
+    TBranch* Bra_angPip = new_tree->Branch("angPip", &angPip, "angPip/D");
+    TBranch* Bra_angPim = new_tree->Branch("angPim", &angPim, "angPim/D");
+    TBranch* Bra_maxCos = new_tree->Branch("maxCos", &maxCos, "maxCos/D");
+    TBranch* Bra_maxGP = new_tree->Branch("maxGP", &maxGP, "maxGP/D");
+
+    ///loop over events
+    int numEvents = tree->GetEntries();
+    for(int i=0; i< numEvents; i++){	
+			if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEvents << endl;
+			tree->GetEntry(i);
+
+			TVector3 Ds(Ds_rec[0],Ds_rec[1],0.);
+			TVector3 K(K_rec[0],K_rec[1],0.);
+			TVector3 pip(pip_rec[0],pip_rec[1],0.);
+			TVector3 pim(pim_rec[0],pim_rec[1],0.);
+			angK= Ds.Angle(K);
+			angPip= Ds.Angle(pip);
+			angPim= Ds.Angle(pim);
+			maxCos = cos(max(angK,max(angPip,angPim)));
+			maxGP = max(gp[0],max(gp[1],max(gp[2],max(gp[3],max(gp[4],gp[5])))));
+			Bra_maxGP->Fill();
+			Bra_angK->Fill();
+			Bra_angPip->Fill();
+			Bra_angPim->Fill();
+			Bra_maxCos->Fill();		
+     }
+     new_tree->Write();
+     outputFile->Close();	
+}
+
+
+void BDTSelection() {
+	time_t startTime = time(0);
+
+	/// This applies all preselection cuts except:
+	/// PIDK_K_plus > 8
+	/// Ds_MM signal region
+	/// LO + HLT1 Trigger ?
+	/// Bkg Cat for MC ?
+	preselect();
+
+        /// Add refitted momenta and variables used for BDT training
+        /// Output goes to TMVAClassificationDsKpipi.C
+        chooseBestPV("DTF","/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_with_BDT_variables_S21_PID.root", "/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_DTF.root");
+        chooseBestPV("BsDTF","/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_DTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_BsDTF.root");
+        addVarsForBDT("/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_BsDTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_forBDT.root");
+
+	/*
+        chooseBestPV("DTF","/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_with_BDT_variables_S21_PID.root", "/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_DTF.root");
+        chooseBestPV("BsDTF","/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_DTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_BsDTF.root");
+        addVarsForBDT("/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_BsDTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_forBDT.root");
+	*/
+
+	/*   
+        chooseBestPV("DTF","/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_with_BDT_variables.root",   "/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_DTF.root");
+        chooseBestPV("BsDTF","/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_DTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_BsDTF.root");
+        addVarsForBDT("/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_BsDTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_forBDT.root");
+	*/
+	
+	/*
+        chooseBestPV("DTF","/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_with_BDT_variables.root", "/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_DTF.root");
+        chooseBestPV("BsDTF","/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_DTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_BsDTF.root");
+        addVarsForBDT("/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_BsDTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_forBDT.root");
+        */
+
+	/*
+   	 chooseBestPV("DTF","/auto/data/dargent/Bs2DsKpipi/MC/Bkg/DsstKpipi.root", "/auto/data/dargent/Bs2DsKpipi/MC/Bkg/DsstKpipi_DTF.root");
+   	 chooseBestPV("DTF","/auto/data/dargent/Bs2DsKpipi/MC/Bkg/Dspipipi.root", "/auto/data/dargent/Bs2DsKpipi/MC/Bkg/Dspipipi_DTF.root");
+   	 chooseBestPV("DTF","/auto/data/dargent/Bs2DsKpipi/MC/Bkg/Dsstpipipi.root", "/auto/data/dargent/Bs2DsKpipi/MC/Bkg/Dsstpipipi_DTF.root");
+	*/
+
+    	 cout << "==============================================" << endl;
+   	 cout << " Done " 
+   	 << " \n Time since start " << (time(0) - startTime)/60.0
+   	 << " min." << endl;
+   	 cout << "==============================================" << endl; 
 }
