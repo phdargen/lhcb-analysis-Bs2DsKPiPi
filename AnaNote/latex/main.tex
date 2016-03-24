@@ -28,6 +28,7 @@
 
 \input{preamble}
 \usepackage{longtable} % only for template; not usually to be used in PAPERs
+\usepackage{paralist}
 
 \begin{document}
 
@@ -40,9 +41,9 @@
 % %%%%%%% CHOOSE TITLE PAGE--------
 %\onecolumn
 %\input{title-LHCb-INT}
-%\input{title-LHCb-ANA}
+\input{title-LHCb-ANA}
 %\input{title-LHCb-CONF}
-\input{title-LHCb-PAPER}
+%\input{title-LHCb-PAPER}
 %\twocolumn
 % %%%%%%%%%%%%% ---------
 
@@ -53,8 +54,8 @@
 %%%%%  Table of Content   %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Uncomment next 2 lines if desired
-%\tableofcontents
-%\cleardoublepage
+\tableofcontents
+\cleardoublepage
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -79,11 +80,17 @@
 
 \input{introduction}
 
-\input{principles}
+\input{data}
 
-\input{layout}
+\input{monteCarlo}
 
-\input{typography}
+\input{selection}
+
+%\input{principles}
+
+%\input{layout}
+
+%\input{typography}
 
 \input{detector}
 
@@ -94,7 +101,7 @@
 \input{supplementary}
 
 % Do not include this in analysis note and conference reports
-\input{acknowledgements}
+%\input{acknowledgements}
 
 \input{appendix}
 

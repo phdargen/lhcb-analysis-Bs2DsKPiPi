@@ -1,0 +1,156 @@
+\section{Selection}
+
+A twofold approach is used to isolate the $\Bs\to\Ds\kaon\pion\pion$ from data passing the stripping line. 
+First, further one-dimensional cuts are applied to reduce the level of combinatorial background and to veto some specific physical background. 
+After that, a multivariate analysis selection is performed, combining multiple variables to train a neural network and create a powerfull discriminator between signal and background. 
+
+\subsection{Cut-based selection}
+
+In order to minimize the contribution of combinatorial background to our samples, we apply the following cuts to the b-hadron:
+
+\begin{enumerate}[(i)]
+
+\item DIRA $>$ 0.99994
+
+\item min IP $\chi^{2}$ $<$ 20 to any PV
+
+\item FD $\chi^{2}$ $>$ 100 to any PV
+
+\item Vertex $\chi^{2}$/nDoF $<$ 8 
+
+\end{enumerate}    
+
+
+Additionaly, we veto various physical beackgrounds, which have either the same final state as our signal decay, or can contribute via a single miss-identification of $\kaon\to\pion$ or $\kaon\to\proton$:
+
+\begin{itemize}
+
+\item $\Bs\to\Dsp\Dsm$ : $|M(\kaon\pion\pion) - m_{\Ds}| > 20 \mevcc$ 
+
+\item $\Bs\to\Ds\kaon\kaon\pion$ : $\pim$ $\dllkpi$ $<$ 5 
+
+\item $\Bz\to\Dp(\to\Kp\pim\pip)\kaon\pion\pion$ : possible with single miss-ID of $\Kp\rightarrow\pip$, vetoed by changing mass hypothesis and recompute $|M(\Kp\pim\pip) - m_{Dp}|$ $>$ 20 $\mevcc$, 
+or the $\Kp$ has to fulfill $\dllkpi$ $>$ 10
+
+\item $\Lb\to\Lc(\to\proton\Km\pip)\kaon\pion\pion$ : possible with single miss-ID of $\Kp\rightarrow\proton$, vetoed by changing mass hypothesis and recompute $M(\proton\Km\pip) - m_{\Lc}$ $>$ 15 $\mevcc$, 
+or the $\Kp$ has to fulfill $\mathrm{DLL}_{\kaon\proton}$ $>$ 0  
+
+\end{itemize} 
+
+
+All signal candidates for the branching ratio measurement are reconstructed via the $\Ds\to\Kp\Km\pip$ channel. This decay can either proceed via the narrow $\phiz$ resonance, the broader $\Kstarz$ resonance, or non-resonant.
+Depending on the process being resonant or not, we apply additional PID requirements:
+
+\begin{enumerate}
+
+\item resonant case, no additional PID requirements:
+\begin{enumerate}
+\item $\Dsp\to\phiz\pip$, with $|M(\Kp\Km) - m_{\phiz}|$ $<$ 20 $\mevcc$  
+\item $\Dsp\to\Kstarzb\Kp$, with  $|M(\Km\pip) -m_{\Kstarz}$ $<$ 75 $\mevcc$
+\end{enumerate}
+
+\item non-resonant case: $\dllkpi$ $>$ 5 for kaons
+
+\end{enumerate}
+
+
+%%%
+
+
+\subsection{Multivariate stage}
+
+We use TMVA \cite{Hocker:2007ht} to train a multivariate descriminator, which is used to further improve the signal to background ratio. The 17 variables used for the training are:
+
+\begin{itemize} 
+
+\item max(ghostProb) over all tracks
+
+\item cone($\pt$) asymmetrie of every track
+
+\item min(IP$\chi^{2}$) over the $X_{s}$ daughters
+
+\item max(DOCA) over all pairs of $X_{s}$ daughters
+
+\item min(IP$\chi^{2}$) over the $\Ds$ daughters
+
+\item $\Ds$ DIRA
+
+\item $\Ds$ FD significance
+
+\item max($\cos(\Ds h_{i})$), where $\cos(\Ds h_{i})$ is the cosine of the angle between the $\Ds$ and another track i in the plane transverse to the beam
+
+\item $\Bs$ IP$\chi^{2}$, FD$\chi^{2}$ and Vertex $\chi^{2}$
+
+\end{itemize}
+
+Various classifiers were investigated in order to select the most efficient discriminator. As the result a boosted decision tree with gradient boost (BDTG) is chosen as nominal classifier. 
+We use truth-matched Monte Carlo (MC), taken from the mass region $\pm 60 \mevcc$ around the nominal $\Bs$ mass, as signal input. 
+Those simulated signal candidates are required to pass the same trigger and stripping requirements, that were used to select the data samples. 
+For the background we use events from the high mass sideband ($m_{\Bs candidate}$ $>$ 5600 $\mevcc$) of our data samples. \newline
+The distributions of the input variables for signal and background are shown in Fig. \ref{fig:BDT_Input_1}. 
+
+\begin{figure}[h]
+%\vspace*{-0.4cm}
+\includegraphics[height=6.cm,width=0.95\textwidth]{figs/BDT_Input_1.pdf}
+\includegraphics[height=6.cm,width=0.95\textwidth]{figs/BDT_Input_2.pdf}
+\includegraphics[height=6.cm,width=0.95\textwidth]{figs/BDT_Input_3.pdf}
+%\vspace*{-0.2cm}
+\caption{Distributions of the input variables used in the BDTG training. The background is shown as red hatched, while the signal is depicted solid blue.}
+\label{fig:BDT_Input_1}
+\end{figure}
+
+
+The relative importance of the input variables for the BDTG training is summarized in Table \ref{table:InputVars}.
+
+\begin{table}[h]
+\centering
+ \begin{tabular}{l c}
+Variable & relative importance [$\%$]\\
+  \hline
+max\_ghostProb & 14.93\\
+log\_Bs\_IPCHI2\_OWNPV & 10.91\\
+log\_DsDaughters\_min\_IPCHI2 & 10.67\\
+K\_plus\_ptasy\_1.00 & 9.60\\
+Bs\_ENDVERTEX\_CHI2 & 9.38\\
+K\_minus\_fromDs\_ptasy\_1.00 & 8.99\\
+log\_Ds\_FDCHI2\_ORIVX & 8.78\\
+log\_XsDaughters\_min\_IPCHI2 & 7.23\\
+K\_plus\_fromDs\_ptasy\_1.00 & 6.62\\
+Xs\_max\_DOCA & 4.13\\
+log\_Bs\_DIRA & 3.36\\
+pi\_minus\_ptasy\_1.00 & 1.63\\
+pi\_minus\_fromDs\_ptasy\_1.00 & 1.46\\
+cos(Ds h) & 0.93\\
+log\_Bs\_FDCHI2\_OWNPV & 0.69\\
+pi\_plus\_ptasy\_1.00 & 0.43\\
+log\_Ds\_DIRA & 0.27\\
+\end{tabular}
+\caption{Summary of the relative importance of each variable in the training of the BDTG.}
+\label{table:InputVars}
+\end{table}
+
+
+ 
+The BDTG output distribution for test and training samples is shown in Fig \ref{fig:BDT_Response}. No sign of overtraining is observed. 
+
+\begin{figure}[h]
+%\vspace*{-0.4cm}
+\includegraphics[height=9.cm,width=0.80\textwidth]{figs/BDT_Response.pdf}
+%\vspace*{-0.2cm}
+\caption{BDTG output classifier distribution for (blue) signal and (red) background. The response of an independent test sample is overlaid.}
+\label{fig:BDT_Response}
+\end{figure}
+
+
+The efficiency curves as a function of the cut value are shown in Fig. \ref{fig:BDT_Efficiency}.
+
+\begin{figure}[h]
+%\vspace*{-0.4cm}
+\includegraphics[height=9.cm,width=0.80\textwidth]{figs/BDT_CutEfficiency.pdf}
+%\vspace*{-0.2cm}
+\caption{Efficiency and purity curves for (blue) signal, (red) background and the (green) FoM curve, as a function of the chosen cut value.}
+\label{fig:BDT_Efficiency}
+\end{figure}       
+
+
+Something about how we determine the optimal cut IS MISSING HERE.
