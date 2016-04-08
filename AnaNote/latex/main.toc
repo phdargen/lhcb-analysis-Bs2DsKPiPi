@@ -5,57 +5,59 @@
 \contentsline {subsection}{\numberline {4.1}Cut-based selection}{2}{subsection.4.1}
 \contentsline {subsection}{\numberline {4.2}Multivariate stage}{3}{subsection.4.2}
 \contentsline {section}{\numberline {5}Detector and simulation}{4}{section.5}
-\contentsline {section}{\numberline {6}Figures}{9}{section.6}
-\contentsline {section}{\numberline {7}References}{10}{section.7}
-\contentsline {section}{\numberline {8}Inclusion of supplementary material}{11}{section.8}
-\contentsline {section}{\numberline {A}Standard References}{13}{appendix.A}
-\contentsline {section}{\numberline {B}Standard symbols}{20}{appendix.B}
-\contentsline {section}{\numberline {C}List of all symbols}{21}{appendix.C}
-\contentsline {subsection}{\numberline {C.1}Experiments}{21}{subsection.C.1}
-\contentsline {subsubsection}{\numberline {C.1.1}LHCb sub-detectors and sub-systems}{21}{subsubsection.C.1.1}
-\contentsline {subsection}{\numberline {C.2}Particles}{21}{subsection.C.2}
-\contentsline {subsubsection}{\numberline {C.2.1}Leptons}{21}{subsubsection.C.2.1}
-\contentsline {subsubsection}{\numberline {C.2.2}Gauge bosons and scalars}{21}{subsubsection.C.2.2}
-\contentsline {subsubsection}{\numberline {C.2.3}Quarks}{22}{subsubsection.C.2.3}
-\contentsline {subsubsection}{\numberline {C.2.4}Light mesons}{22}{subsubsection.C.2.4}
-\contentsline {subsubsection}{\numberline {C.2.5}Heavy mesons}{22}{subsubsection.C.2.5}
-\contentsline {subsubsection}{\numberline {C.2.6}Onia}{23}{subsubsection.C.2.6}
-\contentsline {subsubsection}{\numberline {C.2.7}Baryons}{23}{subsubsection.C.2.7}
-\contentsline {subsection}{\numberline {C.3}Physics symbols}{23}{subsection.C.3}
-\contentsline {subsubsection}{\numberline {C.3.1}Decays}{23}{subsubsection.C.3.1}
-\contentsline {subsubsection}{\numberline {C.3.2}Lifetimes}{23}{subsubsection.C.3.2}
-\contentsline {subsubsection}{\numberline {C.3.3}Masses}{23}{subsubsection.C.3.3}
-\contentsline {subsubsection}{\numberline {C.3.4}EW theory, groups}{24}{subsubsection.C.3.4}
-\contentsline {subsubsection}{\numberline {C.3.5}QCD parameters}{24}{subsubsection.C.3.5}
-\contentsline {subsubsection}{\numberline {C.3.6}CKM, CP violation}{24}{subsubsection.C.3.6}
-\contentsline {subsubsection}{\numberline {C.3.7}Oscillations}{24}{subsubsection.C.3.7}
-\contentsline {subsubsection}{\numberline {C.3.8}Tagging}{24}{subsubsection.C.3.8}
-\contentsline {subsubsection}{\numberline {C.3.9}Key decay channels}{25}{subsubsection.C.3.9}
-\contentsline {subsubsection}{\numberline {C.3.10}Rare decays}{25}{subsubsection.C.3.10}
-\contentsline {subsubsection}{\numberline {C.3.11}Wilson coefficients and operators}{25}{subsubsection.C.3.11}
-\contentsline {subsubsection}{\numberline {C.3.12}Charm}{25}{subsubsection.C.3.12}
-\contentsline {subsubsection}{\numberline {C.3.13}QM}{25}{subsubsection.C.3.13}
-\contentsline {subsection}{\numberline {C.4}Units}{25}{subsection.C.4}
-\contentsline {subsubsection}{\numberline {C.4.1}Energy and momentum}{25}{subsubsection.C.4.1}
-\contentsline {subsubsection}{\numberline {C.4.2}Distance and area}{26}{subsubsection.C.4.2}
-\contentsline {subsubsection}{\numberline {C.4.3}Time }{26}{subsubsection.C.4.3}
-\contentsline {subsubsection}{\numberline {C.4.4}Temperature}{26}{subsubsection.C.4.4}
-\contentsline {subsubsection}{\numberline {C.4.5}Material lengths, radiation}{26}{subsubsection.C.4.5}
-\contentsline {subsubsection}{\numberline {C.4.6}Uncertainties}{26}{subsubsection.C.4.6}
-\contentsline {subsubsection}{\numberline {C.4.7}Maths}{26}{subsubsection.C.4.7}
-\contentsline {subsection}{\numberline {C.5}Kinematics}{27}{subsection.C.5}
-\contentsline {subsubsection}{\numberline {C.5.1}Energy, Momenta}{27}{subsubsection.C.5.1}
-\contentsline {subsubsection}{\numberline {C.5.2}PID}{27}{subsubsection.C.5.2}
-\contentsline {subsubsection}{\numberline {C.5.3}Geometry}{27}{subsubsection.C.5.3}
-\contentsline {subsubsection}{\numberline {C.5.4}Accelerator}{27}{subsubsection.C.5.4}
-\contentsline {subsection}{\numberline {C.6}Software}{27}{subsection.C.6}
-\contentsline {subsubsection}{\numberline {C.6.1}Programs}{27}{subsubsection.C.6.1}
-\contentsline {subsubsection}{\numberline {C.6.2}Languages}{27}{subsubsection.C.6.2}
-\contentsline {subsubsection}{\numberline {C.6.3}Data processing}{27}{subsubsection.C.6.3}
-\contentsline {subsection}{\numberline {C.7}Detector related}{28}{subsection.C.7}
-\contentsline {subsubsection}{\numberline {C.7.1}Detector technologies}{28}{subsubsection.C.7.1}
-\contentsline {subsubsection}{\numberline {C.7.2}Detector components, electronics}{28}{subsubsection.C.7.2}
-\contentsline {subsubsection}{\numberline {C.7.3}Chemical symbols}{28}{subsubsection.C.7.3}
-\contentsline {subsection}{\numberline {C.8}Special Text }{28}{subsection.C.8}
-\contentsline {section}{\numberline {D}Supplementary material for LHCb-PAPER-20XX-YYY}{29}{appendix.D}
-\contentsline {section}{References}{30}{figure.8}
+\contentsline {section}{\numberline {6}Efficiency corrections}{9}{section.6}
+\contentsline {subsection}{\numberline {6.1}Relative efficiency for BR measurement}{9}{subsection.6.1}
+\contentsline {section}{\numberline {7}Figures}{9}{section.7}
+\contentsline {section}{\numberline {8}References}{11}{section.8}
+\contentsline {section}{\numberline {9}Inclusion of supplementary material}{13}{section.9}
+\contentsline {section}{\numberline {A}Standard References}{14}{appendix.A}
+\contentsline {section}{\numberline {B}Standard symbols}{21}{appendix.B}
+\contentsline {section}{\numberline {C}List of all symbols}{22}{appendix.C}
+\contentsline {subsection}{\numberline {C.1}Experiments}{22}{subsection.C.1}
+\contentsline {subsubsection}{\numberline {C.1.1}LHCb sub-detectors and sub-systems}{22}{subsubsection.C.1.1}
+\contentsline {subsection}{\numberline {C.2}Particles}{22}{subsection.C.2}
+\contentsline {subsubsection}{\numberline {C.2.1}Leptons}{22}{subsubsection.C.2.1}
+\contentsline {subsubsection}{\numberline {C.2.2}Gauge bosons and scalars}{22}{subsubsection.C.2.2}
+\contentsline {subsubsection}{\numberline {C.2.3}Quarks}{23}{subsubsection.C.2.3}
+\contentsline {subsubsection}{\numberline {C.2.4}Light mesons}{23}{subsubsection.C.2.4}
+\contentsline {subsubsection}{\numberline {C.2.5}Heavy mesons}{23}{subsubsection.C.2.5}
+\contentsline {subsubsection}{\numberline {C.2.6}Onia}{24}{subsubsection.C.2.6}
+\contentsline {subsubsection}{\numberline {C.2.7}Baryons}{24}{subsubsection.C.2.7}
+\contentsline {subsection}{\numberline {C.3}Physics symbols}{24}{subsection.C.3}
+\contentsline {subsubsection}{\numberline {C.3.1}Decays}{24}{subsubsection.C.3.1}
+\contentsline {subsubsection}{\numberline {C.3.2}Lifetimes}{24}{subsubsection.C.3.2}
+\contentsline {subsubsection}{\numberline {C.3.3}Masses}{24}{subsubsection.C.3.3}
+\contentsline {subsubsection}{\numberline {C.3.4}EW theory, groups}{25}{subsubsection.C.3.4}
+\contentsline {subsubsection}{\numberline {C.3.5}QCD parameters}{25}{subsubsection.C.3.5}
+\contentsline {subsubsection}{\numberline {C.3.6}CKM, CP violation}{25}{subsubsection.C.3.6}
+\contentsline {subsubsection}{\numberline {C.3.7}Oscillations}{25}{subsubsection.C.3.7}
+\contentsline {subsubsection}{\numberline {C.3.8}Tagging}{25}{subsubsection.C.3.8}
+\contentsline {subsubsection}{\numberline {C.3.9}Key decay channels}{26}{subsubsection.C.3.9}
+\contentsline {subsubsection}{\numberline {C.3.10}Rare decays}{26}{subsubsection.C.3.10}
+\contentsline {subsubsection}{\numberline {C.3.11}Wilson coefficients and operators}{26}{subsubsection.C.3.11}
+\contentsline {subsubsection}{\numberline {C.3.12}Charm}{26}{subsubsection.C.3.12}
+\contentsline {subsubsection}{\numberline {C.3.13}QM}{26}{subsubsection.C.3.13}
+\contentsline {subsection}{\numberline {C.4}Units}{26}{subsection.C.4}
+\contentsline {subsubsection}{\numberline {C.4.1}Energy and momentum}{26}{subsubsection.C.4.1}
+\contentsline {subsubsection}{\numberline {C.4.2}Distance and area}{27}{subsubsection.C.4.2}
+\contentsline {subsubsection}{\numberline {C.4.3}Time }{27}{subsubsection.C.4.3}
+\contentsline {subsubsection}{\numberline {C.4.4}Temperature}{27}{subsubsection.C.4.4}
+\contentsline {subsubsection}{\numberline {C.4.5}Material lengths, radiation}{27}{subsubsection.C.4.5}
+\contentsline {subsubsection}{\numberline {C.4.6}Uncertainties}{27}{subsubsection.C.4.6}
+\contentsline {subsubsection}{\numberline {C.4.7}Maths}{27}{subsubsection.C.4.7}
+\contentsline {subsection}{\numberline {C.5}Kinematics}{28}{subsection.C.5}
+\contentsline {subsubsection}{\numberline {C.5.1}Energy, Momenta}{28}{subsubsection.C.5.1}
+\contentsline {subsubsection}{\numberline {C.5.2}PID}{28}{subsubsection.C.5.2}
+\contentsline {subsubsection}{\numberline {C.5.3}Geometry}{28}{subsubsection.C.5.3}
+\contentsline {subsubsection}{\numberline {C.5.4}Accelerator}{28}{subsubsection.C.5.4}
+\contentsline {subsection}{\numberline {C.6}Software}{28}{subsection.C.6}
+\contentsline {subsubsection}{\numberline {C.6.1}Programs}{28}{subsubsection.C.6.1}
+\contentsline {subsubsection}{\numberline {C.6.2}Languages}{28}{subsubsection.C.6.2}
+\contentsline {subsubsection}{\numberline {C.6.3}Data processing}{28}{subsubsection.C.6.3}
+\contentsline {subsection}{\numberline {C.7}Detector related}{29}{subsection.C.7}
+\contentsline {subsubsection}{\numberline {C.7.1}Detector technologies}{29}{subsubsection.C.7.1}
+\contentsline {subsubsection}{\numberline {C.7.2}Detector components, electronics}{29}{subsubsection.C.7.2}
+\contentsline {subsubsection}{\numberline {C.7.3}Chemical symbols}{29}{subsubsection.C.7.3}
+\contentsline {subsection}{\numberline {C.8}Special Text }{29}{subsection.C.8}
+\contentsline {section}{\numberline {D}Supplementary material for LHCb-PAPER-20XX-YYY}{30}{appendix.D}
+\contentsline {section}{References}{31}{figure.9}

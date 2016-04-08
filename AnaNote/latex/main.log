@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  24 MAR 2016 14:56
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  8 APR 2016 11:16
 entering extended mode
  %&-line parsing enabled.
 **main
@@ -386,7 +386,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 (/usr/share/texmf/tex/latex/microtype/mt-eur.cfg
 File: mt-eur.cfg 2006/07/31 v1.1 microtype config. file: AMS Euler Roman (RS)
 )
-<lhcb-logo.pdf, id=251, 86.3225pt x 59.22125pt>
+<lhcb-logo.pdf, id=259, 86.3225pt x 59.22125pt>
 File: lhcb-logo.pdf Graphic file (type pdf)
  <use lhcb-logo.pdf> [1
 
@@ -425,15 +425,15 @@ l.34
 <to be read again> 
                    \relax 
 l.91 
-      [3] <figs/BDT_Input_1.pdf, id=374, 569.12625pt x 296.10625pt>
+      [3] <figs/BDT_Input_1.pdf, id=384, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_1.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_1.pdf>
-<figs/BDT_Input_2.pdf, id=375, 569.12625pt x 296.10625pt>
+<figs/BDT_Input_2.pdf, id=385, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_2.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_2.pdf>
-<figs/BDT_Input_3.pdf, id=376, 569.12625pt x 296.10625pt>
+<figs/BDT_Input_3.pdf, id=386, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_3.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_3.pdf>
@@ -449,14 +449,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 94--98
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figs/BDT_Response.pdf, id=379, 569.12625pt x 421.575pt>
+<figs/BDT_Response.pdf, id=389, 569.12625pt x 421.575pt>
 File: figs/BDT_Response.pdf Graphic file (type pdf)
 
 <use figs/BDT_Response.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figs/BDT_CutEfficiency.pdf, id=381, 569.12625pt x 421.575pt>
+<figs/BDT_CutEfficiency.pdf, id=391, 569.12625pt x 421.575pt>
 File: figs/BDT_CutEfficiency.pdf Graphic file (type pdf)
 
 <use figs/BDT_CutEfficiency.pdf>
@@ -477,7 +477,11 @@ rd spec-trom-e-ter cov-er-ing the
 [5 <./figs/BDT_Input_1.pdf, page is rotated 90 degrees> <./figs/BDT_Input_2.pdf
 , page is rotated 90 degrees> <./figs/BDT_Input_3.pdf, page is rotated 90 degre
 es>] [6 <./figs/BDT_Response.pdf, page is rotated 90 degrees>] [7 <./figs/BDT_C
-utEfficiency.pdf, page is rotated 90 degrees>]) (./figures.tex [8]
+utEfficiency.pdf, page is rotated 90 degrees>]) (./efficiency.tex [8]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) (./figures.tex
 Underfull \hbox (badness 7777) in paragraph at lines 11--17
 \OT1/cmr/m/n/12 (+20) A stan-dard [] style file for use in pro-duc-tion of fig-
 ures in []
@@ -497,16 +501,16 @@ LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
 (Font)              for symbol `textbackslash' on input line 19.
 
-<./figs/Example1DPlot-python-1.pdf, id=667, 569.12625pt x 390.45876pt>
+<./figs/Example1DPlot-python-1.pdf, id=679, 569.12625pt x 390.45876pt>
 File: ./figs/Example1DPlot-python-1.pdf Graphic file (type pdf)
 
 <use ./figs/Example1DPlot-python-1.pdf>
-<./figs/Example1DPlot-python-1_sim.pdf, id=668, 569.12625pt x 390.45876pt>
+<./figs/Example1DPlot-python-1_sim.pdf, id=680, 569.12625pt x 390.45876pt>
 File: ./figs/Example1DPlot-python-1_sim.pdf Graphic file (type pdf)
 
-<use ./figs/Example1DPlot-python-1_sim.pdf> [9 <./figs/Example1DPlot-python-1.p
-df, page is rotated 90 degrees> <./figs/Example1DPlot-python-1_sim.pdf, page is
- rotated 90 degrees>]) (./reference.tex [10]
+<use ./figs/Example1DPlot-python-1_sim.pdf> [9] [10 <./figs/Example1DPlot-pytho
+n-1.pdf, page is rotated 90 degrees> <./figs/Example1DPlot-python-1_sim.pdf, pa
+ge is rotated 90 degrees>]) (./reference.tex [11]
 Underfull \hbox (badness 4805) in paragraph at lines 63--73
 []\OT1/cmr/m/n/12 (+20) The \OT1/cmtt/m/n/12 mciteplus \OT1/cmr/m/n/12 (+20) [[
 ]22[]] pack-age is used to en-able mul-ti-ple ref-er-ences to
@@ -518,22 +522,23 @@ Underfull \hbox (badness 6032) in paragraph at lines 63--73
 ex-am-ple
  []
 
-) (./supplementary.tex [11]) (./appendix.tex [12]
+) (./supplementary.tex [12]) (./appendix.tex [13]pdfTeX warning (ext4): destina
+tion with the same identifier (name{table.4}) has been already used, duplicate 
+ignored
+<to be read again> 
+                   \relax 
+l.30   \begin{longtable}{llc}
+                             
 Underfull \vbox (badness 10000) detected at line 56
  []
 
-[13
+[14
 
-]pdfTeX warning (ext4): destination with the same identifier (name{table.4}) ha
-s been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.149 \begin{longtable}{ll}
-                           
+]
 Underfull \vbox (badness 10000) detected at line 200
  []
 
-[14] [15] [16] [17]
+[15] [16] [17] [18]
 Underfull \hbox (badness 5490) in paragraph at lines 493--493
 [][][]\OT1/cmr/m/n/10 (+20) If you cite the gamma com-bi-na-tion, al-ways also 
 cite the lat-est gamma pa-per as
@@ -543,31 +548,31 @@ cite the lat-est gamma pa-per as
 Underfull \vbox (badness 10000) detected at line 528
  []
 
-[18] [19]
+[19] [20]
 
-LaTeX Warning: Reference `sec:typography' on page 20 undefined on input line 63
+LaTeX Warning: Reference `sec:typography' on page 21 undefined on input line 63
 6.
 
-(./lhcb-symbols-list.tex [20] [21] [22] [23] [24]
+(./lhcb-symbols-list.tex [21] [22] [23] [24] [25]
 Overfull \hbox (42.84633pt too wide) in alignment at lines 199--204
 [] [] [] [] [] [] 
  []
 
-[25] [26] [27])) (./supplementary-app.tex [28]
+[26] [27] [28])) (./supplementary-app.tex [29]
 
 Package pdftex.def Warning: Option `bb' does not make sense,
 (pdftex.def)                using `viewport' instead on input line 16.
 
-<./figs/Roger-plot.pdf, id=1815, 614.295pt x 794.97pt>
+<./figs/Roger-plot.pdf, id=1834, 614.295pt x 794.97pt>
 File: ./figs/Roger-plot.pdf Graphic file (type pdf)
 
-<use ./figs/Roger-plot.pdf> [29
+<use ./figs/Roger-plot.pdf> [30
 
  <./figs/Roger-plot.pdf
 
 pdfTeX warning: pdflatex (file ./figs/Roger-plot.pdf): PDF inclusion: Page Grou
 p detected which pdfTeX can't handle. Ignoring it.
->]) (./main.bbl [30
+>]) (./main.bbl [31
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 235--242
@@ -575,8 +580,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 235--242
 ul-ti-c-i-ta-tions\OT1/cmr/m/n/12 (+20) ,
  []
 
-[31] [32] [33] [34] [35] [36] [37] [38] [39] [40] [41] [42] [43] [44] [45]
-[46] [47]
+[32] [33] [34] [35] [36] [37] [38] [39] [40] [41] [42] [43] [44] [45] [46]
+[47] [48]
 Underfull \hbox (badness 2237) in paragraph at lines 3208--3220
 \OML/cmm/m/it/12 D[]K[]^^Y[]^^Y[]$ \OT1/cmr/m/it/12 (+20) and $[][] \OMS/cmtt/m
 /n/12 ! \OML/cmm/m/it/12 D[]\OT1/cmr/m/n/12 (+20) (2536)[]\OML/cmm/m/it/12 ^^Y[
@@ -584,13 +589,13 @@ Underfull \hbox (badness 2237) in paragraph at lines 3208--3220
 0) (2012) 112005[],
  []
 
-[48] [49] [50] [51] [52] [53] [54] [55] [56] [57] [58]
+[49] [50] [51] [52] [53] [54] [55] [56] [57] [58] [59]
 Underfull \hbox (badness 4713) in paragraph at lines 4989--4999
 []\OT1/cmr/m/n/12 (+20) LHCb col-lab-o-ra-tion, \OT1/cmr/m/it/12 (+20) Mea-sure
 -ment of the Ra-tio of Branch-ing Frac-tions
  []
 
-[59] [60]) [61] (./LHCb_authorlist.tex) [62] (./main.aux)
+[60] [61]) [62] (./LHCb_authorlist.tex) [63] (./main.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -599,10 +604,10 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 8722 strings out of 256216
- 141201 string characters out of 1917072
- 217379 words of memory out of 1500000
- 11113 multiletter control sequences out of 10000+200000
+ 8736 strings out of 256216
+ 141363 string characters out of 1917072
+ 217575 words of memory out of 1500000
+ 11118 multiletter control sequences out of 10000+200000
  22715 words of font info for 114 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
  39i,14n,46p,731b,1441s stack positions out of 5000i,500n,6000p,200000b,15000s
@@ -623,9 +628,9 @@ type1/bluesky/cm/cmti10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti12.pfb
 e1/bluesky/cm/cmti8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmtt10.pfb></u
 sr/share/texmf/fonts/type1/bluesky/cm/cmtt12.pfb></usr/share/texmf/fonts/type1/
 bluesky/ams/eurm10.pfb></usr/share/texmf/fonts/type1/public/cmex/fmex8.pfb>
-Output written on main.pdf (66 pages, 1085064 bytes).
+Output written on main.pdf (67 pages, 1093828 bytes).
 PDF statistics:
- 3160 PDF objects out of 3580 (max. 8388607)
- 639 named destinations out of 1000 (max. 131072)
- 30252 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 3181 PDF objects out of 3580 (max. 8388607)
+ 645 named destinations out of 1000 (max. 131072)
+ 30268 words of extra memory for PDF output out of 35830 (max. 10000000)
 
