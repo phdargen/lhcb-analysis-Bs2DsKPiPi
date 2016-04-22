@@ -1,4 +1,5 @@
 \section{Efficiency corrections}
+\label{sec: efficiency}
 
 Several relative efficiency corrections are needed to measure the branching fraction of $\Bs\to\Ds\kaon\pion\pion$ with respect to $\Bs\to\Ds\pion\pion\pion$. Precise knowledge of the efficiency related to the detector acceptance, PID requirements, used trigger lines and offline selections are crucial for both, the determination of $\gamma$ and the branching ratio measurement.
 
@@ -18,7 +19,8 @@ where $\epsilon = \frac{\epsilon_{Norm}}{\epsilon_{Sig}}$ is the ratio of the ef
 
 \item $\epsilon^{sel}_{rel}$: The relative selection efficiency due to trigger and offline requirements. 
 
-\item $\epsilon^{pid}_{rel}$: The relative PID efficiency due to the identification likelihood requirements for tracks from both modes. This is evaluated using WHATEVER PIDCALIB MAGIC.
+\item $\epsilon^{pid}_{rel}$: The relative PID efficiency due to the identification likelihood requirements for tracks from both modes. This is evaluated using efficiencies from $\D^{*+}\to D^{0}(\Km\pip)\pip$ calibration data, 
+which is weighted by the expected momentum (p) distribution taken from simulation.
 
 \end{itemize}
 
@@ -31,22 +33,22 @@ where $\epsilon = \frac{\epsilon_{Norm}}{\epsilon_{Sig}}$ is the ratio of the ef
 \end{equation} 
 
 where $\mathcal{Y}(x)$ represents the yield of the respective channel. \newline
-Some further bla bla.
+The single efficiencies, as well as the total selection efficiency, for the signal and normalization channel, is given in Table \ref{tab: effTab}.
 
-\begin{table}[h]
+\begin{table}[h!]
 \centering
 \begin{tabular}{l c c}
 Efficiency ($\%$) & $\Bs\to\Ds\kaon\pion\pion$ & $\Bs\to\Ds\pion\pion\pion$\\
 \hline
-2011 $\epsilon^{acc}$ & xxx & yyy\\
-2012 $\epsilon^{acc}$ & xxx & yyy\\
-2011 $\epsilon^{sel}$ & 0.893 & yyy\\
-2012 $\epsilon^{sel}$ & 0.794 & yyy\\
+2011 $\epsilon^{acc}$ & 15.84 $\pm$ 0.04 & 9.85 $\pm$ 0.04\\
+2012 $\epsilon^{acc}$ & 16.11 $\pm$ 0.04 & yyy\\
+2011 $\epsilon^{sel}$ & 0.877 $\pm$ 0.013& 0.980\\
+2012 $\epsilon^{sel}$ & 0.801 $\pm$ 0.009& yyy\\
 2011 $\epsilon^{pid}$ & 74.88 $\pm$ 0.85 & 92.64 $\pm$ 0.47\\
 2012 $\epsilon^{pid}$ & 74.30 $\pm$ 0.85 & -\\
 \hline
-2011 total $\epsilon$ & z & zz\\
-2012 total $\epsilon$ & z & zz\\
+2011 total $\epsilon$ & 0.110 & zz\\
+2012 total $\epsilon$ & 0.101 & zz\\
 \hline
 \end{tabular}
 \caption{Efficiencies due to the detector accpetance, selection requirements and PID cuts for the signal and normalization mode. All values are obtained using simulated events.}

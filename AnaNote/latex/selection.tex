@@ -18,6 +18,8 @@ In order to minimize the contribution of combinatorial background to our samples
 
 \item Vertex $\chi^{2}$/nDoF $<$ 8 
 
+\item ($Z_{\Ds}-Z_{\Bs}$) $>$ 0 , where $Z_{M}$ is the z-component of the position $\vec{x}$ of the decay vertex for the $\Bs$/$\Ds$ meson
+
 \end{enumerate}    
 
 
@@ -28,7 +30,7 @@ Additionaly, we veto various physical beackgrounds, which have either the same f
 \item $\Bs\to\Dsp\Dsm$ : $|M(\kaon\pion\pion) - m_{\Ds}| > 20 \mevcc$ 
 
 \item $\Bs\to\Ds\kaon\kaon\pion$ : $\pim$ $\dllkpi$ $<$ 5 
-
+i
 \item $\Bz\to\Dp(\to\Kp\pim\pip)\kaon\pion\pion$ : possible with single miss-ID of $\Kp\rightarrow\pip$, vetoed by changing mass hypothesis and recompute $|M(\Kp\pim\pip) - m_{Dp}|$ $>$ 20 $\mevcc$, 
 or the $\Kp$ has to fulfill $\dllkpi$ $>$ 10
 
@@ -49,7 +51,7 @@ Depending on the process being resonant or not, we apply additional PID requirem
 \item $\Dsp\to\Kstarzb\Kp$, with  $|M(\Km\pip) -m_{\Kstarz}$ $<$ 75 $\mevcc$
 \end{enumerate}
 
-\item non-resonant case: $\dllkpi$ $>$ 5 for kaons
+\item non-resonant case: $\dllkpi$ $>$ 0 for kaons
 
 \end{enumerate}
 
@@ -129,28 +131,36 @@ log\_Ds\_DIRA & 0.27\\
 \label{table:InputVars}
 \end{table}
 
-
  
 The BDTG output distribution for test and training samples is shown in Fig \ref{fig:BDT_Response}. No sign of overtraining is observed. 
 
 \begin{figure}[h]
 %\vspace*{-0.4cm}
-\includegraphics[height=9.cm,width=0.80\textwidth]{figs/BDT_Response.pdf}
+\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/BDT_Response.pdf}
 %\vspace*{-0.2cm}
 \caption{BDTG output classifier distribution for (blue) signal and (red) background. The response of an independent test sample is overlaid.}
 \label{fig:BDT_Response}
 \end{figure}
 
+       
+We determine the optimal cut value by maximizing the figure of merit $S/\sqrt{S+B}$ where S is the signal yield and B the background yield in the signal region, defined to be within $\pm$50 $\mevcc$ of the nominal $\Bs$ mass. 
+To avoid a bias in the determination of the branching fraction, we determine S and B using our normalizaton channel. 
+All trigger, stripping and additional selections described in this and the previous chapters are applied to the $\Bs\to\Ds\pion\pion\pion$ data samples. 
+After that, a fit with a gaussian signal model and an exponential function to model combinatorial background is performed to the invariant mass distribution of $\Bs\to\Ds\pion\pion\pion$ candidates. 
+From this fit we can estimate the number of signal events in our normalization channel. 
+Mulitplying that number with the PDG branching fraction of $\frac{\mathcal{B}(\Bs\to\Ds\kaon\pion\pion)}{\mathcal{B}(\Bs\to\Ds\pion\pion\pion)}$ and the ratio of efficiencies discussed in Sec. \ref{sec: efficiency} allows us to estimate the expected number of $\Bs\to\Ds\kaon\pion\pion$ signals. The number of background events can then be computed as
+
+\begin{equation}
+ N_{bkg}=N_{all}-N_{sig}|_{m_{\Bs\pm50\mevcc}}.   
+\end{equation}
 
 The efficiency curves as a function of the cut value are shown in Fig. \ref{fig:BDT_Efficiency}.
 
+
 \begin{figure}[h]
 %\vspace*{-0.4cm}
-\includegraphics[height=9.cm,width=0.80\textwidth]{figs/BDT_CutEfficiency.pdf}
+\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/BDT_CutEfficiency.pdf}
 %\vspace*{-0.2cm}
 \caption{Efficiency and purity curves for (blue) signal, (red) background and the (green) FoM curve, as a function of the chosen cut value.}
 \label{fig:BDT_Efficiency}
-\end{figure}       
-
-
-Something about how we determine the optimal cut IS MISSING HERE.
+\end{figure}
