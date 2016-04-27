@@ -6,9 +6,9 @@ $\Bs\to\Ds\kaon\pion\pion$ and $\Bs\to\Ds\pion\pion\pion$ candidates.
 
 \subsection{Signal model}
 \label{subsec: signalmodel}
-The mass distribution of $\Bs\to\Ds\kaon\pion\pion$ signal is modelled using two gaussian functions, which share the same mean $\mu$, but are allowed to have different widths $\sigma_{1}$ and $\sigma_{2}$. 
+The mass distribution of $\Bs\to\Ds\kaon\pion\pion$ signal is modeled using two gaussian functions, which share the same mean $\mu$, but are allowed to have different widths $\sigma_{1}$ and $\sigma_{2}$. 
 Another double gaussian is used to account for the contribution of $\B^{0}\to\Ds\kaon\pion\pion$ decays, which are also present in the $m(\Ds\kaon\pion\pion)$ spectrum. 
-All parameters of both double gaussians except the core width $\sigma_{1}$ are allowed to float in the nominal fit. \newline
+All parameters of both double gaussians except the core width $\sigma_{1}$ \comment{Why is it fixed and to what? } are allowed to float in the nominal fit. \newline
 The same approach is used to describe the invariant mass distribution of $\Bs\to\Ds\pion\pion\pion$ candidates. 
 A double gaussian is used to model this signal shape, all parameters except the core width $\sigma_{1}$ are allowed to float.
 
@@ -26,7 +26,7 @@ The following backgrounds have to be accounted for:
 
 In both cases of combinatorial background, the distribution in the invariant mass spectrum of $\Bs$ candidates is expected to be smooth and decrease with higher masses. 
 Therefore, one exponential function is used to model these contributions. \newline
-The shape of the  $\Bs\to\Ds^{*}\pion\pion\pion$ contribution is expected to be peaking in the $m(\Ds\pion\pion\pion)$ spectrum, with large tails due to the missing momentum, which is carried away by the $piz$ or $\gamma$. 
+The shape of the  $\Bs\to\Ds^{*}\pion\pion\pion$ contribution is expected to be peaking in the $m(\Ds\pion\pion\pion)$ spectrum, with large tails due to the missing momentum, which is carried away by the $\piz$ or $\gamma$. 
 We rely on simulation to estimate the shape of this contribution. 
 
 \begin{figure}[h]
@@ -61,6 +61,7 @@ not reconstructed.
 
 Again the combinatorial background is expected to be flat in the spectrum of the invariant mass of $\Bs\to\Ds\kaon\pion\pion$ candidates. An exponential function is used to model this contribution.\newline
 The shape of the partially reconstructed $\Bs$/$\Bz\to\Ds^{*}\kaon\pion\pion$ background is taken from simulation. 
+\comment{I think we take them from the normalization mode}
 A MC sample of $\Bs\to\Ds^{*}\kaon\pion\pion$ events, where the $\gamma$/$\piz$ is excluded from the reconstruction, is generated. 
 The sum of three bifurcated gaussians is then fitted to the mass distribution of $\Bs$ candidates. The distribution and the overlaid fit is shown in Fig. \ref{fig: BsDsstarKpipiMC}.  
 

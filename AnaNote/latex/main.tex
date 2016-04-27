@@ -31,6 +31,19 @@
 
 \input{preamble}
 
+\newcommand{\comment}[1]{{\color{red}\{#1\}}}
+\renewcommand{\thefigure}{\arabic{section}.\arabic{figure}}
+\makeatletter \@addtoreset{figure}{section} \makeatother
+
+\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
+\makeatletter \@addtoreset{equation}{section} \makeatother
+
+\renewcommand{\thetable}{\arabic{section}.\arabic{table}}
+\makeatletter \@addtoreset{table}{section} \makeatother
+
+\usepackage[labelfont=bf]{caption}
+
+
 \begin{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,6 +91,8 @@
 % collaboration with several people, since then different parts can be
 % edited independently.  This type of file organization is shown here.
 % 
+
+\input{todo}
 
 \input{introduction}
 
