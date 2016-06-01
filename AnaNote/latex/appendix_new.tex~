@@ -1,0 +1,16 @@
+\section{Appendix}
+\label{sec: appendix}
+
+\subsection{Re-weghted MC observables}
+\label{sec: mcvdata}
+The following figures show the distributions of observables used during the multivariate selection stage, for data, monte carlo and re-weighted monte carlo.
+
+
+%\begin{figure}[h]
+%\includegraphics[height=6.cm,width=0.45\textwidth]{figs/.pdf}
+%\includegraphics[height=6.cm,width=0.45\textwidth]{figs/.pdf}\\
+%\includegraphics[height=6.cm,width=0.45\textwidth]{figs/.pdf}
+%\includegraphics[height=6.cm,width=0.45\textwidth]{figs/.pdf}
+%\caption{Comparison of data and simulated observables, before and after re-weighting 1.}
+%\end{figure}
+

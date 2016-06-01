@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  29 APR 2016 09:21
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  1 JUN 2016 15:46
 entering extended mode
  %&-line parsing enabled.
 **main
@@ -387,7 +387,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 (/usr/share/texmf/tex/latex/microtype/mt-eur.cfg
 File: mt-eur.cfg 2006/07/31 v1.1 microtype config. file: AMS Euler Roman (RS)
 )
-<lhcb-logo.pdf, id=83, 86.3225pt x 59.22125pt>
+<lhcb-logo.pdf, id=95, 86.3225pt x 59.22125pt>
 File: lhcb-logo.pdf Graphic file (type pdf)
  <use lhcb-logo.pdf>
 Missing character: There is no Ã in font cmti10!
@@ -416,67 +416,76 @@ Overfull \hbox (24.97975pt too wide) in paragraph at lines 15--42
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) (./monteCarlo.tex) (./selection.texpdfTeX warning (ext4): destination with th
-e same identifier (name{page.2}) has been already used, duplicate ignored
+) (./monteCarlo.texpdfTeX warning (ext4): destination with the same identifier 
+(name{page.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.7 
-     [2
+l.12 
+      [2
 
-]pdfTeX warning (ext4): destination with the same identifier (name{page.3}) has
- been already used, duplicate ignored
+] <figs/nTracks.pdf, id=172, 569.12625pt x 385.44pt>
+File: figs/nTracks.pdf Graphic file (type pdf)
+
+<use figs/nTracks.pdf>
+<figs/max_ghostProb.pdf, id=173, 569.12625pt x 385.44pt>
+File: figs/max_ghostProb.pdf Graphic file (type pdf)
+
+<use figs/max_ghostProb.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) (./selection.texpdfTeX warning (ext4): destination with the same identifier (
+name{page.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.23 
-      [3]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 31.
+l.8 
+     [3]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 32.
  (/usr/share/texmf/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 31.
- [4]
-<figs/BDT_Input_1.pdf, id=175, 569.12625pt x 296.10625pt>
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 32.
+ [4 <./figs/nTracks.pdf> <./figs/max_ghostProb.pdf>] [5]
+<figs/BDT_Input_1.pdf, id=213, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_1.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_1.pdf>
-<figs/BDT_Input_2.pdf, id=176, 569.12625pt x 296.10625pt>
+<figs/BDT_Input_2.pdf, id=214, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_2.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_2.pdf>
-<figs/BDT_Input_3.pdf, id=177, 569.12625pt x 296.10625pt>
+<figs/BDT_Input_3.pdf, id=215, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_3.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_3.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 101--105
+Underfull \hbox (badness 10000) in paragraph at lines 102--106
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 101--105
+Underfull \hbox (badness 10000) in paragraph at lines 102--106
 []
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figs/BDT_Response.pdf, id=180, 569.12625pt x 421.575pt>
+<figs/BDT_Response.pdf, id=218, 569.12625pt x 421.575pt>
 File: figs/BDT_Response.pdf Graphic file (type pdf)
 
 <use figs/BDT_Response.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[5] [6 <./figs/BDT_Input_1.pdf, page is rotated 90 degrees> <./figs/BDT_Input_2
+[6] [7 <./figs/BDT_Input_1.pdf, page is rotated 90 degrees> <./figs/BDT_Input_2
 .pdf, page is rotated 90 degrees> <./figs/BDT_Input_3.pdf, page is rotated 90 d
-egrees>] <figs/BDT_CutEfficiency.pdf, id=327, 569.12625pt x 421.575pt>
+egrees>] <figs/BDT_CutEfficiency.pdf, id=365, 569.12625pt x 421.575pt>
 File: figs/BDT_CutEfficiency.pdf Graphic file (type pdf)
 
-<use figs/BDT_CutEfficiency.pdf>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-) (./model.tex [7 <./figs/BDT_Response.pdf, page is rotated 90 degrees>]
+<use figs/BDT_CutEfficiency.pdf>) (./model.tex [8 <./figs/BDT_Response.pdf, pag
+e is rotated 90 degrees> <./figs/BDT_CutEfficiency.pdf, page is rotated 90 degr
+ees>]
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 15.
@@ -602,14 +611,13 @@ Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 15.
 
-<figs/Bs2Dsstartpipipi.pdf, id=378, 569.12625pt x 385.44pt>
+<figs/Bs2Dsstartpipipi.pdf, id=460, 569.12625pt x 385.44pt>
 File: figs/Bs2Dsstartpipipi.pdf Graphic file (type pdf)
 
 <use figs/Bs2Dsstartpipipi.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[8 <./figs/BDT_CutEfficiency.pdf, page is rotated 90 degrees>]
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 44.
@@ -718,19 +726,23 @@ Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 44.
 
-[9 <./figs/Bs2Dsstartpipipi.pdf>]
-<figs/Bs2DsstartKpipi.pdf, id=441, 569.12625pt x 385.44pt>
+[9] [10 <./figs/Bs2Dsstartpipipi.pdf>]
+<figs/Bs2DsstartKpipi.pdf, id=480, 569.12625pt x 385.44pt>
 File: figs/Bs2DsstartKpipi.pdf Graphic file (type pdf)
 
-<use figs/Bs2DsstartKpipi.pdf> [10 <./figs/Bs2DsstartKpipi.pdf>]
-<figs/Bs2Dspipipi_as_DsKpipi.pdf, id=457, 569.12625pt x 385.44pt>
+<use figs/Bs2DsstartKpipi.pdf>
+<figs/Bs2Dspipipi_as_DsKpipi.pdf, id=483, 569.12625pt x 385.44pt>
 File: figs/Bs2Dspipipi_as_DsKpipi.pdf Graphic file (type pdf)
 
 <use figs/Bs2Dspipipi_as_DsKpipi.pdf>
-<figs/Bs2Dsstarpipipi_as_DsKpipi.pdf, id=458, 569.12625pt x 385.44pt>
+<figs/Bs2Dsstarpipipi_as_DsKpipi.pdf, id=484, 569.12625pt x 385.44pt>
 File: figs/Bs2Dsstarpipipi_as_DsKpipi.pdf Graphic file (type pdf)
 
-<use figs/Bs2Dsstarpipipi_as_DsKpipi.pdf>) (./fitting.tex
+<use figs/Bs2Dsstarpipipi_as_DsKpipi.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[11 <./figs/Bs2DsstartKpipi.pdf>]) (./fitting.tex
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 7.
@@ -903,15 +915,19 @@ Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 7.
 
-[11 <./figs/Bs2Dspipipi_as_DsKpipi.pdf> <./figs/Bs2Dsstarpipipi_as_DsKpipi.pdf>
-] <figs/3pi_BmassFit_11.pdf, id=481, 569.12625pt x 385.44pt>
-File: figs/3pi_BmassFit_11.pdf Graphic file (type pdf)
+<figs/3pi_BmassFit_sim11.pdf, id=502, 569.12625pt x 385.44pt>
+File: figs/3pi_BmassFit_sim11.pdf Graphic file (type pdf)
 
-<use figs/3pi_BmassFit_11.pdf>
-<figs/3pi_BmassFit_12.pdf, id=482, 569.12625pt x 385.44pt>
-File: figs/3pi_BmassFit_12.pdf Graphic file (type pdf)
+<use figs/3pi_BmassFit_sim11.pdf>
+<figs/3pi_BmassFit_sim12.pdf, id=503, 569.12625pt x 385.44pt>
+File: figs/3pi_BmassFit_sim12.pdf Graphic file (type pdf)
 
-<use figs/3pi_BmassFit_12.pdf>
+<use figs/3pi_BmassFit_sim12.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[12 <./figs/Bs2Dspipipi_as_DsKpipi.pdf> <./figs/Bs2Dsstarpipipi_as_DsKpipi.pdf>
+]
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 27.
@@ -1080,48 +1096,50 @@ Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 27.
 
-<figs/BmassFit_11.pdf, id=483, 569.12625pt x 385.44pt>
-File: figs/BmassFit_11.pdf Graphic file (type pdf)
+<figs/BmassFit_sim11.pdf, id=522, 569.12625pt x 385.44pt>
+File: figs/BmassFit_sim11.pdf Graphic file (type pdf)
 
-<use figs/BmassFit_11.pdf>
-<figs/BmassFit_12.pdf, id=484, 569.12625pt x 385.44pt>
-File: figs/BmassFit_12.pdf Graphic file (type pdf)
+<use figs/BmassFit_sim11.pdf>
+<figs/BmassFit_sim12.pdf, id=523, 569.12625pt x 385.44pt>
+File: figs/BmassFit_sim12.pdf Graphic file (type pdf)
 
-<use figs/BmassFit_12.pdf>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
+<use figs/BmassFit_sim12.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) (./efficiency.tex [12 <./figs/3pi_BmassFit_11.pdf> <./figs/3pi_BmassFit_12.pd
-f>] [13 <./figs/BmassFit_11.pdf> <./figs/BmassFit_12.pdf>]) (./systematics.tex
-[14]) (./results.tex) [15] (./main.bbl) [16] (./main.aux) ) 
+) (./efficiency.tex [13 <./figs/3pi_BmassFit_sim11.pdf> <./figs/3pi_BmassFit_si
+m12.pdf>] [14 <./figs/BmassFit_sim11.pdf> <./figs/BmassFit_sim12.pdf>])
+(./systematics.tex
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+) (./results.tex [15]) [16] (./appendix_new.tex) [17] (./main.bbl) [18]
+(./main.aux) ) 
 Here is how much of TeX's memory you used:
- 7144 strings out of 256216
- 99056 string characters out of 1917072
+ 7180 strings out of 256216
+ 99685 string characters out of 1917072
  199224 words of memory out of 1500000
- 10138 multiletter control sequences out of 10000+200000
- 24820 words of font info for 114 fonts, out of 1200000 for 2000
+ 10157 multiletter control sequences out of 10000+200000
+ 24980 words of font info for 116 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 37i,14n,40p,1767b,430s stack positions out of 5000i,500n,6000p,200000b,15000s
-</usr/share/texmf/fo
-nts/type1/bluesky/cm/cmbsy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx1
-0.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx12.pfb></usr/share/texmf/fon
-ts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi12.
-pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi6.pfb></usr/share/texmf/fonts/
-type1/bluesky/cm/cmmi8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmib10.pfb
-></usr/share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/typ
-e1/bluesky/cm/cmr12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr6.pfb></usr
-/share/texmf/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf/fonts/type1/blue
-sky/cm/cmr8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmss8.pfb></usr/share/
-texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/bluesky/c
-m/cmsy6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy8.pfb></usr/share/texm
-f/fonts/type1/bluesky/cm/cmti10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cm
-ti12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmtt12.pfb>
-Output written on main.pdf (19 pages, 437586 bytes).
+ 37i,14n,40p,1768b,388s stack positions out of 5000i,500n,6000p,200000b,15000s
+</usr/share/texmf/fonts/type1/bluesky/cm/cmbsy10.pfb></usr/share/
+texmf/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/c
+m/cmbx12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/te
+xmf/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/
+cmmi6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi8.pfb></usr/share/texmf/
+fonts/type1/bluesky/cm/cmmib10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr
+10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/fon
+ts/type1/bluesky/cm/cmr6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pfb>
+</usr/share/texmf/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/type1
+/bluesky/cm/cmss8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr
+/share/texmf/fonts/type1/bluesky/cm/cmsy6.pfb></usr/share/texmf/fonts/type1/blu
+esky/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti10.pfb></usr/sha
+re/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/type1/bluesk
+y/cm/cmtt12.pfb>
+Output written on main.pdf (21 pages, 461475 bytes).
 PDF statistics:
- 628 PDF objects out of 1000 (max. 8388607)
- 70 named destinations out of 1000 (max. 131072)
- 19183 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 675 PDF objects out of 1000 (max. 8388607)
+ 78 named destinations out of 1000 (max. 131072)
+ 19217 words of extra memory for PDF output out of 20736 (max. 10000000)
 

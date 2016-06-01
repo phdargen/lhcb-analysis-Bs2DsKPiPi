@@ -27,6 +27,18 @@ LHCb, S.~Blusk, \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of the
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
+\bibitem{Pivk:2004ty}
+M.~Pivk and F.~R. Le~Diberder,
+  \ifthenelse{\boolean{articletitles}}{\emph{{sPlot: A statistical tool to
+  unfold data distributions}},
+  }{}\href{http://dx.doi.org/10.1016/j.nima.2005.08.106}{Nucl.\ Instrum.\
+  Meth.\  \textbf{A555} (2005) 356},
+  \href{http://arxiv.org/abs/physics/0402083}{{\normalfont\ttfamily
+  arXiv:physics/0402083}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
 \bibitem{Hocker:2007ht}
 A.~Hoecker {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{TMVA:
   Toolkit for Multivariate Data Analysis}}, }{}PoS \textbf{ACAT} (2007) 040,

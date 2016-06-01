@@ -1,0 +1,66 @@
+#-- GAUDI jobOptions generated on Wed Jun  1 16:05:28 2016
+#-- Contains event types : 
+#--   13266007 - 30 files - 545211 events - 141.51 GBytes
+
+
+#--  Extra information about the data processing phases:
+
+
+#--  Processing Pass Step-127970 
+
+#--  StepId : 127970 
+#--  StepName : Reco14c for MC - 2011 
+#--  ApplicationName : Brunel 
+#--  ApplicationVersion : v43r2p11 
+#--  OptionFiles : $APPCONFIGOPTS/Brunel/DataType-2011.py;$APPCONFIGOPTS/Brunel/MC-WithTruth.py;$APPCONFIGOPTS/Persistency/DST-multipleTCK-2011.py;$APPCONFIGOPTS/Persistency/Compression-ZLIB-1.py 
+#--  DDDB : fromPreviousStep 
+#--  CONDDB : fromPreviousStep 
+#--  ExtraPackages : AppConfig.v3r222 
+#--  Visible : Y 
+
+
+#--  Processing Pass Step-127161 
+
+#--  StepId : 127161 
+#--  StepName : Stripping21r1-NoPrescalingFlagged for Sim08 - MD - Implicit merging. 
+#--  ApplicationName : DaVinci 
+#--  ApplicationVersion : v36r1p1 
+#--  OptionFiles : $APPCONFIGOPTS/DaVinci/DV-Stripping21r1-Stripping-MC-NoPrescaling.py;$APPCONFIGOPTS/DaVinci/DV-RedoCaloPID-Stripping21.py;$APPCONFIGOPTS/DaVinci/DataType-2011.py;$APPCONFIGOPTS/DaVinci/InputType-DST.py;$APPCONFIGOPTS/Persistency/Compression-ZLIB-1.py 
+#--  DDDB : fromPreviousStep 
+#--  CONDDB : sim-20141210-vc-md100 
+#--  ExtraPackages : AppConfig.v3r205 
+#--  Visible : Y 
+
+from Gaudi.Configuration import * 
+from GaudiConf import IOHelper
+IOHelper('ROOT').inputFiles(['LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000001_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000002_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000003_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000004_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000005_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000006_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000007_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000008_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000009_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000010_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000012_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000013_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000014_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000015_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000016_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000017_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000018_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000019_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000020_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000021_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000022_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000023_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000026_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000027_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000028_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000029_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000030_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000031_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000032_2.AllStreams.dst',
+'LFN:/lhcb/MC/2011/ALLSTREAMS.DST/00051568/0000/00051568_00000033_2.AllStreams.dst'
+], clear=True)
