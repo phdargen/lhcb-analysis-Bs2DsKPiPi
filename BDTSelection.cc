@@ -31,14 +31,14 @@ int preselect() {
     bool Ds2pipipi = false;
 
     //MC or Data?
-    bool MC = false;
+    bool MC = true;
 
     //Bkg sample?
     bool Ds3piBkg = false;
     bool Dsstar3piBkg = false;
 
     //which year?
-    bool sevenTeV = true; //for 2011 = true , for 2012 = false 
+    bool sevenTeV = false; //for 2011 = true , for 2012 = false 
 
     TChain* tree = 0;
 	
@@ -62,12 +62,12 @@ int preselect() {
 		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Bkg/Dst3pi-D/*.root");
 	}
 	else if((MC) && (!sevenTeV)){
-		tree->Add("/auto/data/kecke/B2DKPiPi/12D-MC/*.root");
-		tree->Add("/auto/data/kecke/B2DKPiPi/12U-MC/*.root");
+		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC_Reco14/Signal/12D/*.root");
+		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC_Reco14/Signal/12U/*.root");
 	}
 	else if((MC) && (sevenTeV)){
-		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/11U/*.root");
-		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/11D/*.root");
+		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC_Reco14/Signal/11U/*.root");
+		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC_Reco14/Signal/11D/*.root");
 	}
     }
 
@@ -198,6 +198,7 @@ double massLambda_c = 2286.46;
 
 Double_t Bs_MM;
 Double_t Ds_MM;
+Int_t Bs_BKGCAT;
 Double_t K_plus_fromDs_PX;
 Double_t K_plus_fromDs_PY;
 Double_t K_plus_fromDs_PZ;
@@ -296,8 +297,16 @@ Double_t K_plus_TRACK_CHI2NDOF;
 Double_t pi_plus_TRACK_CHI2NDOF;
 Double_t pi_minus_TRACK_CHI2NDOF;
 
+Double_t K_plus_fromDs_TRACK_GhostProb;
+Double_t K_minus_fromDs_TRACK_GhostProb;
+Double_t pi_minus_fromDs_TRACK_GhostProb;
+Double_t K_plus_TRACK_GhostProb;
+Double_t pi_plus_TRACK_GhostProb;
+Double_t pi_minus_TRACK_GhostProb;
+
 Double_t Ds_ENDVERTEX_CHI2;
 Int_t Ds_ENDVERTEX_NDOF;
+Double_t Ds_ENDVERTEX_Z;
 Double_t K_1_1270_plus_ENDVERTEX_CHI2;
 Int_t K_1_1270_plus_ENDVERTEX_NDOF;
 Double_t K_1_1270_plus_FDCHI2_OWNPV;
@@ -346,6 +355,8 @@ tree -> SetBranchAddress( "Bs_Hlt2Topo2BodyBBDTDecision_TOS" , &Bs_Hlt2Topo2Body
 tree -> SetBranchAddress( "Bs_Hlt2Topo3BodyBBDTDecision_TOS" , &Bs_Hlt2Topo3BodyBBDTDecision_TOS );
 tree -> SetBranchAddress( "Bs_Hlt2Topo4BodyBBDTDecision_TOS" , &Bs_Hlt2Topo4BodyBBDTDecision_TOS );
 
+tree -> SetBranchAddress( "Bs_BKGCAT" , &Bs_BKGCAT );
+tree -> SetBranchAddress( "Ds_ENDVERTEX_Z", &Ds_ENDVERTEX_Z );
 tree -> SetBranchAddress( "Ds_ENDVERTEX_CHI2", &Ds_ENDVERTEX_CHI2 );
 tree -> SetBranchAddress( "Ds_ENDVERTEX_NDOF", &Ds_ENDVERTEX_NDOF );
 tree -> SetBranchAddress( "Ds_FDCHI2_ORIVX", &Ds_FDCHI2_ORIVX );
@@ -378,6 +389,13 @@ if(Ds2KKpi){
 	tree -> SetBranchAddress( "K_plus_fromDs_IPCHI2_OWNPV" ,&K_plus_fromDs_IPCHI2_OWNPV );
 	tree -> SetBranchAddress( "K_plus_fromDs_PIDK" , &K_plus_fromDs_PIDK );
 	tree -> SetBranchAddress( "K_plus_fromDs_TRUEID" , &K_plus_fromDs_TRUEID );
+
+	tree -> SetBranchAddress("K_plus_fromDs_TRACK_GhostProb", &K_plus_fromDs_TRACK_GhostProb );
+	tree -> SetBranchAddress("K_minus_fromDs_TRACK_GhostProb", &K_minus_fromDs_TRACK_GhostProb );
+	tree -> SetBranchAddress("pi_minus_fromDs_TRACK_GhostProb", &pi_minus_fromDs_TRACK_GhostProb );
+	tree -> SetBranchAddress("K_plus_TRACK_GhostProb", &K_plus_TRACK_GhostProb );
+	tree -> SetBranchAddress("pi_plus_TRACK_GhostProb", &pi_plus_TRACK_GhostProb );
+	tree -> SetBranchAddress("pi_minus_TRACK_GhostProb", &pi_minus_TRACK_GhostProb );
 }
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -558,12 +576,14 @@ THStack *all = new THStack("all","all candidates");
 	TFile* output = 0;
 
 	// Ds2KKpi case
-	if(Ds2KKpi && (!MC) && sevenTeV) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_with_BDT_variables_S21_PID.root","RECREATE");
-	else if(Ds2KKpi && (!MC) && (!sevenTeV)) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_with_BDT_variables_S21_PID.root","RECREATE");
+	if(Ds2KKpi && (!MC) && sevenTeV) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_with_BDT_variables_S21_PID_temporary.root","RECREATE");
+	else if(Ds2KKpi && (!MC) && (!sevenTeV)) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_with_BDT_variables_S21_PID_tmp.root","RECREATE");
 	else if(Ds2KKpi && MC && Ds3piBkg) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/bkg_Ds3pi.root","RECREATE");
 	else if(Ds2KKpi && MC && Dsstar3piBkg) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/bkg_Dsstar3pi.root","RECREATE");
-	else if(Ds2KKpi && MC && (!sevenTeV)) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_with_BDT_variables.root","RECREATE");
-	else if(Ds2KKpi && MC && sevenTeV) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_with_BDT_variables.root","RECREATE");
+	else if(Ds2KKpi && MC && (!sevenTeV)) output = new TFile("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_with_BDT_variables_Reco14.root","RECREATE");
+	//else if(Ds2KKpi && MC && (!sevenTeV)) output = new TFile("/auto/data/kecke/B2DKPiPi/MC2012/mc12_fullSelectionL0HLT1Triggered.root","RECREATE");
+	else if(Ds2KKpi && MC && sevenTeV) output = new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_with_BDT_variables_Reco14.root","RECREATE");
+	//else if(Ds2KKpi && MC && sevenTeV) output = new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_fullSelectionL0HLT1Triggered.root","RECREATE");
 
 	//Ds2Kpipi case
 	if(Ds2Kpipi && (!MC) && sevenTeV) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2Kpipi_with_BDT_variables_S21_PID.root","RECREATE");
@@ -590,6 +610,7 @@ THStack *all = new THStack("all","all candidates");
 	float Xs_max_DOCA = 0;
 	float max_TrackChi2 = 0;
 	float min_TrackChi2 = 0;
+	float max_ghostProb = 0;
 	int resonant = 0 ;
 
 	summary_tree->Branch("DsDaughters_min_IPCHI2",&DsDaughters_min_IPCHI2,"DsDaughters_min_IPCHI2/F");
@@ -601,6 +622,7 @@ THStack *all = new THStack("all","all candidates");
 	summary_tree->Branch("Xs_max_DOCA",&Xs_max_DOCA,"Xs_max_DOCA/F");
 	summary_tree->Branch("max_TrackChi2",&max_TrackChi2,"max_Track_Chi2/F");
 	summary_tree->Branch("min_TrackChi2",&min_TrackChi2,"min_Track_Chi2/F");
+	summary_tree->Branch("max_ghostProb",&max_ghostProb,"max_ghostProb/F");
 	summary_tree->Branch("resonant",&resonant,"resonant/I");
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -650,10 +672,10 @@ for(int i=0; i< numEvents; i++)
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//trigger selection
 	//L0 stage
-	//if((!Bs_L0Global_TIS) && (!Bs_L0HadronDecision_TOS)) continue;
+	if((!Bs_L0Global_TIS) && (!Bs_L0HadronDecision_TOS)) continue;
 
 	//HLT 1 stage
-	//if(!Bs_Hlt1TrackAllL0Decision_TOS) continue;
+	if(!Bs_Hlt1TrackAllL0Decision_TOS) continue;
 
 	//HLT2 stage
 	if((!Bs_Hlt2Topo2BodyBBDTDecision_TOS) &&  (!Bs_Hlt2Topo3BodyBBDTDecision_TOS) && (!Bs_Hlt2Topo4BodyBBDTDecision_TOS)) continue;
@@ -661,7 +683,7 @@ for(int i=0; i< numEvents; i++)
 
 	if(Ds2KKpi){
         	if(K_plus_fromDs_PT<100) continue;
-		if(K_plus_fromDs_P<1000) continue;
+		if(K_plus_fromDs_P<1600) continue;
 		if(K_plus_fromDs_TRACK_CHI2NDOF> 4) continue;
 		if(K_plus_fromDs_IPCHI2_OWNPV< 4) continue; 
 		if((pi_minus_fromDs_PT + K_minus_fromDs_PT + K_plus_fromDs_PT) < 1800) continue;
@@ -674,7 +696,7 @@ for(int i=0; i< numEvents; i++)
 
 	if(Ds2Kpipi || Ds2pipipi){
       		if(pi_plus_fromDs_PT<100) continue;
-		if(pi_plus_fromDs_P<1000) continue;
+		if(pi_plus_fromDs_P<1600) continue;
 		if(pi_plus_fromDs_TRACK_CHI2NDOF> 4) continue;
 		if(pi_plus_fromDs_IPCHI2_OWNPV< 4) continue;
 		if(!MC)if(pi_plus_fromDs_PIDK>10) continue;
@@ -682,7 +704,7 @@ for(int i=0; i< numEvents; i++)
 
 	if(Ds2KKpi || Ds2Kpipi){
 		if(K_minus_fromDs_PT<100) continue;
-		if(K_minus_fromDs_P<1000) continue;
+		if(K_minus_fromDs_P<1600) continue;
 		if(K_minus_fromDs_TRACK_CHI2NDOF> 4) continue;
 		if(K_minus_fromDs_IPCHI2_OWNPV< 4) continue;
 		if(!MC)if(K_minus_fromDs_PIDK<-10) continue;
@@ -690,7 +712,7 @@ for(int i=0; i< numEvents; i++)
 
 	if(Ds2pipipi){
       		if(pi_minus2_fromDs_PT<100) continue;
-		if(pi_minus2_fromDs_P<1000) continue;
+		if(pi_minus2_fromDs_P<1600) continue;
 		if(pi_minus2_fromDs_TRACK_CHI2NDOF> 4) continue;
 		if(pi_minus2_fromDs_IPCHI2_OWNPV< 4) continue;
 		if(!MC)if(pi_minus2_fromDs_PIDK>10) continue;
@@ -704,7 +726,7 @@ for(int i=0; i< numEvents; i++)
 	if(pi_minus_PT<100) continue;
 
 	//track p cut
-	if(pi_minus_fromDs_P<1000) continue;
+	if(pi_minus_fromDs_P<1600) continue;
 	if(K_plus_P<1000) continue;
 	if(pi_plus_P<1000) continue;
 	if(pi_minus_P<1000) continue;
@@ -730,8 +752,8 @@ for(int i=0; i< numEvents; i++)
 	if(Ds_DOCA2> 0.5) continue;
 	if(Ds_DOCA3> 0.5) continue;
 
-	//ds mass window of 100 MeV
-	if( Ds_MM < 1945 || Ds_MM > 1995) continue;
+	//ds mass window of 40 MeV
+	if( Ds_MM < 1950 || Ds_MM > 1990) continue;
 
 	//ds vertex chi2 cut
 	if((Ds_ENDVERTEX_CHI2/Ds_ENDVERTEX_NDOF) > 10) continue;
@@ -741,7 +763,7 @@ for(int i=0; i< numEvents; i++)
 
 	//loose pid requirements
 if(!MC){
-	if(K_plus_PIDK<-5) continue;
+	if(K_plus_PIDK<8) continue;
 	if(pi_minus_fromDs_PIDK>10) continue;
 	if(pi_plus_PIDK>10) continue;
 	if(pi_minus_PIDK>10) continue;
@@ -813,37 +835,26 @@ if(!MC){
 	if((Bs_ENDVERTEX_CHI2/Bs_ENDVERTEX_NDOF)> 8) continue;
 
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 if(!MC){
 	//implement PID requirements on Ds daughters
 	if(Ds2KKpi){
 		resonant = 0;
 		if( TMath::Abs(((K_plus_fromDs + K_minus_fromDs).M() - massPhi)) < 20) resonant = 1; 
 		else if(TMath::Abs(((pi_minus_fromDs + K_plus_fromDs).M() - massKstar)) < 75) {
-			if((K_plus_fromDs_PIDK>-5 && K_minus_fromDs_PIDK>-5) ) resonant = 1;
+			if((K_plus_fromDs_PIDK>0 && K_minus_fromDs_PIDK>0) ) resonant = 1;
 			else continue;
 		}  		
 		else{
-			if((K_plus_fromDs_PIDK>0 && K_minus_fromDs_PIDK>0) ) resonant = 0;
+			if((K_plus_fromDs_PIDK>5 && K_minus_fromDs_PIDK>5) ) resonant = 0;
 			else continue;
 		}
-
-		/*
-		//cut for non PhiPi, but K*K candidates
-		if( TMath::Abs(((K_plus_fromDs + K_minus_fromDs).M() - massPhi)) > 20 && TMath::Abs(((pi_minus_fromDs + K_plus_fromDs).M() - massKstar)) < 75 && (K_plus_fromDs_PIDK<0 || K_minus_fromDs_PIDK<0) ) continue;
-
-		//cut for non resonant candidates
-		if( TMath::Abs(((K_plus_fromDs + K_minus_fromDs).M() - massPhi)) > 20 && TMath::Abs(((pi_minus_fromDs + K_plus_fromDs).M() - massKstar)) > 75 && (K_plus_fromDs_PIDK<5 || K_minus_fromDs_PIDK<5) ) continue;
-		*/
 	}
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 }
-
-	//if(Ds_TAU < 0) continue;
-
 	//rejection cuts for peaking background
+	if((Ds_ENDVERTEX_Z - Bs_ENDVERTEX_Z) < 0) continue;
 
-	//charmless suppression
-	//if(Ds_FDCHI2_ORIVX < 2) continue;
 
 	//Bs->DsDs suppression
 	if(TMath::Abs((K_plus + pi_plus + pi_minus).M() - massDs) < 20) continue;
@@ -856,7 +867,7 @@ if(!MC){
 	if(Ds2KKpi){
 		if(TMath::Abs(((K_plus_fromDs + K_minus_fromDs).M() - massPhi)) > 20){
 
-			//Bs->D^-Kpipi suppression
+			//B0->D^-Kpipi suppression
 			if( TMath::Abs((K_plus_fromDs + Kminus_asPiminus_MissID + pi_minus_fromDs).M() - massDminus) < 20 && K_minus_fromDs_PIDK < 10 ) continue;
 
 			//Lambda_b->Lambda_c Kpipi suppression
@@ -866,6 +877,7 @@ if(!MC){
 }
 	//MC Truth matching
 	if(MC){
+		//if(Bs_BKGCAT == 50) continue; // remove ghosts
 		if(TMath::Abs(Bs_TRUEID) != 531) continue;
 		if(TMath::Abs(Ds_TRUEID) != 431) continue;
 		if(!Ds3piBkg)if(!Dsstar3piBkg)if(TMath::Abs(K_plus_TRUEID) != 321) continue;
@@ -957,6 +969,9 @@ if(!MC){
 		interMax56 = TMath::Max(pi_minus_TRACK_CHI2NDOF,pi_plus_TRACK_CHI2NDOF);
 		interMax1to4 = TMath::Max(interMax12,interMax34);
 		max_TrackChi2 = TMath::Max(interMax1to4,interMax56);
+
+		//max GhostProb
+		max_ghostProb = TMath::Max(pi_plus_TRACK_GhostProb,TMath::Max(K_plus_TRACK_GhostProb,TMath::Max(pi_minus_TRACK_GhostProb,TMath::Max(K_plus_fromDs_TRACK_GhostProb,TMath::Max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb)))));
 	}
 		summary_tree->Fill();
 
@@ -1453,39 +1468,40 @@ void addVarsForBDT(string input, string output){
 }
 
 
-void BDTSelection() {
+int main() {
 	time_t startTime = time(0);
 
 	/// This applies all preselection cuts except:
-	/// PIDK_K_plus > 8
-	/// Ds_MM signal region
-	/// LO + HLT1 Trigger ?
+	/// PIDK_K_plus > 8 INN 
+	/// Ds_MM signal region INN
+	/// LO + HLT1 Trigger ? INN
 	/// Bkg Cat for MC ?
 	preselect();
 
         /// Add refitted momenta and variables used for BDT training
         /// Output goes to TMVAClassificationDsKpipi.C
-        chooseBestPV("DTF","/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_with_BDT_variables_S21_PID.root", "/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_DTF.root");
-        chooseBestPV("BsDTF","/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_DTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_BsDTF.root");
-        addVarsForBDT("/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_BsDTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_forBDT.root");
+/*	
+        chooseBestPV("DTF","/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_with_BDT_variables_S21_PID_temporary.root", "/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_DTF_tmp.root");
+        chooseBestPV("BsDTF","/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_DTF_tmp.root", "/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_BsDTF_tmp.root");
+        addVarsForBDT("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_BsDTF_tmp.root", "/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_forBDT_tmp.root");
+*/	
+/*
+        chooseBestPV("DTF","/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_with_BDT_variables_S21_PID_tmp.root", "/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_DTF_tmp.root");
+        chooseBestPV("BsDTF","/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_DTF_tmp.root", "/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_BsDTF_tmp.root");
+        addVarsForBDT("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_BsDTF_tmp.root", "/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT_tmp.root");
+*/
 
-	/*
-        chooseBestPV("DTF","/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_with_BDT_variables_S21_PID.root", "/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_DTF.root");
-        chooseBestPV("BsDTF","/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_DTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_BsDTF.root");
-        addVarsForBDT("/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_BsDTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_forBDT.root");
-	*/
+/*
+        chooseBestPV("DTF","/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_with_BDT_variables_Reco14.root",   "/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_DTF.root");
+        chooseBestPV("BsDTF","/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_DTF.root", "/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BsDTF.root");
+        addVarsForBDT("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BsDTF.root", "/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_forBDT_Reco14.root");
+*/
 
-	/*   
-        chooseBestPV("DTF","/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_with_BDT_variables.root",   "/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_DTF.root");
-        chooseBestPV("BsDTF","/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_DTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_BsDTF.root");
-        addVarsForBDT("/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_BsDTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_forBDT.root");
-	*/
 	
-	/*
-        chooseBestPV("DTF","/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_with_BDT_variables.root", "/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_DTF.root");
-        chooseBestPV("BsDTF","/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_DTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_BsDTF.root");
-        addVarsForBDT("/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_BsDTF.root", "/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_forBDT.root");
-        */
+        chooseBestPV("DTF","/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_with_BDT_variables_Reco14.root", "/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_DTF.root");
+        chooseBestPV("BsDTF","/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_DTF.root", "/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BsDTF.root");
+        addVarsForBDT("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BsDTF.root", "/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_forBDT_Reco14.root");
+ 	
 
 	/*
    	 chooseBestPV("DTF","/auto/data/dargent/Bs2DsKpipi/MC/Bkg/DsstKpipi.root", "/auto/data/dargent/Bs2DsKpipi/MC/Bkg/DsstKpipi_DTF.root");
@@ -1498,4 +1514,6 @@ void BDTSelection() {
    	 << " \n Time since start " << (time(0) - startTime)/60.0
    	 << " min." << endl;
    	 cout << "==============================================" << endl; 
+	
+	 return 0;
 }

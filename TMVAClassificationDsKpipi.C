@@ -52,12 +52,12 @@
 void TMVAClassification( TString myMethodList = "BDTG" )
 {
    TChain* background = new TChain("DecayTree");
-   background->Add("/auto/data/dargent/Bs2DsKpipi/preselection/data2011_Ds2KKpi_forBDT.root");
-   background->Add("/auto/data/dargent/Bs2DsKpipi/preselection/data2012_Ds2KKpi_forBDT.root");
+   background->Add("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_forBDT_tightDCUT_DZ.root");
+   background->Add("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT_tightDCUT_DZ.root");
 
    TChain* signal = new TChain("DecayTree");
-   signal->Add("/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_forBDT.root");
-   signal->Add("/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_forBDT.root");
+   signal->Add("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_reweighted_Reco14.root");
+   signal->Add("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_reweighted_Reco14.root");
 
    //---------------------------------------------------------------
    // This loads the library
@@ -150,7 +150,7 @@ void TMVAClassification( TString myMethodList = "BDTG" )
    // --- Here the preparation phase begins
 
    // Create a ROOT output file where TMVA will store ntuples, histograms, etc.
-   TString outfileName( "TMVA_Bs2DsKpipi_2012Ana.root" );
+   TString outfileName( "TMVA_Bs2DsKpipi_Ana.root" );
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
 
    // Create the factory object. 
@@ -226,11 +226,12 @@ void TMVAClassification( TString myMethodList = "BDTG" )
    // You can add an arbitrary number of signal or background trees
    factory->AddSignalTree    ( signal,     signalWeight     );
    factory->AddBackgroundTree( background, backgroundWeight );
-  
+   factory->SetSignalWeightExpression("weight");
+
    // Apply additional cuts on the signal and background samples (can be different)
    TCut mycuts = "Bs_MM > 5300 && Bs_MM < 5420 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1"; 
   //&& min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 &&  min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1";
-   TCut mycutb = "Bs_MM > 5600 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1 && abs(Ds_MM - 1969) < 40   ";
+   TCut mycutb = "Bs_MM > 5600 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1 ";
    //&& min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 &&  min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1";
 
    // Tell the factory how to use the training and testing events

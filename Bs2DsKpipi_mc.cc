@@ -55,26 +55,26 @@ void plotEventVars(string Branch,string TitleX, int bins, double min, double max
 
    ///Load files
    TChain* tree=new TChain("DecayTree");
-   tree->Add("/auto/data/dargent/Bs2DsKpipi/final/data2012_Ds2KKpi_sweight.root");
-   tree->Add("/auto/data/dargent/Bs2DsKpipi/final/data2011_Ds2KKpi_sweight.root");	
+   tree->Add("/auto/data/kecke/B2DPiPiPi/Data2011/data_Bs2Dspipipi_11_final_sweight.root");
+   //tree->Add("/auto/data/kecke/B2DPiPiPi/Data2011/data_Bs2Dspipipi_11_afterPreSel_sweight.root");	
    tree->SetBranchStatus("*",0);
    tree->SetBranchStatus(Branch.c_str(),1);
    tree->SetBranchStatus("N_Bs_sw",1);
-   int var;
+   float var;
    double sw;
    tree->SetBranchAddress(Branch.c_str(),&var);
    tree->SetBranchAddress("N_Bs_sw",&sw);
 
    TString fileNameMC;
-   if(useWeights)fileNameMC="/auto/data/dargent/Bs2DsKpipi/preselection/mc_Ds2KKpi_BDT_reweighted.root";
-   else fileNameMC= "/auto/data/dargent/Bs2DsKpipi/preselection/mc_Ds2KKpi_BDT.root";
+   if(useWeights)fileNameMC="/auto/data/kecke/B2DKPiPi/MC2011/mc_Ds2KKpi_BDT_reweighted.root";
+   else fileNameMC= "/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_forBDT.root";
 
    TFile* fileMC= new TFile(fileNameMC);
    TTree* treeMC = (TTree*) fileMC->Get("DecayTree");	
    treeMC->SetBranchStatus("*",0);
    treeMC->SetBranchStatus(Branch.c_str(),1);
    if(useWeights)treeMC->SetBranchStatus("weight",1);
-   int varMC;
+   double varMC;
    double w;
    treeMC->SetBranchAddress(Branch.c_str(),&varMC);
    if(useWeights)treeMC->SetBranchAddress("weight",&w);
@@ -177,30 +177,32 @@ void plot(string Branch,string TitleX, int bins, double min, double max, bool us
 
    ///Load files
    TChain* tree=new TChain("DecayTree");
-   tree->Add("/auto/data/dargent/Bs2DsKpipi/final/data2012_Ds2KKpi_sweight.root");
-   tree->Add("/auto/data/dargent/Bs2DsKpipi/final/data2011_Ds2KKpi_sweight.root");
+   //tree->Add("/auto/data/dargent/Bs2DsKpipi/final/data2012_Ds2KKpi_sweight.root");
+   tree->Add("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_12_afterPreSel_sweight.root");
 
    tree->SetBranchStatus("*",0);
    tree->SetBranchStatus(Branch.c_str(),1);
    tree->SetBranchStatus("N_Bs_sw",1);
-   double var,sw;
+   float var;
+   double sw;
    tree->SetBranchAddress(Branch.c_str(),&var);
    tree->SetBranchAddress("N_Bs_sw",&sw);
 
    TString fileNameMC;
-   if(useWeights)fileNameMC="/auto/data/dargent/Bs2DsKpipi/preselection/mc_Ds2KKpi_BDT_reweighted.root";
-   else fileNameMC= "/auto/data/dargent/Bs2DsKpipi/preselection/mc_Ds2KKpi_BDT.root";
+   if(useWeights)fileNameMC="/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_reweighted_Reco14.root";
+   else fileNameMC= "/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_forBDT_Reco14.root";
 
    TChain* treeMC =new TChain("DecayTree");
    treeMC->Add(fileNameMC);
    treeMC->SetBranchStatus("*",0);
    treeMC->SetBranchStatus(Branch.c_str(),1);
-   treeMC->SetBranchStatus("Bplus_BKGCAT",1);
+  // treeMC->SetBranchStatus("Bplus_BKGCAT",1);
    if(useWeights)treeMC->SetBranchStatus("weight",1);
-   double varMC, w;
-   int cat;
+   float varMC;
+   double w;
+  // int cat;
    treeMC->SetBranchAddress(Branch.c_str(),&varMC);
-   treeMC->SetBranchAddress("Bplus_BKGCAT",&cat);
+   //treeMC->SetBranchAddress("Bplus_BKGCAT",&cat);
    if(useWeights)treeMC->SetBranchAddress("weight",&w);
    else w=1.;
 
@@ -304,11 +306,11 @@ void reweight(){
 	//TFile* vtxFile=new TFile("");	
 	//TH1D* h_vtx=(TH1D*)vtxFile->Get("Bplus_ENDVERTEX_CHI2_weight");
 	
-	TFile* etaFile=new TFile("Bs_ETA_weights.root");	
-	TH1D* h_eta=(TH1D*)etaFile->Get("Bs_ETA_weight");
+	//TFile* etaFile=new TFile("Bs_ETA_weights.root");	
+	//TH1D* h_eta=(TH1D*)etaFile->Get("Bs_ETA_weight");
 
-	TFile* pFile=new TFile("Bs_P_weights.root");	
-	TH1D* h_p=(TH1D*)pFile->Get("Bs_P_weight");
+	TFile* ghostFile=new TFile("max_ghostProb_weights.root");	
+	TH1D* h_ghost=(TH1D*)ghostFile->Get("max_ghostProb_weight");
 	
 	TFile* nTFile=new TFile("nTracks_weights.root");	
 	TH1D* h_nT=(TH1D*)nTFile->Get("nTracks_weight");
@@ -336,37 +338,34 @@ void reweight(){
 	c->Print("DataVsMC/isMuEff.eps");
         */
 	///Load MC file
-	TFile* fileMC= new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/mc_Ds2KKpi_BDT.root");
+	TFile* fileMC= new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_forBDT_Reco14.root");
    	TTree* treeMC = (TTree*) fileMC->Get("DecayTree");
-	double chi,p,eta;
+	float ghostProb;
 	int nT;
-	double K_p,K_eta;
-	double pip_p,pip_eta;
-	double pim_p,pim_eta;
-	double mup_p,mup_eta,mup_pt;
-	double mum_p,mum_eta,mum_pt;
+	//double K_p,K_eta;
+	//double pip_p,pip_eta;
+	//double pim_p,pim_eta;
+	//double mup_p,mup_eta,mup_pt;
+	//double mum_p,mum_eta,mum_pt;
 
-   	treeMC->SetBranchAddress("Bs_ENDVERTEX_CHI2",&chi);
-   	treeMC->SetBranchAddress("Bs_P",&p);
-   	treeMC->SetBranchAddress("Bs_ETA",&eta);
+   	//treeMC->SetBranchAddress("Bs_ENDVERTEX_CHI2",&chi);
+   	//treeMC->SetBranchAddress("Bs_P",&p);
+   	treeMC->SetBranchAddress("max_ghostProb",&ghostProb);
    	treeMC->SetBranchAddress("nTracks",&nT);
-   	treeMC->SetBranchAddress("Kplus_P",&K_p);
-   	treeMC->SetBranchAddress("Kplus_ETA",&K_eta);
-   	treeMC->SetBranchAddress("piplus_P",&pip_p);
-   	treeMC->SetBranchAddress("piplus_ETA",&pip_eta);
-   	treeMC->SetBranchAddress("piminus_P",&pim_p);
-   	treeMC->SetBranchAddress("piminus_ETA",&pim_eta);
+   	//treeMC->SetBranchAddress("Kplus_P",&K_p);
+   	//treeMC->SetBranchAddress("Kplus_ETA",&K_eta);
+   	//treeMC->SetBranchAddress("piplus_P",&pip_p);
+   	//treeMC->SetBranchAddress("piplus_ETA",&pip_eta);
+   	//treeMC->SetBranchAddress("piminus_P",&pim_p);
+   	//treeMC->SetBranchAddress("piminus_ETA",&pim_eta);
 	///Create new tree
 	double w;
-    	TFile* output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/mc_Ds2KKpi_BDT_reweighted.root","RECREATE");
+    	TFile* output = new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_reweighted_Reco14.root","RECREATE");
     	TTree* new_tree = treeMC->CloneTree();//CopyTree();    
     	TBranch* Bra_w = new_tree->Branch("weight",&w,"weight/D");
 
         treeMC->SetBranchStatus("*",0);
-   	treeMC->SetBranchStatus("Bplus_ENDVERTEX_CHI2",1);
-   	treeMC->SetBranchStatus("*_PT",1);
-   	treeMC->SetBranchStatus("*_ETA",1);
-   	treeMC->SetBranchStatus("*_P",1);
+   	treeMC->SetBranchStatus("*ghostProb*",1);
    	treeMC->SetBranchStatus("nTracks",1);
 
    	///loop over MC events
@@ -382,14 +381,14 @@ void reweight(){
 		if(tmp==0)tmp=1.;
 		w*=tmp;
 		*/
-                tmp=h_p->GetBinContent(h_p->FindBin(p));
+                tmp=h_ghost->GetBinContent(h_ghost->FindBin(ghostProb));
 		if(tmp==0)tmp=1.;
 		w*=tmp;
-
+		/*
                 tmp=h_eta->GetBinContent(h_eta->FindBin(eta));
 		if(tmp==0)tmp=1.;
 		//w*=tmp;
-
+		*/
 		
 		tmp=h_nT->GetBinContent(h_nT->FindBin(nT));
 		if(tmp==0)tmp=1.;
@@ -422,8 +421,8 @@ void reweight(){
 
 	new_tree->Write();
 
-	etaFile->Close();
-	pFile->Close();
+	//etaFile->Close();
+	ghostFile->Close();
 	nTFile->Close();
 	//isMuFile->Close();
 	//trackFile->Close();
@@ -433,9 +432,9 @@ void reweight(){
 
 void dataVsMC(bool useWeights=false){
 	///B
-	plot("Bs_P","p(B) [MeV]",40,0,500000,useWeights,true);
+	plot("Bs_P","p(B) [MeV]",40,0,500000,useWeights);
 	plot("Bs_PT","p_{T}(B) [MeV]",40,0,40000,useWeights);
-	plot("Bs_ETA","#eta(B)",40,1,6,useWeights,true);
+	plot("Bs_ETA","#eta(B)",40,1,6,useWeights);
 	plot("Bs_IPCHI2_OWNPV","#chi^{2}_{IP}(B)",40,0,16,useWeights);
 	plot("Bs_FDCHI2_OWNPV","#chi^{2}_{FD}(B)",40,0,100000,useWeights);
 	plot("Bs_ENDVERTEX_CHI2","#chi^{2}_{vtx}(B)",40,0,35,useWeights);
@@ -469,8 +468,10 @@ void dataVsMC(bool useWeights=false){
 	plot("angPim","#theta_{D_{s} #pi^{-}}",40,0,3.141,useWeights);
 	plot("pi_minus_ptasy_1.00","pt cone asymmetry (#pi^{-})",40,-1,1,useWeights);
 	plot("pi_minus_TRACK_GhostProb","ghost prob (#pi^{-})",40,0,0.4,useWeights);
+
 	///Xs
         plot("Xs_max_DOCA","X_{s} max DOCA [mm]",40, 0, 0.4 ,useWeights);
+        plot("XsDaughters_min_IPCHI2","X_{s} min(#chi^{2}_{IP})",40, 0, 10 ,useWeights);
 
 	///Ds
 	plot("Ds_P","p(D_{s}) [MeV]",40,0,400000,useWeights);
@@ -478,6 +479,8 @@ void dataVsMC(bool useWeights=false){
 	plot("Ds_ETA","#eta(D_{s})",40,1,6,useWeights);
 	plot("Ds_FDCHI2_ORIVX","#chi^{2}_{FD}(D_{s})",40,0,40000,useWeights);
 	plot("Ds_DIRA_OWNPV","cos(DIRA) (D_{s})",40,0.9999,1,useWeights);
+        plot("DsDaughters_min_IPCHI2","D_{s} min(#chi^{2}_{IP})",40, 0, 10 ,useWeights);
+
 	///K+ from Ds
 	plot("K_plus_fromDs_P","p(K^{+} from D_{s}) [MeV]",40,0,180000,useWeights);
 	plot("K_plus_fromDs_PT","p_{T}(K^{+} from D_{s}) [MeV]",40,0,10000,useWeights);
@@ -500,12 +503,13 @@ void dataVsMC(bool useWeights=false){
 	plot("K_minus_fromDs_ptasy_1.00","pt cone asymmetry (K^{-} from D_{s})",40,-1,1,useWeights);
 	plot("K_minus_fromDs_TRACK_GhostProb","ghost prob (K^{-} from D_{s})",40,0,0.4,useWeights);
 	///event
-	plotEventVars("nPV","N_{PV}",10,0,10,useWeights);
-	plotEventVars("nTracks","N_{Tracks}",40,0,500,useWeights,true);
+	//plotEventVars("nPV","N_{PV}",10,0,10,useWeights);
+      //  plotEventVars("max_ghostProb","max(Track_ghostProb)",25,0.,0.375,useWeights);
+      //  plotEventVars("nTracks","# of tracks",40,0,450,useWeights);
 }
 
 void dataVsReweightedMC(){
-   reweight();
+   //reweight();
    dataVsMC(true);
 }
  
@@ -801,7 +805,7 @@ void applyPIDweights(){
 }
 
 
-int BsDsKpipi_mc(){
+int main(){
    time_t startTime = time(0);
    
    ///Set plot options
@@ -820,17 +824,22 @@ int BsDsKpipi_mc(){
    TH1::SetDefaultSumw2();
    TH2::SetDefaultSumw2();
 
-   //plot("Bs_PT","p_{T}(B) [MeV]",50,0,40000,true,false);
+  // plotEventVars("K_minus_fromDs_PIDK","#Delta LLK of K^{+}",25,-4,4,true,false);
+  // plotEventVars("K_minus_fromDs_PIDp","#Delta LLp of K^{+}",25,-4,4,true,false);
 
-    //dataVsMC(); 
+   //plot("nTracks","# of tracks",40,0,450,true,false);
+   //plot("nPV","# of PV",10,0,10,true,false);
+  // plot("max_ghostProb","max(Track_ghostProb)",25,0.,0.375,true,false);
 
-    //reweight();    
-    //dataVsReweightedMC(); 
+   // dataVsMC(); 
+
+   // reweight();    
+    dataVsReweightedMC(); 
 
     //compareBDTresponse();
     //applyBDTcut();
 
-    applyPIDweights();
+    //applyPIDweights();
     
     cout << "==============================================" << endl;
     cout << " Done " 

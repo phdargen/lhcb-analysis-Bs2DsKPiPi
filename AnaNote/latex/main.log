@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  1 JUN 2016 15:46
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  2 JUN 2016 17:50
 entering extended mode
  %&-line parsing enabled.
 **main
@@ -153,6 +153,9 @@ Package: array 2005/08/23 v2.4b Tabular extension package (FMi)
 )
 \everycr=\toks20
 \minrowclearance=\skip53
+)
+(/usr/share/texmf/tex/latex/placeins/placeins.sty
+Package: placeins 2005/04/18  v 2.2
 )
 (/usr/share/texmf/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2000/07/18 v2.13 AMS math features
@@ -1113,33 +1116,97 @@ m12.pdf>] [14 <./figs/BmassFit_sim11.pdf> <./figs/BmassFit_sim12.pdf>])
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-) (./results.tex [15]) [16] (./appendix_new.tex) [17] (./main.bbl) [18]
-(./main.aux) ) 
+) (./results.tex [15]) [16] (./appendix_new.tex
+<figs/MC-v-Data/nTracks.pdf, id=577, 569.12625pt x 385.44pt>
+File: figs/MC-v-Data/nTracks.pdf Graphic file (type pdf)
+
+<use figs/MC-v-Data/nTracks.pdf>
+<figs/MC-v-Data/max_ghostProb.pdf, id=578, 569.12625pt x 385.44pt>
+File: figs/MC-v-Data/max_ghostProb.pdf Graphic file (type pdf)
+
+<use figs/MC-v-Data/max_ghostProb.pdf>
+<figs/MC-v-Data/Bs_DIRA_OWNPV.pdf, id=579, 569.12625pt x 385.44pt>
+File: figs/MC-v-Data/Bs_DIRA_OWNPV.pdf Graphic file (type pdf)
+
+<use figs/MC-v-Data/Bs_DIRA_OWNPV.pdf>
+<figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf, id=580, 569.12625pt x 385.44pt>
+File: figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf Graphic file (type pdf)
+
+<use figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf>
+<figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf, id=581, 569.12625pt x 385.44pt>
+File: figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf Graphic file (type pdf)
+
+<use figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf>
+<figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf, id=582, 569.12625pt x 385.44pt>
+File: figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf Graphic file (type pdf)
+
+<use figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<figs/MC-v-Data/Ds_DIRA_OWNPV.pdf, id=583, 569.12625pt x 385.44pt>
+File: figs/MC-v-Data/Ds_DIRA_OWNPV.pdf Graphic file (type pdf)
+
+<use figs/MC-v-Data/Ds_DIRA_OWNPV.pdf>
+<figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf, id=584, 569.12625pt x 385.44pt>
+File: figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf Graphic file (type pdf)
+
+<use figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf>
+<figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf, id=585, 569.12625pt x 385.44pt>
+File: figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf Graphic file (type pdf)
+
+<use figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf>
+<figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf, id=586, 569.12625pt x 385.44pt>
+File: figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf Graphic file (type pdf)
+
+<use figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<figs/MC-v-Data/pi_minus_ptasy_1_00.pdf, id=587, 569.12625pt x 385.44pt>
+File: figs/MC-v-Data/pi_minus_ptasy_1_00.pdf Graphic file (type pdf)
+
+<use figs/MC-v-Data/pi_minus_ptasy_1_00.pdf>
+<figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf, id=588, 569.12625pt x 385.44pt>
+File: figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf Graphic file (type pdf)
+<use figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[17 <./figs/MC-v-Data/nTracks.pdf> <./figs/MC-v-Data/max_ghostProb.pdf>]
+[18 <./figs/MC-v-Data/Bs_DIRA_OWNPV.pdf> <./figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pd
+f> <./figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf> <./figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf
+>] [19 <./figs/MC-v-Data/Ds_DIRA_OWNPV.pdf> <./figs/MC-v-Data/Ds_FDCHI2_ORIVX.p
+df> <./figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf> <./figs/MC-v-Data/K_plus_f
+romDs_ptasy_1_00.pdf> <./figs/MC-v-Data/pi_minus_ptasy_1_00.pdf> <./figs/MC-v-D
+ata/pi_minus_fromDs_ptasy_1_00.pdf>]) (./main.bbl) [20
+
+] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 7180 strings out of 256216
- 99685 string characters out of 1917072
- 199224 words of memory out of 1500000
- 10157 multiletter control sequences out of 10000+200000
+ 7261 strings out of 256216
+ 102224 string characters out of 1917072
+ 199305 words of memory out of 1500000
+ 10217 multiletter control sequences out of 10000+200000
  24980 words of font info for 116 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
  37i,14n,40p,1768b,388s stack positions out of 5000i,500n,6000p,200000b,15000s
-</usr/share/texmf/fonts/type1/bluesky/cm/cmbsy10.pfb></usr/share/
-texmf/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/c
-m/cmbx12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/te
-xmf/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/
-cmmi6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi8.pfb></usr/share/texmf/
-fonts/type1/bluesky/cm/cmmib10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr
-10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/fon
-ts/type1/bluesky/cm/cmr6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pfb>
-</usr/share/texmf/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/type1
-/bluesky/cm/cmss8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr
-/share/texmf/fonts/type1/bluesky/cm/cmsy6.pfb></usr/share/texmf/fonts/type1/blu
-esky/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti10.pfb></usr/sha
-re/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/type1/bluesk
-y/cm/cmtt12.pfb>
-Output written on main.pdf (21 pages, 461475 bytes).
+</usr/share/texmf/fonts/type1/bluesky/cm/cmbsy10.pfb></usr/shar
+e/texmf/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky
+/cm/cmbx12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/
+texmf/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf/fonts/type1/bluesky/c
+m/cmmi6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi8.pfb></usr/share/texm
+f/fonts/type1/bluesky/cm/cmmib10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/c
+mr10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/f
+onts/type1/bluesky/cm/cmr6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pf
+b></usr/share/texmf/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/typ
+e1/bluesky/cm/cmss8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></u
+sr/share/texmf/fonts/type1/bluesky/cm/cmsy6.pfb></usr/share/texmf/fonts/type1/b
+luesky/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti10.pfb></usr/s
+hare/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/type1/blue
+sky/cm/cmtt12.pfb>
+Output written on main.pdf (23 pages, 558342 bytes).
 PDF statistics:
- 675 PDF objects out of 1000 (max. 8388607)
- 78 named destinations out of 1000 (max. 131072)
- 19217 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 777 PDF objects out of 1000 (max. 8388607)
+ 84 named destinations out of 1000 (max. 131072)
+ 19277 words of extra memory for PDF output out of 20736 (max. 10000000)
 

@@ -3,17 +3,41 @@
 
 \subsection{Re-weghted MC observables}
 \label{sec: mcvdata}
-The following figures show the distributions of observables used during the multivariate selection stage, for data, monte carlo and re-weighted monte carlo.
+Figure \ref{fig: reweightingVar} shows the distributions of the (left) number of tracks and the (right) maximum ghost probability over all tracks for data, monte carlo and re-weighted monte carlo.
+These two observables showed significant dissagrement and were therefore chosen for the re-weighting procedure.
+
+\begin{figure}[ht!]
+\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/nTracks.pdf}
+\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/max_ghostProb.pdf}
+\label{fig: reweightingVar}
+\caption{.}
+\end{figure}
+
+The following figures show the comparison of all other observables, which were used during the multivariate selection stage.
 
 
-%\begin{figure}[h]
-%\includegraphics[height=6.cm,width=0.45\textwidth]{figs/.pdf}
-%\includegraphics[height=6.cm,width=0.45\textwidth]{figs/.pdf}\\
-%\includegraphics[height=6.cm,width=0.45\textwidth]{figs/.pdf}
-%\includegraphics[height=6.cm,width=0.45\textwidth]{figs/.pdf}
-%\caption{Comparison of data and simulated observables, before and after re-weighting 1.}
-%\end{figure}
+\begin{figure}[h!]
+\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/Bs_DIRA_OWNPV.pdf}
+\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf}\\
+\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf}
+\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf}
+\caption{Comparison of data and simulated observables, before and after re-weighting 1.}
+\end{figure}
 
+\begin{figure}[h!]
+\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/Ds_DIRA_OWNPV.pdf}
+\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf}\\
+\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf}
+\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf}
+\caption{Comparison of data and simulated observables, before and after re-weighting 2.}
+\end{figure}
+
+\begin{figure}[h!]
+\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/pi_minus_ptasy_1_00.pdf}
+%\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/log_DsDaughters_min_IPCHI2.pdf}\\
+\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf}
+\caption{Comparison of data and simulated observables, before and after re-weighting 3.}
+\end{figure}
 
 \subsection{Toys for normalization fit}
 \label{sec: toysNorm}
@@ -30,6 +54,7 @@ where $x$ is the fitted value, $x_{0}$ the generated value and $\Delta x$ the un
 Given the fit is correctly implemented and unbiased, one expects the distribution of the pulls for every fit parameter to be centered around 0, with a gaussian width of 1.
 
 
+
 %\begin{figure}[h]
 %\includegraphics[height=6.cm,width=0.45\textwidth]{figs/.pdf}
 %\includegraphics[height=6.cm,width=0.45\textwidth]{figs/.pdf}\\
@@ -37,3 +62,6 @@ Given the fit is correctly implemented and unbiased, one expects the distributio
 %\includegraphics[height=6.cm,width=0.45\textwidth]{figs/.pdf}
 %\caption{Pull distributions for 1000 pseudo experiments, using the fit model for the normalization fit. Part 1.}
 %\end{figure}
+
+
+\FloatBarrier
