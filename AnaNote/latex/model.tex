@@ -8,7 +8,8 @@ $\Bs\to\Ds\kaon\pion\pion$ and $\Bs\to\Ds\pion\pion\pion$ candidates.
 \label{subsec: signalmodel}
 The mass distribution of $\Bs\to\Ds\kaon\pion\pion$ signal is modeled using two gaussian functions, which share the same mean $\mu$, but are allowed to have different widths $\sigma_{1}$ and $\sigma_{2}$. 
 Another double gaussian is used to account for the contribution of $\B^{0}\to\Ds\kaon\pion\pion$ decays, which are also present in the $m(\Ds\kaon\pion\pion)$ spectrum. 
-All parameters of both double gaussians except the core width $\sigma_{1}$ \comment{Why is it fixed and to what? } are allowed to float in the nominal fit. \newline
+All parameters of both double gaussians except the core width $\sigma_{1}$ are allowed to float in the nominal fit. 
+The core width is fixed to the value obtained from simulation in order to improve the stability of the fit. \newline
 The same approach is used to describe the invariant mass distribution of $\Bs\to\Ds\pion\pion\pion$ candidates. 
 A double gaussian is used to model this signal shape, all parameters except the core width $\sigma_{1}$ are allowed to float.
 
@@ -60,19 +61,19 @@ not reconstructed.
 \end{itemize}
 
 Again the combinatorial background is expected to be flat in the spectrum of the invariant mass of $\Bs\to\Ds\kaon\pion\pion$ candidates. An exponential function is used to model this contribution.\newline
-The shape of the partially reconstructed $\Bs$/$\Bz\to\Ds^{*}\kaon\pion\pion$ background is taken from simulation. 
-\comment{I think we take them from the normalization mode}
-A MC sample of $\Bs\to\Ds^{*}\kaon\pion\pion$ events, where the $\gamma$/$\piz$ is excluded from the reconstruction, is generated. 
-The sum of three bifurcated gaussians is then fitted to the mass distribution of $\Bs$ candidates. The distribution and the overlaid fit is shown in Fig. \ref{fig: BsDsstarKpipiMC}.  
+The shape of the partially reconstructed $\Bs$/$\Bz\to\Ds^{*}\kaon\pion\pion$ background is taken from the normalization channel, where it can be directly fitted by the sum of three bifurcated gaussians as described above.
+In the signal massfit, all shape parameters for the $\Bs\to\Ds^{*}\kaon\pion\pion$ background are fixed to the input values from our normalization fit.  
+%A MC sample of $\Bs\to\Ds^{*}\kaon\pion\pion$ events, where the $\gamma$/$\piz$ is excluded from the reconstruction, is generated. 
+%The sum of three bifurcated gaussians is then fitted to the mass distribution of $\Bs$ candidates. The distribution and the overlaid fit is shown in Fig. \ref{fig: BsDsstarKpipiMC}.  
 
-\begin{figure}[h]
-\includegraphics[height=8.cm,width=0.80\textwidth]{figs/Bs2DsstartKpipi.pdf}
-\caption{Invariant mass distribution of simulated $\Bs\to\Ds^{*}\kaon\pion\pion$ events, where the $\gamma$/$\piz$ is excluded from the reconstruction. 
-A fit of the sum of three bifurcated gaussians to this distribution is overlaid.}
-\label{fig: BsDsstarKpipiMC}
-\end{figure}
+%\begin{figure}[h]
+%\includegraphics[height=8.cm,width=0.80\textwidth]{figs/Bs2DsstartKpipi.pdf}
+%\caption{Invariant mass distribution of simulated $\Bs\to\Ds^{*}\kaon\pion\pion$ events, where the $\gamma$/$\piz$ is excluded from the reconstruction. 
+%A fit of the sum of three bifurcated gaussians to this distribution is overlaid.}
+%\label{fig: BsDsstarKpipiMC}
+%\end{figure}
 
-The obtained shape parameters are used as input values for the nominal $m(\Ds\kaon\pion\pion)$ mass fit. For the contribution of the $\Bz\to\Ds^{*}\kaon\pion\pion$ background, the same shape is used, but the means $\mu_{i}$ of the bifurcated gaussians are shifted down by $m_{\Bs} - m_{\Bz}$ \cite{Agashe:2014kda}. The yield of both contributions are directly determined in the nominal fit. \newline
+For the contribution of the $\Bz\to\Ds^{*}\kaon\pion\pion$ background, the same shape is used, but the means $\mu_{i}$ of the bifurcated gaussians are shifted down by $m_{\Bs} - m_{\Bz}$ \cite{Agashe:2014kda}. The yield of both contributions are directly determined in the nominal fit. \newline
 To determine the shape of miss-identified $\Bs\to\Ds\pion\pion\pion$ candidates in the $m(\Ds\kaon\pion\pion)$ spectrum, we take a truth matched signal MC sample of our normalization channel. 
 We then use the PIDCalib package to determine the $\pion\rightarrow\kaon$ fake rate. For every candidate in our MC sample, a $p$ and $\eta$-dependent event weight is computed and assigned. 
 We flip the particle hypothesis from pion to kaon for the $\pion$ with the biggest miss-ID weight for each event and recompute the invariant $\Bs$ mass. This distribution is then modelled using two crystal ball functions. 
