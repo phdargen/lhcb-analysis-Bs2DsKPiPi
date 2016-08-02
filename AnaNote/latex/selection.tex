@@ -1,14 +1,14 @@
 \section{Selection}
 \label{sec:Selection}
 
-A twofold approach is used to isolate the $\Bs\to\Ds\kaon\pion\pion$ candidates from data passing the stripping line. 
+A two-fold approach is used to isolate the $\Bs\to\Ds\kaon\pion\pion$ candidates from data passing the stripping line. 
 First, further one-dimensional cuts are applied to reduce the level of combinatorial background and to veto some specific physical background. 
 After that, a multivariate classifier is trained which combines the information of several input variables, including their correlation, into one powerful discriminator
 between signal and combinatorial background. 
 
 \subsection{Cut-based selection}
 
-In order to minimize the contribution of combinatorial background to our samples, we apply the following cuts to the b-hadron:
+In order to minimize the contribution of combinatorial background to our samples, we apply the following cuts to the b hadron:
 
 \begin{enumerate}[(i)]
 
@@ -25,40 +25,42 @@ In order to minimize the contribution of combinatorial background to our samples
 \end{enumerate}    
 
 
-Additionally, we veto various physical backgrounds, which have either the same final state as our signal decay, or can contribute via a single miss-identification of $\kaon\to\pion$ or $\kaon\to\proton$:
+Additionally, we veto various physical backgrounds, which have either the same final state as our signal decay, or can contribute via a single missidentification of $\kaon\to\pion$ or $\kaon\to\proton$:
 
 \begin{itemize}
 
-\item $\Bs\to\Dsp\Dsm$ : $|M(\kaon\pion\pion) - m_{\Ds}| > 20 \mevcc$ 
+\item $\Bs\to\Dsp\Dsm$ : $|M(\kaon\pion\pion) - m_{\Ds}| >$ 20 $\mevcc$ 
 
-\item $\Bs\to\Ds\kaon\kaon\pion$ : $\pim$ $\dllkpi$ $<$ 5 
-i
-\item $\Bz\to\Dp(\to\Kp\pim\pip)\kaon\pion\pion$ : possible with single miss-ID of $\Kp\rightarrow\pip$, vetoed by changing mass hypothesis and recompute $|M(\Kp\pim\pip) - m_{Dp}|$ $>$ 20 $\mevcc$, 
+\item $\Bs\to\Ds^{-}\Kp\Km\pip$ : possible with single missID of $\Km\rightarrow\pim$, rejected by requiring $\pim$ to fulfill $\dllkpi$ $<$ 5 
+
+\item $\Bz\to\Dp(\to\Kp\pim\pip)\kaon\pion\pion$ : possible with single missID of $\pip\rightarrow\Kp$, vetoed by changing particle hypothesis and recompute $|M(\Kp\pim\pip) - m_{Dp}|$ $>$ 20 $\mevcc$, 
 or the $\Kp$ has to fulfill $\dllkpi$ $>$ 10
 
-\item $\Lb\to\Lc(\to\proton\Km\pip)\kaon\pion\pion$ : possible with single miss-ID of $\Kp\rightarrow\proton$, vetoed by changing mass hypothesis and recompute $M(\proton\Km\pip) - m_{\Lc}$ $>$ 15 $\mevcc$, 
-or the $\Kp$ has to fulfill $\mathrm{DLL}_{\kaon\proton}$ $>$ 0  
+\item $\Lb\to\Lc(\to\proton\Km\pip)\kaon\pion\pion$ : possible with single missID of $\proton\rightarrow\Kp$, vetoed by changing particle hypothesis and recompute $M(\proton\Km\pip) - m_{\Lc}$ $>$ 15 $\mevcc$, 
+or the $\Kp$ has to fulfill ($\dllkpi$ - $\dllppi$) $>$ 0  
 
 \end{itemize} 
 
 
-All signal candidates for the branching ratio measurement are reconstructed via the $\Ds\to\Kp\Km\pip$ channel. This decay can either proceed via the narrow $\phiz$ resonance, the broader $\Kstarz$ resonance, or non-resonant.
+All signal candidates used in the branching ratio measurement are reconstructed via the $\Ds\to\Kp\Km\pip$ channel. This decay can either proceed via the narrow $\phiz$ resonance, the broader $\Kstarz$ resonance, or non resonant.
 Depending on the decay process being resonant or not, we apply additional PID requirements:
 
 \begin{enumerate}
 
 \item resonant case: 
 \begin{enumerate}
-\item $\Dsp\to\phiz\pip$, with $|M(\Kp\Km) - m_{\phiz}|$ $<$ 20 $\mevcc$ : no additional requirements
-\item $\Dsp\to\Kstarzb\Kp$, with  $|M(\Km\pip) -m_{\Kstarz}$ $<$ 75 $\mevcc$ :  $\dllkpi$ $>$ 0 for kaons
+\item $\Dsp\to\phiz\pip$, with $|M(\Kp\Km) - m_{\phiz}|$ $<$ 20 $\mevcc$ : no additional requirements, since $\phiz$ is narrow and almost pure $\Kp\Km$. 
+\item $\Dsp\to\Kstarzb\Kp$, with  $|M(\Km\pip) -m_{\Kstarz}$ $<$ 75 $\mevcc$ :  $\dllkpi$ $>$ 0 for kaons, since this resonance is more than ten times broader than $\phiz$. 
 \end{enumerate}
 
-\item non-resonant case: $\dllkpi$ $>$ 5 for kaons
+\item non resonant case: $\dllkpi$ $>$ 5 for kaons, since the non resonant category has significant charmless contributions.
 
 \end{enumerate}
 
-
-%%%
+Since a measurement of the weak CKM phase $\gamma$ in the $\Bs\to\Ds\kaon\pion\pion$ channel will almost certainly be statistically limited, 
+we plan to add also the $\Ds\to\pion\pion\pion$ final state with $\mathcal{BR}(\Ds\to\pion\pion\pion) \approx 0.2\cdot\mathcal{BR}(\Ds\to\kaon\kaon\pion)$ to the $\gamma$ analysis. 
+Since the determination of the branching ratio is expected to have the same level of statistical and systematical uncertainties and due to the additional complexity (different selection, efficiencies, simulated samples), 
+we choose to only use the most prominent $\Ds\to\kaon\kaon\pion$ final state for the BR determination. 
 
 
 \subsection{Multivariate stage}
@@ -70,7 +72,8 @@ The 17 variables used for the training are:
 
 \item max(ghostProb) over all tracks
 
-\item cone($\pt$) asymmetry of every track
+\item cone($\pt$) asymmetry of every track, 
+which is defined to be the difference between the $\pt$ of the $pion$/$\kaon$ and the sum of all other $\pt$ in a cone of radius $r = \sqrt{(\Delta\Phi)^{2} + (\Delta\eta)^{2}}$ $<$ 1 rad around the signal $pion$/$\kaon$ track.
 
 \item min(IP$\chi^{2}$) over the $X_{s}$ daughters
 
@@ -78,7 +81,7 @@ The 17 variables used for the training are:
 
 \item min(IP$\chi^{2}$) over the $\Ds$ daughters
 
-\item $\Ds$ DIRA
+\item $\Ds$ and $\Bs$ DIRA
 
 \item $\Ds$ FD significance
 
@@ -88,13 +91,23 @@ The 17 variables used for the training are:
 
 \end{itemize}
 
-Various classifiers were investigated in order to select the most efficient discriminator. As the result a boosted decision tree with gradient boost (BDTG) is chosen as nominal classifier. 
-We use truth-matched Monte Carlo (MC)
+Various classifiers were investigated in order to select the best performing discriminator. Consequently, a boosted decision tree with gradient boost (BDTG) is chosen as nominal classifier. 
+We use truth-matched MC
 %, taken from the mass region $\pm 60 \mevcc$ around the nominal $\Bs$ mass, 
 as signal input. 
-Those simulated signal candidates are required to pass the same trigger, stripping and preselection requirements, that were used to select the data samples. 
+Simulated signal candidates are required to pass the same trigger, stripping and preselection requirements, that were used to select the data samples. 
 %\comment{What about other preselection cuts? Maybe we could include the PID weights?} 
-For the background we use events from the high mass sideband ($m_{\Bs candidate}$ $>$ 5600 $\mevcc$) of our data samples. \newline
+For the background we use events from the high mass sideband ($m_{\Bs candidate}$ $>$ 5600 $\mevcc$) of our data samples. 
+As shown in Fig. \ref{fig:massforBDT}, this mass region is sufficiently far away from signal structures and is expected to be dominantly composed of combinatorial background. \newline
+
+\begin{figure}[h]
+%\vspace*{-0.4cm}
+\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/mass_Bs_forBDT_12_AnA.png}
+%\vspace*{-0.2cm}
+\caption{Invariant mass distribution of preselected $\Bs\to\Ds\kaon\pion\pion$ candidates. The red coloured region with $m_{\Bs candidate}$ $>$ 5600 $\mevcc$ is used as background input for the boosted decision tree.}
+\label{fig:massforBDT}
+\end{figure}
+
 The distributions of the input variables for signal and background are shown in Fig. \ref{fig:BDT_Input_1}. 
 
 \begin{figure}[h]
@@ -142,9 +155,9 @@ The BDTG output distribution for test and training samples is shown in Fig \ref{
 
 \begin{figure}[h]
 %\vspace*{-0.4cm}
-\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/BDT_Response.pdf}
+\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/BDT_Response_new.pdf}
 %\vspace*{-0.2cm}
-\caption{BDTG output classifier distribution for (blue) signal and (red) background. The response of an independent test sample is overlaid.}
+\caption{BDTG output classifier distribution for (blue) signal and (red) background. The response of an independent test sample (dots) is overlaid.}
 \label{fig:BDT_Response}
 \end{figure}
 
@@ -152,17 +165,18 @@ The BDTG output distribution for test and training samples is shown in Fig \ref{
        
 We determine the optimal cut value by maximizing the figure of merit $S/\sqrt{S+B}$ where S is the signal yield and B the background yield in the signal region, defined to be within $\pm$50 $\mevcc$ of the nominal $\Bs$ mass. 
 To avoid a bias in the determination of the branching fraction, we determine S and B using our normalization channel. 
-All trigger, stripping and additional selections described in this and the previous chapters are applied to the $\Bs\to\Ds\pion\pion\pion$ data samples. 
+All trigger, stripping and additional selection criteria described in this and the previous chapter are applied to the $\Bs\to\Ds\pion\pion\pion$ data samples. 
 After that, we perform a simplified version of the fit to the invariant mass distribution of $\Bs\to\Ds\pion\pion\pion$ candidates described in Sec.~\ref{sec: fitting}.
-Here, a gaussian signal model and an exponential function to model combinatorial background is used.
-From this fit we can estimate the number of signal events in our normalization channel. 
-Multiplying that number with the PDG branching fraction of $\frac{\mathcal{B}(\Bs\to\Ds\kaon\pion\pion)}{\mathcal{B}(\Bs\to\Ds\pion\pion\pion)}$ and the ratio of efficiencies discussed in Sec. \ref{sec: efficiency} allows us to estimate the expected number of $\Bs\to\Ds\kaon\pion\pion$ signals. The number of background events can then be computed as
+Here, a Gaussian function to model the signal and an exponential function to model combinatorial background is used.
+From this fit we estimate the number of signal events in our normalization channel. 
+Multiplying that number with the PDG branching fraction of $\frac{\mathcal{B}(\Bs\to\Ds\kaon\pion\pion)}{\mathcal{B}(\Bs\to\Ds\pion\pion\pion)}$ and the ratio of efficiencies discussed in Sec. \ref{sec: efficiency} allows us to estimate the expected number of $\Bs\to\Ds\kaon\pion\pion$ signal decays. The number of background events can then be computed as
 
 \begin{equation}
  N_{bkg}=N_{all}-N_{sig}|_{m_{\Bs\pm50\mevcc}}.   
 \end{equation}
 
-The efficiency curves as a function of the cut value are shown in Fig. \ref{fig:BDT_Efficiency}.
+The efficiency curves as a function of the cut value are shown in Fig. \ref{fig:BDT_Efficiency}. 
+The optimal cut value is found to be BDTG $>$ 0.7012. At this working point the signal efficiency is estimated to be 72.47 $\%$, while the background rejection in the signal region is 97.38 $\%$. 
 
 
 \begin{figure}[h]

@@ -1,7 +1,7 @@
 \section{Efficiency corrections}
 \label{sec: efficiency}
 
-Several relative efficiency corrections are needed to measure the branching fraction of $\Bs\to\Ds\kaon\pion\pion$ with respect to $\Bs\to\Ds\pion\pion\pion$. Precise knowledge of the efficiency related to the detector acceptance, PID requirements, used trigger lines and offline selections are crucial for both, the determination of $\gamma$ and the branching ratio measurement.
+Several relative efficiency corrections are needed to measure the branching fraction of the $\Bs\to\Ds\kaon\pion\pion$ decay with respect to $\Bs\to\Ds\pion\pion\pion$. Precise knowledge of the efficiency related to the detector acceptance, PID requirements, used trigger lines and offline selections are crucial for both, the determination of $\gamma$ and the branching ratio measurement.
 
 \subsection{Relative efficiency for BR measurement}
 For the branching ratio measurement, the relative efficiency is given by
@@ -15,25 +15,28 @@ where $\epsilon = \frac{\epsilon_{Norm}}{\epsilon_{Sig}}$ is the ratio of the ef
 
 \begin{itemize}
 
-\item $\epsilon^{acc}_{rel}$: This is the relative efficiency due to the geometrical acceptance of the LHCb detector. All tracks are required to have a polar angle between 10 and 400 mrad and a minimal momentum of $|p| >$ 1.6 $\gevc$ in order to be recorded for further analysis. Since the particle species of one track differs between the signal and normalization mode, the efficiencies caused by the geometrical acceptance are expected to be different for the two channels.
+\item $\epsilon^{acc}_{rel}$: This is the relative efficiency due to the geometrical acceptance of the LHCb detector. All tracks are required to have a polar angle between 10 and 400 mrad and a minimal momentum of $|p| >$ 1.6 $\gevc$ in order to be recorded for further analysis. 
+Since the particle species of one track differs between the signal and normalization mode, the efficiencies caused by the geometrical acceptance are expected to be slightly different for the two channels.
 
 \item $\epsilon^{sel}_{rel}$: The relative selection efficiency due to trigger and offline requirements. 
+This efficiency is evaluated using the simulated $\Bs\to\Ds\kaon\pion\pion$ and $\Bs\to\Ds\pion\pion\pion$ samples, 
+comparing the signal yield at generator level to the yield after the trigger and offline requirements are imposed. 
+The respective yields used for the efficiency determination can be found in Tab. \ref{table:MC11} and \ref{table:MC12}. 
 
 \item $\epsilon^{pid}_{rel}$: The relative PID efficiency due to the identification likelihood requirements for tracks from both modes. This is evaluated using efficiencies from $\D^{*+}\to D^{0}(\Km\pip)\pip$ calibration data, 
-which is weighted by the expected momentum (p) distribution taken from simulation.
+which is weighted by the expected momentum ($\ptot$) distribution taken from simulation. The PIDCalib tool with a $\ptot$- and $\eta$-dependent binning is used to perform this evaluation.
 
 \end{itemize}
 
  Using the definition given in Eq. \ref{eq: relEff}, the branching ratio can be expressed as
 
 \begin{equation}
-\frac{\mathcal{B}(\Bs\to\Ds\kaon\pion\pion)}{\mathcal{B}(\Bs\to\Ds\pion\pion\pion)} = \frac{\mathcal{Y}(\Bs\to\Ds\kaon\pion\pion)}{\mathcal{Y}(\Bs\to\Ds\pion\pion\pion)},
-\cdot \epsilon_{rel}
+\frac{\mathcal{B}(\Bs\to\Ds\kaon\pion\pion)}{\mathcal{B}(\Bs\to\Ds\pion\pion\pion)} = \frac{\mathcal{Y}(\Bs\to\Ds\kaon\pion\pion)}{\mathcal{Y}(\Bs\to\Ds\pion\pion\pion)} \cdot \epsilon_{rel},
 \label{eq: BRwEff}
 \end{equation} 
 
 where $\mathcal{Y}(x)$ represents the yield of the respective channel. \newline
-The single efficiencies, as well as the total selection efficiency, for the signal and normalization channel, is given in Table \ref{tab: effTab}.
+The single efficiencies, as well as the total selection efficiency, for the signal and normalization channel, is given in Tab. \ref{tab: effTab}.
 
 \begin{table}[h!]
 \centering

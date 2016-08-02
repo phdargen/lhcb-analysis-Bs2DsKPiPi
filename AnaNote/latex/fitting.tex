@@ -1,26 +1,29 @@
-\section{Massfits for signal and normalization channel}
+\section{Mass fits for signal and normalization}
 \label{sec: fitting}
 
-This section describes the nominal fits to the invariant mass distribution of $\Bs\to\Ds\kaon\pion\pion$ and $\Bs\to\Ds\pion\pion\pion$ candidates after all selection steps, described in the previous Sections, are applied. 
+This section describes the fits to the invariant mass distribution of $\Bs\to\Ds\kaon\pion\pion$ and $\Bs\to\Ds\pion\pion\pion$ candidates after all selections are applied. 
 The obtained yields are summarized in Tab. \ref{tab: SigYields}.
 
 \subsection{Fit to $\Bs\to\Ds\pion\pion\pion$ candidates}
 \label{subsec: NormFit}
 
 An unbinned maximum likelihood fit is performed simultaneously to the invariant mass distribution of $\Bs\to\Ds\pion\pion\pion$ candidates, for 7 and 8 TeV data. 
-As discussed in Sec. \ref{subsec: signalmodel}, the fit is given as the sum of the double gaussian signal model, the sum of three bifurcated gaussians to model the partially reconstructed $\Bs\to\Ds^{*}\pion\pion\pion$ background, as well as an exponential to account for combinatorial background. The invariant mass distribution and the fit to it is shown in Fig. \ref{fig: BsDs3piFit}.
+As discussed in Sec. \ref{subsec: signalmodel}, the fit is given as the sum of the double Gaussian signal model, the sum of three bifurcated Gaussian functions to model the partially reconstructed $\Bs\to\Ds^{*}\pion\pion\pion$ background and an Exponential function to account for combinatorial background. The invariant mass distribution and the fit is shown in Fig. \ref{fig: BsDs3piFit}.
 
 \begin{figure}[h]
 \includegraphics[height=7.cm,width=0.49\textwidth]{figs/3pi_BmassFit_sim11.pdf}
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/3pi_BmassFit_sim12.pdf}
+\includegraphics[height=7.cm,width=0.49\textwidth]{figs/3pi_BmassFit_sim12.pdf}\\
+\includegraphics[width=0.49\textwidth,height=1.5cm]{figs/3pi_pull_sim11.pdf}
+\includegraphics[width=0.49\textwidth,height=1.5cm]{figs/3pi_pull_sim12.pdf}
 \caption{Invariant mass distribution of $\Bs\to\Ds\pion\pion\pion$ candidates for (left) 2011 and (right) 2012 data.
-A fit described in the text is overlaid. The dashed lines show the (green) partially reconstructed and (red) combinatorial background, as well as the (blue) signal component.}
+The fit described in the text is overlaid. The dashed lines show the (magenta) partially reconstructed and (red) combinatorial component, as well as the (blue) signal component. 
+The pull distributions for the simultaneous fit are shown at the lower left and right.}
 \label{fig: BsDs3piFit}
 \end{figure}
 
-The determined number of $\Bs\to\Ds\pion\pion\pion$ decays is $8496 \pm 102$ for 2011 data and $19410 \pm 160$ for 2012 data. 
-The determined yield for the partially reconstructed $\Bs\to\Ds^{*}\pion\pion\pion$ background is  (2011) $16904 \pm 299$ and (2012)  $38437 \pm 589$, 
-while the yield for the combinatorial background is (2011) $16066 \pm 304$ and (2012) $35285 \pm 596$.
+%The determined number of $\Bs\to\Ds\pion\pion\pion$ decays is $8496 \pm 102$ for 2011 data and $19410 \pm 160$ for 2012 data. 
+%The determined yield for the partially reconstructed $\Bs\to\Ds^{*}\pion\pion\pion$ background is  (2011) $16904 \pm 299$ and (2012)  $38437 \pm 589$, 
+%while the yield for the combinatorial background is (2011) $16066 \pm 304$ and (2012) $35285 \pm 596$.
 
 
 
@@ -29,29 +32,45 @@ while the yield for the combinatorial background is (2011) $16066 \pm 304$ and (
 
 \begin{figure}[h]
 \includegraphics[height=7.cm,width=0.49\textwidth]{figs/BmassFit_sim11.pdf}
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/BmassFit_sim12.pdf}
+\includegraphics[height=7.cm,width=0.49\textwidth]{figs/BmassFit_sim12.pdf}\\
+\includegraphics[width=0.49\textwidth,height=1.5cm]{figs/pull_sim11.pdf}
+\includegraphics[width=0.49\textwidth,height=1.5cm]{figs/pull_sim12.pdf}
 \caption{Invariant mass distribution of $\Bs\to\Ds\kaon\pion\pion$ candidates for (left) 2011 and (right) 2012 data.
-A fit described in the text is overlaid. The dashed lines show the (green) partially reconstructed and (red) combinatorial background, as well as the (blue) signal component. 
-Additional, the dashed magenta line depicts the miss-ID background and the dashed yellow line shows the miss-identified, partially reconstructed background component.}
+A fit described in the text is overlaid. The dashed lines show the (magenta) partially reconstructed and (red) combinatorial background, as well as the (blue) signal component. 
+The dashed green line depicts the misID backgrounds and the dashed yellow line depicts the misidentified, partially reconstructed background component. 
+The pull distributions for the simultaneous fit are shown at the lower left and right.}
 \label{fig: BsDsKpipiFit}
 \end{figure}
 
-
-Fig. \ref{fig: BsDsKpipiFit} shows the invariant mass distribution of $\Bs\to\Ds\kaon\pion\pion$ candidates. 
-A simultaneous unbinned maximum likelihood fit is overlaid, which consists of two double gaussian models for the $\Bz$ and $\Bs$ signal, two sums of three bifurcated gaussians for the $\Bs$/$\Bz\to\Ds^{*}\kaon\pion\pion$ partially reconstructed background contributions and two sums of double crystal ball functions for the single miss-ID $\Bs\to\Ds\pion\pion\pion$ and the partially reconstructed, miss-identified $\Bs\to\Ds^{*}\pion\pion\pion$ decays. \newline
-The extracted signal yields are (2011) $375 \pm  26$ and (2012) $866 \pm 42$.  
-
+The shape of the invariant mass distribution of$\Bs\to\Ds\kaon\pion\pion$ candidates is described by the sum of two double Gaussian functions for the $\Bz$ and $\Bs$ signal, 
+two sums of three bifurcated Gaussians for the $\Bs$/$\Bz\to\Ds^{*}\kaon\pion\pion$ partially reconstructed background contributions and 
+two sums of double Crystal Ball functions for the single misID $\Bs\to\Ds\pion\pion\pion$ and the partially reconstructed, misidentified $\Bs\to\Ds^{*}\pion\pion\pion$ decays. 
+A simultaneous unbinned maximum likelihood fit is performed and the result is shown in Fig. \ref{fig: BsDsKpipiFit}.
+ 
 
 \begin{table}[h]
 \centering
 \begin{tabular}{l c c}
-Decay & yield 2011 & yield 2012\\
+invariant mass spectrum/fit component & yield 2011 & yield 2012\\
+\hline \hline
+$m(\Ds\kaon\pion\pion)$    &                  &\\
 \hline
-$\Bs\to\Ds\kaon\pion\pion$ &  $375 \pm  26$   &  $866 \pm 42$\\
-$\Bs\to\Ds\pion\pion\pion$ &  $8496 \pm 102$  &  $19410 \pm 160$\\
+$\Bs\to\Ds\kaon\pion\pion$    &  $375 \pm 26$   &  $866 \pm 42$\\
+$\Bz\to\Ds\kaon\pion\pion$    &  $984 \pm 44$   &  $2118 \pm 72$\\
+$\Bs\to\Ds^{*}\kaon\pion\pion$ &  $765 \pm 103$   &  $1705 \pm 221$\\
+$\Bz\to\Ds^{*}\kaon\pion\pion$ &  $2048 \pm 363$   &  $4564 \pm 810$\\
+$\Bs\to\Ds\pion\pion\pion$    &  $285$ (fixed)      & $650$ (fixed)\\
+$\Bs\to\Ds^{*}\pion\pion\pion$ &  $602$ (fixed)      & $1375$ (fixed)\\
+combinatorial                 &  $5821 \pm 145$  & $12683 \pm 216$\\
+\hline \hline
+$m(\Ds\pion\pion\pion)$       &                  &\\
+\hline
+$\Bs\to\Ds\pion\pion\pion$    &  $8496 \pm 102$  &  $19410 \pm 160$\\
+$\Bs\to\Ds^{*}\pion\pion\pion$ & $16730 \pm 296$  & $38180 \pm 583$\\
+combinatorial                 & $16640 \pm 302$  & $36606 \pm 590$\\
 \hline
 \end{tabular}
-\caption{Summary of signal yields from the fits to 2011 and 2012 data.}
+\caption{Summary of yields from the fits to 2011 and 2012 data.}
 \label{tab: SigYields}
 \end{table}
 

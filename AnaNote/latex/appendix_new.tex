@@ -1,6 +1,33 @@
 \section{Appendix}
 \label{sec: appendix}
 
+\subsection{High Level Trigger requirements}
+\label{sec: trigger}
+The following table summarizes the trigger requirements imposed by the HLT1 line used in this analysis. 
+At least one of the six decay particles must pass the requirements listed in Tab. \ref{table:HLT1} in order for the event to be stored for further analysis.
+
+\begin{table}[h]
+\centering
+ \begin{tabular}{l l}
+Quantity & Hlt1TrackAllL0 requirement \\
+  \hline
+Track IP [mm] & $>$ 0.1\\
+Track IP $\chi^{2}$ & $>$ 16\\
+Track $\chi^{2}$/nDoF & $<$ 2.5\\
+Track $\pt$ & $>$ 1.7 $\gevc$\\
+Track $\ptot$ & $>$ 10 $\gevc$\\
+Number VELO hits/track & $>$ 9\\
+Number missed VELO hits/track & $<$ 3\\
+Number OT+IT $\times$ 2 hits/track & $>$ 16\\
+\end{tabular}
+\caption{Summary of the cuts applied by the Hlt1TrackAllL0 trigger. At least one of the six decay particles must pass this requirements, in order for the event to be accepted.}
+\label{table:HLT1}
+\end{table}
+
+The HLt2 2, 3 and 4-body topological lines use a Boosted Decision Tree based on the b-hadron $\pt$, 
+its flight distance $\chi^{2}$ from the nearest PV and the sum of the $\Bs$ and $\Ds$ vertex $\chi^{2}$ divided by the sum of their number of degrees of freedom.
+
+
 \subsection{Re-weghted MC observables}
 \label{sec: mcvdata}
 Figure \ref{fig: reweightingVar} shows the distributions of the (left) number of tracks and the (right) maximum ghost probability over all tracks for data, monte carlo and re-weighted monte carlo.
@@ -10,7 +37,7 @@ These two observables showed significant dissagrement and were therefore chosen 
 \includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/nTracks.pdf}
 \includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/max_ghostProb.pdf}
 \label{fig: reweightingVar}
-\caption{distributions of the (left) number of tracks and the (right) maximum ghost probability over all tracks for data (black), monte carlo (red) and re-weighted monte carlo (blue).}
+\caption{Distributions of the (left) number of tracks and the (right) maximum ghost probability over all tracks for data (black), MC (red) and reweighted MC (blue).}
 \end{figure}
 
 The following figures show the comparison of all other observables, which were used during the multivariate selection stage.
@@ -21,7 +48,7 @@ The following figures show the comparison of all other observables, which were u
 \includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf}\\
 \includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf}
 \includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf}
-\caption{Comparison of data and simulated observables, before and after re-weighting 1.}
+\caption{Comparison of data and MC observables, before and after reweighting 1.}
 \end{figure}
 
 \begin{figure}[h!]
@@ -29,15 +56,16 @@ The following figures show the comparison of all other observables, which were u
 \includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf}\\
 \includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf}
 \includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf}
-\caption{Comparison of data and simulated observables, before and after re-weighting 2.}
+\caption{Comparison of data and MC observables, before and after reweighting 2.}
 \end{figure}
 
 \begin{figure}[h!]
 \includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/pi_minus_ptasy_1_00.pdf}
 %\includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/log_DsDaughters_min_IPCHI2.pdf}\\
 \includegraphics[height=6.cm,width=0.45\textwidth]{figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf}
-\caption{Comparison of data and simulated observables, before and after re-weighting 3.}
+\caption{Comparison of data and MC observables, before and after reweighting 3.}
 \end{figure}
+
 
 %\subsection{Toys for normalization fit}
 %\label{sec: toysNorm}

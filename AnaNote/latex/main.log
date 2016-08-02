@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  6 JUL 2016 13:17
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  2 AUG 2016 16:05
 entering extended mode
  %&-line parsing enabled.
 **main
@@ -390,7 +390,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 (/usr/share/texmf/tex/latex/microtype/mt-eur.cfg
 File: mt-eur.cfg 2006/07/31 v1.1 microtype config. file: AMS Euler Roman (RS)
 )
-<lhcb-logo.pdf, id=87, 86.3225pt x 59.22125pt>
+<lhcb-logo.pdf, id=91, 86.3225pt x 59.22125pt>
 File: lhcb-logo.pdf Graphic file (type pdf)
  <use lhcb-logo.pdf>
 Missing character: There is no Ã in font cmti10!
@@ -404,29 +404,22 @@ Missing character: There is no ¤ in font cmti10!
 
  [3
 
-] (./introduction.tex) (./data.tex
-Overfull \hbox (24.97975pt too wide) in paragraph at lines 15--42
+] (./introduction.tex
+<figs/FeynmannGraphs.png, id=149, 565.51276pt x 148.75575pt>
+File: figs/FeynmannGraphs.png Graphic file (type png)
+
+<use figs/FeynmannGraphs.png>) (./data.texpdfTeX warning (ext4): destination wi
+th the same identifier (name{page.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.14 
+      [1
+
+ <./figs/FeynmannGraphs.png>]
+Overfull \hbox (24.97975pt too wide) in paragraph at lines 17--45
  [][] 
  []
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-) (./monteCarlo.texpdfTeX warning (ext4): destination with the same identifier 
-(name{page.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.12 
-      [1
-
-] <figs/nTracks.pdf, id=156, 569.12625pt x 385.44pt>
-File: figs/nTracks.pdf Graphic file (type pdf)
-
-<use figs/nTracks.pdf>
-<figs/max_ghostProb.pdf, id=157, 569.12625pt x 385.44pt>
-File: figs/max_ghostProb.pdf Graphic file (type pdf)
-
-<use figs/max_ghostProb.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -434,8 +427,8 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 name{page.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.8 
-     [2]
+l.24 
+      [2]
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 32.
  (/usr/share/texmf/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
@@ -447,46 +440,309 @@ been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.41 
-      [3 <./figs/nTracks.pdf> <./figs/max_ghostProb.pdf>] [4]
-<figs/BDT_Input_1.pdf, id=196, 569.12625pt x 296.10625pt>
+      [3] [4]
+Underfull \hbox (badness 10000) in paragraph at lines 94--102
+
+ []
+
+<figs/mass_Bs_forBDT_12_AnA.png, id=195, 419.166pt x 284.262pt>
+File: figs/mass_Bs_forBDT_12_AnA.png Graphic file (type png)
+
+<use figs/mass_Bs_forBDT_12_AnA.png>
+<figs/BDT_Input_1.pdf, id=197, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_1.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_1.pdf>
-<figs/BDT_Input_2.pdf, id=197, 569.12625pt x 296.10625pt>
+<figs/BDT_Input_2.pdf, id=198, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_2.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_2.pdf>
-<figs/BDT_Input_3.pdf, id=198, 569.12625pt x 296.10625pt>
+<figs/BDT_Input_3.pdf, id=199, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_3.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_3.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 102--106
+Underfull \hbox (badness 10000) in paragraph at lines 115--119
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 102--106
+Underfull \hbox (badness 10000) in paragraph at lines 115--119
 []
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figs/BDT_Response.pdf, id=201, 569.12625pt x 421.575pt>
-File: figs/BDT_Response.pdf Graphic file (type pdf)
-
-<use figs/BDT_Response.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[5] [6 <./figs/BDT_Input_1.pdf, page is rotated 90 degrees> <./figs/BDT_Input_2
-.pdf, page is rotated 90 degrees> <./figs/BDT_Input_3.pdf, page is rotated 90 d
-egrees>] <figs/BDT_CutEfficiency.pdf, id=348, 569.12625pt x 421.575pt>
+<figs/BDT_Response_new.pdf, id=202, 569.12625pt x 421.575pt>
+File: figs/BDT_Response_new.pdf Graphic file (type pdf)
+
+<use figs/BDT_Response_new.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[5 <./figs/mass_Bs_forBDT_12_AnA.png>] [6 <./figs/BDT_Input_1.pdf, page is rota
+ted 90 degrees> <./figs/BDT_Input_2.pdf, page is rotated 90 degrees> <./figs/BD
+T_Input_3.pdf, page is rotated 90 degrees>]
+<figs/BDT_CutEfficiency.pdf, id=351, 569.12625pt x 421.575pt>
 File: figs/BDT_CutEfficiency.pdf Graphic file (type pdf)
 
-<use figs/BDT_CutEfficiency.pdf>) (./model.tex [7 <./figs/BDT_Response.pdf, pag
-e is rotated 90 degrees> <./figs/BDT_CutEfficiency.pdf, page is rotated 90 degr
-ees>]
+<use figs/BDT_CutEfficiency.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) (./monteCarlo.tex
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[7] [8 <./figs/BDT_Response_new.pdf, page is rotated 90 degrees> <./figs/BDT_Cu
+tEfficiency.pdf, page is rotated 90 degrees>]
+<figs/nTracks.pdf, id=458, 569.12625pt x 385.44pt>
+File: figs/nTracks.pdf Graphic file (type pdf)
+ <use figs/nTracks.pdf>
+<figs/max_ghostProb.pdf, id=459, 569.12625pt x 385.44pt>
+File: figs/max_ghostProb.pdf Graphic file (type pdf)
+
+<use figs/max_ghostProb.pdf>) [9 <./figs/nTracks.pdf> <./figs/max_ghostProb.pdf
+>] (./model.tex
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string:
+(hyperref)                \kern 1.95872pt
+(hyperref)                removed on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 7.
+
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 16.
@@ -612,14 +868,14 @@ Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 16.
 
-<figs/Bs2Dsstartpipipi.pdf, id=443, 569.12625pt x 385.44pt>
+<figs/Bs2Dsstartpipipi.pdf, id=477, 569.12625pt x 385.44pt>
 File: figs/Bs2Dsstartpipipi.pdf Graphic file (type pdf)
 
 <use figs/Bs2Dsstartpipipi.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[8]
+[10]
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 45.
@@ -728,16 +984,16 @@ Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 45.
 
-[9 <./figs/Bs2Dsstartpipipi.pdf>]
-<figs/Bs2Dspipipi_as_DsKpipi.pdf, id=463, 569.12625pt x 385.44pt>
+[11 <./figs/Bs2Dsstartpipipi.pdf>]
+<figs/Bs2Dspipipi_as_DsKpipi.pdf, id=498, 569.12625pt x 385.44pt>
 File: figs/Bs2Dspipipi_as_DsKpipi.pdf Graphic file (type pdf)
 
 <use figs/Bs2Dspipipi_as_DsKpipi.pdf>
-<figs/Bs2Dsstarpipipi_as_DsKpipi.pdf, id=464, 569.12625pt x 385.44pt>
+<figs/Bs2Dsstarpipipi_as_DsKpipi.pdf, id=499, 569.12625pt x 385.44pt>
 File: figs/Bs2Dsstarpipipi_as_DsKpipi.pdf Graphic file (type pdf)
 
-<use figs/Bs2Dsstarpipipi_as_DsKpipi.pdf>) (./fitting.tex [10 <./figs/Bs2Dspipi
-pi_as_DsKpipi.pdf> <./figs/Bs2Dsstarpipipi_as_DsKpipi.pdf>]
+<use figs/Bs2Dsstarpipipi_as_DsKpipi.pdf> [12 <./figs/Bs2Dspipipi_as_DsKpipi.pd
+f> <./figs/Bs2Dsstarpipipi_as_DsKpipi.pdf>]) (./fitting.tex
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 7.
@@ -910,290 +1166,324 @@ Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 7.
 
-<figs/3pi_BmassFit_sim11.pdf, id=488, 569.12625pt x 385.44pt>
+<figs/3pi_BmassFit_sim11.pdf, id=522, 569.12625pt x 385.44pt>
 File: figs/3pi_BmassFit_sim11.pdf Graphic file (type pdf)
 
 <use figs/3pi_BmassFit_sim11.pdf>
-<figs/3pi_BmassFit_sim12.pdf, id=489, 569.12625pt x 385.44pt>
+<figs/3pi_BmassFit_sim12.pdf, id=523, 569.12625pt x 385.44pt>
 File: figs/3pi_BmassFit_sim12.pdf Graphic file (type pdf)
 
 <use figs/3pi_BmassFit_sim12.pdf>
+<figs/3pi_pull_sim11.pdf, id=524, 569.12625pt x 385.44pt>
+File: figs/3pi_pull_sim11.pdf Graphic file (type pdf)
 
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
+<use figs/3pi_pull_sim11.pdf>
+<figs/3pi_pull_sim12.pdf, id=525, 569.12625pt x 385.44pt>
+File: figs/3pi_pull_sim12.pdf Graphic file (type pdf)
 
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `superscript' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `subscript' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\rightarrow' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `subscript' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\pi' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\pi' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `math shift' on input line 27.
-
-<figs/BmassFit_sim11.pdf, id=490, 569.12625pt x 385.44pt>
-File: figs/BmassFit_sim11.pdf Graphic file (type pdf)
-
-<use figs/BmassFit_sim11.pdf>
-<figs/BmassFit_sim12.pdf, id=491, 569.12625pt x 385.44pt>
-File: figs/BmassFit_sim12.pdf Graphic file (type pdf)
-
-<use figs/BmassFit_sim12.pdf>
+<use figs/3pi_pull_sim12.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[11 <./figs/3pi_BmassFit_sim11.pdf> <./figs/3pi_BmassFit_sim12.pdf>])
-(./efficiency.tex [12 <./figs/BmassFit_sim11.pdf> <./figs/BmassFit_sim12.pdf>])
-(./systematics.tex [13]
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `superscript' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\rightarrow' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 30.
+
+<figs/BmassFit_sim11.pdf, id=526, 569.12625pt x 385.44pt>
+File: figs/BmassFit_sim11.pdf Graphic file (type pdf)
+
+<use figs/BmassFit_sim11.pdf>
+<figs/BmassFit_sim12.pdf, id=527, 569.12625pt x 385.44pt>
+File: figs/BmassFit_sim12.pdf Graphic file (type pdf)
+
+<use figs/BmassFit_sim12.pdf>
+<figs/pull_sim11.pdf, id=528, 569.12625pt x 385.44pt>
+File: figs/pull_sim11.pdf Graphic file (type pdf)
+
+<use figs/pull_sim11.pdf>
+<figs/pull_sim12.pdf, id=529, 569.12625pt x 385.44pt>
+File: figs/pull_sim12.pdf Graphic file (type pdf)
+
+<use figs/pull_sim12.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) (./efficiency.tex [13] [14 <./figs/3pi_BmassFit_sim11.pdf> <./figs/3pi_BmassF
+it_sim12.pdf> <./figs/3pi_pull_sim11.pdf> <./figs/3pi_pull_sim12.pdf>]
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-) (./results.tex [14]) [15] (./appendix_new.tex
-<figs/MC-v-Data/nTracks.pdf, id=552, 569.12625pt x 385.44pt>
+) (./systematics.tex [15 <./figs/BmassFit_sim11.pdf> <./figs/BmassFit_sim12.pdf
+> <./figs/pull_sim11.pdf> <./figs/pull_sim12.pdf>]
+Overfull \hbox (12.93987pt too wide) in paragraph at lines 26--35
+ [][] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[16]
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+) (./results.tex [17]) [18] (./appendix_new.tex
+<figs/MC-v-Data/nTracks.pdf, id=632, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/nTracks.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/nTracks.pdf>
-<figs/MC-v-Data/max_ghostProb.pdf, id=553, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/max_ghostProb.pdf, id=633, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/max_ghostProb.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/max_ghostProb.pdf>
-<figs/MC-v-Data/Bs_DIRA_OWNPV.pdf, id=554, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/Bs_DIRA_OWNPV.pdf, id=634, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/Bs_DIRA_OWNPV.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/Bs_DIRA_OWNPV.pdf>
-<figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf, id=555, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf, id=635, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf>
-<figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf, id=556, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf, id=636, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf>
-<figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf, id=557, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf, id=637, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf>
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<figs/MC-v-Data/Ds_DIRA_OWNPV.pdf, id=558, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/Ds_DIRA_OWNPV.pdf, id=638, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/Ds_DIRA_OWNPV.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/Ds_DIRA_OWNPV.pdf>
-<figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf, id=559, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf, id=639, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf>
-<figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf, id=560, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf, id=640, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf>
-<figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf, id=561, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf, id=641, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf>
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<figs/MC-v-Data/pi_minus_ptasy_1_00.pdf, id=562, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/pi_minus_ptasy_1_00.pdf, id=642, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/pi_minus_ptasy_1_00.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/pi_minus_ptasy_1_00.pdf>
-<figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf, id=563, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf, id=643, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf Graphic file (type pdf)
 <use figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf>
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[16 <./figs/MC-v-Data/nTracks.pdf> <./figs/MC-v-Data/max_ghostProb.pdf>]
-[17 <./figs/MC-v-Data/Bs_DIRA_OWNPV.pdf> <./figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pd
-f> <./figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf> <./figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf
->] [18 <./figs/MC-v-Data/Ds_DIRA_OWNPV.pdf> <./figs/MC-v-Data/Ds_FDCHI2_ORIVX.p
-df> <./figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf> <./figs/MC-v-Data/K_plus_f
-romDs_ptasy_1_00.pdf> <./figs/MC-v-Data/pi_minus_ptasy_1_00.pdf> <./figs/MC-v-D
-ata/pi_minus_fromDs_ptasy_1_00.pdf>]) (./main.bbl) [19
+[19] [20 <./figs/MC-v-Data/nTracks.pdf> <./figs/MC-v-Data/max_ghostProb.pdf> <.
+/figs/MC-v-Data/Bs_DIRA_OWNPV.pdf> <./figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf> <./
+figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf> <./figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf>]
+[21 <./figs/MC-v-Data/Ds_DIRA_OWNPV.pdf> <./figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf>
+ <./figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf> <./figs/MC-v-Data/K_plus_from
+Ds_ptasy_1_00.pdf> <./figs/MC-v-Data/pi_minus_ptasy_1_00.pdf> <./figs/MC-v-Data
+/pi_minus_fromDs_ptasy_1_00.pdf>]) (./main.bbl) [22
 
 ] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 7238 strings out of 256216
- 101884 string characters out of 1917072
- 199305 words of memory out of 1500000
- 10206 multiletter control sequences out of 10000+200000
- 24980 words of font info for 116 fonts, out of 1200000 for 2000
+ 7295 strings out of 256216
+ 103043 string characters out of 1917072
+ 200305 words of memory out of 1500000
+ 10242 multiletter control sequences out of 10000+200000
+ 25089 words of font info for 117 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 37i,14n,40p,1767b,388s stack positions out of 5000i,500n,6000p,200000b,15000s
+ 37i,14n,40p,1776b,426s stack positions out of 5000i,500n,6000p,200000b,15000s
 </usr/share/texmf/fonts/type1/bluesky/cm/cmbsy10.pfb></usr/shar
 e/texmf/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky
-/cm/cmbx12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/
-texmf/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf/fonts/type1/bluesky/c
-m/cmmi6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi8.pfb></usr/share/texm
-f/fonts/type1/bluesky/cm/cmmib10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/c
-mr10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/f
-onts/type1/bluesky/cm/cmr6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pf
-b></usr/share/texmf/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/typ
-e1/bluesky/cm/cmss8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></u
-sr/share/texmf/fonts/type1/bluesky/cm/cmsy6.pfb></usr/share/texmf/fonts/type1/b
-luesky/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti10.pfb></usr/s
-hare/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/type1/blue
-sky/cm/cmtt12.pfb>
-Output written on main.pdf (22 pages, 546304 bytes).
+/cm/cmbx12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/
+texmf/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/bluesky/c
+m/cmmi12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi6.pfb></usr/share/tex
+mf/fonts/type1/bluesky/cm/cmmi8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cm
+mib10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/
+fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr6.
+pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf/fonts/t
+ype1/bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmss8.pfb></u
+sr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/
+bluesky/cm/cmsy6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy8.pfb></usr/s
+hare/texmf/fonts/type1/bluesky/cm/cmti10.pfb></usr/share/texmf/fonts/type1/blue
+sky/cm/cmti12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmtt12.pfb>
+Output written on main.pdf (25 pages, 627804 bytes).
 PDF statistics:
- 751 PDF objects out of 1000 (max. 8388607)
- 76 named destinations out of 1000 (max. 131072)
- 19256 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 843 PDF objects out of 1000 (max. 8388607)
+ 88 named destinations out of 1000 (max. 131072)
+ 19294 words of extra memory for PDF output out of 20736 (max. 10000000)
 

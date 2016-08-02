@@ -8,6 +8,30 @@
 \mciteSetBstSublistLabelBeginEnd{\mcitemaxwidthsubitemform\space}
 {\relax}{\relax}
 
+\bibitem{Fleischer:2003yb}
+R.~Fleischer, \ifthenelse{\boolean{articletitles}}{\emph{{New strategies to
+  obtain insights into CP violation through B(s) ---> D(s)+- K-+, D(s)*+- K-+,
+  ... and B(d) ---> D+- pi-+, D*+- pi-+, ... decays}},
+  }{}\href{http://dx.doi.org/10.1016/j.nuclphysb.2003.08.010}{Nucl.\ Phys.\
+  \textbf{B671} (2003) 459},
+  \href{http://arxiv.org/abs/hep-ph/0304027}{{\normalfont\ttfamily
+  arXiv:hep-ph/0304027}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{DeBruyn:2012jp}
+K.~De~Bruyn {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{Exploring
+  $B_s \to D_s^{(*)\pm} K^\mp$ Decays in the Presence of a Sizable Width
+  Difference $\Delta\Gamma_s$}},
+  }{}\href{http://dx.doi.org/10.1016/j.nuclphysb.2012.11.012}{Nucl.\ Phys.\
+  \textbf{B868} (2013) 351},
+  \href{http://arxiv.org/abs/1208.6463}{{\normalfont\ttfamily
+  arXiv:1208.6463}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
 \bibitem{Blusk:1471393}
 S.~Blusk, \ifthenelse{\boolean{articletitles}}{\emph{{First observations and
   measurements of the branching fractions for the decays $\bar{B}^0_s\to
@@ -27,6 +51,15 @@ LHCb, S.~Blusk, \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of the
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
+\bibitem{Hocker:2007ht}
+A.~Hoecker {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{TMVA:
+  Toolkit for Multivariate Data Analysis}}, }{}PoS \textbf{ACAT} (2007) 040,
+  \href{http://arxiv.org/abs/physics/0703039}{{\normalfont\ttfamily
+  arXiv:physics/0703039}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
 \bibitem{Pivk:2004ty}
 M.~Pivk and F.~R. Le~Diberder,
   \ifthenelse{\boolean{articletitles}}{\emph{{sPlot: A statistical tool to
@@ -35,15 +68,6 @@ M.~Pivk and F.~R. Le~Diberder,
   Meth.\  \textbf{A555} (2005) 356},
   \href{http://arxiv.org/abs/physics/0402083}{{\normalfont\ttfamily
   arXiv:physics/0402083}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{Hocker:2007ht}
-A.~Hoecker {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{TMVA:
-  Toolkit for Multivariate Data Analysis}}, }{}PoS \textbf{ACAT} (2007) 040,
-  \href{http://arxiv.org/abs/physics/0703039}{{\normalfont\ttfamily
-  arXiv:physics/0703039}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
