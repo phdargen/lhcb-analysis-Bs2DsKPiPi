@@ -81,4 +81,13 @@ Particle Data Group, K.~A. Olive {\em et~al.},
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
+\bibitem{Tolk:1701134}
+S.~Tolk, J.~Albrecht, F.~Dettori, and A.~Pellegrino,
+  \ifthenelse{\boolean{articletitles}}{\emph{{Data driven trigger efficiency
+  determination at LHCb}}, }{} Tech. Rep. LHCb-PUB-2014-039, CERN, Geneva, May,
+  2014\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
 \end{mcitethebibliography}

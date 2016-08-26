@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  2 AUG 2016 16:05
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  25 AUG 2016 12:12
 entering extended mode
  %&-line parsing enabled.
 **main
@@ -1382,89 +1382,115 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 ) (./systematics.tex [15 <./figs/BmassFit_sim11.pdf> <./figs/BmassFit_sim12.pdf
 > <./figs/pull_sim11.pdf> <./figs/pull_sim12.pdf>]
-Overfull \hbox (12.93987pt too wide) in paragraph at lines 26--35
+Overfull \hbox (12.93987pt too wide) in paragraph at lines 30--39
  [][] 
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[16]
+[16] <figs/Xd_Mass.pdf, id=617, 569.12625pt x 385.44pt>
+File: figs/Xd_Mass.pdf Graphic file (type pdf)
+ <use figs/Xd_Mass.pdf>
+<figs/Xs_Mass.pdf, id=618, 569.12625pt x 385.44pt>
+File: figs/Xs_Mass.pdf Graphic file (type pdf)
+ <use figs/Xs_Mass.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[17] <figs/L0_efficiency_comparison.pdf, id=628, 569.12625pt x 385.44pt>
+File: figs/L0_efficiency_comparison.pdf Graphic file (type pdf)
+
+<use figs/L0_efficiency_comparison.pdf>
+<figs/HLT1_efficiency_comparison.pdf, id=629, 569.12625pt x 385.44pt>
+File: figs/HLT1_efficiency_comparison.pdf Graphic file (type pdf)
+
+<use figs/HLT1_efficiency_comparison.pdf> [18 <./figs/Xd_Mass.pdf> <./figs/Xs_M
+ass.pdf> <./figs/L0_efficiency_comparison.pdf> <./figs/HLT1_efficiency_comparis
+on.pdf>] <figs/ratio2011S20MC17.png, id=658, 698.61pt x 473.77pt>
+File: figs/ratio2011S20MC17.png Graphic file (type png)
+
+<use figs/ratio2011S20MC17.png>
+<figs/ratio2012S20.png, id=659, 698.61pt x 473.77pt>
+File: figs/ratio2012S20.png Graphic file (type png)
+
+<use figs/ratio2012S20.png>
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-) (./results.tex [17]) [18] (./appendix_new.tex
-<figs/MC-v-Data/nTracks.pdf, id=632, 569.12625pt x 385.44pt>
+) (./results.tex [19 <./figs/ratio2011S20MC17.png (PNG copy)> <./figs/ratio2012
+S20.png (PNG copy)>]) [20] (./appendix_new.tex
+<figs/MC-v-Data/nTracks.pdf, id=676, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/nTracks.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/nTracks.pdf>
-<figs/MC-v-Data/max_ghostProb.pdf, id=633, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/max_ghostProb.pdf, id=677, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/max_ghostProb.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/max_ghostProb.pdf>
-<figs/MC-v-Data/Bs_DIRA_OWNPV.pdf, id=634, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/Bs_DIRA_OWNPV.pdf, id=678, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/Bs_DIRA_OWNPV.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/Bs_DIRA_OWNPV.pdf>
-<figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf, id=635, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf, id=679, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf>
-<figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf, id=636, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf, id=680, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf>
-<figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf, id=637, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf, id=681, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf>
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<figs/MC-v-Data/Ds_DIRA_OWNPV.pdf, id=638, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/Ds_DIRA_OWNPV.pdf, id=682, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/Ds_DIRA_OWNPV.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/Ds_DIRA_OWNPV.pdf>
-<figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf, id=639, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf, id=683, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf>
-<figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf, id=640, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf, id=684, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf>
-<figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf, id=641, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf, id=685, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/K_plus_fromDs_ptasy_1_00.pdf>
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<figs/MC-v-Data/pi_minus_ptasy_1_00.pdf, id=642, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/pi_minus_ptasy_1_00.pdf, id=686, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/pi_minus_ptasy_1_00.pdf Graphic file (type pdf)
 
 <use figs/MC-v-Data/pi_minus_ptasy_1_00.pdf>
-<figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf, id=643, 569.12625pt x 385.44pt>
+<figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf, id=687, 569.12625pt x 385.44pt>
 File: figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf Graphic file (type pdf)
 <use figs/MC-v-Data/pi_minus_fromDs_ptasy_1_00.pdf>
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[19] [20 <./figs/MC-v-Data/nTracks.pdf> <./figs/MC-v-Data/max_ghostProb.pdf> <.
+[21] [22 <./figs/MC-v-Data/nTracks.pdf> <./figs/MC-v-Data/max_ghostProb.pdf> <.
 /figs/MC-v-Data/Bs_DIRA_OWNPV.pdf> <./figs/MC-v-Data/Bs_ENDVERTEX_CHI2.pdf> <./
 figs/MC-v-Data/Bs_FDCHI2_OWNPV.pdf> <./figs/MC-v-Data/Bs_IPCHI2_OWNPV.pdf>]
-[21 <./figs/MC-v-Data/Ds_DIRA_OWNPV.pdf> <./figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf>
+[23 <./figs/MC-v-Data/Ds_DIRA_OWNPV.pdf> <./figs/MC-v-Data/Ds_FDCHI2_ORIVX.pdf>
  <./figs/MC-v-Data/K_minus_fromDs_ptasy_1_00.pdf> <./figs/MC-v-Data/K_plus_from
 Ds_ptasy_1_00.pdf> <./figs/MC-v-Data/pi_minus_ptasy_1_00.pdf> <./figs/MC-v-Data
-/pi_minus_fromDs_ptasy_1_00.pdf>]) (./main.bbl) [22
+/pi_minus_fromDs_ptasy_1_00.pdf>]) (./main.bbl) [24
 
 ] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 7295 strings out of 256216
- 103043 string characters out of 1917072
+ 7340 strings out of 256216
+ 104050 string characters out of 1917072
  200305 words of memory out of 1500000
- 10242 multiletter control sequences out of 10000+200000
- 25089 words of font info for 117 fonts, out of 1200000 for 2000
+ 10271 multiletter control sequences out of 10000+200000
+ 25191 words of font info for 119 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
  37i,14n,40p,1776b,426s stack positions out of 5000i,500n,6000p,200000b,15000s
 </usr/share/texmf/fonts/type1/bluesky/cm/cmbsy10.pfb></usr/shar
@@ -1481,9 +1507,9 @@ sr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/
 bluesky/cm/cmsy6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy8.pfb></usr/s
 hare/texmf/fonts/type1/bluesky/cm/cmti10.pfb></usr/share/texmf/fonts/type1/blue
 sky/cm/cmti12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmtt12.pfb>
-Output written on main.pdf (25 pages, 627804 bytes).
+Output written on main.pdf (27 pages, 685623 bytes).
 PDF statistics:
- 843 PDF objects out of 1000 (max. 8388607)
- 88 named destinations out of 1000 (max. 131072)
- 19294 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 888 PDF objects out of 1000 (max. 8388607)
+ 94 named destinations out of 1000 (max. 131072)
+ 19324 words of extra memory for PDF output out of 20736 (max. 10000000)
 
