@@ -1,3 +1,4 @@
+
 //main file for Bs->DsKpipi Analysis
 //philippe d'argent & matthieu kecke
 
@@ -16,6 +17,7 @@
 #include <TStyle.h>
 #include <TFitResult.h>
 #include <TLegend.h>
+#include <TPaveText.h>
 #include <TNtuple.h>
 #include "TRandom3.h"
 #include <sstream>
@@ -57,7 +59,7 @@ using namespace std;
 using namespace RooFit ;
 using namespace RooStats;
 
-int preselect(bool MC=true , bool preselection =false) {
+int preselect(bool MC=false , bool preselection =false) {
 
     //specifiy decay channel of Ds
     bool Ds2KKpi = false;
@@ -103,19 +105,20 @@ int preselect(bool MC=true , bool preselection =false) {
 
     //Bs2Dspipipi normalisation case
     if(BsDspipipi){
-    tree=new TChain("Bs2Dspipipi_Ds2KKpi_Tuple/DecayTree");
+    //tree=new TChain("Bs2Dspipipi_Ds2pipipi_Tuple/DecayTree");
+tree=new TChain("DecayTree");
   //  tree->Add("/auto/data/kecke/B2DKPiPi/12D-3pi/*.root");
    // tree->Add("/auto/data/kecke/B2DKPiPi/12U-3pi/*.root");
-      tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Norm/11-U/*.root");
-      tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Norm/11-D/*.root");
-      //tree->Add("/auto/data/dargent/Bs2DsKpipi/3pi/11D/*.root");
+      //tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Norm/11-U/*.root");
+      //tree->Add("/auto/data/dargent/Bs2DsKpipi/MC/Norm/11-D/*.root");
+      tree->Add("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2pipipi_forBDT.root");
     }
 
     int N = tree->GetEntries();
     cout << "Old file contains " << N << " events" <<  endl;
     
     //Disable all branches
-    tree->SetBranchStatus("*",0);
+    tree->SetBranchStatus("*",1);
         
     //activate needed branches
     tree->SetBranchStatus("Bs*Decision*",1) ;
@@ -189,7 +192,7 @@ int preselect(bool MC=true , bool preselection =false) {
 	if(Ds2pipipi) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2pipipi_preselected.root","RECREATE");
 
 	//Bs->Dspipipi normalisation case
-	if(BsDspipipi)output = new TFile("/auto/data/kecke/B2DPiPiPi/MC2011/mc11_Bs2Dspipipi_TriggeredandTruthMatched.root","RECREATE");
+	if(BsDspipipi)output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2pipipi_forBDT_tmp.root","RECREATE");
 		
 	///cuts
 	string cuts;
@@ -322,7 +325,7 @@ int preselect(bool MC=true , bool preselection =false) {
     //string cuts_noPID;
     //cuts_noPID.append(MCTRUE_cut);
     
-    TTree* tree_sel = tree->CopyTree(cuts.c_str());
+    TTree* tree_sel = tree->CopyTree(/*cuts.c_str()*/"(Ds_ENDVERTEX_Z - Bs_ENDVERTEX_Z) > 1.5");
     //TTree* tree_noPID = tree->CopyTree(cuts_noPID.c_str());
     cout << "New file contains " << tree_sel->GetEntries() << " events" <<  endl;
     //if(MC)cout << "Signal Eff = " << (double) ((double) tree_sel->GetEntries() / (double) tree_noPID->GetEntries()) << endl;
@@ -998,10 +1001,10 @@ TTree* tree = (TTree*) file->Get("DecayTree");
 void applyBDTcut(string cutoff){
    ///Load file
 
-  //TFile* file= new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data12_Ds2KKpi_BDT_tmp.root");
- // TTree* tree = (TTree*) file->Get("DecayTree");	
-TFile* file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data12_Ds2KKpi_BDT_tmp.root");
-TTree* tree = (TTree*) file->Get("DecayTree");
+  TFile* file= new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2pipipi_BDT.root");
+  TTree* tree = (TTree*) file->Get("DecayTree");	
+//TFile* file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data12_Ds2pipipi_BDT.root");
+//TTree* tree = (TTree*) file->Get("DecayTree");
 
 //string cutstring = "Ds_MM > 1950 && Ds_MM < 1990 && BDTG_response > ";
 string cutstring = "BDTG_response > ";
@@ -1024,19 +1027,19 @@ const char* cstringcutstring = cutstring.c_str();
 */
 
     //BDTG application for 2012 Signal Channel (9500BG/450S), 0.8040 for maximum S/sqrt(S+B) , with S = 726 , B = 18751 
+
+   TFile* output_BDTG=new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2pipipi_fullSelectionBDTG.root","RECREATE");
+   TTree* new_tree_BDTG = tree->CopyTree(cstringcutstring);
+   new_tree_BDTG->Write();
+   output_BDTG->Close();
+
 /*
-   TFile* output_BDTG=new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_fullSelectionBDTG_tightDCUT_DZ.root","RECREATE");
+    //BDTG application for 2012 normalization Channel (9500BG/450S) , 0.1458 for maximum S/sqrt(S+B) with S = 13867 , B = 23588
+   TFile* output_BDTG=new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data12_Bs2Dspipipi_Ds2pipipi_fullSelectionBDTG.root","RECREATE");
    TTree* new_tree_BDTG = tree->CopyTree(cstringcutstring);
    new_tree_BDTG->Write();
    output_BDTG->Close();
 */
-
-    //BDTG application for 2012 normalization Channel (9500BG/450S) , 0.1458 for maximum S/sqrt(S+B) with S = 13867 , B = 23588
-   TFile* output_BDTG=new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/Bs2Dspipipi_fullSelectionBDTG_tightDCUT_DZ.root","RECREATE");
-   TTree* new_tree_BDTG = tree->CopyTree(cstringcutstring);
-   new_tree_BDTG->Write();
-   output_BDTG->Close();
-
 /*
     //BDTG application for 2011 normalization Channel (32.500BG/6500S) ------> BDTG > 0.5571 with S=14511 and B=98053
    TFile* output_BDTG=new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/Bs2Dspipipi_fullSelectionBDTG_tightDCUT_DZ.root","RECREATE");
@@ -1500,7 +1503,7 @@ c1->Print("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi.eps");
 return fitValues;
 }
 
-double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool doToys=false, bool altModel = false){
+double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool Ds2KKpi, bool doToys=false, bool altModel = false){
 
    	gStyle->SetOptStat(0);
     	gStyle->SetTitleXSize(0.03);
@@ -1525,8 +1528,10 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 	TFile* file;
 	TTree* tree;
 	if(!fitSimultan){
-		if(sevenTeV) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/Bs2Dspipipi_fullSelectionBDTG_tightDCUT_DZ.root");
-		if(!sevenTeV) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/Bs2Dspipipi_fullSelectionBDTG_tightDCUT_DZ.root");
+		if(sevenTeV && Ds2KKpi) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/Bs2Dspipipi_fullSelectionBDTG_tightDCUT_DZ.root");
+		if(!sevenTeV && Ds2KKpi) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/Bs2Dspipipi_fullSelectionBDTG_tightDCUT_DZ.root");
+		if((!sevenTeV) && (!Ds2KKpi)) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data12_Bs2Dspipipi_Ds2pipipi_fullSelectionBDTG.root");
+		if(sevenTeV && (!Ds2KKpi)) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data11_Bs2Dspipipi_Ds2pipipi_fullSelectionBDTG.root");
 		tree = (TTree*) file->Get("DecayTree");	
    		tree->SetBranchStatus("*",0);
 		tree->SetBranchStatus("DTF_Bs_M",1);
@@ -1537,12 +1542,22 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 	TFile* file12;
 	TTree* tree11;
 	TTree* tree12;
-	if(fitSimultan){
+	if(fitSimultan && Ds2KKpi){
 		file11 = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/Bs2Dspipipi_fullSelectionBDTG_tightDCUT_DZ.root");
 		tree11 = (TTree*) file11->Get("DecayTree");
 		tree11->SetBranchStatus("*",0);
 		tree11->SetBranchStatus("DTF_Bs_M",1);
 		file12 = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/Bs2Dspipipi_fullSelectionBDTG_tightDCUT_DZ.root");
+		tree12 = (TTree*) file12->Get("DecayTree");
+		tree12->SetBranchStatus("*",0);
+		tree12->SetBranchStatus("DTF_Bs_M",1);
+	}
+	if(fitSimultan && (!Ds2KKpi)){
+		file11 = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data11_Bs2Dspipipi_Ds2pipipi_fullSelectionBDTG.root");
+		tree11 = (TTree*) file11->Get("DecayTree");
+		tree11->SetBranchStatus("*",0);
+		tree11->SetBranchStatus("DTF_Bs_M",1);
+		file12 = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data12_Bs2Dspipipi_Ds2pipipi_fullSelectionBDTG.root");
 		tree12 = (TTree*) file12->Get("DecayTree");
 		tree12->SetBranchStatus("*",0);
 		tree12->SetBranchStatus("DTF_Bs_M",1);
@@ -1591,7 +1606,6 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 	///Define fit model----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	///Signal model - two double gaussians for B0 and Bs signal 
-
 
 /*
 	//Bs signal shape
@@ -1664,9 +1678,9 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 	RooRealVar* f_2;
 
 	///mean of gaussians
-	RooRealVar mean1("mean1","mu", DstarpipipiNorm[0], mean1Variation_low, mean1Variation_high);
-	RooRealVar mean2("mean2","mu", DstarpipipiNorm[1], mean2Variation_low, mean2Variation_high);
-	RooRealVar mean3("mean3","mu", DstarpipipiNorm[2], mean3Variation_low, mean3Variation_high);
+	RooRealVar* mean1;
+	RooRealVar* mean2;
+	RooRealVar* mean3;
 
 	///width and fractions of gaussians 2011
 
@@ -1677,6 +1691,10 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 		sigmaR2 = new RooRealVar("sigma_{2R}", "sigmaR2",  DstarpipipiNorm[6], sigmaR2Variation_low, sigmaR2Variation_high);
 		sigmaL3 = new RooRealVar("sigma_{3L}", "sigmaL3",  DstarpipipiNorm[7]);// sigmaL3Variation_low, sigmaL3Variation_high);
 		sigmaR3 = new RooRealVar("sigma_{3R}", "sigmaR3",  DstarpipipiNorm[8], sigmaR3Variation_low, sigmaR3Variation_high);
+
+		mean1 = new RooRealVar("mean1","mu", DstarpipipiNorm[0], mean1Variation_low, mean1Variation_high);
+		mean2 = new RooRealVar("mean2","mu", DstarpipipiNorm[1], mean2Variation_low, mean2Variation_high);
+		mean3 = new RooRealVar("mean3","mu", DstarpipipiNorm[2], mean3Variation_low, mean3Variation_high);
 	}
 
 	///fractions of gauss functions for 2011
@@ -1696,15 +1714,20 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 	///width and fractions of gaussians 2012
 
 	if(!sevenTeV){
-	sigmaL1 = new RooRealVar("sigma_{1L}", "sigmaL1",  DstarpipipiNorm[3], sigmaL1Variation_low, 2*sigmaL1Variation_high);
-	sigmaR1 = new RooRealVar("sigma_{1R}", "sigmaR1",  DstarpipipiNorm[4]);//, sigmaR1Variation_low, sigmaR1Variation_high);
-	sigmaL2 = new RooRealVar("sigma_{2L}", "sigmaL2",  DstarpipipiNorm[5], sigmaL2Variation_low, sigmaL2Variation_high);
-	sigmaR2 = new RooRealVar("sigma_{2R}", "sigmaR2",  DstarpipipiNorm[6], sigmaR2Variation_low, sigmaR2Variation_high);
-	sigmaL3 = new RooRealVar("sigma_{3L}", "sigmaL3",  DstarpipipiNorm[7]);//, sigmaL3Variation_low, sigmaL3Variation_high);
-	sigmaR3 = new RooRealVar("sigma_{3R}", "sigmaR3",  DstarpipipiNorm[8], sigmaR3Variation_low, sigmaR3Variation_high);
+		sigmaL1 = new RooRealVar("sigma_{1L}", "sigmaL1",  DstarpipipiNorm[3], sigmaL1Variation_low, 2*sigmaL1Variation_high);
+		sigmaR1 = new RooRealVar("sigma_{1R}", "sigmaR1",  DstarpipipiNorm[4]);//, sigmaR1Variation_low, sigmaR1Variation_high);
+		sigmaL2 = new RooRealVar("sigma_{2L}", "sigmaL2",  DstarpipipiNorm[5], sigmaL2Variation_low, sigmaL2Variation_high);
+		sigmaR2 = new RooRealVar("sigma_{2R}", "sigmaR2",  DstarpipipiNorm[6], sigmaR2Variation_low, sigmaR2Variation_high);
+		sigmaL3 = new RooRealVar("sigma_{3L}", "sigmaL3",  DstarpipipiNorm[7]);//, sigmaL3Variation_low, sigmaL3Variation_high);
+		sigmaR3 = new RooRealVar("sigma_{3R}", "sigmaR3",  DstarpipipiNorm[8], sigmaR3Variation_low, sigmaR3Variation_high);
+
+		mean1 = new RooRealVar("mean1","mu", DstarpipipiNorm[0], mean1Variation_low, mean1Variation_high);
+		mean2 = new RooRealVar("mean2","mu", DstarpipipiNorm[1], mean2Variation_low, mean2Variation_high);
+		mean3 = new RooRealVar("mean3","mu", DstarpipipiNorm[2], mean3Variation_low, mean3Variation_high);
 	}
 
-	if(fitSimultan){
+
+	if(fitSimultan && Ds2KKpi){
 		sigmaL1 = new RooRealVar("sigma_{1L}", "sigmaL1",  DstarpipipiNorm[3], sigmaL1Variation_low, 2*sigmaL1Variation_high);
 		sigmaR1 = new RooRealVar("sigma_{1R}", "sigmaR1",  DstarpipipiNorm[4]);//, sigmaR1Variation_low, sigmaR1Variation_high);
 		sigmaL2 = new RooRealVar("sigma_{2L}", "sigmaL2",  DstarpipipiNorm[5], sigmaL2Variation_low, sigmaL2Variation_high);
@@ -1714,21 +1737,38 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 
 		f_1 = new RooRealVar("f_{1}", "fraction1", DstarpipipiNorm[9], 0.,1.);
 		f_2 = new RooRealVar("f_{2}", "fraction2", DstarpipipiNorm[10], 0.,1.);
+		mean1 = new RooRealVar("mean1","mu", DstarpipipiNorm[0], mean1Variation_low, mean1Variation_high);
+		mean2 = new RooRealVar("mean2","mu", DstarpipipiNorm[1], mean2Variation_low, mean2Variation_high);
+		mean3 = new RooRealVar("mean3","mu", DstarpipipiNorm[2], mean3Variation_low, mean3Variation_high);
+	}
+
+	if(fitSimultan && (!Ds2KKpi)){
+		sigmaL1 = new RooRealVar("sigma_{1L}", "sigmaL1",  DstarpipipiNorm[3], sigmaL1Variation_low, 3*sigmaL1Variation_high);
+		sigmaR1 = new RooRealVar("sigma_{1R}", "sigmaR1",  DstarpipipiNorm[4]);//, sigmaR1Variation_low, sigmaR1Variation_high);
+		sigmaL2 = new RooRealVar("sigma_{2L}", "sigmaL2",  DstarpipipiNorm[5], sigmaL2Variation_low, sigmaL2Variation_high);
+		sigmaR2 = new RooRealVar("sigma_{2R}", "sigmaR2",  DstarpipipiNorm[6], sigmaR2Variation_low, sigmaR2Variation_high);
+		sigmaL3 = new RooRealVar("sigma_{3L}", "sigmaL3",  DstarpipipiNorm[7], sigmaL3Variation_low, sigmaL3Variation_high);
+		sigmaR3 = new RooRealVar("sigma_{3R}", "sigmaR3",  DstarpipipiNorm[8]);//, sigmaR3Variation_low, sigmaR3Variation_high);
+
+		mean1 = new RooRealVar("mean1","mu", DstarpipipiNorm[0]);//, mean1Variation_low, mean1Variation_high);
+		mean2 = new RooRealVar("mean2","mu", DstarpipipiNorm[1]);//, mean2Variation_low, mean2Variation_high);
+		mean3 = new RooRealVar("mean3","mu", DstarpipipiNorm[2]);//, mean3Variation_low, mean3Variation_high);
+
+		f_1 = new RooRealVar("f_{1}", "fraction1", DstarpipipiNorm[9], 0.,1.);
+		f_2 = new RooRealVar("f_{2}", "fraction2", DstarpipipiNorm[10], 0.,1.);
 	}
 
 	//bifurcated gaussians
-	RooBifurGauss BifGauss1("BifGauss1","BifGauss1", DTF_Bs_M, mean1, *sigmaL1,*sigmaR1);
-	RooBifurGauss BifGauss2("BifGauss2","BifGauss2", DTF_Bs_M, mean2, *sigmaL2,*sigmaR2);
-	RooBifurGauss BifGauss3("BifGauss3","BifGauss3", DTF_Bs_M, mean3, *sigmaL3,*sigmaR3);
-
+	RooBifurGauss BifGauss1("BifGauss1","BifGauss1", DTF_Bs_M, *mean1, *sigmaL1,*sigmaR1);
+	RooBifurGauss BifGauss2("BifGauss2","BifGauss2", DTF_Bs_M, *mean2, *sigmaL2,*sigmaR2);
+	RooBifurGauss BifGauss3("BifGauss3","BifGauss3", DTF_Bs_M, *mean3, *sigmaL3,*sigmaR3);
 
 	//add functions
 	RooAddPdf Dstarpipipi_as_Dspipipi("Dstarpipipi_as_Dspipipi", "Dstarpipipi_as_Dspipipi", RooArgList(BifGauss1, BifGauss2, BifGauss3), RooArgList(*f_1,*f_2));
 
 	//sum all background shapes
 	//yields
-	RooRealVar N_Dstarpipipi("N_Dstarpipipi","N_Dstarpipipi", 9500., 0., data->numEntries());
-
+	RooRealVar N_Dstarpipipi("N_Dstarpipipi","N_Dstarpipipi", data->numEntries()/2., 0., data->numEntries());
 	RooRealVar N_comb("N_comb","N_comb", data->numEntries()/2., 0., data->numEntries());
 
         //sum background pdfs for BDT estimation 
@@ -1739,11 +1779,11 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 	///add yields for possible simultaneous fit
 	RooRealVar N_Bs_11("N_Bs_11", "2011 #B_{s}", data11->numEntries()/2., 0., data11->numEntries());
 	RooRealVar N_Bs_12("N_Bs_12", "2012 #B_{s}", data12->numEntries()/2., 0., data12->numEntries());
-	RooRealVar N_Dstarpipipi_11("N_Dstarpipipi_11","N_Dstarpipipi_11", 9500., 0., data11->numEntries());
-	RooRealVar N_Dstarpipipi_12("N_Dstarpipipi_12","N_Dstarpipipi_12", 9500., 0., data12->numEntries());
+	RooRealVar N_Dstarpipipi_11("N_Dstarpipipi_11","N_Dstarpipipi_11", data11->numEntries()/2., 0., data11->numEntries());
+	RooRealVar N_Dstarpipipi_12("N_Dstarpipipi_12","N_Dstarpipipi_12", data12->numEntries()/2., 0., data12->numEntries());
 	RooRealVar N_comb_11("N_comb_11","N_comb_11", data11->numEntries()/2., 0., data11->numEntries());
 	RooRealVar N_comb_12("N_comb_12","N_comb_12", data12->numEntries()/2., 0., data12->numEntries());
-
+cout << "läuft 5" << endl;
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1752,7 +1792,7 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 
 	RooAbsPdf* pdf=new RooAddPdf("pdf", "pdf", RooArgList(DoubleGaussBs, Dstarpipipi_as_Dspipipi ,bkg_exp), RooArgList(N_Bs, N_Dstarpipipi, N_comb));
 	RooAbsPdf* pdfScan=new RooAddPdf("pdfScan", "pdfScan", RooArgList(DoubleGaussBs, bkg), RooArgList(N_Bs, n_bkg));
-
+cout << "läuft 5" << endl;
 	///construct a simultaneous pdf using category sample as index
 	RooSimultaneous* simPdf;
 	RooAbsPdf* pdf11;
@@ -1791,12 +1831,32 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 	string BsMassResidual = "eps/Final/3pi_residual";
 	string BsMassPull = "eps/Final/3pi_pull";
 	string BsMassSweight = "eps/Final/3pi_Bs_sWeight";
+	string simfit11 = "_sim11.eps";
+	string simfit12 = "_sim12.eps";
+	string StringDs2pipipi = "_Ds2pipipi";
 
 	string eleven = "_11.eps";
 	string twelve = "_12.eps";
 
+	string BsMassDistribution11 = "eps/Final/3pi_BmassFit";
+	string BsMassDistribution12 = "eps/Final/3pi_BmassFit";
+	string BsMassResidual11 = "eps/Final/3pi_residual";
+	string BsMassResidual12 = "eps/Final/3pi_residual";
+	string BsMassPull11 = "eps/Final/3pi_pull";
+	string BsMassPull12 = "eps/Final/3pi_pull";
+	string BsMassSweight11 = "eps/Final/3pi_Bs_sWeight";
+	string BsMassSweight12 = "eps/Final/3pi_Bs_sWeight";
+
+	// append Ds2pipipi string to all names in case this channel is fitted
+	if(!Ds2KKpi){
+		BsMassDistribution.append(StringDs2pipipi);
+		BsMassResidual.append(StringDs2pipipi);
+		BsMassPull.append(StringDs2pipipi);
+		BsMassSweight.append(StringDs2pipipi);
+	}
+
 	// 2011 results
-	if(sevenTeV){
+	if(sevenTeV && (!fitSimultan)){
 		BsMassDistribution.append(eleven);
 		BsMassResidual.append(eleven);
 		BsMassPull.append(eleven);
@@ -1804,11 +1864,44 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 	}
 
 	//2012 results
-	if(!sevenTeV){
+	if(!sevenTeV && (!fitSimultan)){
+		if(!Ds2KKpi) BsMassDistribution.append(StringDs2pipipi);
 		BsMassDistribution.append(twelve);
 		BsMassResidual.append(twelve);
 		BsMassPull.append(twelve);
 		BsMassSweight.append(twelve);
+	}
+
+	if(fitSimultan && Ds2KKpi){
+	BsMassDistribution11.append(simfit11);
+	BsMassResidual11.append(simfit11);
+	BsMassPull11.append(simfit11);
+	BsMassSweight11.append(simfit11);
+
+	BsMassDistribution12.append(simfit12);
+	BsMassResidual12.append(simfit12);
+	BsMassPull12.append(simfit12);
+	BsMassSweight12.append(simfit12);
+	}
+
+	if(fitSimultan && (!Ds2KKpi)){
+	BsMassDistribution11.append(StringDs2pipipi);
+	BsMassResidual11.append(StringDs2pipipi);
+	BsMassPull11.append(StringDs2pipipi);
+	BsMassSweight11.append(StringDs2pipipi);
+	BsMassDistribution11.append(simfit11);
+	BsMassResidual11.append(simfit11);
+	BsMassPull11.append(simfit11);
+	BsMassSweight11.append(simfit11);
+
+	BsMassDistribution12.append(StringDs2pipipi);
+	BsMassResidual12.append(StringDs2pipipi);
+	BsMassPull12.append(StringDs2pipipi);
+	BsMassSweight12.append(StringDs2pipipi);
+	BsMassDistribution12.append(simfit12);
+	BsMassResidual12.append(simfit12);
+	BsMassPull12.append(simfit12);
+	BsMassSweight12.append(simfit12);
 	}
 
 
@@ -1830,7 +1923,7 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 		simPdf->plotOn(frame_m_11,Slice(sample_year,"y11"),Components(Dstarpipipi_as_Dspipipi),ProjWData(sample_year,*combData),LineColor(kMagenta),LineStyle(kDashed),LineWidth(1));
 		simPdf->plotOn(frame_m_11,Slice(sample_year,"y11"),Components(bkg_exp_11),ProjWData(sample_year,*combData),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 		frame_m_11->Draw();
-		c1->Print("eps/Final/3pi_BmassFit_sim11.eps");
+		c1->Print(BsMassDistribution11.c_str());
 
 		combData->plotOn(frame_m_12,Name("data12"),Cut("sample_year==sample_year::y12"),MarkerSize(0.5),Binning(60));
 		simPdf->plotOn(frame_m_12,Name("pdf12"),Slice(sample_year,"y12"),ProjWData(sample_year,*combData),LineColor(kBlack),LineWidth(2));
@@ -1838,7 +1931,7 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 		simPdf->plotOn(frame_m_12,Slice(sample_year,"y12"),Components(Dstarpipipi_as_Dspipipi),ProjWData(sample_year,*combData),LineColor(kMagenta),LineStyle(kDashed),LineWidth(1));
 		simPdf->plotOn(frame_m_12,Slice(sample_year,"y12"),Components(bkg_exp_12),ProjWData(sample_year,*combData),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 		frame_m_12->Draw();
-		c1->Print("eps/Final/3pi_BmassFit_sim12.eps");
+		c1->Print(BsMassDistribution12.c_str());
 	}
 
 
@@ -1884,12 +1977,12 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 		frame2_11->SetTitle("");
 		frame2_11->addPlotable(hresid11,"P") ;
 		frame2_11->Draw();
-		c1->Print("eps/Final/3pi_residual_sim11.eps");
+		c1->Print(BsMassResidual11.c_str());
 
 		frame2_12->SetTitle("");
 		frame2_12->addPlotable(hresid12,"P") ;
 		frame2_12->Draw();
-		c1->Print("eps/Final/3pi_residual_sim12.eps");
+		c1->Print(BsMassResidual12.c_str());
 	}
 
 	// Create a new frame to draw the pull distribution and add the distribution to the frame
@@ -1909,20 +2002,20 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool d
 		frame3_11->SetLabelFont(62,"Y");
 		frame3_11->addPlotable(hpull11,"P") ;
 		frame3_11->Draw();
-		c1->Print("eps/Final/3pi_pull_sim11.eps");
+		c1->Print(BsMassPull11.c_str());
 
 		frame3_12->SetTitle("");	
 		frame3_12->SetLabelFont(62,"Y");
 		frame3_12->addPlotable(hpull12,"P") ;
 		frame3_12->Draw();
-		c1->Print("eps/Final/3pi_pull_sim12.eps");
+		c1->Print(BsMassPull12.c_str());
 	}
 
 
 	///save fitavalues in array to be use in fitBDT()
-	fitvalues[0] = mean1.getVal();
-	fitvalues[1] = mean2.getVal();
-	fitvalues[2] = mean3.getVal();
+	fitvalues[0] = mean1->getVal();
+	fitvalues[1] = mean2->getVal();
+	fitvalues[2] = mean3->getVal();
 	fitvalues[3] = sigmaL1->getVal();
 	fitvalues[4] = sigmaR1->getVal();
 	fitvalues[5] = sigmaL2->getVal();
@@ -2043,9 +2136,9 @@ if(doToys && (!fitSimultan)){
 
 
 
-	RooPlot* frame_mean1_value = Toystudy->plotParam(mean1,Bins(40));
-	RooPlot* frame_mean1_error = Toystudy->plotError(mean1,Bins(40));
-	RooPlot* frame_mean1_pull = Toystudy->plotPull(mean1,Bins(30),FrameRange(-5., 5.),FitGauss(kTRUE));
+	RooPlot* frame_mean1_value = Toystudy->plotParam(*mean1,Bins(40));
+	RooPlot* frame_mean1_error = Toystudy->plotError(*mean1,Bins(40));
+	RooPlot* frame_mean1_pull = Toystudy->plotPull(*mean1,Bins(30),FrameRange(-5., 5.),FitGauss(kTRUE));
 
 	frame_mean1_value->Draw("E1");
 	if(sevenTeV) c1->Print("eps/Toys/Normalization/mean1_Distribution_11.eps");
@@ -2059,9 +2152,9 @@ if(doToys && (!fitSimultan)){
 
 
 
-	RooPlot* frame_mean2_value = Toystudy->plotParam(mean2,Bins(40));
-	RooPlot* frame_mean2_error = Toystudy->plotError(mean2,Bins(40));
-	RooPlot* frame_mean2_pull = Toystudy->plotPull(mean2,Bins(30),FrameRange(-5., 5.),FitGauss(kTRUE));
+	RooPlot* frame_mean2_value = Toystudy->plotParam(*mean2,Bins(40));
+	RooPlot* frame_mean2_error = Toystudy->plotError(*mean2,Bins(40));
+	RooPlot* frame_mean2_pull = Toystudy->plotPull(*mean2,Bins(30),FrameRange(-5., 5.),FitGauss(kTRUE));
 
 	frame_mean2_value->Draw("E1"); 
 	if(sevenTeV) c1->Print("eps/Toys/Normalization/mean2_Distribution_11.eps");
@@ -2075,9 +2168,9 @@ if(doToys && (!fitSimultan)){
 
 
 
-	RooPlot* frame_mean3_value = Toystudy->plotParam(mean3,Bins(40));
-	RooPlot* frame_mean3_error = Toystudy->plotError(mean3,Bins(40));
-	RooPlot* frame_mean3_pull = Toystudy->plotPull(mean3,Bins(30),FrameRange(-5., 5.),FitGauss(kTRUE));
+	RooPlot* frame_mean3_value = Toystudy->plotParam(*mean3,Bins(40));
+	RooPlot* frame_mean3_error = Toystudy->plotError(*mean3,Bins(40));
+	RooPlot* frame_mean3_pull = Toystudy->plotPull(*mean3,Bins(30),FrameRange(-5., 5.),FitGauss(kTRUE));
 
 	frame_mean3_value->Draw("E1"); 
 	if(sevenTeV) c1->Print("eps/Toys/Normalization/mean3_Distribution_11.eps");
@@ -2214,9 +2307,9 @@ if(sWeight && (!fitSimultan)){
  		sigmaR3->setConstant();
  		f_1->setConstant();
  		f_2->setConstant();
-		mean1.setConstant();
-		mean2.setConstant();
-		mean3.setConstant();
+		mean1->setConstant();
+		mean2->setConstant();
+		mean3->setConstant();
 		meanBs1.setConstant();
 		sigmaBs1.setConstant();
 		sigmaBs2.setConstant();
@@ -2238,8 +2331,10 @@ if(sWeight && (!fitSimultan)){
 
     		///Create output file
    		 TFile* output;
-		 if(sevenTeV) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data_Bs2Dspipipi_11_final_sweight.root","RECREATE");
-		 if(!sevenTeV) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_12_final_sweight.root","RECREATE");
+		 if(sevenTeV && Ds2KKpi) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data_Bs2Dspipipi_11_final_sweight.root","RECREATE");
+		 if(!sevenTeV && Ds2KKpi) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_12_final_sweight.root","RECREATE");
+		 if(sevenTeV && (!Ds2KKpi)) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data_Bs2Dspipipi_Ds2pipipi_11_final_sweight.root","RECREATE");
+		 if(!sevenTeV && (!Ds2KKpi)) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_Ds2pipipi_12_final_sweight.root","RECREATE");
 
 		 tree->SetBranchStatus("*",1);
    		 TTree* new_tree = tree->CopyTree("DTF_Bs_M > 4800 && DTF_Bs_M < 5800");
@@ -2273,9 +2368,9 @@ if(sWeight && (!fitSimultan)){
 		RooRealVar a3_12("a3_12","a3_12",0.,-1.,1.);
 		RooPolynomial polyBG_12("polyBG_12","polyBG_12",DTF_Bs_M,RooArgList(a1_12,a2_12),0);
 
-		mean1.setVal(DstarpipipiNorm[0]);
-		mean2.setVal(DstarpipipiNorm[1]);
-		mean3.setVal(DstarpipipiNorm[2]);
+		mean1->setVal(DstarpipipiNorm[0]);
+		mean2->setVal(DstarpipipiNorm[1]);
+		mean3->setVal(DstarpipipiNorm[2]);
 /*
 		sigmaL1->setVal(DstarpipipiNorm[3]);
 		sigmaR1->setVal(DstarpipipiNorm[4]);
@@ -2299,9 +2394,9 @@ if(sWeight && (!fitSimultan)){
 
  		f_1->setConstant();
  		f_2->setConstant();
-		mean1.setConstant();
-		mean2.setConstant();
-		mean3.setConstant();
+		mean1->setConstant();
+		mean2->setConstant();
+		mean3->setConstant();
 
 		RooSimultaneous* simPdf_alt;
 		RooAbsPdf* pdf11_alt;
@@ -2353,9 +2448,10 @@ void fitBDT(){
 
 	bool sWeight=false;
 	bool sevenTeV=false; // 2011 = true, 2012 = false
-	bool doToys=true;
-	bool fitSimultan=false;
+	bool doToys=false;
+	bool fitSimultan=true;
 	bool altModel=false;
+	bool Ds2KKpi = false;
 
    	gStyle->SetOptStat(0);
     	gStyle->SetTitleXSize(0.05);
@@ -2373,7 +2469,7 @@ void fitBDT(){
 	///seperate fits for 7 & 8 TeV data (fitSimultan = false)
 	TFile* file;
 	TTree* tree;
-	if(!fitSimultan){
+	if(!fitSimultan && Ds2KKpi){
 		if(sevenTeV) file= new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_fullSelectionBDTG_tightDCUT_DZ.root");	
 		if(!sevenTeV) file= new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_fullSelectionBDTG_tightDCUT_DZ.root");
 		tree = (TTree*) file->Get("DecayTree");	
@@ -2386,12 +2482,22 @@ void fitBDT(){
 	TFile* file12;
 	TTree* tree11;
 	TTree* tree12;
-	if(fitSimultan){
+	if(fitSimultan && Ds2KKpi){
 		file11 = new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_fullSelectionBDTG_tightDCUT_DZ.root");
 		tree11 = (TTree*) file11->Get("DecayTree");
 		tree11->SetBranchStatus("*",0);
 		tree11->SetBranchStatus("DTF_Bs_M",1);
 		file12 = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_fullSelectionBDTG_tightDCUT_DZ.root");
+		tree12 = (TTree*) file12->Get("DecayTree");
+		tree12->SetBranchStatus("*",0);
+		tree12->SetBranchStatus("DTF_Bs_M",1);
+	}
+	if(fitSimultan && (!Ds2KKpi)){
+		file11 = new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2pipipi_fullSelectionBDTG.root");
+		tree11 = (TTree*) file11->Get("DecayTree");
+		tree11->SetBranchStatus("*",0);
+		tree11->SetBranchStatus("DTF_Bs_M",1);
+		file12 = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2pipipi_fullSelectionBDTG.root");
 		tree12 = (TTree*) file12->Get("DecayTree");
 		tree12->SetBranchStatus("*",0);
 		tree12->SetBranchStatus("DTF_Bs_M",1);
@@ -2434,7 +2540,7 @@ void fitBDT(){
 	// 13 params: mean1-3, sigma1-6, f_1 & f_2, N_Dstar, N_Bs
 	double fillarr4[13];
 	double *DsstarKpipifromNorm;
-	DsstarKpipifromNorm = fitBDTNorm(fillarr4, sevenTeV, fitSimultan);
+	DsstarKpipifromNorm = fitBDTNorm(fillarr4, sevenTeV, fitSimultan, Ds2KKpi);
 
 	//5) Dspipipi in DsKpipi
 	// 9 params: mean1, mean2, a1, a2, n1, n2, sigma1, sigma2, f_1
@@ -2627,10 +2733,16 @@ void fitBDT(){
 	RooRealVar N_DstarKpipi("N_DstarKpipi","N_DstarKpipi", 1275, 0, data->numEntries());
 	RooRealVar N_DstarKpipiShifted("N_DstarKpipiShifted","N_DstarKpipiShifted", 1275, 0, data->numEntries());
 	RooRealVar N_DstarKpipi_11("N_DstarKpipi_11","N_DstarKpipi 11", 1275, 0, data11->numEntries());
-	RooRealVar ratioDstar("ratioDstar","ratioDstar",1.,0.,10.);
+
+	RooRealVar *ratioDstar;
+	if(Ds2KKpi) ratioDstar = new RooRealVar("ratioDstar","ratioDstar",1.,0.,10.);
+
+	//fixed from Bs->Ds(->KKpi)Kpipi massfit
+	if(!Ds2KKpi) ratioDstar = new RooRealVar("ratioDstar", "ratioDstar", 2.6771e+00);
+
 	RooRealVar N_DstarKpipi_12("N_DstarKpipi_12","N_DstarKpipi 12", 1275, 0, data12->numEntries());
-	RooGenericPdf N_DstarKpipiShifted_11("N_DstarKpipiShifted_11","N_DstarKpipiShifted 11", "@0*@1",RooArgList(ratioDstar,N_DstarKpipi_11));
-	RooGenericPdf N_DstarKpipiShifted_12("N_DstarKpipiShifted_12","N_DstarKpipiShifted 12", "@0*@1",RooArgList(ratioDstar,N_DstarKpipi_12));
+	RooGenericPdf N_DstarKpipiShifted_11("N_DstarKpipiShifted_11","N_DstarKpipiShifted 11", "@0*@1",RooArgList(*ratioDstar,N_DstarKpipi_11));
+	RooGenericPdf N_DstarKpipiShifted_12("N_DstarKpipiShifted_12","N_DstarKpipiShifted 12", "@0*@1",RooArgList(*ratioDstar,N_DstarKpipi_12));
 
 	RooRealVar* N_Dspipipi;
 	RooRealVar* N_Dstarpipipi;
@@ -2716,12 +2828,32 @@ cout << "put together pdfs 1.5" << endl;
 	string BsMassResidual = "eps/Final/residual";
 	string BsMassPull = "eps/Final/pull";
 	string BsMassSweight = "eps/Final/Bs_sWeight";
+        string simfit11 = "_sim11.eps";
+        string simfit12 = "_sim12.eps";
+        string StringDs2pipipi = "_Ds2pipipi";
 
 	string eleven = "_11.eps";
 	string twelve = "_12.eps";
 
+        string BsMassDistribution11 = "eps/Final/BmassFit";
+        string BsMassDistribution12 = "eps/Final/BmassFit";
+        string BsMassResidual11 = "eps/Final/residual";
+        string BsMassResidual12 = "eps/Final/residual";
+        string BsMassPull11 = "eps/Final/pull";
+        string BsMassPull12 = "eps/Final/pull";
+        string BsMassSweight11 = "eps/Final/Bs_sWeight";
+        string BsMassSweight12 = "eps/Final/Bs_sWeight";
+
+	// add Ds2pipipi tag to names where appropriate
+	if(!Ds2KKpi){
+		BsMassDistribution.append(StringDs2pipipi);
+		BsMassResidual.append(StringDs2pipipi);
+		BsMassPull.append(StringDs2pipipi);
+		BsMassSweight.append(StringDs2pipipi);
+	}
+
 	// 2011 results
-	if(sevenTeV){
+	if(sevenTeV && (!fitSimultan)){
 		BsMassDistribution.append(eleven);
 		BsMassResidual.append(eleven);
 		BsMassPull.append(eleven);
@@ -2729,13 +2861,46 @@ cout << "put together pdfs 1.5" << endl;
 	}
 
 	//2012 results
-	if(!sevenTeV){
+	if((!sevenTeV) && (!fitSimultan)){
 		BsMassDistribution.append(twelve);
 		BsMassResidual.append(twelve);
 		BsMassPull.append(twelve);
 		BsMassSweight.append(twelve);
 	}
-	
+
+	// results for simfit
+        if(fitSimultan && Ds2KKpi){
+        BsMassDistribution11.append(simfit11);
+        BsMassResidual11.append(simfit11);
+        BsMassPull11.append(simfit11);
+        BsMassSweight11.append(simfit11);
+
+        BsMassDistribution12.append(simfit12);
+        BsMassResidual12.append(simfit12);
+        BsMassPull12.append(simfit12);
+        BsMassSweight12.append(simfit12);
+        }
+
+        if(fitSimultan && (!Ds2KKpi)){
+        BsMassDistribution11.append(StringDs2pipipi);
+        BsMassResidual11.append(StringDs2pipipi);
+        BsMassPull11.append(StringDs2pipipi);
+        BsMassSweight11.append(StringDs2pipipi);
+        BsMassDistribution11.append(simfit11);
+        BsMassResidual11.append(simfit11);
+        BsMassPull11.append(simfit11);
+        BsMassSweight11.append(simfit11);
+
+        BsMassDistribution12.append(StringDs2pipipi);
+        BsMassResidual12.append(StringDs2pipipi);
+        BsMassPull12.append(StringDs2pipipi);
+        BsMassSweight12.append(StringDs2pipipi);
+        BsMassDistribution12.append(simfit12);
+        BsMassResidual12.append(simfit12);
+        BsMassPull12.append(simfit12);
+        BsMassSweight12.append(simfit12);
+        }
+
 	TCanvas* c1= new TCanvas("");
 	RooPlot* frame_m= DTF_Bs_M.frame();
         RooPlot* frame_m_11= DTF_Bs_M.frame();
@@ -2770,7 +2935,7 @@ cout << "put together pdfs 1.5" << endl;
                 simPdf->plotOn(frame_m_11,Slice(sample_year,"y11"),Components(Dstarpipipi_as_DsKpipi),ProjWData(sample_year,*combData),LineColor(kOrange),LineStyle(kDashed),LineWidth(1));
                 simPdf->plotOn(frame_m_11,Slice(sample_year,"y11"),Components(bkg_exp_11),ProjWData(sample_year,*combData),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
                 frame_m_11->Draw();
-                c1->Print("eps/Final/BmassFit_sim11.eps");
+                c1->Print(BsMassDistribution11.c_str());
 
                 combData->plotOn(frame_m_12,Name("data12"),Cut("sample_year==sample_year::y12"),MarkerSize(0.5),Binning(60));
                 simPdf->plotOn(frame_m_12,Name("pdf12"),Slice(sample_year,"y12"),ProjWData(sample_year,*combData),LineColor(kBlack),LineWidth(2));
@@ -2782,7 +2947,7 @@ cout << "put together pdfs 1.5" << endl;
                 simPdf->plotOn(frame_m_12,Slice(sample_year,"y12"),Components(Dstarpipipi_as_DsKpipi),ProjWData(sample_year,*combData),LineColor(kOrange),LineStyle(kDashed),LineWidth(1));
                 simPdf->plotOn(frame_m_12,Slice(sample_year,"y12"),Components(bkg_exp_12),ProjWData(sample_year,*combData),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
                 frame_m_12->Draw();
-                c1->Print("eps/Final/BmassFit_sim12.eps");
+                c1->Print(BsMassDistribution12.c_str());
         }
 
 	///fit results
@@ -2827,12 +2992,12 @@ cout << "put together pdfs 1.5" << endl;
                 frame2_11->SetTitle("");
                 frame2_11->addPlotable(hresid11,"P") ;
                 frame2_11->Draw();
-                c1->Print("eps/Final/residual_sim11.eps");
+                c1->Print(BsMassResidual11.c_str());
 
                 frame2_12->SetTitle("");
                 frame2_12->addPlotable(hresid12,"P") ;
                 frame2_12->Draw();
-                c1->Print("eps/Final/residual_sim12.eps");
+                c1->Print(BsMassResidual12.c_str());
         }
 
 	// Create a new frame to draw the pull distribution and add the distribution to the frame
@@ -2852,13 +3017,13 @@ cout << "put together pdfs 1.5" << endl;
                 frame3_11->SetLabelFont(62,"Y");
                 frame3_11->addPlotable(hpull11,"P") ;
                 frame3_11->Draw();
-                c1->Print("eps/Final/pull_sim11.eps");
+                c1->Print(BsMassPull11.c_str());
 
                 frame3_12->SetTitle("");
                 frame3_12->SetLabelFont(62,"Y");
                 frame3_12->addPlotable(hpull12,"P") ;
                 frame3_12->Draw();
-                c1->Print("eps/Final/pull_sim12.eps");
+                c1->Print(BsMassPull12.c_str());
         }
 
 if(doToys && (!fitSimultan)){
@@ -3082,8 +3247,10 @@ if(doToys && (!fitSimultan)){
 
     		///Create output file
    		 TFile* output;
-		 if(sevenTeV) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data_Bs_11_final_sweight.root","RECREATE");
-		 if(!sevenTeV) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data_Bs_12_final_sweight.root","RECREATE");
+		 if(sevenTeV && Ds2KKpi) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data_Bs_11_final_sweight.root","RECREATE");
+		 if(!sevenTeV && Ds2KKpi) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data_Bs_12_final_sweight.root","RECREATE");
+		 if(sevenTeV && (!Ds2KKpi)) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data_Bs_Ds2pipipi_11_final_sweight.root","RECREATE");
+		 if(!sevenTeV && (!Ds2KKpi)) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data_Bs_Ds2pipipi_12_final_sweight.root","RECREATE");
 
 		 tree->SetBranchStatus("*",1);
    		 TTree* new_tree = tree->CopyTree("DTF_Bs_M > 4800 && DTF_Bs_M < 5800");
@@ -3211,48 +3378,50 @@ void makePlots(){
     
     ///Load file
     TFile* file;
-   file= new TFile("/auto/data/kecke/B2DKPiPi/Data2012/Bs2DsKpipi_Ds2pipipi_fullSelectionBDTG.root");
- //   file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/Bs2Dspipipi_fullSelectionBDTG_tightDCUT.root");    
-    TTree* tree = (TTree*) file->Get("DecayTree");	
+    TFile* fileMC;
+  // fileMC= new TFile("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_reweighted_Reco14.root");
+   //file= new TFile("/auto/data/kecke/B2DPiPiPi/MC2011/mc11_Bs2Dspipipi_Ds2KKpi_BDT_XdReweighted_Reco14.root");
+    //file= new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT_tmp.root");    
+   fileMC= new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_withTriggerWeights_Reco14.root");
+   // TTree* tree = (TTree*) file->Get("DecayTree");
+    TTree* treeMC = (TTree*) fileMC->Get("DecayTree");
 
-    double Bs_MM, Ds_MM;
-    tree->SetBranchAddress("Bs_MM",&Bs_MM);
-    tree->SetBranchAddress("Ds_MM",&Ds_MM);
-    TH1D* massBs = new TH1D("mass of B_{s} candidates",";m(D_{s}^{+} K #pi^{+} #pi^{-}) [MeV];Entries",40, 5000., 5600.);
+    TH1D* massBs = new TH1D("mass of B_{s}^{0} candidates",";m(D_{s}^{+} K^{-} #pi^{+} #pi^{-}) [MeV];Entries",75, 4750., 6000.);
+    TH1D* massBssyst_L0 = new TH1D("mass of B_{s} candidates L0 syst",";m(D_{s}^{+} K #pi^{+} #pi^{-}) [MeV];Entries",75, 4750., 6000.);
+    TH1D* massBssyst_HLT1 = new TH1D("mass of B_{s} candidates HLT1 syst",";m(D_{s}^{+} K #pi^{+} #pi^{-}) [MeV];Entries",75, 4750., 6000.);
   //  TH1D* massBs = new TH1D("mass of B_{s} candidates",";m(D_{s}^{+} #pi^{-} #pi^{+} #pi^{-}) [MeV];Entries",40, 5000., 5600.);
-    TH1D* massDs = new TH1D("mass of D_{s} candidates",";m(K^{-} K^{+} #pi^{+}) [MeV];Entries",40, 1900., 2050.);
-/*
-    double DTF_mKpipi, mKpipi, DTF_mKpi, mKpi, mPsi;
-    double mB, sw;
-    tree->SetBranchAddress("DTF_mKpipi",&DTF_mKpipi);
-    tree->SetBranchAddress("mKpipi",&mKpipi);
-    tree->SetBranchAddress("DTF_mKpi",&DTF_mKpi);
-    tree->SetBranchAddress("mKpi",&mKpi);
-    tree->SetBranchAddress("Bplus_MM",&mB);
-    tree->SetBranchAddress("n_sig_sw",&sw);
-    tree->SetBranchAddress("J_psi_1S_MM",&mPsi);*/
-/*
-    TH1D* hKpi = new TH1D("hKpi","",100,0.,4.5);
-    TH1D* hKpi_DTF = new TH1D("hKpi_DTF",";m^{2}(K #pi) [GeV^{2}]; Yield [norm.]",100,0.,4.5);
-    
-    TH1D* hKpipi = new TH1D("hKpipi","",100,0.5,6);
-    TH1D* hKpipi_DTF = new TH1D("hKpipi_DTF",";m^{2}(K #pi #pi) [GeV^{2}]; Yield [norm.]",100,0.5,6);
-    TH1D* hKpipi_s = new TH1D("hKpipi_s",";m^{2}(K^{+} #pi^{+} #pi^{-}) [GeV^{2}]; Candidates ",100,0.5,6);
-    TH1D* hKpipi_DTF_s = new TH1D("hKpipi_DTF_s",";m^{2}(K^{+} #pi^{+} #pi^{-}) [GeV^{2}]; Candidates",100,0.5,6);
-    TH1D* hKpipi_b = new TH1D("hKpipi_b",";m^{2}(K #pi #pi) [GeV^{2}]; Yield [norm.]",100,0.5,6);
-    TH1D* hKpipi_DTF_b = new TH1D("hKpipi_DTF_b",";m^{2}(K #pi #pi) [GeV^{2}]; Yield [norm.]",100,0.5,6);
-    
-    TH2D* mB_mKpipi = new TH2D("mB_mKpipi",";m^{2}(K^{+} #pi^{+} #pi^{-}) [GeV^{2}];m(B^{+}) [MeV]",50,0,6.5,50,5200,5600);
-    TH1D* hpsi = new TH1D("mPsi","",100,3640,3740);
-*/
+   // TH1D* massDs = new TH1D("mass of D_{s} candidates",";m(K^{-} K^{+} #pi^{+}) [MeV];Entries",40, 1900., 2050.);
+
+    //TH2D* nTracksVsGhostProb = new TH2D("nTracks vs max(ghostProb)",";nTracks;max(ghostProb)",10, 50., 300.,10,0.,0.1);
+   //plot("nTracks","# of tracks",40,0,450,false,true);
+  // plot("max_ghostProb","max(Track_ghostProb)",25,0.,0.375,false,true);
+
+
+    double mB;
+    int nTracks;
+    float max_ghostProb;
+    //double w;
+    double w_L0;
+    double w_HLT1;
+
+
+    treeMC->SetBranchAddress("DTF_Bs_M",&mB);
+    //treeMC->SetBranchAddress("weight",&w);
+    treeMC->SetBranchAddress("weight_L0",&w_L0);
+    treeMC->SetBranchAddress("weight_HLT1",&w_HLT1);
+    treeMC->SetBranchAddress("nTracks",&nTracks);
+    treeMC->SetBranchAddress("max_ghostProb",&max_ghostProb);
+
     ///loop over events
-    int numEvents = tree->GetEntries();
+    int numEvents = treeMC->GetEntries();
     for(int i=0; i< numEvents; i++){	
 		if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEvents << endl;
-		tree->GetEntry(i);
+		treeMC->GetEntry(i);
 
-		massBs->Fill(Bs_MM);
-		massDs->Fill(Ds_MM);
+		massBs->Fill(mB);
+		massBssyst_L0->Fill(mB,w_L0);
+		massBssyst_HLT1->Fill(mB,w_HLT1);
+		//nTracksVsGhostProb->Fill(nTracks,max_ghostProb,w);
 /*
 		hJpsipipi->Fill(mJpsipipi/1000000,sw);
 		hJpsipipi_DTF->Fill(DTF_mJpsipipi/1000000,sw);
@@ -3276,8 +3445,21 @@ void makePlots(){
  //   massBs->Draw("e1"); c->Print("eps/mass_Bs_fullSel_12.eps");
   //  massDs->Draw("e1"); c->Print("eps/mass_Ds_fullSel_12.eps");
 
-    massBs->Draw("e1"); c->Print("eps/mass_Bs_fullSel_12_Ds2pipipi.eps");
-    massDs->Draw("e1"); c->Print("eps/mass_Ds_fullSel_12_Ds2pipipi.eps");
+
+   /// nTracksVsGhostProb->SetStats(0);
+   /// nTracksVsGhostProb->Draw("COLZ"); 
+   /// c->Print("DataVsMC/nTracksVsGhostProb.eps"); 
+   /// c->Print("DataVsMC/nTracksVsGhostProb.pdf");
+
+
+    //massBs->SetStats(0);
+    //massBs->Draw("e1"); c->Print("eps/afterPresel/mass_Bs_forBDT_12.png");
+    //c->Print("eps/afterPresel/mass_Bs_forBDT_12.root");
+   // massBssyst_L0->Draw("e1"); c->Print("eps/Systematics/mass_Bs_systL0_12.eps");
+
+	cout << "integral without weights is: " << massBs->Integral() << endl;
+	cout << "integral with L0 weight is: " << massBssyst_L0->Integral() << endl;
+	cout << "integral with HLT1 weight is: " << massBssyst_HLT1->Integral() << endl;
 /*
     hpsi->Draw("e");
     c->Print("plots/mpsi.eps");
@@ -3314,17 +3496,117 @@ void makePlots(){
     c->Print("plots/mJpsipipi_log.eps");*/
 }
 
-int quickFit(bool sevenTeV=true ){
+int quickFit(bool sevenTeV=false, bool Ds2KKpi=true){
 
-	bool sWeight=false;
+	bool sWeight = false;
+	bool Systematics = false;
+
+	bool L0 = true;
+	bool HLT1 = false;
+	bool HLT2 = false;
+
+	if(Systematics) sWeight = false;
 
 	///Load file
 	TFile* file;
-	if(sevenTeV) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data2011_Ds2KKpi_forBDT_tmp.root");
-	if(!sevenTeV)file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_forBDT_tmp.root");	
+	if(sevenTeV && Ds2KKpi) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data2011_Ds2KKpi_forBDT_tmp.root");
+	if(sevenTeV && (!Ds2KKpi)) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data2011_Ds2pipipi_forBDT.root");
+	if((!sevenTeV) && Ds2KKpi)file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_forBDT_tmp.root");
+	if((!sevenTeV) && (!Ds2KKpi))file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2pipipi_forBDT.root");
 	TTree* tree = (TTree*) file->Get("DecayTree");
    	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("DTF_Bs_M",1);
+
+	///Load files for TISTOS data studies
+	/// load L0 efficiencies
+	//TISTOS files
+	TFile* fileData_1_TISTOS;
+	if(L0) fileData_1_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TISTOS_pt_1525.root");
+	else if(HLT1) fileData_1_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_HLT1_TISTOS_pt_1525.root");
+	TTree* treeData_1_TISTOS = (TTree*) fileData_1_TISTOS->Get("DecayTree");
+   	treeData_1_TISTOS->SetBranchStatus("*",0);
+	treeData_1_TISTOS->SetBranchStatus("Bs_MM",1);
+
+	TFile* fileData_2_TISTOS;
+	if(L0) fileData_2_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TISTOS_pt_2535.root");
+	else if(HLT1) fileData_2_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_HLT1_TISTOS_pt_2535.root");
+	TTree* treeData_2_TISTOS = (TTree*) fileData_2_TISTOS->Get("DecayTree");
+   	treeData_2_TISTOS->SetBranchStatus("*",0);
+	treeData_2_TISTOS->SetBranchStatus("Bs_MM",1);
+
+	TFile* fileData_3_TISTOS;
+	if(L0) fileData_3_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TISTOS_pt_3545.root");
+	else if(HLT1) fileData_3_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_HLT1_TISTOS_pt_3545.root");
+	TTree* treeData_3_TISTOS = (TTree*) fileData_3_TISTOS->Get("DecayTree");
+   	treeData_3_TISTOS->SetBranchStatus("*",0);
+	treeData_3_TISTOS->SetBranchStatus("Bs_MM",1);
+
+	TFile* fileData_4_TISTOS;
+	if(L0) fileData_4_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TISTOS_pt_4555.root");
+	else if(HLT1) fileData_4_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_HLT1_TISTOS_pt_4555.root");
+	TTree* treeData_4_TISTOS = (TTree*) fileData_4_TISTOS->Get("DecayTree");
+   	treeData_4_TISTOS->SetBranchStatus("*",0);
+	treeData_4_TISTOS->SetBranchStatus("Bs_MM",1);
+
+	TFile* fileData_5_TISTOS;
+	if(L0) fileData_5_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TISTOS_alt_pt_5565.root");
+	else if(HLT1) fileData_5_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_HLT1_TISTOS_pt_5565.root");
+	TTree* treeData_5_TISTOS = (TTree*) fileData_5_TISTOS->Get("DecayTree");
+   	treeData_5_TISTOS->SetBranchStatus("*",0);
+	treeData_5_TISTOS->SetBranchStatus("Bs_MM",1);
+
+	TFile* fileData_6_TISTOS;
+	if(L0) fileData_6_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TISTOS_pt_6575.root");
+	else if(HLT1) fileData_6_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_HLT1_TISTOS_pt_6575.root");
+	TTree* treeData_6_TISTOS = (TTree*) fileData_6_TISTOS->Get("DecayTree");
+   	treeData_6_TISTOS->SetBranchStatus("*",0);
+	treeData_6_TISTOS->SetBranchStatus("Bs_MM",1);
+
+
+	//TIS only files
+	TFile* fileData_1_TIS;
+	if(L0) fileData_1_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TIS_pt_1525.root");
+	else if(HLT1) fileData_1_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_HLT1_TIS_pt_1525.root");
+	TTree* treeData_1_TIS = (TTree*) fileData_1_TIS->Get("DecayTree");
+   	treeData_1_TIS->SetBranchStatus("*",0);
+	treeData_1_TIS->SetBranchStatus("Bs_MM",1);
+
+	TFile* fileData_2_TIS;
+	if(L0) fileData_2_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TIS_pt_2535.root");
+	else if(HLT1) fileData_2_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_HLT1_TIS_pt_2535.root");
+	TTree* treeData_2_TIS = (TTree*) fileData_2_TIS->Get("DecayTree");
+   	treeData_2_TIS->SetBranchStatus("*",0);
+	treeData_2_TIS->SetBranchStatus("Bs_MM",1);
+
+	TFile* fileData_3_TIS;
+	if(L0) fileData_3_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TIS_pt_3545.root");
+	else if(HLT1) fileData_3_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_HLT1_TIS_pt_3545.root");
+	TTree* treeData_3_TIS = (TTree*) fileData_3_TIS->Get("DecayTree");
+   	treeData_3_TIS->SetBranchStatus("*",0);
+	treeData_3_TIS->SetBranchStatus("Bs_MM",1);
+
+	TFile* fileData_4_TIS;
+	if(L0) fileData_4_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TIS_pt_4555.root");
+	else if(HLT1) fileData_4_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_HLT1_TIS_pt_4555.root");
+	TTree* treeData_4_TIS = (TTree*) fileData_4_TIS->Get("DecayTree");
+   	treeData_4_TIS->SetBranchStatus("*",0);
+	treeData_4_TIS->SetBranchStatus("Bs_MM",1);
+
+	TFile* fileData_5_TIS;
+	if(L0) fileData_5_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TIS_pt_5565.root");
+	else if(HLT1) fileData_5_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_HLT1_TIS_pt_5565.root");
+	TTree* treeData_5_TIS = (TTree*) fileData_5_TIS->Get("DecayTree");
+   	treeData_5_TIS->SetBranchStatus("*",0);
+	treeData_5_TIS->SetBranchStatus("Bs_MM",1);
+
+	TFile* fileData_6_TIS;
+	if(L0) fileData_6_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TIS_pt_6575.root");
+	else if(HLT1) fileData_6_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_HLT1_TIS_pt_6575.root");
+	TTree* treeData_6_TIS = (TTree*) fileData_6_TIS->Get("DecayTree");
+   	treeData_6_TIS->SetBranchStatus("*",0);
+	treeData_6_TIS->SetBranchStatus("Bs_MM",1);
+
+	
 
 	///Fill all needed variables in RooDataSet
   	///---------------------------------------
@@ -3334,6 +3616,53 @@ int quickFit(bool sevenTeV=true ){
 	RooArgList list =  RooArgList(DTF_Bs_M);
         RooDataSet* data = new RooDataSet("data","data",RooArgSet(DTF_Bs_M),Import(*tree));
 
+	///for TISTOS
+	RooRealVar Bs_MM("Bs_MM", "m(D_{s} #pi #pi #pi)", 5200., 5500.,"MeV/c^{2}");
+	RooArgList list_TISTOS =  RooArgList(Bs_MM);
+	RooDataSet* data_TISTOS_1;
+	RooDataSet* data_TISTOS_2;
+	RooDataSet* data_TISTOS_3;
+	RooDataSet* data_TISTOS_4;
+	RooDataSet* data_TISTOS_5;
+	RooDataSet* data_TISTOS_6;
+	RooDataSet* data_TIS_1;
+	RooDataSet* data_TIS_2;
+	RooDataSet* data_TIS_3;
+	RooDataSet* data_TIS_4;
+	RooDataSet* data_TIS_5;
+	RooDataSet* data_TIS_6;
+
+	if(Systematics){
+		data_TISTOS_1 = new RooDataSet("data_TISTOS_1","data_TISTOS_1",RooArgSet(Bs_MM),Import(*treeData_1_TISTOS));
+		data_TISTOS_2 = new RooDataSet("data_TISTOS_2","data_TISTOS_2",RooArgSet(Bs_MM),Import(*treeData_2_TISTOS));
+		data_TISTOS_3 = new RooDataSet("data_TISTOS_3","data_TISTOS_3",RooArgSet(Bs_MM),Import(*treeData_3_TISTOS));
+		data_TISTOS_4 = new RooDataSet("data_TISTOS_4","data_TISTOS_4",RooArgSet(Bs_MM),Import(*treeData_4_TISTOS));
+		data_TISTOS_5 = new RooDataSet("data_TISTOS_5","data_TISTOS_5",RooArgSet(Bs_MM),Import(*treeData_5_TISTOS));
+		data_TISTOS_6 = new RooDataSet("data_TISTOS_6","data_TISTOS_6",RooArgSet(Bs_MM),Import(*treeData_6_TISTOS));
+
+		data_TIS_1 = new RooDataSet("data_TIS_1","data_TIS_1",RooArgSet(Bs_MM),Import(*treeData_1_TIS));
+		data_TIS_2 = new RooDataSet("data_TIS_2","data_TIS_2",RooArgSet(Bs_MM),Import(*treeData_2_TIS));
+		data_TIS_3 = new RooDataSet("data_TIS_3","data_TIS_3",RooArgSet(Bs_MM),Import(*treeData_3_TIS));
+		data_TIS_4 = new RooDataSet("data_TIS_4","data_TIS_4",RooArgSet(Bs_MM),Import(*treeData_4_TIS));
+		data_TIS_5 = new RooDataSet("data_TIS_5","data_TIS_5",RooArgSet(Bs_MM),Import(*treeData_5_TIS));
+		data_TIS_6 = new RooDataSet("data_TIS_6","data_TIS_6",RooArgSet(Bs_MM),Import(*treeData_6_TIS));
+	}
+
+	double N_TISTOS_1 = 0;
+	double N_TISTOS_2 = 0;
+	double N_TISTOS_3 = 0;
+	double N_TISTOS_4 = 0;
+	double N_TISTOS_5 = 0;
+	double N_TISTOS_6 = 0;
+
+	double N_TIS_1 = 0;
+	double N_TIS_2 = 0;
+	double N_TIS_3 = 0;
+	double N_TIS_4 = 0;
+	double N_TIS_5 = 0;
+	double N_TIS_6 = 0;
+
+	///put together the roofit pdf
 	//Bs signal shape
 	RooRealVar meanBs1("meanBs1", "B_{s} #mu", 5370.,5320.,5420.); 
 	RooRealVar sigmaBs1("sigmaBs1", "B_{s} #sigma_{1}", 39.27,5.,45.);	
@@ -3342,6 +3671,7 @@ int quickFit(bool sevenTeV=true ){
 	RooRealVar n1("n1","n1", 1., 0., 100.);
 	RooGaussian GaussBs1("GaussBs1", "GaussBs1", DTF_Bs_M, meanBs1, sigmaBs1);
 	RooGaussian GaussBs2("GaussBs2", "GaussBs2", DTF_Bs_M, meanBs1, sigmaBs2);
+	RooGaussian GaussBs("GaussBs", "GaussBs", Bs_MM, meanBs1, sigmaBs1);
 	RooCBShape CB1("CB1", "CB1", DTF_Bs_M, meanBs1, sigmaBs2, a1, n1);
 	RooRealVar f_GaussBs("f_GaussBs" , "f__{B_{s}}", 0.5, 0., 1.);
         RooAddPdf DoubleGaussBs("DoubleGaussBs", "DoubleGaussBs", RooArgList(GaussBs1,GaussBs2),RooArgList(f_GaussBs));
@@ -3356,18 +3686,106 @@ int quickFit(bool sevenTeV=true ){
 	RooRealVar f_comb("f_comb" , "f_comb", 0.5, 0., 1.);
 	RooRealVar exp_par("exp_par","#lambda",0.,-1.,1.);	
 	RooExponential bkg("bkg_exp","exponential background",DTF_Bs_M,exp_par);
+	RooExponential exp_bkg("exp_bkg","exponential background function",Bs_MM,exp_par);
 
 	//add pdfs
 	//RooAbsPdf* pdf=new RooAddPdf("pdf", "pdf", RooArgList(GaussBs1, GaussBs2, bkg_exp), RooArgList(f_GaussBs, f_comb));
-	RooAbsPdf* pdf=new RooAddPdf("pdf", "pdf", RooArgList(GaussBs1, bkg), RooArgList(N_Bs, N_comb));
+	RooAbsPdf* pdf=new RooAddPdf("pdf", "pdf", RooArgList(DoubleGaussBs, bkg), RooArgList(N_Bs, N_comb));
+	RooAbsPdf* pdf_TISTOS = new RooAddPdf("pdf_TISTOS", "pdf_TISTOS", RooArgList(GaussBs, exp_bkg), RooArgList(N_Bs, N_comb));
 
 
 	///Fit
 	RooFitResult *result;
-	result = pdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),NumCPU(3));
-	cout << "result is --------------- "<<endl;
-	result->Print();
+	if(!Systematics){
+		result = pdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),NumCPU(3));
+		cout << "result is --------------- "<<endl;
+		result->Print();
+	}
 
+	///Fit TIS & TISTOS datasets
+	RooFitResult *result_TISTOS_1;
+	RooFitResult *result_TISTOS_2;
+	RooFitResult *result_TISTOS_3;
+	RooFitResult *result_TISTOS_4;
+	RooFitResult *result_TISTOS_5;
+	RooFitResult *result_TISTOS_6;
+
+	RooFitResult *result_TIS_1;
+	RooFitResult *result_TIS_2;
+	RooFitResult *result_TIS_3;
+	RooFitResult *result_TIS_4;
+	RooFitResult *result_TIS_5;
+	RooFitResult *result_TIS_6;
+
+	if(Systematics){
+		result_TISTOS_1 = pdf_TISTOS->fitTo(*data_TISTOS_1,Save(kTRUE),Extended(kTRUE),NumCPU(2));
+		cout << "result for TISTOS_1 Bin is --------------- "<<endl;
+		result_TISTOS_1->Print();
+		N_TISTOS_1 = N_Bs.getVal();
+	
+
+		result_TISTOS_2 = pdf_TISTOS->fitTo(*data_TISTOS_2,Save(kTRUE),Extended(kTRUE),NumCPU(2));
+		cout << "result for TISTOS_2 Bin is --------------- "<<endl;
+		result_TISTOS_2->Print();
+		N_TISTOS_2 = N_Bs.getVal();
+
+		result_TISTOS_3 = pdf_TISTOS->fitTo(*data_TISTOS_3,Save(kTRUE),Extended(kTRUE),NumCPU(2));
+		cout << "result for TISTOS_3 Bin is --------------- "<<endl;
+		result_TISTOS_3->Print();
+		N_TISTOS_3 = N_Bs.getVal();
+
+		result_TISTOS_4 = pdf_TISTOS->fitTo(*data_TISTOS_4,Save(kTRUE),Extended(kTRUE),NumCPU(2));
+		cout << "result for TISTOS_4 Bin is --------------- "<<endl;
+		result_TISTOS_4->Print();
+		N_TISTOS_4 = N_Bs.getVal();
+
+		result_TISTOS_5 = pdf_TISTOS->fitTo(*data_TISTOS_5,Save(kTRUE),Extended(kTRUE),NumCPU(2));
+		cout << "result for TISTOS_5 Bin is --------------- "<<endl;
+		result_TISTOS_5->Print();
+		N_TISTOS_5 = N_Bs.getVal();
+
+		result_TISTOS_6 = pdf_TISTOS->fitTo(*data_TISTOS_6,Save(kTRUE),Extended(kTRUE),NumCPU(2));
+		cout << "result for TISTOS_6 Bin is --------------- "<<endl;
+		result_TISTOS_6->Print();
+		N_TISTOS_6 = N_Bs.getVal();
+
+
+
+		result_TIS_1 = pdf_TISTOS->fitTo(*data_TIS_1,Save(kTRUE),Extended(kTRUE),NumCPU(2));
+		cout << "result for TIS_1 Bin is --------------- "<<endl;
+		result_TIS_1->Print();
+		N_TIS_1 = N_Bs.getVal();
+
+
+		result_TIS_2 = pdf_TISTOS->fitTo(*data_TIS_2,Save(kTRUE),Extended(kTRUE),NumCPU(2));
+		cout << "result for TIS_2 Bin is --------------- "<<endl;
+		result_TIS_2->Print();
+		N_TIS_2 = N_Bs.getVal();
+
+
+		result_TIS_3 = pdf_TISTOS->fitTo(*data_TIS_3,Save(kTRUE),Extended(kTRUE),NumCPU(2));
+		cout << "result for TIS_3 Bin is --------------- "<<endl;
+		result_TIS_3->Print();
+		N_TIS_3 = N_Bs.getVal();
+
+
+		result_TIS_4 = pdf_TISTOS->fitTo(*data_TIS_4,Save(kTRUE),Extended(kTRUE),NumCPU(2));
+		cout << "result for TIS_4 Bin is --------------- "<<endl;
+		result_TIS_4->Print();
+		N_TIS_4 = N_Bs.getVal();
+
+
+		result_TIS_5 = pdf_TISTOS->fitTo(*data_TIS_5,Save(kTRUE),Extended(kTRUE),NumCPU(2));
+		cout << "result for TIS_5 Bin is --------------- "<<endl;
+		result_TIS_5->Print();
+		N_TIS_5 = N_Bs.getVal();
+
+
+		result_TIS_6 = pdf_TISTOS->fitTo(*data_TIS_6,Save(kTRUE),Extended(kTRUE),NumCPU(2));
+		cout << "result for TIS_6 Bin is --------------- "<<endl;
+		result_TIS_6->Print();
+		N_TIS_6 = N_Bs.getVal();
+	}
 
 	///calculate # (signal)background events in signal region
 
@@ -3378,13 +3796,15 @@ int quickFit(bool sevenTeV=true ){
 	RooAbsReal* B_fr= bkg.createIntegral(DTF_Bs_M,NormSet(DTF_Bs_M),Range("SigRange"));
 	Double_t B = B_fr->getVal()*N_comb.getVal();
 	
-	cout<< "S/sqrt(S+B)= " << S/sqrt(S+B) << endl;
-	cout<<"S/B= " << S/B<< endl;
-	cout<<"S= " << S<< endl;
-	cout<<"B= " << B<< endl;
+	if(!Systematics){
+		cout<< "S/sqrt(S+B)= " << S/sqrt(S+B) << endl;
+		cout<<"S/B= " << S/B<< endl;
+		cout<<"S= " << S<< endl;
+		cout<<"B= " << B<< endl;
 
-	cout << endl;
-	cout << endl;
+		cout << endl;
+		cout << endl;
+	}
 
 	///Plot 
 	///----------
@@ -3394,35 +3814,119 @@ int quickFit(bool sevenTeV=true ){
 
 	string BsMassDistribution = "eps/3pi_BmassShape_afterPreSel";
 	string BsMassSweight = "eps/afterPresel/3pi_Bs_sWeight";
+	string Dsto3pi = "_Ds23pi";
 
 	string eleven = "_11.eps";
 	string twelve = "_12.eps";
 
-	// 2011 results
-	if(sevenTeV){
-		BsMassDistribution.append(eleven);
-		BsMassSweight.append(eleven);
+	if(!Systematics){
+		// 2011 results
+		if(sevenTeV && Ds2KKpi){
+			BsMassDistribution.append(eleven);
+			BsMassSweight.append(eleven);
+		}
+
+		//2012 results
+		if((!sevenTeV) && Ds2KKpi){
+			BsMassDistribution.append(twelve);
+			BsMassSweight.append(twelve);
+		}
+
+		if((!sevenTeV) && (!Ds2KKpi)){
+			BsMassDistribution.append(Dsto3pi);
+			BsMassSweight.append(Dsto3pi);
+			BsMassDistribution.append(twelve);
+			BsMassSweight.append(twelve);
+		}
+		if(sevenTeV && (!Ds2KKpi)){
+			BsMassDistribution.append(Dsto3pi);
+			BsMassSweight.append(Dsto3pi);
+			BsMassDistribution.append(eleven);
+			BsMassSweight.append(eleven);
+		}
+
+
+		data->plotOn(frame_m,Name("data"),MarkerSize(0.5),Binning(50));
+		pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlack),LineWidth(2));
+		pdf->plotOn(frame_m,Components(GaussBs1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
+		//pdf->plotOn(frame_m,Components(GaussBs2),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
+		//pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
+		pdf->plotOn(frame_m,Components(bkg),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
+		//pdf->paramOn(frame_m,Layout(0.75));
+		data->plotOn(frame_m,Name("data"),MarkerSize(0.5),Binning(50));
+		//gPad->SetLogy();
+		frame_m->Draw();
+		c1->Print(BsMassDistribution.c_str());
 	}
 
-	//2012 results
-	if(!sevenTeV){
-		BsMassDistribution.append(twelve);
-		BsMassSweight.append(twelve);
+
+	//setup Histograms
+	TH1D* e_data;
+	if(L0) e_data  = new TH1D("L0 efficiency",";p_{t} [GeV/c];#epsilon(L0)",6, 1.5, 7.5);
+	if(HLT1) e_data = new TH1D("HLT1 efficiency",";p_{t} [GeV/c];#epsilon(HLT1)",6, 1.5, 7.5);
+	if(HLT2) e_data = new TH1D("HLT2 efficiency",";p_{t} [GeV/c];#epsilon(HLT2)",6, 1.5, 7.5);
+
+
+	double e_data_1525 = ( N_TISTOS_1 / N_TIS_1);
+	double e_data_1525_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_TISTOS_1)/N_TISTOS_1),2) + TMath::Power((TMath::Sqrt(N_TIS_1)/N_TIS_1),2) ) * e_data_1525;
+
+	double e_data_2535 = ( N_TISTOS_2 / N_TIS_2 );
+	double e_data_2535_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_TISTOS_2)/N_TISTOS_2),2) + TMath::Power((TMath::Sqrt(N_TIS_2)/N_TIS_2),2) ) * e_data_2535;
+
+	double e_data_3545 = ( N_TISTOS_3 / N_TIS_3 );
+	double e_data_3545_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_TISTOS_3)/N_TISTOS_3),2) + TMath::Power((TMath::Sqrt(N_TIS_3)/N_TIS_3),2) ) * e_data_3545;
+
+	double e_data_4555 = ( N_TISTOS_4 / N_TIS_4 );
+	double e_data_4555_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_TISTOS_4)/N_TISTOS_4),2) + TMath::Power((TMath::Sqrt(N_TIS_4)/N_TIS_4),2) ) * e_data_4555;
+
+	double e_data_5565 = ( N_TISTOS_5 / N_TIS_5 );
+	double e_data_5565_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_TISTOS_5)/N_TISTOS_5),2) + TMath::Power((TMath::Sqrt(N_TIS_5)/N_TIS_5),2) ) * e_data_5565;
+
+	double e_data_6575 = ( N_TISTOS_6 / N_TIS_6 );
+	double e_data_6575_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_TISTOS_6)/N_TISTOS_6),2) + TMath::Power((TMath::Sqrt(N_TIS_6)/N_TIS_6),2) ) * e_data_6575;
+
+	//fill the histos
+	if(Systematics){
+		e_data->SetBinContent(1,e_data_1525); e_data->SetBinError(1,e_data_1525_error);
+		e_data->SetBinContent(2,e_data_2535); e_data->SetBinError(2,e_data_2535_error);
+		e_data->SetBinContent(3,e_data_3545); e_data->SetBinError(3,e_data_3545_error);
+		e_data->SetBinContent(4,e_data_4555); e_data->SetBinError(4,e_data_4555_error);
+		e_data->SetBinContent(5,e_data_5565); e_data->SetBinError(5,e_data_5565_error);
+		e_data->SetBinContent(6,e_data_6575); e_data->SetBinError(6,e_data_6575_error);
+	}
+
+	//draw histos
+	if(L0 && Systematics){
+		e_data->SetStats(0);
+		e_data->SetAxisRange(0.,1.2,"Y");
+		e_data->Draw("E1"); c1->Print("eps/efficiency_L0_data.eps");
+	}
+	if(HLT1 && Systematics){
+		e_data->SetStats(0);
+		e_data->SetAxisRange(0.,1.2,"Y");
+		e_data->Draw("E1"); c1->Print("eps/efficiency_HLT1_data.eps");
 	}
 
 
 
-	data->plotOn(frame_m,Name("data"),MarkerSize(0.5),Binning(50));
-	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlack),LineWidth(2));
-	pdf->plotOn(frame_m,Components(GaussBs1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
-	//pdf->plotOn(frame_m,Components(GaussBs2),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
-	//pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
-	pdf->plotOn(frame_m,Components(bkg),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
-	//pdf->paramOn(frame_m,Layout(0.75));
-	data->plotOn(frame_m,Name("data"),MarkerSize(0.5),Binning(50));
-	//gPad->SetLogy();
-	frame_m->Draw();
-	c1->Print(BsMassDistribution.c_str());
+	TFile* output_TISTOS;
+	if(L0 && Systematics){
+		output_TISTOS = new TFile("rootHistos/L0_data_Hist.root","RECREATE");
+		e_data->Draw();
+		e_data->Write();
+		output_TISTOS->Write();
+		output_TISTOS->Close();
+	}
+	if(HLT1 && Systematics){
+		output_TISTOS = new TFile("rootHistos/HLT1_data_Hist.root","RECREATE");
+		e_data->Draw();
+		e_data->Write();
+		output_TISTOS->Write();
+		output_TISTOS->Close();
+	}
+
+	if(Systematics) output_TISTOS->Close();
+
 
 if(sWeight){
 
@@ -3445,8 +3949,9 @@ if(sWeight){
 
     		///Create output file
    		 TFile* output;
-		 if(sevenTeV) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data_Bs2Dspipipi_11_afterPreSel_sweight.root","RECREATE");
-		 if(!sevenTeV) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_12_afterPreSel_sweight.root","RECREATE");
+		 if(sevenTeV && Ds2KKpi) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data_Bs2Dspipipi_11_afterPreSel_sweight.root","RECREATE");
+		 if((!sevenTeV) && Ds2KKpi) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_12_afterPreSel_sweight.root","RECREATE");
+		 if((!sevenTeV) && (!Ds2KKpi)) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_Ds2pipipi_12_afterPreSel_sweight.root","RECREATE");
 
 		 tree->SetBranchStatus("*",1);
    		 TTree* new_tree = tree->CopyTree("DTF_Bs_M > 5200 && DTF_Bs_M < 5500");
@@ -3475,12 +3980,14 @@ return S;
 void quickSignalEstimate(){
 
 	bool sevenTeV=false;
-
+	bool Ds2KKpi=false;
 
 ///Load file
 	TFile* file;
-	if(sevenTeV) file= new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_forBDT_tmp.root");
-	if(!sevenTeV) file=new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT_tmp.root");
+	if(sevenTeV && Ds2KKpi) file= new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_forBDT_tmp.root");
+	if(!sevenTeV && Ds2KKpi) file=new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT_tmp.root");
+	if(sevenTeV && (!Ds2KKpi)) file= new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2pipipi_forBDT.root");
+	if(!sevenTeV && (!Ds2KKpi)) file=new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2pipipi_forBDT.root");
 	//file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data2011_Ds2KKpi_forBDT.root");	
 	TTree* tree = (TTree*) file->Get("DecayTree");	
    	tree->SetBranchStatus("*",0);
@@ -3499,10 +4006,7 @@ void quickSignalEstimate(){
 	//int expectedYield_11 = 623;
 	//int expectedYield = 0.05238 * 0.95122 * quickFit(sevenTeV);
 	//int expectedYield = 0.05238 * 0.595 * quickFit(sevenTeV);
-	int expectedYield = 0.05238 * 0.863 * quickFit(sevenTeV);
-
-	int expectedYield_Ds2pipipi = expectedYield * 0.2 ;
-	int expectedYield_Ds2Kpipi = expectedYield * 0.12 ;
+	int expectedYield = 0.05238 * 0.863 * quickFit(sevenTeV,Ds2KKpi);
 
 	//int expectedYield_11
 
@@ -4053,14 +4557,1342 @@ int resonance = 0;
 	cout << "nonRes: " << resonant_structure->GetBinContent(1) << " p/m " << resonant_structure->GetBinError(1) << endl;
 }
 
+void Systematics(bool sevenTeV, bool SignalMode){
+
+	bool useWeights = false;
+	bool reweight = true;
+	if(useWeights) reweight = false;
+
+	/// data from signal & normalization mode
+	TFile* file;
+	if(sevenTeV && SignalMode) file= new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data_Bs_11_final_sweight.root");
+	if((!sevenTeV) && SignalMode) file= new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data_Bs_12_final_sweight.root");
+	if(sevenTeV && (!SignalMode)) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data_Bs2Dspipipi_11_final_sweight.root");
+	if((!sevenTeV) && (!SignalMode)) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_12_final_sweight.root");
+	TTree* tree = (TTree*) file->Get("DecayTree");
+
+	/// mc from signal & normalization mode
+	TFile* fileMC;
+	if(sevenTeV && SignalMode && (!useWeights)) fileMC= new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_reweighted_Reco14.root");
+	if((!sevenTeV) && SignalMode && (!useWeights)) fileMC= new TFile("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_reweighted_Reco14.root");
+	if(sevenTeV && (!SignalMode)&& (!useWeights)) fileMC= new TFile("/auto/data/kecke/B2DPiPiPi/MC2011/mc11_Bs2Dspipipi_Ds2KKpi_BDT_reweighted_Reco14.root");
+	if((!sevenTeV) && (!SignalMode) && (!useWeights)) fileMC= new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/mc12_Bs2Dspipipi_Ds2KKpi_BDT_reweighted_Reco14.root");
+	if((!SignalMode) && useWeights && sevenTeV) fileMC = new TFile("/auto/data/kecke/B2DPiPiPi/MC2011/mc11_Bs2Dspipipi_Ds2KKpi_BDT_XdReweighted_Reco14.root");
+	if(SignalMode && useWeights && sevenTeV) fileMC= new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_XsReweighted_Reco14.root");
+	if((!SignalMode) && useWeights && (!sevenTeV)) fileMC = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/mc12_Bs2Dspipipi_Ds2KKpi_BDT_XdReweighted_Reco14.root");
+	if(SignalMode && useWeights && (!sevenTeV)) fileMC= new TFile("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_XsReweighted_Reco14.root");
+	TTree* treeMC = (TTree*) fileMC->Get("DecayTree");
+
+	tree->SetBranchStatus("*",0);
+	tree->SetBranchStatus("N_Bs_sw",1);
+	tree->SetBranchStatus( "*PX", 1 );
+	tree->SetBranchStatus( "*PY", 1);
+	tree->SetBranchStatus( "*PZ", 1);
+
+	treeMC->SetBranchStatus("*",0);
+	treeMC->SetBranchStatus( "*PX", 1 );
+	treeMC->SetBranchStatus( "*PY", 1);
+	treeMC->SetBranchStatus( "*PZ", 1);
+	treeMC->SetBranchStatus( "*weight", 1);
+
+	double massKaon = 493.68;
+	double massPion = 139.57;
+	double w;
+	if(!useWeights) w = 1.;
+	else if(useWeights) treeMC -> SetBranchAddress( "weight" , &w );
+
+	//signal data
+	Double_t K_plus_PX;
+	Double_t K_plus_PY;
+	Double_t K_plus_PZ;
+	Double_t pi_plus_PX;
+	Double_t pi_plus_PY;
+	Double_t pi_plus_PZ;
+	Double_t pi_minus_PX;
+	Double_t pi_minus_PY;
+	Double_t pi_minus_PZ;
+	Double_t N_Bs_sw;
+
+	//signal mc
+	Double_t K_plus_PX_MC;
+	Double_t K_plus_PY_MC;
+	Double_t K_plus_PZ_MC;
+	Double_t pi_plus_PX_MC;
+	Double_t pi_plus_PY_MC;
+	Double_t pi_plus_PZ_MC;
+	Double_t pi_minus_PX_MC;
+	Double_t pi_minus_PY_MC;
+	Double_t pi_minus_PZ_MC;
+
+	//normalization data
+	Double_t pi_plus1_PX;
+	Double_t pi_plus1_PY;
+	Double_t pi_plus1_PZ;
+	Double_t pi_plus2_PX;
+	Double_t pi_plus2_PY;
+	Double_t pi_plus2_PZ;
+	Double_t pi_minusN_PX;
+	Double_t pi_minusN_PY;
+	Double_t pi_minusN_PZ;
+
+	//normalization mc
+	Double_t pi_plus1_PX_MC;
+	Double_t pi_plus1_PY_MC;
+	Double_t pi_plus1_PZ_MC;
+	Double_t pi_plus2_PX_MC;
+	Double_t pi_plus2_PY_MC;
+	Double_t pi_plus2_PZ_MC;
+	Double_t pi_minusN_PX_MC;
+	Double_t pi_minusN_PY_MC;
+	Double_t pi_minusN_PZ_MC;
+
+	TLorentzVector K_plus;
+	TLorentzVector pi_minus;
+	TLorentzVector pi_plus;
+
+	TLorentzVector K_plus_MC;
+	TLorentzVector pi_minus_MC;
+	TLorentzVector pi_plus_MC;
+
+	TLorentzVector pi_plus1;
+	TLorentzVector pi_minusN;
+	TLorentzVector pi_plus2;
+
+	TLorentzVector pi_plus1_MC;
+	TLorentzVector pi_minusN_MC;
+	TLorentzVector pi_plus2_MC;
+
+	if(SignalMode){
+
+        	tree -> SetBranchAddress( "K_plus_PX" , &K_plus_PX );
+        	tree -> SetBranchAddress( "K_plus_PY" , &K_plus_PY );
+        	tree -> SetBranchAddress( "K_plus_PZ" , &K_plus_PZ );
+        	tree -> SetBranchAddress( "pi_plus_PX" , &pi_plus_PX );
+        	tree -> SetBranchAddress( "pi_plus_PY" , &pi_plus_PY );
+        	tree -> SetBranchAddress( "pi_plus_PZ" , &pi_plus_PZ );
+        	tree -> SetBranchAddress( "pi_minus_PX" , &pi_minus_PX );
+        	tree -> SetBranchAddress( "pi_minus_PY" , &pi_minus_PY );
+        	tree -> SetBranchAddress( "pi_minus_PZ" , &pi_minus_PZ );
+        	tree -> SetBranchAddress( "N_Bs_sw" , &N_Bs_sw );
+
+        	treeMC -> SetBranchAddress( "K_plus_PX" , &K_plus_PX_MC );
+        	treeMC -> SetBranchAddress( "K_plus_PY" , &K_plus_PY_MC );
+        	treeMC -> SetBranchAddress( "K_plus_PZ" , &K_plus_PZ_MC );
+        	treeMC -> SetBranchAddress( "pi_plus_PX" , &pi_plus_PX_MC );
+        	treeMC -> SetBranchAddress( "pi_plus_PY" , &pi_plus_PY_MC );
+        	treeMC -> SetBranchAddress( "pi_plus_PZ" , &pi_plus_PZ_MC );
+        	treeMC -> SetBranchAddress( "pi_minus_PX" , &pi_minus_PX_MC );
+        	treeMC -> SetBranchAddress( "pi_minus_PY" , &pi_minus_PY_MC );
+        	treeMC -> SetBranchAddress( "pi_minus_PZ" , &pi_minus_PZ_MC );
+	}
+
+	if(!SignalMode){
+
+        	tree -> SetBranchAddress( "pi_plus2_PX" , &pi_plus2_PX );
+        	tree -> SetBranchAddress( "pi_plus2_PY" , &pi_plus2_PY );
+        	tree -> SetBranchAddress( "pi_plus2_PZ" , &pi_plus2_PZ );
+        	tree -> SetBranchAddress( "pi_plus1_PX" , &pi_plus1_PX );
+        	tree -> SetBranchAddress( "pi_plus1_PY" , &pi_plus1_PY );
+        	tree -> SetBranchAddress( "pi_plus1_PZ" , &pi_plus1_PZ );
+        	tree -> SetBranchAddress( "pi_minus_PX" , &pi_minusN_PX );
+        	tree -> SetBranchAddress( "pi_minus_PY" , &pi_minusN_PY );
+        	tree -> SetBranchAddress( "pi_minus_PZ" , &pi_minusN_PZ );
+        	tree -> SetBranchAddress( "N_Bs_sw" , &N_Bs_sw );
+
+        	treeMC -> SetBranchAddress( "pi_plus2_PX" , &pi_plus2_PX_MC );
+        	treeMC -> SetBranchAddress( "pi_plus2_PY" , &pi_plus2_PY_MC );
+        	treeMC -> SetBranchAddress( "pi_plus2_PZ" , &pi_plus2_PZ_MC );
+        	treeMC -> SetBranchAddress( "pi_plus1_PX" , &pi_plus1_PX_MC );
+        	treeMC -> SetBranchAddress( "pi_plus1_PY" , &pi_plus1_PY_MC );
+        	treeMC -> SetBranchAddress( "pi_plus1_PZ" , &pi_plus1_PZ_MC );
+        	treeMC -> SetBranchAddress( "pi_minus_PX" , &pi_minusN_PX_MC );
+        	treeMC -> SetBranchAddress( "pi_minus_PY" , &pi_minusN_PY_MC );
+        	treeMC -> SetBranchAddress( "pi_minus_PZ" , &pi_minusN_PZ_MC );
+	}
+
+	string TitleX;
+	if(SignalMode) TitleX = "X_{s} mass";
+	else if (!SignalMode) TitleX = "X_{d} mass";
+	string Branch;
+	if(SignalMode) Branch = "Xs_Mass";
+	if(!SignalMode) Branch = "Xd_Mass";
+	int bins = 25;
+	double min;
+	double max;
+	if(SignalMode){
+		min = 700.;
+		max = 3400.;
+	}
+	if(!SignalMode){
+		min = 500.;
+		max = 3100.;
+	}
+
+	///Make histograms
+	TH1::SetDefaultSumw2();
+	TH2::SetDefaultSumw2();
+	TString title= ";"+TitleX+";Yield [norm.]";
+	TH1D* h= new TH1D(Branch.c_str(),title,bins,min,max);
+	TH1D* h_MC= new TH1D((Branch+"_MC").c_str(),title,bins,min,max);
+	TH1D* h_MC_rw= new TH1D((Branch+"_MC_rw").c_str(),title,bins,min,max);
+	h->SetStats(0);
+	h_MC->SetStats(0);
+	h_MC_rw->SetStats(0);
+
+
+
+	///loop over data events
+	int numEvents = tree->GetEntries();
+	for(int i=0; i< numEvents; i++)
+	{
+		if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEvents << endl;
+		tree->GetEntry(i);
+		if(SignalMode){
+			K_plus.SetXYZM(K_plus_PX,K_plus_PY,K_plus_PZ,massKaon);
+			pi_minus.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ,massPion);
+			pi_plus.SetXYZM(pi_plus_PX,pi_plus_PY,pi_plus_PZ,massPion);
+			h->Fill((K_plus + pi_minus + pi_plus).M(),N_Bs_sw);
+		}
+		if(!SignalMode){
+			pi_plus1.SetXYZM(pi_plus1_PX,pi_plus1_PY,pi_plus1_PZ,massPion);
+			pi_minusN.SetXYZM(pi_minusN_PX,pi_minusN_PY,pi_minusN_PZ,massPion);
+			pi_plus2.SetXYZM(pi_plus2_PX,pi_plus2_PY,pi_plus2_PZ,massPion);
+			h->Fill((pi_plus1 + pi_minusN + pi_plus2).M(),N_Bs_sw);
+		}
+	}
+
+	///loop over MC events
+	int numEventsMC = treeMC->GetEntries();
+	for(int i=0; i< numEventsMC; i++)
+	{
+		if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEventsMC << endl;
+		treeMC->GetEntry(i);
+		if(SignalMode){
+			K_plus_MC.SetXYZM(K_plus_PX_MC,K_plus_PY_MC,K_plus_PZ_MC,massKaon);
+			pi_minus_MC.SetXYZM(pi_minus_PX_MC,pi_minus_PY_MC,pi_minus_PZ_MC,massPion);
+			pi_plus_MC.SetXYZM(pi_plus_PX_MC,pi_plus_PY_MC,pi_plus_PZ_MC,massPion);
+			h_MC->Fill((K_plus_MC + pi_minus_MC + pi_plus_MC).M());
+			h_MC_rw->Fill((K_plus_MC + pi_minus_MC + pi_plus_MC).M(),w);
+		}
+		if(!SignalMode){
+			pi_plus1_MC.SetXYZM(pi_plus1_PX_MC,pi_plus1_PY_MC,pi_plus1_PZ_MC,massPion);
+			pi_minusN_MC.SetXYZM(pi_minusN_PX_MC,pi_minusN_PY_MC,pi_minusN_PZ_MC,massPion);
+			pi_plus2_MC.SetXYZM(pi_plus2_PX_MC,pi_plus2_PY_MC,pi_plus2_PZ_MC,massPion);
+			h_MC->Fill((pi_plus2_MC + pi_minusN_MC + pi_plus1_MC).M());
+			h_MC_rw->Fill((pi_plus2_MC + pi_minusN_MC + pi_plus1_MC).M(),w);
+		}
+	}
+    	///Plot it
+    	TCanvas* c= new TCanvas();
+
+    	h->Scale(1./h->Integral());
+    	h_MC->Scale(1./h_MC->Integral());
+    	h_MC_rw->Scale(1./h_MC_rw->Integral());
+    	double maxY= h->GetMaximum();
+    	if(h_MC->GetMaximum()>maxY)maxY=h_MC->GetMaximum();
+    	h->SetMinimum(0.);
+    	h->SetMaximum(maxY*1.2);
+    	h->SetLineColor(kBlack);
+    	h->Draw("");
+    	h_MC->SetLineColor(kRed);
+    	h_MC->Draw("same");
+    	h_MC_rw->SetLineColor(kBlue);
+    	if(useWeights)h_MC_rw->Draw("histsame");
+
+    	double KolmoTest = h->KolmogorovTest(h_MC);
+    	TPaveText *KolmOut= new TPaveText(0.55,0.6,0.85,0.7,"NDC");
+    	KolmOut->AddText(Form("Kolmogorov Test : %2f ", KolmoTest));
+    	KolmOut->SetLineColor(kWhite);
+    	KolmOut->SetFillColor(kWhite);
+    	KolmOut->SetShadowColor(0);
+    	KolmOut->SetTextSize(0.03);
+    	KolmOut->SetTextColor(kRed);
+
+    	double KolmoTest_rw = h->KolmogorovTest(h_MC_rw);
+    	TPaveText *KolmOut_rw= new TPaveText(0.55,0.575,0.85,0.625,"NDC");
+    	KolmOut_rw->AddText(Form("Kolmogorov Test : %2f ", KolmoTest_rw));
+    	KolmOut_rw->SetLineColor(kWhite);
+    	KolmOut_rw->SetTextColor(kBlue);
+    	KolmOut_rw->SetFillColor(kWhite);
+    	KolmOut_rw->SetShadowColor(0);
+    	KolmOut_rw->SetTextSize(0.03);
+
+    	TLegend *leg = new TLegend(0.55,0.7,0.85,0.85);
+    	leg->SetHeader(" ");
+    	leg->AddEntry(h,"Data","LEP");
+    	leg->AddEntry(h_MC,"MC","LEP");
+    	if(useWeights)leg->AddEntry(h_MC_rw,"MC (reweighted)","LEP");
+    	leg->SetLineColor(kWhite);
+    	leg->SetFillColor(kWhite);
+   	leg->SetTextSize(0.05);
+    	KolmOut->Draw();
+    	if(useWeights)KolmOut_rw->Draw();
+    	leg->Draw(); 
+
+    	if(useWeights)c->Print(("DataVsReweightedMC/"+Branch+".eps").c_str());
+    	else c->Print(("DataVsMC/"+Branch+".eps").c_str());
+
+    	///calculate weights
+    	if(reweight){
+		TFile* output=new TFile((Branch+"_weights.root").c_str(),"RECREATE");
+		TH1D *h_weight = (TH1D*)h->Clone();
+		h_weight->SetName((Branch+"_weight").c_str());
+		h_weight->Divide(h,h_MC);
+		h_weight->SetMinimum(0.);
+  		h_weight->SetMaximum(h_weight->GetMaximum()*1.2);
+		h_weight->GetYaxis()->SetTitle("Weight");
+		h_weight->Draw();
+		c->Print(("DataVsMC/"+Branch+"_weights.eps").c_str());
+		h_weight->Write();
+		output->Write();
+		output->Close();
+    	}
+
+}
+
+void reweight(bool SignalMode, bool Trigger){
+
+	///Get weight histos
+	TFile* massFile;
+	if(!SignalMode && (!Trigger)) massFile = new TFile("Xd_Mass_weights.root");
+	if(SignalMode && (!Trigger)) massFile = new TFile("Xs_Mass_weights.root");	
+	TH1D* h_mass;
+	if(!SignalMode && (!Trigger)) h_mass = (TH1D*)massFile->Get("Xd_Mass_weight");
+	if(SignalMode && (!Trigger)) h_mass = (TH1D*)massFile->Get("Xs_Mass_weight");
+
+	TFile* L0_File;
+	TFile* HLT1_File;
+	TH1D* h_L0;
+	TH1D* h_HLT1;
+	if(Trigger){
+		L0_File = new TFile("rootHistos/L0_weights_Hist.root");
+		HLT1_File = new TFile("rootHistos/HLT1_weights_Hist.root");
+		h_L0 = (TH1D*)L0_File->Get("L0_weights");
+		h_HLT1 = (TH1D*)HLT1_File->Get("HLT1_weights");
+	}
+
+	///Load MC file
+	TFile* fileMC;
+	if(!SignalMode) fileMC= new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_forBDT_Reco14.root");
+	if(SignalMode) fileMC= new TFile("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_forBDT_Reco14.root");
+   	TTree* treeMC = (TTree*) fileMC->Get("DecayTree");
+
+	Double_t K_plus_PX;
+	Double_t K_plus_PY;
+	Double_t K_plus_PZ;
+	Double_t K_plus_PT;
+
+	Double_t pi_plus_PX;
+	Double_t pi_plus_PY;
+	Double_t pi_plus_PZ;
+	Double_t pi_plus_PT;
+
+	Double_t pi_minus_PX;
+	Double_t pi_minus_PY;
+	Double_t pi_minus_PZ;
+	Double_t pi_minus_PT;
+
+	Double_t pi_plus1_PX;
+	Double_t pi_plus1_PY;
+	Double_t pi_plus1_PZ;
+	Double_t pi_plus1_PT;
+
+	Double_t pi_plus2_PX;
+	Double_t pi_plus2_PY;
+	Double_t pi_plus2_PZ;
+	Double_t pi_plus2_PT;
+
+	Double_t K_plus_fromDs_PT;
+	Double_t K_minus_fromDs_PT;
+	Double_t pi_minus_fromDs_PT;
+
+
+	treeMC -> SetBranchAddress( "K_plus_fromDs_PT" , &K_plus_fromDs_PT );
+	treeMC -> SetBranchAddress( "K_minus_fromDs_PT" , &K_minus_fromDs_PT );
+	treeMC -> SetBranchAddress( "pi_minus_fromDs_PT" , &pi_minus_fromDs_PT );
+
+	if(SignalMode){
+        	treeMC -> SetBranchAddress( "K_plus_PX" , &K_plus_PX );
+        	treeMC -> SetBranchAddress( "K_plus_PY" , &K_plus_PY );
+        	treeMC -> SetBranchAddress( "K_plus_PZ" , &K_plus_PZ );
+        	treeMC -> SetBranchAddress( "K_plus_PT" , &K_plus_PT );
+        	treeMC -> SetBranchAddress( "pi_plus_PX" , &pi_plus_PX );
+        	treeMC -> SetBranchAddress( "pi_plus_PY" , &pi_plus_PY );
+        	treeMC -> SetBranchAddress( "pi_plus_PZ" , &pi_plus_PZ );
+        	treeMC -> SetBranchAddress( "pi_plus_PT" , &pi_plus_PT );
+        	treeMC -> SetBranchAddress( "pi_minus_PX" , &pi_minus_PX );
+        	treeMC -> SetBranchAddress( "pi_minus_PY" , &pi_minus_PY );
+        	treeMC -> SetBranchAddress( "pi_minus_PZ" , &pi_minus_PZ );
+        	treeMC -> SetBranchAddress( "pi_minus_PT" , &pi_minus_PT );
+	}
+	if(!SignalMode){
+        	treeMC -> SetBranchAddress( "pi_plus2_PX" , &pi_plus2_PX );
+        	treeMC -> SetBranchAddress( "pi_plus2_PY" , &pi_plus2_PY );
+        	treeMC -> SetBranchAddress( "pi_plus2_PZ" , &pi_plus2_PZ );
+        	treeMC -> SetBranchAddress( "pi_plus2_PT" , &pi_plus2_PT );
+        	treeMC -> SetBranchAddress( "pi_plus1_PX" , &pi_plus1_PX );
+        	treeMC -> SetBranchAddress( "pi_plus1_PY" , &pi_plus1_PY );
+        	treeMC -> SetBranchAddress( "pi_plus1_PZ" , &pi_plus1_PZ );
+        	treeMC -> SetBranchAddress( "pi_plus1_PT" , &pi_plus1_PT );
+        	treeMC -> SetBranchAddress( "pi_minus_PX" , &pi_minus_PX );
+        	treeMC -> SetBranchAddress( "pi_minus_PY" , &pi_minus_PY );
+        	treeMC -> SetBranchAddress( "pi_minus_PZ" , &pi_minus_PZ );
+        	treeMC -> SetBranchAddress( "pi_minus_PT" , &pi_minus_PT );
+	}
+
+	TLorentzVector K_plus;
+	TLorentzVector pi_minus;
+	TLorentzVector pi_plus;
+	TLorentzVector pi_plus1;
+	TLorentzVector pi_plus2;
+
+	double massKaon = 493.68;
+	double massPion = 139.57;
+	double massX = 0;
+	double maxPt = 0;
+
+	///Create new tree
+	double w;
+	double w_L0;
+	double w_HLT1;
+    	///TFile* output = new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_reweighted_Reco14.root","RECREATE");
+	TFile* output;
+	if(!SignalMode && (!Trigger)) output = new TFile("/auto/data/kecke/B2DPiPiPi/MC2011/mc11_Bs2Dspipipi_Ds2KKpi_BDT_XdReweighted_Reco14.root","RECREATE");
+	if(SignalMode && (!Trigger)) output = new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_XsReweighted_Reco14.root","RECREATE");
+
+	if(!SignalMode && Trigger) output = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/mc12_Bs2Dspipipi_Ds2KKpi_BDT_withTriggerWeights_Reco14.root","RECREATE");
+	if(SignalMode && Trigger) output = new TFile("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_withTriggerWeights_Reco14.root","RECREATE");
+
+    	TTree* new_tree = treeMC->CloneTree();
+    	TBranch* Bra_w;
+	TBranch* Bra_w_L0;
+	TBranch* Bra_w_HLT1;
+	if(!Trigger) Bra_w = new_tree->Branch("weight",&w,"weight/D");
+	if(Trigger){
+		Bra_w_L0 = new_tree->Branch("weight_L0",&w_L0,"weight_L0/D");
+		Bra_w_HLT1 = new_tree->Branch("weight_HLT1",&w_HLT1,"weight_HLT1/D");
+	}
+
+	treeMC->SetBranchStatus("*",0);
+	treeMC->SetBranchStatus( "*PX", 1 );
+	treeMC->SetBranchStatus( "*PY", 1);
+	treeMC->SetBranchStatus( "*PZ", 1);
+	treeMC->SetBranchStatus( "*PT", 1);
+
+   	///loop over MC events
+   	int numEventsMC = treeMC->GetEntries();
+   	for(int i=0; i< numEventsMC; i++)
+  	{	
+		if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEventsMC << endl;
+		treeMC->GetEntry(i);
+		w=1.;
+		w_L0=1.;
+		w_HLT1=1.;
+
+		double tmp=w;
+		double tmp_L0=w_L0;
+		double tmp_HLT1=w_HLT1;
+
+
+		if(!Trigger){
+			if(SignalMode){
+				K_plus.SetXYZM(K_plus_PX,K_plus_PY,K_plus_PZ,massKaon);
+				pi_minus.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ,massPion);
+				pi_plus.SetXYZM(pi_plus_PX,pi_plus_PY,pi_plus_PZ,massPion);
+				massX = (pi_plus + pi_minus + K_plus).M();
+			}
+			if(!SignalMode){
+				pi_plus1.SetXYZM(pi_plus1_PX,pi_plus1_PY,pi_plus1_PZ,massPion);
+				pi_minus.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ,massPion);
+				pi_plus2.SetXYZM(pi_plus2_PX,pi_plus2_PY,pi_plus2_PZ,massPion);
+				massX = (pi_plus1 + pi_plus2 + pi_minus).M();
+			}
+		
+                	tmp=h_mass->GetBinContent(h_mass->FindBin(massX));
+			if(tmp==0)tmp=1.;
+			w*=tmp;
+
+			Bra_w->Fill();
+		}
+		if(Trigger){
+			if(!SignalMode){
+				//maxPt in GeV units
+				maxPt = TMath::Max(pi_minus_PT,TMath::Max(pi_plus2_PT,TMath::Max(pi_plus1_PT,TMath::Max(pi_minus_fromDs_PT,TMath::Max(K_plus_fromDs_PT,K_minus_fromDs_PT))))) / 1000;
+			}
+			if(SignalMode){
+				//maxPt in GeV units
+				maxPt = TMath::Max(pi_minus_PT,TMath::Max(K_plus_PT,TMath::Max(pi_plus_PT,TMath::Max(pi_minus_fromDs_PT,TMath::Max(K_plus_fromDs_PT,K_minus_fromDs_PT))))) / 1000;
+			}
+
+                	tmp_L0=h_L0->GetBinContent(h_L0->FindBin(maxPt));
+			if(tmp_L0==0)tmp_L0=1.;
+			w_L0*=tmp_L0;
+
+                	tmp_HLT1=h_HLT1->GetBinContent(h_HLT1->FindBin(maxPt));
+			if(tmp_HLT1==0)tmp_HLT1=1.;
+			w_HLT1*=tmp_HLT1;
+
+			Bra_w_L0->Fill();
+			Bra_w_HLT1->Fill();
+		}
+    	}
+	new_tree->Write();
+	if(!Trigger) massFile->Close();
+	fileMC->Close();
+	output->Close();
+	if(Trigger){
+		L0_File->Close();
+		HLT1_File->Close();
+	}
+}
+
+void TriggerSyst(bool reweight = false){
+
+///baseline for estimation , max pt of tracks between 1.5 - 7.5 GeV , using 6 bins
+/*
+TFile* fileMC;
+fileMC= new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/mc12_Bs2Dspipipi_Ds2KKpi_BDT_reweighted_Reco14.root");
+TTree* treeMC = (TTree*) fileMC->Get("DecayTree");
+
+int N = treeMC->GetEntries();
+cout << "full MC file contains " << N << " events" <<  endl;
+
+Double_t K_plus_fromDs_PT;
+Double_t K_minus_fromDs_PT;
+Double_t pi_minus_fromDs_PT;
+Double_t pi_plus1_PT;
+Double_t pi_plus2_PT;
+Double_t pi_minus_PT;
+
+treeMC -> SetBranchAddress( "pi_plus1_PT" , &pi_plus1_PT );
+treeMC -> SetBranchAddress( "pi_plus2_PT" , &pi_plus2_PT );
+treeMC -> SetBranchAddress( "pi_minus_PT" , &pi_minus_PT );
+
+treeMC -> SetBranchAddress( "K_plus_fromDs_PT" , &K_plus_fromDs_PT );
+treeMC -> SetBranchAddress( "K_minus_fromDs_PT" , &K_minus_fromDs_PT );
+treeMC -> SetBranchAddress( "pi_minus_fromDs_PT" , &pi_minus_fromDs_PT );
+
+
+double maxPt = 0;
+
+
+TH1D* max_track_pt = new TH1D("max track p_{t}",";p_{t} [MeV];Entries",6, 1500., 7500.);
+
+	///loop over data events
+int numEvents = treeMC->GetEntries();
+for(int i=0; i< numEvents; i++)
+{
+	if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEvents << endl;
+	treeMC->GetEntry(i);
+
+	maxPt = TMath::Max(pi_minus_PT,TMath::Max(pi_plus2_PT,TMath::Max(pi_plus1_PT,TMath::Max(pi_minus_fromDs_PT,TMath::Max(K_plus_fromDs_PT,K_minus_fromDs_PT)))));
+	max_track_pt->Fill(maxPt);
+
+	}
+
+TCanvas* c= new TCanvas();
+max_track_pt->Draw("E1"); c->Print("eps/max_track_pt_Norm_MC.eps");
+*/
+
+///load and compute all MC TISTOS efficiencies first
+
+/// load L0 efficiencies
+//TISTOS files
+TFile* fileMC_L0_1_TISTOS;
+fileMC_L0_1_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_L0_TISTOS_alt_pt_1525.root");
+TTree* treeMC_L0_1_TISTOS = (TTree*) fileMC_L0_1_TISTOS->Get("DecayTree");
+TTree* treeMC_L0_1_TISTOS_inRange = treeMC_L0_1_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_L0_2_TISTOS;
+fileMC_L0_2_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_L0_TISTOS_pt_2535.root");
+TTree* treeMC_L0_2_TISTOS = (TTree*) fileMC_L0_2_TISTOS->Get("DecayTree");
+TTree* treeMC_L0_2_TISTOS_inRange = treeMC_L0_2_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_L0_3_TISTOS;
+fileMC_L0_3_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_L0_TISTOS_pt_3545.root");
+TTree* treeMC_L0_3_TISTOS = (TTree*) fileMC_L0_3_TISTOS->Get("DecayTree");
+TTree* treeMC_L0_3_TISTOS_inRange = treeMC_L0_3_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_L0_4_TISTOS;
+fileMC_L0_4_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_L0_TISTOS_pt_4555.root");
+TTree* treeMC_L0_4_TISTOS = (TTree*) fileMC_L0_4_TISTOS->Get("DecayTree");
+TTree* treeMC_L0_4_TISTOS_inRange = treeMC_L0_4_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_L0_5_TISTOS;
+fileMC_L0_5_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_L0_TISTOS_pt_5565.root");
+TTree* treeMC_L0_5_TISTOS = (TTree*) fileMC_L0_5_TISTOS->Get("DecayTree");
+TTree* treeMC_L0_5_TISTOS_inRange = treeMC_L0_5_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_L0_6_TISTOS;
+fileMC_L0_6_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_L0_TISTOS_pt_6575.root");
+TTree* treeMC_L0_6_TISTOS = (TTree*) fileMC_L0_6_TISTOS->Get("DecayTree");
+TTree* treeMC_L0_6_TISTOS_inRange = treeMC_L0_6_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+//TIS only files
+TFile* fileMC_L0_1_TIS;
+fileMC_L0_1_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_L0_TIS_alt_pt_1525.root");
+TTree* treeMC_L0_1_TIS = (TTree*) fileMC_L0_1_TIS->Get("DecayTree");
+TTree* treeMC_L0_1_TIS_inRange = treeMC_L0_1_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_L0_2_TIS;
+fileMC_L0_2_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_L0_TIS_pt_2535.root");
+TTree* treeMC_L0_2_TIS = (TTree*) fileMC_L0_2_TIS->Get("DecayTree");
+TTree* treeMC_L0_2_TIS_inRange = treeMC_L0_2_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_L0_3_TIS;
+fileMC_L0_3_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_L0_TIS_pt_3545.root");
+TTree* treeMC_L0_3_TIS = (TTree*) fileMC_L0_3_TIS->Get("DecayTree");
+TTree* treeMC_L0_3_TIS_inRange = treeMC_L0_3_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_L0_4_TIS;
+fileMC_L0_4_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_L0_TIS_pt_4555.root");
+TTree* treeMC_L0_4_TIS = (TTree*) fileMC_L0_4_TIS->Get("DecayTree");
+TTree* treeMC_L0_4_TIS_inRange = treeMC_L0_4_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_L0_5_TIS;
+fileMC_L0_5_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_L0_TIS_pt_5565.root");
+TTree* treeMC_L0_5_TIS = (TTree*) fileMC_L0_5_TIS->Get("DecayTree");
+TTree* treeMC_L0_5_TIS_inRange = treeMC_L0_5_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_L0_6_TIS;
+fileMC_L0_6_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_L0_TIS_pt_6575.root");
+TTree* treeMC_L0_6_TIS = (TTree*) fileMC_L0_6_TIS->Get("DecayTree");
+TTree* treeMC_L0_6_TIS_inRange = treeMC_L0_6_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+/// load HLT1 efficiencies
+//TISTOS files
+TFile* fileMC_HLT1_1_TISTOS;
+fileMC_HLT1_1_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT1_TISTOS_pt_1525.root");
+TTree* treeMC_HLT1_1_TISTOS = (TTree*) fileMC_HLT1_1_TISTOS->Get("DecayTree");
+TTree* treeMC_HLT1_1_TISTOS_inRange = treeMC_HLT1_1_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT1_2_TISTOS;
+fileMC_HLT1_2_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT1_TISTOS_pt_2535.root");
+TTree* treeMC_HLT1_2_TISTOS = (TTree*) fileMC_HLT1_2_TISTOS->Get("DecayTree");
+TTree* treeMC_HLT1_2_TISTOS_inRange = treeMC_HLT1_2_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT1_3_TISTOS;
+fileMC_HLT1_3_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT1_TISTOS_pt_3545.root");
+TTree* treeMC_HLT1_3_TISTOS = (TTree*) fileMC_HLT1_3_TISTOS->Get("DecayTree");
+TTree* treeMC_HLT1_3_TISTOS_inRange = treeMC_HLT1_3_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT1_4_TISTOS;
+fileMC_HLT1_4_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT1_TISTOS_pt_4555.root");
+TTree* treeMC_HLT1_4_TISTOS = (TTree*) fileMC_HLT1_4_TISTOS->Get("DecayTree");
+TTree* treeMC_HLT1_4_TISTOS_inRange = treeMC_HLT1_4_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT1_5_TISTOS;
+fileMC_HLT1_5_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT1_TISTOS_pt_5565.root");
+TTree* treeMC_HLT1_5_TISTOS = (TTree*) fileMC_HLT1_5_TISTOS->Get("DecayTree");
+TTree* treeMC_HLT1_5_TISTOS_inRange = treeMC_HLT1_5_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT1_6_TISTOS;
+fileMC_HLT1_6_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT1_TISTOS_pt_6575.root");
+TTree* treeMC_HLT1_6_TISTOS = (TTree*) fileMC_HLT1_6_TISTOS->Get("DecayTree");
+TTree* treeMC_HLT1_6_TISTOS_inRange = treeMC_HLT1_6_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+
+//TIS only files
+TFile* fileMC_HLT1_1_TIS;
+fileMC_HLT1_1_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT1_TIS_pt_1525.root");
+TTree* treeMC_HLT1_1_TIS = (TTree*) fileMC_HLT1_1_TIS->Get("DecayTree");
+TTree* treeMC_HLT1_1_TIS_inRange = treeMC_HLT1_1_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT1_2_TIS;
+fileMC_HLT1_2_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT1_TIS_pt_2535.root");
+TTree* treeMC_HLT1_2_TIS = (TTree*) fileMC_HLT1_2_TIS->Get("DecayTree");
+TTree* treeMC_HLT1_2_TIS_inRange = treeMC_HLT1_2_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT1_3_TIS;
+fileMC_HLT1_3_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT1_TIS_pt_3545.root");
+TTree* treeMC_HLT1_3_TIS = (TTree*) fileMC_HLT1_3_TIS->Get("DecayTree");
+TTree* treeMC_HLT1_3_TIS_inRange = treeMC_HLT1_3_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT1_4_TIS;
+fileMC_HLT1_4_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT1_TIS_pt_4555.root");
+TTree* treeMC_HLT1_4_TIS = (TTree*) fileMC_HLT1_4_TIS->Get("DecayTree");
+TTree* treeMC_HLT1_4_TIS_inRange = treeMC_HLT1_4_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT1_5_TIS;
+fileMC_HLT1_5_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT1_TIS_pt_5565.root");
+TTree* treeMC_HLT1_5_TIS = (TTree*) fileMC_HLT1_5_TIS->Get("DecayTree");
+TTree* treeMC_HLT1_5_TIS_inRange = treeMC_HLT1_5_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT1_6_TIS;
+fileMC_HLT1_6_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT1_TIS_pt_6575.root");
+TTree* treeMC_HLT1_6_TIS = (TTree*) fileMC_HLT1_6_TIS->Get("DecayTree");
+TTree* treeMC_HLT1_6_TIS_inRange = treeMC_HLT1_6_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+/// load HLT2 efficiencies
+//TISTOS files
+TFile* fileMC_HLT2_1_TISTOS;
+fileMC_HLT2_1_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TISTOS_pt_1525.root");
+TTree* treeMC_HLT2_1_TISTOS = (TTree*) fileMC_HLT2_1_TISTOS->Get("DecayTree");
+TTree* treeMC_HLT2_1_TISTOS_inRange = treeMC_HLT2_1_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT2_2_TISTOS;
+fileMC_HLT2_2_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TISTOS_pt_2535.root");
+TTree* treeMC_HLT2_2_TISTOS = (TTree*) fileMC_HLT2_2_TISTOS->Get("DecayTree");
+TTree* treeMC_HLT2_2_TISTOS_inRange = treeMC_HLT2_2_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT2_3_TISTOS;
+fileMC_HLT2_3_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TISTOS_pt_3545.root");
+TTree* treeMC_HLT2_3_TISTOS = (TTree*) fileMC_HLT2_3_TISTOS->Get("DecayTree");
+TTree* treeMC_HLT2_3_TISTOS_inRange = treeMC_HLT2_3_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT2_4_TISTOS;
+fileMC_HLT2_4_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TISTOS_pt_4555.root");
+TTree* treeMC_HLT2_4_TISTOS = (TTree*) fileMC_HLT2_4_TISTOS->Get("DecayTree");
+TTree* treeMC_HLT2_4_TISTOS_inRange = treeMC_HLT2_4_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT2_5_TISTOS;
+fileMC_HLT2_5_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TISTOS_pt_5565.root");
+TTree* treeMC_HLT2_5_TISTOS = (TTree*) fileMC_HLT2_5_TISTOS->Get("DecayTree");
+TTree* treeMC_HLT2_5_TISTOS_inRange = treeMC_HLT2_5_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT2_6_TISTOS;
+fileMC_HLT2_6_TISTOS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TISTOS_pt_6575.root");
+TTree* treeMC_HLT2_6_TISTOS = (TTree*) fileMC_HLT2_6_TISTOS->Get("DecayTree");
+TTree* treeMC_HLT2_6_TISTOS_inRange = treeMC_HLT2_6_TISTOS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+
+//TIS only files
+TFile* fileMC_HLT2_1_TIS;
+fileMC_HLT2_1_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TIS_pt_1525.root");
+TTree* treeMC_HLT2_1_TIS = (TTree*) fileMC_HLT2_1_TIS->Get("DecayTree");
+TTree* treeMC_HLT2_1_TIS_inRange = treeMC_HLT2_1_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT2_2_TIS;
+fileMC_HLT2_2_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TIS_pt_2535.root");
+TTree* treeMC_HLT2_2_TIS = (TTree*) fileMC_HLT2_2_TIS->Get("DecayTree");
+TTree* treeMC_HLT2_2_TIS_inRange = treeMC_HLT2_2_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT2_3_TIS;
+fileMC_HLT2_3_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TIS_pt_3545.root");
+TTree* treeMC_HLT2_3_TIS = (TTree*) fileMC_HLT2_3_TIS->Get("DecayTree");
+TTree* treeMC_HLT2_3_TIS_inRange = treeMC_HLT2_3_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT2_4_TIS;
+fileMC_HLT2_4_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TIS_pt_4555.root");
+TTree* treeMC_HLT2_4_TIS = (TTree*) fileMC_HLT2_4_TIS->Get("DecayTree");
+TTree* treeMC_HLT2_4_TIS_inRange = treeMC_HLT2_4_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT2_5_TIS;
+fileMC_HLT2_5_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TIS_pt_5565.root");
+TTree* treeMC_HLT2_5_TIS = (TTree*) fileMC_HLT2_5_TIS->Get("DecayTree");
+TTree* treeMC_HLT2_5_TIS_inRange = treeMC_HLT2_5_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+TFile* fileMC_HLT2_6_TIS;
+fileMC_HLT2_6_TIS = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TIS_pt_6575.root");
+TTree* treeMC_HLT2_6_TIS = (TTree*) fileMC_HLT2_6_TIS->Get("DecayTree");
+TTree* treeMC_HLT2_6_TIS_inRange = treeMC_HLT2_6_TIS->CopyTree("Bs_MM > 5300 && Bs_MM < 5420");
+
+
+//setup Histograms
+TH1D* e_L0_MC = new TH1D("L0 efficiency",";p_{t} [GeV/c];#epsilon(L0)",6, 1.5, 7.5);
+TH1D* e_HLT1_MC = new TH1D("HLT1 efficiency",";p_{t} [GeV/c];#epsilon(HLT1)",6, 1.5, 7.5);
+TH1D* e_HLT2_MC = new TH1D("HLT2 efficiency",";p_{t} [GeV/c];#epsilon(HLT2)",6, 1.5, 7.5);
+
+//store number of events in doubles
+double N_L0_TISTOS_1 = treeMC_L0_1_TISTOS_inRange->GetEntries();
+double N_L0_TISTOS_2 = treeMC_L0_2_TISTOS_inRange->GetEntries();
+double N_L0_TISTOS_3 = treeMC_L0_3_TISTOS_inRange->GetEntries();
+double N_L0_TISTOS_4 = treeMC_L0_4_TISTOS_inRange->GetEntries();
+double N_L0_TISTOS_5 = treeMC_L0_5_TISTOS_inRange->GetEntries();
+double N_L0_TISTOS_6 = treeMC_L0_6_TISTOS_inRange->GetEntries();
+
+double N_L0_TIS_1 = treeMC_L0_1_TIS_inRange->GetEntries();
+double N_L0_TIS_2 = treeMC_L0_2_TIS_inRange->GetEntries();
+double N_L0_TIS_3 = treeMC_L0_3_TIS_inRange->GetEntries();
+double N_L0_TIS_4 = treeMC_L0_4_TIS_inRange->GetEntries();
+double N_L0_TIS_5 = treeMC_L0_5_TIS_inRange->GetEntries();
+double N_L0_TIS_6 = treeMC_L0_6_TIS_inRange->GetEntries();
+
+double N_HLT1_TISTOS_1 = treeMC_HLT1_1_TISTOS_inRange->GetEntries();
+double N_HLT1_TISTOS_2 = treeMC_HLT1_2_TISTOS_inRange->GetEntries();
+double N_HLT1_TISTOS_3 = treeMC_HLT1_3_TISTOS_inRange->GetEntries();
+double N_HLT1_TISTOS_4 = treeMC_HLT1_4_TISTOS_inRange->GetEntries();
+double N_HLT1_TISTOS_5 = treeMC_HLT1_5_TISTOS_inRange->GetEntries();
+double N_HLT1_TISTOS_6 = treeMC_HLT1_6_TISTOS_inRange->GetEntries();
+
+double N_HLT1_TIS_1 = treeMC_HLT1_1_TIS_inRange->GetEntries();
+double N_HLT1_TIS_2 = treeMC_HLT1_2_TIS_inRange->GetEntries();
+double N_HLT1_TIS_3 = treeMC_HLT1_3_TIS_inRange->GetEntries();
+double N_HLT1_TIS_4 = treeMC_HLT1_4_TIS_inRange->GetEntries();
+double N_HLT1_TIS_5 = treeMC_HLT1_5_TIS_inRange->GetEntries();
+double N_HLT1_TIS_6 = treeMC_HLT1_6_TIS_inRange->GetEntries();
+
+double N_HLT2_TISTOS_1 = treeMC_HLT2_1_TISTOS_inRange->GetEntries();
+double N_HLT2_TISTOS_2 = treeMC_HLT2_2_TISTOS_inRange->GetEntries();
+double N_HLT2_TISTOS_3 = treeMC_HLT2_3_TISTOS_inRange->GetEntries();
+double N_HLT2_TISTOS_4 = treeMC_HLT2_4_TISTOS_inRange->GetEntries();
+double N_HLT2_TISTOS_5 = treeMC_HLT2_5_TISTOS_inRange->GetEntries();
+double N_HLT2_TISTOS_6 = treeMC_HLT2_6_TISTOS_inRange->GetEntries();
+
+double N_HLT2_TIS_1 = treeMC_HLT2_1_TIS_inRange->GetEntries();
+double N_HLT2_TIS_2 = treeMC_HLT2_2_TIS_inRange->GetEntries();
+double N_HLT2_TIS_3 = treeMC_HLT2_3_TIS_inRange->GetEntries();
+double N_HLT2_TIS_4 = treeMC_HLT2_4_TIS_inRange->GetEntries();
+double N_HLT2_TIS_5 = treeMC_HLT2_5_TIS_inRange->GetEntries();
+double N_HLT2_TIS_6 = treeMC_HLT2_6_TIS_inRange->GetEntries();
+
+//compute efficiencies for different p_t bins
+double e_L0_MC_1525 = ( N_L0_TISTOS_1 / N_L0_TIS_1);
+double e_L0_MC_1525_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_L0_TISTOS_1)/N_L0_TISTOS_1),2) + TMath::Power((TMath::Sqrt(N_L0_TIS_1)/N_L0_TIS_1),2) ) * e_L0_MC_1525;
+
+double e_L0_MC_2535 = ( N_L0_TISTOS_2 / N_L0_TIS_2 );
+double e_L0_MC_2535_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_L0_TISTOS_2)/N_L0_TISTOS_2),2) + TMath::Power((TMath::Sqrt(N_L0_TIS_2)/N_L0_TIS_2),2) ) * e_L0_MC_2535;
+
+double e_L0_MC_3545 = ( N_L0_TISTOS_3 / N_L0_TIS_3 );
+double e_L0_MC_3545_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_L0_TISTOS_3)/N_L0_TISTOS_3),2) + TMath::Power((TMath::Sqrt(N_L0_TIS_3)/N_L0_TIS_3),2) ) * e_L0_MC_3545;
+
+double e_L0_MC_4555 = ( N_L0_TISTOS_4 / N_L0_TIS_4 );
+double e_L0_MC_4555_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_L0_TISTOS_4)/N_L0_TISTOS_4),2) + TMath::Power((TMath::Sqrt(N_L0_TIS_4)/N_L0_TIS_4),2) ) * e_L0_MC_4555;
+
+double e_L0_MC_5565 = ( N_L0_TISTOS_5 / N_L0_TIS_5 );
+double e_L0_MC_5565_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_L0_TISTOS_5)/N_L0_TISTOS_5),2) + TMath::Power((TMath::Sqrt(N_L0_TIS_5)/N_L0_TIS_5),2) ) * e_L0_MC_5565;
+
+double e_L0_MC_6575 = ( N_L0_TISTOS_6 / N_L0_TIS_6 );
+double e_L0_MC_6575_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_L0_TISTOS_6)/N_L0_TISTOS_6),2) + TMath::Power((TMath::Sqrt(N_L0_TIS_6)/N_L0_TIS_6),2) ) * e_L0_MC_6575;
+
+
+
+double e_HLT1_MC_1525 = ( N_HLT1_TISTOS_1 / N_HLT1_TIS_1);
+double e_HLT1_MC_1525_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_HLT1_TISTOS_1)/N_HLT1_TISTOS_1),2) + TMath::Power((TMath::Sqrt(N_HLT1_TIS_1)/N_HLT1_TIS_1),2) ) * e_HLT1_MC_1525;
+
+double e_HLT1_MC_2535 = ( N_HLT1_TISTOS_2 / N_HLT1_TIS_2 );
+double e_HLT1_MC_2535_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_HLT1_TISTOS_2)/N_HLT1_TISTOS_2),2) + TMath::Power((TMath::Sqrt(N_HLT1_TIS_2)/N_HLT1_TIS_2),2) ) * e_HLT1_MC_2535;
+
+double e_HLT1_MC_3545 = ( N_HLT1_TISTOS_3 / N_HLT1_TIS_3 );
+double e_HLT1_MC_3545_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_HLT1_TISTOS_3)/N_HLT1_TISTOS_3),2) + TMath::Power((TMath::Sqrt(N_HLT1_TIS_3)/N_HLT1_TIS_3),2) ) * e_HLT1_MC_3545;
+
+double e_HLT1_MC_4555 = ( N_HLT1_TISTOS_4 / N_HLT1_TIS_4 );
+double e_HLT1_MC_4555_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_HLT1_TISTOS_4)/N_HLT1_TISTOS_4),2) + TMath::Power((TMath::Sqrt(N_HLT1_TIS_4)/N_HLT1_TIS_4),2) ) * e_HLT1_MC_4555;
+
+double e_HLT1_MC_5565 = ( N_HLT1_TISTOS_5 / N_HLT1_TIS_5 );
+double e_HLT1_MC_5565_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_HLT1_TISTOS_5)/N_HLT1_TISTOS_5),2) + TMath::Power((TMath::Sqrt(N_HLT1_TIS_5)/N_HLT1_TIS_5),2) ) * e_HLT1_MC_5565;
+
+double e_HLT1_MC_6575 = ( N_HLT1_TISTOS_6 / N_HLT1_TIS_6 );
+double e_HLT1_MC_6575_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_HLT1_TISTOS_6)/N_HLT1_TISTOS_6),2) + TMath::Power((TMath::Sqrt(N_HLT1_TIS_6)/N_HLT1_TIS_6),2) ) * e_HLT1_MC_6575;
+
+
+
+double e_HLT2_MC_1525 = ( N_HLT2_TISTOS_1 / N_HLT2_TIS_1);
+double e_HLT2_MC_1525_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_HLT2_TISTOS_1)/N_HLT2_TISTOS_1),2) + TMath::Power((TMath::Sqrt(N_HLT2_TIS_1)/N_HLT2_TIS_1),2) ) * e_HLT2_MC_1525;
+
+double e_HLT2_MC_2535 = ( N_HLT2_TISTOS_2 / N_HLT2_TIS_2 );
+double e_HLT2_MC_2535_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_HLT2_TISTOS_2)/N_HLT2_TISTOS_2),2) + TMath::Power((TMath::Sqrt(N_HLT2_TIS_2)/N_HLT2_TIS_2),2) ) * e_HLT2_MC_2535;
+
+double e_HLT2_MC_3545 = ( N_HLT2_TISTOS_3 / N_HLT2_TIS_3 );
+double e_HLT2_MC_3545_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_HLT2_TISTOS_3)/N_HLT2_TISTOS_3),2) + TMath::Power((TMath::Sqrt(N_HLT2_TIS_3)/N_HLT2_TIS_3),2) ) * e_HLT2_MC_3545;
+
+double e_HLT2_MC_4555 = ( N_HLT2_TISTOS_4 / N_HLT2_TIS_4 );
+double e_HLT2_MC_4555_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_HLT2_TISTOS_4)/N_HLT2_TISTOS_4),2) + TMath::Power((TMath::Sqrt(N_HLT2_TIS_4)/N_HLT2_TIS_4),2) ) * e_HLT2_MC_4555;
+
+double e_HLT2_MC_5565 = ( N_HLT2_TISTOS_5 / N_HLT2_TIS_5 );
+double e_HLT2_MC_5565_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_HLT2_TISTOS_5)/N_HLT2_TISTOS_5),2) + TMath::Power((TMath::Sqrt(N_HLT2_TIS_5)/N_HLT2_TIS_5),2) ) * e_HLT2_MC_5565;
+
+double e_HLT2_MC_6575 = ( N_HLT2_TISTOS_6 / N_HLT2_TIS_6 );
+double e_HLT2_MC_6575_error = TMath::Sqrt( TMath::Power((TMath::Sqrt(N_HLT2_TISTOS_6)/N_HLT2_TISTOS_6),2) + TMath::Power((TMath::Sqrt(N_HLT2_TIS_6)/N_HLT2_TIS_6),2) ) * e_HLT2_MC_6575;
+
+
+
+//fill the histos
+e_L0_MC->SetBinContent(1,e_L0_MC_1525); e_L0_MC->SetBinError(1,e_L0_MC_1525_error);
+e_L0_MC->SetBinContent(2,e_L0_MC_2535); e_L0_MC->SetBinError(2,e_L0_MC_2535_error);
+e_L0_MC->SetBinContent(3,e_L0_MC_3545); e_L0_MC->SetBinError(3,e_L0_MC_3545_error);
+e_L0_MC->SetBinContent(4,e_L0_MC_4555); e_L0_MC->SetBinError(4,e_L0_MC_4555_error);
+e_L0_MC->SetBinContent(5,e_L0_MC_5565); e_L0_MC->SetBinError(5,e_L0_MC_5565_error);
+e_L0_MC->SetBinContent(6,e_L0_MC_6575); e_L0_MC->SetBinError(6,e_L0_MC_6575_error);
+
+e_HLT1_MC->SetBinContent(1,e_HLT1_MC_1525); e_HLT1_MC->SetBinError(1,e_HLT1_MC_1525_error);
+e_HLT1_MC->SetBinContent(2,e_HLT1_MC_2535); e_HLT1_MC->SetBinError(2,e_HLT1_MC_2535_error);
+e_HLT1_MC->SetBinContent(3,e_HLT1_MC_3545); e_HLT1_MC->SetBinError(3,e_HLT1_MC_3545_error);
+e_HLT1_MC->SetBinContent(4,e_HLT1_MC_4555); e_HLT1_MC->SetBinError(4,e_HLT1_MC_4555_error);
+e_HLT1_MC->SetBinContent(5,e_HLT1_MC_5565); e_HLT1_MC->SetBinError(5,e_HLT1_MC_5565_error);
+e_HLT1_MC->SetBinContent(6,e_HLT1_MC_6575); e_HLT1_MC->SetBinError(6,e_HLT1_MC_6575_error);
+
+e_HLT2_MC->SetBinContent(1,e_HLT2_MC_1525); e_HLT2_MC->SetBinError(1,e_HLT2_MC_1525_error);
+e_HLT2_MC->SetBinContent(2,e_HLT2_MC_2535); e_HLT2_MC->SetBinError(2,e_HLT2_MC_2535_error);
+e_HLT2_MC->SetBinContent(3,e_HLT2_MC_3545); e_HLT2_MC->SetBinError(3,e_HLT2_MC_3545_error);
+e_HLT2_MC->SetBinContent(4,e_HLT2_MC_4555); e_HLT2_MC->SetBinError(4,e_HLT2_MC_4555_error);
+e_HLT2_MC->SetBinContent(5,e_HLT2_MC_5565); e_HLT2_MC->SetBinError(5,e_HLT2_MC_5565_error);
+e_HLT2_MC->SetBinContent(6,e_HLT2_MC_6575); e_HLT2_MC->SetBinError(6,e_HLT2_MC_6575_error);
+
+//draw histos
+TCanvas* c= new TCanvas();
+e_L0_MC->SetStats(0);
+e_L0_MC->SetAxisRange(0.,1.2,"Y");
+e_L0_MC->Draw("E1"); c->Print("eps/efficiency_L0_MC.eps");
+e_HLT1_MC->SetStats(0);
+e_HLT1_MC->SetAxisRange(0.,1.2,"Y");
+e_HLT1_MC->Draw("E1"); c->Print("eps/efficiency_HLT1_MC.eps");
+e_HLT2_MC->SetStats(0);
+e_HLT2_MC->SetAxisRange(0.,1.2,"Y");
+e_HLT2_MC->Draw("E1"); c->Print("eps/efficiency_HLT2_MC.eps");
+
+
+///create the MC vs Data Histos
+//load L0 data efficiency
+TFile* L0_data = new TFile("rootHistos/L0_data_Hist.root");
+TH1D* e_L0_data = (TH1D*) L0_data->Get("L0 efficiency");
+
+double maxY= e_L0_data->GetMaximum();
+if(e_L0_MC->GetMaximum()>maxY)maxY=e_L0_MC->GetMaximum();
+e_L0_data->SetMinimum(0.);
+e_L0_data->SetMaximum(maxY*1.2);
+e_L0_data->SetLineColor(kBlack);
+e_L0_data->Draw("");
+e_L0_MC->SetLineColor(kRed);
+e_L0_MC->Draw("same");
+
+TLegend *leg = new TLegend(0.55,0.7,0.85,0.85);
+leg->SetHeader(" ");
+leg->AddEntry(e_L0_data,"Data","LEP");
+leg->AddEntry(e_L0_MC,"MC","LEP");
+leg->SetLineColor(kWhite);
+leg->SetFillColor(kWhite);
+leg->SetTextSize(0.05);
+leg->Draw();
+
+//calculate weights
+if(reweight){
+        TFile* output_L0_weights=new TFile("rootHistos/L0_weights_Hist.root","RECREATE");
+        TH1D *h_weight_L0 = (TH1D*)e_L0_MC->Clone();
+        h_weight_L0->SetName("L0_weights");
+        h_weight_L0->Divide(e_L0_data,e_L0_MC);
+        h_weight_L0->SetMinimum(0.);
+        h_weight_L0->SetMaximum(h_weight_L0->GetMaximum()*1.2);
+        h_weight_L0->GetYaxis()->SetTitle("Weight");
+        h_weight_L0->Draw();
+        c->Print("eps/TriggerSyst/L0_efficiency_weights.eps");
+        h_weight_L0->Write();
+        output_L0_weights->Write();
+        output_L0_weights->Close();
+}
+
+
+c->Print("eps/TriggerSyst/L0_efficiency_comparison.eps");
+L0_data->Close();
+
+
+//load HLT1 data efficiency
+TFile* HLT1_data = new TFile("rootHistos/HLT1_data_Hist.root");
+TH1D* e_HLT1_data = (TH1D*) HLT1_data->Get("HLT1 efficiency");
+
+double maxY_HLT1= e_HLT1_data->GetMaximum();
+if(e_HLT1_MC->GetMaximum()>maxY)maxY_HLT1=e_HLT1_MC->GetMaximum();
+e_HLT1_data->SetMinimum(0.);
+e_HLT1_data->SetMaximum(maxY_HLT1*1.2);
+e_HLT1_data->SetLineColor(kBlack);
+e_HLT1_data->Draw("");
+e_HLT1_MC->SetLineColor(kRed);
+e_HLT1_MC->Draw("same");
+
+TLegend *leg_HLT1 = new TLegend(0.55,0.7,0.85,0.85);
+leg_HLT1->SetHeader(" ");
+leg_HLT1->AddEntry(e_HLT1_data,"Data","LEP");
+leg_HLT1->AddEntry(e_HLT1_MC,"MC","LEP");
+leg_HLT1->SetLineColor(kWhite);
+leg_HLT1->SetFillColor(kWhite);
+leg_HLT1->SetTextSize(0.05);
+leg_HLT1->Draw();
+
+//calculate weights
+if(reweight){
+        TFile* output_HLT1_weights=new TFile("rootHistos/HLT1_weights_Hist.root","RECREATE");
+        TH1D *h_weight_HLT1 = (TH1D*)e_HLT1_MC->Clone();
+        h_weight_HLT1->SetName("HLT1_weights");
+        h_weight_HLT1->Divide(e_HLT1_data,e_HLT1_MC);
+        h_weight_HLT1->SetMinimum(0.);
+        h_weight_HLT1->SetMaximum(h_weight_HLT1->GetMaximum()*1.2);
+        h_weight_HLT1->GetYaxis()->SetTitle("Weight");
+        h_weight_HLT1->Draw();
+        c->Print("eps/TriggerSyst/HLT1_efficiency_weights.eps");
+        h_weight_HLT1->Write();
+        output_HLT1_weights->Write();
+        output_HLT1_weights->Close();
+}
+
+c->Print("eps/TriggerSyst/HLT1_efficiency_comparison.eps");
+HLT1_data->Close();
+
+
+//close all files at the end
+fileMC_L0_1_TISTOS->Close();
+fileMC_L0_2_TISTOS->Close();
+fileMC_L0_3_TISTOS->Close();
+fileMC_L0_4_TISTOS->Close();
+fileMC_L0_5_TISTOS->Close();
+fileMC_L0_6_TISTOS->Close();
+
+fileMC_L0_1_TIS->Close();
+fileMC_L0_2_TIS->Close();
+fileMC_L0_3_TIS->Close();
+fileMC_L0_4_TIS->Close();
+fileMC_L0_5_TIS->Close();
+fileMC_L0_6_TIS->Close();
+
+fileMC_HLT1_1_TISTOS->Close();
+fileMC_HLT1_2_TISTOS->Close();
+fileMC_HLT1_3_TISTOS->Close();
+fileMC_HLT1_4_TISTOS->Close();
+fileMC_HLT1_5_TISTOS->Close();
+fileMC_HLT1_6_TISTOS->Close();
+
+fileMC_HLT1_1_TIS->Close();
+fileMC_HLT1_2_TIS->Close();
+fileMC_HLT1_3_TIS->Close();
+fileMC_HLT1_4_TIS->Close();
+fileMC_HLT1_5_TIS->Close();
+fileMC_HLT1_6_TIS->Close();
+
+fileMC_HLT2_1_TISTOS->Close();
+fileMC_HLT2_2_TISTOS->Close();
+fileMC_HLT2_3_TISTOS->Close();
+fileMC_HLT2_4_TISTOS->Close();
+fileMC_HLT2_5_TISTOS->Close();
+fileMC_HLT2_6_TISTOS->Close();
+
+fileMC_HLT2_1_TIS->Close();
+fileMC_HLT2_2_TIS->Close();
+fileMC_HLT2_3_TIS->Close();
+fileMC_HLT2_4_TIS->Close();
+fileMC_HLT2_5_TIS->Close();
+fileMC_HLT2_6_TIS->Close();
+}
+
+
+void TrackingEff(){ 
+
+///compute tracking efficiency ratio from MC
+
+bool sevenTeV = true;
+
+//load tracking eff histo from tracking group
+TFile* tracking;
+if(sevenTeV) tracking = new TFile("rootHistos/ratio2011S20MC17.root");
+if(!sevenTeV) tracking = new TFile("rootHistos/ratio2012S20.root");
+TH2D* effHisto = (TH2D*) tracking->Get("Ratio");
+
+
+TFile* fileMCNorm;
+if(sevenTeV) fileMCNorm= new TFile("/auto/data/kecke/B2DPiPiPi/MC2011/mc11_Bs2Dspipipi_Ds2KKpi_BDT_reweighted_Reco14.root");
+if(!sevenTeV) fileMCNorm= new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/mc12_Bs2Dspipipi_Ds2KKpi_BDT_reweighted_Reco14.root");
+TTree* treeMC_Norm = (TTree*) fileMCNorm->Get("DecayTree");
+
+
+TFile* fileMCSig;
+if(sevenTeV) fileMCSig= new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_reweighted_Reco14.root");
+if(!sevenTeV) fileMCSig= new TFile("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_reweighted_Reco14.root");
+TTree* treeMC_Sig = (TTree*) fileMCSig->Get("DecayTree");
+
+
+Double_t K_plus_fromDs_P_Norm;
+Double_t K_minus_fromDs_P_Norm;
+Double_t pi_minus_fromDs_P_Norm;
+Double_t pi_plus1_P_Norm;
+Double_t pi_plus2_P_Norm;
+Double_t pi_minus_P_Norm;
+Double_t K_plus_fromDs_ETA_Norm;
+Double_t K_minus_fromDs_ETA_Norm;
+Double_t pi_minus_fromDs_ETA_Norm;
+Double_t pi_plus1_ETA_Norm;
+Double_t pi_plus2_ETA_Norm;
+Double_t pi_minus_ETA_Norm;
+
+Double_t Bs_DTF_M_Norm;
+Double_t weight_Norm;
+
+Double_t K_plus_fromDs_P_Sig;
+Double_t K_minus_fromDs_P_Sig;
+Double_t pi_minus_fromDs_P_Sig;
+Double_t K_plus_P_Sig;
+Double_t pi_plus_P_Sig;
+Double_t pi_minus_P_Sig;
+Double_t K_plus_fromDs_ETA_Sig;
+Double_t K_minus_fromDs_ETA_Sig;
+Double_t pi_minus_fromDs_ETA_Sig;
+Double_t K_plus_ETA_Sig;
+Double_t pi_plus_ETA_Sig;
+Double_t pi_minus_ETA_Sig;
+
+Double_t Bs_DTF_M_Sig;
+Double_t weight_Sig;
+
+treeMC_Norm -> SetBranchAddress( "pi_plus1_P" , &pi_plus1_P_Norm );
+treeMC_Norm -> SetBranchAddress( "pi_plus2_P" , &pi_plus2_P_Norm );
+treeMC_Norm -> SetBranchAddress( "pi_minus_P" , &pi_minus_P_Norm );
+treeMC_Norm -> SetBranchAddress( "K_plus_fromDs_P" , &K_plus_fromDs_P_Norm );
+treeMC_Norm -> SetBranchAddress( "K_minus_fromDs_P" , &K_minus_fromDs_P_Norm );
+treeMC_Norm -> SetBranchAddress( "pi_minus_fromDs_P" , &pi_minus_fromDs_P_Norm );
+treeMC_Norm -> SetBranchAddress( "pi_plus1_ETA" , &pi_plus1_ETA_Norm );
+treeMC_Norm -> SetBranchAddress( "pi_plus2_ETA" , &pi_plus2_ETA_Norm );
+treeMC_Norm -> SetBranchAddress( "pi_minus_ETA" , &pi_minus_ETA_Norm );
+treeMC_Norm -> SetBranchAddress( "K_plus_fromDs_ETA" , &K_plus_fromDs_ETA_Norm );
+treeMC_Norm -> SetBranchAddress( "K_minus_fromDs_ETA" , &K_minus_fromDs_ETA_Norm );
+treeMC_Norm -> SetBranchAddress( "pi_minus_fromDs_ETA" , &pi_minus_fromDs_ETA_Norm );
+treeMC_Norm -> SetBranchAddress( "DTF_Bs_M" , &Bs_DTF_M_Norm );
+treeMC_Norm -> SetBranchAddress( "weight" , &weight_Norm );
+
+treeMC_Sig -> SetBranchAddress( "pi_plus_P" , &pi_plus_P_Sig );
+treeMC_Sig -> SetBranchAddress( "K_plus_P" , &K_plus_P_Sig );
+treeMC_Sig -> SetBranchAddress( "pi_minus_P" , &pi_minus_P_Sig );
+treeMC_Sig -> SetBranchAddress( "K_plus_fromDs_P" , &K_plus_fromDs_P_Sig );
+treeMC_Sig -> SetBranchAddress( "K_minus_fromDs_P" , &K_minus_fromDs_P_Sig );
+treeMC_Sig -> SetBranchAddress( "pi_minus_fromDs_P" , &pi_minus_fromDs_P_Sig );
+treeMC_Sig -> SetBranchAddress( "pi_plus_ETA" , &pi_plus_ETA_Sig );
+treeMC_Sig -> SetBranchAddress( "pi_plus_ETA" , &pi_plus_ETA_Sig );
+treeMC_Sig -> SetBranchAddress( "pi_minus_ETA" , &pi_minus_ETA_Sig );
+treeMC_Sig -> SetBranchAddress( "K_plus_fromDs_ETA" , &K_plus_fromDs_ETA_Sig );
+treeMC_Sig -> SetBranchAddress( "K_minus_fromDs_ETA" , &K_minus_fromDs_ETA_Sig );
+treeMC_Sig -> SetBranchAddress( "pi_minus_fromDs_ETA" , &pi_minus_fromDs_ETA_Sig );
+treeMC_Sig -> SetBranchAddress( "DTF_Bs_M" , &Bs_DTF_M_Sig );
+treeMC_Sig -> SetBranchAddress( "weight" , &weight_Sig );
+
+
+//define efficiencies
+double eff_pi_plus1_Norm = 0;
+double eff_pi_plus2_Norm = 0;
+double eff_pi_minus_Norm = 0;
+double eff_K_plus_fromDs_Norm = 0;
+double eff_K_minus_fromDs_Norm = 0;
+double eff_pi_minus_fromDs_Norm = 0;
+
+double eff_pi_plus1_error_Norm = 0;
+double eff_pi_plus2_error_Norm = 0;
+double eff_pi_minus_error_Norm = 0;
+double eff_K_plus_fromDs_error_Norm = 0;
+double eff_K_minus_fromDs_error_Norm = 0;
+double eff_pi_minus_fromDs_error_Norm = 0;
+
+int normalization_Norm = 0;
+double trackingWeight_Norm = 0;
+double trackingWeight_error_Norm = 0;
+
+double weighted_efficiency_Norm = 0;
+double weighted_efficiency_error_Norm = 0;
+
+double eff_pi_plus_Sig = 0;
+double eff_pi_minus_Sig = 0;
+double eff_K_plus_Sig = 0;
+double eff_K_plus_fromDs_Sig = 0;
+double eff_K_minus_fromDs_Sig = 0;
+double eff_pi_minus_fromDs_Sig = 0;
+
+double eff_pi_plus_error_Sig = 0;
+double eff_pi_minus_error_Sig = 0;
+double eff_K_plus_error_Sig = 0;
+double eff_K_plus_fromDs_error_Sig = 0;
+double eff_K_minus_fromDs_error_Sig = 0;
+double eff_pi_minus_fromDs_error_Sig = 0;
+
+int normalization_Sig = 0;
+double trackingWeight_Sig = 0;
+double trackingWeight_error_Sig = 0;
+
+double weighted_efficiency_Sig = 0;
+double weighted_efficiency_error_Sig = 0;
+
+/*
+	TFile* output_Norm;
+	if(sevenTeV) output_Norm = new TFile("/auto/data/kecke/B2DPiPiPi/MC2011/mc11_Bs2Dspipipi_Ds2KKpi_BDT_reweighted_wTrackingWeights_SigRegion_Reco14.root","RECREATE");
+	if(!sevenTeV) output_Norm = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/mc12_Bs2Dspipipi_Ds2KKpi_BDT_reweighted_wTrackingWeights_SigRegion_Reco14.root","RECREATE");
+
+	TFile* output_Sig;
+	if(sevenTeV) output_Sig = new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_reweighted_wTrackingWeights_SigRegion_Reco14.root","RECREATE");
+	if(!sevenTeV) output_Sig = new TFile("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_reweighted_wTrackingWeights_SigRegion_Reco14.root","RECREATE");
+*/
+
+///loop over Norm MC
+int numEvents_Norm = treeMC_Norm->GetEntries();
+for(int i=0; i< numEvents_Norm; i++)
+	{
+	if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEvents_Norm << endl;
+	treeMC_Norm->GetEntry(i);
+
+	//only signal region
+	if(Bs_DTF_M_Norm < 5300 || Bs_DTF_M_Norm > 5420) continue;
+	
+
+	//get efficiency ratio for every track from Histo
+	eff_pi_plus1_Norm = effHisto->GetBinContent(effHisto->FindBin((pi_plus1_P_Norm/1000),pi_plus1_ETA_Norm));
+	eff_pi_plus1_error_Norm = effHisto->GetBinError(effHisto->FindBin((pi_plus1_P_Norm/1000),pi_plus1_ETA_Norm));
+	if(eff_pi_plus1_Norm == 0){
+		eff_pi_plus1_Norm = 1;
+		eff_pi_plus1_error_Norm = 0;
+	}
+
+	eff_pi_plus2_Norm = effHisto->GetBinContent(effHisto->FindBin((pi_plus2_P_Norm/1000),pi_plus2_ETA_Norm));
+	eff_pi_plus2_error_Norm = effHisto->GetBinError(effHisto->FindBin((pi_plus2_P_Norm/1000),pi_plus2_ETA_Norm));
+	if(eff_pi_plus2_Norm == 0){
+		eff_pi_plus2_Norm = 1;
+		eff_pi_plus2_error_Norm = 0;
+	}
+
+	eff_pi_minus_Norm = effHisto->GetBinContent(effHisto->FindBin((pi_minus_P_Norm/1000),pi_minus_ETA_Norm));
+	eff_pi_minus_error_Norm = effHisto->GetBinError(effHisto->FindBin((pi_minus_P_Norm/1000),pi_minus_ETA_Norm));
+	if(eff_pi_minus_Norm == 0){ 
+		eff_pi_minus_Norm = 1;
+		eff_pi_minus_error_Norm = 0;
+	}
+
+	eff_K_plus_fromDs_Norm = effHisto->GetBinContent(effHisto->FindBin((K_plus_fromDs_P_Norm/1000),K_plus_fromDs_ETA_Norm));
+	eff_K_plus_fromDs_error_Norm = effHisto->GetBinError(effHisto->FindBin((K_plus_fromDs_P_Norm/1000),K_plus_fromDs_ETA_Norm));
+	if(eff_K_plus_fromDs_Norm == 0){ 
+		eff_K_plus_fromDs_Norm =1;
+		eff_K_plus_fromDs_error_Norm =0;
+	}
+
+	eff_K_minus_fromDs_Norm = effHisto->GetBinContent(effHisto->FindBin((K_minus_fromDs_P_Norm/1000),K_minus_fromDs_ETA_Norm));
+	eff_K_minus_fromDs_error_Norm = effHisto->GetBinError(effHisto->FindBin((K_minus_fromDs_P_Norm/1000),K_minus_fromDs_ETA_Norm));
+	if(eff_K_minus_fromDs_Norm == 0){
+		eff_K_minus_fromDs_Norm =1;
+		eff_K_minus_fromDs_error_Norm =0;
+	}
+
+	eff_pi_minus_fromDs_Norm = effHisto->GetBinContent(effHisto->FindBin((pi_minus_fromDs_P_Norm/1000),pi_minus_fromDs_ETA_Norm));
+	eff_pi_minus_fromDs_error_Norm = effHisto->GetBinError(effHisto->FindBin((pi_minus_fromDs_P_Norm/1000),pi_minus_fromDs_ETA_Norm));
+	if(eff_pi_minus_fromDs_Norm == 0){ 
+		eff_pi_minus_fromDs_Norm =1;
+		eff_pi_minus_fromDs_error_Norm =0;
+	}
+
+	//compute event tracking efficiency as product of single track efficiencies
+	trackingWeight_Norm = eff_pi_plus1_Norm * eff_pi_plus2_Norm * eff_pi_minus_Norm * eff_K_plus_fromDs_Norm * eff_K_minus_fromDs_Norm * eff_pi_minus_fromDs_Norm;
+	trackingWeight_error_Norm = TMath::Sqrt(TMath::Power(eff_pi_plus1_error_Norm,2) + TMath::Power(eff_pi_plus2_error_Norm,2) + TMath::Power(eff_pi_minus_error_Norm,2) + TMath::Power(eff_K_plus_fromDs_error_Norm,2) + TMath::Power(eff_K_minus_fromDs_error_Norm,2) + TMath::Power(eff_pi_minus_fromDs_error_Norm,2));
+
+	//compute weighted efficiency ratio, using the MC weights
+	weighted_efficiency_Norm = weighted_efficiency_Norm + (weight_Norm * trackingWeight_Norm);
+	weighted_efficiency_error_Norm = weighted_efficiency_error_Norm + trackingWeight_error_Norm;
+	//conuter for normalization
+	normalization_Norm++;
+	}
+
+
+
+///loop over Sig MC
+int numEvents_Sig = treeMC_Sig->GetEntries();
+for(int i=0; i< numEvents_Sig; i++)
+	{
+	if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEvents_Sig << endl;
+	treeMC_Sig->GetEntry(i);
+
+	//only signal region
+	if(Bs_DTF_M_Sig < 5300 || Bs_DTF_M_Sig > 5420) continue;
+	
+
+	//get efficiency ratio for every track from Histo
+	eff_pi_plus_Sig = effHisto->GetBinContent(effHisto->FindBin((pi_plus_P_Sig/1000),pi_plus_ETA_Sig));
+	eff_pi_plus_error_Sig = effHisto->GetBinError(effHisto->FindBin((pi_plus_P_Sig/1000),pi_plus_ETA_Sig));
+	if(eff_pi_plus_Sig == 0){
+		 eff_pi_plus_Sig = 1;
+		 eff_pi_plus_error_Sig = 0;
+	}
+
+	eff_K_plus_Sig = effHisto->GetBinContent(effHisto->FindBin((K_plus_P_Sig/1000),K_plus_ETA_Sig));
+	eff_K_plus_error_Sig = effHisto->GetBinError(effHisto->FindBin((K_plus_P_Sig/1000),K_plus_ETA_Sig));
+	if(eff_K_plus_Sig == 0){
+		eff_K_plus_Sig = 1;
+		eff_K_plus_error_Sig = 0;
+	}
+
+	eff_pi_minus_Sig = effHisto->GetBinContent(effHisto->FindBin((pi_minus_P_Sig/1000),pi_minus_ETA_Sig));
+	eff_pi_minus_error_Sig = effHisto->GetBinError(effHisto->FindBin((pi_minus_P_Sig/1000),pi_minus_ETA_Sig));
+	if(eff_pi_minus_Sig == 0){
+		eff_pi_minus_Sig = 1;
+		eff_pi_minus_error_Sig = 0;		
+	}
+
+	eff_K_plus_fromDs_Sig = effHisto->GetBinContent(effHisto->FindBin((K_plus_fromDs_P_Sig/1000),K_plus_fromDs_ETA_Sig));
+	eff_K_plus_fromDs_error_Sig = effHisto->GetBinError(effHisto->FindBin((K_plus_fromDs_P_Sig/1000),K_plus_fromDs_ETA_Sig));
+	if(eff_K_plus_fromDs_Sig == 0){
+		eff_K_plus_fromDs_Sig =1;
+		eff_K_plus_fromDs_error_Sig =0;
+	}
+
+	eff_K_minus_fromDs_Sig = effHisto->GetBinContent(effHisto->FindBin((K_minus_fromDs_P_Sig/1000),K_minus_fromDs_ETA_Sig));
+	eff_K_minus_fromDs_error_Sig = effHisto->GetBinError(effHisto->FindBin((K_minus_fromDs_P_Sig/1000),K_minus_fromDs_ETA_Sig));
+	if(eff_K_minus_fromDs_Sig == 0){
+		eff_K_minus_fromDs_Sig =1;
+		eff_K_minus_fromDs_error_Sig =0;
+	}
+
+
+	eff_pi_minus_fromDs_Sig = effHisto->GetBinContent(effHisto->FindBin((pi_minus_fromDs_P_Sig/1000),pi_minus_fromDs_ETA_Sig));
+	eff_pi_minus_fromDs_error_Sig = effHisto->GetBinError(effHisto->FindBin((pi_minus_fromDs_P_Sig/1000),pi_minus_fromDs_ETA_Sig));
+	if(eff_pi_minus_fromDs_Sig == 0){
+		eff_pi_minus_fromDs_Sig =1;
+		eff_pi_minus_fromDs_error_Sig =0;
+	}
+
+	//compute event tracking efficiency as product of single track efficiencies
+	trackingWeight_Sig = eff_pi_plus_Sig * eff_K_plus_Sig * eff_pi_minus_Sig * eff_K_plus_fromDs_Sig * eff_K_minus_fromDs_Sig * eff_pi_minus_fromDs_Sig;
+	trackingWeight_error_Sig = TMath::Sqrt(TMath::Power(eff_pi_plus_error_Sig,2) + TMath::Power(eff_K_plus_error_Sig,2) + TMath::Power(eff_pi_minus_error_Sig,2) + TMath::Power(eff_K_plus_fromDs_error_Sig,2) + TMath::Power(eff_K_minus_fromDs_error_Sig,2) + TMath::Power(eff_pi_minus_fromDs_error_Sig,2));
+
+	//compute weighted efficiency ratio, using the MC weights
+	weighted_efficiency_Sig = weighted_efficiency_Sig + (weight_Sig * trackingWeight_Sig);
+	weighted_efficiency_error_Sig = weighted_efficiency_error_Sig + trackingWeight_error_Sig;
+
+	//conuter for normalization
+	normalization_Sig++;
+	}
+
+TCanvas* c= new TCanvas();
+gPad->SetLogx(1);
+effHisto->Draw("COLZ");
+if(sevenTeV)c->Print("eps/TrackingEff_MCvData_11.eps");
+if(!sevenTeV)c->Print("eps/TrackingEff_MCvData_12.eps");
+gPad->SetLogx(0);
+
+cout << "****************************************************************************************************" << endl;
+
+//cout << "weighted tracking eff ratio for normalization channel:  " << weighted_efficiency_Norm << endl;
+//cout << "weighted tracking eff ratio error for normalization channel:  " << weighted_efficiency_error_Norm << endl;
+//cout << "normalization for normalization channel:  " << normalization_Norm << endl;
+cout << "normalized weighted tracking eff ratio for normalization channel:  " << weighted_efficiency_Norm / normalization_Norm << endl;
+cout << "normalized weighted tracking eff ratio error for normalization channel:  " << weighted_efficiency_error_Norm / normalization_Norm << endl;
+
+cout << "****************************************************************************************************" << endl;
+
+//cout << "weighted tracking eff ratio for signal channel:  " << weighted_efficiency_Sig << endl;
+//cout << "normalization for signal channel:  " << normalization_Sig << endl;
+cout << "normalized weighted tracking eff ratio for signal channel:  " << weighted_efficiency_Sig / normalization_Sig << endl;
+cout << "normalized weighted tracking eff ratio error for signal channel:  " << weighted_efficiency_error_Sig / normalization_Sig << endl;
+
+cout << "****************************************************************************************************" << endl;
+cout << "****************************************************************************************************" << endl;
+
+cout << "Systematic uncertainty due to tracking efficiency:  " << TMath::Abs(1. - ((weighted_efficiency_Norm / normalization_Norm)/ (weighted_efficiency_Sig / normalization_Sig))) << endl;
+}
+
 int main(){
     time_t startTime = time(0);
 
- // quickSignalEstimate();
+	bool sevenTeV=false;
+	bool fitSimultan=false;
+	bool Ds2KKpi = false;
+	double fillarr4[13];
+	double *DsstarKpipifromNorm;
+	DsstarKpipifromNorm = fitBDTNorm(fillarr4,sevenTeV,fitSimultan,Ds2KKpi);
+
+
+ // quickFit(false,false);
+ // TriggerSyst(false);
+ // reweight(false, true);
+//TrackingEff();
+
+  //quickSignalEstimate();
   //  iterateBDT(-0.9,0.9,0.05);
     //preselect();
- // applyBDTcut("0.7012");
-    //makePlots();
+
+   //nominal value for Ds->KKpi final state
+  //applyBDTcut("0.7012");
+
+   //nominal value for Ds->KKpi final state
+ // applyBDTcut("0.9082");
+
+   // makePlots();
   //  //chooseBestPV("BFit","/auto/data/dargent/Bu2psiKpipi/data/data_preselected.root");
     //chooseBestPV("psiFit","/auto/data/dargent/Bu2psiKpipi/data/data_preselected_bestPV_BFit.root");
     //chooseBestPV("psiDTF","/auto/data/dargent/Bu2psiKpipi/data/data_preselected_bestPV_psiFit.root");
@@ -4094,19 +5926,13 @@ frame->Draw();
 c1->Print("eps/BkgShape/RooKeyKernelstimator.eps");
 */
    //addCut();
-  // fitBDT();
-  // quickFit(true);
+   //fitBDT();
   //  MCStudies();
    //splitMC();
-/// bool sevenTeV , bool signalMode
+// bool sevenTeV , bool signalMode
   //DataStructure(true, true);
+ // Systematics(false,true);
 
-	bool sevenTeV=false;
-	bool fitSimultan=false;
-	bool doToys=true;
-	double fillarr4[13];
-	double *DsstarKpipifromNorm;
-	DsstarKpipifromNorm = fitBDTNorm(fillarr4,sevenTeV,fitSimultan,doToys,false);
 
     cout << "==============================================" << endl;
     cout << " Done " 
