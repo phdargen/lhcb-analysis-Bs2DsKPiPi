@@ -4,18 +4,18 @@
 \contentsline {subsection}{\numberline {3.1}Cut-based selection}{2}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Multivariate stage}{4}{subsection.3.2}
 \contentsline {section}{\numberline {4}Simulated samples}{7}{section.4}
-\contentsline {section}{\numberline {5}Models for signal and background components in invariant mass spectrum}{10}{section.5}
+\contentsline {section}{\numberline {5}Models for signal and background components in invariant mass spectrum}{9}{section.5}
 \contentsline {subsection}{\numberline {5.1}Signal models for $\ensuremath {\mathrm { \tmspace +\thinmuskip {.1667em}m}}\xspace ({\ensuremath {{\ensuremath {\ensuremath {D}\xspace }}\xspace _{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace )$ and $m({\ensuremath {{\ensuremath {\ensuremath {D}\xspace }}\xspace _{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace {\ensuremath {\ensuremath {K}\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace )$}{10}{subsection.5.1}
-\contentsline {subsection}{\numberline {5.2}Background models for $\ensuremath {\mathrm { \tmspace +\thinmuskip {.1667em}m}}\xspace ({\ensuremath {{\ensuremath {\ensuremath {D}\xspace }}\xspace _{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace )$}{10}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.2}Background models for $\ensuremath {\mathrm { \tmspace +\thinmuskip {.1667em}m}}\xspace ({\ensuremath {{\ensuremath {\ensuremath {D}\xspace }}\xspace _{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace )$}{11}{subsection.5.2}
 \contentsline {subsection}{\numberline {5.3}Background models for $m({\ensuremath {{\ensuremath {\ensuremath {D}\xspace }}\xspace _{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace {\ensuremath {\ensuremath {K}\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace )$}{11}{subsection.5.3}
 \contentsline {section}{\numberline {6}Mass fits for signal and normalization}{13}{section.6}
-\contentsline {subsection}{\numberline {6.1}Fit to ${\ensuremath {{\ensuremath {\ensuremath {B}\xspace }}\xspace ^0_{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace \ensuremath {\rightarrow }\xspace {\ensuremath {{\ensuremath {\ensuremath {D}\xspace }}\xspace _{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace $ candidates}{13}{subsection.6.1}
-\contentsline {subsection}{\numberline {6.2}Fit to ${\ensuremath {{\ensuremath {\ensuremath {B}\xspace }}\xspace ^0_{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace \ensuremath {\rightarrow }\xspace {\ensuremath {{\ensuremath {\ensuremath {D}\xspace }}\xspace _{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace {\ensuremath {\ensuremath {K}\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace $ candidates}{13}{subsection.6.2}
-\contentsline {section}{\numberline {7}Efficiency corrections}{13}{section.7}
-\contentsline {subsection}{\numberline {7.1}Relative efficiency for BR measurement}{13}{subsection.7.1}
-\contentsline {section}{\numberline {8}Systematic errors}{15}{section.8}
-\contentsline {section}{\numberline {9}Results and summary}{19}{section.9}
-\contentsline {section}{\numberline {A}Appendix}{21}{appendix.A}
-\contentsline {subsection}{\numberline {A.1}High Level Trigger requirements}{21}{subsection.A.1}
-\contentsline {subsection}{\numberline {A.2}Re-weghted MC observables}{21}{subsection.A.2}
-\contentsline {section}{References}{24}{figure.27}
+\contentsline {subsection}{\numberline {6.1}Fit to ${\ensuremath {{\ensuremath {\ensuremath {B}\xspace }}\xspace ^0_{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace \ensuremath {\rightarrow }\xspace {\ensuremath {{\ensuremath {\ensuremath {D}\xspace }}\xspace _{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace $ candidates}{14}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Fit to ${\ensuremath {{\ensuremath {\ensuremath {B}\xspace }}\xspace ^0_{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace \ensuremath {\rightarrow }\xspace {\ensuremath {{\ensuremath {\ensuremath {D}\xspace }}\xspace _{\ensuremath {\ensuremath {s}\xspace }}\xspace }}\xspace {\ensuremath {\ensuremath {K}\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace {\ensuremath {\ensuremath {\pi }\xspace }}\xspace $ candidates}{14}{subsection.6.2}
+\contentsline {section}{\numberline {7}Efficiency corrections}{15}{section.7}
+\contentsline {subsection}{\numberline {7.1}Relative efficiency for BR measurement}{15}{subsection.7.1}
+\contentsline {section}{\numberline {8}Systematic errors}{17}{section.8}
+\contentsline {section}{\numberline {9}Results and summary}{21}{section.9}
+\contentsline {section}{\numberline {A}Appendix}{22}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}High Level Trigger requirements}{22}{subsection.A.1}
+\contentsline {subsection}{\numberline {A.2}Re-weghted MC observables}{22}{subsection.A.2}
+\contentsline {section}{References}{25}{figure.28}

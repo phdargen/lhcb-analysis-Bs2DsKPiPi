@@ -6,12 +6,21 @@ $\Bs\to\Ds\kaon\pion\pion$ and $\Bs\to\Ds\pion\pion\pion$ candidates.
 
 \subsection{Signal models for $\m(\Ds\pion\pion\pion)$ and $m(\Ds\kaon\pion\pion)$}
 \label{subsec: signalmodel}
-The mass distribution of $\Bs\to\Ds\kaon\pion\pion$ signals is modeled using two Gaussian functions, which share the same mean $\mu$, but are allowed to have different widths $\sigma_{1}$ and $\sigma_{2}$. 
-Another double Gaussian function is used to account for the contribution of the $\B^{0}\to\Ds\kaon\pion\pion$ decay, which is also present in the $m(\Ds\kaon\pion\pion)$ spectrum. 
-All parameters of both double Gaussians, except the core width $\sigma_{1}$, are allowed to float in the fit. 
-The core width is fixed to the value obtained from simulation in order to improve the stability of the fit. \newline
+
+\begin{figure}[h]
+\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Bs2Dspipipi_MC_SignalShape.pdf}
+\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Bs2DsKpipi_MC_SignalShape.pdf}
+\caption{Invariant mass distributions of simulated (left) $\Bs\to\Ds\pion\pion\pion$ and (right) $\Bs\to\Ds\kaon\pion\pion$ events. A fit of the sum of two Crystal Ball functions to each distribution is overlaid. The dotted lines represent the individual Crystal Ball functions.}
+\label{fig: BsMassShapes}
+\end{figure}
+
+
+The mass distribution of $\Bs\to\Ds\kaon\pion\pion$ signals is modeled using two Crystal Ball functions, which share the same mean $\mu$, but are allowed to have different widths $\sigma_{1}$ and $\sigma_{2}$. 
+Another double Crystal Ball function is used to account for the contribution of the $\B^{0}\to\Ds\kaon\pion\pion$ decay, which is also present in the $m(\Ds\kaon\pion\pion)$ spectrum.
+The core width, as well as the tail parameters and the ratio of the two individual Crsystal Ball functions are fixed to values obtained by a fit to the invariant mass distribution of simulated events shown in Fig \ref{fig: BsMassShapes}. The second width $\sigma_{2}$ and the shared mean $\mu$ are floated in the fit to account for possible differences between the simulation and real data. \newline
 The same approach is used to describe the invariant mass distribution of $\Bs\to\Ds\pion\pion\pion$ candidates. 
-A double Gaussian function is used to model the signal, all parameters except the core width $\sigma_{1}$ are allowed to float.
+A double Crystal Ball function is used to model the signal, the parameters are determined by a fit to the invariant mass of simulated $\Bs\to\Ds\pion\pion\pion$ decays, shown in Fig \ref{fig: BsMassShapes}.
+The second width and the shared mean are floated to account for differences between data and MC.
 
 \subsection{Background models for $\m(\Ds\pion\pion\pion)$} 
 \label{subsec: BkginNorm}
