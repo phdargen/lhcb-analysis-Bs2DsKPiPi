@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 \BOOKMARK [1][-]{section.1}{Introduction}{}
 \BOOKMARK [1][-]{section.2}{Data samples}{}
 \BOOKMARK [1][-]{section.3}{Selection}{}
@@ -19,3 +20,26 @@
 \BOOKMARK [2][-]{subsection.A.1}{High Level Trigger requirements}{appendix.A}
 \BOOKMARK [2][-]{subsection.A.2}{Re-weghted MC observables}{appendix.A}
 \BOOKMARK [1][-]{figure.28}{References}{}
+=======
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Data samples}{}% 2
+\BOOKMARK [1][-]{section.3}{Selection}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Cut-based selection}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Multivariate stage}{section.3}% 5
+\BOOKMARK [1][-]{section.4}{Simulated samples}{}% 6
+\BOOKMARK [1][-]{section.5}{Models for signal and background components in invariant mass spectrum}{}% 7
+\BOOKMARK [2][-]{subsection.5.1}{Signal models for \040m \(Ds\) and m\(DsK\)}{section.5}% 8
+\BOOKMARK [2][-]{subsection.5.2}{Background models for \040m \(Ds\)}{section.5}% 9
+\BOOKMARK [2][-]{subsection.5.3}{Background models for m\(DsK\)}{section.5}% 10
+\BOOKMARK [1][-]{section.6}{Mass fits for signal and normalization}{}% 11
+\BOOKMARK [2][-]{subsection.6.1}{Fit to B 0s Ds candidates}{section.6}% 12
+\BOOKMARK [2][-]{subsection.6.2}{Fit to B 0s DsK candidates}{section.6}% 13
+\BOOKMARK [1][-]{section.7}{Efficiency corrections}{}% 14
+\BOOKMARK [2][-]{subsection.7.1}{Relative efficiency for BR measurement}{section.7}% 15
+\BOOKMARK [1][-]{section.8}{Systematic errors}{}% 16
+\BOOKMARK [1][-]{section.9}{Results and summary}{}% 17
+\BOOKMARK [1][-]{appendix.A}{Appendix}{}% 18
+\BOOKMARK [2][-]{subsection.A.1}{High Level Trigger requirements}{appendix.A}% 19
+\BOOKMARK [2][-]{subsection.A.2}{Re-weghted MC observables}{appendix.A}% 20
+\BOOKMARK [1][-]{figure.caption.27}{References}{}% 21
+>>>>>>> 1c7a920677ca331f0dd157be286154b279f5dfbe
