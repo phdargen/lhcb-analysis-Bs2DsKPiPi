@@ -40,13 +40,13 @@ void TMVAClassificationApplication( TString myMethodList = "BDTG" )
    //---------------------------------------------------------------
 
    TChain* theTree = new TChain("DecayTree");
-   //theTree->Add("/auto/data/kecke/B2DPiPiPi/Data2011/data2011_Ds2KKpi_forBDT_tmp.root");
-   theTree->Add("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_forBDT_tmp.root");
+   //theTree->Add("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_forBDT_tmp_DsK3fb_Selection.root");
+   theTree->Add("/auto/data/kecke/B2DPiPiPi/Data2011/data2011_Ds2KKpi_forBDT_tmp.root");
    //theTree->Add("/auto/data/dargent/Bs2DsKpipi/preselection_norm/mc11_Ds2KKpi_forBDT.root");
    //theTree->Add("/auto/data/dargent/Bs2DsKpipi/preselection_norm/mc12_Ds2KKpi_forBDT.root");
 
-   //TFile *hFile = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data11_Ds2KKpi_BDT_tmp.root","RECREATE");
-   TFile *hFile = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data12_Ds2KKpi_BDT_tmp.root","RECREATE");
+   //TFile *hFile = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data12_Ds2KKpi_BDT_tmp_DsK3fb_Selection.root","RECREATE");
+   TFile *hFile = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data11_Ds2KKpi_BDT_tmp.root","RECREATE");
    //TFile *hFile = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection_norm/mc11_Ds2KKpi_BDT.root","RECREATE");
    //TFile *hFile = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection_norm/mc12_Ds2KKpi_BDT.root","RECREATE");
    TTree* tree = theTree->CloneTree(0);
@@ -278,13 +278,13 @@ void TMVAClassificationApplication( TString myMethodList = "BDTG" )
 
    theTree->SetBranchAddress( "Bs_PT", &myVar1 );
    theTree->SetBranchAddress( "Bs_ENDVERTEX_CHI2",&myVar2 );
-   theTree->SetBranchAddress( "XdDaughters_min_PT", &myVar3 );
+   theTree->SetBranchAddress( "XsDaughters_min_PT", &myVar3 );
    theTree->SetBranchAddress( "DsDaughters_min_PT", &myVar4 );
-   theTree->SetBranchAddress( "XdDaughters_min_IPCHI2", &myVar5 );
+   theTree->SetBranchAddress( "XsDaughters_min_IPCHI2", &myVar5 );
    theTree->SetBranchAddress( "DsDaughters_min_IPCHI2", &myVar6 );
-   theTree->SetBranchAddress( "XdDaughters_max_IPCHI2", &myVar7 );
+   theTree->SetBranchAddress( "XsDaughters_max_IPCHI2", &myVar7 );
    theTree->SetBranchAddress( "DsDaughters_max_IPCHI2", &myVar8 );
-   theTree->SetBranchAddress( "Xd_max_DOCA", &myVar9 );
+   theTree->SetBranchAddress( "Xs_max_DOCA", &myVar9 );
    theTree->SetBranchAddress( "Bs_FDCHI2_OWNPV", &myVar10 );
    theTree->SetBranchAddress( "Ds_FDCHI2_ORIVX", &myVar11 );
    theTree->SetBranchAddress( "Bs_IPCHI2_OWNPV", &myVar12 );
