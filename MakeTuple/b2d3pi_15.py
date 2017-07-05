@@ -7,8 +7,8 @@ from Configurables import FilterDesktop
 from Configurables import CombineParticles
 
 ############# Global settings
-year = "2012"
-data = False
+year = "2015"
+data = True
 down = False
 stream = "AllStreams"
 if (data):
@@ -58,7 +58,7 @@ triggerlines = [ "L0HadronDecision",
 
 from Configurables import (BTagging)   
 Btag = BTagging("BTagging")
-Btag.Inputs = [ "/Event/"+stream+"/Phys/B02DKPiPiD2HHHFULLDSTBeauty2CharmLine/Particles"]
+Btag.Inputs = [ "/Event/"+stream+"/Phys/B02DPiPiPiD2HHHFULLDSTBeauty2CharmLine/Particles"]
 Btag.OutputLevel    = 6
 
 from FlavourTagging.Tunings import TuneTool
@@ -80,7 +80,7 @@ def configureTaggingTools(BTuple, BsBd):
 ###############   Pre Filter, does not really do much except choose only candidates passing the Stripping line, maybe beneficial to performance
 from Configurables import LoKi__HDRFilter as StripFilter
 stripFilter = StripFilter( 'stripPassFilter',\
-                           Code = "HLT_PASS('StrippingB02DKPiPiD2HHHPIDBeauty2CharmLineDecision')",\
+                           Code = "HLT_PASS('StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLineDecision')",\
                            Location= "/Event/Strip/Phys/DecReports")
 
 ############# DecayTreeTuple
@@ -95,23 +95,23 @@ from Configurables import SubstitutePID,BTaggingTool
 from Configurables import TupleToolDecayTreeFitter, TupleToolTrackIsolation, TupleToolTagging, TupleToolRecoStats, TupleToolKinematic, TupleToolGeometry 
 from Configurables import LoKi__Hybrid__TupleTool
 
-reqsel = AutomaticData(Location = "/Event/"+stream+"/Phys/StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine_Line/Particles")
+reqsel = AutomaticData(Location = "/Event/"+stream+"/Phys/StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLine_Line/Particles")
 
 from Configurables import FilterDesktop
 
 #B0 -> (D- -> K K pi) (K_1(1270)+ -> K+ pi+ pi-)
-b2dkpipiTuple = DecayTreeTuple("Bs2DsKpipi_Ds2KKpi_Tuple")
-b2dkpipiTuple.Decay = "[[B0]cc -> ^(D- -> ^K+ ^K- ^pi-) ^(K_1(1270)+ -> ^K+ ^pi+ ^pi-)]CC"
+b2dkpipiTuple = DecayTreeTuple("Bs2Dspipipi_Ds2KKpi_Tuple")
+b2dkpipiTuple.Decay = "[[B0]cc -> ^(D- -> ^K+ ^K- ^pi-) ^(a_1(1260)+ -> ^pi+ ^pi+ ^pi-)]CC"
 b2dkpipiTuple.Branches= {
-"Bs" : "^([[B0]cc -> (D- -> K+ K- pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC)" ,
-"K_1_1270_plus" : "[[B0]cc -> (D- -> K+ K- pi-) ^(K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"K_plus" : "[[B0]cc -> (D- -> K+ K- pi-) (K_1(1270)+ -> ^K+ pi+ pi-)  ]CC",
-"pi_plus" : "[[B0]cc -> (D- -> K+ K- pi-) (K_1(1270)+ -> K+ ^pi+ pi-)  ]CC",
-"pi_minus" : "[[B0]cc -> (D- -> K+ K- pi-) (K_1(1270)+ -> K+ pi+ ^pi-) ]CC",
-"Ds" : "[[B0]cc -> ^(D- -> K+ K- pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"K_plus_fromDs" : "[[B0]cc -> (D- -> ^K+ K- pi-) (K_1(1270)+ -> K+ pi+ pi-)  ]CC",
-"K_minus_fromDs" : "[[B0]cc -> (D- -> K+ ^K- pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"pi_minus_fromDs" : "[[B0]cc -> (D- -> K+ K- ^pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC"
+"Bs" : "^([[B0]cc -> (D- -> K+ K- pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC)" ,
+"a_1_1260_plus" : "[[B0]cc -> (D- -> K+ K- pi-) ^(a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_plus1" : "[[B0]cc -> (D- -> K+ K- pi-) (a_1(1260)+ -> ^pi+ pi+ pi-)  ]CC",
+"pi_plus2" : "[[B0]cc -> (D- -> K+ K- pi-) (a_1(1260)+ -> pi+ ^pi+ pi-)  ]CC",
+"pi_minus" : "[[B0]cc -> (D- -> K+ K- pi-) (a_1(1260)+ -> pi+ pi+ ^pi-) ]CC",
+"Ds" : "[[B0]cc -> ^(D- -> K+ K- pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"K_plus_fromDs" : "[[B0]cc -> (D- -> ^K+ K- pi-) (a_1(1260)+ -> pi+ pi+ pi-)  ]CC",
+"K_minus_fromDs" : "[[B0]cc -> (D- -> K+ ^K- pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_minus_fromDs" : "[[B0]cc -> (D- -> K+ K- ^pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC"
 }
 b2dkpipiTuple.ReFitPVs = True
 
@@ -226,7 +226,7 @@ b2dkpipitt.VerboseHlt2 = True
 #b2dkpipiprinter.Inputs = [ makebu2kpipimumuseq.outputLocation() ]
 
 #main sequence
-b2dkpipiTuple.Inputs = [ "/Event/"+stream+"/Phys/B02DKPiPiD2HHHPIDBeauty2CharmLine/Particles" ]
+b2dkpipiTuple.Inputs = [ "/Event/"+stream+"/Phys/B02DPiPiPiD2HHHPIDBeauty2CharmLine/Particles" ]
 b2dkpipiseq = GaudiSequencer("B2dkpipiSeq")
 #bu2kpipimumuseq.Members += [makebu2kpipimumuseq.sequence(), bu2kpipimumuprinter, bu2kpipimumutuple]
 b2dkpipiseq.Members += [b2dkpipiTuple]
@@ -234,18 +234,18 @@ b2dkpipiseq.Members += [b2dkpipiTuple]
 
 #
 #B0 -> (D- -> pi pi pi) (K_1(1270)+ -> K+ pi+ pi-)
-b2dkpipi_d2pipipiTuple = DecayTreeTuple("Bs2DsKpipi_Ds2pipipi_Tuple")
-b2dkpipi_d2pipipiTuple.Decay = "[[B0]cc -> ^(D- -> ^pi+ ^pi- ^pi-) ^(K_1(1270)+ -> ^K+ ^pi+ ^pi-)]CC"
+b2dkpipi_d2pipipiTuple = DecayTreeTuple("Bs2Dspipipi_Ds2pipipi_Tuple")
+b2dkpipi_d2pipipiTuple.Decay = "[[B0]cc -> ^(D- -> ^pi+ ^pi- ^pi-) ^(a_1(1260)+ -> ^pi+ ^pi+ ^pi-)]CC"
 b2dkpipi_d2pipipiTuple.Branches= {
-"Bs" : "^([[B0]cc -> (D- -> pi+ pi- pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC)" ,
-"K_1_1270_plus" : "[[B0]cc -> (D- -> pi+ pi- pi-) ^(K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"K_plus" : "[[B0]cc -> (D- -> pi+ pi- pi-) (K_1(1270)+ -> ^K+ pi+ pi-)  ]CC",
-"pi_plus" : "[[B0]cc -> (D- -> pi+ pi- pi-) (K_1(1270)+ -> K+ ^pi+ pi-)  ]CC",
-"pi_minus" : "[[B0]cc -> (D- -> pi+ pi- pi-) (K_1(1270)+ -> K+ pi+ ^pi-) ]CC",
-"Ds" : "[[B0]cc -> ^(D- -> pi+ pi- pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"pi_plus_fromDs" : "[[B0]cc -> (D- -> ^pi+ pi- pi-) (K_1(1270)+ -> K+ pi+ pi-)  ]CC",
-"pi_minus_fromDs" : "[[B0]cc -> (D- -> pi+ ^pi- pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"pi_minus2_fromDs" : "[[B0]cc -> (D- -> pi+ pi- ^pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC"
+"Bs" : "^([[B0]cc -> (D- -> pi+ pi- pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC)" ,
+"a_1_1260_plus" : "[[B0]cc -> (D- -> pi+ pi- pi-) ^(a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_plus1" : "[[B0]cc -> (D- -> pi+ pi- pi-) (a_1(1260)+ -> ^pi+ pi+ pi-)  ]CC",
+"pi_plus2" : "[[B0]cc -> (D- -> pi+ pi- pi-) (a_1(1260)+ -> pi+ ^pi+ pi-)  ]CC",
+"pi_minus" : "[[B0]cc -> (D- -> pi+ pi- pi-) (a_1(1260)+ -> pi+ pi+ ^pi-) ]CC",
+"Ds" : "[[B0]cc -> ^(D- -> pi+ pi- pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_plus_fromDs" : "[[B0]cc -> (D- -> ^pi+ pi- pi-) (a_1(1260)+ -> pi+ pi+ pi-)  ]CC",
+"pi_minus_fromDs" : "[[B0]cc -> (D- -> pi+ ^pi- pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_minus2_fromDs" : "[[B0]cc -> (D- -> pi+ pi- ^pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC"
 }
 b2dkpipi_d2pipipiTuple.ReFitPVs = True
 
@@ -345,25 +345,25 @@ b2dkpipi_d2pipipitt.VerboseHlt1 = True
 b2dkpipi_d2pipipitt.VerboseHlt2 = True
 
 #main sequence
-b2dkpipi_d2pipipiTuple.Inputs = [ "/Event/"+stream+"/Phys/B02DKPiPiD2HHHPIDBeauty2CharmLine/Particles" ]
+b2dkpipi_d2pipipiTuple.Inputs = [ "/Event/"+stream+"/Phys/B02DPiPiPiD2HHHPIDBeauty2CharmLine/Particles" ]
 b2dkpipi_d2pipipiseq = GaudiSequencer("B2dkpipi_d2pipipiSeq")
 b2dkpipi_d2pipipiseq.Members += [b2dkpipi_d2pipipiTuple]
 
 
 #
 #B0 -> (D- -> K pi pi) (K_1(1270)+ -> K+ pi+ pi-)
-b2dkpipi_d2KpipiTuple = DecayTreeTuple("Bs2DsKpipi_Ds2Kpipi_Tuple")
-b2dkpipi_d2KpipiTuple.Decay = "[[B0]cc -> ^(D- -> ^pi+ ^pi- ^K-) ^(K_1(1270)+ -> ^K+ ^pi+ ^pi-)]CC"
+b2dkpipi_d2KpipiTuple = DecayTreeTuple("Bs2Dspipipi_Ds2Kpipi_Tuple")
+b2dkpipi_d2KpipiTuple.Decay = "[[B0]cc -> ^(D- -> ^pi+ ^pi- ^K-) ^(a_1(1260)+ -> ^pi+ ^pi+ ^pi-)]CC"
 b2dkpipi_d2KpipiTuple.Branches= {
-"Bs" : "^([[B0]cc -> (D- -> pi+ pi- K-) (K_1(1270)+ -> K+ pi+ pi-) ]CC)" ,
-"K_1_1270_plus" : "[[B0]cc -> (D- -> pi+ pi- K-) ^(K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"K_plus" : "[[B0]cc -> (D- -> pi+ pi- K-) (K_1(1270)+ -> ^K+ pi+ pi-)  ]CC",
-"pi_plus" : "[[B0]cc -> (D- -> pi+ pi- K-) (K_1(1270)+ -> K+ ^pi+ pi-)  ]CC",
-"pi_minus" : "[[B0]cc -> (D- -> pi+ pi- K-) (K_1(1270)+ -> K+ pi+ ^pi-) ]CC",
-"Ds" : "[[B0]cc -> ^(D- -> pi+ pi- K-) (K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"pi_plus_fromDs" : "[[B0]cc -> (D- -> ^pi+ pi- K-) (K_1(1270)+ -> K+ pi+ pi-)  ]CC",
-"pi_minus_fromDs" : "[[B0]cc -> (D- -> pi+ ^pi- K-) (K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"K_minus_fromDs" : "[[B0]cc -> (D- -> pi+ pi- ^K-) (K_1(1270)+ -> K+ pi+ pi-) ]CC"
+"Bs" : "^([[B0]cc -> (D- -> pi+ pi- K-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC)" ,
+"a_1_1260_plus" : "[[B0]cc -> (D- -> pi+ pi- K-) ^(a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_plus1" : "[[B0]cc -> (D- -> pi+ pi- K-) (a_1(1260)+ -> ^pi+ pi+ pi-)  ]CC",
+"pi_plus2" : "[[B0]cc -> (D- -> pi+ pi- K-) (a_1(1260)+ -> pi+ ^pi+ pi-)  ]CC",
+"pi_minus" : "[[B0]cc -> (D- -> pi+ pi- K-) (a_1(1260)+ -> pi+ pi+ ^pi-) ]CC",
+"Ds" : "[[B0]cc -> ^(D- -> pi+ pi- K-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_plus_fromDs" : "[[B0]cc -> (D- -> ^pi+ pi- K-) (a_1(1260)+ -> pi+ pi+ pi-)  ]CC",
+"pi_minus_fromDs" : "[[B0]cc -> (D- -> pi+ ^pi- K-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"K_minus_fromDs" : "[[B0]cc -> (D- -> pi+ pi- ^K-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC"
 }
 b2dkpipi_d2KpipiTuple.ReFitPVs = True
 
@@ -463,7 +463,7 @@ b2dkpipi_d2Kpipitt.VerboseHlt1 = True
 b2dkpipi_d2Kpipitt.VerboseHlt2 = True
 
 #main sequence
-b2dkpipi_d2KpipiTuple.Inputs = [ "/Event/"+stream+"/Phys/B02DKPiPiD2HHHPIDBeauty2CharmLine/Particles" ]
+b2dkpipi_d2KpipiTuple.Inputs = [ "/Event/"+stream+"/Phys/B02DPiPiPiD2HHHPIDBeauty2CharmLine/Particles" ]
 b2dkpipi_d2Kpipiseq = GaudiSequencer("B2dkpipi_d2KpipiSeq")
 b2dkpipi_d2Kpipiseq.Members += [b2dkpipi_d2KpipiTuple]
 
@@ -472,7 +472,7 @@ b2dkpipi_d2Kpipiseq.Members += [b2dkpipi_d2KpipiTuple]
 #
 #
 DaVinci().EventPreFilters = [stripFilter]
-DaVinci().UserAlgorithms += [ b2dkpipiseq]
+DaVinci().UserAlgorithms += [ b2dkpipiseq, b2dkpipi_d2pipipiseq]
 
 DaVinci().DataType = year
 if (data):

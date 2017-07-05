@@ -6,7 +6,7 @@ ganga -i collect-LFNs.py jobnumber
 # Download files (modify outputLocation in collect-output.sh):
 
 ssh -p28 sigma0
-source collect-output.sh 
+source collect-output.sh LFNs.txt
 
 
 

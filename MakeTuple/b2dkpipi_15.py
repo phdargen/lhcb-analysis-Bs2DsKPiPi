@@ -7,8 +7,8 @@ from Configurables import FilterDesktop
 from Configurables import CombineParticles
 
 ############# Global settings
-year = "2012"
-data = False
+year = "2015"
+data = True
 down = False
 stream = "AllStreams"
 if (data):
@@ -472,7 +472,7 @@ b2dkpipi_d2Kpipiseq.Members += [b2dkpipi_d2KpipiTuple]
 #
 #
 DaVinci().EventPreFilters = [stripFilter]
-DaVinci().UserAlgorithms += [ b2dkpipiseq]
+DaVinci().UserAlgorithms += [ b2dkpipiseq, b2dkpipi_d2pipipiseq]
 
 DaVinci().DataType = year
 if (data):

@@ -472,7 +472,7 @@ b2dkpipi_d2Kpipiseq.Members += [b2dkpipi_d2KpipiTuple]
 #
 #
 DaVinci().EventPreFilters = [stripFilter]
-DaVinci().UserAlgorithms += [ b2dkpipiseq, b2dkpipi_d2pipipiseq]
+DaVinci().UserAlgorithms += [ b2dkpipiseq]
 
 DaVinci().DataType = year
 if (data):
