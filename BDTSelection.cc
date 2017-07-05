@@ -31,18 +31,31 @@ int preselect() {
     bool Ds2pipipi = false;
 
     //MC or Data?
-    bool MC = true;
+    bool MC = false;
 
     //Bkg sample?
     bool Ds3piBkg = false;
     bool Dsstar3piBkg = false;
 
     //which year?
-    bool sevenTeV = true; //for 2011 = true , for 2012 = false 
+    bool sevenTeV = false; //for 2011 = true , for 2012 = false 
 
     TChain* tree = 0;
-	
+    tree=new TChain("Bs2DsKpipi_Ds2KKpi_Tuple/DecayTree");
+    //TString loc = "/auto/data/dargent/gangadir/workspace/dargent/LocalXML/55/";
+    //TString file = "/output/b2dhhh.root";
+    tree->Add("/auto/data/kecke/B2DKPiPi/12/*.root");
+/*
+cout << "yolo" << endl;
+    for(int i = 0; i<1000; i++){
+            TString dir_i = TString::Format("%d",i);
+            tree->Add(loc + dir_i + file);
+    }
+cout << "yolo oho" << endl;
+*/	
     //Ds2KKpi case
+/// CAREFULL ! ONLY TEMPORARELY DISABLE
+/*
     if(Ds2KKpi){
 	tree=new TChain("Bs2DsKpipi_Ds2KKpi_Tuple/DecayTree");
 	if((!MC) && (sevenTeV)){
@@ -70,7 +83,7 @@ int preselect() {
 		tree->Add("/auto/data/dargent/Bs2DsKpipi/MC_Reco14/Signal/11D/*.root");
 	}
     }
-
+*/
     //Ds2Kpipi case
     if(Ds2Kpipi){
     	tree=new TChain("Bs2DsKpipi_Ds2Kpipi_Tuple/DecayTree");
@@ -149,11 +162,17 @@ int preselect() {
     tree->SetBranchStatus( "*PE", 1);
     tree->SetBranchStatus( "*PT", 1 );
     tree->SetBranchStatus( "*TAU*", 1 );
+    tree->SetBranchStatus( "*ERR*", 1 );
     tree->SetBranchStatus( "*DTF*", 1 );    
     tree->SetBranchStatus( "*ETA", 1 );
     tree->SetBranchStatus( "*FD*", 1 );
     tree->SetBranchStatus( "*IP*", 1 );
     tree->SetBranchStatus( "*TAG*", 1);
+    tree->SetBranchStatus("*_SS_*",1);
+    tree->SetBranchStatus("*_OS_*",1);
+    tree->SetBranchStatus("*VtxCharge*",1);
+    tree->SetBranchStatus("*DEC*",1);
+    tree->SetBranchStatus("*PROB*",1);
 
     tree->SetBranchStatus( "*IPCHI2_OWNPV", 1 );
     tree->SetBranchStatus( "*FDCHI2_OWNPV",1 );
@@ -363,6 +382,9 @@ Double_t pi_plus_fromDs_PIDp;
 Double_t pi_minus_fromDs_PIDp;
 Double_t pi_minus2_fromDs_PIDp;
 
+Int_t Bs_ID;
+Int_t K_plus_ID;
+
 
 //trigger decisions
 tree -> SetBranchAddress( "Bs_L0Global_TIS" , &Bs_L0Global_TIS );
@@ -394,6 +416,9 @@ tree -> SetBranchAddress( "Bs_ENDVERTEX_Y", &Bs_ENDVERTEX_Y );
 tree -> SetBranchAddress( "Bs_OWNPV_Z", &Bs_OWNPV_Z ); 
 tree -> SetBranchAddress( "Bs_ENDVERTEX_Z", &Bs_ENDVERTEX_Z );
 tree -> SetBranchAddress( "K_1_1270_plus_DIRA_OWNPV", &K_1_1270_plus_DIRA_OWNPV );
+
+tree -> SetBranchAddress( "Bs_ID" , &Bs_ID );
+tree -> SetBranchAddress( "K_plus_ID" , &K_plus_ID );
 
 //Ds->KKpi case----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 if(Ds2KKpi){
@@ -599,7 +624,7 @@ THStack *all = new THStack("all","all candidates");
 
 	// Ds2KKpi case
 	if(Ds2KKpi && (!MC) && sevenTeV) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_with_BDT_variables_S21_PID_temporary.root","RECREATE");
-	else if(Ds2KKpi && (!MC) && (!sevenTeV)) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_with_BDT_variables_S21_PID_tmp.root","RECREATE");
+	else if(Ds2KKpi && (!MC) && (!sevenTeV)) output = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_with_BDT_variables_S21_PID.root","RECREATE");
 	else if(Ds2KKpi && MC && Ds3piBkg) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/bkg_Ds3pi.root","RECREATE");
 	else if(Ds2KKpi && MC && Dsstar3piBkg) output = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/bkg_Dsstar3pi.root","RECREATE");
 	else if(Ds2KKpi && MC && (!sevenTeV)) output = new TFile("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_with_BDT_variables_Reco14.root","RECREATE");
@@ -642,6 +667,8 @@ THStack *all = new THStack("all","all candidates");
         double Bs_cterr = 0;
         double Ds_ct = 0;
         double Ds_cterr = 0;
+	int qt = 0;
+	int qf = 0;
 
 	summary_tree->Branch("DsDaughters_min_IPCHI2",&DsDaughters_min_IPCHI2,"DsDaughters_min_IPCHI2/F");
         summary_tree->Branch("XsDaughters_min_IPCHI2",&XsDaughters_min_IPCHI2,"XsDaughters_min_IPCHI2/F");
@@ -658,6 +685,8 @@ THStack *all = new THStack("all","all candidates");
         summary_tree->Branch("Bs_cterr",&Bs_cterr,"Bs_cterr/D");
         summary_tree->Branch("Ds_ct",&Ds_ct,"Ds_ct/D");
         summary_tree->Branch("Ds_cterr",&Ds_cterr,"Ds_cterr/D");
+	summary_tree->Branch("qt",&qt,"qt/I");
+	summary_tree->Branch("qf",&qf,"qf/I");
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -855,7 +884,7 @@ if(!MC){
 	}
 	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//additional loose requirements on b-hadron
 
 	//dira cut
@@ -952,6 +981,12 @@ if(!MC){
         Bs_cterr = Bs_TAUERR*1000;
         Ds_ct = Ds_TAU*1000;
         Ds_cterr = Ds_TAUERR*1000;
+
+	if(Bs_ID > 0) qt = 1;
+	if(Bs_ID < 0) qt = -1;
+	if(Bs_ID == 0) qt = 0;
+	if(K_plus_ID > 0) qf = 1;
+	if(K_plus_ID < 0) qf = -1;
 
 
 	if(Ds2KKpi){
@@ -1594,22 +1629,22 @@ int main() {
 
         /// Add refitted momenta and variables used for BDT training
         /// Output goes to TMVAClassificationDsKpipi.C
-/*	
+/*
         chooseBestPV("DTF","/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_with_BDT_variables_S21_PID_temporary.root", "/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_DTF.root");
         chooseBestPV("BsDTF","/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_DTF.root", "/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_BsDTF.root");
         addVarsForBDT("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_BsDTF.root", "/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_forBDT.root");
-*/	
-/*
-        chooseBestPV("DTF","/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_with_BDT_variables_S21_PID_tmp.root", "/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_DTF.root");
-        chooseBestPV("BsDTF","/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_DTF.root", "/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_BsDTF.root");
-        addVarsForBDT("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_BsDTF.root", "/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT.root");
 */
 
+        chooseBestPV("DTF","/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_with_BDT_variables_S21_PID.root", "/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_DTF.root");
+        chooseBestPV("BsDTF","/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_DTF.root", "/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_BsDTF.root");
+        addVarsForBDT("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_BsDTF.root", "/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT.root");
 
+
+/*
         chooseBestPV("DTF","/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_with_BDT_variables_Reco14.root",   "/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_DTF.root");
         chooseBestPV("BsDTF","/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_DTF.root", "/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BsDTF.root");
         addVarsForBDT("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BsDTF.root", "/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_forBDT_Reco14.root");
-
+*/
 
 /*
         chooseBestPV("DTF","/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_with_BDT_variables_Reco14.root", "/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_DTF.root");

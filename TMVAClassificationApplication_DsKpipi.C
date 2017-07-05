@@ -40,13 +40,13 @@ void TMVAClassificationApplication( TString myMethodList = "BDTG" )
    //---------------------------------------------------------------
 
    TChain* theTree = new TChain("DecayTree");
-   //theTree->Add("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_forBDT_tmp.root");
-   theTree->Add("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT_tmp.root");
+   theTree->Add("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT.root");
+   //theTree->Add("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT_DsK3fb_Selection.root");
    //theTree->Add("/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_forBDT.root");
    //theTree->Add("/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_forBDT.root");
 
-   //TFile *hFile = new TFile("/auto/data/kecke/B2DKPiPi/Data2011/data11_Ds2KKpi_BDT_tmp.root","RECREATE");
-   TFile *hFile = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data12_Ds2KKpi_BDT_tmp.root","RECREATE");
+   TFile *hFile = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data12_Ds2KKpi_BDT.root","RECREATE");
+   //TFile *hFile = new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data12_Ds2KKpi_BDT_DsK3fb_Selection.root","RECREATE");
    //TFile *hFile = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/mc11_Ds2KKpi_BDT.root","RECREATE");
    //TFile *hFile = new TFile("/auto/data/dargent/Bs2DsKpipi/preselection/mc12_Ds2KKpi_BDT.root","RECREATE");
    TTree* tree = theTree->CloneTree(0);

@@ -24,7 +24,7 @@ using namespace std;
 
 void preselect() {
 
-    bool MC = true;
+    bool MC = false;
     bool Ds2KKpi = true;
     bool Ds2pipipi = false;
 
@@ -33,54 +33,73 @@ void preselect() {
     if(Ds2KKpi) tree=new TChain("Bs2Dspipipi_Ds2KKpi_Tuple/DecayTree");
    // tree->Add("/auto/data/kecke/B2DKPiPi/12U-3pi-PID/*.root");
    // tree->Add("/auto/data/kecke/B2DKPiPi/12D-3pi-PID/*.root");
-   ///11U mc
 
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/14/0/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/14/1/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/14/2/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/14/3/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/14/4/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/14/5/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/14/6/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/14/7/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/14/8/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/14/9/output/b2dhhh.root");
+/*
+    TChain* tree=new TChain("Bs2Dspipipi_Ds2KKpi_Tuple/DecayTree");
+    TString loc = "/auto/data/dargent/gangadir/workspace/dargent/LocalXML/36/";
+    TString file = "/output/b2dhhh.root";
+    for(int i = 0; i<1000; i++){
+            TString dir_i = TString::Format("%d",i);
+            tree->Add(loc + dir_i + file);
+    }
+*/
 
+    tree->Add("/auto/data/kecke/B2DPiPiPi/12/*.root");
    ///11D mc
+/*
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/29/0/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/29/1/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/29/2/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/29/3/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/29/4/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/29/5/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/29/6/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/29/7/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/29/8/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/29/9/output/b2dhhh.root");
 
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/13/0/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/13/1/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/13/2/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/13/3/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/13/4/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/13/5/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/13/6/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/13/7/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/13/8/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/13/9/output/b2dhhh.root");
-
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/42/0/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/42/1/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/42/2/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/42/3/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/42/4/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/42/5/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/42/6/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/42/7/output/b2dhhh.root");
+*/
+   ///11U mc
+/*
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/33/0/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/33/1/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/33/2/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/33/3/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/33/4/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/33/5/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/33/6/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/33/7/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/33/8/output/b2dhhh.root");
+*/
    ///12D mc 
 /*
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/15/0/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/15/1/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/15/2/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/15/3/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/15/4/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/15/5/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/15/6/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/15/7/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/34/0/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/34/1/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/34/2/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/34/3/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/34/4/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/34/5/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/34/6/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/34/7/output/b2dhhh.root");
 */
    ///12U mc
 /*
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/16/0/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/16/1/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/16/2/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/16/3/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/16/4/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/16/5/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/16/6/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/16/7/output/b2dhhh.root");
-    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/16/8/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/35/0/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/35/1/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/35/2/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/35/3/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/35/4/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/35/5/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/35/6/output/b2dhhh.root");
+    tree->Add("/auto/data/dargent/gangadir/workspace/dargent/LocalXML/35/7/output/b2dhhh.root");
 */
    // tree->Add("/auto/data/dargent/Bs2DsKpipi/MC_Reco14/Norm/12U/*.root");
     //tree->Add("/auto/data/dargent/Bs2DsKpipi/MC_Reco14/Norm/12D/*.root");
@@ -88,13 +107,13 @@ void preselect() {
     //tree->Add("/auto/data/dargent/Bs2DsKpipi/Data_PID/11U_3pi/*.root");
    //tree->Add("/auto/data/kecke/B2DPiPiPi/MC2012/mc12_Bs2Dspipipi_Ds2KKpi_BDT_reweighted_Reco14.root");
 
-   // TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data2011_with_BDT_variables_S21_PID_temporary.root","RECREATE");
-   // TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_with_BDT_variables_S21_PID_temporary.root","RECREATE");
+   // TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/forMaster/Data2011/data2011_with_BDT_variables_S21_PID_temporary.root","RECREATE");
+    TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_with_BDT_variables_S21_PID.root","RECREATE");
     //TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2pipipi_with_BDT_variables_S21_PID.root","RECREATE");
     //TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/DecayTimeError/decayTimeErr_from_Bs2Dspipipi.root","RECREATE");
    // TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/MC2011/mc2011_Bs2Dspipipi_with_BDT_variables_S21_PID_Reco14.root","RECREATE");
-  TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_with_BDT_variables_S21_PID_Reco14.root","RECREATE");
- // TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_with_BDT_variables_S21_PID_Reco14.root","RECREATE");
+  //TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/forMaster/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_with_BDT_variables_S21_PID_Reco14.root","RECREATE");
+  //TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/forMaster/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_with_BDT_variables_S21_PID_Reco14.root","RECREATE");
     //TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/TriggerTisTos/mc_HLT2_TIS_pt_3545.root","RECREATE");
   // TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/MC2012/HLT2efficiency/noHLT2.root","RECREATE");
    // TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/TriggerTisTos/data_L0_TIS_pt_6575.root","RECREATE");
@@ -142,6 +161,7 @@ void preselect() {
     tree->SetBranchStatus( "*PE", 1);
     tree->SetBranchStatus( "*PT", 1 );
     tree->SetBranchStatus( "*TAU*", 1 );
+    tree->SetBranchStatus( "*ERR*", 1 );
     tree->SetBranchStatus( "*DTF*", 1 );
     tree->SetBranchStatus( "*ETA", 1 );
     tree->SetBranchStatus( "*FD*", 1 );
@@ -1297,15 +1317,15 @@ int main(){
 
      /// Add refitted momenta and variables used for BDT training
 /*
-     chooseBestPV("DTF","/auto/data/kecke/B2DPiPiPi/Data2011/data2011_with_BDT_variables_S21_PID_temporary.root", "/auto/data/kecke/B2DPiPiPi/Data2011/data2011_Ds2KKpi_DTF_tmp.root");
-     chooseBestPV("BsDTF","/auto/data/kecke/B2DPiPiPi/Data2011/data2011_Ds2KKpi_DTF_tmp.root", "/auto/data/kecke/B2DPiPiPi/Data2011/data2011_Ds2KKpi_BsDTF_tmp.root");
-     addVarsForBDT("/auto/data/kecke/B2DPiPiPi/Data2011/data2011_Ds2KKpi_BsDTF_tmp.root", "/auto/data/kecke/B2DPiPiPi/Data2011/data2011_Ds2KKpi_forBDT_tmp.root");
+     chooseBestPV("DTF","/auto/data/kecke/B2DPiPiPi/forMaster/Data2011/data2011_with_BDT_variables_S21_PID_temporary.root", "/auto/data/kecke/B2DPiPiPi/forMaster/Data2011/data2011_Ds2KKpi_DTF_tmp.root");
+     chooseBestPV("BsDTF","/auto/data/kecke/B2DPiPiPi/forMaster/Data2011/data2011_Ds2KKpi_DTF_tmp.root", "/auto/data/kecke/B2DPiPiPi/forMaster/Data2011/data2011_Ds2KKpi_BsDTF_tmp.root");
+     addVarsForBDT("/auto/data/kecke/B2DPiPiPi/forMaster/Data2011/data2011_Ds2KKpi_BsDTF_tmp.root", "/auto/data/kecke/B2DPiPiPi/forMaster/Data2011/data2011_Ds2KKpi_forBDT_tmp.root");
 */
-/*
-     chooseBestPV("DTF","/auto/data/kecke/B2DPiPiPi/Data2012/data2012_with_BDT_variables_S21_PID_temporary.root", "/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_DTF_tmp.root");
+
+     chooseBestPV("DTF","/auto/data/kecke/B2DPiPiPi/Data2012/data2012_with_BDT_variables_S21_PID.root", "/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_DTF_tmp.root");
      chooseBestPV("BsDTF","/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_DTF_tmp.root", "/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_BsDTF_tmp.root");
-     addVarsForBDT("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_BsDTF_tmp.root", "/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_forBDT_tmp.root");
- */
+     addVarsForBDT("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_BsDTF_tmp.root", "/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_forBDT.root");
+
 /*
      chooseBestPV("DTF","/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2pipipi_with_BDT_variables_S21_PID.root", "/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2pipipi_DTF.root");
      chooseBestPV("BsDTF","/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2pipipi_DTF.root", "/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2pipipi_BsDTF.root");
@@ -1317,14 +1337,14 @@ int main(){
      addVarsForBDT("/auto/data/kecke/B2DPiPiPi/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_BsDTF.root", "/auto/data/kecke/B2DPiPiPi/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_forBDT_Reco14.root");
 */
 /*
-     chooseBestPV("DTF","/auto/data/kecke/B2DPiPiPi/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_with_BDT_variables_S21_PID_Reco14.root", "/auto/data/kecke/B2DPiPiPi/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_DTF.root");
-     chooseBestPV("BsDTF","/auto/data/kecke/B2DPiPiPi/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_DTF.root", "/auto/data/kecke/B2DPiPiPi/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_BsDTF.root");
-     addVarsForBDT("/auto/data/kecke/B2DPiPiPi/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_BsDTF.root", "/auto/data/kecke/B2DPiPiPi/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_forBDT_Reco14.root");
+     chooseBestPV("DTF","/auto/data/kecke/B2DPiPiPi/forMaster/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_with_BDT_variables_S21_PID_Reco14.root", "/auto/data/kecke/B2DPiPiPi/forMaster/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_DTF.root");
+     chooseBestPV("BsDTF","/auto/data/kecke/B2DPiPiPi/forMaster/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_DTF.root", "/auto/data/kecke/B2DPiPiPi/forMaster/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_BsDTF.root");
+     addVarsForBDT("/auto/data/kecke/B2DPiPiPi/forMaster/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_BsDTF.root", "/auto/data/kecke/B2DPiPiPi/forMaster/MC2011/mc2011_Bs2Dspipipi_Ds2KKpi_forBDT_Reco14.root");
 */
 /*
-     chooseBestPV("DTF","/auto/data/kecke/B2DPiPiPi/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_with_BDT_variables_S21_PID_Reco14.root", "/auto/data/kecke/B2DPiPiPi/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_DTF.root");
-     chooseBestPV("BsDTF","/auto/data/kecke/B2DPiPiPi/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_DTF.root", "/auto/data/kecke/B2DPiPiPi/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_BsDTF.root");
-     addVarsForBDT("/auto/data/kecke/B2DPiPiPi/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_BsDTF.root", "/auto/data/kecke/B2DPiPiPi/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_forBDT_Reco14.root");
+     chooseBestPV("DTF","/auto/data/kecke/B2DPiPiPi/forMaster/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_with_BDT_variables_S21_PID_Reco14.root", "/auto/data/kecke/B2DPiPiPi/forMaster/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_DTF.root");
+     chooseBestPV("BsDTF","/auto/data/kecke/B2DPiPiPi/forMaster/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_DTF.root", "/auto/data/kecke/B2DPiPiPi/forMaster/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_BsDTF.root");
+     addVarsForBDT("/auto/data/kecke/B2DPiPiPi/forMaster/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_BsDTF.root", "/auto/data/kecke/B2DPiPiPi/forMaster/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_forBDT_Reco14.root");
 */
 /*
      chooseBestPV("DTF","/auto/data/kecke/B2DPiPiPi/MC2012/mc2012_Bs2Dspipipi_Ds2pipipi_with_BDT_variables_S21_PID_Reco14.root", "/auto/data/kecke/B2DPiPiPi/MC2012/mc2012_Bs2Dspipipi_Ds2pipipi_DTF.root");

@@ -1,0 +1,85 @@
+\ifx\mcitethebibliography\mciteundefinedmacro
+\PackageError{LHCb.bst}{mciteplus.sty has not been loaded}
+{This bibstyle requires the use of the mciteplus package.}\fi
+\providecommand{\href}[2]{#2}
+\begin{mcitethebibliography}{1}
+\mciteSetBstSublistMode{n}
+\mciteSetBstMaxWidthForm{subitem}{\alph{mcitesubitemcount})}
+\mciteSetBstSublistLabelBeginEnd{\mcitemaxwidthsubitemform\space}
+{\relax}{\relax}
+
+\bibitem{Fleischer:2003yb}
+R.~Fleischer, \ifthenelse{\boolean{articletitles}}{\emph{{New strategies to
+  obtain insights into CP violation through B(s) ---> D(s)+- K-+, D(s)*+- K-+,
+  ... and B(d) ---> D+- pi-+, D*+- pi-+, ... decays}},
+  }{}\href{http://dx.doi.org/10.1016/j.nuclphysb.2003.08.010}{Nucl.\ Phys.\
+  \textbf{B671} (2003) 459},
+  \href{http://arxiv.org/abs/hep-ph/0304027}{{\normalfont\ttfamily
+  arXiv:hep-ph/0304027}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{DeBruyn:2012jp}
+K.~De~Bruyn {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{Exploring
+  $B_s \to D_s^{(*)\pm} K^\mp$ Decays in the Presence of a Sizable Width
+  Difference $\Delta\Gamma_s$}},
+  }{}\href{http://dx.doi.org/10.1016/j.nuclphysb.2012.11.012}{Nucl.\ Phys.\
+  \textbf{B868} (2013) 351},
+  \href{http://arxiv.org/abs/1208.6463}{{\normalfont\ttfamily
+  arXiv:1208.6463}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Blusk:1471393}
+S.~Blusk, \ifthenelse{\boolean{articletitles}}{\emph{{First observations and
+  measurements of the branching fractions for the decays $\bar{B}^0_s\to
+  D_s^+K^-\pi^+\pi^-$ and $\bar{B}^0\to D_s^+K^-\pi^+\pi^-$}}, }{}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Blusk:2012it}
+LHCb, S.~Blusk, \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of the
+  CP observables in $\bar{B}^0_s \to D^+_sK^-$ and first observation of
+  $\bar{B}^0_{(s)}\to D^+_sK^-\pi^+\pi^-$ and $\bar{B}_s^0\to
+  D_{s1}(2536)^+\pi^-$}}, }{} 2012.
+\newblock \href{http://arxiv.org/abs/1212.4180}{{\normalfont\ttfamily
+  arXiv:1212.4180}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Hocker:2007ht}
+A.~Hoecker {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{TMVA:
+  Toolkit for Multivariate Data Analysis}}, }{}PoS \textbf{ACAT} (2007) 040,
+  \href{http://arxiv.org/abs/physics/0703039}{{\normalfont\ttfamily
+  arXiv:physics/0703039}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{HFAG}
+Heavy Flavor Averaging Group, Y.~Amhis {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Averages of $b$-hadron,
+  $c$-hadron, and $\tau$-lepton properties as of summer 2014}},
+  }{}\href{http://arxiv.org/abs/1412.7515}{{\normalfont\ttfamily
+  arXiv:1412.7515}}, {updated results and plots available at
+  \href{http://www.slac.stanford.edu/xorg/hfag/}{{\texttt{http://www.slac.stan%
+ford.edu/xorg/hfag/}}}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Karbach:2014qba}
+T.~M. Karbach, G.~Raven, and M.~Schiller,
+  \ifthenelse{\boolean{articletitles}}{\emph{{Decay time integrals in neutral
+  meson mixing and their efficient evaluation}},
+  }{}\href{http://arxiv.org/abs/1407.0748}{{\normalfont\ttfamily
+  arXiv:1407.0748}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\end{mcitethebibliography}

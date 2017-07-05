@@ -52,12 +52,12 @@
 void TMVAClassification( TString myMethodList = "BDTG" )
 {
    TChain* background = new TChain("DecayTree");
-   background->Add("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_forBDT_tightDCUT_DZ.root");
-   background->Add("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT_tightDCUT_DZ.root");
+   background->Add("/auto/data/kecke/B2DKPiPi/Data2011/data2011_Ds2KKpi_forBDT_DsK3fb_Selection.root");
+   background->Add("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT_DsK3fb_Selection.root");
 
    TChain* signal = new TChain("DecayTree");
-   signal->Add("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_reweighted_Reco14.root");
-   signal->Add("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_reweighted_Reco14.root");
+   signal->Add("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_reweighted_DsK3fb_Selection.root");
+   signal->Add("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_reweighted_DsK3fb_Selection.root");
 
    //---------------------------------------------------------------
    // This loads the library

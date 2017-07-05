@@ -55,8 +55,8 @@ void plotEventVars(string Branch,string TitleX, int bins, double min, double max
 
    ///Load files
    TChain* tree=new TChain("DecayTree");
-   tree->Add("/auto/data/kecke/B2DPiPiPi/Data2011/data_Bs2Dspipipi_11_final_sweight.root");
-   //tree->Add("/auto/data/kecke/B2DPiPiPi/Data2011/data_Bs2Dspipipi_11_afterPreSel_sweight.root");	
+   tree->Add("/auto/data/kecke/B2DKPiPi/Data2011/data_Bs2Dspipipi_11_final_sweight.root");
+  // tree->Add("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_12_afterPreSel_sweight.root");	
    tree->SetBranchStatus("*",0);
    tree->SetBranchStatus(Branch.c_str(),1);
    tree->SetBranchStatus("N_Bs_sw",1);
@@ -66,15 +66,18 @@ void plotEventVars(string Branch,string TitleX, int bins, double min, double max
    tree->SetBranchAddress("N_Bs_sw",&sw);
 
    TString fileNameMC;
-   if(useWeights)fileNameMC="/auto/data/kecke/B2DKPiPi/MC2011/mc_Ds2KKpi_BDT_reweighted.root";
-   else fileNameMC= "/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_forBDT.root";
+   if(useWeights)fileNameMC="/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_reweighted_DsK3fb_Selection.root";
+   else fileNameMC= "/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_forBDT_Reco14.root";
+  // else fileNameMC= "/auto/data/kecke/B2DPiPiPi/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_forBDT_Reco14.root";
+
+
 
    TFile* fileMC= new TFile(fileNameMC);
    TTree* treeMC = (TTree*) fileMC->Get("DecayTree");	
    treeMC->SetBranchStatus("*",0);
    treeMC->SetBranchStatus(Branch.c_str(),1);
    if(useWeights)treeMC->SetBranchStatus("weight",1);
-   double varMC;
+   float varMC;
    double w;
    treeMC->SetBranchAddress(Branch.c_str(),&varMC);
    if(useWeights)treeMC->SetBranchAddress("weight",&w);
@@ -157,7 +160,7 @@ void plotEventVars(string Branch,string TitleX, int bins, double min, double max
 
     ///calculate weights
     if(reweight){
-	TFile* output=new TFile((Branch+"_weights.root").c_str(),"RECREATE");
+	TFile* output=new TFile((Branch+"_weights_norm.root").c_str(),"RECREATE");
 	TH1D *h_weight = (TH1D*)h->Clone();
 	h_weight->SetName((Branch+"_weight").c_str());
 	h_weight->Divide(h,h_MC);
@@ -179,18 +182,20 @@ void plot(string Branch,string TitleX, int bins, double min, double max, bool us
    TChain* tree=new TChain("DecayTree");
    //tree->Add("/auto/data/dargent/Bs2DsKpipi/final/data2012_Ds2KKpi_sweight.root");
    tree->Add("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_12_afterPreSel_sweight.root");
+   //tree->Add("/auto/data/kecke/B2DKPiPi/Data2012/data_Bs_12_final_sweight.root");
 
    tree->SetBranchStatus("*",0);
    tree->SetBranchStatus(Branch.c_str(),1);
    tree->SetBranchStatus("N_Bs_sw",1);
-   float var;
+   int var;
    double sw;
    tree->SetBranchAddress(Branch.c_str(),&var);
    tree->SetBranchAddress("N_Bs_sw",&sw);
 
    TString fileNameMC;
-   if(useWeights)fileNameMC="/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_reweighted_Reco14.root";
-   else fileNameMC= "/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_forBDT_Reco14.root";
+   if(useWeights)fileNameMC="/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_reweighted_DsK3fb_Selection.root";
+   //else fileNameMC= "/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_forBDT_Reco14.root";
+   else fileNameMC= "/auto/data/kecke/B2DPiPiPi/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_forBDT_Reco14.root";
 
    TChain* treeMC =new TChain("DecayTree");
    treeMC->Add(fileNameMC);
@@ -198,7 +203,7 @@ void plot(string Branch,string TitleX, int bins, double min, double max, bool us
    treeMC->SetBranchStatus(Branch.c_str(),1);
   // treeMC->SetBranchStatus("Bplus_BKGCAT",1);
    if(useWeights)treeMC->SetBranchStatus("weight",1);
-   float varMC;
+   int varMC;
    double w;
   // int cat;
    treeMC->SetBranchAddress(Branch.c_str(),&varMC);
@@ -286,7 +291,7 @@ void plot(string Branch,string TitleX, int bins, double min, double max, bool us
 
     ///calculate weights
     if(reweight){
-	TFile* output=new TFile((Branch+"_weights.root").c_str(),"RECREATE");
+	TFile* output=new TFile((Branch+"_weights_B2D3Pi12.root").c_str(),"RECREATE");
 	TH1D *h_weight = (TH1D*)h->Clone();
 	h_weight->SetName((Branch+"_weight").c_str());
 	h_weight->Divide(h,h_MC);
@@ -309,10 +314,10 @@ void reweight(){
 	//TFile* etaFile=new TFile("Bs_ETA_weights.root");	
 	//TH1D* h_eta=(TH1D*)etaFile->Get("Bs_ETA_weight");
 
-	TFile* ghostFile=new TFile("max_ghostProb_weights.root");	
+	TFile* ghostFile=new TFile("max_ghostProb_weights_B2D3Pi12.root");	
 	TH1D* h_ghost=(TH1D*)ghostFile->Get("max_ghostProb_weight");
 	
-	TFile* nTFile=new TFile("nTracks_weights.root");	
+	TFile* nTFile=new TFile("nTracks_weights_B2D3Pi12.root");	
 	TH1D* h_nT=(TH1D*)nTFile->Get("nTracks_weight");
 
 	//TFile* isMuFile=new TFile("");	
@@ -338,7 +343,8 @@ void reweight(){
 	c->Print("DataVsMC/isMuEff.eps");
         */
 	///Load MC file
-	TFile* fileMC= new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_forBDT_Reco14.root");
+	TFile* fileMC= new TFile("/auto/data/kecke/B2DPiPiPi/forMaster/MC2012/mc2012_Bs2Dspipipi_Ds2KKpi_forBDT_Reco14.root");
+	//TFile* fileMC= new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_forBDT_Reco14.root");
    	TTree* treeMC = (TTree*) fileMC->Get("DecayTree");
 	float ghostProb;
 	int nT;
@@ -360,7 +366,8 @@ void reweight(){
    	//treeMC->SetBranchAddress("piminus_ETA",&pim_eta);
 	///Create new tree
 	double w;
-    	TFile* output = new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_reweighted_Reco14.root","RECREATE");
+    	//TFile* output = new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_reweighted_DsK3fb_Selection.root","RECREATE");
+	TFile* output = new TFile("/auto/data/kecke/B2DPiPiPi/forMaster/MC2012/mc12_Bs2Dspipipi_Ds2KKpi_BDT_reweighted_Reco14.root","RECREATE");
     	TTree* new_tree = treeMC->CloneTree();//CopyTree();    
     	TBranch* Bra_w = new_tree->Branch("weight",&w,"weight/D");
 
@@ -827,14 +834,15 @@ int main(){
   // plotEventVars("K_minus_fromDs_PIDK","#Delta LLK of K^{+}",25,-4,4,true,false);
   // plotEventVars("K_minus_fromDs_PIDp","#Delta LLp of K^{+}",25,-4,4,true,false);
 
-   //plot("nTracks","# of tracks",40,0,450,true,false);
-   //plot("nPV","# of PV",10,0,10,true,false);
-  // plot("max_ghostProb","max(Track_ghostProb)",25,0.,0.375,true,false);
+  // plot("nTracks","# of tracks",40,0,450,false, true);
+  // plot("nPV","# of PV",10,0,10,false,true);
+  // plot("max_ghostProb","max(Track_ghostProb)",25,0.,0.375,false,true);
 
+  // plot("max_ghostProb","max(Track_ghostProb)",25,0.,0.375,true);
    // dataVsMC(); 
 
-   // reweight();    
-    dataVsReweightedMC(); 
+    reweight();
+   // dataVsReweightedMC(); 
 
     //compareBDTresponse();
     //applyBDTcut();

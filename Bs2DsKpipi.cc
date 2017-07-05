@@ -4,6 +4,7 @@
 
 #include <boost/lexical_cast.hpp>
 #include <cmath>
+#include <algorithm>
 #include <iostream>
 #include <TChain.h>
 #include <TTree.h>
@@ -13,6 +14,7 @@
 #include <TFile.h>
 #include <TCanvas.h>
 #include <TLorentzVector.h>
+#include <TLatex.h>
 #include <TROOT.h>
 #include <TStyle.h>
 #include <TFitResult.h>
@@ -1124,29 +1126,46 @@ output->Close();
 
 void addVars(){
 
-
-TFile* file= new TFile("/auto/data/kecke/B2DPiPiPi/Bs2Dspipipi_MC_fullSel_reweighted_combined.root");
+TFile* file= new TFile("/auto/data/kecke/B2DKPiPi/Bs2DsKpipi_MC_fullSel_reweighted_combined.root");
 TTree* tree = (TTree*) file->Get("DecayTree");
 
+/*
 Double_t Bs_TAU;
 Double_t Bs_TAUERR;
+*/
 Double_t Bs_TRUETAU;
 
+/*
 tree -> SetBranchAddress("Bs_TAU" , &Bs_TAU );
 tree -> SetBranchAddress("Bs_TAUERR" , &Bs_TAUERR );
+*/
+
 tree -> SetBranchAddress("Bs_TRUETAU" , &Bs_TRUETAU );
+/*
+Int_t Bs_TRUEID;
+Int_t K_plus_TRUEID;
+*/
+//tree -> SetBranchAddress( "Bs_TRUEID" , &Bs_TRUEID );
+//tree -> SetBranchAddress( "K_plus_TRUEID" , &K_plus_TRUEID );
 
 
-TFile* output=new TFile("/auto/data/kecke/B2DPiPiPi/Bs2Dspipipi_MC_fullSel_reweighted_combined_wTrueCT.root","RECREATE");
+TFile* output=new TFile("/auto/data/kecke/B2DKPiPi/Bs2DsKpipi_MC_fullSel_reweighted_combined_wTrueCT.root","RECREATE");
 TTree* new_tree = tree->CloneTree();
 
 
-double Bs_ct = 0;
+//double Bs_ct = 0;
 double Bs_cttrue = 0;
-double Bs_cterr = 0;
+//double Bs_cterr = 0;
+
+//int qt = 0;
+//int qf = 0;
+
 //TBranch* Bs_ct_Branch = new_tree->Branch("Bs_ct",&Bs_ct,"Bs_ct/D");
 TBranch* Bs_cttrue_Branch = new_tree->Branch("Bs_cttrue",&Bs_cttrue,"Bs_cttrue/D");
 //TBranch* Bs_cterr_Branch = new_tree->Branch("Bs_cterr",&Bs_cterr,"Bs_cterr/D");
+
+//TBranch* qt_Branch = new_tree->Branch("qt",&qt,"qt/I");
+//TBranch* qf_Branch = new_tree->Branch("qf",&qf,"qf/I");
 
 int numEvents = tree->GetEntries();
 for(int i=0; i< numEvents; i++)
@@ -1154,14 +1173,23 @@ for(int i=0; i< numEvents; i++)
         if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEvents << endl;
         tree->GetEntry(i);
 
-        Bs_ct = Bs_TAU*1000;
+        //Bs_ct = Bs_TAU*1000;
         Bs_cttrue = Bs_TRUETAU*1000;
-        Bs_cterr = Bs_TAUERR*1000;
+        //Bs_cterr = Bs_TAUERR*1000;
 	
 	//Bs_ct_Branch->Fill();
 	Bs_cttrue_Branch->Fill();
 	//Bs_cterr_Branch->Fill();
-	}
+/*
+	if(Bs_TRUEID > 0) qt = 1;
+	if(Bs_TRUEID < 0) qt = -1;
+	if(K_plus_TRUEID > 0) qf = 1;
+	if(K_plus_TRUEID < 0) qf = -1;
+
+	qt_Branch->Fill();
+	qf_Branch->Fill();
+*/
+}
 
 
 new_tree->Write();
@@ -1172,12 +1200,115 @@ file->Close();
 
 }
 
+void checkForDuplicates(){
+
+TFile* file= new TFile("/auto/data/kecke/B2DPiPiPi/12/b2dhhh_285.root");
+TTree* tree = (TTree*) file->Get("Bs2Dspipipi_Ds2KKpi_Tuple/DecayTree");
+
+//TFile* file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_BDT.root");
+//TTree* tree = (TTree*) file->Get("DecayTree");
+
+cout << "check 1" << endl;
+
+ULong64_t eventNumber;
+UInt_t runNumber;
+Double_t Bs_MM;
+Double_t Ds_MM;
+Double_t Bs_P;
+Double_t Ds_P;
+
+
+tree -> SetBranchAddress("eventNumber" , &eventNumber );
+tree -> SetBranchAddress("runNumber" , &runNumber );
+tree -> SetBranchAddress("Bs_MM" , &Bs_MM );
+tree -> SetBranchAddress("Ds_MM" , &Ds_MM );
+tree -> SetBranchAddress("Bs_P" , &Bs_P );
+tree -> SetBranchAddress("Ds_P" , &Ds_P );
+
+cout << "check 2" << endl;
+
+int numEvents = tree->GetEntries();
+
+long allNumbers[numEvents];
+int  allRuns[numEvents];
+
+cout << "check 3" << endl;
+
+long double Bs_mass[numEvents];
+
+cout << "check 3" << endl;
+
+long double Bs_momentum[numEvents];
+
+cout << "check 3" << endl;
+
+long double Ds_mass[numEvents];
+
+cout << "check 3" << endl;
+
+long double Ds_momentum[numEvents];
+
+
+
+for(int i=0; i< numEvents; i++)
+        {
+        if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEvents << endl;
+        tree->GetEntry(i);
+
+	allNumbers[i] = eventNumber;
+        allRuns[i] = runNumber;
+        Bs_mass[i] = Bs_MM;
+        Bs_momentum[i] = Bs_P;
+        Ds_mass[i] = Ds_MM;
+	Ds_momentum[i] = Ds_P;
+        }
+
+/*
+for(int i=0; i< 500; i++)
+        {
+	
+        cout << "event number in event " << i << "  is: " << allNumbers[i] << endl;
+        cout << "run number number in event  " << i << "  is: " << allRuns[i] << endl;
+
+	}
+*/
+	
+  // Check for duplicate numbers in user inputted data
+  // the kecke way
+
+int m; // Need to declare m here so that it can be accessed by the 'inner' loop 
+for(m = 0;m < numEvents; m++) { // Check each other number in the array
+    for(int n = m; n < numEvents; n++) { // Check the rest of the numbers
+      if(n != m) { // Makes sure don't check number against itself
+        if((allNumbers[m]==allNumbers[n])&&(allRuns[m] == allRuns[n])&&(Bs_mass[m] == Bs_mass[n])&&(Ds_mass[m]==Ds_mass[n])&&(Bs_momentum[m]==Bs_momentum[n])&&(Ds_momentum[m]==Ds_momentum[n])){
+	      	
+		cout << "following event number is present twice.  " << m +1 << ". Duplicate numbers are not cool." << endl;
+	}    
+      }
+                
+    } // Comparison loop
+     // Reset the boolean after each number entered has been checked
+} // Main check loop  
+
+
+    //the elegant way
+//int* end = allNumbers + numEvents;
+//std::sort(allNumbers, numEvents);
+//bool containsDuplicates = (std::unique(allNumbers, numEvents) != numEvents);
+ 
+
+file->Close();
+
+
+}
+
+
 void applyBDTcut(string cutoff){
    ///Load file
 
- // TFile* file= new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data12_Ds2KKpi_BDT_DsK3fb_Selection.root");
-  //TTree* tree = (TTree*) file->Get("DecayTree");	
-TFile* file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data11_Ds2KKpi_BDT_tmp.root");
+//  TFile* file= new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data12_Ds2KKpi_BDT.root");
+//  TTree* tree = (TTree*) file->Get("DecayTree");	
+TFile* file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data2012_Ds2KKpi_BDT.root");
 TTree* tree = (TTree*) file->Get("DecayTree");
 
 //string cutstring = "Ds_MM > 1950 && Ds_MM < 1990 && BDTG_response > ";
@@ -1198,29 +1329,29 @@ const char* cstringcutstring = cutstring.c_str();
    TTree* new_tree_BDTG = tree->CopyTree(cstringcutstring);
    new_tree_BDTG->Write();
    output_BDTG->Close();
-*/
 
+*/
     //BDTG application for 2012 Signal Channel (9500BG/450S), 0.8040 for maximum S/sqrt(S+B) , with S = 726 , B = 18751 
 /*
-   TFile* output_BDTG=new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_fullSelectionBDTG_DsK3fb_Selection.root","RECREATE");
+   TFile* output_BDTG=new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_fullSelectionBDTG.root","RECREATE");
    TTree* new_tree_BDTG = tree->CopyTree(cstringcutstring);
    new_tree_BDTG->Write();
    output_BDTG->Close();
 */
-/*
+
     //BDTG application for 2012 normalization Channel (9500BG/450S) , 0.1458 for maximum S/sqrt(S+B) with S = 13867 , B = 23588
-   TFile* output_BDTG=new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data12_Bs2Dspipipi_fullSelectionBDTG_DsK3fb_Selection.root","RECREATE");
+   TFile* output_BDTG=new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data12_Bs2Dspipipi_fullSelectionBDTG.root","RECREATE");
+   TTree* new_tree_BDTG = tree->CopyTree(cstringcutstring);
+   new_tree_BDTG->Write();
+   output_BDTG->Close();
+
+/*
+    //BDTG application for 2011 normalization Channel (32.500BG/6500S) ------> BDTG > 0.5571 with S=14511 and B=98053
+   TFile* output_BDTG=new TFile("/auto/data/kecke/B2DPiPiPi/forMaster/Data2011/data11_Bs2Dspipipi_fullSelectionBDTG.root","RECREATE");
    TTree* new_tree_BDTG = tree->CopyTree(cstringcutstring);
    new_tree_BDTG->Write();
    output_BDTG->Close();
 */
-
-    //BDTG application for 2011 normalization Channel (32.500BG/6500S) ------> BDTG > 0.5571 with S=14511 and B=98053
-   TFile* output_BDTG=new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data11_Bs2Dspipipi_fullSelectionBDTG.root","RECREATE");
-   TTree* new_tree_BDTG = tree->CopyTree(cstringcutstring);
-   new_tree_BDTG->Write();
-   output_BDTG->Close();
-
 
    //close file at the end
    file->Close();
@@ -1729,7 +1860,7 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool D
 
 	///fit options
 	bool BDTscan = false;
-	bool sWeight = true;
+	bool sWeight = false;
 
 	string filename11="/auto/data/kecke/B2DPiPiPi/Data2011/data11_Bs2Dspipipi_fullSelectionBDTG_DsK3fb_Selection.root";
 	string filename12="/auto/data/kecke/B2DPiPiPi/Data2012/data12_Bs2Dspipipi_fullSelectionBDTG_DsK3fb_Selection.root";
@@ -1740,7 +1871,7 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool D
 	TFile* file;
 	TTree* tree;
 	if(!fitSimultan){
-		if(sevenTeV && Ds2KKpi) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/Bs2Dspipipi_fullSelectionBDTG_tightDCUT_DZ.root");
+		if(sevenTeV && Ds2KKpi) file= new TFile("/auto/data/kecke/B2DPiPiPi/forMaster/Data2011/data11_Bs2Dspipipi_fullSelectionBDTG.root");
 		if(!sevenTeV && Ds2KKpi) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/Bs2Dspipipi_fullSelectionBDTG_tightDCUT_DZ.root");
 		if((!sevenTeV) && (!Ds2KKpi)) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data12_Bs2Dspipipi_Ds2pipipi_fullSelectionBDTG.root");
 		if(sevenTeV && (!Ds2KKpi)) file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data11_Bs2Dspipipi_Ds2pipipi_fullSelectionBDTG.root");
@@ -2067,7 +2198,7 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool D
 	///total pdf
 	///----------------------
 
-	RooAbsPdf* pdf=new RooAddPdf("pdf", "pdf", RooArgList(DoubleGaussBs, Dstarpipipi_as_Dspipipi ,bkg_exp), RooArgList(N_Bs, N_Dstarpipipi, N_comb));
+	RooAbsPdf* pdf=new RooAddPdf("pdf", "pdf", RooArgList(DoubleCBs, Dstarpipipi_as_Dspipipi ,bkg_exp), RooArgList(N_Bs, N_Dstarpipipi, N_comb));
 	RooAbsPdf* pdfScan=new RooAddPdf("pdfScan", "pdfScan", RooArgList(DoubleGaussBs, bkg), RooArgList(N_Bs, n_bkg));
 
 	///construct a simultaneous pdf using category sample as index
@@ -2117,8 +2248,8 @@ double *fitBDTNorm(double fitvalues[15], bool sevenTeV, bool fitSimultan, bool D
 	string BsMassResidual = "eps/Final/3pi_residual";
 	string BsMassPull = "eps/Final/3pi_pull";
 	string BsMassSweight = "eps/Final/3pi_Bs_sWeight";
-	string simfit11 = "_sim11.eps";
-	string simfit12 = "_sim12.eps";
+	string simfit11 = "_sim11.pdf";
+	string simfit12 = "_sim12.pdf";
 	string StringDs2pipipi = "_Ds2pipipi";
 	string StringDs2KKpi = "_Ds2KKpi";
 	string eps = ".eps";
@@ -2665,27 +2796,27 @@ if(sWeight/* && (!fitSimultan)*/){
 		exp_par_12.setConstant();
 
 	
-		SPlot* sData = new SPlot("sData","An SPlot",*data12,pdf12,RooArgList(N_Bs_12, N_Dstarpipipi_12, N_comb_12)); 
+		SPlot* sData = new SPlot("sData","An SPlot",*data,pdf,RooArgList(N_Bs, N_Dstarpipipi, N_comb)); 
 		gStyle->SetOptStat(0);
 	
 		///Plot the sWeight distributions as a function of mass
 		TCanvas* SwDs = new TCanvas("Bs sWeight","Bs sWeight distribution");
-		TH2 * SwDsHist = (TH2*)data12->createHistogram("DTF_Bs_M,N_Bs_12_sw");
+		TH2 * SwDsHist = (TH2*)data->createHistogram("DTF_Bs_M,N_Bs_sw");
 		SwDsHist->GetYaxis()->SetTitle("Signal sWeights");
 		SwDsHist->SetTitle("");
 		//SwDs->Write();
 		SwDsHist->Draw();
-		SwDs->Print(BsMassSweight12.c_str());
+		SwDs->Print(BsMassSweight11.c_str());
 
     		///Create output file
    		 TFile* output;
-		// if(sevenTeV && Ds2KKpi) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data_Bs2Dspipipi_11_final_sweight.root","RECREATE");
-		/* if(!sevenTeV && Ds2KKpi)*/ output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_12_final_sweight.root","RECREATE");
+		 if(sevenTeV && Ds2KKpi) output = new TFile("/auto/data/kecke/B2DPiPiPi/forMaster/Data2011/data_Bs2Dspipipi_11_final_sweight.root","RECREATE");
+		// if(!sevenTeV && Ds2KKpi) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_12_final_sweight.root","RECREATE");
 		// if(sevenTeV && (!Ds2KKpi)) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2011/data_Bs2Dspipipi_Ds2pipipi_11_final_sweight.root","RECREATE");
 		// if(!sevenTeV && (!Ds2KKpi)) output = new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/data_Bs2Dspipipi_Ds2pipipi_12_final_sweight.root","RECREATE");
 
-		 tree12->SetBranchStatus("*",1);
-   		 TTree* new_tree = tree12->CopyTree("DTF_Bs_M > 4975 && DTF_Bs_M < 5800");
+		 tree->SetBranchStatus("*",1);
+   		 TTree* new_tree = tree->CopyTree("DTF_Bs_M > 4975 && DTF_Bs_M < 5800");
     		 double w;
     		 TBranch* Bra_sw = new_tree->Branch("N_Bs_sw", &w, "N_Bs_sw/D");
 
@@ -2694,8 +2825,8 @@ if(sWeight/* && (!fitSimultan)*/){
 
     		  for(int i=0; i< numEvents; i++){	
 			if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEvents << endl;
-			tree12->GetEntry(i);
-			w=sData->GetSWeight(i,"N_Bs_12_sw");
+			tree->GetEntry(i);
+			w=sData->GetSWeight(i,"N_Bs_sw");
 			Bra_sw->Fill();
   		  }
 	cout << "loop finished!!!" << endl;
@@ -2908,12 +3039,12 @@ output->Close();
 
 void fitBDT(){
 
-	bool sWeight=true;
+	bool sWeight=false;
 	bool sevenTeV=false; // 2011 = true, 2012 = false
 	bool doToys=false;
 	bool fitSimultan=true;
 	bool altModel=false;
-	bool Ds2KKpi = true;
+	bool Ds2KKpi = false;
         bool combineYears = false;
 
    	gStyle->SetOptStat(0);
@@ -3297,9 +3428,9 @@ cout << "put together pdfs 1.5" << endl;
         if(fitSimultan){
         simPdf = new RooSimultaneous("simPdf","simultaneous pdf",sample_year);	
 
-	pdf11 = new RooAddPdf("pdf11", "pdf11", RooArgList(DoubleGaussB0, /*DoubleGaussBs*/DoubleCBBs, DstarKpipi_as_DsKpipi, Dspipipi_as_DsKpipi, Dstarpipipi_as_DsKpipi ,bkg_exp_11, DstarKpipi_as_DsKpipi_Shifted), RooArgList(N_B0_11, N_Bs_11, N_DstarKpipi_11, *N_Dspipipi_11, *N_Dstarpipipi_11, N_comb_11, N_DstarKpipiShifted_11));
+	pdf11 = new RooAddPdf("pdf11", "pdf11", RooArgList(DoubleGaussB0, DoubleGaussBs/*DoubleCBBs*/, DstarKpipi_as_DsKpipi, Dspipipi_as_DsKpipi, Dstarpipipi_as_DsKpipi ,bkg_exp_11, DstarKpipi_as_DsKpipi_Shifted), RooArgList(N_B0_11, N_Bs_11, N_DstarKpipi_11, *N_Dspipipi_11, *N_Dstarpipipi_11, N_comb_11, N_DstarKpipiShifted_11));
 
-	pdf12 = new RooAddPdf("pdf12", "pdf12", RooArgList(DoubleGaussB0, /*DoubleGaussBs*/DoubleCBBs, DstarKpipi_as_DsKpipi, Dspipipi_as_DsKpipi, Dstarpipipi_as_DsKpipi ,bkg_exp_12, DstarKpipi_as_DsKpipi_Shifted), RooArgList(N_B0_12, N_Bs_12, N_DstarKpipi_12, *N_Dspipipi_12, *N_Dstarpipipi_12, N_comb_12, N_DstarKpipiShifted_12));
+	pdf12 = new RooAddPdf("pdf12", "pdf12", RooArgList(DoubleGaussB0, DoubleGaussBs/*DoubleCBBs*/, DstarKpipi_as_DsKpipi, Dspipipi_as_DsKpipi, Dstarpipipi_as_DsKpipi ,bkg_exp_12, DstarKpipi_as_DsKpipi_Shifted), RooArgList(N_B0_12, N_Bs_12, N_DstarKpipi_12, *N_Dspipipi_12, *N_Dstarpipipi_12, N_comb_12, N_DstarKpipiShifted_12));
 
 	simPdf->addPdf(*pdf11,"y11");
 	simPdf->addPdf(*pdf12,"y12");
@@ -3340,8 +3471,8 @@ cout << "put together pdfs 1.5" << endl;
 	string BsMassResidual = "eps/Final/residual";
 	string BsMassPull = "eps/Final/pull";
 	string BsMassSweight = "eps/Final/Bs_sWeight";
-        string simfit11 = "_sim11.eps";
-        string simfit12 = "_sim12.eps";
+        string simfit11 = "_sim11.pdf";
+        string simfit12 = "_sim12.pdf";
         string StringDs2pipipi = "_Ds2pipipi";
         string StringDs2KKpi = "_Ds2KKpi";
         string eps = ".eps";
@@ -3446,6 +3577,13 @@ cout << "put together pdfs 1.5" << endl;
         frame_m_11->SetTitle("");
         frame_m_12->SetTitle("");
 
+	TLatex* lhcbtext = new TLatex();
+	lhcbtext->SetTextFont(132);
+	lhcbtext->SetTextColor(1);
+	lhcbtext->SetTextSize(0.05);
+	lhcbtext->SetTextAlign(12);
+
+
 	if(!fitSimultan){
 		data->plotOn(frame_m,Name("data"),MarkerSize(0.5),Binning(50));
 		pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlack),LineWidth(2));
@@ -3464,7 +3602,7 @@ cout << "put together pdfs 1.5" << endl;
         if(fitSimultan){
                 combData->plotOn(frame_m_11,Name("data11"),Cut("sample_year==sample_year::y11"),MarkerSize(0.5),Binning(90));
                 simPdf->plotOn(frame_m_11,Name("pdf11"),Slice(sample_year,"y11"),ProjWData(sample_year,*combData),LineColor(kBlack),LineWidth(2));
-                simPdf->plotOn(frame_m_11,Slice(sample_year,"y11"),Components(/*DoubleGaussBs*/DoubleCBBs),ProjWData(sample_year,*combData),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
+                simPdf->plotOn(frame_m_11,Slice(sample_year,"y11"),Components(DoubleGaussBs/*DoubleCBBs*/),ProjWData(sample_year,*combData),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
                 simPdf->plotOn(frame_m_11,Slice(sample_year,"y11"),Components(DoubleGaussB0),ProjWData(sample_year,*combData),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
                 simPdf->plotOn(frame_m_11,Slice(sample_year,"y11"),Components(RooArgSet(DstarKpipi_as_DsKpipi)),ProjWData(sample_year,*combData),LineColor(kMagenta),LineStyle(kDashed),LineWidth(1));
                 simPdf->plotOn(frame_m_11,Slice(sample_year,"y11"),Components(RooArgSet(DstarKpipi_as_DsKpipi_Shifted)),ProjWData(sample_year,*combData),LineColor(kMagenta),LineStyle(kDashed),LineWidth(1));
@@ -3476,7 +3614,7 @@ cout << "put together pdfs 1.5" << endl;
 
                 combData->plotOn(frame_m_12,Name("data12"),Cut("sample_year==sample_year::y12"),MarkerSize(0.5),Binning(90));
                 simPdf->plotOn(frame_m_12,Name("pdf12"),Slice(sample_year,"y12"),ProjWData(sample_year,*combData),LineColor(kBlack),LineWidth(2));
-                simPdf->plotOn(frame_m_12,Slice(sample_year,"y12"),Components(/*DoubleGaussBs*/DoubleCBBs),ProjWData(sample_year,*combData),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
+                simPdf->plotOn(frame_m_12,Slice(sample_year,"y12"),Components(DoubleGaussBs/*DoubleCBBs*/),ProjWData(sample_year,*combData),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
                 simPdf->plotOn(frame_m_12,Slice(sample_year,"y12"),Components(DoubleGaussB0),ProjWData(sample_year,*combData),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
                 simPdf->plotOn(frame_m_12,Slice(sample_year,"y12"),Components(RooArgSet(DstarKpipi_as_DsKpipi)),ProjWData(sample_year,*combData),LineColor(kMagenta),LineStyle(kDashed),LineWidth(1));
                 simPdf->plotOn(frame_m_12,Slice(sample_year,"y12"),Components(RooArgSet(DstarKpipi_as_DsKpipi_Shifted)),ProjWData(sample_year,*combData),LineColor(kMagenta),LineStyle(kDashed),LineWidth(1));
@@ -3484,6 +3622,9 @@ cout << "put together pdfs 1.5" << endl;
                 simPdf->plotOn(frame_m_12,Slice(sample_year,"y12"),Components(Dstarpipipi_as_DsKpipi),ProjWData(sample_year,*combData),LineColor(kOrange),LineStyle(kDashed),LineWidth(1));
                 simPdf->plotOn(frame_m_12,Slice(sample_year,"y12"),Components(bkg_exp_12),ProjWData(sample_year,*combData),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
                 frame_m_12->Draw();
+		//lhcbtext->DrawLatex(5480.,570.,"LHCb data");
+		//lhcbtext->DrawLatex(5480.,500.,"L_{int} = 2 fb^{-1}");
+		//lhcbtext->DrawLatex(5480.,430.,"(my analysis)");
                 c1->Print(BsMassDistribution12.c_str());
         }
 
@@ -3934,7 +4075,7 @@ void makePlots(){
   // fileMC= new TFile("/auto/data/kecke/B2DKPiPi/MC2012/mc12_Ds2KKpi_BDT_reweighted_Reco14.root");
    //file= new TFile("/auto/data/kecke/B2DPiPiPi/MC2011/mc11_Bs2Dspipipi_Ds2KKpi_BDT_XdReweighted_Reco14.root");
     //file= new TFile("/auto/data/kecke/B2DKPiPi/Data2012/data2012_Ds2KKpi_forBDT_tmp.root");
-    file= new TFile("/auto/data/kecke/B2DPiPiPi/Data2012/Bs2Dspipipi_fullSelectionBDTG_tightDCUT_DZ.root");
+    file= new TFile("/auto/data/kecke/B2DKPiPi/Bs2DsKpipi_MC_fullSel_reweighted_combined.root");
    //fileMC= new TFile("/auto/data/kecke/B2DKPiPi/MC2011/mc11_Ds2KKpi_BDT_withTriggerWeights_Reco14.root");
     TTree* tree = (TTree*) file->Get("DecayTree");
   //  TTree* treeMC = (TTree*) fileMC->Get("DecayTree");
@@ -3970,6 +4111,8 @@ void makePlots(){
    /// Lambda_c -> K + P + pi miss ID? 
    TH1D* mass_Lambda_c_peakBG = new TH1D("mass of #Lambda_{c} candidates",";m(K P #pi) [MeV];Entries",50, 1800., 3000.);
    TH1D* mass_Lambda_b_to_Lambda_c_peakBG = new TH1D("mass of #Lambda_{b} candidates",";m(#Lambda_{c} #pi #pi #pi) [MeV];Entries",50, 5200., 6000.);
+
+   TH1D* cterr = new TH1D("distribution of #sigma(t) (MC)",";#sigma(t) [fs];Entries",30, 0., 150.);
 
     double mB;
     int nTracks;
@@ -4007,6 +4150,8 @@ void makePlots(){
    Double_t pi_minus_fromDs_PY;
    Double_t pi_minus_fromDs_PZ;
 
+   Double_t Bs_cterr;
+
   //look for D_s1
   Double_t DTF_Bs_M;
 
@@ -4019,6 +4164,8 @@ TLorentzVector pi_minus_fromDs;
 TLorentzVector Kminus_asProton_MissID;
 TLorentzVector Ds;
 TLorentzVector Lambda_c;
+
+    tree->SetBranchAddress("Bs_cterr",&Bs_cterr);
 
     tree->SetBranchAddress("pi_plus1_PX",&pi_plus1_PX);
     tree->SetBranchAddress("pi_plus1_PY",&pi_plus1_PY);
@@ -4051,6 +4198,8 @@ TLorentzVector Lambda_c;
     for(int i=0; i< numEvents; i++){	
 		if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << numEvents << endl;
 		tree->GetEntry(i);
+
+		cterr->Fill(Bs_cterr*1000);
 
 		pi_plus1.SetXYZM(pi_plus1_PX,pi_plus1_PY,pi_plus1_PZ,massPion);
         	pi_minus.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ,massPion);
@@ -4092,24 +4241,25 @@ TLorentzVector Lambda_c;
     }
    TCanvas* c= new TCanvas();
    // pairs
-   massDs_Pi1->Draw("e1"); c->Print("eps/CombBG_DsPi1.eps");
-   massDs_Pi2->Draw("e1"); c->Print("eps/CombBG_DsPi2.eps");
-   massPiPi1->Draw("e1"); c->Print("eps/CombBG_PiPi1.eps");
-   massPiPi2->Draw("e1"); c->Print("eps/CombBG_PiPi2.eps");
+   cterr->Draw("e1"); c->Print("eps/Bs_cterr_MC.pdf");
+//   massDs_Pi1->Draw("e1"); c->Print("eps/CombBG_DsPi1.eps");
+//   massDs_Pi2->Draw("e1"); c->Print("eps/CombBG_DsPi2.eps");
+//   massPiPi1->Draw("e1"); c->Print("eps/CombBG_PiPi1.eps");
+//   massPiPi2->Draw("e1"); c->Print("eps/CombBG_PiPi2.eps");
 
    // triplets
-   massDs_PiPi1->Draw("e1"); c->Print("eps/CombBG_DsPiPi1.eps");
-   massDs_PiPi2->Draw("e1"); c->Print("eps/CombBG_DsPiPi2.eps");
-   massDs_PiPi3->Draw("e1"); c->Print("eps/CombBG_DsPiPi3.eps");
-   mass_PiPiPi->Draw("e1");  c->Print("eps/CombBG_PiPiPi.eps");
+//   massDs_PiPi1->Draw("e1"); c->Print("eps/CombBG_DsPiPi1.eps");
+//   massDs_PiPi2->Draw("e1"); c->Print("eps/CombBG_DsPiPi2.eps");
+//   massDs_PiPi3->Draw("e1"); c->Print("eps/CombBG_DsPiPi3.eps");
+//   mass_PiPiPi->Draw("e1");  c->Print("eps/CombBG_PiPiPi.eps");
 
    //D_s1 studies
-   mass_D_s1_peakBG1->Draw("E1"); c->Print("eps/CombBG_Ds1_1.eps");
-   mass_D_s1_peakBG2->Draw("E1"); c->Print("eps/CombBG_Ds1_2.eps");
+//   mass_D_s1_peakBG1->Draw("E1"); c->Print("eps/CombBG_Ds1_1.eps");
+//   mass_D_s1_peakBG2->Draw("E1"); c->Print("eps/CombBG_Ds1_2.eps");
 
-   mass_D_s1_signal->Draw("E1"); c->Print("eps/Final/DeltaMass_Ds1.eps");
-   mass_Lambda_c_peakBG->Draw("E1"); c->Print("eps/CombBG_Lambda_c.eps");
-   mass_Lambda_b_to_Lambda_c_peakBG->Draw("E1"); c->Print("eps/CombBG_Lambda_b.eps");
+//   mass_D_s1_signal->Draw("E1"); c->Print("eps/Final/DeltaMass_Ds1.eps");
+//   mass_Lambda_c_peakBG->Draw("E1"); c->Print("eps/CombBG_Lambda_c.eps");
+//   mass_Lambda_b_to_Lambda_c_peakBG->Draw("E1"); c->Print("eps/CombBG_Lambda_b.eps");
 
 
 /*
@@ -7147,6 +7297,12 @@ DoubleGaussBs.plotOn(frame_m,Name("FullPdf"),LineColor(kBlack),LineWidth(2));
 DoubleGaussBs.plotOn(frame_m,Components(GaussBs1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
 DoubleGaussBs.plotOn(frame_m,Components(GaussBs2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 
+TLatex* lhcbtext = new TLatex();
+lhcbtext->SetTextFont(132);
+lhcbtext->SetTextColor(1);
+lhcbtext->SetTextSize(0.07);
+lhcbtext->SetTextAlign(12);
+
 
 TCanvas* canvas = new TCanvas("canvas", "canvas", 1200, 800);
 canvas->cd();
@@ -7166,6 +7322,9 @@ pad1->cd();
 frame_m->GetYaxis()->SetRangeUser(0.1,frame_m->GetMaximum()*1.0);
 frame_m->Draw();
 
+lhcbtext->DrawTextNDC(0.70,0.85,"LHCb simulation");
+lhcbtext->DrawTextNDC(0.70,0.75,"preliminary");
+lhcbtext->DrawTextNDC(0.70,0.65,"Bin(19 - 24) fs");
 
 canvas->cd();
 TPad* pad2 = new TPad("lowerPad", "lowerPad", .050, .005, 1.0, .3275);
@@ -7200,7 +7359,7 @@ frame_p->GetYaxis()->SetNdivisions(5);
 frame_p->GetXaxis()->SetLabelSize(0.12);
 frame_p->GetXaxis()->SetLabelFont( 132 );
 frame_p->GetYaxis()->SetLabelFont( 132 );
-frame_p->GetXaxis()->SetTitle("#font[132]{#Delta#tau(B_{s}) [ps]}");
+frame_p->GetXaxis()->SetTitle("#font[132]{#Delta t(B_{s}) [ps]}");
 
 TString* obsTS = new TString(Bs_DeltaTau.GetName());
 TString* pullnameTS = new TString("FullPdf");
@@ -7254,7 +7413,6 @@ pullHist->SetTitle("");
 
 frame_p->GetYaxis()->SetRangeUser(-5.0,5.0);
 frame_p->Draw();
-
 
 graph->Draw("same");
 //graph2->Draw("same");
@@ -7323,13 +7481,15 @@ double reso_t_BinWidth[8] = {8.81782 , 8.48237 , 5.27469 , 10.4688 , 11.7751 , 1
 
 //define polynom
 
-TF1 *fitFunc = new TF1("fitFunc", "[0]+[1]*x ", 20., 45.);
+//TF1 *fitFunc = new TF1("fitFunc", "[0]+[1]*x ", 0., 45.);
+TF1 *fitFunc = new TF1("fitFunc", "[0]+[1]*x ", 0., 150.);
 fitFunc->SetParNames("c0","s");
 fitFunc->SetParameters(10.,1.2);
 fitFunc->SetParLimits(0,0.,30.);
 fitFunc->SetParLimits(1,0.,10.);
 
 fitFunc->FixParameter(0,0.);
+//fitFunc->FixParameter(1,1.280);
 
 //fill histo
 TH1D* ResoRelation = new TH1D("ResoRelation" ,"ResoRelation", 8, sigma_t_BinCenter);
@@ -7353,7 +7513,7 @@ ResoRelation->Fit(fitFunc,"RL");
 
 ResoRelation->Draw("e1");
 fitFunc->Draw("same");
-canvas->Print("testmyplot.eps");
+canvas->Print("eps/TimeRes/ResoRelation_MC.pdf");
 
 }
 
@@ -7365,23 +7525,23 @@ int main(){
 //	getDecayTimeError();
 	//taggingCategories();
 	//getBR();
-//	FitTimeRes("Bs2DsKpipi_MCcombined_49to150.root", "SignalMC_49to150.eps");
+//	FitTimeRes("Bs2DsKpipi_MCcombined_19to24.root", "SignalMC_19to24.pdf");
 	//getExpBkgShape();
 
 
 	//applyBDTcut("0.7012");
-
+/*
 	bool sevenTeV=true;
 	bool fitSimultan=true;
-	bool Ds2KKpi = true;
+	bool Ds2KKpi = false;
 	bool combineYears = false;
 	double fillarr4[13];
 	double *DsstarKpipifromNorm;
 	DsstarKpipifromNorm = fitBDTNorm(fillarr4,sevenTeV,fitSimultan,Ds2KKpi,combineYears);
-
+*/
 
    //getDecayTimeAcceptance("Bs_TAU","#tau_{Bs}",10,0.,10.);
-  //addVars();
+ // addVars();
 //makeSweightedPlots();
  //quickFit(true,true);
    //createRooDataSet("mc2012_Bs2Dspipipi_Ds2KKpi_forBDT_Reco14",false);
@@ -7394,15 +7554,17 @@ int main(){
     //preselect();
 
    //nominal value for Ds->KKpi final state
-  //applyBDTcut("0.7012");
+   // applyBDTcut("0.7012");
+
+    checkForDuplicates();
 
    ///nominal value for Ds->KKpi final state, DsK ,3 fb^-1 selection
   //applyBDTcut("0.6891");
 
-   //nominal value for Ds->KKpi final state
+   //troll value for Ds->KKpi final state
  // applyBDTcut("0.9082");
 
-    //makePlots();
+//   makePlots();
   //  //chooseBestPV("BFit","/auto/data/dargent/Bu2psiKpipi/data/data_preselected.root");
     //chooseBestPV("psiFit","/auto/data/dargent/Bu2psiKpipi/data/data_preselected_bestPV_BFit.root");
     //chooseBestPV("psiDTF","/auto/data/dargent/Bu2psiKpipi/data/data_preselected_bestPV_psiFit.root");
@@ -7436,7 +7598,7 @@ frame->Draw();
 c1->Print("eps/BkgShape/RooKeyKernelstimator.eps");
 */
   //addCut();
-   //fitBDT();
+  // fitBDT();
  //  getBR();
   //  MCStudies();
    //splitMC();
