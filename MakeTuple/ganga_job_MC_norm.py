@@ -1,7 +1,7 @@
 j=Job(name='N11DMC',application=DaVinci(version="v36r1"), backend=Dirac() )
 j.application.optsfile = [ 'b2d3pi_11_MC_Down.py' ]
 j.application.platform = "x86_64-slc6-gcc48-opt"
-datatmp=BKQuery('/MC/2011/Beam3500GeV-2011-MagDown-Nu2-Pythia8/Sim08i/Digi13/Trig0x40760037/Reco14c/Stripping21r1NoPrescalingFlagged/13266006/ALLSTREAMS.DST', #dqflag=['OK']).getDataset()
+datatmp=BKQuery('/MC/2011/Beam3500GeV-2011-MagDown-Nu2-Pythia8/Sim08i/Digi13/Trig0x40760037/Reco14c/Stripping21r1NoPrescalingFlagged/13266006/ALLSTREAMS.DST', dqflag=['OK']).getDataset()
 j.inputdata = datatmp
 j.do_auto_resubmit = True
 j.splitter = SplitByFiles( filesPerJob = 1 )
@@ -21,7 +21,7 @@ j2.outputfiles = [DiracFile('*.root'), LocalFile('stdout')]
 j2.submit() 
 
 j3=Job(name='N12DMC',application=DaVinci(version="v36r1"), backend=Dirac() )
-j3.application.optsfile = [ 'b2d3pi_12_MC_Down.py' ) ]
+j3.application.optsfile = [ 'b2d3pi_12_MC_Down.py' ]
 j3.application.platform = "x86_64-slc6-gcc48-opt"
 datatmp3=BKQuery('/MC/2012/Beam4000GeV-2012-MagDown-Nu2.5-Pythia8/Sim08i/Digi13/Trig0x409f0045/Reco14c/Stripping21NoPrescalingFlagged/13266006/ALLSTREAMS.DST', dqflag=['OK']).getDataset()
 j3.inputdata = datatmp3
