@@ -5,6 +5,7 @@
 #include <TCanvas.h>
 #include <iostream>
 #include <ctime>
+#include <math.h>
 
 using namespace std; 
 
@@ -37,7 +38,7 @@ void MiniDecayTree::Loop()
    TFile* output = new TFile(_outFileName,"RECREATE");
    TTree* summary_tree = fChain->CloneTree(0);
     
-   Long64_t nentries = fChain->GetEntriesFast();
+   Long64_t nentries = fChain->GetEntries();
    cout << "Have " << nentries << " events" <<  endl;
 
    Long64_t nbytes = 0, nb = 0;

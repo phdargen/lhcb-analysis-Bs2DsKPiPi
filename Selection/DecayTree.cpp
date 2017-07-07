@@ -5,6 +5,7 @@
 #include <TCanvas.h>
 #include <iostream>
 #include <ctime>
+#include <math.h>
 
 using namespace std; 
 
@@ -20,6 +21,10 @@ TTree* DecayTree::GetInputTree(){
     TChain* chain = new TChain(tupleName);
     
     TString fileName = "/auto/data/dargent/BsDsKpipi/Stripped/";
+
+    if(_decay==Decay::signal)fileName+="Signal/";
+    else fileName += "Norm/";
+
     if(_data==DataType::data) {
         fileName+= "data/";
         fileName+= _year; 
@@ -27,12 +32,15 @@ TTree* DecayTree::GetInputTree(){
     else {
         fileName+= "mc/";
         fileName+= _year; 
-        fileName+= "U";
+        fileName+= "U/";
     }
-    fileName+= "/b2dhhh_*.root"; 
+    fileName+= "b2dhhh_*.root"; 
+
+    cout << fileName << endl;
+    //chain->Add("/auto/data/dargent/BsDsKpipi/Stripped/Norm/mc/11U/b2dhhh_11.root");
+    //chain->Add("/auto/data/dargent/BsDsKpipi/Stripped/Norm/mc/11U/b2dhhh_10.root");
     chain->Add(fileName);
     if(_data!=DataType::data) chain->Add(fileName.ReplaceAll(TString("U/b2hhh"),TString("D/b2hhh")));
-    
     if(chain==0){
         cout << "ERROR: No file found" << endl;
         throw "ERROR";
@@ -106,12 +114,11 @@ Bool_t DecayTree::LooseCuts(){
     //if (Bs_PV_M[0] < 4800. || Bs_PV_M[0] > 6000.) return false;
     
     if((Ds_ENDVERTEX_Z - Bs_ENDVERTEX_Z) < -1) return false;
-    if(abs(Ds_MM-massDs) > 60 ) return false;
+    if(fabs(Ds_MM-massDs) > 60 ) return false;
     //if(Ds_FDCHI2_ORIVX < 0) return false;
 
-    if(_data)if(K_plus_PIDK<5) return false;
+    //if(_data)if(K_plus_PIDK<5) return false;
     
-    //if(abs(Bs_TRUEID) != 531) return false;
     /*
     if(K_plus_PT < 250) return false;
     if(pi_plus_PT < 250) return false;
@@ -207,17 +214,20 @@ void DecayTree::Loop()
    TFile* output = new TFile(_outFileName,"RECREATE");
    TTree* summary_tree = fChain->CloneTree(0);
     
-   Long64_t nentries = fChain->GetEntriesFast();
+   Long64_t nentries = fChain->GetEntries();
    cout << "Have " << nentries << " events" <<  endl << endl;
 
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
+
+      if(0ul == (jentry % 10000ul)) cout << "Read event " << jentry << "/" << nentries << endl;
       fChain->GetEntry(jentry);   
 
-      if(!TriggerCuts()) continue;
-      if(!LooseCuts()) continue;
+      //if(!TriggerCuts()) continue;
+      //if(!LooseCuts()) continue;
 
       summary_tree->Fill();
+      if(0ul == (jentry % 100000ul))summary_tree->AutoSave();
    }
 
     cout << "Selected " << summary_tree->GetEntries() << " events" <<  endl;
