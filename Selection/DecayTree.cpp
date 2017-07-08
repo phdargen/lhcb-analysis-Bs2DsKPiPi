@@ -81,18 +81,33 @@ fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataTyp
     _outFileName += ".root";    
 }
 
-Bool_t DecayTree::TriggerCuts(){
+Bool_t DecayTree::TriggerCuts(Long64_t i){
 
+    b_Bs_L0Global_TIS->GetEntry(i);
+    b_Bs_L0HadronDecision_TOS->GetEntry(i);
     if( (!Bs_L0Global_TIS) && (!Bs_L0HadronDecision_TOS)) return false;
     
     if(_year == 15 || _year == 16){
+        b_Bs_Hlt1TrackMVADecision_TOS->GetEntry(i);
+        b_Bs_Hlt1TwoTrackMVADecision_TOS->GetEntry(i);
         if((!Bs_Hlt1TrackMVADecision_TOS) && (!Bs_Hlt1TwoTrackMVADecision_TOS) ) return false;
+        
+        b_Bs_Hlt2Topo2BodyDecision_TOS->GetEntry(i);
+        b_Bs_Hlt2Topo3BodyDecision_TOS->GetEntry(i);
+        b_Bs_Hlt2Topo4BodyDecision_TOS->GetEntry(i);
+        b_Bs_Hlt2PhiIncPhiDecision_TOS->GetEntry(i);
         if((!Bs_Hlt2Topo2BodyDecision_TOS) &&  (!Bs_Hlt2Topo3BodyDecision_TOS) && (!Bs_Hlt2Topo4BodyDecision_TOS)  
         && (!Bs_Hlt2PhiIncPhiDecision_TOS) ) return false;
     }
     
     else if(_year == 11 || _year == 12){
+        b_Bs_Hlt1TrackAllL0Decision_TOS->GetEntry(i);        
         if(!Bs_Hlt1TrackAllL0Decision_TOS) return false;
+        
+        b_Bs_Hlt2Topo2BodyBBDTDecision_TOS->GetEntry(i);
+        b_Bs_Hlt2Topo3BodyBBDTDecision_TOS->GetEntry(i);
+        b_Bs_Hlt2Topo4BodyBBDTDecision_TOS->GetEntry(i);
+        b_Bs_Hlt2IncPhiDecision_TOS->GetEntry(i);
         if((!Bs_Hlt2Topo2BodyBBDTDecision_TOS) &&  (!Bs_Hlt2Topo3BodyBBDTDecision_TOS) && (!Bs_Hlt2Topo4BodyBBDTDecision_TOS) 
         && (!Bs_Hlt2IncPhiDecision_TOS)) return false;
     }
@@ -100,34 +115,49 @@ Bool_t DecayTree::TriggerCuts(){
     return true;
 }
 
-Bool_t DecayTree::LooseCuts(){
+Bool_t DecayTree::LooseCuts(Long64_t i){
 
+    b_Bs_DIRA_OWNPV->GetEntry(i);
     if(Bs_DIRA_OWNPV<0.99994) return false;
+    
+    b_Bs_IPCHI2_OWNPV->GetEntry(i);
     if(Bs_IPCHI2_OWNPV>20) return false;
+    
+    b_Bs_FDCHI2_OWNPV->GetEntry(i);
     if(Bs_FDCHI2_OWNPV<100) return false;
+    
+    b_Bs_ENDVERTEX_CHI2->GetEntry(i);
+    b_Bs_ENDVERTEX_NDOF->GetEntry(i);
     if((Bs_ENDVERTEX_CHI2/Bs_ENDVERTEX_NDOF)> 8) return false;
+    
+    b_Bs_TAU->GetEntry(i);
     if(Bs_TAU < 0.0002) return false;
 
+    b_Bs_MM->GetEntry(i);
     if(Bs_MM < 4800. || Bs_MM > 6000.) return false;
+    
+    b_Bs_DTF_M->GetEntry(i);
     if(Bs_DTF_M[0] < 4800. || Bs_DTF_M[0] > 6000.) return false;
+    
+    b_Bs_BsDTF_M->GetEntry(i);
     if(Bs_BsDTF_M[0] < 4800. || Bs_BsDTF_M[0] > 6000.) return false;
+    
+    //b_Bs_PV_M->GetEntry(i);
     //if (Bs_PV_M[0] < 4800. || Bs_PV_M[0] > 6000.) return false;
     
+    b_Ds_ENDVERTEX_Z->GetEntry(i);
+    b_Bs_ENDVERTEX_Z->GetEntry(i);
     if((Ds_ENDVERTEX_Z - Bs_ENDVERTEX_Z) < -1) return false;
+    
+    b_Ds_MM->GetEntry(i);
     if(fabs(Ds_MM-massDs) > 60 ) return false;
+    
+    //b_Ds_FDCHI2_ORIVX->GetEntry(i);
     //if(Ds_FDCHI2_ORIVX < 0) return false;
 
+    //b_K_plus_PIDK->GetEntry(i);
     //if(_data)if(K_plus_PIDK<5) return false;
     
-    /*
-    if(K_plus_PT < 250) return false;
-    if(pi_plus_PT < 250) return false;
-    if(pi_minus_PT < 250) return false;
-    if(K_plus_fromDs_PT < 250) return false;
-    if(K_minus_fromDs_PT < 250) return false;
-    if(pi_minus_fromDs_PT < 250) return false;
-*/
-
     return true;
 }
 
@@ -217,17 +247,24 @@ void DecayTree::Loop()
    Long64_t nentries = fChain->GetEntries();
    cout << "Have " << nentries << " events" <<  endl << endl;
 
-   Long64_t nbytes = 0, nb = 0;
-   for (Long64_t jentry=0; jentry<nentries;jentry++) {
+   for (Long64_t i=0; i<nentries;i++) {
 
-      if(0ul == (jentry % 10000ul)) cout << "Read event " << jentry << "/" << nentries << endl;
-      fChain->GetEntry(jentry);   
+      if(0ul == (i % 10000ul)) cout << "Read event " << i << "/" << nentries <<
+      "  ( " << i/(double)nentries << " % )" << endl;
+      
+      // Read from individual branches rather than whole tree,
+      // messy and prone to errors but benefical to performance
+      // fChain->GetEntry(i);   
 
-      //if(!TriggerCuts()) continue;
-      //if(!LooseCuts()) continue;
+      Long64_t j = LoadTree(i);
+      if (j < 0) break;
+       
+      if(!TriggerCuts(j)) continue;
+      if(!LooseCuts(j)) continue;
 
+      fChain->GetEntry(i);   
       summary_tree->Fill();
-      if(0ul == (jentry % 100000ul))summary_tree->AutoSave();
+      if(0ul == (i % 100000ul))summary_tree->AutoSave();
    }
 
     cout << "Selected " << summary_tree->GetEntries() << " events" <<  endl;

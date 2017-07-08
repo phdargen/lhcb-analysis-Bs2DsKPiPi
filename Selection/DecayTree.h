@@ -62,8 +62,8 @@ public :
     virtual void     Show(Long64_t entry = -1);
     virtual TTree* GetInputTree();
     
-    virtual  Bool_t TriggerCuts();
-    virtual  Bool_t LooseCuts();
+    virtual  Bool_t TriggerCuts(Long64_t entry);
+    virtual  Bool_t LooseCuts(Long64_t entry);
 
     // Declaration of leaf types
     Double_t        Bs_DOCA1;

@@ -41,15 +41,22 @@ void MiniDecayTree::Loop()
    Long64_t nentries = fChain->GetEntries();
    cout << "Have " << nentries << " events" <<  endl;
 
-   Long64_t nbytes = 0, nb = 0;
-   for (Long64_t jentry=0; jentry<nentries;jentry++) {
-      fChain->GetEntry(jentry);   
+    for (Long64_t i=0; i<nentries;i++) {
+        
+        if(0ul == (i % 10000ul)) cout << "Read event " << i << "/" << nentries <<
+        "  ( " << i/(double)nentries << " % )" << endl;
 
-      if(!TriggerCuts()) continue;
-      if(!LooseCuts()) continue;
-
-      summary_tree->Fill();
-   }
+        fChain->GetEntry(i);   
+        
+        Long64_t j = LoadTree(i);
+        if (j < 0) break;
+        
+        //if(!TriggerCuts(j)) continue;
+        //if(!LooseCuts(j)) continue;
+        
+        summary_tree->Fill();
+        if(0ul == (i % 100000ul))summary_tree->AutoSave();
+    }
    
     cout << "Selected " << summary_tree->GetEntries() << " events" <<  endl;
     cout << "Efficiency = " << summary_tree->GetEntries()/(double)nentries * 100. << " %" <<  endl;
