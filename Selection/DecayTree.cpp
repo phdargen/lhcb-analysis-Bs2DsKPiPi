@@ -32,12 +32,12 @@ TTree* DecayTree::GetInputTree(){
     else {
         fileName+= "mc/";
         fileName+= _year; 
-        fileName+= "U/";
+        fileName+= "U";
     }
-    fileName+= "b2dhhh_*.root"; 
+    fileName+= "/b2dhhh_*.root"; 
 
     cout << fileName << endl;
-    //chain->Add("/auto/data/dargent/BsDsKpipi/Stripped/Norm/mc/11U/b2dhhh_11.root");
+    //chain->Add("/auto/data/kecke/B2DPiPiPi/12/b2dhhh_88.root");
     //chain->Add("/auto/data/dargent/BsDsKpipi/Stripped/Norm/mc/11U/b2dhhh_10.root");
     chain->Add(fileName);
     if(_data!=DataType::data) chain->Add(fileName.ReplaceAll(TString("U/b2hhh"),TString("D/b2hhh")));
@@ -81,7 +81,7 @@ fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataTyp
     _outFileName += ".root";    
 }
 
-Bool_t DecayTree::TriggerCuts(Long64_t i){
+inline Bool_t DecayTree::TriggerCuts(Long64_t i){
 
     b_Bs_L0Global_TIS->GetEntry(i);
     b_Bs_L0HadronDecision_TOS->GetEntry(i);
@@ -115,7 +115,7 @@ Bool_t DecayTree::TriggerCuts(Long64_t i){
     return true;
 }
 
-Bool_t DecayTree::LooseCuts(Long64_t i){
+inline Bool_t DecayTree::LooseCuts(Long64_t i){
 
     b_Bs_DIRA_OWNPV->GetEntry(i);
     if(Bs_DIRA_OWNPV<0.99994) return false;
