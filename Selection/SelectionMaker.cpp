@@ -42,6 +42,8 @@ int main(int argc, char** argv){
 	}    
 
     MiniDecayTree d(decay, year, finalState, dataType);
+    //d.set_inFileName(d.get_outFileName());
+    //d.set_outFileName("test.root");    
     d.Loop();
 
     return 0;

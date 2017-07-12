@@ -15,53 +15,95 @@ TTree* DecayTree::GetInputTree(){
     if(_decay==Decay::signal)tupleName="Bs2DsKpipi_";
     else tupleName = "Bs2Dspipipi_";
     if(_Ds_finalState==Ds_finalState::pipipi)tupleName+="Ds2pipipi_Tuple/DecayTree";
-    if(_Ds_finalState==Ds_finalState::Kpipi)tupleName+="Ds2Kpipi_Tuple/DecayTree";
+    else if(_Ds_finalState==Ds_finalState::Kpipi)tupleName+="Ds2Kpipi_Tuple/DecayTree";
     else tupleName+="Ds2KKpi_Tuple/DecayTree";    
 
     TChain* chain = new TChain(tupleName);
+
+    if(_decay==Decay::signal && _data==DataType::data && _year == 11){
+        TString loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/5/";
+        TString file = "/output/b2dhhh.root";
+        
+        cout << "Using the files: " << endl;
+        cout << loc + "*" + file << endl << endl;
+        
+        for(int i = 0; i<1000; i++){
+            TString dir_i = TString::Format("%d",i);
+             chain->Add(loc + dir_i + file);
+        }
+    }
     
-    TString fileName = "/auto/data/dargent/BsDsKpipi/Stripped/";
-
-    if(_decay==Decay::signal)fileName+="Signal/";
-    else fileName += "Norm/";
-
-    if(_data==DataType::data) {
-        fileName+= "data/";
-        fileName+= _year; 
+    else if(_decay==Decay::signal && _data==DataType::data && _year == 12){
+        TString loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/8/";
+        TString file = "/output/b2dhhh.root";
+        for(int i = 0; i<1000; i++){
+            TString dir_i = TString::Format("%d",i);
+            chain->Add(loc + dir_i + file);
+        }
     }
+    
+    else if(_decay==Decay::norm && _data==DataType::data && _year == 11){
+        TString loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/9/";
+        TString file = "/output/b2dhhh.root";
+        for(int i = 0; i<1000; i++){
+            TString dir_i = TString::Format("%d",i);
+            chain->Add(loc + dir_i + file);
+        }
+    }
+    
+    else if(_decay==Decay::norm && _data==DataType::data && _year == 12){
+        TString loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/10/";
+        TString file = "/output/b2dhhh.root";
+        for(int i = 0; i<1000; i++){
+            TString dir_i = TString::Format("%d",i);
+            chain->Add(loc + dir_i + file);
+        }
+    }
+
     else {
-        fileName+= "mc/";
-        fileName+= _year; 
-        fileName+= "U";
-    }
-    fileName+= "/b2dhhh_*.root"; 
+        TString fileName = _inFileLoc + "Stripped/";
 
-    cout << fileName << endl;
-    //chain->Add("/auto/data/kecke/B2DPiPiPi/12/b2dhhh_88.root");
-    //chain->Add("/auto/data/dargent/BsDsKpipi/Stripped/Norm/mc/11U/b2dhhh_10.root");
-    chain->Add(fileName);
-    if(_data!=DataType::data) chain->Add(fileName.ReplaceAll(TString("U/b2hhh"),TString("D/b2hhh")));
-    if(chain==0){
-        cout << "ERROR: No file found" << endl;
+        if(_decay==Decay::signal)fileName+="Signal/";
+        else fileName += "Norm/";
+
+        if(_data==DataType::data) {
+            fileName+= "data/";
+            fileName+= _year; 
+        }
+        else {
+            fileName+= "mc/";
+            fileName+= _year; 
+            fileName+= "U";
+        }
+        fileName+= "/b2dhhh_*.root"; 
+        
+        cout << "Using the files: " << endl;
+        cout << fileName << endl << endl;
+        chain->Add(fileName);
+        if(_data!=DataType::data) chain->Add(fileName.ReplaceAll(TString("U/b2hhh"),TString("D/b2hhh")));
+    }
+
+    if(chain->GetEntries()==0){
+        cout << "ERROR: No events found" << endl;
         throw "ERROR";
     }
     
     return (TTree*)chain;
 }
 
-DecayTree::DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType ) : 
-fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataType) 
+DecayTree::DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString inFileLoc, TString outFileLoc ) : 
+fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataType), _inFileLoc(inFileLoc), _outFileLoc(outFileLoc)
 {    
     cout << "Requested to process files with options: " << endl << endl;
 
     TString s1,s2,s3,s4;
     
-    if(_data==DataType::data)s1="data";
-    else s1 = "mc";
+    if(_data==DataType::data)s1="Data";
+    else s1 = "MC";
     if(_decay==Decay::signal)s2="signal";
-    else s2 = "norm";
+    else s2 = "Norm";
     if(_Ds_finalState==Ds_finalState::pipipi)s3="Ds2pipipi";
-    if(_Ds_finalState==Ds_finalState::Kpipi)s3="Ds2Kpipi";
+    else if(_Ds_finalState==Ds_finalState::Kpipi)s3="Ds2Kpipi";
     else s3="Ds2KKpi";
 
     cout << "DataType: " << s1 << endl;
@@ -69,7 +111,7 @@ fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataTyp
     cout << "Ds finalState: " << s3 << endl;
     cout << "Year: " << _year << endl << endl;
 
-    _outFileName = "/auto/data/dargent/BsDsKpipi/";    
+    _outFileName = _outFileLoc;    
     _outFileName += "Mini/";
     _outFileName += s1;  
     _outFileName += "/";  
@@ -155,8 +197,10 @@ inline Bool_t DecayTree::LooseCuts(Long64_t i){
     //b_Ds_FDCHI2_ORIVX->GetEntry(i);
     //if(Ds_FDCHI2_ORIVX < 0) return false;
 
-    //b_K_plus_PIDK->GetEntry(i);
-    //if(_data)if(K_plus_PIDK<5) return false;
+    //if(_decay== DecayType::signal){
+        //b_K_plus_PIDK->GetEntry(i);
+        //if(_data)if(K_plus_PIDK<0) return false;
+    //}
     
     return true;
 }
@@ -180,8 +224,8 @@ void DecayTree::Loop()
    fChain->SetBranchStatus("Bs_*Hlt*Global*_T*S",0);  
     
    fChain->SetBranchStatus("Bs_TAG*",1);  
-   fChain->SetBranchStatus("Bs_*DEC",0);  
-   fChain->SetBranchStatus("Bs_*PROB",0);  
+   fChain->SetBranchStatus("Bs_*DEC",1);  
+   fChain->SetBranchStatus("Bs_*PROB",1);  
 
    fChain->SetBranchStatus("Bs_*DTF*",1);  
    fChain->SetBranchStatus("Bs_*PV*",1);  
@@ -250,7 +294,7 @@ void DecayTree::Loop()
    for (Long64_t i=0; i<nentries;i++) {
 
       if(0ul == (i % 10000ul)) cout << "Read event " << i << "/" << nentries <<
-      "  ( " << i/(double)nentries << " % )" << endl;
+      "  ( " << i/(double)nentries * 100. << " % )" << endl;
       
       // Read from individual branches rather than whole tree,
       // messy and prone to errors but benefical to performance
@@ -260,7 +304,7 @@ void DecayTree::Loop()
       if (j < 0) break;
        
       if(!TriggerCuts(j)) continue;
-      if(!LooseCuts(j)) continue;
+      else if(!LooseCuts(j)) continue;
 
       fChain->GetEntry(i);   
       summary_tree->Fill();

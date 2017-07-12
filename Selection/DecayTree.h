@@ -16,7 +16,7 @@
 using namespace std;
 
 struct Ds_finalState{
-    enum  Type { phipi, Kspi, KKpi_NR, pipipi, Kpipi };
+    enum  Type { phipi, KsK, KKpi_NR, pipipi, Kpipi };
 };
 
 struct Decay{
@@ -43,6 +43,8 @@ static const double c_light = 0.299792458;
 
 class DecayTree {
 public :
+    TString _inFileLoc;
+    TString _outFileLoc;
     TString _outFileName;
     TTree          *fChain;   //!pointer to the analyzed TTree or TChain
     Int_t           fCurrent; //!current Tree number in a TChain
@@ -52,7 +54,7 @@ public :
     Ds_finalState::Type _Ds_finalState;
     DataType::Type _data;
 
-    DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType );
+    DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString inFileLoc = "auto/data/dargent/BsDsKpipi/", TString outFileLoc = "auto/data/dargent/BsDsKpipi/" );
     virtual ~DecayTree();
     virtual Int_t    GetEntry(Long64_t entry);
     virtual Long64_t LoadTree(Long64_t entry);
