@@ -314,6 +314,8 @@ void MiniDecayTree::Loop()
     summary_tree->Branch("beta_pi_minus_fromDs", &beta_pi_minus_fromDs, "beta_pi_minus_fromDs/D");
     summary_tree->Branch("beta_K_minus_fromDs", &beta_K_minus_fromDs, "beta_K_minus_fromDs/D");
 
+    double Bs_DTF_tau; // = Bs_DTF_ctau[0] * 1e-3*1/(2.99792458*1e8)*1e12 = Bs_DTF_ctau[0] * 3.33564095
+
     for (Long64_t i=0; i<nentries;i++) {
         
         if(0ul == (i % 10000ul)) cout << "Read event " << i << "/" << nentries <<

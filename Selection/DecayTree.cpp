@@ -285,6 +285,11 @@ void DecayTree::Loop()
    fChain->SetBranchStatus("totCandidates",1) ;
    fChain->SetBranchStatus("Polarity",1) ;
 
+   if(!_data){
+	   fChain->SetBranchStatus("*TRUE*",1) ;
+	   fChain->SetBranchStatus("*BKG*",1) ;
+   }
+
    TFile* output = new TFile(_outFileName,"RECREATE");
    TTree* summary_tree = fChain->CloneTree(0);
     
