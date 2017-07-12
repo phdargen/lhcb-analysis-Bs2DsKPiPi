@@ -67,11 +67,11 @@ TTree* DecayTree::GetInputTree(){
         else fileName += "Norm/";
 
         if(_data==DataType::data) {
-            fileName+= "data/";
+            fileName+= "Data/";
             fileName+= _year; 
         }
         else {
-            fileName+= "mc/";
+            fileName+= "MC/";
             fileName+= _year; 
             fileName+= "U";
         }
@@ -293,7 +293,7 @@ void DecayTree::Loop()
 
    for (Long64_t i=0; i<nentries;i++) {
 
-      if(0ul == (i % 10000ul)) cout << "Read event " << i << "/" << nentries <<
+      if(0ul == (i % 100000ul)) cout << "Read event " << i << "/" << nentries <<
       "  ( " << i/(double)nentries * 100. << " % )" << endl;
       
       // Read from individual branches rather than whole tree,

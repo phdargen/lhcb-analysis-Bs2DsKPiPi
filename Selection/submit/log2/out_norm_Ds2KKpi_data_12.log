@@ -1,0 +1,18 @@
+/var/lib/sge/spool/local/lambdac/job_scripts/417634: line 3: cd: ..: No such file or directory
+/var/lib/sge/spool/local/lambdac/job_scripts/417634: line 19: : command not found
+/var/lib/sge/spool/local/lambdac/job_scripts/417634: line 21: : command not found
+/var/lib/sge/spool/local/lambdac/job_scripts/417634: line 22: : command not found
+/var/lib/sge/spool/local/lambdac/job_scripts/417634: line 24: : command not found
+Requested to process files with options: 
+
+DataType: Data
+Decay: Norm
+Ds finalState: Ds2KKpi
+Year: 12
+
+Read from file /auto/data/dargent/BsDsKpipi/Mini/Data/Norm_Ds2KKpi_12.root
+Found files, now init
+Error in <TFile::TFile>: file /auto/data/dargent/BsDsKpipi/Mini/Data/Norm_Ds2KKpi_12.root does not exist
+Have 0 events
+
+ *** Break *** segmentation violation

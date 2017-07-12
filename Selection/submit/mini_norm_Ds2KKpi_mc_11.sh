@@ -14,7 +14,7 @@ cd ..
 #$ -l h_cpu=100:59:59
 #$-l os=slc5 
 #(the maximum memory usage of this job)
-#$-l h_vmem=8000M
+#$-l h_vmem=12000M
 #$ -V
 
 #(setup the environment)

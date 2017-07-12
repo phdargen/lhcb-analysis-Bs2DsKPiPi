@@ -1,0 +1,112 @@
+/var/lib/sge/spool/local/nu/job_scripts/417614: line 3: cd: ..: No such file or directory
+/var/lib/sge/spool/local/nu/job_scripts/417614: line 19: : command not found
+/var/lib/sge/spool/local/nu/job_scripts/417614: line 21: : command not found
+/var/lib/sge/spool/local/nu/job_scripts/417614: line 22: : command not found
+/var/lib/sge/spool/local/nu/job_scripts/417614: line 24: : command not found
+Requested to process files with options: 
+
+DataType: MC
+Decay: signal
+Ds finalState: Ds2KKpi
+Year: 11
+
+Using the files: 
+auto/data/dargent/BsDsKpipi/Stripped/Signal/MC/11U/b2dhhh_*.root
+
+ERROR: No events found
+terminate called after throwing an instance of 'char const*'
+/var/lib/sge/spool/local/nu/job_scripts/417614: line 25: 22196 Aborted                 (core dumped) ./MiniMaker "Signal" "Ds2KKpi" "MC" 11
+/var/lib/sge/spool/local/nu/job_scripts/417618: line 3: cd: ..: No such file or directory
+/var/lib/sge/spool/local/nu/job_scripts/417618: line 19: : command not found
+/var/lib/sge/spool/local/nu/job_scripts/417618: line 21: : command not found
+/var/lib/sge/spool/local/nu/job_scripts/417618: line 22: : command not found
+/var/lib/sge/spool/local/nu/job_scripts/417618: line 24: : command not found
+Requested to process files with options: 
+
+DataType: MC
+Decay: signal
+Ds finalState: Ds2KKpi
+Year: 11
+
+Using the files: 
+/auto/data/dargent/BsDsKpipi/Stripped/Signal/MC/11U/b2dhhh_*.root
+
+Warning in <TStreamerInfo::BuildCheck>: 
+   The StreamerInfo of class TAttLine read from file /auto/data/dargent/BsDsKpipi/Stripped/Signal/MC/11U/b2dhhh_1.root
+   has the same version (=1) as the active class but a different checksum.
+   You should update the version to ClassDef(TAttLine,2).
+   Do not try to write objects with the current class definition,
+   the files will not be readable.
+
+Warning in <TStreamerInfo::CompareContent>: The following data member of
+the on-file layout version 1 of class 'TAttLine' differs from 
+the in-memory layout version 1:
+   short fLineColor; //
+vs
+   Color_t fLineColor; //
+Warning in <TStreamerInfo::CompareContent>: The following data member of
+the on-file layout version 1 of class 'TAttLine' differs from 
+the in-memory layout version 1:
+   short fLineStyle; //
+vs
+   Style_t fLineStyle; //
+Warning in <TStreamerInfo::CompareContent>: The following data member of
+the on-file layout version 1 of class 'TAttLine' differs from 
+the in-memory layout version 1:
+   short fLineWidth; //
+vs
+   Width_t fLineWidth; //
+Warning in <TStreamerInfo::BuildCheck>: 
+   The StreamerInfo of class TAttFill read from file /auto/data/dargent/BsDsKpipi/Stripped/Signal/MC/11U/b2dhhh_1.root
+   has the same version (=1) as the active class but a different checksum.
+   You should update the version to ClassDef(TAttFill,2).
+   Do not try to write objects with the current class definition,
+   the files will not be readable.
+
+Warning in <TStreamerInfo::CompareContent>: The following data member of
+the on-file layout version 1 of class 'TAttFill' differs from 
+the in-memory layout version 1:
+   short fFillColor; //
+vs
+   Color_t fFillColor; //
+Warning in <TStreamerInfo::CompareContent>: The following data member of
+the on-file layout version 1 of class 'TAttFill' differs from 
+the in-memory layout version 1:
+   short fFillStyle; //
+vs
+   Style_t fFillStyle; //
+Warning in <TStreamerInfo::BuildCheck>: 
+   The StreamerInfo of class TAttMarker read from file /auto/data/dargent/BsDsKpipi/Stripped/Signal/MC/11U/b2dhhh_1.root
+   has the same version (=2) as the active class but a different checksum.
+   You should update the version to ClassDef(TAttMarker,3).
+   Do not try to write objects with the current class definition,
+   the files will not be readable.
+
+Warning in <TStreamerInfo::CompareContent>: The following data member of
+the on-file layout version 2 of class 'TAttMarker' differs from 
+the in-memory layout version 2:
+   short fMarkerColor; //
+vs
+   Color_t fMarkerColor; //
+Warning in <TStreamerInfo::CompareContent>: The following data member of
+the on-file layout version 2 of class 'TAttMarker' differs from 
+the in-memory layout version 2:
+   short fMarkerStyle; //
+vs
+   Style_t fMarkerStyle; //
+Warning in <TStreamerInfo::CompareContent>: The following data member of
+the on-file layout version 2 of class 'TAttMarker' differs from 
+the in-memory layout version 2:
+   float fMarkerSize; //
+vs
+   Size_t fMarkerSize; //
+Found files, now init
+Have 45780 events
+
+Read event 0/45780  ( 0 % )
+Selected 28440 events
+Efficiency = 62.1232 %
+Created new file /auto/data/dargent/BsDsKpipi/Mini/MC/signal_Ds2KKpi_11.root
+==============================================
+ Done.  Total time since start 2.36667 min.
+==============================================

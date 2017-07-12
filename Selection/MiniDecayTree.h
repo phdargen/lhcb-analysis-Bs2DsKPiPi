@@ -12,7 +12,7 @@ class MiniDecayTree: public DecayTree {
 public :
 
     TString _inFileName;
-    MiniDecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString inFileLoc = "auto/data/dargent/BsDsKpipi/", TString outFileLoc = "auto/data/dargent/BsDsKpipi/" );
+    MiniDecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString inFileLoc = "/auto/data/dargent/BsDsKpipi/", TString outFileLoc = "/auto/data/dargent/BsDsKpipi/" );
     virtual ~MiniDecayTree();
     
     virtual void  Init();

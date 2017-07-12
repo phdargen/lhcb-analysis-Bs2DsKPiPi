@@ -20,6 +20,6 @@ cd ..
 #(setup the environment)
 . /local/AZ/envfor.sh root 5.34.10;
 
-#$ -o ./submit/log/out_norm_Ds2KKpi_mc_12.log
+#$ -o ./submit/log2/out_signal_Ds2pipipi_data_12.log
 
-./MiniMaker "Norm" "Ds2KKpi" "MC" 12
+./SelectionMaker "Signal" "Ds2pipipi" "Data" 12
