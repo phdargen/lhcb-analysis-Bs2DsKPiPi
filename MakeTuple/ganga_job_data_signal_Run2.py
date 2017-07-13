@@ -8,8 +8,8 @@ j3.application = myApp
 j3.application.options = ["b2dkpipi_15.py"]
 j3.backend=Dirac()
 j3.application.platform = "x86_64-slc6-gcc49-opt"
-datatmp5=BKQuery('/LHCb/Collision15/Beam6500GeV-VeloClosed-MagDown/Real Data/Reco15a/Stripping24r0p1/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
-datatmp6=BKQuery('/LHCb/Collision15/Beam6500GeV-VeloClosed-MagUp/Real Data/Reco15a/Stripping24r0p1/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
+datatmp5=BKQuery('/LHCb/Collision15/Beam6500GeV-VeloClosed-MagDown/Real Data/Reco15a/Stripping24/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
+datatmp6=BKQuery('/LHCb/Collision15/Beam6500GeV-VeloClosed-MagUp/Real Data/Reco15a/Stripping24/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
 
 for f in datatmp6.files:
 	datatmp5.append(f)
