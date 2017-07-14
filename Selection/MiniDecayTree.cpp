@@ -332,15 +332,15 @@ void MiniDecayTree::Loop()
     summary_tree->Branch("Bs_BsDTF_TAU", &Bs_BsDTF_TAU, "Bs_BsDTF_TAU/D");
     summary_tree->Branch("Bs_BsDTF_TAUERR", &Bs_BsDTF_TAUERR, "Bs_BsDTF_TAUERR/D");
     
-    double Bs_DTF_M,Bs_DTF_MERR;
-    summary_tree->Branch("Bs_DTF_M", &Bs_DTF_M, "Bs_DTF_M/D");
-    summary_tree->Branch("Bs_DTF_MERR", &Bs_DTF_MERR, "Bs_DTF_MERR/D");
-    double Bs_PV_M,Bs_PV_MERR;
-    summary_tree->Branch("Bs_PV_M", &Bs_PV_M, "Bs_PV_M/D");
-    summary_tree->Branch("Bs_PV_MERR", &Bs_PV_MERR, "Bs_PV_MERR/D");    
-    double Ds_PV_M,Ds_PV_MERR;
-    summary_tree->Branch("Ds_PV_M", &Ds_PV_M, "Ds_PV_M/D");
-    summary_tree->Branch("Ds_PV_MERR", &Ds_PV_MERR, "Ds_PV_MERR/D");    
+    double Bs_DTF_MM,Bs_DTF_MMERR;
+    summary_tree->Branch("Bs_DTF_MM", &Bs_DTF_MM, "Bs_DTF_MM/D");
+    summary_tree->Branch("Bs_DTF_MMERR", &Bs_DTF_MMERR, "Bs_DTF_MMERR/D");
+    double Bs_PV_MM,Bs_PV_MMERR;
+    summary_tree->Branch("Bs_PV_MM", &Bs_PV_MM, "Bs_PV_MM/D");
+    summary_tree->Branch("Bs_PV_MMERR", &Bs_PV_MMERR, "Bs_PV_MMERR/D");    
+    double Ds_PV_MM,Ds_PV_MMERR;
+    summary_tree->Branch("Ds_PV_MM", &Ds_PV_MM, "Ds_PV_MM/D");
+    summary_tree->Branch("Ds_PV_MMERR", &Ds_PV_MMERR, "Ds_PV_MMERR/D");    
     
     double BsDTF_Kplus_PX,BsDTF_Kplus_PY,BsDTF_Kplus_PZ,BsDTF_Kplus_PE;
     summary_tree->Branch("BsDTF_Kplus_PX", &BsDTF_Kplus_PX, "BsDTF_Kplus_PX/D");
@@ -429,7 +429,10 @@ void MiniDecayTree::Loop()
             m_Dspipi = (Ds+pi_plus+pi_minus).M();
             m_DsKpi = (Ds+K_plus+pi_minus).M();
             m_DsKpip = (Ds+K_plus+pi_plus).M();
-            
+	    m_Kpipi = (K_plus+pi_plus+pi_minus).M();
+            m_Kpi = (K_plus+pi_minus).M();
+	    m_pipi = (pi_plus+pi_minus).M();            
+
             TLorentzVector pi_minus_asK_MissID; 
             pi_minus_asK_MissID.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ, massKaon);
             bkg_KKpi_as_Xs_m = (K_plus+pi_plus+pi_minus_asK_MissID).M();
@@ -477,7 +480,10 @@ void MiniDecayTree::Loop()
             m_Dspipi = (Ds+pi_plus1+pi_minus).M();
             m_DsKpi = (Ds+pi_plus2+pi_minus).M();
             m_DsKpip = (Ds+pi_plus1+pi_plus2).M(); 
-            
+            m_Kpipi = (pi_minus+pi_plus1+pi_plus2).M(); 
+     	    m_pipi = (pi_minus+pi_plus1).M();
+	    m_Kpi = (pi_minus+pi_plus2).M();
+
             TLorentzVector pi_plus1_asK_MissID; 
             TLorentzVector pi_plus2_asK_MissID; 
 
@@ -587,6 +593,13 @@ void MiniDecayTree::Loop()
         }
         
         max_ghostProb = max(Xs_max_ghostProb,Ds_max_ghostProb);
+
+	Bs_PV_MM = Bs_PV_M[0];
+	Bs_DTF_MM = Bs_DTF_M[0];
+        Ds_PV_MM = Bs_PV_Dplus_M[0];
+	Bs_PV_MMERR = Bs_PV_MERR[0];
+	Bs_DTF_MMERR = Bs_DTF_MERR[0];
+        Ds_PV_MMERR = Bs_PV_Dplus_MERR[0];
 
         Bs_TAU = Bs_TAU*1000.;
         Bs_TAUERR = Bs_TAUERR*1000.;
