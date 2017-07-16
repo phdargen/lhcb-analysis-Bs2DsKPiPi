@@ -1,8 +1,9 @@
 # compile:
 make
 
-# options (set in TD_Bs.txt):
+# options:
 --------------------------------
+Are set in TD_Bs.txt
 
 # General options:
 
@@ -48,6 +49,7 @@ for example:
 "gamma"		0 70 1 0.0 0.0
 
 Fix = 0 == Fixed
+
 Fix = 2 == Floating
 
 # run it:

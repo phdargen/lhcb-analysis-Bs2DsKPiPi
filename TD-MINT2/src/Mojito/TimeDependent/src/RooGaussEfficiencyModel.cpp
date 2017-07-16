@@ -270,20 +270,15 @@ Int_t RooGaussEfficiencyModel::getAnalyticalIntegral(RooArgSet& allVars, RooArgS
 Double_t RooGaussEfficiencyModel::analyticalIntegral(Int_t code, const char* rangeName) const
 {
 
-
   // Code must be 1 or 2
   assert(code==1||code==2) ;
   Double_t ssfInt( code==2 ? (ssf.max(rangeName)-ssf.min(rangeName)) : 1.0 );
 
   basisType basisCode = (basisType) _basisCode ;
   
-  basisCode = (basisType) cosBasis;
-  
-  //cout << "RooGaussEfficiencyModel::analyticalIntegral(" << GetName() << ") basisCode = " << basisCode << endl;
-  
-  Double_t tau    = 1.;//(basisCode!=noBasis)                           ? ((RooAbsReal*)basis().getParameter(1))->getVal() : 0 ;
-  Double_t omega  = 20.;//(basisCode==sinBasis  || basisCode==cosBasis)  ? ((RooAbsReal*)basis().getParameter(2))->getVal() : 0 ;
-  Double_t dGamma = 0.;//(basisCode==sinhBasis || basisCode==coshBasis) ? ((RooAbsReal*)basis().getParameter(2))->getVal() : 0 ;
+  Double_t tau    =(basisCode!=noBasis)                           ? ((RooAbsReal*)basis().getParameter(1))->getVal() : 0 ;
+  Double_t omega  = (basisCode==sinBasis  || basisCode==cosBasis)  ? ((RooAbsReal*)basis().getParameter(2))->getVal() : 0 ;
+  Double_t dGamma = (basisCode==sinhBasis || basisCode==coshBasis) ? ((RooAbsReal*)basis().getParameter(2))->getVal() : 0 ;
   if (basisCode == coshBasis && basisCode!=noBasis && dGamma==0 ) basisCode = expBasis;
 
   Double_t scale  = sigma*ssf*TMath::Sqrt2();
