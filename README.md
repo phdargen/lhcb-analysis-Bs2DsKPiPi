@@ -28,4 +28,9 @@ Final sample:
 /auto/data/dargent/BsDsKpipi/Final/Data(MC)/signal(Norm)_Ds2KKpi(Ds2pipipi)_11(12/15/16).root 
 
 
+Final sample in MINT format:
+---------------------------------------------------
+/auto/data/dargent/BsDsKpipi/Mint/Data(MC)/signal(Norm)_Ds2KKpi(Ds2pipipi)_11(12/15/16).root 
+
+
 

@@ -8,6 +8,7 @@
 #include <ctime>
 #include <math.h>
 #include "TLorentzVector.h"
+#include "TRandom3.h"
 
 using namespace std; 
 
@@ -18,7 +19,6 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
         if(K_plus_fromDs_PIDK < -10) return false;
         else if(K_minus_fromDs_PIDK < -10) return false;
         else if(pi_minus_fromDs_PIDK > 20) return false;
-
     }
 
     else if(_Ds_finalState == Ds_finalState::KsK){
@@ -65,7 +65,6 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
         if(pi_plus1_PIDK > 10) return false;
         else if(pi_plus2_PIDK > 10) return false;
         else if(pi_minus_PIDK > 10) return false;
-        
     }
 
     
@@ -225,9 +224,12 @@ void MiniDecayTree::Loop()
    cout << "Have " << nentries << " events" <<  endl;
    
     // Add new branches to output tree
-    int Ds_finalState = 0 ;
-    summary_tree->Branch("Ds_finalState",&Ds_finalState,"Ds_finalState/I");
-    
+    int Ds_finalState, sample;
+    int year = (int)_year;
+    summary_tree->Branch("Ds_finalState",&Ds_finalState,"Ds_finalState/I");    
+    summary_tree->Branch("sample", &sample, "sample/I");
+    summary_tree->Branch("year", &year, "year/I");
+
     // Variables for BDT 
     float DsDaughters_min_IPCHI2 = 0;
     float XsDaughters_min_IPCHI2 = 0;
@@ -242,6 +244,7 @@ void MiniDecayTree::Loop()
     float Xs_max_ghostProb = 0;
     float Ds_max_ghostProb = 0;
     float max_ghostProb = 0;
+    
     summary_tree->Branch("DsDaughters_min_IPCHI2",&DsDaughters_min_IPCHI2,"DsDaughters_min_IPCHI2/F");
     summary_tree->Branch("XsDaughters_min_IPCHI2",&XsDaughters_min_IPCHI2,"XsDaughters_min_IPCHI2/F");
     summary_tree->Branch("DsDaughters_max_IPCHI2",&DsDaughters_max_IPCHI2,"DsDaughters_max_IPCHI2/F");
@@ -384,6 +387,7 @@ void MiniDecayTree::Loop()
     summary_tree->Branch("qt",&qt,"qt/I");
     summary_tree->Branch("qf",&qf,"qf/I");
     
+    TRandom3 r;
     for (Long64_t i=0; i<nentries;i++) {
         
         if(0ul == (i % 10000ul)) cout << "Read event " << i << "/" << nentries <<
@@ -429,9 +433,9 @@ void MiniDecayTree::Loop()
             m_Dspipi = (Ds+pi_plus+pi_minus).M();
             m_DsKpi = (Ds+K_plus+pi_minus).M();
             m_DsKpip = (Ds+K_plus+pi_plus).M();
-	    m_Kpipi = (K_plus+pi_plus+pi_minus).M();
+            m_Kpipi = (K_plus+pi_plus+pi_minus).M();
             m_Kpi = (K_plus+pi_minus).M();
-	    m_pipi = (pi_plus+pi_minus).M();            
+            m_pipi = (pi_plus+pi_minus).M();            
 
             TLorentzVector pi_minus_asK_MissID; 
             pi_minus_asK_MissID.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ, massKaon);
@@ -594,11 +598,11 @@ void MiniDecayTree::Loop()
         
         max_ghostProb = max(Xs_max_ghostProb,Ds_max_ghostProb);
 
-	Bs_PV_MM = Bs_PV_M[0];
-	Bs_DTF_MM = Bs_DTF_M[0];
+        Bs_PV_MM = Bs_PV_M[0];
+        Bs_DTF_MM = Bs_DTF_M[0];
         Ds_PV_MM = Bs_PV_Dplus_M[0];
-	Bs_PV_MMERR = Bs_PV_MERR[0];
-	Bs_DTF_MMERR = Bs_DTF_MERR[0];
+        Bs_PV_MMERR = Bs_PV_MERR[0];
+        Bs_DTF_MMERR = Bs_DTF_MERR[0];
         Ds_PV_MMERR = Bs_PV_Dplus_MERR[0];
 
         Bs_TAU = Bs_TAU*1000.;
@@ -619,6 +623,9 @@ void MiniDecayTree::Loop()
         PV_CHI2NDOF = Bs_PV_chi2[0]/Bs_PV_nDOF[0];
         DTF_CHI2NDOF = Bs_DTF_chi2[0]/Bs_DTF_nDOF[0];
         BsDTF_CHI2NDOF = Bs_BsDTF_chi2[0]/Bs_BsDTF_nDOF[0];
+        
+        if(r.Rndm()<0.5)sample=1;
+        else sample=2;
         
         // ???
         if(Bs_ID > 0) qt = 1;
