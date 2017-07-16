@@ -3,11 +3,13 @@ Feel free to add usefull information to this README :)
 
 For instructions on how to compile and run the code see README in the corresponding directories.
 
-***Data samples:
+Data samples:
+---------------------------------------------------
+---------------------------------------------------
 
 Stripping output after loose preselection is applied and unnecessary branches are removed:
 ---------------------------------------------------
-/auto/data/dargent/BsDsKpipi/Mini/Data/Norm/signal_Ds2KKpi/Ds2pipipi_11/12/15/16.root
+/auto/data/dargent/BsDsKpipi/Mini/Data/Norm/signal_Ds2KKpi/Ds2pipipi_11/12/15/16.root 
 /auto/data/dargent/BsDsKpipi/Mini/MC/Norm/signal_Ds2KKpi/Ds2pipipi_11/12/15/16.root
 
 After preselection with BDT variables added:
