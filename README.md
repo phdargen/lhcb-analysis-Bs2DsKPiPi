@@ -10,26 +10,22 @@ Data samples:
 
 Stripping output after loose preselection is applied and unnecessary branches are removed:
 ---------------------------------------------------
-/auto/data/dargent/BsDsKpipi/Mini/Data/Norm/signal_Ds2KKpi/Ds2pipipi_11/12/15/16.root 
+/auto/data/dargent/BsDsKpipi/Mini/Data(MC)/signal(Norm)_Ds2KKpi(Ds2pipipi)_11(12/15/16).root 
 
-/auto/data/dargent/BsDsKpipi/Mini/MC/Norm/signal_Ds2KKpi/Ds2pipipi_11/12/15/16.root
 
 After preselection with BDT variables added:
 ---------------------------------------------------
-/auto/data/dargent/BsDsKpipi/Preselected/Data/Norm/signal_Ds2KKpi/Ds2pipipi_11/12/15/16.root
+/auto/data/dargent/BsDsKpipi/Preselected/Data(MC)/signal(Norm)_Ds2KKpi(Ds2pipipi)_11(12/15/16).root 
 
-/auto/data/dargent/BsDsKpipi/Mini/MC/Norm/signal_Ds2KKpi/Ds2pipipi_11/12/15/16.root
 
 With BDT response:
 ---------------------------------------------------
-/auto/data/dargent/BsDsKpipi/BDT/Data/Norm/signal_Ds2KKpi/Ds2pipipi_11/12/15/16.root
+/auto/data/dargent/BsDsKpipi/BDT/Data(MC)/signal(Norm)_Ds2KKpi(Ds2pipipi)_11(12/15/16).root 
 
-/auto/data/dargent/BsDsKpipi/Mini/MC/Norm/signal_Ds2KKpi/Ds2pipipi_11/12/15/16.root
 
 Final sample:
 ---------------------------------------------------
-/auto/data/dargent/BsDsKpipi/Final/Data/Norm/signal_Ds2KKpi/Ds2pipipi_11/12/15/16.root
+/auto/data/dargent/BsDsKpipi/Final/Data(MC)/signal(Norm)_Ds2KKpi(Ds2pipipi)_11(12/15/16).root 
 
-/auto/data/dargent/BsDsKpipi/Mini/MC/Norm/signal_Ds2KKpi/Ds2pipipi_11/12/15/16.root
 
 
