@@ -9,6 +9,7 @@ Removes not needed branches and applies loose preselection (choose one of the op
 or submit all jobs to batch:
 
 source mini_mc.sh
+
 source mini_data.sh
 
 # Run over minimized sample: 
@@ -19,15 +20,19 @@ Applies final preselection and adds variables for BDT:
 or submit all jobs to batch:
 
 source select_mc.sh
+
 source select_data.sh
 
 # train BDT   
 
 Requires TMVA 4.2.0:
+
 source setup.sh < /work/dargent/TMVA-v4.2.0/
 
 root -l 
+
 .L TMVAClassification.cpp 
+
 TMVAClassification("BDTG","Run1")
 
 
