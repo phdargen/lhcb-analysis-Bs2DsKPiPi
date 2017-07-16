@@ -27,7 +27,7 @@ source select_data.sh
 
 Requires TMVA 4.2.0:
 
-source setup.sh < /work/dargent/TMVA-v4.2.0/
+source setup.sh /work/dargent/TMVA-v4.2.0/
 
 root -l 
 
