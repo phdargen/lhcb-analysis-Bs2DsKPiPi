@@ -69,10 +69,10 @@
 
 using namespace std;
 using namespace RooFit ;
-using namespace RooStats;
+//using namespace RooStats;
 using namespace MINT;
 
-
+// DsK like time PDF with additional coherence factor 
 class TimePdf : public MINT::PdfBase<IDalitzEvent>
 {
 protected:
@@ -156,7 +156,7 @@ public:
 };
 
 
-
+// Time PDF in term of r, gamma, delta instead of CP coefficients
 class TimePdf_mod : public MINT::PdfBase<IDalitzEvent>
 {
 protected:
@@ -248,13 +248,8 @@ void timeFit(){
     
     NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
     DalitzEventPattern pat(EventPattern.getVector());
-    NamedParameter<int>  Nevents("Nevents", 10);
-    NamedParameter<double>  pdf_max("pdf_max", 10);
-    NamedParameter<double>  t_max("t_max", 10);
-    
-    NamedParameter<double>  r("r",0.64);
-    NamedParameter<double>  delta("delta",1.63);
-    NamedParameter<double>  gamma2("gamma2",1.2);
+    NamedParameter<int>  Nevents("Nevents", 100);
+    NamedParameter<double>  pdf_max("pdf_max", 100);
     
     FitParameter  C("C",0,1,0.1);
     FitParameter  D("D",0,-1.3,0.1);
@@ -266,11 +261,10 @@ void timeFit(){
     FitParameter  tau("tau");
     FitParameter  dGamma("dGamma");
     FitParameter  dm("dm");
-    FitParameter  gamma("gamma");
     FitParameter  eff_tag("eff_tag");
-    FitParameter  w("w");
+    FitParameter  mistag("mistag");
     
-    TimePdf t_pdf(C,D,D_bar,S,S_bar,k,tau,dGamma,dm,eff_tag,w );
+    TimePdf t_pdf(C,D,D_bar,S,S_bar,k,tau,dGamma,dm,eff_tag,mistag );
 
     DalitzEventList eventList;
     DalitzEventList eventList_f, eventList_fbar;
@@ -282,23 +276,24 @@ void timeFit(){
     //simple hit and miss
     for(int i = 0; i < Nevents; i++){
         while(true){
-            const double t = ranLux.Exp(tau*2.);
+            const double t = ranLux.Exp(tau);
             const double q_rand = ranLux.Uniform();
             int q = 0;
             if (q_rand < 1./3.) q = -1;
             if (q_rand > 2./3.) q = 1;
-            const int f = 1; //ranLux.Uniform() > 0.5 ? +1 : -1;
+            int f;
+            if(i<=Nevents/2)f = 1; 
+            else f = -1;
             
             evt.setValueInVector(0, t);
-            //evt.setValueInVector(1, _dt);
             evt.setValueInVector(1, 0);
             evt.setValueInVector(2, q);
-            evt.setValueInVector(3, w);
+            evt.setValueInVector(3, mistag);
             evt.setValueInVector(4, f);
             
             const double pdfVal = t_pdf.un_normalised(evt);
             
-            double maxVal = exp(-fabs(t)/(tau*2.))/(tau*2.)*pdf_max;
+            double maxVal = exp(-fabs(t)/(tau))/(tau)*pdf_max;
             const double height = ranLux.Uniform(0,maxVal);
             
             //Safety check on the maxmimum generated height
@@ -312,46 +307,8 @@ void timeFit(){
             //Hit-and-miss
             if( height < pdfVal ){
                 eventList.Add(evt);
-                if(f==1) eventList_f.Add(evt);
+                if(f==1)eventList_f.Add(evt);
                 else eventList_fbar.Add(evt);
-                
-                break;
-            }
-        }
-        while(true){
-            const double t = ranLux.Exp(tau*2.);
-            const double q_rand = ranLux.Uniform();
-            int q = 0;
-            if (q_rand < 1./3.) q = -1;
-            if (q_rand > 2./3.) q = 1;
-            const int f = -1; //ranLux.Uniform() > 0.5 ? +1 : -1;
-            
-            evt.setValueInVector(0, t);
-            //evt.setValueInVector(1, _dt);
-            evt.setValueInVector(1, 0);
-            evt.setValueInVector(2, q);
-            evt.setValueInVector(3, w);
-            evt.setValueInVector(4, f);
-            
-            const double pdfVal = t_pdf.un_normalised(evt);
-            
-            double maxVal = exp(-fabs(t)/(tau*2.))/(tau*2.)*pdf_max;
-            const double height = ranLux.Uniform(0,maxVal);
-            
-            //Safety check on the maxmimum generated height
-            if( pdfVal > maxVal ){
-                std::cout << "ERROR: PDF above determined maximum." << std::endl;
-                std::cout << pdfVal << " > " << maxVal << std::endl;
-                //exit(1);
-                pdf_max = pdf_max * 2.;
-            }
-            
-            //Hit-and-miss
-            if( height < pdfVal ){
-                eventList.Add(evt);
-                if(f==1) eventList_f.Add(evt);
-                else eventList_fbar.Add(evt);
-                
                 break;
             }
         }
@@ -377,9 +334,8 @@ void timeFit_mod(){
     
     NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
     DalitzEventPattern pat(EventPattern.getVector());
-    NamedParameter<int>  Nevents("Nevents", 10);
-    NamedParameter<double>  pdf_max("pdf_max", 10);
-    NamedParameter<double>  t_max("t_max", 10);
+    NamedParameter<int>  Nevents("Nevents", 100);
+    NamedParameter<double>  pdf_max("pdf_max", 100);
     
     FitParameter  r("r");
     FitParameter  delta("delta");
@@ -409,8 +365,10 @@ void timeFit_mod(){
             int q = 0;
             if (q_rand < 1./3.) q = -1;
             if (q_rand > 2./3.) q = 1;
-            const int f = 1; 
-            
+            int f;
+            if(i<=Nevents/2)f = 1; 
+            else f = -1;
+                        
             evt.setValueInVector(0, t);
             evt.setValueInVector(1, 0);
             evt.setValueInVector(2, q);
@@ -433,49 +391,12 @@ void timeFit_mod(){
             //Hit-and-miss
             if( height < pdfVal ){
                 eventList.Add(evt);
-                eventList_f.Add(evt);                
-                break;
-            }
-        }
-        while(true){
-            const double t = ranLux.Exp(tau);
-            const double q_rand = ranLux.Uniform();
-            int q = 0;
-            if (q_rand < 1./3.) q = -1;
-            if (q_rand > 2./3.) q = 1;
-            const int f = -1; 
-            
-            evt.setValueInVector(0, t);
-            evt.setValueInVector(1, 0);
-            evt.setValueInVector(2, q);
-            evt.setValueInVector(3, mistag);
-            evt.setValueInVector(4, f);
-            
-            const double pdfVal = t_pdf.un_normalised(evt);
-            
-            double maxVal = exp(-fabs(t)/(tau))/(tau)*pdf_max;
-            const double height = ranLux.Uniform(0,maxVal);
-            
-            //Safety check on the maxmimum generated height
-            if( pdfVal > maxVal ){
-                std::cout << "ERROR: PDF above determined maximum." << std::endl;
-                std::cout << pdfVal << " > " << maxVal << std::endl;
-                //exit(1);
-                pdf_max = pdf_max * 2.;
-            }
-            
-            //Hit-and-miss
-            if( height < pdfVal ){
-                eventList.Add(evt);
-                eventList_fbar.Add(evt);                
+                if(f==1)eventList_f.Add(evt);
+                else eventList_fbar.Add(evt);
                 break;
             }
         }
     }
-    
-    
-    return;
-
     
     // Fit
     Neg2LL fcn_t(t_pdf, eventList_f);
@@ -488,7 +409,7 @@ void timeFit_mod(){
     return;
 }
 
-void TD_test(){
+void spline_test(){
 
     TCanvas* c = new TCanvas();
     //c->Divide(1, 2);
@@ -504,46 +425,33 @@ void TD_test(){
     RooRealVar dgamma("dgamma", "dgamma", 0.1);
     RooRealVar dm("dm", "dm", 20);
     RooRealVar f0("f0", "f0",1 );
-    RooRealVar f1("f1", "f1",0 );
+    RooRealVar f1("f1", "f1",1 );
     RooRealVar f2("f2", "f2",0 );
     RooRealVar f3("f3", "f3",0 );
     
     // Generate random hist? Like 5 bins : from 1 to 0.5 to imitate
     // efficiency
-    TH1F *hist = new TH1F("hist", "efficiency histogram", 5, 0., 14);
-    //for (int i = 0; i < 10; i++) {
-        // linearly decreasing for this test
-      //  hist->SetBinContent(i + 1, 0.99 - 0.1 * i);
-    //}
-    
-    hist->SetBinContent(1, 1);
-    hist->SetBinContent(2, 1);
-    hist->SetBinContent(3, 1);
-    hist->SetBinContent(4, 1);
-    hist->SetBinContent(5, 1.);
-
-    
+    TH1F *hist = new TH1F("hist", "efficiency histogram", 10, 0., 14);
+    for (int i = 0; i < 10; i++) {
+        hist->SetBinContent(i + 1, 0.99 - 0.1 * i);
+    }
+        
     // define spline (from histogram)
     RooCubicSplineFun spline("spline", "spline from hist", t, hist);
-    
-    hist->Draw();
-    c->Print("eff.pdf");
-    
+        
     TH1F *h_spline = new TH1F("", "", 100, 0., 14);
     
     for (int i = 1; i<=h_spline->GetNbinsX(); i++) {
             t.setVal(h_spline->GetXaxis()->GetBinCenter(i));
-            h_spline->SetBinContent(i+1,spline.getVal());
+            h_spline->SetBinContent(i,spline.getVal());
     }
 
     hist->Draw();
     h_spline->SetLineColor(kRed);
     h_spline->Draw("histcsame");
+    c->Print("spline.eps");
     c->Print("spline.pdf");
 
-    //return;
-    
-    
     // build PDF for per-candidate decay time resolution:
     // This gives the probability to observe a predicted time resolution of
     // dt; the chosen functional form pdf has roughly the shape one would see
@@ -583,13 +491,13 @@ void TD_test(){
     //genpdf.fitTo(*data, Timer(), Verbose(kFALSE));
     
     
-    //c->cd(1);
     RooPlot* tframegen = t.frame(Title("Decay Time p.d.f. (generation)"));
     data->plotOn(tframegen);
     genpdf.plotOn(tframegen);
     tframegen->DrawClone();
     
-    c->Print("spline2.pdf");
+    c->Print("splineFit.pdf");
+    c->Print("splineFit.eps");
     
     
     /*
@@ -603,14 +511,6 @@ void TD_test(){
     // version can do analytical integrals
     //RooDecay fitpdf_t("fitpdf_t", "decay time PDF for fitting", t, tau, efficiency, RooDecay::SingleSided);
                       
-    
-    /*
-    51   _f0("f0", "Cosh Coefficient", this, f0),
-    52   _f1("f1", "Sinh Coefficient", this, f1),
-    53   _f2("f2", "Cos Coefficient", this, f2),
-    54   _f3("f3", "Sin Coefficient", this, f3),
-     */
-                  
     RooBDecay fitpdf_t("fitpdf_t", "decay time PDF for fitting",
                           t,tau, dgamma, 
                           f0, f1, f2, f3,
@@ -621,15 +521,17 @@ void TD_test(){
                       RooArgSet(sigmapdf),
                       RooFit::Conditional(RooArgSet(fitpdf_t), RooArgSet(t)));
     // fit - should be a lot faster!
-    //fitpdf.fitTo(*data, Timer(), Verbose(kFALSE));
+    fitpdf.fitTo(*data, Timer(), Verbose(kFALSE));
     
     RooPlot* tframefit = t.frame(Title("Decay Time p.d.f."));
     data->plotOn(tframefit);
     fitpdf.plotOn(tframefit);
     tframefit->DrawClone();
     
-    c->Print("spline3.pdf");
+    c->Print("splineFitFast.pdf");
+    c->Print("splineFitFast.eps");
     
+    /*
     t.setRange("range",0,14);
     //cout << "int = " << fitpdf_t.analyticalIntegral(1,"range") << endl;
     
@@ -646,6 +548,7 @@ void TD_test(){
     knots.push_back(2);
     
     RooCubicSplineKnot k(knots);
+    */
 }
 
 
@@ -655,9 +558,16 @@ int main(int argc, char** argv){
 
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
-  //TD_test();
-  timeFit_mod();
+  NamedParameter<int>  doToyFit("doToyFit", 1);
+  NamedParameter<int>  useCPcoefficients("useCPcoefficients", 1);
   
+  NamedParameter<int>  doSplineTest("doSplineTest", 1);
+
+  if(doToyFit){
+      if(useCPcoefficients)timeFit();
+      else timeFit_mod();
+  }
+  if(doSplineTest)spline_test();
   
   cout << "==============================================" << endl;
   cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;

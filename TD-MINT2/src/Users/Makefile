@@ -22,9 +22,11 @@ CXXFLAGS += $(MOREINCSFLAGS)
 LIBS += -lMinuit
 LIBS += -lMathMore
 
+LIBS += -lCint 
 LIBS += -lCore 
 LIBS += -lRooFitCore 
 LIBS += -lRooFit
+LIBS += -lRooStats
 #LIBS += -lprofiler
 #CXXFLAGS += -fopenmp
 ##LDFLAGS += -fopenmp
