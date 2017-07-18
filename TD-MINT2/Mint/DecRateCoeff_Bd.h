@@ -76,12 +76,12 @@ public:
                     RooAbsReal& _detection_asym_);
     
     DecRateCoeff_Bd(const DecRateCoeff_Bd& other, const char* name=0) ;
-    TObject* clone(const char* newname) const override { return new DecRateCoeff_Bd(*this,newname); }
+    TObject* clone(const char* newname) const { return new DecRateCoeff_Bd(*this,newname); }
     inline ~DecRateCoeff_Bd() { }
     
-    Int_t getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName=0) const override;
-    Int_t getAnalyticalIntegralWN(RooArgSet& allVars, RooArgSet& analVars, const RooArgSet* normSet, const char* rangeName=0) const override;
-    Double_t analyticalIntegral(Int_t code, const char* rangeName=0) const override;
+    Int_t getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName=0) const ;
+    Int_t getAnalyticalIntegralWN(RooArgSet& allVars, RooArgSet& analVars, const RooArgSet* normSet, const char* rangeName=0) const ;
+    Double_t analyticalIntegral(Int_t code, const char* rangeName=0) const ;
     
 protected:
     
@@ -115,7 +115,7 @@ protected:
     
     Bool_t onetagger_;
     
-    Double_t evaluate() const override;
+    Double_t evaluate() const ;
     
 private:
     

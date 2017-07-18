@@ -123,14 +123,19 @@ RooRealVar coeff_6("coeff_6", "coeff_6", 1.0);
 
 
 //#############Implement GetCoefffomBinning directly###################
-//Do linear extrapolation for last knotvalue
-
+//Do linear extrapolation for last coeff
+/*
 double deltaY = values[6] - values[5];
 double deltaX= myknots[5] - myknots[4];
 double gradient = deltaY / deltaX;
-double lastKnotValue = 1 + gradient * (Bs_ct.getMax() - myknots[5]);
+double lastcoeff = 1 + gradient * (Bs_ct.getMax() - myknots[5]);
+*/
 
-RooRealVar coeff_7("coeff_7", "coeff_7", lastKnotValue);
+RooRealVar knot_5("knot_5","knot_5",myknots[5]);
+RooRealVar knot_4("knot_4","knot_4",myknots[4]);
+RooRealVar Bs_ct_max("Bs_ct_max","Bs_ct_max", Bs_ct.getMax());
+
+RooGenericPdf coeff_7("coeff_7","coeff_7", "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(coeff_6, coeff_5, knot_5, knot_4, Bs_ct_max) );
 
 
 //RooArgList* tacc_list;
