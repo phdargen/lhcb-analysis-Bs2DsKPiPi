@@ -217,6 +217,7 @@ std::vector<double> coherenceFactor(FitAmpSum& fas, FitAmpSum& fas_bar, double r
     return result;
 }
 
+// Full time-dependent PDF
 class AmpsPdfFlexiFastCPV : public MINT::PdfBase<IDalitzEvent>
 , virtual public IDalitzPdf{
     
@@ -323,7 +324,6 @@ public:
     }
     
     virtual DalitzHistoSet histoSet(){return _ampsSum->histoSet();}
-    
     
     void doFinalStatsAndSaveForAmp12(MINT::Minimiser* min=0,const std::string& fname = "FitAmpResults", const std::string& fnameROOT="fitFractions"){
         _amps1->redoIntegrator();
@@ -465,7 +465,7 @@ public:
     {;}
 };
 
-
+// DsK like time PDF with additional coherence factor 
 class TimePdf : public MINT::PdfBase<IDalitzEvent>
 {
 protected:
@@ -548,6 +548,7 @@ public:
     
 };
 
+// Time PDF in term of r, gamma, delta instead of CP coefficients
 class TimePdf_mod : public MINT::PdfBase<IDalitzEvent>
 {
 protected:
@@ -631,14 +632,18 @@ public:
 
 
 int ampFit(int step=0){    
+
+    // Set random seed, important for toy studies
     TRandom3 ranLux;
     NamedParameter<int> RandomSeed("RandomSeed", 0);
     int seed = RandomSeed + step;
     ranLux.SetSeed((int)seed);
     gRandom = &ranLux;
     
+    // Generate list of amplitudes
     FitAmplitude::AutogenerateFitFile();
     
+    // Read options from steering file
     NamedParameter<string> InputFileName("InputFileName", (std::string) "");
     std::string inputFile = InputFileName;
     bool generateNew = (std::string) InputFileName == "";
@@ -654,18 +659,17 @@ int ampFit(int step=0){
     NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
     DalitzEventPattern pat(EventPattern.getVector());
     cout << " got event pattern: " << pat << endl;
-    DalitzEventPattern patBar(EventPattern.getVector());
-    patBar[0].antiThis();
     
-    NamedParameter<int>  Nevents("Nevents", 10);
-    NamedParameter<double>  pdf_max("pdf_max", 10);
+    NamedParameter<int>  Nevents("Nevents", 100);
+    NamedParameter<int>  saveEvents("saveEvents", 1);
+    NamedParameter<double>  pdf_max("pdf_max", 100);
     
     NamedParameter<int>  doPlots("doPlots", 1);
     NamedParameter<int>  do2DScan("do2DScan", 0);
-    NamedParameter<int>  saveEvents("saveEvents", 1);
     NamedParameter<int>  doTimeFit("doTimeFit", 1);
     NamedParameter<int>  doDalitzFit("doDalitzFit", 1);
     
+    // Fit parameters for time-dependent part
     FitParameter  tau("tau");
     FitParameter  dGamma("dGamma");
     FitParameter  dm("dm");
@@ -677,6 +681,7 @@ int ampFit(int step=0){
     FitParameter  eff_tag("eff_tag");
     FitParameter  mistag("mistag");
     
+    // Define amplitude model
     DalitzEventList eventListPhsp,eventList;
     DalitzEventList eventList_f, eventList_fbar;
     
@@ -732,8 +737,10 @@ int ampFit(int step=0){
     AmpsPdfFlexiFast ampsSigCC(pat, &fasCC, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
     AmpsPdfFlexiFast ampsSum(pat, &fas_sum, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
     
+    // Make full time-dependent PDF
     AmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSigCC,&ampsSum, r, delta, gamma, tau, dGamma, dm, eff_tag, mistag );
     
+    // Generate toys
     if(generateNew){
         time_t startTime = time(0); 
         
@@ -804,6 +811,8 @@ int ampFit(int step=0){
         cout << " Generated " << Nevents << " Events. Took " << (time(0) - startTime)/60 << " mins "<< endl;
         
         if(saveEvents){
+            // Very messy workaround, needs to be fixded
+            // event vector should be saved with evt 
             eventList.saveAsNtuple(OutputRootFile);
             TFile* file= TFile::Open(((std::string) OutputRootFile).c_str(),"UPDATE");
             file->cd();
@@ -829,6 +838,8 @@ int ampFit(int step=0){
         in_treeTD->SetBranchAddress("w",&w);
         in_treeTD->SetBranchAddress("f",&f);
         
+        // Very messy workaround, needs to be fixded
+        // event vector should be saved with evt 
         if(in_treeTD->GetEntries() != in_tree->GetEntries()){cout << "ERROR: Different number of DalitzEvents and time information " << endl; throw "crash"; }
         
         for (unsigned int i = 0; i < in_treeTD->GetEntries(); i++) {
@@ -859,6 +870,7 @@ int ampFit(int step=0){
     mini.doFit();
     mini.printResultVsInput();
     
+    // Calculate pulls
     gDirectory->cd();
     TFile* paraFile = new TFile(((string)OutputDir+"pull_"+anythingToString((int)seed)+".root").c_str(), "RECREATE");
     paraFile->cd();
@@ -909,6 +921,7 @@ int ampFit(int step=0){
     k_val = k_fit[1];
     delta_val = k_fit[2];
     
+    // Calculate fit fractions
     pdf.doFinalStatsAndSaveForAmp12(&mini,((string)OutputDir+"FitAmpResults_rand_"+anythingToString((int)seed)).c_str(),((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
     
     if(doDalitzFit==1){
@@ -1435,6 +1448,7 @@ int ampFit(int step=0){
     return 0;
 }
 
+// Coherence factor studies
 void calculateCoherence(int step=0){
     
     TRandom3 ranLux;

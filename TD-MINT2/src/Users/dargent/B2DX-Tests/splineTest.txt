@@ -1,0 +1,2 @@
+"doToyFit"	 0
+"doSplineTest"	 1
