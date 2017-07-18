@@ -11,7 +11,7 @@ RooAbsGaussModelEfficiency::~RooAbsGaussModelEfficiency() {}
 namespace {
     using std::exp;
     using std::sqrt;
-    using std::erf;
+    //using std::erf;
 
     static const Double_t rootpi(sqrt(TMath::Pi())) ;
     std::complex<double> evalApprox(Double_t x, const std::complex<double>& z) {
