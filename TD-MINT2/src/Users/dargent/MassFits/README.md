@@ -4,10 +4,8 @@ Run code with ./massFit < massFit.txt
 
 Options that can be tuned in the optionsfile:
 
-* general options
-
 Channel: specify "Normalization" or "Signal" depending on the channel you want to perform the massfit in
-Year: takes integer 2011, 2012, 2015 or 2016 (only relevant in case you do not fit simultaneous)
+Year: takes integer 2011, 2012, 2015 or 2016. Only relevant in case you do not fit simultaneous
 DsKKpi: choose 1 for Ds->KKpi final state or 0 for Ds->pipipi
 
 fitSimultaneous: choose 1 for simultaneous fit or 0 for single fit (Year becomes relevant for 0 case)
