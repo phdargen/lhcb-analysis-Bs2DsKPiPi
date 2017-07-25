@@ -1,32 +1,19 @@
 ----------------------------------------------------
 
-Bs2DsKpipi.cc :
-Various functions are defined in this macro:
+Run code with ./massFit < massFit.txt
 
-void applyBDTcut(string "cutValue") - applies BDT cut of value "cutValue" to ntuple specified in the function 
+Options that can be tuned in the optionsfile:
 
-void iterateBDT(double startValue, double stopValue, double stepSize) - iterates BDT cuts from startValue to stopValue in stepSize increments and does massfit to obtain S/sqrt(s + B) every iteration
+* general options
 
-double *fitBGShape(double fitValues[int num parameters]) - fits mass shape of Bs->Ds*Kpipi reconstructed as Bs->DsKpipi and fills fitValue array to use shape as input for other functions
+Channel: specify "Normalization" or "Signal" depending on the channel you want to perform the massfit in
+Year: takes integer 2011, 2012, 2015 or 2016 (only relevant in case you do not fit simultaneous)
+DsKKpi: choose 1 for Ds->KKpi final state or 0 for Ds->pipipi
 
-double *fitBGShapeNorm(double fitValues[int numParameters]) - fits mass shape of Bs->Ds*pipipi reconstructed as Bs->Dspipipi and fills fitValue array to use shape as input for other functions 
-
-double *fitBGShapeNormKpipi(double fitValues[int numParameters]) - fits mass shape of Bs->DsKpipi reconstructed as Bs->Dspipipi and fills fitValue array to use shape as input for other functions
-
-double *fitBGShapeNormDstKpipi(double fitValues[int numParameters]) - fits mass shape of Bs->Ds*Kpipi reconstructed as Bs->Dspipipi and fills fitValue array to use shape as input for other functions
-
-double *fitBGShapethreePi(double fitValues[int numParameters]) - fits mass shape of Bs->Dspipipi reconstructed as Bs->DsKpipi and fills fitValue array to use shape as input for other functions
-
-double *fitBGShapethreePiDstar(double fitValues[int numParameters]) - fits mass shape of Bs->Ds*pipipi reconstructed as Bs->DsKpipi and fills fitValue array to use shape as input for other functions
-
-void fitBDT() - fits fully selected signal mass distribution with all shapes and saves sWeights if option is set
-
-double fitBDTNorm() - fits fully selected normalization channel mass shape with all shapes
-
-void quickFit()	- implementation of quick gaussian+exp PDF to estimate signal component 
-
-void makePlots() - makes plots
-
-void MCStudies() - uses fake rates from PID calib to determin what percentage of faked events are within our massfit (4800-5800 MeV) region
+fitSimultaneous: choose 1 for simultaneous fit or 0 for single fit (Year becomes relevant for 0 case)
+sWeighting: choose 1 to create sWeights from massfits and save new Ntuple with weights, 0 otherwise
+makePlots: choose 1 to save new plots, 0 otherwise
+BDTScan: choose 1 if you want to scan BDT cut in Normalization channel, 0 otherwise 
+fitCombined: choose 1 to combine years for Run1 and Run2, 0 otherwise 
 
  
