@@ -1,0 +1,11 @@
+* general options
+"Channel"		"Normalization"
+"Year"			2011
+"DsKKpi"		1
+
+* other options
+"fitSimultaneous"	1
+"sWeighting"		0
+"makePlots"		0
+"BDTScan"		0
+"fitCombined"		0
