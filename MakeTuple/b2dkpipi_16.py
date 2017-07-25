@@ -471,7 +471,12 @@ b2dkpipi_d2Kpipiseq.Members += [b2dkpipi_d2KpipiTuple]
 #
 #
 #
-DaVinci().EventPreFilters = [stripFilter]
+from Configurables import CheckPV
+checkPVs = CheckPV("checkPVs")
+checkPVs.MinPVs = 1
+checkPVs.MaxPVs = -1
+
+DaVinci().EventPreFilters = [stripFilter,checkPV]
 DaVinci().UserAlgorithms += [ b2dkpipiseq, b2dkpipi_d2pipipiseq]
 
 DaVinci().DataType = year
