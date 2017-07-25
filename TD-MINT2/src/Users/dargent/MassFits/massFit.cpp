@@ -1252,21 +1252,18 @@ void fitBDT(){
 
 	//4) Ds*Kpipi in DsKpipi
 	// 13 params: mean1-3, sigma1-6, f_1 & f_2, N_Dstar, N_Bs
-	//double fillarr4[13];
 	double *DsstarKpipifromNorm;
 	DsstarKpipifromNorm = fitBDTNorm();
 
 	//5) Dspipipi in DsKpipi
 	// 9 params: mean1, mean2, a1, a2, n1, n2, sigma1, sigma2, f_1
-	//double fillarr5[9];
 	double *DspipipiSig;
-	DspipipiSig = fitBGShapethreePi(/*fillarr5*/);
+	DspipipiSig = fitBGShapethreePi();
 
 	//6) Ds*pipipi in DsKpipi
 	// 9 params: mean1, mean2, a1, a2, n1, n2, sigma1, sigma2, f_1
-	//double fillarr6[9];
 	double *DstarpipipiSig;
-	DstarpipipiSig = fitBGShapethreePiDstar(/*fillarr6*/);
+	DstarpipipiSig = fitBGShapethreePiDstar();
 
 	///Define fit model----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1278,12 +1275,12 @@ void fitBDT(){
 	RooRealVar sigmaB2("sigmaB2", "B_{0} sigma_{2}", 13.,10.,50.);
 	RooGaussian GaussB01("GaussB01", "GaussB01", DTF_Bs_M, meanB01, sigmaB1);
 	RooGaussian GaussB02("GaussB02", "GaussB02", DTF_Bs_M, meanB01, sigmaB2);
-	RooRealVar f_GaussB("f_GaussB" , "f__{B_{0}}", 0.066);//, 0.2, 0.75);
+	RooRealVar f_GaussB("f_GaussB" , "f__{B_{0}}", 0.066);
         RooAddPdf DoubleGaussB0("DoubleGaussB0", "DoubleGaussB0", RooArgList(GaussB01,GaussB02),RooArgList(f_GaussB));
 
 	//Bs signal shape
 	RooRealVar meanBs1("meanBs1", "B_{s} #mu", 5370.,5320.,5420.); 
-	RooRealVar sigmaBs1("sigmaBs1", "B_{s} #sigma_{1}", 1.4186e+01);//,10.,90.);	
+	RooRealVar sigmaBs1("sigmaBs1", "B_{s} #sigma_{1}", 1.4186e+01);	
 	RooRealVar sigmaBs2("sigmaBs2", "B_{s} sigma_{2}", 15.,10.,55.);
 	RooGaussian GaussBs1("GaussBs1", "GaussBs1", DTF_Bs_M, meanBs1, sigmaB1);
 	RooGaussian GaussBs2("GaussBs2", "GaussBs2", DTF_Bs_M, meanBs1, sigmaBs2);
@@ -1291,8 +1288,8 @@ void fitBDT(){
         RooAddPdf DoubleGaussBs("DoubleGaussBs", "DoubleGaussBs", RooArgList(GaussBs1,GaussBs2),RooArgList(f_GaussB));
 
 	//double Crystal Ball Shape
-	RooRealVar a1_Sig("a1_Sig","a1_Sig", -2.1977e+00);//,-10.,10.);
-	RooRealVar n1_Sig("n1_Sig","n1_Sig", 3.1187e+00);//,0.,100.);
+	RooRealVar a1_Sig("a1_Sig","a1_Sig", -2.1977e+00);
+	RooRealVar n1_Sig("n1_Sig","n1_Sig", 3.1187e+00);
 	RooRealVar a2_Sig("a2_Sig","a2_Sig", 1.9229e+00);
 	RooRealVar n2_Sig("n2_Sig","n2_Sig", 9.0758e-01);
 	RooRealVar f_CB_Sig("f_CB_Sig","f_CB_Sig",5.5008e-01);
@@ -1307,7 +1304,6 @@ void fitBDT(){
 	RooRealVar N_Bs_11("N_Bs_11", "#B_{s} 11", 500, 0, 5000);
 	RooRealVar N_B0_12("N_B0_12", "#B_{0} 12", 500, 0, 5000);
 	RooRealVar N_Bs_12("N_Bs_12", "#B_{s} 12", 500, 0, 5000);
-//	RooAddPdf signal("signal", "signal", RooArgList(DoubleGaussB0, DoubleGaussBs),RooArgList(N_B0, N_Bs));	
 
 	///Background model - exponential for combinatorial Bkg + fixed BG shape from peaking Bkg
 
@@ -1393,8 +1389,8 @@ void fitBDT(){
 
 
 	//mean of crrystal balls
-	RooRealVar meanDspipipi1("meanDspipipi1","mu", DspipipiSig[0]);//, meanDspipipi1Variation_low, meanDspipipi1Variation_high);
-	RooRealVar meanDspipipi2("meanDspipipi2","mu", DspipipiSig[1]);//, meanDspipipi2Variation_low, meanDspipipi2Variation_high);
+	RooRealVar meanDspipipi1("meanDspipipi1","mu", DspipipiSig[0]);
+	RooRealVar meanDspipipi2("meanDspipipi2","mu", DspipipiSig[1]);
 
 	// asymmetry parameter of crystsal balls
 	RooRealVar a1("a1","a1", DspipipiSig[2]);
@@ -1419,16 +1415,10 @@ void fitBDT(){
 
 	//3) Ds*pipipi in DsKpipi-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// 9 params: mean1, mean2, a1, a2, n1, n2, sigma1, sigma2, f_1
-/*
-	double meanDstarThreePi1Variation_low = DstarpipipiSig[0] - (0.01 * DstarpipipiSig[0]);
-	double meanDstarThreePi1Variation_high = DstarpipipiSig[0] + (0.01 * DstarpipipiSig[0]);
-	double meanDstarThreePi2Variation_low = DstarpipipiSig[1] - (0.01 * DstarpipipiSig[1]);
-	double meanDstarThreePi2Variation_high = DstarpipipiSig[1] + (0.01 * DstarpipipiSig[1]);
-*/
 
 	//mean of crrystal balls
-	RooRealVar meanDstarThreePi1("meanDstarThreePi1","mu", DstarpipipiSig[0]/*, meanDstarThreePi1Variation_low, meanDstarThreePi1Variation_high*/);
-	RooRealVar meanDstarThreePi2("meanDstarThreePi2","mu", DstarpipipiSig[1]/*, meanDstarThreePi2Variation_low, meanDstarThreePi2Variation_high*/);
+	RooRealVar meanDstarThreePi1("meanDstarThreePi1","mu", DstarpipipiSig[0]);
+	RooRealVar meanDstarThreePi2("meanDstarThreePi2","mu", DstarpipipiSig[1]);
 
 	// asymmetry parameter of crystsal balls
 	RooRealVar aDstarThreePi1("aDstarThreePi1","a1", DstarpipipiSig[2]);
@@ -1526,27 +1516,6 @@ cout << "put together pdfs 1.5" << endl;
 	cout << "result is --------------- "<<endl;
 	result->Print();
 
-	//cout << "sigma2 =" << sigma1.getVal()*scale.getVal() << " pm " << sigma1.getError()*scale.getVal() << endl;
-
-	///calculate # (signal)background events in signal region
-	//cout << endl;
-	//cout << endl;
-/*
-	Bplus_MM.setRange("signal",mean1.getVal()-60.,mean1.getVal()+60.);
-	
-	RooAbsReal* S_fr= signal.createIntegral(Bplus_MM,NormSet(Bplus_MM),Range("signal"));
-	Double_t S = S_fr->getVal()*n_sig.getVal();
-	cout<<"S= " << S << endl;
-	RooAbsReal* B_fr= bkg.createIntegral(Bplus_MM,NormSet(Bplus_MM),Range("signal"));
-	Double_t B = B_fr->getVal()*n_bkg.getVal();
-	cout<<"B= " << B << endl;
-	
-	cout<< "S/sqrt(S+B)= " << S/sqrt(S+B) << endl;
-   	cout<<"S/B= " << S/B<< endl;
-
-	cout << endl;
-	cout << endl;
-*/
 	///Plot 
 	//define strings to be used when saving plots
 	
