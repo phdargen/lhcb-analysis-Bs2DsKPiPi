@@ -1,3 +1,4 @@
+
 from Gaudi.Configuration import *
 
 from Configurables import DaVinci
@@ -13,6 +14,12 @@ down = False
 stream = "AllStreams"
 if (data):
     stream = "BhadronCompleteEvent"
+
+
+from Configurables import CheckPV
+checkPVs = CheckPV("checkPVs")
+checkPVs.MinPVs = 1
+checkPVs.MaxPVs = -1
 
 triggerlines = [ "L0HadronDecision", 
                 "L0MuonDecision",
@@ -83,6 +90,9 @@ stripFilter = StripFilter( 'stripPassFilter',\
                            Code = "HLT_PASS('StrippingB02DKPiPiD2HHHPIDBeauty2CharmLineDecision')",\
                            Location= "/Event/Strip/Phys/DecReports")
 
+#from Configurables import LoKi__VoidFilter as Filter
+#fltr = Filter ( 'BPVFilter' ,  Code = "BPVVALID()")
+
 ############# DecayTreeTuple
 from DecayTreeTuple.Configuration import *
 from Configurables import TupleToolTISTOS
@@ -92,12 +102,15 @@ from Configurables import PrintDecayTree, PrintDecayTreeTool
 ##subpid stuff
 #from Configurables import SubPIDMMFilter
 from Configurables import SubstitutePID,BTaggingTool
-from Configurables import TupleToolDecayTreeFitter, TupleToolTrackIsolation, TupleToolTagging, TupleToolRecoStats, TupleToolKinematic, TupleToolGeometry 
+from Configurables import TupleToolDecayTreeFitter, TupleToolTrackIsolation, TupleToolTagging, TupleToolRecoStats, TupleToolKinematic, TupleToolGeometry, TupleToolPropertime
 from Configurables import LoKi__Hybrid__TupleTool
 
 reqsel = AutomaticData(Location = "/Event/"+stream+"/Phys/StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine_Line/Particles")
 
-from Configurables import FilterDesktop
+#_PVFilter = FilterDesktop("PVFilter", Code = "BPVVALID()")
+#PVsel = Selection("PVSel", Algorithm = _PVFilter, RequiredSelections = [reqsel])
+#PVseq = SelectionSequence("PVSeq", TopSelection = PVsel)
+
 
 #B0 -> (D- -> K K pi) (K_1(1270)+ -> K+ pi+ pi-)
 b2dkpipiTuple = DecayTreeTuple("Bs2DsKpipi_Ds2KKpi_Tuple")
@@ -124,7 +137,6 @@ b2dkpipiTuple.ToolList +=  ["TupleToolGeometry", \
                             "TupleToolRecoStats", \
                             "TupleToolAngles", \
                             "TupleToolPid", \
-                            "TupleToolPropertime", \
                             "TupleToolPhotonInfo", \
                             "TupleToolTrackIsolation",
                             "TupleToolTagging" ]
@@ -150,6 +162,9 @@ b2dkpipiTuple.TupleToolKinematic.Verbose = False
 b2dkpipiTuple.addTool( TupleToolGeometry, name = "TupleToolGeometry" )
 b2dkpipiTuple.TupleToolGeometry.Verbose = False
 
+#b2dkpipiTuple.addTool( TupleToolPropertime, name = "TupleToolPropertime" )
+#b2dkpipiTuple.TupleToolPropertime.Verbose = True
+
 b2dkpipiTuple.addTool(TupleToolRecoStats, name="TupleToolRecoStats")
 b2dkpipiTuple.TupleToolRecoStats.Verbose = True
 b2dkpipiTuple.UseLabXSyntax = True                          
@@ -157,7 +172,7 @@ b2dkpipiTuple.RevertToPositiveID = False
 
 LoKiTool = b2dkpipiTuple.addTupleTool("LoKi::Hybrid::TupleTool/LoKiTool")
 LoKiTool.Variables = { #"inMuon" : "switch(INMUON, 1, 0)",
-                       "ETA" : "ETA" , "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)"
+                       "ETA" : "ETA" , "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)", "TAU" : "BPVLTIME()", "TAUERR" : "BPVLTERR()"
                        };
                        
 b2dkpipiTuple.addTool(TupleToolDecay, name="Bs")
@@ -227,10 +242,16 @@ b2dkpipitt.VerboseHlt2 = True
 
 #main sequence
 b2dkpipiTuple.Inputs = [ "/Event/"+stream+"/Phys/B02DKPiPiD2HHHPIDBeauty2CharmLine/Particles" ]
+#b2dkpipiTuple.Inputs = [ PVseq.outputLocation()  ]
+
 b2dkpipiseq = GaudiSequencer("B2dkpipiSeq")
-#bu2kpipimumuseq.Members += [makebu2kpipimumuseq.sequence(), bu2kpipimumuprinter, bu2kpipimumutuple]
+#bu2kpipimumuseq.Members += [makebu2kpipimumuseq.sequence(), bu2kpipimumuprinter, bu2kpipimumutuple
+#b2dkpipiseq.Members += [PVseq.sequence(),b2dkpipiTuple]
 b2dkpipiseq.Members += [b2dkpipiTuple]
 
+#from PhysConf.Selections import CheckPVSelection, ValidBPVSelection
+#b2dkpipiseq = CheckPVSelection(b2dkpipiseq)
+#b2dkpipiseq = ValidBPVSelection(b2dkpipiseq)
 
 #
 #B0 -> (D- -> pi pi pi) (K_1(1270)+ -> K+ pi+ pi-)
@@ -258,7 +279,6 @@ b2dkpipi_d2pipipiTuple.ToolList +=  ["TupleToolGeometry", \
                               "TupleToolRecoStats", \
                               "TupleToolAngles", \
                               "TupleToolPid", \
-                              "TupleToolPropertime", \
                               "TupleToolPhotonInfo", \
                               "TupleToolTrackIsolation",
                               "TupleToolTagging" ]
@@ -291,7 +311,7 @@ b2dkpipi_d2pipipiTuple.RevertToPositiveID = False
 
 LoKiTool_d2pipipi = b2dkpipi_d2pipipiTuple.addTupleTool("LoKi::Hybrid::TupleTool/LoKiTool")
 LoKiTool_d2pipipi.Variables = { #"inMuon" : "switch(INMUON, 1, 0)",
-    "ETA" : "ETA" , "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)"
+                       "ETA" : "ETA" , "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)", "TAU" : "BPVLTIME()", "TAUERR" : "BPVLTERR()"
         };
                        
 b2dkpipi_d2pipipiTuple.addTool(TupleToolDecay, name="Bs")
@@ -376,7 +396,6 @@ b2dkpipi_d2KpipiTuple.ToolList +=  ["TupleToolGeometry", \
                               "TupleToolRecoStats", \
                               "TupleToolAngles", \
                               "TupleToolPid", \
-                              "TupleToolPropertime", \
                               "TupleToolPhotonInfo", \
                               "TupleToolTrackIsolation",
                               "TupleToolTagging" ]
@@ -409,7 +428,7 @@ b2dkpipi_d2KpipiTuple.RevertToPositiveID = False
 
 LoKiTool_d2KpipiTuple = b2dkpipi_d2KpipiTuple.addTupleTool("LoKi::Hybrid::TupleTool/LoKiTool")
 LoKiTool_d2KpipiTuple.Variables = { #"inMuon" : "switch(INMUON, 1, 0)",
-    "ETA" : "ETA" , "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)"
+                       "ETA" : "ETA" , "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)", "TAU" : "BPVLTIME()", "TAUERR" : "BPVLTERR()"
         };
 
 b2dkpipi_d2KpipiTuple.addTool(TupleToolDecay, name="Bs")
@@ -470,9 +489,13 @@ b2dkpipi_d2Kpipiseq.Members += [b2dkpipi_d2KpipiTuple]
 
 #
 #
-#
-DaVinci().EventPreFilters = [stripFilter]
-DaVinci().UserAlgorithms += [ b2dkpipiseq, b2dkpipi_d2pipipiseq]
+
+#from PhysSelPython.Wrappers import ValidBPVSelection
+
+#good = ValidBPVSelection(["/Event/"+stream+"/Phys/B02DKPiPiD2HHHPIDBeauty2CharmLine/Particles"])
+
+DaVinci().EventPreFilters = [stripFilter,checkPVs]
+DaVinci().UserAlgorithms += [b2dkpipiseq, b2dkpipi_d2pipipiseq]
 
 DaVinci().DataType = year
 if (data):
