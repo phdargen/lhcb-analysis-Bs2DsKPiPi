@@ -33,7 +33,8 @@ Run new job with inputdata from failed jobs:
 ds = LHCbDataset()
 
 for sj in j.subjobs.select(status='failed'):
-         ...:     ds.extend(sj.inputdata)
+
+             ds.extend(sj.inputdata)
 
 j_new = j.copy()
 
@@ -42,6 +43,10 @@ j_new.inputdata = ds
 j_new.splitter = SplitByFiles(filesPerJob = 10)
 
 j_new.splitter.ignoremissing = True
+
+if optionsfile has changed: 
+
+j_new.unprepare()
 
 j_new.submit()
 
