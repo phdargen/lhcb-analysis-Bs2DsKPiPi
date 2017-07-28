@@ -36,10 +36,14 @@ TTree* DecayTree::GetInputTree(){
     else if(_decay==Decay::signal && _data==DataType::data && _year == 12){
         TString loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/8/";
         TString file = "/output/b2dhhh.root";
-        for(int i = 0; i<1000; i++){
+        for(int i = 0; i<1100; i++){
             TString dir_i = TString::Format("%d",i);
             chain->Add(loc + dir_i + file);
         }
+        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/12/";
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/12b/";
+        chain->Add(loc+"b2dhhh*.root");
     }
     
     else if(_decay==Decay::norm && _data==DataType::data && _year == 11){
@@ -49,15 +53,45 @@ TTree* DecayTree::GetInputTree(){
             TString dir_i = TString::Format("%d",i);
             chain->Add(loc + dir_i + file);
         }
+	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/14/";
+        for(int i = 0; i<1000; i++){
+            TString dir_i = TString::Format("%d",i);
+            chain->Add(loc + dir_i + file);
+        }
     }
     
     else if(_decay==Decay::norm && _data==DataType::data && _year == 12){
         TString loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/10/";
         TString file = "/output/b2dhhh.root";
+        for(int i = 0; i<1100; i++){
+            TString dir_i = TString::Format("%d",i);
+            chain->Add(loc + dir_i + file);
+        }
+	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/13/";
         for(int i = 0; i<1000; i++){
             TString dir_i = TString::Format("%d",i);
             chain->Add(loc + dir_i + file);
         }
+	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/16/";
+        for(int i = 0; i<1000; i++){
+            TString dir_i = TString::Format("%d",i);
+            chain->Add(loc + dir_i + file);
+        }
+    }
+
+    else if(_decay==Decay::signal && _data==DataType::data && _year == 16){
+        TString loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16U/";
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16Ub/";
+        chain->Add(loc+"b2dhhh*.root");
+
+        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16D/";
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16Db/";
+        chain->Add(loc+"b2dhhh*.root");
+
+        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16D_3pi/";
+        chain->Add(loc+"b2dhhh*.root");
     }
 
     else {
