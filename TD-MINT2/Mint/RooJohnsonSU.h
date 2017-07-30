@@ -38,7 +38,7 @@ public:
                  RooAbsReal& _nu,
                  RooAbsReal& _tau);
     RooJohnsonSU(const RooJohnsonSU& other, const char* name=0) ;
-    TObject* clone(const char* newname) const override { return new RooJohnsonSU(*this,newname); }
+    TObject* clone(const char* newname) const { return new RooJohnsonSU(*this,newname); }
     inline virtual ~RooJohnsonSU() { }
     
 protected:
@@ -49,10 +49,10 @@ protected:
     RooRealProxy nu ;
     RooRealProxy tau ;
     
-    Double_t evaluate() const override;
+    Double_t evaluate() const;
     // Integrals
-    Int_t getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName=0) const override;
-    Double_t analyticalIntegral(Int_t code, const char* rangeName=0) const override;
+    Int_t getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName=0) const;
+    Double_t analyticalIntegral(Int_t code, const char* rangeName=0) const;
     
 private:
     
