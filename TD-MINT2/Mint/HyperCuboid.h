@@ -13,11 +13,11 @@
 class HyperCuboid;
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "HyperPoint.h"
-#include "HyperPlane.h"
-#include "HyperLine.h"
-#include "HyperVolume.h"
+#include "Mint/MessageService.h"
+#include "Mint/HyperPoint.h"
+#include "Mint/HyperPlane.h"
+#include "Mint/HyperLine.h"
+#include "Mint/HyperVolume.h"
 
 // Root includes
 

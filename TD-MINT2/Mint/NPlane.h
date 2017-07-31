@@ -7,9 +7,9 @@
 #define NPLANE_HH
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "HyperPoint.h"
-#include "HyperPointSet.h"
+#include "Mint/MessageService.h"
+#include "Mint/HyperPoint.h"
+#include "Mint/HyperPointSet.h"
 
 // Root includes
 

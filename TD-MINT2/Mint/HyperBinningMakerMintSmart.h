@@ -2,9 +2,9 @@
 #define HYPERBINNINGMAKERMINTSMART_HH
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "HyperBinningMaker.h"
-#include "LoadingBar.h"
+#include "Mint/MessageService.h"
+#include "Mint/HyperBinningMaker.h"
+#include "Mint/LoadingBar.h"
 
 // Root includes
 #include "TMath.h"

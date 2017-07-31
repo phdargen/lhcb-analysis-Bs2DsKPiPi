@@ -10,15 +10,15 @@
 
 
 // HyperPlot includes
-#include "HyperBinningMakerSmart.h"
-#include "HyperBinningMakerMint.h"
-#include "HyperBinningMakerMultiSmart.h"
-#include "HyperBinningMakerMintSmart.h"
-#include "HyperBinningMakerMintRandomise.h"
-#include "HyperBinningMakerSmartRandomise.h"
-#include "HyperBinningMakerSmartLikelihood.h"
-#include "HyperBinningMakerLikelihood.h"
-#include "HyperBinningMakerPhaseBinning.h"
+#include "Mint/HyperBinningMakerSmart.h"
+#include "Mint/HyperBinningMakerMint.h"
+#include "Mint/HyperBinningMakerMultiSmart.h"
+#include "Mint/HyperBinningMakerMintSmart.h"
+#include "Mint/HyperBinningMakerMintRandomise.h"
+#include "Mint/HyperBinningMakerSmartRandomise.h"
+#include "Mint/HyperBinningMakerSmartLikelihood.h"
+#include "Mint/HyperBinningMakerLikelihood.h"
+#include "Mint/HyperBinningMakerPhaseBinning.h"
 
 
 

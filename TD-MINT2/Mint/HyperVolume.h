@@ -14,10 +14,10 @@
 class HyperVolume;
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "HyperPoint.h"
-#include "HyperPointSet.h"
-#include "HyperCuboid.h"
+#include "Mint/MessageService.h"
+#include "Mint/HyperPoint.h"
+#include "Mint/HyperPointSet.h"
+#include "Mint/HyperCuboid.h"
 
 // Root includes
 

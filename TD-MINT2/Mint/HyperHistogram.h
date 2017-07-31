@@ -33,14 +33,14 @@ Binning Algorithm Options:
 #define HYPERHISTOGRAM_HH
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "HistogramBase.h"
-#include "HyperFunction.h"
-#include "HyperName.h"
-#include "BinningBase.h"
-#include "HyperBinning.h"
-#include "HyperBinningDiskRes.h"
-#include "HyperBinningAlgorithms.h"
+#include "Mint/MessageService.h"
+#include "Mint/HistogramBase.h"
+#include "Mint/HyperFunction.h"
+#include "Mint/HyperName.h"
+#include "Mint/BinningBase.h"
+#include "Mint/HyperBinning.h"
+#include "Mint/HyperBinningDiskRes.h"
+#include "Mint/HyperBinningAlgorithms.h"
 
 // Root includes
 #include "TRandom.h"

@@ -12,10 +12,10 @@
 #define BINNINGBASE_HH
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "HyperPoint.h"
-#include "HyperVolume.h"
-#include "HyperName.h"
+#include "Mint/MessageService.h"
+#include "Mint/HyperPoint.h"
+#include "Mint/HyperVolume.h"
+#include "Mint/HyperName.h"
 
 
 // Root includes

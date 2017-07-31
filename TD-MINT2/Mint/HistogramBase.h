@@ -12,9 +12,9 @@
 #define HISTOGRAMBASE_HH
 
 // HyperPlot includes
-#include "RootPlotter1D.h"
-#include "RootPlotter2D.h"
-#include "MessageService.h"
+#include "Mint/RootPlotter1D.h"
+#include "Mint/RootPlotter2D.h"
+#include "Mint/MessageService.h"
 
 // Root includes
 #include "TTree.h"

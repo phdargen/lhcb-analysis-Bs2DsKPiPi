@@ -20,7 +20,7 @@
 #include "TCanvas.h"
 #include "TStyle.h"
 #include "TEllipse.h"
-#include "MessageService.h"
+#include "Mint/MessageService.h"
 
 
 class Plotter {

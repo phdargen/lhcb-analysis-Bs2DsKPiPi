@@ -1,4 +1,5 @@
 #include "Mint/HyperPlane.h"
+#include <math.h>
 
 ///Constructor that requires nDim points to define the HyperPlane
 ///

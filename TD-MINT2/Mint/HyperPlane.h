@@ -12,10 +12,10 @@
 #define HYPERPLANE_HH
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "HyperPoint.h"
-#include "NPlane.h"
-#include "HyperLine.h"
+#include "Mint/MessageService.h"
+#include "Mint/HyperPoint.h"
+#include "Mint/NPlane.h"
+#include "Mint/HyperLine.h"
 
 // Root includes
 #include "TDecompLU.h"

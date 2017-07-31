@@ -1,4 +1,5 @@
 #include "Mint/StatisticsFinder.h"
+#include <math.h>
 
 #include <algorithm>
 

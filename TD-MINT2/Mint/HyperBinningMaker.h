@@ -9,13 +9,13 @@
 #define HYPERBINNINGMAKER_HH
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "HyperCuboid.h"
-#include "HyperPointSet.h"
-#include "HyperBinningMemRes.h"
-#include "RootPlotter1D.h"
-#include "RootPlotter2D.h"
-#include "HyperFunction.h"
+#include "Mint/MessageService.h"
+#include "Mint/HyperCuboid.h"
+#include "Mint/HyperPointSet.h"
+#include "Mint/HyperBinningMemRes.h"
+#include "Mint/RootPlotter1D.h"
+#include "Mint/RootPlotter2D.h"
+#include "Mint/HyperFunction.h"
 
 // Root includes
 #include "TH1D.h"

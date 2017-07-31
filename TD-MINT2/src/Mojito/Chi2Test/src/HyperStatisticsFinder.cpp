@@ -1,4 +1,5 @@
 #include "Mint/HyperStatisticsFinder.h"
+#include <math.h>
 
 
 HyperStatisticsFinder::HyperStatisticsFinder(int dim, bool mean, bool width, bool widthError, bool keepOrderedEvents) :

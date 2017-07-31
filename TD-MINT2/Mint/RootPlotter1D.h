@@ -10,10 +10,10 @@
 #ifndef ROOT_PLOTTER_1D_HH
 #define ROOT_PLOTTER_1D_HH
 
-#include "RootPlotter.h"
+#include "Mint/RootPlotter.h"
 
 
-#include "MessageService.h"
+#include "Mint/MessageService.h"
 
 #include "TLine.h"
 

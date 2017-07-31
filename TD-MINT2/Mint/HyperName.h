@@ -13,7 +13,7 @@
 #define HYPERNAME_HH
 
 // HyperPlot includes
-#include "MessageService.h"
+#include "Mint/MessageService.h"
 
 // Root includes
 #include "TString.h"

@@ -2,7 +2,7 @@
 #define CYCLIC_PHASE_BINS_HH
 
 // HyperPlot includes
-#include "MessageService.h"
+#include "Mint/MessageService.h"
 
 #include "TMath.h"
 

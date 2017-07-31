@@ -1,4 +1,5 @@
 #include "Mint/HyperPoint.h"
+#include <math.h>
 
 ///Most basic constructor that makes a HyperPoint with a 
 ///specified dimension, and filled with 0.0 for each element.

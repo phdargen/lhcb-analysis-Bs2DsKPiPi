@@ -15,9 +15,9 @@
 
 // HyperPlot includes
 
-#include "MessageService.h"
-#include "StatisticsFinder.h"
-#include "HyperPoint.h"
+#include "Mint/MessageService.h"
+#include "Mint/StatisticsFinder.h"
+#include "Mint/HyperPoint.h"
 
 class HyperStatisticsFinder {
 

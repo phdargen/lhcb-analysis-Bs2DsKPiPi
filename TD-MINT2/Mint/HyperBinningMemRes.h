@@ -56,15 +56,15 @@ The
 #define HYPERBINNINGMEMRES_HH
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "HyperPoint.h"
-#include "HyperPointSet.h"
-#include "HyperCuboid.h"
-#include "HyperVolume.h"
-#include "RootPlotter1D.h"
-#include "RootPlotter2D.h"
-#include "HyperName.h"
-#include "HyperBinning.h"
+#include "Mint/MessageService.h"
+#include "Mint/HyperPoint.h"
+#include "Mint/HyperPointSet.h"
+#include "Mint/HyperCuboid.h"
+#include "Mint/HyperVolume.h"
+#include "Mint/RootPlotter1D.h"
+#include "Mint/RootPlotter2D.h"
+#include "Mint/HyperName.h"
+#include "Mint/HyperBinning.h"
 
 
 // Root includes

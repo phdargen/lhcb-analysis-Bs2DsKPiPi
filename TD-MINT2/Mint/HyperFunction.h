@@ -13,10 +13,10 @@
 #define HYPERFUNCTION_HH
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "HyperPointSet.h"
-#include "HyperCuboid.h"
-#include "RootPlotter2D.h"
+#include "Mint/MessageService.h"
+#include "Mint/HyperPointSet.h"
+#include "Mint/HyperCuboid.h"
+#include "Mint/RootPlotter2D.h"
 
 // Root includes
 #include "TH2D.h"

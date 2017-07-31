@@ -11,12 +11,12 @@
 #define HYPERBINNINGPAINTER_HH
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "RootPlotter1D.h"
-#include "RootPlotter2D.h"
+#include "Mint/MessageService.h"
+#include "Mint/RootPlotter1D.h"
+#include "Mint/RootPlotter2D.h"
 
-#include "BinningBase.h"
-#include "HyperHistogram.h"
+#include "Mint/BinningBase.h"
+#include "Mint/HyperHistogram.h"
 
 
 // Root includes

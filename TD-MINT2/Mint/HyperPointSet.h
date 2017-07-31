@@ -12,9 +12,9 @@
 #define HYPERPOINTSET_HH
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "HyperPoint.h"
-#include "StatisticsFinder.h"
+#include "Mint/MessageService.h"
+#include "Mint/HyperPoint.h"
+#include "Mint/StatisticsFinder.h"
 
 // Root includes
 #include "TMatrixD.h"
@@ -24,7 +24,7 @@
 // std includes
 #include <algorithm>
 #include <functional>
-#include <array>
+//#include <array>
 #include <iostream>
 
 

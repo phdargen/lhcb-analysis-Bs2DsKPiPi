@@ -11,8 +11,8 @@
 #define HYPERPOINT_HH
 
 // HyperPlot includes
-#include "MessageService.h" 
-#include "Weights.h"
+#include "Mint/MessageService.h" 
+#include "Mint/Weights.h"
 
 // Root includes
 #include "TMatrixD.h"

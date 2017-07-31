@@ -1,4 +1,5 @@
 #include "Mint/HyperPointSet.h"
+#include <math.h>
 
 ///Standard constuctor where only the dimensionality is given
 ///

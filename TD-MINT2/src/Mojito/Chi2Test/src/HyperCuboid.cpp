@@ -1,4 +1,5 @@
 #include "Mint/HyperCuboid.h"
+#include <math.h>
 
 ///Most basic constructor where only the dimension
 ///of the cuboid is specified.

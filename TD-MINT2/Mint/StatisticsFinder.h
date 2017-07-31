@@ -10,7 +10,7 @@
 #ifndef STATISTICS_FINDER_HH
 #define STATISTICS_FINDER_HH
 
-#include "MessageService.h"
+#include "Mint/MessageService.h"
 
 class StatisticsFinder {
 

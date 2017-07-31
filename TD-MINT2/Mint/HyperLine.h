@@ -11,9 +11,9 @@
 #define HYPERLINE_HH
 
 // HyperPlot includes
-#include "MessageService.h"
-#include "HyperPoint.h"
-#include "NPlane.h"
+#include "Mint/MessageService.h"
+#include "Mint/HyperPoint.h"
+#include "Mint/NPlane.h"
 
 // Root includes
 

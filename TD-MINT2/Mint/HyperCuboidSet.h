@@ -13,7 +13,7 @@
 #ifndef HYPERCUBOIDSET_HH
 #define HYPERCUBOIDSET_HH
 
-#include "HyperVolume.h"
+#include "Mint/HyperVolume.h"
 
 typedef HyperVolume HyperCuboidSet;
 

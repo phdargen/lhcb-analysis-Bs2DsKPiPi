@@ -24,8 +24,8 @@
 #define HYPERBINNINGALGORITHMS_HH
 
 // HyperPlot includes
-#include "HyperBinningMakers.h"
-#include "MessageService.h"
+#include "Mint/HyperBinningMakers.h"
+#include "Mint/MessageService.h"
 
 // Root includes
 
