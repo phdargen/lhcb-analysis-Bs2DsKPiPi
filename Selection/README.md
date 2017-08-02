@@ -35,5 +35,12 @@ root -l
 
 TMVAClassification("BDTG","Run1")
 
+# apply BDT
+
+root -l 
+
+.L TMVAClassificationApplication.cpp
+
+TMVAClassificationApplication("Signal/Norm","Data/MC","BDTG")
 
 
