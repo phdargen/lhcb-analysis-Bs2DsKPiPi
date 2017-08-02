@@ -23,13 +23,14 @@ TTree* DecayTree::GetInputTree(){
     if(_decay==Decay::signal && _data==DataType::data && _year == 11){
         TString loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/5/";
         TString file = "/output/b2dhhh.root";
-        
-        cout << "Using the files: " << endl;
-        cout << loc + "*" + file << endl << endl;
-        
         for(int i = 0; i<1000; i++){
             TString dir_i = TString::Format("%d",i);
              chain->Add(loc + dir_i + file);
+        }
+	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/33/";
+        for(int i = 0; i<110; i++){
+	  TString dir_i = TString::Format("%d",i);
+	  chain->Add(loc + dir_i + file);
         }
     }
     
@@ -40,10 +41,11 @@ TTree* DecayTree::GetInputTree(){
             TString dir_i = TString::Format("%d",i);
             chain->Add(loc + dir_i + file);
         }
-        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/12/";
-        chain->Add(loc+"b2dhhh*.root");
-        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/12b/";
-        chain->Add(loc+"b2dhhh*.root");
+	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/34/";
+        for(int i = 0; i<1100; i++){
+            TString dir_i = TString::Format("%d",i);
+            chain->Add(loc + dir_i + file);
+        }
     }
     
     else if(_decay==Decay::norm && _data==DataType::data && _year == 11){
@@ -53,7 +55,7 @@ TTree* DecayTree::GetInputTree(){
             TString dir_i = TString::Format("%d",i);
             chain->Add(loc + dir_i + file);
         }
-	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/14/";
+	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/35/";
         for(int i = 0; i<1000; i++){
             TString dir_i = TString::Format("%d",i);
             chain->Add(loc + dir_i + file);
@@ -67,30 +69,45 @@ TTree* DecayTree::GetInputTree(){
             TString dir_i = TString::Format("%d",i);
             chain->Add(loc + dir_i + file);
         }
-	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/13/";
-        for(int i = 0; i<1000; i++){
-            TString dir_i = TString::Format("%d",i);
-            chain->Add(loc + dir_i + file);
-        }
-	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/16/";
+	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/36/";
         for(int i = 0; i<1000; i++){
             TString dir_i = TString::Format("%d",i);
             chain->Add(loc + dir_i + file);
         }
     }
 
+    else if(_decay==Decay::signal && _data==DataType::data && _year == 15){
+        TString loc = "/auto/data/kecke/B2DKPiPi/15/";
+        chain->Add(loc+"b2dhhh*.root");
+	loc = "/auto/data/kecke/B2DKPiPi/15-rest/";
+        chain->Add(loc+"b2dhhh*.root");
+    }
+
     else if(_decay==Decay::signal && _data==DataType::data && _year == 16){
         TString loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16U/";
         chain->Add(loc+"b2dhhh*.root");
-        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16Ub/";
-        chain->Add(loc+"b2dhhh*.root");
-
+	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/38/";
+        TString file = "/output/b2dhhh.root";
+        for(int i = 0; i<1000; i++){
+            TString dir_i = TString::Format("%d",i);
+            chain->Add(loc + dir_i + file);
+        }
+	
         loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16D/";
-        chain->Add(loc+"b2dhhh*.root");
-        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16Db/";
-        chain->Add(loc+"b2dhhh*.root");
+        //chain->Add(loc+"b2dhhh*.root");
+    }
 
-        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16D_3pi/";
+    else if(_decay==Decay::norm && _data==DataType::data && _year == 15){
+        TString loc = "/auto/data/kecke/B2DPiPiPi/15/";
+        chain->Add(loc+"b2dhhh*.root");
+	loc = "/auto/data/kecke/B2DPiPiPi/15-rest/";
+        chain->Add(loc+"b2dhhh*.root");
+    }
+
+    else if(_decay==Decay::norm && _data==DataType::data && _year == 16){
+        TString loc = "/auto/data/kecke/B2DPiPiPi/16/";
+        chain->Add(loc+"b2dhhh*.root");
+	loc = "/auto/data/kecke/B2DPiPiPi/16-rest/";
         chain->Add(loc+"b2dhhh*.root");
     }
 
@@ -135,7 +152,7 @@ fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataTyp
     if(_data==DataType::data)s1="Data";
     else s1 = "MC";
     if(_decay==Decay::signal)s2="signal";
-    else s2 = "Norm";
+    else s2 = "norm";
     if(_Ds_finalState==Ds_finalState::pipipi)s3="Ds2pipipi";
     else if(_Ds_finalState==Ds_finalState::Kpipi)s3="Ds2Kpipi";
     else s3="Ds2KKpi";
@@ -218,8 +235,8 @@ inline Bool_t DecayTree::LooseCuts(Long64_t i){
     b_Bs_BsDTF_M->GetEntry(i);
     if(Bs_BsDTF_M[0] < 4800. || Bs_BsDTF_M[0] > 6000.) return false;
     
-    //b_Bs_PV_M->GetEntry(i);
-    //if (Bs_PV_M[0] < 4800. || Bs_PV_M[0] > 6000.) return false;
+    b_Bs_PV_M->GetEntry(i);
+    if (Bs_PV_M[0] < 4800. || Bs_PV_M[0] > 6000.) return false;
     
     b_Ds_ENDVERTEX_Z->GetEntry(i);
     b_Bs_ENDVERTEX_Z->GetEntry(i);

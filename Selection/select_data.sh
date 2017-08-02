@@ -1,19 +1,19 @@
 qsub submit/select_signal_Ds2KKpi_data_11.sh
 qsub submit/select_signal_Ds2KKpi_data_12.sh
-#qsub submit/select_signal_Ds2KKpi_data_15.sh
-#qsub submit/select_signal_Ds2KKpi_data_16.sh
+qsub submit/select_signal_Ds2KKpi_data_15.sh
+qsub submit/select_signal_Ds2KKpi_data_16.sh
 
 qsub submit/select_signal_Ds2pipipi_data_11.sh
 qsub submit/select_signal_Ds2pipipi_data_12.sh
-#qsub submit/select_signal_Ds2pipipi_data_15.sh
-#qsub submit/select_signal_Ds2pipipi_data_16.sh
+qsub submit/select_signal_Ds2pipipi_data_15.sh
+qsub submit/select_signal_Ds2pipipi_data_16.sh
 
 qsub submit/select_norm_Ds2KKpi_data_11.sh
 qsub submit/select_norm_Ds2KKpi_data_12.sh
-#qsub submit/select_norm_Ds2KKpi_data_15.sh
-#qsub submit/select_norm_Ds2KKpi_data_16.sh
+qsub submit/select_norm_Ds2KKpi_data_15.sh
+qsub submit/select_norm_Ds2KKpi_data_16.sh
 
 qsub submit/select_norm_Ds2pipipi_data_11.sh
 qsub submit/select_norm_Ds2pipipi_data_12.sh
-#qsub submit/select_norm_Ds2pipipi_data_15.sh
-#qsub submit/select_norm_Ds2pipipi_data_16.sh
+qsub submit/select_norm_Ds2pipipi_data_15.sh
+qsub submit/select_norm_Ds2pipipi_data_16.sh

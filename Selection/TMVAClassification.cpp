@@ -23,7 +23,7 @@
 void TMVAClassification( TString myMethodList = "BDTG", TString run = "Run1" )
 {
    TChain* background = new TChain("DecayTree");
-   //background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_11.root");
+   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_11.root");
    background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_12.root");
 
    TChain* signal = new TChain("DecayTree");
@@ -78,51 +78,63 @@ void TMVAClassification( TString myMethodList = "BDTG", TString run = "Run1" )
    TMVA::Factory *factory = new TMVA::Factory( "TMVAClassification", outputFile,
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" );
 
-   // Define the input variables that shall be used for the MVA training
 
+   signal->SetBranchStatus("*",0);  // disable all branches
+   signal->SetBranchStatus("*CHI2*",1); 
+   signal->SetBranchStatus("*DOCA*",1);
+   signal->SetBranchStatus("*DIRA*",1);
+   signal->SetBranchStatus("*PT*",1);
+   signal->SetBranchStatus("*RFD*",1);
+   signal->SetBranchStatus("*max*",1);
+   signal->SetBranchStatus("*ptasy*",1);
+   signal->SetBranchStatus("*MM*",1);
+
+   background->SetBranchStatus("*",0);  // disable all branches
+   background->SetBranchStatus("*CHI2*",1); 
+   background->SetBranchStatus("*DOCA*",1);
+   background->SetBranchStatus("*DIRA*",1);
+   background->SetBranchStatus("*PT*",1);
+   background->SetBranchStatus("*RFD*",1);
+   background->SetBranchStatus("*max*",1);
+   background->SetBranchStatus("*ptasy*",1);
+   background->SetBranchStatus("*MM*",1);
+
+   // Define the input variables that shall be used for the MVA training
+   factory->AddVariable( "DTF_CHI2NDOF", "DTF Fit chi2", "", 'F' );
+   factory->AddVariable( "log_Bs_IPCHI2_OWNPV := log(Bs_IPCHI2_OWNPV)","B_{s} ln(IP #chi^{2})", "", 'F' );
+   factory->AddVariable( "log_Bs_DIRA := log(1-Bs_DIRA_OWNPV)","ln(1 - B_{s} DIRA)","", 'F' );
+  
+   factory->AddVariable( "log_XsDaughters_min_IPCHI2 := log(XsDaughters_min_IPCHI2)","X_{s} daughters min ln(IP#chi^{2})", "", 'F' );
+   factory->AddVariable( "K_1_1270_plus_ptasy_1.00","K1^{+}  cone p_{t} asy","", 'F' );
+   factory->AddVariable( "Xs_max_DOCA","X_{s} max DOCA", "mm", 'F' );
+
+   factory->AddVariable( "log_DsDaughters_min_IPCHI2 := log(DsDaughters_min_IPCHI2)","D_{s} daughters min ln(IP#chi^{2})", "", 'F' );
+   factory->AddVariable( "Ds_ptasy_1.00","Ds  cone p_{t} asy","", 'F' );
+   factory->AddVariable( "log_Ds_FDCHI2_ORIVX := log(Ds_FDCHI2_ORIVX)","D_{s} FD significance", "", 'F' );
+   factory->AddVariable( "log_Ds_RFD:=log(Ds_RFD)","D_{s} RFD", "", 'F' );
+   factory->AddVariable( "maxCos", "cos(max[#theta_{Ds h}])", "", 'F' );
+
+   factory->AddVariable("max_ghostProb","max(ghostProb)","",'F');
+
+   // Additional variables for testing
+   //factory->AddVariable( "log_Bs_RFD:=log(Bs_RFD)","B_{s} RFD", "", 'F' );
    //factory->AddVariable( "Bs_PT","Bs p_t","MeV", 'D' );
    //factory->AddVariable( "Bs_ENDVERTEX_CHI2", "Bs Vertex fit", "", 'D' );
    //factory->AddVariable( "PV_CHI2NDOF", "PV Fit chi2", "", 'D' );
-   factory->AddVariable( "DTF_CHI2NDOF", "DTF Fit chi2", "", 'D' );
-
    //factory->AddVariable( "log_XsDaughters_min_PT := log(XsDaughters_min_PT)","X_{s} daughters ln(p_{t})", "ln(MeV)", 'F' );
    //factory->AddVariable( "log_DsDaughters_min_PT := log(DsDaughters_min_PT)","D_{s} daughters ln(p_{t})", "ln(MeV)", 'F' );
-
-   factory->AddVariable( "log_Bs_IPCHI2_OWNPV := log(Bs_IPCHI2_OWNPV)","B_{s} ln(IP #chi^{2})", "", 'D' );
    //factory->AddVariable( "log_K_1_1270_plus_IPCHI2_OWNPV := log(K_1_1270_plus_IPCHI2_OWNPV)","X_{s} ln(IP #chi^{2})", "", 'D' );   
-   factory->AddVariable( "log_XsDaughters_min_IPCHI2 := log(XsDaughters_min_IPCHI2)","X_{s} daughters min ln(IP#chi^{2})", "", 'F' );
-   factory->AddVariable( "log_DsDaughters_min_IPCHI2 := log(DsDaughters_min_IPCHI2)","D_{s} daughters min ln(IP#chi^{2})", "", 'F' );
    //factory->AddVariable( "log_XsDaughters_max_IPCHI2 := log(XsDaughters_max_IPCHI2)","X_{s} daughters max ln(IP#chi^{2})", "", 'F' );
    //factory->AddVariable( "log_DsDaughters_max_IPCHI2 := log(DsDaughters_max_IPCHI2)","D_{s} daughters max ln(IP#chi^{2})", "", 'F' );
-   
-   factory->AddVariable( "Xs_max_DOCA","X_{s} max DOCA", "mm", 'F' );
    //factory->AddVariable( "Ds_max_DOCA","D_{s} max DOCA", "mm", 'F' );
-      
    //factory->AddVariable( "log_Bs_FDCHI2_OWNPV := log(Bs_FDCHI2_OWNPV)","B_{s} ln(FD #chi^{2})", "", 'D' );
-   //factory->AddVariable( "log_Ds_FDCHI2_ORIVX := log(Ds_FDCHI2_ORIVX)","D_{s} FD significance", "", 'D' );
-
-   factory->AddVariable( "log_Bs_DIRA := log(1-Bs_DIRA_OWNPV)","ln(1 - B_{s} DIRA)","", 'D' );
    //factory->AddVariable( "log_Ds_DIRA := log(1-Ds_DIRA_OWNPV)","ln(1 - D_{s} DIRA)","", 'D' );
-
-   factory->AddVariable( "K_1_1270_plus_ptasy_1.00","K1^{+}  cone p_{t} asy","", 'D' );
-   factory->AddVariable( "Ds_ptasy_1.00","Ds  cone p_{t} asy","", 'D' );
-
    //factory->AddVariable( "K_plus_fromDs_ptasy_1.00","K^{+} (from D_{s}) cone p_{t} asy","", 'D' );
    //factory->AddVariable( "K_minus_fromDs_ptasy_1.00","K^{-} (from D_{s}) cone p_{t} asy","", 'D' );
    //factory->AddVariable( "pi_minus_fromDs_ptasy_1.00","#pi^{+} (from D_{s}) cone p_{t} asy","", 'D' );
    //factory->AddVariable( "K_plus_ptasy_1.00","K^{+} cone p_{t} asy","", 'D' );
    //factory->AddVariable( "pi_plus_ptasy_1.00","#pi^{+} cone p_{t}","", 'D' );
    //factory->AddVariable( "pi_minus_ptasy_1.00","#pi^{-} cone p_{t} asy","", 'D' );
-
-   factory->AddVariable("max_ghostProb","max(ghostProb)","",'D');
-   factory->AddVariable( "maxCos", "cos(max[#theta_{Ds h}])", "", 'F' );
-
-   //factory->AddVariable( "K_plus_PIDK","K^{+} PIDK","", 'D' );
-
-   factory->AddVariable( "log_Bs_RFD:=log(Bs_RFD)","B_{s} RFD", "", 'D' );
-   factory->AddVariable( "log_Ds_RFD:=log(Ds_RFD)","D_{s} RFD", "", 'D' );
-   //factory->AddVariable( "log_Ds_FDsig:=log(Ds_FDsig)","D_{s} FD significance", "", 'D' );
-   //factory->AddVariable( "Ds_z","D_{s} z", "", 'D' );
    
    // global event weights per tree (see below for setting event-wise weights)
    Double_t signalWeight     = 1.0;
@@ -134,11 +146,10 @@ void TMVAClassification( TString myMethodList = "BDTG", TString run = "Run1" )
    //factory->SetSignalWeightExpression("weight");
 
    // Apply additional cuts on the signal and background samples (can be different)
-   TCut mycuts = "Bs_MM > 5300 && Bs_MM < 5420 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1 && m_Kpipi < 2000 "  ; 
-  //&& min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 &&  min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1";
-   TCut mycutb = "Bs_MM > 5600 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 && max(pi_minus_TRACK_GhostProb,max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,max(K_plus_fromDs_TRACK_GhostProb,max(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1 && m_Kpipi < 2000";
-   //&& min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) > 0 &&  min(pi_minus_TRACK_GhostProb,min(pi_plus_TRACK_GhostProb,min(K_plus_TRACK_GhostProb,min(K_plus_fromDs_TRACK_GhostProb,min(pi_minus_fromDs_TRACK_GhostProb,K_minus_fromDs_TRACK_GhostProb))))) < 1";
-
+   TCut mycuts = "Bs_MM > 5300 && Bs_MM < 5420  "  ; 
+  
+   TCut mycutb = "Bs_MM > 5600";
+   
    // Tell the factory how to use the training and testing events
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
                                         "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" );

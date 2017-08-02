@@ -20,3 +20,4 @@ run "g++ -O3 -c MiniDecayTree.cpp `root-config --cflags` -I. -o MiniDecayTree.o"
 run "g++ -o MiniMaker MiniMaker.cpp `root-config --cflags --glibs` -I. DecayTree.o"
 run "g++ -o SelectionMaker SelectionMaker.cpp `root-config --cflags --glibs` -I. DecayTree.o MiniDecayTree.o"
 
+#run "g++ -o TMVAClassificationApplication TMVAClassificationApplication.cpp `root-config --cflags --glibs` -lTMVA"

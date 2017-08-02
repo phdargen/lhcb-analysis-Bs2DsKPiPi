@@ -30,6 +30,9 @@ public :
     inline Bool_t Preselection_Cuts();    
     inline Bool_t PID_Cuts();
     inline Bool_t Veto_Cuts();
+    inline Bool_t PhaseSpace_Cuts();
+    inline Bool_t PIDCalib_Cuts();
+    inline Bool_t MC_Cuts();
 
     TLorentzVector K_plus_fromDs;
     TLorentzVector K_minus_fromDs;
@@ -407,6 +410,18 @@ public :
     Double_t        pi_plus2_TRACK_GhostProb;
     Double_t        pi_plus2_ptasy_1_00;
 
+    Int_t	   Bs_TRUEID;
+    Int_t	   Bs_BKGCAT;
+    Int_t	   K_plus_TRUEID;
+    Int_t	   pi_plus_TRUEID;
+    Int_t	   pi_minus_TRUEID;
+    Int_t	   pi_plus1_TRUEID;
+    Int_t	   pi_plus2_TRUEID;
+    Int_t	   K_plus_fromDs_TRUEID;
+    Int_t	   K_minus_fromDs_TRUEID;
+    Int_t	   pi_minus_fromDs_TRUEID;
+    Int_t	   pi_plus_fromDs_TRUEID;
+    Int_t	   pi_minus2_fromDs_TRUEID;
 /*
  Short_t         Bs_OS_Muon_DEC;
  Float_t         Bs_OS_Muon_PROB;
@@ -1067,7 +1082,20 @@ void MiniDecayTree::Init()
     
     
     if(_Ds_finalState == Ds_finalState::phipi && _decay == Decay::signal){
-    
+
+    if(!_data){
+	    fChain->SetBranchAddress("Bs_TRUEID", &Bs_TRUEID);
+    	    fChain->SetBranchAddress("Bs_BKGCAT", &Bs_BKGCAT);
+
+	    fChain->SetBranchAddress("K_plus_TRUEID", &K_plus_TRUEID);
+    	    fChain->SetBranchAddress("pi_plus_TRUEID", &pi_plus_TRUEID);
+    	    fChain->SetBranchAddress("pi_minus_TRUEID", &pi_minus_TRUEID);
+
+    	    fChain->SetBranchAddress("K_plus_fromDs_TRUEID", &K_plus_fromDs_TRUEID);
+    	    fChain->SetBranchAddress("K_minus_fromDs_TRUEID", &K_minus_fromDs_TRUEID);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_TRUEID", &pi_minus_fromDs_TRUEID);
+    }
+
     fChain->SetBranchAddress("Bs_ETA", &Bs_ETA, &b_Bs_ETA);
     fChain->SetBranchAddress("Bs_ENDVERTEX_X", &Bs_ENDVERTEX_X, &b_Bs_ENDVERTEX_X);
     fChain->SetBranchAddress("Bs_ENDVERTEX_Y", &Bs_ENDVERTEX_Y, &b_Bs_ENDVERTEX_Y);
@@ -1101,7 +1129,7 @@ void MiniDecayTree::Init()
     fChain->SetBranchAddress("Bs_ID", &Bs_ID, &b_Bs_ID);
     fChain->SetBranchAddress("Bs_TAU", &Bs_TAU, &b_Bs_TAU);
     fChain->SetBranchAddress("Bs_TAUERR", &Bs_TAUERR, &b_Bs_TAUERR);
-    fChain->SetBranchAddress("Bs_TAUCHI2", &Bs_TAUCHI2, &b_Bs_TAUCHI2);
+    //fChain->SetBranchAddress("Bs_TAUCHI2", &Bs_TAUCHI2, &b_Bs_TAUCHI2);
     fChain->SetBranchAddress("Bs_L0Global_TIS", &Bs_L0Global_TIS, &b_Bs_L0Global_TIS);
     fChain->SetBranchAddress("Bs_L0Global_TOS", &Bs_L0Global_TOS, &b_Bs_L0Global_TOS);
     fChain->SetBranchAddress("Bs_L0HadronDecision_TIS", &Bs_L0HadronDecision_TIS, &b_Bs_L0HadronDecision_TIS);
@@ -1190,7 +1218,7 @@ void MiniDecayTree::Init()
     fChain->SetBranchAddress("Ds_ID", &Ds_ID, &b_Ds_ID);
     fChain->SetBranchAddress("Ds_TAU", &Ds_TAU, &b_Ds_TAU);
     fChain->SetBranchAddress("Ds_TAUERR", &Ds_TAUERR, &b_Ds_TAUERR);
-    fChain->SetBranchAddress("Ds_TAUCHI2", &Ds_TAUCHI2, &b_Ds_TAUCHI2);
+    //fChain->SetBranchAddress("Ds_TAUCHI2", &Ds_TAUCHI2, &b_Ds_TAUCHI2);
     fChain->SetBranchAddress("Ds_ptasy_1.00", &Ds_ptasy_1_00, &b_Ds_ptasy_1_00);
 
     fChain->SetBranchAddress("nCandidate", &nCandidate, &b_nCandidate);
@@ -1629,7 +1657,7 @@ void MiniDecayTree::Init()
     fChain->SetBranchAddress("K_1_1270_plus_ID", &K_1_1270_plus_ID, &b_K_1_1270_plus_ID);
     fChain->SetBranchAddress("K_1_1270_plus_TAU", &K_1_1270_plus_TAU, &b_K_1_1270_plus_TAU);
     fChain->SetBranchAddress("K_1_1270_plus_TAUERR", &K_1_1270_plus_TAUERR, &b_K_1_1270_plus_TAUERR);
-    fChain->SetBranchAddress("K_1_1270_plus_TAUCHI2", &K_1_1270_plus_TAUCHI2, &b_K_1_1270_plus_TAUCHI2);
+    //fChain->SetBranchAddress("K_1_1270_plus_TAUCHI2", &K_1_1270_plus_TAUCHI2, &b_K_1_1270_plus_TAUCHI2);
     fChain->SetBranchAddress("K_1_1270_plus_ptasy_1.00", &K_1_1270_plus_ptasy_1_00, &b_K_1_1270_plus_ptasy_1_00);
     fChain->SetBranchAddress("K_plus_ETA", &K_plus_ETA, &b_K_plus_ETA);
     fChain->SetBranchAddress("K_plus_MC12TuneV2_ProbNNmu", &K_plus_MC12TuneV2_ProbNNmu, &b_K_plus_MC12TuneV2_ProbNNmu);
@@ -1761,6 +1789,20 @@ void MiniDecayTree::Init()
     }
 
     if(_Ds_finalState == Ds_finalState::pipipi && _decay == Decay::signal){
+
+	 if(!_data){
+	    fChain->SetBranchAddress("Bs_TRUEID", &Bs_TRUEID);
+    	    fChain->SetBranchAddress("Bs_BKGCAT", &Bs_BKGCAT);
+
+	    fChain->SetBranchAddress("K_plus_TRUEID", &K_plus_TRUEID);
+    	    fChain->SetBranchAddress("pi_plus_TRUEID", &pi_plus_TRUEID);
+    	    fChain->SetBranchAddress("pi_minus_TRUEID", &pi_minus_TRUEID);
+
+    	    fChain->SetBranchAddress("pi_minus_fromDs_TRUEID", &pi_minus_fromDs_TRUEID);
+	    fChain->SetBranchAddress("pi_plus_fromDs_TRUEID", &pi_plus_fromDs_TRUEID);
+   	    fChain->SetBranchAddress("pi_minus2_fromDs_TRUEID", &pi_minus2_fromDs_TRUEID);
+	}
+
         fChain->SetBranchAddress("Bs_ETA", &Bs_ETA, &b_Bs_ETA);
         fChain->SetBranchAddress("Bs_ENDVERTEX_X", &Bs_ENDVERTEX_X, &b_Bs_ENDVERTEX_X);
         fChain->SetBranchAddress("Bs_ENDVERTEX_Y", &Bs_ENDVERTEX_Y, &b_Bs_ENDVERTEX_Y);
@@ -1794,7 +1836,7 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("Bs_ID", &Bs_ID, &b_Bs_ID);
         fChain->SetBranchAddress("Bs_TAU", &Bs_TAU, &b_Bs_TAU);
         fChain->SetBranchAddress("Bs_TAUERR", &Bs_TAUERR, &b_Bs_TAUERR);
-        fChain->SetBranchAddress("Bs_TAUCHI2", &Bs_TAUCHI2, &b_Bs_TAUCHI2);
+        //fChain->SetBranchAddress("Bs_TAUCHI2", &Bs_TAUCHI2, &b_Bs_TAUCHI2);
         fChain->SetBranchAddress("Bs_L0Global_TIS", &Bs_L0Global_TIS, &b_Bs_L0Global_TIS);
         fChain->SetBranchAddress("Bs_L0Global_TOS", &Bs_L0Global_TOS, &b_Bs_L0Global_TOS);
         fChain->SetBranchAddress("Bs_L0HadronDecision_TIS", &Bs_L0HadronDecision_TIS, &b_Bs_L0HadronDecision_TIS);
@@ -2178,7 +2220,7 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("Ds_ID", &Ds_ID, &b_Ds_ID);
         fChain->SetBranchAddress("Ds_TAU", &Ds_TAU, &b_Ds_TAU);
         fChain->SetBranchAddress("Ds_TAUERR", &Ds_TAUERR, &b_Ds_TAUERR);
-        fChain->SetBranchAddress("Ds_TAUCHI2", &Ds_TAUCHI2, &b_Ds_TAUCHI2);
+        //fChain->SetBranchAddress("Ds_TAUCHI2", &Ds_TAUCHI2, &b_Ds_TAUCHI2);
         fChain->SetBranchAddress("Ds_ptasy_1.00", &Ds_ptasy_1_00, &b_Ds_ptasy_1_00);
         fChain->SetBranchAddress("pi_plus_fromDs_ETA", &pi_plus_fromDs_ETA, &b_pi_plus_fromDs_ETA);
         fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV2_ProbNNmu", &pi_plus_fromDs_MC12TuneV2_ProbNNmu, &b_pi_plus_fromDs_MC12TuneV2_ProbNNmu);
@@ -2353,7 +2395,7 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("K_1_1270_plus_ID", &K_1_1270_plus_ID, &b_K_1_1270_plus_ID);
         fChain->SetBranchAddress("K_1_1270_plus_TAU", &K_1_1270_plus_TAU, &b_K_1_1270_plus_TAU);
         fChain->SetBranchAddress("K_1_1270_plus_TAUERR", &K_1_1270_plus_TAUERR, &b_K_1_1270_plus_TAUERR);
-        fChain->SetBranchAddress("K_1_1270_plus_TAUCHI2", &K_1_1270_plus_TAUCHI2, &b_K_1_1270_plus_TAUCHI2);
+        //fChain->SetBranchAddress("K_1_1270_plus_TAUCHI2", &K_1_1270_plus_TAUCHI2, &b_K_1_1270_plus_TAUCHI2);
         fChain->SetBranchAddress("K_1_1270_plus_ptasy_1.00", &K_1_1270_plus_ptasy_1_00, &b_K_1_1270_plus_ptasy_1_00);
         fChain->SetBranchAddress("K_plus_ETA", &K_plus_ETA, &b_K_plus_ETA);
         fChain->SetBranchAddress("K_plus_MC12TuneV2_ProbNNmu", &K_plus_MC12TuneV2_ProbNNmu, &b_K_plus_MC12TuneV2_ProbNNmu);
@@ -2494,6 +2536,20 @@ void MiniDecayTree::Init()
     }
 
     if(_Ds_finalState == Ds_finalState::phipi && _decay == Decay::norm){
+
+	 if(!_data){
+	    fChain->SetBranchAddress("Bs_TRUEID", &Bs_TRUEID);
+    	    fChain->SetBranchAddress("Bs_BKGCAT", &Bs_BKGCAT);
+	  
+            fChain->SetBranchAddress("pi_minus_TRUEID", &pi_minus_TRUEID);
+    	    fChain->SetBranchAddress("pi_plus1_TRUEID", &pi_plus1_TRUEID);
+    	    fChain->SetBranchAddress("pi_plus2_TRUEID", &pi_plus2_TRUEID);
+
+    	    fChain->SetBranchAddress("K_plus_fromDs_TRUEID", &K_plus_fromDs_TRUEID);
+    	    fChain->SetBranchAddress("K_minus_fromDs_TRUEID", &K_minus_fromDs_TRUEID);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_TRUEID", &pi_minus_fromDs_TRUEID);
+	}
+
         fChain->SetBranchAddress("Bs_ETA", &Bs_ETA, &b_Bs_ETA);
         fChain->SetBranchAddress("Bs_ENDVERTEX_X", &Bs_ENDVERTEX_X, &b_Bs_ENDVERTEX_X);
         fChain->SetBranchAddress("Bs_ENDVERTEX_Y", &Bs_ENDVERTEX_Y, &b_Bs_ENDVERTEX_Y);
@@ -2527,7 +2583,7 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("Bs_ID", &Bs_ID, &b_Bs_ID);
         fChain->SetBranchAddress("Bs_TAU", &Bs_TAU, &b_Bs_TAU);
         fChain->SetBranchAddress("Bs_TAUERR", &Bs_TAUERR, &b_Bs_TAUERR);
-        fChain->SetBranchAddress("Bs_TAUCHI2", &Bs_TAUCHI2, &b_Bs_TAUCHI2);
+        //fChain->SetBranchAddress("Bs_TAUCHI2", &Bs_TAUCHI2, &b_Bs_TAUCHI2);
         fChain->SetBranchAddress("Bs_L0Global_TIS", &Bs_L0Global_TIS, &b_Bs_L0Global_TIS);
         fChain->SetBranchAddress("Bs_L0Global_TOS", &Bs_L0Global_TOS, &b_Bs_L0Global_TOS);
         fChain->SetBranchAddress("Bs_L0HadronDecision_TIS", &Bs_L0HadronDecision_TIS, &b_Bs_L0HadronDecision_TIS);
@@ -2911,7 +2967,7 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("Ds_ID", &Ds_ID, &b_Ds_ID);
         fChain->SetBranchAddress("Ds_TAU", &Ds_TAU, &b_Ds_TAU);
         fChain->SetBranchAddress("Ds_TAUERR", &Ds_TAUERR, &b_Ds_TAUERR);
-        fChain->SetBranchAddress("Ds_TAUCHI2", &Ds_TAUCHI2, &b_Ds_TAUCHI2);
+        //fChain->SetBranchAddress("Ds_TAUCHI2", &Ds_TAUCHI2, &b_Ds_TAUCHI2);
         fChain->SetBranchAddress("Ds_ptasy_1.00", &Ds_ptasy_1_00, &b_Ds_ptasy_1_00);
         fChain->SetBranchAddress("K_plus_fromDs_ETA", &K_plus_fromDs_ETA, &b_K_plus_fromDs_ETA);
         fChain->SetBranchAddress("K_plus_fromDs_MC12TuneV2_ProbNNmu", &K_plus_fromDs_MC12TuneV2_ProbNNmu, &b_K_plus_fromDs_MC12TuneV2_ProbNNmu);
@@ -3056,7 +3112,7 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("a_1_1260_plus_ID", &a_1_1260_plus_ID, &b_a_1_1260_plus_ID);
         fChain->SetBranchAddress("a_1_1260_plus_TAU", &a_1_1260_plus_TAU, &b_a_1_1260_plus_TAU);
         fChain->SetBranchAddress("a_1_1260_plus_TAUERR", &a_1_1260_plus_TAUERR, &b_a_1_1260_plus_TAUERR);
-        fChain->SetBranchAddress("a_1_1260_plus_TAUCHI2", &a_1_1260_plus_TAUCHI2, &b_a_1_1260_plus_TAUCHI2);
+        //fChain->SetBranchAddress("a_1_1260_plus_TAUCHI2", &a_1_1260_plus_TAUCHI2, &b_a_1_1260_plus_TAUCHI2);
         fChain->SetBranchAddress("a_1_1260_plus_ptasy_1.00", &a_1_1260_plus_ptasy_1_00, &b_a_1_1260_plus_ptasy_1_00);
         fChain->SetBranchAddress("pi_plus1_ETA", &pi_plus1_ETA, &b_pi_plus1_ETA);
         fChain->SetBranchAddress("pi_plus1_MC12TuneV2_ProbNNmu", &pi_plus1_MC12TuneV2_ProbNNmu, &b_pi_plus1_MC12TuneV2_ProbNNmu);
@@ -3167,6 +3223,20 @@ void MiniDecayTree::Init()
     }
 
     if(_Ds_finalState == Ds_finalState::pipipi && _decay == Decay::norm){
+	
+ 	if(!_data){
+	    fChain->SetBranchAddress("Bs_TRUEID", &Bs_TRUEID);
+    	    fChain->SetBranchAddress("Bs_BKGCAT", &Bs_BKGCAT);
+	
+	    fChain->SetBranchAddress("pi_minus_TRUEID", &pi_minus_TRUEID);
+    	    fChain->SetBranchAddress("pi_plus1_TRUEID", &pi_plus1_TRUEID);
+    	    fChain->SetBranchAddress("pi_plus2_TRUEID", &pi_plus2_TRUEID);
+
+    	    fChain->SetBranchAddress("pi_minus_fromDs_TRUEID", &pi_minus_fromDs_TRUEID);
+	    fChain->SetBranchAddress("pi_plus_fromDs_TRUEID", &pi_plus_fromDs_TRUEID);
+   	    fChain->SetBranchAddress("pi_minus2_fromDs_TRUEID", &pi_minus2_fromDs_TRUEID);
+	}
+
         fChain->SetBranchAddress("Bs_ETA", &Bs_ETA, &b_Bs_ETA);
         fChain->SetBranchAddress("Bs_ENDVERTEX_X", &Bs_ENDVERTEX_X, &b_Bs_ENDVERTEX_X);
         fChain->SetBranchAddress("Bs_ENDVERTEX_Y", &Bs_ENDVERTEX_Y, &b_Bs_ENDVERTEX_Y);
@@ -3200,7 +3270,7 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("Bs_ID", &Bs_ID, &b_Bs_ID);
         fChain->SetBranchAddress("Bs_TAU", &Bs_TAU, &b_Bs_TAU);
         fChain->SetBranchAddress("Bs_TAUERR", &Bs_TAUERR, &b_Bs_TAUERR);
-        fChain->SetBranchAddress("Bs_TAUCHI2", &Bs_TAUCHI2, &b_Bs_TAUCHI2);
+        //fChain->SetBranchAddress("Bs_TAUCHI2", &Bs_TAUCHI2, &b_Bs_TAUCHI2);
         fChain->SetBranchAddress("Bs_L0Global_TIS", &Bs_L0Global_TIS, &b_Bs_L0Global_TIS);
         fChain->SetBranchAddress("Bs_L0Global_TOS", &Bs_L0Global_TOS, &b_Bs_L0Global_TOS);
         fChain->SetBranchAddress("Bs_L0HadronDecision_TIS", &Bs_L0HadronDecision_TIS, &b_Bs_L0HadronDecision_TIS);
@@ -3584,7 +3654,7 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("Ds_ID", &Ds_ID, &b_Ds_ID);
         fChain->SetBranchAddress("Ds_TAU", &Ds_TAU, &b_Ds_TAU);
         fChain->SetBranchAddress("Ds_TAUERR", &Ds_TAUERR, &b_Ds_TAUERR);
-        fChain->SetBranchAddress("Ds_TAUCHI2", &Ds_TAUCHI2, &b_Ds_TAUCHI2);
+        //fChain->SetBranchAddress("Ds_TAUCHI2", &Ds_TAUCHI2, &b_Ds_TAUCHI2);
         fChain->SetBranchAddress("Ds_ptasy_1.00", &Ds_ptasy_1_00, &b_Ds_ptasy_1_00);
         fChain->SetBranchAddress("pi_plus_fromDs_ETA", &pi_plus_fromDs_ETA, &b_pi_plus_fromDs_ETA);
         fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV2_ProbNNmu", &pi_plus_fromDs_MC12TuneV2_ProbNNmu, &b_pi_plus_fromDs_MC12TuneV2_ProbNNmu);
@@ -3729,7 +3799,7 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("a_1_1260_plus_ID", &a_1_1260_plus_ID, &b_a_1_1260_plus_ID);
         fChain->SetBranchAddress("a_1_1260_plus_TAU", &a_1_1260_plus_TAU, &b_a_1_1260_plus_TAU);
         fChain->SetBranchAddress("a_1_1260_plus_TAUERR", &a_1_1260_plus_TAUERR, &b_a_1_1260_plus_TAUERR);
-        fChain->SetBranchAddress("a_1_1260_plus_TAUCHI2", &a_1_1260_plus_TAUCHI2, &b_a_1_1260_plus_TAUCHI2);
+        //fChain->SetBranchAddress("a_1_1260_plus_TAUCHI2", &a_1_1260_plus_TAUCHI2, &b_a_1_1260_plus_TAUCHI2);
         fChain->SetBranchAddress("a_1_1260_plus_ptasy_1.00", &a_1_1260_plus_ptasy_1_00, &b_a_1_1260_plus_ptasy_1_00);
         fChain->SetBranchAddress("pi_plus1_ETA", &pi_plus1_ETA, &b_pi_plus1_ETA);
         fChain->SetBranchAddress("pi_plus1_MC12TuneV2_ProbNNmu", &pi_plus1_MC12TuneV2_ProbNNmu, &b_pi_plus1_MC12TuneV2_ProbNNmu);

@@ -2396,7 +2396,7 @@ public :
     TBranch        *b_Bs_ID;   //!
     TBranch        *b_Bs_TAU;   //!
     TBranch        *b_Bs_TAUERR;   //!
-    TBranch        *b_Bs_TAUCHI2;   //!
+    //TBranch        *b_Bs_TAUCHI2;   //!
     TBranch        *b_Bs_L0Global_Dec;   //!
     TBranch        *b_Bs_L0Global_TIS;   //!
     TBranch        *b_Bs_L0Global_TOS;   //!
@@ -2896,7 +2896,7 @@ public :
     TBranch        *b_Ds_ID;   //!
     TBranch        *b_Ds_TAU;   //!
     TBranch        *b_Ds_TAUERR;   //!
-    TBranch        *b_Ds_TAUCHI2;   //!
+    //TBranch        *b_Ds_TAUCHI2;   //!
     TBranch        *b_Ds_L0Global_Dec;   //!
     TBranch        *b_Ds_L0Global_TIS;   //!
     TBranch        *b_Ds_L0Global_TOS;   //!
@@ -3774,7 +3774,7 @@ public :
     TBranch        *b_K_1_1270_plus_ID;   //!
     TBranch        *b_K_1_1270_plus_TAU;   //!
     TBranch        *b_K_1_1270_plus_TAUERR;   //!
-    TBranch        *b_K_1_1270_plus_TAUCHI2;   //!
+    //TBranch        *b_K_1_1270_plus_TAUCHI2;   //!
     TBranch        *b_K_1_1270_plus_L0Global_Dec;   //!
     TBranch        *b_K_1_1270_plus_L0Global_TIS;   //!
     TBranch        *b_K_1_1270_plus_L0Global_TOS;   //!
@@ -4725,7 +4725,7 @@ void DecayTree::Init()
     fChain->SetBranchAddress("Bs_ID", &Bs_ID, &b_Bs_ID);
     fChain->SetBranchAddress("Bs_TAU", &Bs_TAU, &b_Bs_TAU);
     fChain->SetBranchAddress("Bs_TAUERR", &Bs_TAUERR, &b_Bs_TAUERR);
-    fChain->SetBranchAddress("Bs_TAUCHI2", &Bs_TAUCHI2, &b_Bs_TAUCHI2);
+    //fChain->SetBranchAddress("Bs_TAUCHI2", &Bs_TAUCHI2, &b_Bs_TAUCHI2);
     fChain->SetBranchAddress("Bs_L0Global_TIS", &Bs_L0Global_TIS, &b_Bs_L0Global_TIS);
     fChain->SetBranchAddress("Bs_L0Global_TOS", &Bs_L0Global_TOS, &b_Bs_L0Global_TOS);
     fChain->SetBranchAddress("Bs_L0HadronDecision_TIS", &Bs_L0HadronDecision_TIS, &b_Bs_L0HadronDecision_TIS);
@@ -5065,7 +5065,7 @@ void DecayTree::Init()
     fChain->SetBranchAddress("Ds_ID", &Ds_ID, &b_Ds_ID);
     fChain->SetBranchAddress("Ds_TAU", &Ds_TAU, &b_Ds_TAU);
     fChain->SetBranchAddress("Ds_TAUERR", &Ds_TAUERR, &b_Ds_TAUERR);
-    fChain->SetBranchAddress("Ds_TAUCHI2", &Ds_TAUCHI2, &b_Ds_TAUCHI2);
+    //fChain->SetBranchAddress("Ds_TAUCHI2", &Ds_TAUCHI2, &b_Ds_TAUCHI2);
     fChain->SetBranchAddress("Ds_ptasy_1.00", &Ds_ptasy_1_00, &b_Ds_ptasy_1_00);
 /*    fChain->SetBranchAddress("K_plus_fromDs_ETA", &K_plus_fromDs_ETA, &b_K_plus_fromDs_ETA);
     fChain->SetBranchAddress("K_plus_fromDs_MC12TuneV2_ProbNNmu", &K_plus_fromDs_MC12TuneV2_ProbNNmu, &b_K_plus_fromDs_MC12TuneV2_ProbNNmu);
