@@ -59,6 +59,7 @@
 #endif
 #include <ctime>
 #include "Mint/NamedParameter.h"
+#include "Mint/Utils.h"
 
 using namespace std;
 using namespace RooFit ;
@@ -445,6 +446,21 @@ vector<double> fitNorm(){
         frame->Draw();
         c->Print("eps/norm_pull.eps");
 
+	/// Output file
+	TFile *output= new TFile("/auto/data/dargent/BsDsKpipi/Final/Data/norm.root","RECREATE");
+	tree->SetBranchStatus("*TAU*",1);
+	tree->SetBranchStatus("BsDTF*",1);
+	tree->SetBranchStatus("m*",1);
+	tree->SetBranchStatus("*_m*",1);
+
+	TTree* out_tree = tree->CopyTree("Bs_DTF_MM > 5000 && Bs_DTF_MM < 5900 && BDTG_response > 0.3");
+	double sw;
+    	TBranch* b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
+	TBranch *b_year,*b_Ds_finalState;
+	Int_t t_year, t_Ds_finalState;
+        out_tree->SetBranchAddress("year", &t_year, &b_year);
+        out_tree->SetBranchAddress("Ds_finalState", &t_Ds_finalState, &b_Ds_finalState);
+
 	double yield = 0.;
 
 	for(int i=0; i<str_year.size(); i++){
@@ -456,6 +472,8 @@ vector<double> fitNorm(){
 		lhcbtext->SetTextAlign(13);
 		lhcbtext->SetNDC(1);
 
+		// Doesn't really work
+		/*
 		frame= DTF_Bs_M.frame();
 	        data->plotOn(frame,Name("data_slice"),Cut("year==year::" + str_year[i]),MarkerSize(1),Binning(80));
         	simPdf->plotOn(frame,Name("pdf_slice"),Slice(year,str_year[i]),ProjWData(year,*data),LineColor(kBlue),LineWidth(3));
@@ -466,10 +484,11 @@ vector<double> fitNorm(){
 		frame->addPlotable(hpull,"P") ;
         	frame->Draw();
         	c->Print("eps/norm_pull_" + str_year[i] + ".eps");
-
+		*/
 		for(int j=0; j<str_Ds.size(); j++){
 			/// Get pdf slice
 			RooAbsPdf* pdf_slice = simPdf->getPdf("{" + str_year[i] + ";" + str_Ds[j] + "}");
+
 			/// Plot data and pdf slices
 			frame=DTF_Bs_M.frame();
 			data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(80));
@@ -513,15 +532,30 @@ vector<double> fitNorm(){
 				pdf_slice->Print();
 				SPlot sPlot("sPlot","sPlot",*data_slice,pdf_slice,yield_list); 
 	
-				///Plot the sWeight distributions as a function of mass
+				/// Plot the sWeight distributions as a function of mass
 				TH2 * swHist = (TH2*)data_slice->createHistogram("Bs_DTF_MM,n_sig_{" +str_year[i] + ";" + str_Ds[j] + "}" + "_sw");
 				swHist->GetYaxis()->SetTitle("Signal sWeights");
 				swHist->Draw();
 				c->Print("eps/norm_sweight_" + str_year[i] + "_" + str_Ds[j] + ".eps");
+
+				/// Save sWeights
+				/// Messy and dangerous hack but works for now
+				int n_ij = 0;
+				for(int n = 0; n < out_tree->GetEntries(); n++){
+					b_year->GetEntry(n);
+					b_Ds_finalState->GetEntry(n);
+					if(A_is_in_B(anythingToString(t_year), (string) str_year[i]) && t_Ds_finalState == j){
+						sw=sPlot.GetSWeight(n_ij,"n_sig_{" +str_year[i] + ";" + str_Ds[j] + "}" + "_sw");
+						b_sw->Fill();
+						n_ij++;
+					}
+				}		
 			}
 		}
 	}
 
+ 	out_tree->Write();
+   	output->Close();
 	cout << "Total signal yield = " << yield << endl;
 
 	/// Return fit params
