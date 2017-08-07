@@ -1,4 +1,9 @@
-* general options
-"channel"	"Norm"
+"channel"	"Signal"
+"fixExpBkgFromSidebands"	 0
 "numCPU"	 8
-"sWeight"	 1
+"sWeightNorm"	 0
+"sWeightSignal"	 1
+"nBins"		60
+"min_MM"	5100.
+"max_MM"	5700.
+"cut_BDT" 	0.35

@@ -93,7 +93,7 @@ vector<double> fitPartRecoBkgShape(){
 	RooRealVar f_1("f_{1}", "fraction1", 0.405, 0., 0.6);
 	RooRealVar f_2("f_{2}", "fraction2", 0.1, 0., 0.6);
 	//add all gaussians
-	RooAbsPdf* pdf=new RooAddPdf("BkgShape", "BkgShape", RooArgList(BifGauss1, BifGauss2, BifGauss3), RooArgList(f_1,f_2));
+	RooAbsPdf* pdf=new RooAddPdf("BkgShape", "BkgShape", RooArgList(BifGauss1, BifGauss2, BifGauss3), RooArgList(f_1,f_2),kTRUE);
 	
 	/// Load file
 	TFile* file = new TFile("/auto/data/dargent/old_Bs2DsKpipi/MC/Norm/Bkg/Dsstpipipi.root");
@@ -331,7 +331,11 @@ vector<double> fitNorm(){
 	/// Options
 	NamedParameter<int> fixExpBkgFromSidebands("fixExpBkgFromSidebands", 1);
 	NamedParameter<int> numCPU("numCPU", 6);
-	NamedParameter<int> sWeight("sWeight", 0);
+	NamedParameter<int> sWeight("sWeightNorm", 0);
+	NamedParameter<int> nBins("nBins", 80);
+	NamedParameter<double> min_MM("min_MM",5100.);
+	NamedParameter<double> max_MM("max_MM",5700.);
+	NamedParameter<double> cut_BDT("cut_BDT",0.);
 
 	/// Define categories
 	RooCategory year("year","year") ;
@@ -354,18 +358,18 @@ vector<double> fitNorm(){
 	tree->SetBranchStatus("Ds_finalState",1);
 	tree->SetBranchStatus("year",1);
 
-        RooRealVar DTF_Bs_M("Bs_DTF_MM", "m(D_{s}^{-} #pi^{+} #pi^{+} #pi^{-})", 5000., 5900.,"MeV/c^{2}");
+        RooRealVar DTF_Bs_M("Bs_DTF_MM", "m(D_{s}^{-} #pi^{+}#pi^{+}#pi^{-})", min_MM, max_MM,"MeV/c^{2}");
         RooRealVar BDTG_response("BDTG_response", "BDTG_response", 0.);              
 	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState,year);
 	
-	RooDataSet*  data = new RooDataSet("data","data",tree,list,"BDTG_response > 0.3" );	
+	RooDataSet*  data = new RooDataSet("data","data",tree,list,("BDTG_response > " + anythingToString((double)cut_BDT)).c_str() );	
 
 	/// Signal Pdf
-	vector<double> sig_params = fitSignalShape("signal");
+	vector<double> sig_params = fitSignalShape("norm");
 	RooRealVar mean_MC("mean_MC", "#mu MC", sig_params[0]); 
 	RooRealVar sigma_MC("sigma_MC", "#sigma MC", sig_params[1]);
-	RooRealVar scale_mean("scale_mean", "scale #mu",1.,0.,2. ); 
-	RooRealVar scale_sigma("scale_sigma", "scale #sigma", 1.,0.,2.);
+	RooRealVar scale_mean("scale_mean", "scale #mu",1.,0.9,1.); 
+	RooRealVar scale_sigma("scale_sigma", "scale #sigma", 1.2, 0.9,1.5);
 	RooFormulaVar mean("mean","@0 * @1", RooArgSet(scale_mean,mean_MC)); 
 	RooFormulaVar sigma("sigma","@0 * @1", RooArgSet(scale_sigma,sigma_MC)); 
 	RooRealVar alpha("alpha", "#alpha", sig_params[2]); 
@@ -376,10 +380,7 @@ vector<double> fitNorm(){
 	/// Combinatorial bkg pdf
 	RooRealVar exp_par("exp_par","#lambda",-1.6508e-03,-10.,0.);	
 	RooExponential bkg_exp("bkg_exp","exponential bkg",DTF_Bs_M,exp_par);
-	if(fixExpBkgFromSidebands) {
-		bkg_exp.fitTo(*data,Save(kTRUE),Range(5600.,5800.));
-		//exp_par.setConstant();
-	}
+	bkg_exp.fitTo(*data,Save(kTRUE),Range(5600.,5800.));
 
 	/// Part. reco bkg
 	vector<double> bkg_partReco_params = fitPartRecoBkgShape();
@@ -388,17 +389,17 @@ vector<double> fitNorm(){
 	RooRealVar mean3("mean3","mu", bkg_partReco_params[2]);
 	RooRealVar sigmaL1("sigmaL1", "sigmaL1",  bkg_partReco_params[3]);
 	RooRealVar sigmaR1("sigmaR1", "sigmaR1",  bkg_partReco_params[4]);
-	RooRealVar sigmaL2("sigmaR1", "sigmaL2",  bkg_partReco_params[5]);
-	RooRealVar sigmaR2("sigmaR2", "sigmaR2",  bkg_partReco_params[6]);
-	RooRealVar sigmaL3("sigmaL3", "sigmaL3",  bkg_partReco_params[7]);
-	RooRealVar sigmaR3("sigmaR3", "sigmaR3",  bkg_partReco_params[8]);
-	RooRealVar f_1("f_1", "f_1", bkg_partReco_params[9],0.,1.);
-	RooRealVar f_2("f_2", "f_2", bkg_partReco_params[10],0.,1.);
+	RooRealVar sigmaL2("sigmaL2", "sigmaL2",  bkg_partReco_params[5],bkg_partReco_params[5]*0.5,bkg_partReco_params[5]*1.5);
+	RooRealVar sigmaR2("sigmaR2", "sigmaR2",  bkg_partReco_params[6],bkg_partReco_params[6]*0.5,bkg_partReco_params[6]*1.5);
+	RooRealVar sigmaL3("sigmaL3", "sigmaL3",  bkg_partReco_params[7]);//,bkg_partReco_params[7]*0.5,bkg_partReco_params[7]*1.5);
+	RooRealVar sigmaR3("sigmaR3", "sigmaR3",  bkg_partReco_params[8],bkg_partReco_params[8]*0.5,bkg_partReco_params[8]*1.5);
+	RooRealVar f_1("f_1", "f_1", bkg_partReco_params[9]);
+	RooRealVar f_2("f_2", "f_2", bkg_partReco_params[10],0,1);
 
 	RooBifurGauss BifGauss1("BifGauss1","BifGauss1", DTF_Bs_M, mean1, sigmaL1,sigmaR1);
 	RooBifurGauss BifGauss2("BifGauss2","BifGauss2", DTF_Bs_M, mean2, sigmaL2,sigmaR2);
 	RooBifurGauss BifGauss3("BifGauss3","BifGauss3", DTF_Bs_M, mean3, sigmaL3,sigmaR3);
-	RooAddPdf bkg_partReco("bkg_partReco", "bkg_partReco", RooArgList(BifGauss1, BifGauss2, BifGauss3), RooArgList(f_1,f_2));
+	RooAddPdf bkg_partReco("bkg_partReco", "bkg_partReco", RooArgList(BifGauss1, BifGauss2, BifGauss3), RooArgList(f_1,f_2),kTRUE);
 
 	/// Total pdf
 	RooRealVar n_sig("n_sig", "n_sig", data->numEntries()/4., 0., data->numEntries());
@@ -413,33 +414,105 @@ vector<double> fitNorm(){
   	config->setStringValue("physModels","pdf") ;
   	config->setStringValue("splitCats" ,"year Ds_finalState") ;
   	config->setStringValue("pdf", "year            : scale_sigma "
-				      //"Ds_finalState : f_1, f_2 "  
-                                      "year,Ds_finalState : n_sig, n_exp_bkg, n_partReco_bkg, exp_par") ;  
+				      "Ds_finalState :  exp_par "  
+                                      "year,Ds_finalState : n_sig, n_exp_bkg, n_partReco_bkg") ;  
 	
   	RooSimultaneous* simPdf  = mgr->buildPdf(*config,data) ;
 	simPdf->Print("v") ;
 	RooArgSet* fitParams = simPdf->getParameters(data);
-  	fitParams->Print("v") ;
+
+	/// Fix Exp from Sidebands
+	for(int i=0; i<str_year.size(); i++) for(int j=0; j<str_Ds.size(); j++){
+		/// Get data slice
+		RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]);
+		/// Fit
+		bkg_exp.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
+		/// Fix parameters
+		//((RooRealVar*) fitParams->find("exp_par_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setVal(exp_par.getVal());
+		//if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setConstant();
+		((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setVal(exp_par.getVal());
+		if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setConstant();
+	}
 
 	/// Perform fit
+	fitParams->Print("v") ;
 	RooFitResult* result = simPdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),NumCPU(numCPU));
 	cout << "result is --------------- "<<endl;
 	result->Print();
 
-	/// Plotting
+	/// Plot combined data and fit
 	TCanvas* c = new TCanvas();
 	RooPlot* frame= DTF_Bs_M.frame();
 	frame->SetTitle("");
-	data->plotOn(frame,Name("data"),MarkerSize(1),Binning(80));
-	simPdf->plotOn(frame,Name("pdf"),ProjWData(year,*data),LineColor(kBlue),LineWidth(3));
-	RooArgSet sig_comp(*simPdf->getPdf("signal_{y11;phipi}"),*simPdf->getPdf("signal_{y11;KsK}"),*simPdf->getPdf("signal_{y11;KKpi_NR}"),*simPdf->getPdf("signal_{y11;pipipi}"));
-	simPdf->plotOn(frame,Components(sig_comp),ProjWData(year,*data),LineColor(kRed),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected));
+	data->plotOn(frame,Name("data"),MarkerSize(1),Binning(nBins));
+	simPdf->plotOn(frame,Name("pdf"),ProjWData(year,*data),LineColor(kBlue+1),LineWidth(3));
+
+	TLegend leg(0.6,0.4,0.9,0.9,"");
+    	leg.SetLineStyle(0);
+    	leg.SetLineColor(0);
+	leg.SetFillColor(0);
+	leg.SetTextFont(22);
+	leg.SetTextColor(1);
+	leg.SetTextSize(0.05);
+	leg.SetTextAlign(12);
+	leg.AddEntry(frame->findObject("data"),"LHCb data","ep");
+	leg.AddEntry(frame->findObject("pdf"),"Fit","l");
+
+	/// Plot components 
+	/// argh fuck RooFit, does it really need to be so complicated ? 
+	TString last_name_signal,last_name_exp_bkg,last_name_partReco_bkg;
+	for(int i=0; i<str_year.size(); i++) for(int j=0; j<str_Ds.size(); j++){
+		RooAddPdf* pdf_slice = (RooAddPdf*)simPdf->getPdf("{" + str_year[i] + ";" + str_Ds[j] + "}");
+		RooArgList pdf_slice_comp( pdf_slice->pdfList());
+
+		TString name_signal("signal_"+ anythingToString(i)+ "_" + anythingToString(j));
+		TString name_exp_bkg("exp_bkg_"+ anythingToString(i)+ "_" + anythingToString(j));
+		TString name_partReco_bkg("partReco_bkg_"+ anythingToString(i)+ "_" + anythingToString(j));
+
+		if(i==0 && j == 0){
+			pdf_slice->plotOn(frame,Name(name_signal),Components(RooArgSet(pdf_slice_comp[0])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible());
+			
+			pdf_slice->plotOn(frame,Name(name_exp_bkg),Components(RooArgSet(pdf_slice_comp[1])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible());
+			
+			pdf_slice->plotOn(frame,Name(name_partReco_bkg),Components(RooArgSet(pdf_slice_comp[2])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible());
+		}
+		else{
+			pdf_slice->plotOn(frame,Name(name_signal),Components(RooArgSet(pdf_slice_comp[0])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible(),AddTo(last_name_signal));
+			
+			pdf_slice->plotOn(frame,Name(name_exp_bkg),Components(RooArgSet(pdf_slice_comp[1])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible(),AddTo(last_name_exp_bkg));
+	
+			pdf_slice->plotOn(frame,Name(name_partReco_bkg),Components(RooArgSet(pdf_slice_comp[2])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible(),AddTo(last_name_partReco_bkg));
+		}
+
+		if(i== str_year.size()-1 && j == str_Ds.size() -1) {
+
+			pdf_slice->plotOn(frame,Name(name_partReco_bkg),Components(RooArgSet(pdf_slice_comp[2])),ProjWData(year,*data),FillColor(kGray+3),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_partReco_bkg),DrawOption("F"),FillStyle(1001),LineColor(kGray+3));			
+			pdf_slice->plotOn(frame,Components(RooArgSet(pdf_slice_comp[2])),ProjWData(year,*data),LineColor(kGray+3),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_partReco_bkg));
+
+			pdf_slice->plotOn(frame,Name(name_signal),Components(RooArgSet(pdf_slice_comp[0])),ProjWData(year,*data),FillColor(kRed+1),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_signal),DrawOption("F"),FillStyle(3353),LineColor(kRed+1));
+			pdf_slice->plotOn(frame,Components(RooArgSet(pdf_slice_comp[0])),ProjWData(year,*data),LineColor(kRed+1),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_signal));
+
+			pdf_slice->plotOn(frame,Name(name_exp_bkg),Components(RooArgSet(pdf_slice_comp[1])),ProjWData(year,*data),LineColor(kBlack),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_exp_bkg),LineStyle(kDashed));
+			
+			leg.AddEntry(frame->findObject(name_signal),"#font[132]{B_{s} #rightarrow D_{s}^{-} #pi^{+}#pi^{+}#pi^{-}}","f");
+			leg.AddEntry(frame->findObject(name_exp_bkg),"Comb. bkg.","l");
+			leg.AddEntry(frame->findObject(name_partReco_bkg),"Part. reco. bkg.","f");
+		}
+		else {
+			last_name_signal = name_signal;
+			last_name_exp_bkg = name_exp_bkg;
+			last_name_partReco_bkg = name_partReco_bkg;
+		}
+	}
+
+	simPdf->plotOn(frame,Name("pdf"),ProjWData(year,*data),LineColor(kBlue+1),LineWidth(3));
 	frame->Draw();
+	leg.Draw();
 	c->Print("eps/norm.eps");
-	double chi2 = frame->chiSquare("pdf","data",fitParams->selectByAttrib("Constant",kFALSE)->getSize());
+
+	double chi2 = 0.;
 	double covmatr = result->covQual();
 	double edm = result->edm();
-	cout<<"Chi2 data= " << chi2 <<" Cov Matrix: "<<covmatr<<" EDM: "<<edm<<endl;
 	RooHist* hpull = frame->pullHist("data","pdf") ;
 	frame= DTF_Bs_M.frame();
 	frame->addPlotable(hpull,"P") ;
@@ -447,22 +520,29 @@ vector<double> fitNorm(){
         c->Print("eps/norm_pull.eps");
 
 	/// Output file
-	TFile *output= new TFile("/auto/data/dargent/BsDsKpipi/Final/Data/norm.root","RECREATE");
-	tree->SetBranchStatus("*TAU*",1);
-	tree->SetBranchStatus("BsDTF*",1);
-	tree->SetBranchStatus("m*",1);
-	tree->SetBranchStatus("*_m*",1);
-
-	TTree* out_tree = tree->CopyTree("Bs_DTF_MM > 5000 && Bs_DTF_MM < 5900 && BDTG_response > 0.3");
+	TFile *output;
+	TTree* out_tree;
 	double sw;
-    	TBranch* b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
-	TBranch *b_year,*b_Ds_finalState;
 	Int_t t_year, t_Ds_finalState;
-        out_tree->SetBranchAddress("year", &t_year, &b_year);
-        out_tree->SetBranchAddress("Ds_finalState", &t_Ds_finalState, &b_Ds_finalState);
+	TBranch *b_sw, *b_year,*b_Ds_finalState;
 
+	if(sWeight){
+		output = new TFile("/auto/data/dargent/BsDsKpipi/Final/Data/norm.root","RECREATE");
+		tree->SetBranchStatus("*TAU*",1);
+		tree->SetBranchStatus("BsDTF*",1);
+		tree->SetBranchStatus("m*",1);
+		tree->SetBranchStatus("*_m*",1);
+
+		out_tree = tree->CopyTree(("Bs_DTF_MM > " + anythingToString((double)min_MM) + " && Bs_DTF_MM < " + anythingToString((double)max_MM) + " && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
+    		b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
+        	out_tree->SetBranchAddress("year", &t_year, &b_year);
+        	out_tree->SetBranchAddress("Ds_finalState", &t_Ds_finalState, &b_Ds_finalState);
+	}
+
+	/// Calculate total signal yield
 	double yield = 0.;
 
+	/// Loop over pdf slices
 	for(int i=0; i<str_year.size(); i++){
 
 		TLatex* lhcbtext = new TLatex();
@@ -475,7 +555,7 @@ vector<double> fitNorm(){
 		// Doesn't really work
 		/*
 		frame= DTF_Bs_M.frame();
-	        data->plotOn(frame,Name("data_slice"),Cut("year==year::" + str_year[i]),MarkerSize(1),Binning(80));
+	        data->plotOn(frame,Name("data_slice"),Cut("year==year::" + str_year[i]),MarkerSize(1),Binning(nBins));
         	simPdf->plotOn(frame,Name("pdf_slice"),Slice(year,str_year[i]),ProjWData(year,*data),LineColor(kBlue),LineWidth(3));
         	frame->Draw();
         	c->Print("eps/norm_" + str_year[i] + ".eps");
@@ -491,16 +571,17 @@ vector<double> fitNorm(){
 
 			/// Plot data and pdf slices
 			frame=DTF_Bs_M.frame();
-			data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(80));
-			pdf_slice->plotOn(frame,Name("pdf_slice2"),LineColor(kBlue+1),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected));
+			data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(nBins));
 			pdf_slice->plotOn(frame,LineColor(kGray+3),Components("bkg_partReco"),Normalization(1.,RooAbsReal::RelativeExpected));
 			pdf_slice->plotOn(frame,DrawOption("F"),FillStyle(1001),FillColor(kGray+3),Components("bkg_partReco"),Normalization(1.,RooAbsReal::RelativeExpected));
 			pdf_slice->plotOn(frame,LineColor(kRed+1),Components("signal_{" + str_year[i] + ";" + str_Ds[j] + "}"),Normalization(1.,RooAbsReal::RelativeExpected));
 			pdf_slice->plotOn(frame,DrawOption("F"),FillStyle(3353),FillColor(kRed+1),Components("signal_{" + str_year[i] + ";" + str_Ds[j] + "}"),Normalization(1.,RooAbsReal::RelativeExpected));
 			pdf_slice->plotOn(frame,LineStyle(kDashed),LineColor(kBlack),Components("bkg_exp_{" + str_year[i] + ";" + str_Ds[j] + "}"),Normalization(1.,RooAbsReal::RelativeExpected));
-			//data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(80));
+			pdf_slice->plotOn(frame,Name("pdf_slice2"),LineColor(kBlue+1),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected));
+			//data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(nBins));
 			frame->Draw();
-			
+			chi2 += frame->chiSquare("pdf_slice2","data_slice2");
+
 			/// Print label
 			TString label = "LHCb data " + str_year[i];
 			lhcbtext->SetTextFont(22);
@@ -520,6 +601,8 @@ vector<double> fitNorm(){
 
 			/// Get signal yield
 			yield += ((RooRealVar*) fitParams->find("n_sig_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getVal();
+
+			cout << endl <<  "ratio = " << ((RooRealVar*) fitParams->find("n_sig_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getVal()/ ((RooRealVar*) fitParams->find("n_partReco_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getVal()   << endl << endl;
 
 			/// Calculate sWeights
 			if(sWeight){
@@ -554,8 +637,15 @@ vector<double> fitNorm(){
 		}
 	}
 
- 	out_tree->Write();
-   	output->Close();
+	if(sWeight){
+	 	out_tree->Write();
+   		output->Close();
+		cout << endl;
+		cout << "Created file " << "/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"  << endl << endl;
+	}
+	
+	chi2 = chi2*nBins/(str_year.size()*str_Ds.size()*nBins-fitParams->selectByAttrib("Constant",kFALSE)->getSize());
+	cout << endl; cout<<"Chi2 data= " << chi2 <<" Cov Matrix: "<<covmatr<<" EDM: "<<edm<<endl<<endl;
 	cout << "Total signal yield = " << yield << endl;
 
 	/// Return fit params
@@ -578,6 +668,11 @@ void fitSignal(){
 
 	///Options
 	NamedParameter<int> numCPU("numCPU", 6);
+	NamedParameter<int> sWeight("sWeightSignal", 0);
+	NamedParameter<int> nBins("nBins", 80);
+	NamedParameter<double> min_MM("min_MM",5100.);
+	NamedParameter<double> max_MM("max_MM",5700.);
+	NamedParameter<double> cut_BDT("cut_BDT",0.);
 
 	///define categories
 	RooCategory year("year","year") ;
@@ -598,28 +693,15 @@ void fitSignal(){
 	tree->SetBranchStatus("Bs_DTF_MM",1);
 	tree->SetBranchStatus("BDTG_response",1);
 	tree->SetBranchStatus("Ds_finalState",1);
-	tree->SetBranchStatus("*_PIDK",1);
-	tree->SetBranchStatus("pi_plus2_PIDK",1);	
-	tree->SetBranchStatus("Ds_FDCHI2_ORIVX",1);
-	tree->SetBranchStatus("bkg*",1);
 	tree->SetBranchStatus("year",1);
+	tree->SetBranchStatus("*_PIDK",1);
 
-        RooRealVar DTF_Bs_M("Bs_DTF_MM", "m(D_{s}^{-} K^{+} #pi^{+} #pi^{-})", 5000., 5900.,"MeV/c^{2}");
+        RooRealVar DTF_Bs_M("Bs_DTF_MM", "m(D_{s}^{-} K^{+}#pi^{+}#pi^{-})", min_MM, max_MM,"MeV/c^{2}");
         RooRealVar BDTG_response("BDTG_response", "BDTG_response", 0.);        
-        RooRealVar pi_plus1_PIDK("pi_plus1_PIDK", "pi_plus1_PIDK", 0.);          
-        RooRealVar pi_plus2_PIDK("pi_plus2_PIDK", "pi_plus2_PIDK", 0.);   
-        RooRealVar K_plus_fromDs_PIDK("K_plus_fromDs_PIDK", "K_plus_fromDs_PIDK", 0.);          
-        RooRealVar K_minus_fromDs_PIDK("K_minus_fromDs_PIDK", "K_minus_fromDs_PIDK", 0.);          
-
-        RooRealVar Ds_FDCHI2_ORIVX("Ds_FDCHI2_ORIVX", "Ds_FDCHI2_ORIVX", 0.);          
-        RooRealVar bkg_Dstar_as_Ds_dm1("bkg_Dstar_as_Ds_dm1", "bkg_Dstar_as_Ds_dm1", 0.);          
-        RooRealVar bkg_Dstar_as_Ds_dm2("bkg_Dstar_as_Ds_dm2", "bkg_Dstar_as_Ds_dm2", 0.);          
-        RooRealVar bkg_Dstar_as_Ds_dm3("bkg_Dstar_as_Ds_dm3", "bkg_Dstar_as_Ds_dm3", 0.);          
-        RooRealVar bkg_Dstar_as_Ds_dm4("bkg_Dstar_as_Ds_dm4", "bkg_Dstar_as_Ds_dm4", 0.);          
-        RooRealVar bkg_D_as_Ds_m("bkg_D_as_Ds_m", "bkg_D_as_Ds_m", 0.);          
-
-	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState,year,Ds_FDCHI2_ORIVX,pi_plus2_PIDK,K_plus_fromDs_PIDK,K_minus_fromDs_PIDK,bkg_D_as_Ds_m);
-	RooDataSet*  data = new RooDataSet("data","data",tree,list,"BDTG_response > 0.3" );	
+        //RooRealVar K_plus_PIDK("K_plus_PIDK", "K_plus_PIDK", 0.);             
+	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState,year);
+	
+	RooDataSet*  data = new RooDataSet("data","data",tree,list,("BDTG_response > " + anythingToString((double)cut_BDT)).c_str() );	
 
 	/// Signal Pdf
 	vector<double> sig_params = fitSignalShape("signal");
@@ -636,6 +718,9 @@ void fitSignal(){
 
 	/// B0 pdf
 	RooFormulaVar mean_B0("mean_B0","@0 - @1", RooArgSet(mean,RooConst(87.33))); 
+	RooRealVar scale_sigma_B0("scale_sigma_B0", "scale #sigma_B0", 1.,0.,2.);
+	RooFormulaVar sigma_B0("sigma_B0","@0 * @1", RooArgSet(scale_sigma_B0,sigma_MC)); 
+
 	RooJohnsonSU signal_B0("signal_B0","signal_B0",DTF_Bs_M, mean_B0,sigma,alpha,beta);
 
 	/// Combinatorial bkg pdf
@@ -670,15 +755,18 @@ void fitSignal(){
 	RooBifurGauss BifGauss3_B0("BifGauss3_B0","BifGauss3_B0", DTF_Bs_M, mean3Shifted, sigmaL3,sigmaR3);
 	RooAddPdf bkg_partReco_B0("bkg_partReco_B0", "bkg_partReco_B0", RooArgList(BifGauss1_B0, BifGauss2_B0, BifGauss3_B0), RooArgList(f_1,f_2));
 
+	RooRealVar partReco_f("partReco_f", "partReco_f", 1.);
+	RooAddPdf bkg_partReco("bkg_partReco", "bkg_partReco", RooArgList(bkg_partReco_Bs, bkg_partReco_B0), RooArgList(partReco_f));
+
 	/// MisID bkg
 	vector<double> bkg_misID_Ds3pi_params = fitMisIdBkgShape_Ds3pi();
-	RooRealVar misID_Ds3pi_mean1("misID_Ds3pi_mean1","misID_Ds3pi_mean1", bkg_misID_Ds3pi_params[0]);
+	RooRealVar misID_Ds3pi_mean1("misID_Ds3pi_mean1","misID_Ds3pi_mean1", bkg_misID_Ds3pi_params[0]);//,bkg_misID_Ds3pi_params[0]-50,bkg_misID_Ds3pi_params[0]+50);
 	RooRealVar misID_Ds3pi_mean2("misID_Ds3pi_mean2","misID_Ds3pi_mean2", bkg_misID_Ds3pi_params[1]);
 	RooRealVar misID_Ds3pi_a1("misID_Ds3pi_a1","misID_Ds3pi_a1",bkg_misID_Ds3pi_params[2]);
 	RooRealVar misID_Ds3pi_a2("misID_Ds3pi_a2","misID_Ds3pi_a2",bkg_misID_Ds3pi_params[3]);
 	RooRealVar misID_Ds3pi_n1("misID_Ds3pi_n1","misID_Ds3pi_n1",bkg_misID_Ds3pi_params[4]);
 	RooRealVar misID_Ds3pi_n2("misID_Ds3pi_n2","misID_Ds3pi_n2",bkg_misID_Ds3pi_params[5]);
-	RooRealVar misID_Ds3pi_sigma1("misID_Ds3pi_sigma1", "misID_Ds3pi_sigma1", bkg_misID_Ds3pi_params[6]);
+	RooRealVar misID_Ds3pi_sigma1("misID_Ds3pi_sigma1", "misID_Ds3pi_sigma1", bkg_misID_Ds3pi_params[6]);//,  bkg_misID_Ds3pi_params[6] * 0.5,  bkg_misID_Ds3pi_params[6]*1.5);
 	RooRealVar misID_Ds3pi_sigma2("misID_Ds3pi_sigma2", "misID_Ds3pi_sigma2", bkg_misID_Ds3pi_params[7]);
 	RooRealVar misID_Ds3pi_f("misID_Ds3pi_f", "misID_Ds3pi_f", bkg_misID_Ds3pi_params[8]);
 
@@ -701,7 +789,7 @@ void fitSignal(){
 	RooCBShape misID_Dsstar3pi_CB2("misID_Dsstar3pi_CB2", "misID_Dsstar3pi_CB2", DTF_Bs_M, misID_Dsstar3pi_mean2, misID_Dsstar3pi_sigma2, misID_Dsstar3pi_a2, misID_Dsstar3pi_n2);
 	RooAddPdf bkg_misID_Dsstar3pi("bkg_misID_Dsstar3pi", "bkg_misID_Dsstar3pi", RooArgList(misID_Dsstar3pi_CB1, misID_Dsstar3pi_CB2), RooArgList(misID_Dsstar3pi_f));
 
-	RooRealVar misID_f("misID_f", "misID_f", 1.);
+	RooRealVar misID_f("misID_f", "misID_f", 0.5);
 	RooAddPdf bkg_misID("bkg_misID", "bkg_misID", RooArgList(bkg_misID_Ds3pi, bkg_misID_Dsstar3pi), RooArgList(misID_f));
 
 	/// Total pdf
@@ -709,10 +797,12 @@ void fitSignal(){
 	RooRealVar n_sig_B0("n_sig_B0", "n_sig_B0", data->numEntries()/4., 0., data->numEntries());
 	RooRealVar n_exp_bkg("n_exp_bkg", "n_exp_bkg", data->numEntries()/2., 0., data->numEntries());
 	RooRealVar n_partReco_Bs_bkg("n_partReco_Bs_bkg", "n_partReco_Bs_bkg", data->numEntries()/2., 0., data->numEntries());
-	RooRealVar n_partReco_B0_bkg("n_partReco_B0_bkg", "n_partReco_B0_bkg", data->numEntries()/2., 0., data->numEntries());
+	//RooRealVar n_partReco_B0_bkg("n_partReco_B0_bkg", "n_partReco_B0_bkg", data->numEntries()/2., 0., data->numEntries());
+	//RooRealVar n_partReco_Bs_bkg("n_partReco_Bs_bkg", "n_partReco_Bs_bkg", data->numEntries()/2., 0., data->numEntries());
+	RooRealVar n_partReco_bkg("n_partReco_bkg", "n_partReco_bkg", data->numEntries()/2., 0., data->numEntries());
 	RooRealVar n_misID_bkg("n_misID_bkg", "n_misID_bkg", data->numEntries()*0.01, 0., data->numEntries()*0.1);
 
-	RooAddPdf pdf("pdf", "pdf", RooArgList(signal, signal_B0, bkg_exp, bkg_partReco_Bs, bkg_partReco_B0, bkg_misID), RooArgList(n_sig, n_sig_B0, n_exp_bkg, n_partReco_Bs_bkg, n_partReco_B0_bkg, n_misID_bkg));
+	RooAddPdf pdf("pdf", "pdf", RooArgList(signal, signal_B0, bkg_exp, bkg_partReco, bkg_misID), RooArgList(n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg));
 
 	/// Generate simultaneous pdf out of prototype pdf 
   	RooSimPdfBuilder* mgr = new RooSimPdfBuilder(pdf) ;
@@ -720,8 +810,8 @@ void fitSignal(){
   	config->setStringValue("physModels","pdf") ;
   	config->setStringValue("splitCats" ,"year Ds_finalState") ;
   	config->setStringValue("pdf", "year            : scale_sigma "
-				      //"Ds_finalState : f_1, f_2 "  
-                                      "year,Ds_finalState : n_sig, n_sig_B0, n_exp_bkg, n_partReco_Bs_bkg, n_partReco_B0_bkg, n_misID_bkg, exp_par") ;  
+				      "Ds_finalState : exp_par "  
+                                      "year,Ds_finalState : n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg") ;  
 	
   	RooSimultaneous* simPdf  = mgr->buildPdf(*config,data) ;
 	simPdf->Print("v") ;
@@ -733,27 +823,128 @@ void fitSignal(){
 	cout << "result is --------------- "<<endl;
 	result->Print();
 
-	/// Plotting
+	/// Plot combined data and fit
 	TCanvas* c = new TCanvas();
 	RooPlot* frame= DTF_Bs_M.frame();
 	frame->SetTitle("");
-	data->plotOn(frame,Name("data"),MarkerSize(1),Binning(80));
-	simPdf->plotOn(frame,Name("pdf"),ProjWData(year,*data),LineColor(kBlue),LineWidth(3));
-	//simPdf->plotOn(frame,Components("signal_{y11;phipi}"),ProjWData(year,*data),LineColor(kRed),LineWidth(3));
+	data->plotOn(frame,Name("data"),MarkerSize(1),Binning(nBins));
+	simPdf->plotOn(frame,Name("pdf"),ProjWData(year,*data),LineColor(kBlue+1),LineWidth(3));
+
+	TLegend leg(0.6,0.4,0.9,0.9,"");
+    	leg.SetLineStyle(0);
+    	leg.SetLineColor(0);
+	leg.SetFillColor(0);
+	leg.SetTextFont(22);
+	leg.SetTextColor(1);
+	leg.SetTextSize(0.05);
+	leg.SetTextAlign(12);
+	leg.AddEntry(frame->findObject("data"),"LHCb data","ep");
+	leg.AddEntry(frame->findObject("pdf"),"Fit","l");
+
+	/// Plot components 
+	/// argh fuck RooFit, is this seriously so complicated ? 
+	TString last_name_signal,last_name_signal_B0,last_name_exp_bkg,last_name_partReco_bkg,last_name_misID_bkg;
+	for(int i=0; i<str_year.size(); i++) for(int j=0; j<str_Ds.size(); j++){
+		RooAddPdf* pdf_slice = (RooAddPdf*)simPdf->getPdf("{" + str_year[i] + ";" + str_Ds[j] + "}");
+		RooArgList pdf_slice_comp( pdf_slice->pdfList());
+
+		TString name_signal("signal_"+ anythingToString(i)+ "_" + anythingToString(j));
+		TString name_signal_B0("signal_B0_"+ anythingToString(i)+ "_" + anythingToString(j));
+		TString name_exp_bkg("exp_bkg_"+ anythingToString(i)+ "_" + anythingToString(j));
+		TString name_partReco_bkg("partReco_bkg_"+ anythingToString(i)+ "_" + anythingToString(j));
+		TString name_misID_bkg("misID_bkg_"+ anythingToString(i)+ "_" + anythingToString(j));
+
+		if(i==0 && j == 0){
+			pdf_slice->plotOn(frame,Name(name_signal),Components(RooArgSet(pdf_slice_comp[0])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible());
+			
+			pdf_slice->plotOn(frame,Name(name_signal_B0),Components(RooArgSet(pdf_slice_comp[1])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible());
+				
+			pdf_slice->plotOn(frame,Name(name_exp_bkg),Components(RooArgSet(pdf_slice_comp[2])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible());
+			
+			pdf_slice->plotOn(frame,Name(name_partReco_bkg),Components(RooArgSet(pdf_slice_comp[3])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible());
+
+			pdf_slice->plotOn(frame,Name(name_misID_bkg),Components(RooArgSet(pdf_slice_comp[4])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible());
+		}
+		else{
+			pdf_slice->plotOn(frame,Name(name_signal),Components(RooArgSet(pdf_slice_comp[0])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible(),AddTo(last_name_signal));
+			
+			pdf_slice->plotOn(frame,Name(name_signal_B0),Components(RooArgSet(pdf_slice_comp[1])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible(),AddTo(last_name_signal_B0));
+
+			pdf_slice->plotOn(frame,Name(name_exp_bkg),Components(RooArgSet(pdf_slice_comp[2])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible(),AddTo(last_name_exp_bkg));
+	
+			pdf_slice->plotOn(frame,Name(name_partReco_bkg),Components(RooArgSet(pdf_slice_comp[3])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible(),AddTo(last_name_partReco_bkg));
+
+			pdf_slice->plotOn(frame,Name(name_misID_bkg),Components(RooArgSet(pdf_slice_comp[4])),ProjWData(year,*data),Normalization(1.,RooAbsReal::RelativeExpected),Invisible(),AddTo(last_name_misID_bkg));		
+		}
+
+		if(i== str_year.size()-1 && j == str_Ds.size() -1) {
+
+			pdf_slice->plotOn(frame,Name(name_partReco_bkg),Components(RooArgSet(pdf_slice_comp[3])),ProjWData(year,*data),FillColor(kGray+3),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_partReco_bkg),DrawOption("F"),FillStyle(1001),LineColor(kGray+3));			
+			pdf_slice->plotOn(frame,Components(RooArgSet(pdf_slice_comp[3])),ProjWData(year,*data),LineColor(kGray+3),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_partReco_bkg));
+
+			pdf_slice->plotOn(frame,Name(name_misID_bkg),Components(RooArgSet(pdf_slice_comp[4])),ProjWData(year,*data),FillColor(kMagenta+3),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_misID_bkg),DrawOption("F"),FillStyle(3344),LineColor(kMagenta+3));			
+			pdf_slice->plotOn(frame,Components(RooArgSet(pdf_slice_comp[4])),ProjWData(year,*data),LineColor(kMagenta+3),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_misID_bkg));
+
+			pdf_slice->plotOn(frame,Name(name_signal),Components(RooArgSet(pdf_slice_comp[0])),ProjWData(year,*data),FillColor(kRed+1),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_signal),DrawOption("F"),FillStyle(3353),LineColor(kRed+1));
+			pdf_slice->plotOn(frame,Components(RooArgSet(pdf_slice_comp[0])),ProjWData(year,*data),LineColor(kRed+1),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_signal));
+
+			pdf_slice->plotOn(frame,Name(name_signal_B0),Components(RooArgSet(pdf_slice_comp[1])),ProjWData(year,*data),FillColor(kGreen+3),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_signal_B0),DrawOption("F"),FillStyle(3335),LineColor(kGreen+3));
+			pdf_slice->plotOn(frame,Components(RooArgSet(pdf_slice_comp[1])),ProjWData(year,*data),LineColor(kGreen+3),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_signal_B0));
+
+			pdf_slice->plotOn(frame,Name(name_exp_bkg),Components(RooArgSet(pdf_slice_comp[2])),ProjWData(year,*data),LineColor(kBlack),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected),AddTo(last_name_exp_bkg),LineStyle(kDashed));
+
+			leg.AddEntry(frame->findObject(name_signal),"#font[132]{B_{s} #rightarrow D_{s}^{-} K^{+}#pi^{+}#pi^{-}}","f");
+			leg.AddEntry(frame->findObject(name_signal_B0),"#font[132]{B^{0} #rightarrow D_{s}^{-} K^{+}#pi^{+}#pi^{-}}","f");
+			leg.AddEntry(frame->findObject(name_exp_bkg),"Comb. bkg.","l");
+			leg.AddEntry(frame->findObject(name_partReco_bkg),"Part. reco. bkg.","f");
+			leg.AddEntry(frame->findObject(name_misID_bkg),"MisID bkg.","f");
+		}
+		else {
+			last_name_signal = name_signal;
+			last_name_signal_B0 = name_signal_B0;
+			last_name_exp_bkg = name_exp_bkg;
+			last_name_partReco_bkg = name_partReco_bkg;
+			last_name_misID_bkg = name_misID_bkg;
+		}
+	}
+
 	frame->Draw();
+	leg.Draw();
 	c->Print("eps/signal.eps");
-	double chi2 = frame->chiSquare("pdf","data",fitParams->selectByAttrib("Constant",kFALSE)->getSize());
+
+	double chi2 = 0.;
 	double covmatr = result->covQual();
 	double edm = result->edm();
-	cout<<"Chi2 data= " << chi2 <<" Cov Matrix: "<<covmatr<<" EDM: "<<edm<<endl;
 	RooHist* hpull = frame->pullHist("data","pdf") ;
 	frame= DTF_Bs_M.frame();
 	frame->addPlotable(hpull,"P") ;
         frame->Draw();
         c->Print("eps/signal_pull.eps");
 
+	/// Output file
+	TFile *output;
+	TTree* out_tree;
+	double sw;
+	Int_t t_year, t_Ds_finalState;
+	TBranch *b_sw, *b_year,*b_Ds_finalState;
+
+	if(sWeight){
+		output = new TFile("/auto/data/dargent/BsDsKpipi/Final/Data/signal.root","RECREATE");
+		tree->SetBranchStatus("*TAU*",1);
+		tree->SetBranchStatus("BsDTF*",1);
+		tree->SetBranchStatus("m*",1);
+		tree->SetBranchStatus("*_m*",1);
+
+		out_tree = tree->CopyTree(("Bs_DTF_MM > " + anythingToString((double)min_MM) + " && Bs_DTF_MM < " + anythingToString((double)max_MM) + " && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
+    		b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
+        	out_tree->SetBranchAddress("year", &t_year, &b_year);
+        	out_tree->SetBranchAddress("Ds_finalState", &t_Ds_finalState, &b_Ds_finalState);
+	}
+
+	/// Calculate total signal yield
 	double yield = 0.;
 	
+	/// Loop over pdf slices
 	for(int i=0; i<str_year.size(); i++){
 
 		TLatex* lhcbtext = new TLatex();
@@ -764,7 +955,7 @@ void fitSignal(){
 		lhcbtext->SetNDC(1);
 
 		frame= DTF_Bs_M.frame();
-	        data->plotOn(frame,Name("data_slice"),Cut("year==year::" + str_year[i]),MarkerSize(1),Binning(80));
+	        data->plotOn(frame,Name("data_slice"),Cut("year==year::" + str_year[i]),MarkerSize(1),Binning(nBins));
         	simPdf->plotOn(frame,Name("pdf_slice"),Slice(year,str_year[i]),ProjWData(year,*data),LineColor(kBlue),LineWidth(3));
         	frame->Draw();
         	c->Print("eps/signal_" + str_year[i] + ".eps");
@@ -780,7 +971,7 @@ void fitSignal(){
 			//pdf_slice->Print();
 			/// Plot data and pdf slices
 			frame=DTF_Bs_M.frame();
-			data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(80));
+			data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(nBins));
 			pdf_slice->plotOn(frame,Name("pdf_slice2"),LineColor(kBlue+1),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected));
 
 			pdf_slice->plotOn(frame,LineColor(kGray+3),Components(RooArgSet(bkg_partReco_Bs,bkg_partReco_B0)),Normalization(1.,RooAbsReal::RelativeExpected));
@@ -796,9 +987,10 @@ void fitSignal(){
 			pdf_slice->plotOn(frame,DrawOption("F"),FillStyle(3335),FillColor(kGreen+3),Components("signal_B0_{" + str_year[i] + ";" + str_Ds[j] + "}"),Normalization(1.,RooAbsReal::RelativeExpected));
 
 			pdf_slice->plotOn(frame,LineStyle(kDashed),LineColor(kBlack),Components("bkg_exp_{" + str_year[i] + ";" + str_Ds[j] + "}"),Normalization(1.,RooAbsReal::RelativeExpected));
-			//data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(80));
+			//data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(nBins));
 			frame->Draw();
-			
+			chi2 += frame->chiSquare("pdf_slice2","data_slice2");
+
 			/// Print label
 			TString label = "LHCb data " + str_year[i];
 			lhcbtext->SetTextFont(22);
@@ -818,9 +1010,48 @@ void fitSignal(){
 
 			/// Get signal yield
 			yield += ((RooRealVar*) fitParams->find("n_sig_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getVal();
+
+			/// Calculate sWeights
+			if(sWeight){
+				RooArgList yield_list(
+				*((RooRealVar*) fitParams->find("n_sig_{"+str_year[i] + ";" + str_Ds[j] + "}")),
+				*((RooRealVar*) fitParams->find("n_exp_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}")),
+				*((RooRealVar*) fitParams->find("n_partReco_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))
+				);
+				RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]);
+				SPlot sPlot("sPlot","sPlot",*data_slice,pdf_slice,yield_list); 
+	
+				/// Plot the sWeight distributions as a function of mass
+				TH2 * swHist = (TH2*)data_slice->createHistogram("Bs_DTF_MM,n_sig_{" +str_year[i] + ";" + str_Ds[j] + "}" + "_sw");
+				swHist->GetYaxis()->SetTitle("Signal sWeights");
+				swHist->Draw();
+				c->Print("eps/signal_sweight_" + str_year[i] + "_" + str_Ds[j] + ".eps");
+
+				/// Save sWeights
+				/// Messy and dangerous hack but works for now
+				int n_ij = 0;
+				for(int n = 0; n < out_tree->GetEntries(); n++){
+					b_year->GetEntry(n);
+					b_Ds_finalState->GetEntry(n);
+					if(A_is_in_B(anythingToString(t_year), (string) str_year[i]) && t_Ds_finalState == j){
+						sw=sPlot.GetSWeight(n_ij,"n_sig_{" +str_year[i] + ";" + str_Ds[j] + "}" + "_sw");
+						b_sw->Fill();
+						n_ij++;
+					}
+				}		
+			}
 		}
 	}
+	
+	if(sWeight){
+	 	out_tree->Write();
+   		output->Close();
+		cout << endl;
+		cout << "Created file " << "/auto/data/dargent/BsDsKpipi/Final/Data/signal.root"  << endl << endl;
+	}
 
+	chi2 = chi2*nBins/(str_year.size()*str_Ds.size()*nBins-fitParams->selectByAttrib("Constant",kFALSE)->getSize());
+	cout << endl; cout<<"Chi2 data= " << chi2 <<" Cov Matrix: "<<covmatr<<" EDM: "<<edm<<endl<<endl;
 	cout << "Total signal yield = " << yield << endl;
 }
 
