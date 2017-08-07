@@ -1,0 +1,3 @@
+* options for acceptance 
+"Ds_finalState"			"Ds2KKpi"
+"year"				"Run2"
