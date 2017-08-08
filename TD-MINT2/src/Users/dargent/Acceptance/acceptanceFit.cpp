@@ -73,16 +73,13 @@ void fitSplineAcc(string CutString){
 TFile* file;
 TTree* tree;
 
-file= new TFile("/auto/data/kecke/B2DPiPiPi/Bs2Dspipipi_Data_bothRuns.root");
+file= new TFile("/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
 tree = (TTree*) file->Get("DecayTree");
 
 
 
 //Define RooRealVar for observables
 RooRealVar DTF_Bs_M("DTF_Bs_M", "DTF_Bs_M", 4975., 5800., "MeV");
-//RooRealVar Bs_ct("Bs_ct", "Bs_ct", 0.4, 10., "ps");
-//RooRealVar Bs_cterr("Bs_cterr", "Bs_cterr", 0.0001, 1.,"ps");
-
 RooRealVar Bs_TAU("Bs_TAU", "Bs_TAU", 0.4, 10., "ps");
 RooRealVar Bs_TAUERR("Bs_TAUERR", "Bs_TAUERR", 0.0001, 1.,"ps");
 RooRealVar N_Bs_sw("N_Bs_sw", "N_Bs_sw", -0.3, 1.3);
@@ -91,7 +88,6 @@ RooRealVar year("year", "year", 11, 16);
 
 RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, N_Bs_sw);
 
-//RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(N_Bs_sw.GetName()));
 RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(N_Bs_sw.GetName()), Cut(CutString.c_str()));
 
 
@@ -136,8 +132,8 @@ double gradient = deltaY / deltaX;
 double lastcoeff = 1 + gradient * (Bs_TAU.getMax() - myknots[5]);
 */
 
-RooRealVar knot_5("knot_5","knot_5",myknots[5]);
 RooRealVar knot_4("knot_4","knot_4",myknots[4]);
+RooRealVar knot_5("knot_5","knot_5",myknots[5]);
 RooRealVar Bs_TAU_max("Bs_TAU_max","Bs_TAU_max", Bs_TAU.getMax());
 
 RooGenericPdf coeff_7("coeff_7","coeff_7", "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(coeff_6, coeff_5, knot_5, knot_4, Bs_TAU_max) );
@@ -177,6 +173,8 @@ RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::
 RooFitResult *myfitresult;
 myfitresult = timePDF->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE));
 myfitresult->Print("v");
+
+cout << "coeff_7 =  " << coeff_7.getVal() << endl;
 
 
 //Print
@@ -224,7 +222,7 @@ frame_m->GetYaxis()->SetTitleOffset( 1.00 );
 int bin = 150;
 dataset->plotOn(frame_m, Binning(bin), Name("dataSetCut"));
 timePDF->plotOn(frame_m, LineColor(kBlue+3),  Name("FullPdf"));
-spl->plotOn(frame_m, LineColor(kRed), Normalization(50, RooAbsReal::Relative));
+spl->plotOn(frame_m, LineColor(kRed), Normalization(350, RooAbsReal::Relative));
 
 TLatex* lhcbtext = new TLatex();
 lhcbtext->SetTextFont(132);
@@ -250,7 +248,7 @@ pad1->cd();
 frame_m->GetYaxis()->SetRangeUser(0.1,frame_m->GetMaximum()*1.0);
 frame_m->Draw();
 
-lhcbtext->DrawTextNDC(0.70,0.85,"LHCb Run I data");
+lhcbtext->DrawTextNDC(0.70,0.85,"LHCb Run 1&2 data");
 lhcbtext->DrawTextNDC(0.70,0.75,"preliminary");
 
 canvas->cd();
@@ -349,6 +347,8 @@ string epsFullName = epsName.append(PlotName);
 
 canvas->SaveAs(epsFullName.c_str());
 
+cout << "used datasets:     "<< CutString.c_str() << endl;
+
 file->Close();
 
 }
@@ -420,8 +420,7 @@ int main(int argc, char** argv){
 		fitSplineAcc("(year == 15 || year == 16) && (Ds_finalState ==3)");
 	}
    }
-
-   // fitSplineAcc();
+   
     
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;

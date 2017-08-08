@@ -1,0 +1,147 @@
+Knot Scheme : double myknots [6] = { 0.5, 1., 1.5, 2., 3., 9.5}
+
+
+
+Run1 , all Ds states, Norm-Data:
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+               coeff_0    3.1692e-01    4.0158e-01 +/-  2.25e-02  <none>
+               coeff_1    5.9223e-01    6.3436e-01 +/-  3.99e-02  <none>
+               coeff_2    1.1015e+00    8.5859e-01 +/-  5.09e-02  <none>
+               coeff_3    1.3984e+00    1.0607e+00 +/-  6.15e-02  <none>
+               coeff_4    1.7174e+00    1.1113e+00 +/-  5.28e-02  <none>
+               coeff_5    1.7757e+00    1.2626e+00 +/-  1.01e-01  <none>
+               coeff_6    1.0000e+00
+               coeff_7    0.979799
+
+
+
+Run1 , Ds2KKpi , Norm-Data:
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+               coeff_0    3.1692e-01    3.9447e-01 +/-  2.45e-02  <none>
+               coeff_1    5.9223e-01    6.3579e-01 +/-  4.42e-02  <none>
+               coeff_2    1.1015e+00    8.7440e-01 +/-  5.72e-02  <none>
+               coeff_3    1.3984e+00    1.0890e+00 +/-  6.97e-02  <none>
+               coeff_4    1.7174e+00    1.1439e+00 +/-  6.02e-02  <none>
+               coeff_5    1.7757e+00    1.3018e+00 +/-  1.15e-01  <none>
+               coeff_6    1.0000e+00
+	       coeff_7    0.976784
+
+
+
+Run1 , Ds2pipipi , Norm-Data:
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+               coeff_0    3.1692e-01    4.3543e-01 +/-  5.59e-02  <none>
+               coeff_1    5.9223e-01    6.3181e-01 +/-  9.27e-02  <none>
+               coeff_2    1.1015e+00    7.8532e-01 +/-  1.09e-01  <none>
+               coeff_3    1.3984e+00    9.3552e-01 +/-  1.27e-01  <none>
+               coeff_4    1.7174e+00    9.6408e-01 +/-  1.06e-01  <none>
+               coeff_5    1.7757e+00    1.0886e+00 +/-  2.12e-01  <none>
+               coeff_6    1.0000e+00
+               coeff_7    0.993181
+
+******************************************************************************
+
+
+Run2 , all Ds states, Norm-Data:
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+               coeff_0    3.1692e-01    3.2819e-01 +/-  1.36e-02  <none>
+               coeff_1    5.9223e-01    5.5010e-01 +/-  2.58e-02  <none>
+               coeff_2    1.1015e+00    7.7362e-01 +/-  3.38e-02  <none>
+               coeff_3    1.3984e+00    9.2691e-01 +/-  3.99e-02  <none>
+               coeff_4    1.7174e+00    1.0252e+00 +/-  3.53e-02  <none>
+               coeff_5    1.7757e+00    1.2081e+00 +/-  7.16e-02  <none>
+               coeff_6    1.0000e+00
+               coeff_7    0.983995
+
+
+
+Run2 ,  Ds2KKpi, Norm-Data:
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+               coeff_0    3.1692e-01    3.0601e-01 +/-  1.39e-02  <none>
+               coeff_1    5.9223e-01    5.1371e-01 +/-  2.66e-02  <none>
+               coeff_2    1.1015e+00    7.5650e-01 +/-  3.58e-02  <none>
+               coeff_3    1.3984e+00    9.0268e-01 +/-  4.22e-02  <none>
+               coeff_4    1.7174e+00    1.0159e+00 +/-  3.79e-02  <none>
+               coeff_5    1.7757e+00    1.1930e+00 +/-  7.69e-02  <none>
+               coeff_6    1.0000e+00
+               coeff_7    0.985152
+
+
+
+Run2 ,  Ds2pipipi, Norm-Data:
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+               coeff_0    3.1692e-01    4.5250e-01 +/-  4.71e-02  <none>
+               coeff_1    5.9223e-01    7.5099e-01 +/-  8.53e-02  <none>
+               coeff_2    1.1015e+00    8.7297e-01 +/-  9.73e-02  <none>
+               coeff_3    1.3984e+00    1.0587e+00 +/-  1.16e-01  <none>
+               coeff_4    1.7174e+00    1.0766e+00 +/-  9.63e-02  <none>
+               coeff_5    1.7757e+00    1.2858e+00 +/-  1.93e-01  <none>
+               coeff_6    1.0000e+00
+               coeff_7    0.978013
+
+
+*******************************************************************************
+
+
+Run1&2 , all Ds states, Norm-Data:
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+               coeff_0    3.1692e-01    3.5358e-01 +/-  1.18e-02  <none>
+               coeff_1    5.9223e-01    5.7883e-01 +/-  2.18e-02  <none>
+               coeff_2    1.1015e+00    8.0302e-01 +/-  2.82e-02  <none>
+               coeff_3    1.3984e+00    9.7285e-01 +/-  3.36e-02  <none>
+               coeff_4    1.7174e+00    1.0548e+00 +/-  2.94e-02  <none>
+               coeff_5    1.7757e+00    1.2260e+00 +/-  5.85e-02  <none>
+               coeff_6    1.0000e+00
+               coeff_7    0.982613
+
+
+
+Run1&2 , Ds2KKpi, Norm-Data:
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+               coeff_0    3.1692e-01    3.3597e-01 +/-  1.23e-02  <none>
+               coeff_1    5.9223e-01    5.5477e-01 +/-  2.30e-02  <none>
+               coeff_2    1.1015e+00    7.9647e-01 +/-  3.06e-02  <none>
+               coeff_3    1.3984e+00    9.6552e-01 +/-  3.64e-02  <none>
+               coeff_4    1.7174e+00    1.0591e+00 +/-  3.23e-02  <none>
+               coeff_5    1.7757e+00    1.2292e+00 +/-  6.40e-02  <none>
+               coeff_6    1.0000e+00
+               coeff_7    0.982367
+
+
+
+Run1&2 , Ds2pipipi, Norm-Data:
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+               coeff_0    3.1692e-01    4.4634e-01 +/-  3.62e-02  <none>
+               coeff_1    5.9223e-01    7.0444e-01 +/-  6.33e-02  <none>
+               coeff_2    1.1015e+00    8.3950e-01 +/-  7.31e-02  <none>
+               coeff_3    1.3984e+00    1.0113e+00 +/-  8.63e-02  <none>
+               coeff_4    1.7174e+00    1.0332e+00 +/-  7.17e-02  <none>
+               coeff_5    1.7757e+00    1.2102e+00 +/-  1.44e-01  <none>
+               coeff_6    1.0000e+00
+               coeff_7    0.98383
+
+
+
+
+
+
+
+
