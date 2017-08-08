@@ -538,6 +538,7 @@ vector<double> fitNorm(){
         	out_tree->SetBranchAddress("year", &t_year, &b_year);
         	out_tree->SetBranchAddress("Ds_finalState", &t_Ds_finalState, &b_Ds_finalState);
 	}
+	double weights[out_tree->GetEntries()];
 
 	/// Calculate total signal yield
 	double yield = 0.;
@@ -623,21 +624,25 @@ vector<double> fitNorm(){
 
 				/// Save sWeights
 				/// Messy and dangerous hack but works for now
-				int n_ij = 0;
+				int n_ij = 0;  /// labels entry number of data slice
 				for(int n = 0; n < out_tree->GetEntries(); n++){
 					b_year->GetEntry(n);
 					b_Ds_finalState->GetEntry(n);
 					if(A_is_in_B(anythingToString(t_year), (string) str_year[i]) && t_Ds_finalState == j){
-						sw=sPlot.GetSWeight(n_ij,"n_sig_{" +str_year[i] + ";" + str_Ds[j] + "}" + "_sw");
-						b_sw->Fill();
+						weights[n] = sPlot.GetSWeight(n_ij,"n_sig_{" +str_year[i] + ";" + str_Ds[j] + "}" + "_sw");
 						n_ij++;
 					}
-				}		
+				}	
 			}
 		}
 	}
 
 	if(sWeight){
+		for(int n = 0; n < out_tree->GetEntries(); n++){
+			sw = weights[n];
+			b_sw->Fill();
+		}
+
 	 	out_tree->Write();
    		output->Close();
 		cout << endl;
@@ -941,6 +946,8 @@ void fitSignal(){
         	out_tree->SetBranchAddress("Ds_finalState", &t_Ds_finalState, &b_Ds_finalState);
 	}
 
+	double weights[out_tree->GetEntries()];
+
 	/// Calculate total signal yield
 	double yield = 0.;
 	
@@ -1015,8 +1022,10 @@ void fitSignal(){
 			if(sWeight){
 				RooArgList yield_list(
 				*((RooRealVar*) fitParams->find("n_sig_{"+str_year[i] + ";" + str_Ds[j] + "}")),
+				*((RooRealVar*) fitParams->find("n_sig_B0_{"+str_year[i] + ";" + str_Ds[j] + "}")),
 				*((RooRealVar*) fitParams->find("n_exp_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}")),
-				*((RooRealVar*) fitParams->find("n_partReco_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))
+				*((RooRealVar*) fitParams->find("n_partReco_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}")),
+				*((RooRealVar*) fitParams->find("n_misID_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))
 				);
 				RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]);
 				SPlot sPlot("sPlot","sPlot",*data_slice,pdf_slice,yield_list); 
@@ -1029,21 +1038,25 @@ void fitSignal(){
 
 				/// Save sWeights
 				/// Messy and dangerous hack but works for now
-				int n_ij = 0;
+				int n_ij = 0;  /// labels entry number of data slice
 				for(int n = 0; n < out_tree->GetEntries(); n++){
 					b_year->GetEntry(n);
 					b_Ds_finalState->GetEntry(n);
 					if(A_is_in_B(anythingToString(t_year), (string) str_year[i]) && t_Ds_finalState == j){
-						sw=sPlot.GetSWeight(n_ij,"n_sig_{" +str_year[i] + ";" + str_Ds[j] + "}" + "_sw");
-						b_sw->Fill();
+						weights[n] = sPlot.GetSWeight(n_ij,"n_sig_{" +str_year[i] + ";" + str_Ds[j] + "}" + "_sw");
 						n_ij++;
 					}
-				}		
+				}
 			}
 		}
 	}
-	
+
 	if(sWeight){
+		for(int n = 0; n < out_tree->GetEntries(); n++){
+			sw = weights[n];
+			b_sw->Fill();
+		}
+
 	 	out_tree->Write();
    		output->Close();
 		cout << endl;
@@ -1054,6 +1067,7 @@ void fitSignal(){
 	cout << endl; cout<<"Chi2 data= " << chi2 <<" Cov Matrix: "<<covmatr<<" EDM: "<<edm<<endl<<endl;
 	cout << "Total signal yield = " << yield << endl;
 }
+
 
 int main(int argc, char** argv){
 

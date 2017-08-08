@@ -1,7 +1,7 @@
 "channel"	"Signal"
 "fixExpBkgFromSidebands"	 0
 "numCPU"	 8
-"sWeightNorm"	 1
+"sWeightNorm"	 0
 "sWeightSignal"	 1
 "nBins"		60
 "min_MM"	5100.
