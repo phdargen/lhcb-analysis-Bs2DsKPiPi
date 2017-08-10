@@ -67,7 +67,7 @@ using namespace RooStats;
 using namespace MINT;
 
 
-void fitSplineAcc(string CutString){
+vector<double> fitSplineAcc(string CutString){
 
 // Read Dataset
 TFile* file;
@@ -176,6 +176,24 @@ myfitresult->Print("v");
 
 cout << "coeff_7 =  " << coeff_7.getVal() << endl;
 
+//put coefficients into vector
+std::vector<double> myCoeffs;
+//values
+myCoeffs.push_back(coeff_0.getValV());
+myCoeffs.push_back(coeff_1.getValV());
+myCoeffs.push_back(coeff_2.getValV());
+myCoeffs.push_back(coeff_3.getValV());
+myCoeffs.push_back(coeff_4.getValV());
+myCoeffs.push_back(coeff_5.getValV());
+myCoeffs.push_back(coeff_6.getVal());
+myCoeffs.push_back(coeff_7.getVal());
+//errors
+myCoeffs.push_back(coeff_0.getError());
+myCoeffs.push_back(coeff_1.getError());
+myCoeffs.push_back(coeff_2.getError());
+myCoeffs.push_back(coeff_3.getError());
+myCoeffs.push_back(coeff_4.getError());
+myCoeffs.push_back(coeff_5.getError());
 
 //Print
 double range_dw = Bs_TAU.getMin();
@@ -351,14 +369,18 @@ cout << "used datasets:     "<< CutString.c_str() << endl;
 
 file->Close();
 
+return myCoeffs;
+
 }
 
 
 int main(int argc, char** argv){
     
     time_t startTime = time(0);
-    //gROOT->ProcessLine(".x ../lhcbStyle.C");
+    gROOT->ProcessLine(".x ../lhcbStyle.C");
+    gStyle->SetOptStat(1000000001);
 
+    NamedParameter<int> makePlots("makePlots", 0);
     NamedParameter<string> Ds_finalState("Ds_finalState", (std::string) "all");
     NamedParameter<string> year("year", (std::string) "all");
     string Run1 = "Run1";
@@ -369,58 +391,190 @@ int main(int argc, char** argv){
     string Ds_finalState_convert = Ds_finalState;
     string year_convert = year;
 
-    if(year_convert.compare(all) == 0)
+if(makePlots == 1)
+{
+    int numKnots = 8;
+    double positions[9] = {0., 0.25, 0.75, 1.25, 1.75, 2.25, 3.75, 9.25, 9.75};
+    double *KnotBinning;
+    KnotBinning = positions;
+
+    TH1D *KnotsVsCoeffs_1 = new TH1D("D_{s} -> KK#pi, 2011", "D_{s} -> KK#pi, 2011", numKnots, KnotBinning);
+    KnotsVsCoeffs_1->GetXaxis()->SetTitle("Knot position [ps]");
+    KnotsVsCoeffs_1->GetYaxis()->SetTitle("v_{i} values");
+    TH1D *KnotsVsCoeffs_2 = new TH1D("D_{s} -> KK#pi, 2012", "D_{s} -> KK#pi, 2012", numKnots, KnotBinning);
+    KnotsVsCoeffs_2->GetXaxis()->SetTitle("Knot position [ps]");
+    KnotsVsCoeffs_2->GetYaxis()->SetTitle("v_{i} values");
+    TH1D *KnotsVsCoeffs_3 = new TH1D("D_{s} -> KK#pi, 2015", "D_{s} -> KK#pi, 2015", numKnots, KnotBinning);
+    KnotsVsCoeffs_3->GetXaxis()->SetTitle("Knot position [ps]");
+    KnotsVsCoeffs_3->GetYaxis()->SetTitle("v_{i} values");
+    TH1D *KnotsVsCoeffs_4 = new TH1D("D_{s} -> KK#pi, 2016", "D_{s} -> KK#pi, 2016", numKnots, KnotBinning);
+    KnotsVsCoeffs_4->GetXaxis()->SetTitle("Knot position [ps]");
+    KnotsVsCoeffs_4->GetYaxis()->SetTitle("v_{i} values");
+
+    TH1D *KnotsVsCoeffs_5 = new TH1D("D_{s} -> #phi #pi, Run1&2", "D_{s} -> #phi #pi, Run1&2", numKnots, KnotBinning);
+    KnotsVsCoeffs_5->GetXaxis()->SetTitle("Knot position [ps]");
+    KnotsVsCoeffs_5->GetYaxis()->SetTitle("v_{i} values");
+    TH1D *KnotsVsCoeffs_6 = new TH1D("D_{s} -> K^{*}K, Run1&2", "D_{s} -> K^{*}K, Run1&2", numKnots, KnotBinning);
+    KnotsVsCoeffs_6->GetXaxis()->SetTitle("Knot position [ps]");
+    KnotsVsCoeffs_6->GetYaxis()->SetTitle("v_{i} values");
+    TH1D *KnotsVsCoeffs_7 = new TH1D("D_{s} -> non-resonant, Run1&2", "D_{s} -> non-resonant, Run1&2", numKnots, KnotBinning);
+    KnotsVsCoeffs_7->GetXaxis()->SetTitle("Knot position [ps]");
+    KnotsVsCoeffs_7->GetYaxis()->SetTitle("v_{i} values");
+    TH1D *KnotsVsCoeffs_8 = new TH1D("D_{s} -> #pi#pi#pi, Run1&2", "D_{s} -> #pi#pi#pi, Run1&2", numKnots, KnotBinning);
+    KnotsVsCoeffs_8->GetXaxis()->SetTitle("Knot position [ps]");
+    KnotsVsCoeffs_8->GetYaxis()->SetTitle("v_{i} values");
+
+    vector<double> Ds2KKpi_11;
+    vector<double> Ds2KKpi_12;
+    vector<double> Ds2KKpi_15;
+    vector<double> Ds2KKpi_16;
+
+    vector<double> Ds2phiPi;
+    vector<double> Ds2KstarK;
+    vector<double> Ds2nonRes;
+    vector<double> Ds2PiPiPi;
+
+    Ds2KKpi_11 = fitSplineAcc("year == 11 && Ds_finalState !=3");
+    Ds2KKpi_12 = fitSplineAcc("year == 12 && Ds_finalState !=3");
+    Ds2KKpi_15 = fitSplineAcc("year == 15 && Ds_finalState !=3");
+    Ds2KKpi_16 = fitSplineAcc("year == 16 && Ds_finalState !=3");
+
+    Ds2phiPi = fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && Ds_finalState == 0");
+    Ds2KstarK = fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && Ds_finalState == 1");
+    Ds2nonRes = fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && Ds_finalState == 2");
+    Ds2PiPiPi = fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && Ds_finalState == 3");
+
+    for(int i = 0; i < numKnots; i++)
     {
-	if(Ds_finalState_convert.compare(all) == 0)
-	{
-		fitSplineAcc("year == 16 || year == 15 || year == 12 || year == 11");
+
+	KnotsVsCoeffs_1->SetBinContent((i+1), Ds2KKpi_11[i]);
+	KnotsVsCoeffs_2->SetBinContent((i+1), Ds2KKpi_12[i]);
+	KnotsVsCoeffs_3->SetBinContent((i+1), Ds2KKpi_15[i]);
+	KnotsVsCoeffs_4->SetBinContent((i+1), Ds2KKpi_16[i]);
+
+	KnotsVsCoeffs_5->SetBinContent((i+1), Ds2phiPi[i]);
+	KnotsVsCoeffs_6->SetBinContent((i+1), Ds2KstarK[i]);
+	KnotsVsCoeffs_7->SetBinContent((i+1), Ds2nonRes[i]);
+	KnotsVsCoeffs_8->SetBinContent((i+1), Ds2PiPiPi[i]);
+
+
+	if((i+numKnots) != 14 && (i+numKnots) != 15){
+		KnotsVsCoeffs_1->SetBinError((i+1), Ds2KKpi_11[i+numKnots]);
+		KnotsVsCoeffs_2->SetBinError((i+1), Ds2KKpi_12[i+numKnots]);
+		KnotsVsCoeffs_3->SetBinError((i+1), Ds2KKpi_15[i+numKnots]);
+		KnotsVsCoeffs_4->SetBinError((i+1), Ds2KKpi_16[i+numKnots]);
+
+		KnotsVsCoeffs_5->SetBinError((i+1), Ds2phiPi[i+numKnots]);
+		KnotsVsCoeffs_6->SetBinError((i+1), Ds2KstarK[i+numKnots]);
+		KnotsVsCoeffs_7->SetBinError((i+1), Ds2nonRes[i+numKnots]);
+		KnotsVsCoeffs_8->SetBinError((i+1), Ds2PiPiPi[i+numKnots]);
 	}
-	else if(Ds_finalState_convert.compare(Ds2KKpi) == 0)
-	{
-		fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState !=3)");
-	}
-	else if(Ds_finalState_convert.compare(Ds2pipipi) == 0)
-	{
-		fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState ==3)");
+
+	else if((i+numKnots) == 14 && (i+numKnots) == 15){
+		KnotsVsCoeffs_1->SetBinError((i+1), 0.);
+		KnotsVsCoeffs_2->SetBinError((i+1), 0.);
+		KnotsVsCoeffs_3->SetBinError((i+1), 0.);
+		KnotsVsCoeffs_4->SetBinError((i+1), 0.);
+
+		KnotsVsCoeffs_5->SetBinError((i+1), 0.);
+		KnotsVsCoeffs_6->SetBinError((i+1), 0.);
+		KnotsVsCoeffs_7->SetBinError((i+1), 0.);
+		KnotsVsCoeffs_8->SetBinError((i+1), 0.);
 	}
     }
 
-    if(Ds_finalState_convert.compare(all) == 0)
-    {
-	if(year_convert.compare(all) == 0)
-	{
-		fitSplineAcc("year == 16 || year == 15 || year == 12 || year == 11");
-	}
-	else if(year_convert.compare(Run1) == 0)
-	{
-		fitSplineAcc("year == 12 || year == 11");
-	}
-	else if(year_convert.compare(Run2) == 0)
-	{
-		fitSplineAcc("year == 15 || year == 16");
-	}
-    }
 
-   if((Ds_finalState_convert.compare(all) != 0) && (year_convert.compare(all) != 0))
-   {
-	if((year_convert.compare(Run1) == 0) && (Ds_finalState_convert.compare(Ds2KKpi) == 0))
-	{
-		fitSplineAcc("(year == 12 || year == 11) && (Ds_finalState !=3)");
-	}
-	else if((year_convert.compare(Run1) == 0) && (Ds_finalState_convert.compare(Ds2pipipi) == 0))
-	{
-		fitSplineAcc("(year == 12 || year == 11) && (Ds_finalState ==3)");
-	}
-	else if((year_convert.compare(Run2) == 0) && (Ds_finalState_convert.compare(Ds2KKpi) == 0))
-	{
-		fitSplineAcc("(year == 15 || year == 16) && (Ds_finalState !=3)");
-	}
-	else if((year_convert.compare(Run2) == 0) && (Ds_finalState_convert.compare(Ds2pipipi) == 0))
-	{
-		fitSplineAcc("(year == 15 || year == 16) && (Ds_finalState ==3)");
-	}
+    TCanvas *combinedCanvas_years = new TCanvas("Summary of acceptance analysis", "combinedCanvas_years");
+    combinedCanvas_years->Divide(2,2);
+
+    combinedCanvas_years->cd(1);
+    KnotsVsCoeffs_1->Draw("E1");
+    combinedCanvas_years->cd(2);
+    KnotsVsCoeffs_2->Draw("E1");
+    combinedCanvas_years->cd(3);
+    KnotsVsCoeffs_3->Draw("E1");
+    combinedCanvas_years->cd(4);
+    KnotsVsCoeffs_4->Draw("E1");
+
+    combinedCanvas_years->SaveAs("Plot/Ds2KKpi_Canvas.eps");
+    combinedCanvas_years->SaveAs("Plot/Ds2KKpi_Canvas.root");
+
+
+
+    TCanvas *combinedCanvas_state = new TCanvas("Summary of acceptance analysis", "combinedCanvas_state");
+    combinedCanvas_state->Divide(2,2);
+
+
+    combinedCanvas_state->cd(1);
+    KnotsVsCoeffs_5->Draw("E1");
+    combinedCanvas_state->cd(2);
+    KnotsVsCoeffs_6->Draw("E1");
+    combinedCanvas_state->cd(3);
+    KnotsVsCoeffs_7->Draw("E1");
+    combinedCanvas_state->cd(4);
+    KnotsVsCoeffs_8->Draw("E1");
+
+    combinedCanvas_state->SaveAs("Plot/Run12_Canvas.eps");
+    combinedCanvas_state->SaveAs("Plot/Run12_Canvas.root");
+}
+
+    if(makePlots != 1)
+    {
+
+    	vector<double> dummy;
+
+    	if(year_convert.compare(all) == 0)
+    	{
+		if(Ds_finalState_convert.compare(all) == 0)
+		{
+		dummy = fitSplineAcc("year == 16 || year == 15 || year == 12 || year == 11");
+		}
+		else if(Ds_finalState_convert.compare(Ds2KKpi) == 0)
+		{
+		dummy = fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState !=3)");
+		}
+		else if(Ds_finalState_convert.compare(Ds2pipipi) == 0)
+		{
+		dummy = fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState ==3)");
+		}
+    	}
+
+    	if(Ds_finalState_convert.compare(all) == 0)
+    	{
+		if(year_convert.compare(all) == 0)
+		{
+		dummy = fitSplineAcc("year == 16 || year == 15 || year == 12 || year == 11");
+		}
+		else if(year_convert.compare(Run1) == 0)
+		{
+		dummy = fitSplineAcc("year == 12 || year == 11");
+		}
+		else if(year_convert.compare(Run2) == 0)
+		{
+		dummy = fitSplineAcc("year == 15 || year == 16");
+		}
+    	}
+
+   	if((Ds_finalState_convert.compare(all) != 0) && (year_convert.compare(all) != 0))
+   	{
+		if((year_convert.compare(Run1) == 0) && (Ds_finalState_convert.compare(Ds2KKpi) == 0))
+		{
+		dummy = fitSplineAcc("(year == 12 || year == 11) && (Ds_finalState !=3)");
+		}
+		else if((year_convert.compare(Run1) == 0) && (Ds_finalState_convert.compare(Ds2pipipi) == 0))
+		{
+		dummy = fitSplineAcc("(year == 12 || year == 11) && (Ds_finalState ==3)");
+		}
+		else if((year_convert.compare(Run2) == 0) && (Ds_finalState_convert.compare(Ds2KKpi) == 0))
+		{
+		dummy = fitSplineAcc("(year == 15 || year == 16) && (Ds_finalState !=3)");
+		}
+		else if((year_convert.compare(Run2) == 0) && (Ds_finalState_convert.compare(Ds2pipipi) == 0))
+		{
+		dummy = fitSplineAcc("(year == 15 || year == 16) && (Ds_finalState ==3)");
+		}
+   	}
    }
-   
     
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;

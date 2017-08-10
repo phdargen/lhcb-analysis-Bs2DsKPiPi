@@ -1,3 +1,4 @@
 * options for acceptance 
 "Ds_finalState"			"Ds2KKpi"
 "year"				"all"
+"makePlots"			1
