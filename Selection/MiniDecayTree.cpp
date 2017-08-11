@@ -16,14 +16,38 @@ using namespace std;
 inline Bool_t MiniDecayTree::PhaseSpace_Cuts(){
 
     if(_decay == Decay::signal){
-        if((K_plus + pi_plus + pi_minus).M() > 2000.) return false;
-        if((K_plus + pi_minus).M()  > 1200.) return false;
-        if((pi_plus + pi_minus).M() > 1200.) return false;
+
+	TLorentzVector BsDTF_K_plus(Bs_BsDTF_K_1_1270_plus_Kplus_PX[0],Bs_BsDTF_K_1_1270_plus_Kplus_PY[0], Bs_BsDTF_K_1_1270_plus_Kplus_PZ[0],Bs_BsDTF_K_1_1270_plus_Kplus_PE[0]) ;
+            
+        TLorentzVector BsDTF_pi_plus(Bs_BsDTF_K_1_1270_plus_piplus_0_PX[0], Bs_BsDTF_K_1_1270_plus_piplus_0_PY[0], Bs_BsDTF_K_1_1270_plus_piplus_0_PZ[0], Bs_BsDTF_K_1_1270_plus_piplus_0_PE[0]);
+            
+        TLorentzVector BsDTF_pi_minus( Bs_BsDTF_K_1_1270_plus_piplus_PX[0], Bs_BsDTF_K_1_1270_plus_piplus_PY[0], Bs_BsDTF_K_1_1270_plus_piplus_PZ[0], Bs_BsDTF_K_1_1270_plus_piplus_PE[0]) ;  
+
+        if((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() > 1950.) return false;
+        if((BsDTF_K_plus + BsDTF_pi_minus).M()  > 1200.) return false;
+        if((BsDTF_pi_plus + BsDTF_pi_minus).M() > 1200.) return false;
+
+        if((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() < massKaon + 2. * massPion) return false;
+        if((BsDTF_K_plus + BsDTF_pi_minus).M()  < massKaon + massPion) return false;
+        if((BsDTF_pi_plus + BsDTF_pi_minus).M() < 2. * massPion) return false;
+
     }
     else {
-    	if((pi_plus1 + pi_plus2 + pi_minus).M() > 2000.) return false;
-        if((pi_plus1 + pi_minus).M()  > 1200.) return false;
-        if((pi_plus2 + pi_minus).M()  > 1200.) return false;
+
+	TLorentzVector BsDTF_pi_plus1(Bs_BsDTF_a_1_1260_plus_piplus_1_PX[0],Bs_BsDTF_a_1_1260_plus_piplus_1_PY[0],Bs_BsDTF_a_1_1260_plus_piplus_1_PZ[0], Bs_BsDTF_a_1_1260_plus_piplus_1_PE[0]) ;
+            
+        TLorentzVector BsDTF_pi_plus2( Bs_BsDTF_a_1_1260_plus_piplus_PX[0],Bs_BsDTF_a_1_1260_plus_piplus_PY[0],Bs_BsDTF_a_1_1260_plus_piplus_PZ[0],Bs_BsDTF_a_1_1260_plus_piplus_PE[0]) ;
+            
+        TLorentzVector BsDTF_pi_minus(Bs_BsDTF_a_1_1260_plus_piplus_0_PX[0],Bs_BsDTF_a_1_1260_plus_piplus_0_PY[0], Bs_BsDTF_a_1_1260_plus_piplus_0_PZ[0],Bs_BsDTF_a_1_1260_plus_piplus_0_PE[0]) ;
+	
+    	if((BsDTF_pi_plus1 + BsDTF_pi_plus2 + BsDTF_pi_minus).M() > 1950.) return false;
+        if((BsDTF_pi_plus1 + BsDTF_pi_minus).M()  > 1200.) return false;
+        if((BsDTF_pi_plus2 + BsDTF_pi_minus).M()  > 1200.) return false;
+
+    	if((BsDTF_pi_plus1 + BsDTF_pi_plus2 + BsDTF_pi_minus).M() < 3. * massPion) return false;
+        if((BsDTF_pi_plus1 + BsDTF_pi_minus).M()  < 2. * massPion) return false;
+        if((BsDTF_pi_plus2 + BsDTF_pi_minus).M()  < 2. * massPion) return false;
+
     }
     return true;
 }
@@ -111,7 +135,7 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
 
     if(_decay == Decay::signal){
         
-        if(K_plus_PIDK < 8) return false;
+        if(K_plus_PIDK < 10) return false;
         else if(pi_plus_PIDK > 10) return false;
         else if(pi_minus_PIDK > 5) return false;
         
@@ -196,8 +220,8 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
   
 inline Bool_t MiniDecayTree::Preselection_Cuts(){
     
-        //if(fabs(Ds_MM-massDs) > 25 ) return false;    
-	if(fabs(Bs_PV_Dplus_M[0]-massDs) > 25 ) return false;
+        if(_bkg)if(fabs(Ds_MM-massDs) > 25 ) return false;    
+	if(!_bkg)if(fabs(Bs_PV_Dplus_M[0]-massDs) > 25 ) return false;
 
         return true;
 }
@@ -527,7 +551,7 @@ void MiniDecayTree::Loop()
 
         if(_data)if(!PID_Cuts()) continue;    
         if(!Veto_Cuts()) continue;
-	if(!PhaseSpace_Cuts()) continue;
+	if(!_bkg)if(!PhaseSpace_Cuts()) continue;
 
 	if(!_data)if(!MC_Cuts()) continue;        
 

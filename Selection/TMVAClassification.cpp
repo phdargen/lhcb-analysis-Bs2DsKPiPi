@@ -148,7 +148,7 @@ void TMVAClassification( TString myMethodList = "BDTG", TString run = "Run1" )
    // Apply additional cuts on the signal and background samples (can be different)
    TCut mycuts = "Bs_MM > 5300 && Bs_MM < 5420  "  ; 
   
-   TCut mycutb = "Bs_MM > 5600";
+   TCut mycutb = "Bs_MM > 5650";
    
    // Tell the factory how to use the training and testing events
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,

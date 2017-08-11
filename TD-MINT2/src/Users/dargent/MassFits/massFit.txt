@@ -1,9 +1,16 @@
+* general options
 "channel"	"Signal"
-"fixExpBkgFromSidebands"	 0
-"numCPU"	 8
-"sWeightNorm"	 1
-"sWeightSignal"	 1
 "nBins"		60
-"min_MM"	5100.
+"min_MM"	5050.
 "max_MM"	5700.
 "cut_BDT" 	0.35
+"numCPU"	 10
+
+* Norm fit :
+"fixExpBkgFromSidebands"	 0
+"sWeightNorm"	 0
+
+* Signal fit:
+"fixMisIDyields"	1
+"useNormScaleFactors"	1
+"sWeightSignal"	 0

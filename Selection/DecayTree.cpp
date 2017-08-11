@@ -92,9 +92,17 @@ TTree* DecayTree::GetInputTree(){
             TString dir_i = TString::Format("%d",i);
             chain->Add(loc + dir_i + file);
         }
-	
+	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/40/";
+        for(int i = 0; i<10; i++){
+            TString dir_i = TString::Format("%d",i);
+            chain->Add(loc + dir_i + file);
+        }
         loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16D/";
-        //chain->Add(loc+"b2dhhh*.root");
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16Db/";
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16Dc/";
+        chain->Add(loc+"b2dhhh*.root");
     }
 
     else if(_decay==Decay::norm && _data==DataType::data && _year == 15){
@@ -127,11 +135,13 @@ TTree* DecayTree::GetInputTree(){
             fileName+= "U";
         }
         fileName+= "/b2dhhh_*.root"; 
-        
+
+	if(_bkg)fileName = "/auto/data/dargent/old_Bs2DsKpipi/MC/Norm/Bkg/Dst3pi-U/b2dhhh_*.root" ; 
+
         cout << "Using the files: " << endl;
         cout << fileName << endl << endl;
         chain->Add(fileName);
-        if(_data!=DataType::data) chain->Add(fileName.ReplaceAll(TString("U/b2hhh"),TString("D/b2hhh")));
+        if(_data!=DataType::data) chain->Add(fileName.ReplaceAll(TString("U/b2"),TString("D/b2")));
     }
 
     if(chain->GetEntries()==0){
@@ -142,8 +152,8 @@ TTree* DecayTree::GetInputTree(){
     return (TTree*)chain;
 }
 
-DecayTree::DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString inFileLoc, TString outFileLoc ) : 
-fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataType), _inFileLoc(inFileLoc), _outFileLoc(outFileLoc)
+DecayTree::DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString inFileLoc, TString outFileLoc, Bool_t bkg ) : 
+fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataType), _inFileLoc(inFileLoc), _outFileLoc(outFileLoc), _bkg(bkg)
 {    
     cout << "Requested to process files with options: " << endl << endl;
 
@@ -171,6 +181,7 @@ fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataTyp
     _outFileName += s3; 
     _outFileName += "_";     
     _outFileName += _year;
+    if(_bkg)_outFileName += "_Dstar_bkg";
     _outFileName += ".root";    
 }
 
@@ -235,8 +246,8 @@ inline Bool_t DecayTree::LooseCuts(Long64_t i){
     b_Bs_BsDTF_M->GetEntry(i);
     if(Bs_BsDTF_M[0] < 4800. || Bs_BsDTF_M[0] > 6000.) return false;
     
-    b_Bs_PV_M->GetEntry(i);
-    if (Bs_PV_M[0] < 4800. || Bs_PV_M[0] > 6000.) return false;
+    if(!_bkg)b_Bs_PV_M->GetEntry(i);
+    if(!_bkg)if (Bs_PV_M[0] < 4800. || Bs_PV_M[0] > 6000.) return false;
     
     b_Ds_ENDVERTEX_Z->GetEntry(i);
     b_Bs_ENDVERTEX_Z->GetEntry(i);

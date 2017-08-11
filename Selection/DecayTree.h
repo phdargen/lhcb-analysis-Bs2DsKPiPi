@@ -53,8 +53,9 @@ public :
     Year::Type _year;
     Ds_finalState::Type _Ds_finalState;
     DataType::Type _data;
+    Bool_t _bkg;
 
-    DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString inFileLoc = "/auto/data/dargent/BsDsKpipi/", TString outFileLoc = "/auto/data/dargent/BsDsKpipi/" );
+    DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString inFileLoc = "/auto/data/dargent/BsDsKpipi/", TString outFileLoc = "/auto/data/dargent/BsDsKpipi/", Bool_t bkg = false );
     virtual ~DecayTree();
     virtual Int_t    GetEntry(Long64_t entry);
     virtual Long64_t LoadTree(Long64_t entry);
