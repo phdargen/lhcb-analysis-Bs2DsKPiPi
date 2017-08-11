@@ -230,7 +230,7 @@ namespace MINT{
 
           //EVENT_TYPE & evt( (*_eventList)[i] );
           // sum += logPdf((*_eventList)[i]);
-          double weight     = eventWeight(i);
+          double weight     = _eventList[i].getWeight();//eventWeight(i);
 	  double pdfVal     = getPdf(i);
           double logPdfVal  = log(pdfVal);
           sum              += weight*logPdfVal;

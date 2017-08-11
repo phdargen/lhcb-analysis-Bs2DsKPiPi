@@ -23,7 +23,7 @@ int makeMINTtuple(){
     
     bool dbThis=false;
     bool addSweight = false;
-    bool bkg = true;
+    bool bkg = false;
     
     int N=-1;
     if(dbThis) cout << "read ntuple" << endl;
@@ -124,7 +124,7 @@ int makeMINTtuple(){
 	DalitzEvent evt(pdg, vectorOfvectors);
         if(addSweight)evt.setWeight(sweight);
 	//if(evt.phaseSpace()==0) cout << evt << endl;
-	/*
+	
 	if(evt.s(1,2)<0 || evt.s(2,3)<0 || evt.s(3,4)<0 || evt.t(4,0)<0 || evt.t(1,0)< 0) 
 	cout << "negative mass ?" << endl; 
         if(evt.s(1,2)< pdg.sijMin(1,2) || evt.s(1,2)> pdg.sijMax(1,2) ) continue;
@@ -134,7 +134,7 @@ int makeMINTtuple(){
         if(evt.t(1,0)< pdg.sijMin(2,3,4) || evt.t(1,0)> pdg.sijMax(2,3,4) ) continue; 	
 	if(dbThis) cout << "s12 =  " << ( evt.p(1) + evt.p(2) ).Mag2() << endl;
 	if(dbThis) cout << "adding event " << evt << endl;
-	*/
+	
 	eventList.Add(evt); // this fills the event list		
 	if(dbThis) cout << " added event" << endl;
 		
@@ -184,14 +184,17 @@ int plot(){
         s234.push_back(3);
         s234.push_back(4);
 
-        TH1D* s_Kpipi = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV);Events (norm.) ",50,0.8,3);
-        TH1D* s_Kpi = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV);Events (norm.) ", 50,0.4,2);
-        TH1D* s_pipi = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV);Events (norm.) ",50,0.,2);
+        TH1D* s_Kpipi = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV);Events (norm.) ",50,0.8,2);
+        TH1D* s_Kpi = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV);Events (norm.) ", 50,0.4,1.3);
+        TH1D* s_pipi = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV);Events (norm.) ",50,0.,1.3);
 
 	double sw = 0;
         double tw = 0;
         for (int i=0; i<eventList.size(); i++) {
-	    if(sqrt(eventList[i].sij(s234)/(GeV*GeV)) < 2 && sqrt(eventList[i].s(2,4)/(GeV*GeV)) < 1.2 && sqrt(eventList[i].s(3,4)/(GeV*GeV) < 1.2)) sw += eventList[i].getWeight() ;          
+	    if(sqrt(eventList[i].sij(s234)/(GeV*GeV)) < 2 && sqrt(eventList[i].s(2,4)/(GeV*GeV)) < 1.2 && sqrt(eventList[i].s(3,4)/(GeV*GeV) < 1.2)) sw += eventList[i].getWeight() ;     
+     	    //if(sqrt(eventList[i].sij(s234)/(GeV*GeV)) > 1.95) continue; 
+     	    //if(sqrt(eventList[i].sij(s234)/(GeV*GeV)) < 1.4) continue; 
+
 	    s_Kpipi->Fill(sqrt(eventList[i].sij(s234)/(GeV*GeV)),eventList[i].getWeight());
             s_Kpi->Fill(sqrt(eventList[i].s(2,4)/(GeV*GeV)),eventList[i].getWeight());
             s_pipi->Fill(sqrt(eventList[i].s(3,4)/(GeV*GeV)),eventList[i].getWeight());
@@ -202,9 +205,9 @@ int plot(){
         cout << "tw = " << tw << endl;
         cout << "eff = " << sw/tw << endl;
 
-        TH1D* s_Kpipi2 = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV);Events (norm.) ",50,0.8,3);
-        TH1D* s_Kpi2 = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV);Events (norm.) ", 50,0.4,2);
-        TH1D* s_pipi2 = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV);Events (norm.) ",50,0.,2);
+        TH1D* s_Kpipi2 = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV);Events (norm.) ",50,0.8,2);
+        TH1D* s_Kpi2 = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV);Events (norm.) ", 50,0.4,1.3);
+        TH1D* s_pipi2 = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV);Events (norm.) ",50,0.,1.3);
 
         for (int i=0; i<eventList2.size(); i++) {
             s_Kpipi2->Fill(sqrt(eventList2[i].sij(s234)/(GeV*GeV)));
@@ -212,9 +215,9 @@ int plot(){
             s_pipi2->Fill(sqrt(eventList2[i].s(3,4)/(GeV*GeV)));
         }    
 
-        TH1D* s_Kpipi3 = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV);Events (norm.) ",50,0.8,3);
-        TH1D* s_Kpi3 = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV);Events (norm.) ", 50,0.4,2);
-        TH1D* s_pipi3 = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV);Events (norm.) ",50,0.,2);
+        TH1D* s_Kpipi3 = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV);Events (norm.) ",50,0.8,2);
+        TH1D* s_Kpi3 = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV);Events (norm.) ", 50,0.4,1.3);
+        TH1D* s_pipi3 = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV);Events (norm.) ",50,0.,1.3);
 
         for (int i=0; i<eventListPhsp.size(); i++) {
             s_Kpipi3->Fill(sqrt(eventListPhsp[i].sij(s234)/(GeV*GeV)));

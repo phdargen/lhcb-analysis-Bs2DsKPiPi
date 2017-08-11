@@ -47,6 +47,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <TROOT.h>
 //#include "Mint/HyperBinningHistogram.h"
 //#include "Mint/GofTests.h"
 //#include "Mint/PermutationTest.h"
@@ -470,6 +471,43 @@ int ampFit(int step=0){
     return 0;
 }
 
+void makeIntegratorFile(){
+    
+    FitAmplitude::AutogenerateFitFile();
+
+    NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
+    NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
+    DalitzEventPattern pat(EventPattern.getVector());
+    cout << " got event pattern: " << pat << endl;
+    
+    NamedParameter<int>  IntegratorEvents("IntegratorEvents", 300000);
+    
+    DalitzEventList eventListPhsp,eventList,eventList_cut;
+    
+    eventListPhsp.generatePhaseSpaceEvents(100000,pat);
+    
+    FitAmpIncoherentSum fas((DalitzEventPattern)pat);
+    fas.print();
+    fas.getVal(eventListPhsp[0]);
+    fas.normalizeAmps(eventListPhsp);
+    
+    SignalGenerator sg(pat,&fas);
+    
+    sg.FillEventList(eventList, IntegratorEvents);
+    vector<int> s234;
+    s234.push_back(2);
+    s234.push_back(3);
+    s234.push_back(4);
+
+    for(int i = 0; i < eventList.size(); i++){
+	if(sqrt(eventList[i].sij(s234)/(GeV*GeV)) < 1.95 && sqrt(eventList[i].s(2,4)/(GeV*GeV)) < 1.2 && sqrt(eventList[i].s(3,4)/(GeV*GeV) < 1.2))eventList_cut.Add(eventList[i]);
+    }
+
+    cout << "Generated " << eventList_cut.size() << " events inside selected phasespace region" << endl;
+    
+    eventList_cut.saveAsNtuple(IntegratorEventFile);
+    return;
+}
 
 int main(int argc, char** argv){
     
@@ -477,18 +515,11 @@ int main(int argc, char** argv){
     
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
-    gStyle->SetOptStat(0);
-    gStyle->SetTitleXSize(0.06);
-    gStyle->SetTitleYSize(0.05);
-    gStyle->SetTitleFont(42,"X");
-    gStyle->SetTitleFont(42,"Y");
-    gStyle->SetLabelFont(42,"X");
-    gStyle->SetLabelFont(42,"Y");
-    gStyle->SetLabelOffset(0.01,"X");
-    gStyle->SetTitleOffset(0.8,"X");
-    gStyle->SetPadTickX(1);
-    gStyle->SetPadTickY(1);
-    
+    gROOT->ProcessLine(".x ../lhcbStyle.C");
+
+    NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
+    if(! std::ifstream(((string)IntegratorEventFile).c_str()).good()) makeIntegratorFile();
+  
     ampFit(atoi(argv[1]));
     
     cout << "==============================================" << endl;

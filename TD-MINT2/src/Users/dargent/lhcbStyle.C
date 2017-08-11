@@ -133,7 +133,7 @@
     //lhcbStyle->SetOptFit(1011); // order is probability, Chi2, errors, parameters
     //titles
     lhcbStyle->SetTitleOffset(0.95,"X");
-    lhcbStyle->SetTitleOffset(1.025,"Y");
+    lhcbStyle->SetTitleOffset(1.02,"Y");
     lhcbStyle->SetTitleOffset(1.2,"Z");
     lhcbStyle->SetTitleFillColor(0);
     lhcbStyle->SetTitleStyle(0);

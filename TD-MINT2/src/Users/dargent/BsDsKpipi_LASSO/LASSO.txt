@@ -5,17 +5,17 @@ RandomSeed  0
 
 "IntegratorEventFile"	"SignalIntegrationEvents.root"
 "IntegratorEvents"	300000
-"IntegPrecision"        7.0e-3
+"IntegPrecision"        1.0e-3
 "IntegMethod"           "efficient"
 "IntegratorSource"        "file"
 
 "Nevents"               1000
-"useLASSO"		1
+"useLASSO"		0
 "lambda"		10
 
 *"InputFileName"		"toys.root"
-"InputFileName"            "/auto/data/dargent/Bs2DsKpipi/MINT2/MINT_data_3sigma.root"
-
+*"InputFileName"            "/auto/data/dargent/Bs2DsKpipi/MINT2/MINT_data_3sigma.root"
+"InputFileName"		   "/auto/data/dargent/BsDsKpipi/MINT/MINT_data.root"
 "OutputRootFile"	"toys.root"
 
 "OutputDir"		"LASSO_1/"
@@ -132,10 +132,10 @@ RandomSeed  0
 
 
 * For toy and integrator event generation:
-*"Inco_BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"              2	1	0.01	0.0	0.0
-*"Inco_BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"              2	0.	0.01	0.0	0.0
-*"Inco_BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"		2       1      0.05     0.0     0.0
-*"Inco_BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"		2       0     0.05     0.0     0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"              2	1	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"              2	0.	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"		2       1      0.05     0.0     0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"		2       0     0.05     0.0     0.0
 *"Inco_BgSpinZeroBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Re"              	2	0.7	0.01	0.0	0.0
 *"Inco_BgSpinZeroBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Im"             	2	0.	0.01	0.0	0.0
 
