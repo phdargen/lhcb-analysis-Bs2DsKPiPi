@@ -29,46 +29,30 @@ seed = None   # No initial seed
 # Run PIDCorr.py without arguments to get the full list of PID configs
 tracks = {
   'pi_minus'   : {
-           # "V2ProbNNK"  : "pi_V2ProbNNK", 
-           # "V2ProbNNpi" : "pi_V2ProbNNpi", 
-           # "V2ProbNNp"  : "pi_V2ProbNNp", 
-           # "V3ProbNNK"  : "pi_V3ProbNNK", 
-           # "V3ProbNNpi" : "pi_V3ProbNNpi", 
-           # "V3ProbNNp"  : "pi_V3ProbNNp", 
             "PIDK"       : "pi_CombDLLK", 
-           # "pidp"       : "pi_CombDLLp", 
-           }
- # 'lpi' : { 
- #           "V2ProbNNK"  : "pi_V2ProbNNK", 
- #           "V2ProbNNpi" : "pi_V2ProbNNpi", 
- #           "V2ProbNNp"  : "pi_V2ProbNNp", 
- #           "V3ProbNNK"  : "pi_V3ProbNNK", 
- #           "V3ProbNNpi" : "pi_V3ProbNNpi", 
- #           "V3ProbNNp"  : "pi_V3ProbNNp", 
- #           "PIDK"       : "pi_CombDLLK", 
- #           "pidp"       : "pi_CombDLLp", 
- #          }, 
- # 'lk'  : { 
- #           "V2ProbNNK"  : "K_V2ProbNNK", 
- #           "V2ProbNNpi" : "K_V2ProbNNpi", 
- #           "V2ProbNNp"  : "K_V2ProbNNp", 
- #           "V3ProbNNK"  : "K_V3ProbNNK", 
- #           "V3ProbNNpi" : "K_V3ProbNNpi", 
- #           "V3ProbNNp"  : "K_V3ProbNNp", 
- #           "PIDK"       : "K_CombDLLK", 
- #           "pidp"       : "K_CombDLLp", 
- #          }, 
- # 'lp'  : {
- #           "V2ProbNNK"  : "p_V2ProbNNK", 
- #           "V2ProbNNpi" : "p_V2ProbNNpi", 
- #           "V2ProbNNp"  : "p_V2ProbNNp", 
- #           "V3ProbNNK"  : "p_V3ProbNNK", 
- #           "V3ProbNNpi" : "p_V3ProbNNpi", 
-  #          "V3ProbNNp"  : "p_V3ProbNNp", 
-  #          "pidk"       : "p_CombDLLK", 
-  #          "pidp"       : "p_CombDLLp", 
-  #         }, 
-}
+            "PIDp"       : "pi_CombDLLp", 
+           },
+'pi_plus1'   : {
+    "PIDK"       : "pi_CombDLLK", 
+    "PIDp"       : "pi_CombDLLp", 
+        },
+'pi_plus2'   : {
+    "PIDK"       : "pi_CombDLLK", 
+    "PIDp"       : "pi_CombDLLp", 
+    },        
+'K_plus_fromDs'   : {
+            "PIDK"       : "pi_CombDLLK", 
+            "PIDp"       : "pi_CombDLLp", 
+                },                    
+'K_minus_fromDs'   : {
+    "PIDK"       : "pi_CombDLLK", 
+        "PIDp"       : "pi_CombDLLp", 
+            },            
+'pi_minus_fromDs'   : {
+    "PIDK"       : "pi_CombDLLK", 
+        "PIDp"       : "pi_CombDLLp", 
+            }                    
+ }
 
 output_tree = input_tree.split("/")[-1]
 treename = input_tree
@@ -85,7 +69,7 @@ for input_file, output_file, dataset in files :
 ##      command += " -q %s_%s" % (track, pvar)   # Could also use P variable instead of eta
       command += " -n %s" % ntrvar
       command += " -t %s" % treename
-      command += " -p %s_%s_corr_MagUp" % (track, var)
+      command += " -p %s_%s_gen_MagUp" % (track, var)
       command += " -c %s" % config
       command += " -d %s" % dataset
       command += " -i %s" % tmpinfile
