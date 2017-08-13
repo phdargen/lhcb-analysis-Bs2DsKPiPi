@@ -58,33 +58,33 @@ treename = input_tree
 
 for input_file, output_file, dataset in files : 
     tmpinfile = input_file
-        tmpoutfile = "tmp1.root"
-            for track, subst in tracks.iteritems() : 
-for var, config in subst.iteritems() : 
-    #command = "python $PIDPERFSCRIPTSROOT/scripts/python/PIDGenUser/PIDCorr.py"
-    command = "python ./PIDCorr.py"
-        command += " -m %s_%s" % (track, ptvar)
+    tmpoutfile = "tmp1.root"
+    for track, subst in tracks.iteritems() : 
+        for var, config in subst.iteritems() : 
+            #command = "python $PIDPERFSCRIPTSROOT/scripts/python/PIDGenUser/PIDCorr.py"
+            command = "python ./PIDCorr.py"
+            command += " -m %s_%s" % (track, ptvar)
             command += " -e %s_%s" % (track, etavar)
-                ##      command += " -q %s_%s" % (track, pvar)   # Could also use P variable instead of eta
-                command += " -n %s" % ntrvar
-                    command += " -t %s" % treename
-                        command += " -p %s_%s_corr" % (track, var)
-                            command += " -s %s_%s" % (track, var)
-                                command += " -c %s" % config
-                                    command += " -d %s" % dataset
-                                        command += " -i %s" % tmpinfile
-                                            command += " -o %s" % tmpoutfile
-                                                command += " -S %s" % simversion
-                                                    
-                                                    treename = output_tree
-                                                        tmpinfile = tmpoutfile
-                                                            if tmpoutfile == "tmp1.root" : 
-                                                                tmpoutfile = "tmp2.root"
-                                                                    else : 
-                                                                        tmpoutfile = "tmp1.root"
-                                                                            
-                                                                            print command
-                                                                                os.system(command)
-                                                                                    
-                                                                                    os.system("rm %s" % tmpoutfile)
-                                                                                        os.system("mv %s %s" % (tmpinfile, output_file))
+            ## command += " -q %s_%s" % (track, pvar)   # Could also use P variable instead of eta
+            command += " -n %s" % ntrvar
+            command += " -t %s" % treename
+            command += " -p %s_%s_corr" % (track, var)
+            command += " -s %s_%s" % (track, var)
+            command += " -c %s" % config
+            command += " -d %s" % dataset
+            command += " -i %s" % tmpinfile
+            command += " -o %s" % tmpoutfile
+            command += " -S %s" % simversion
+            
+            treename = output_tree
+            tmpinfile = tmpoutfile
+            if tmpoutfile == "tmp1.root" : 
+            tmpoutfile = "tmp2.root"
+            else : 
+            tmpoutfile = "tmp1.root"
+            
+            print command
+                os.system(command)
+
+os.system("rm %s" % tmpoutfile)
+    system("mv %s %s" % (tmpinfile, output_file))
