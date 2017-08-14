@@ -3,7 +3,7 @@ import os
 # List of input ROOT files with MC ntuples. Format: 
 #   (inputfile, outputfile, dataset)
 files = [
-  ("/auto/data/dargent/BsDsKpipi/Mini/MC/norm_Ds2KKpi_12.root", "/auto/data/dargent/BsDsKpipi/Mini/MC/norm_Ds2KKpi_12_PID_MagDown.root", "MagDown_2012"), 
+  ("/auto/data/dargent/BsDsKpipi/Mini/MC/signal_Ds2KKpi_12.root", "/auto/data/dargent/BsDsKpipi/Mini/MC/signal_Ds2KKpi_12_PID_step1.root", "MagDown_2012"), 
 ]
 
 # Name of the input tree
@@ -30,30 +30,29 @@ seed = None   # No initial seed
 tracks = {
     'pi_minus'   : {
         "PIDK"       : "pi_CombDLLK", 
-            "PIDp"       : "pi_CombDLLp", 
+         "PIDp"       : "pi_CombDLLp", 
                 },
-'pi_plus1'   : {
-    "PIDK"       : "pi_CombDLLK", 
-    "PIDp"       : "pi_CombDLLp", 
+'K_plus'   : {
+    "PIDK"       : "K_CombDLLK", 
+    "PIDp"       : "K_CombDLLp", 
         },
-'pi_plus2'   : {
+'pi_plus'   : {
     "PIDK"       : "pi_CombDLLK", 
     "PIDp"       : "pi_CombDLLp", 
     },        
 'K_plus_fromDs'   : {
-    "PIDK"       : "pi_CombDLLK", 
-        "PIDp"       : "pi_CombDLLp", 
+    "PIDK"       : "K_CombDLLK", 
+        "PIDp"       : "K_CombDLLp", 
             },                    
 'K_minus_fromDs'   : {
-    "PIDK"       : "pi_CombDLLK", 
-        "PIDp"       : "pi_CombDLLp", 
+    "PIDK"       : "K_CombDLLK", 
+        "PIDp"       : "K_CombDLLp", 
             },            
 'pi_minus_fromDs'   : {
     "PIDK"       : "pi_CombDLLK", 
         "PIDp"       : "pi_CombDLLp", 
             }                    
 }
-
 output_tree = input_tree.split("/")[-1]
 treename = input_tree
 

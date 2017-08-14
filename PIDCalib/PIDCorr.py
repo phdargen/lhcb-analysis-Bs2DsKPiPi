@@ -112,9 +112,9 @@ x = minpid
 minpid = eval(transform_forward)
 
 pid_phsp = OneDimPhaseSpace("PIDPhsp", pidmin , pidmax )
-mom_phsp = OneDimPhaseSpace("MomPhsp", 4.5, 9.5)
+mom_phsp = OneDimPhaseSpace("MomPhsp", 4.6, 10.5)
 eta_phsp = OneDimPhaseSpace("EtaPhsp", 1.5, 5.5)
-ntr_phsp = OneDimPhaseSpace("NtrPhsp", 3.0, 6.5)
+ntr_phsp = OneDimPhaseSpace("NtrPhsp", 3.0, 7.0)
 pidmom_phsp = CombinedPhaseSpace("PIDMomPhsp", pid_phsp, mom_phsp) 
 pidmometa_phsp = CombinedPhaseSpace("PIDMomEtaPhsp", pidmom_phsp, eta_phsp) 
 phsp = CombinedPhaseSpace("FullPhsp", pidmometa_phsp, ntr_phsp) 

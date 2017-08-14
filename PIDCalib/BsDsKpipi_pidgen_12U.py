@@ -3,7 +3,7 @@ import os
 # List of input ROOT files with MC ntuples. Format: 
 #   (inputfile, outputfile, dataset)
 files = [
-  ("/auto/data/dargent/BsDsKpipi/Mini/MC/norm_Ds2KKpi_12_PID_MagDown.root", "/auto/data/dargent/BsDsKpipi/Mini/MC/norm_Ds2KKpi_12_PID.root", "MagUp_2012"), 
+  ("/auto/data/dargent/BsDsKpipi/Mini/MC/signal_Ds2KKpi_12_PID_step1.root", "/auto/data/dargent/BsDsKpipi/Mini/MC/signal_Ds2KKpi_12_PID_step2.root", "MagUp_2012"), 
 ]
 
 # Name of the input tree
@@ -28,31 +28,31 @@ seed = None   # No initial seed
 #     {pid_config} is the string describing the PID configuration. 
 # Run PIDCorr.py without arguments to get the full list of PID configs
 tracks = {
-  'pi_minus'   : {
-            "PIDK"       : "pi_CombDLLK", 
-            "PIDp"       : "pi_CombDLLp", 
-           },
-'pi_plus1'   : {
-    "PIDK"       : "pi_CombDLLK", 
-    "PIDp"       : "pi_CombDLLp", 
+    'pi_minus'   : {
+        "PIDK"       : "pi_CombDLLK", 
+         "PIDp"       : "pi_CombDLLp", 
+                },
+'K_plus'   : {
+    "PIDK"       : "K_CombDLLK", 
+    "PIDp"       : "K_CombDLLp", 
         },
-'pi_plus2'   : {
+'pi_plus'   : {
     "PIDK"       : "pi_CombDLLK", 
     "PIDp"       : "pi_CombDLLp", 
     },        
 'K_plus_fromDs'   : {
-            "PIDK"       : "pi_CombDLLK", 
-            "PIDp"       : "pi_CombDLLp", 
-                },                    
+    "PIDK"       : "K_CombDLLK", 
+        "PIDp"       : "K_CombDLLp", 
+            },                    
 'K_minus_fromDs'   : {
-    "PIDK"       : "pi_CombDLLK", 
-        "PIDp"       : "pi_CombDLLp", 
+    "PIDK"       : "K_CombDLLK", 
+        "PIDp"       : "K_CombDLLp", 
             },            
 'pi_minus_fromDs'   : {
     "PIDK"       : "pi_CombDLLK", 
         "PIDp"       : "pi_CombDLLp", 
             }                    
- }
+}
 
 output_tree = input_tree.split("/")[-1]
 treename = input_tree

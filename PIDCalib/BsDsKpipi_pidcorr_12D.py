@@ -3,7 +3,7 @@ import os
 # List of input ROOT files with MC ntuples. Format: 
 #   (inputfile, outputfile, dataset)
 files = [
-         ("/auto/data/dargent/BsDsKpipi/Mini/MC/norm_Ds2KKpi_12.root", "/auto/data/dargent/BsDsKpipi/Mini/MC/norm_Ds2KKpi_12_PID_MagDown.root", "MagDown_2012"), 
+         ("/auto/data/dargent/BsDsKpipi/Mini/MC/signal_Ds2KKpi_12_step3.root", "/auto/data/dargent/BsDsKpipi/Mini/MC/signal_Ds2KKpi_12_PID.root", "MagDown_2012"), 
          ]
 
 # Name of the input tree
@@ -29,23 +29,23 @@ ntrvar = "nTracks" # This should correspond to the number of "Best tracks", not 
 tracks = {
     'pi_minus'   : {
         "PIDK"       : "pi_CombDLLK", 
-            "PIDp"       : "pi_CombDLLp", 
+         "PIDp"       : "pi_CombDLLp", 
                 },
-'pi_plus1'   : {
-    "PIDK"       : "pi_CombDLLK", 
-    "PIDp"       : "pi_CombDLLp", 
+'K_plus'   : {
+    "PIDK"       : "K_CombDLLK", 
+    "PIDp"       : "K_CombDLLp", 
         },
-'pi_plus2'   : {
+'pi_plus'   : {
     "PIDK"       : "pi_CombDLLK", 
     "PIDp"       : "pi_CombDLLp", 
     },        
 'K_plus_fromDs'   : {
-    "PIDK"       : "pi_CombDLLK", 
-        "PIDp"       : "pi_CombDLLp", 
+    "PIDK"       : "K_CombDLLK", 
+        "PIDp"       : "K_CombDLLp", 
             },                    
 'K_minus_fromDs'   : {
-    "PIDK"       : "pi_CombDLLK", 
-        "PIDp"       : "pi_CombDLLp", 
+    "PIDK"       : "K_CombDLLK", 
+        "PIDp"       : "K_CombDLLp", 
             },            
 'pi_minus_fromDs'   : {
     "PIDK"       : "pi_CombDLLK", 
@@ -68,7 +68,7 @@ for input_file, output_file, dataset in files :
             ## command += " -q %s_%s" % (track, pvar)   # Could also use P variable instead of eta
             command += " -n %s" % ntrvar
             command += " -t %s" % treename
-            command += " -p %s_%s_corr" % (track, var)
+            command += " -p %s_%s_corr_MagDown" % (track, var)
             command += " -s %s_%s" % (track, var)
             command += " -c %s" % config
             command += " -d %s" % dataset
@@ -79,12 +79,12 @@ for input_file, output_file, dataset in files :
             treename = output_tree
             tmpinfile = tmpoutfile
             if tmpoutfile == "tmp1.root" : 
-            tmpoutfile = "tmp2.root"
+                tmpoutfile = "tmp2.root"
             else : 
-            tmpoutfile = "tmp1.root"
+                tmpoutfile = "tmp1.root"
             
             print command
-                os.system(command)
+            os.system(command)
 
-os.system("rm %s" % tmpoutfile)
-    system("mv %s %s" % (tmpinfile, output_file))
+    os.system("rm %s" % tmpoutfile)
+    os.system("mv %s %s" % (tmpinfile, output_file))
