@@ -3,6 +3,7 @@
 #include <cmath>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 #include <TChain.h>
 #include <TTree.h>
 #include <TH1D.h>
@@ -124,7 +125,7 @@ summary_tree->Write();
 output->Close();
 }
 
-double *FitTimeRes(string ResoBin, string BinName, double resoValues[2]){
+double *FitTimeRes(string ResoBin, string BinName, double resoValues[2], bool newTable){
 
 
 string Directory = "/auto/data/kecke/B2DKPiPi/TimeRes/";
@@ -159,7 +160,6 @@ RooFitResult *result;
 result = DoubleGaussBs.fitTo(*data,Save(kTRUE),Extended(kFALSE),NumCPU(3));
 cout << "result is --------------- "<<endl;
 result->Print();
-
 
 double range_dw = Bs_DeltaTau.getMin();
 double range_up = Bs_DeltaTau.getMax();
@@ -359,11 +359,20 @@ resoValues[1] = (dresolution_eff*1000);
 
 file->Close();
 
+
+///create a new table for Ana Note
+
+ofstream datafile;
+
+datafile.open ("ResoTable.txt", std::ios_base::app);
+datafile << BinName.c_str() << " : "<< sig1 << " \\pm " << dsig1 << " & " << sig2 << " \\pm " << dsig2 << " & " << f1 << " \\pm " << df1 << " & " << dilution << " \\pm " <<  ddilution << " & " << resolution_eff << " \\pm " << dresolution_eff << " \\\\" << "\n";
+datafile.close();
+
 return resoValues;
 
 }
 
-void FitResoRelation(){
+void FitResoRelation(bool newTable){
 
 double bins[9] = {0., 19. , 24., 29. , 34. , 39. , 44. , 49., 150.};
 
@@ -391,14 +400,14 @@ double *reso_bin_5;
 double *reso_bin_6;
 double *reso_bin_7;
 
-reso_bin_0 = FitTimeRes("Bs2DsKpipi_MCcombined_0to19.root", "SignalMC_0to19.eps", reso_bin_0_fill);
-reso_bin_1 = FitTimeRes("Bs2DsKpipi_MCcombined_19to24.root", "SignalMC_19to24.eps", reso_bin_1_fill);
-reso_bin_2 = FitTimeRes("Bs2DsKpipi_MCcombined_24to29.root", "SignalMC_24to29.eps", reso_bin_2_fill);
-reso_bin_3 = FitTimeRes("Bs2DsKpipi_MCcombined_29to34.root", "SignalMC_29to34.eps", reso_bin_3_fill);
-reso_bin_4 = FitTimeRes("Bs2DsKpipi_MCcombined_34to39.root", "SignalMC_34to39.eps", reso_bin_4_fill);
-reso_bin_5 = FitTimeRes("Bs2DsKpipi_MCcombined_39to44.root", "SignalMC_39to44.eps", reso_bin_5_fill);
-reso_bin_6 = FitTimeRes("Bs2DsKpipi_MCcombined_44to49.root", "SignalMC_44to49.eps", reso_bin_6_fill);
-reso_bin_7 = FitTimeRes("Bs2DsKpipi_MCcombined_49to150.root", "SignalMC_49to150.eps", reso_bin_7_fill);
+reso_bin_0 = FitTimeRes("Bs2DsKpipi_MCcombined_0to19.root", "SignalMC_0to19.eps", reso_bin_0_fill, newTable);
+reso_bin_1 = FitTimeRes("Bs2DsKpipi_MCcombined_19to24.root", "SignalMC_19to24.eps", reso_bin_1_fill, newTable);
+reso_bin_2 = FitTimeRes("Bs2DsKpipi_MCcombined_24to29.root", "SignalMC_24to29.eps", reso_bin_2_fill, newTable);
+reso_bin_3 = FitTimeRes("Bs2DsKpipi_MCcombined_29to34.root", "SignalMC_29to34.eps", reso_bin_3_fill, newTable);
+reso_bin_4 = FitTimeRes("Bs2DsKpipi_MCcombined_34to39.root", "SignalMC_34to39.eps", reso_bin_4_fill, newTable);
+reso_bin_5 = FitTimeRes("Bs2DsKpipi_MCcombined_39to44.root", "SignalMC_39to44.eps", reso_bin_5_fill, newTable);
+reso_bin_6 = FitTimeRes("Bs2DsKpipi_MCcombined_44to49.root", "SignalMC_44to49.eps", reso_bin_6_fill, newTable);
+reso_bin_7 = FitTimeRes("Bs2DsKpipi_MCcombined_49to150.root", "SignalMC_49to150.eps", reso_bin_7_fill, newTable);
 
 //pass resolution in bin center and its error
 double reso_t_BinCenter[8] = {reso_bin_0[0], reso_bin_1[0], reso_bin_2[0], reso_bin_3[0], reso_bin_4[0], reso_bin_5[0], reso_bin_6[0], reso_bin_7[0]};
@@ -449,13 +458,49 @@ int main(int argc, char** argv){
 
     NamedParameter<int> FitReso("FitReso", 1);
     NamedParameter<int> CreateTimeErrorDis("CreateTimeErrorDis", 0);
+    NamedParameter<int> Table("Table", 0);
     NamedParameter<double> lowLimit("lowLimit", 0.);
     NamedParameter<double> highLimit("highLimit", 0.019);
     NamedParameter<string> bin("bin", (std::string) "0to19");
 
+    ofstream datafile;
+
+    bool newTable;
+    if(Table == 1) newTable = true;
+    if(Table != 1) newTable = false;
+
     if(CreateTimeErrorDis == 1) getDecayTimeErrorDistribution(bin, lowLimit, highLimit);
 
-    if(FitReso == 1) FitResoRelation();
+    if(FitReso == 1 && newTable){
+
+	datafile.open ("ResoTable.txt", std::ios_base::app);
+
+	datafile << "\\begin{table}[h]" << "\n";
+	datafile << "\\centering" << "\n";
+	datafile << " \\begin{tabular}{l || l l l | l l}" << "\n";
+	datafile << "\\sigma_{t} Bin & \\sigma_{1} & \\sigma_{2} & f_{1} & D & \\sigma_{eff}" << " \\\\" << "\n";
+	datafile << "\\hline" << "\n";
+
+	datafile.close();
+
+    }
+
+
+    if(FitReso == 1) FitResoRelation(newTable);
+
+
+    if(FitReso == 1 && newTable){
+
+	datafile.open ("ResoTable.txt", std::ios_base::app);
+
+	datafile << "\\hline" << "\n";
+	datafile << "\\end{tabular}" << "\n";
+	datafile << "\\caption{Summary of the obtained parameters from the resolution fits described above.}" << "\n";
+	datafile << "\\label{table:ResoParams}" << "\n";
+	datafile << "\\end{table}" << "\n";
+
+	datafile.close();
+    }
 
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;

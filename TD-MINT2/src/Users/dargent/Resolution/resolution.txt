@@ -8,3 +8,7 @@
 "lowLimit" 			0.
 "highLimit" 			0.019
 "bin" 				"0to19"
+
+*option whether to create a new table
+
+"Table"				1
