@@ -365,7 +365,7 @@ file->Close();
 ofstream datafile;
 
 datafile.open ("ResoTable.txt", std::ios_base::app);
-datafile << BinName.c_str() << " : "<< sig1 << " \\pm " << dsig1 << " & " << sig2 << " \\pm " << dsig2 << " & " << f1 << " \\pm " << df1 << " & " << dilution << " \\pm " <<  ddilution << " & " << resolution_eff << " \\pm " << dresolution_eff << " \\\\" << "\n";
+datafile << BinName.c_str() << " & "<< sig1 << " \\pm " << dsig1 << " & " << sig2 << " \\pm " << dsig2 << " & " << f1 << " \\pm " << df1 << " & " << dilution << " \\pm " <<  ddilution << " & " << resolution_eff << " \\pm " << dresolution_eff << " \\\\" << "\n";
 datafile.close();
 
 return resoValues;
