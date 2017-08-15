@@ -413,17 +413,32 @@ reso_bin_7 = FitTimeRes("Bs2DsKpipi_MCcombined_49to150.root", "SignalMC_49to150.
 double reso_t_BinCenter[8] = {reso_bin_0[0], reso_bin_1[0], reso_bin_2[0], reso_bin_3[0], reso_bin_4[0], reso_bin_5[0], reso_bin_6[0], reso_bin_7[0]};
 double reso_t_BinWidth[8] = {reso_bin_0[1], reso_bin_1[1], reso_bin_2[1], reso_bin_3[1], reso_bin_4[1], reso_bin_5[1], reso_bin_6[1], reso_bin_7[1]};
 
-//define polynom
+//define polynom for fit
 
-//TF1 *fitFunc = new TF1("fitFunc", "[0]+[1]*x ", 0., 45.);
 TF1 *fitFunc = new TF1("fitFunc", "[0]+[1]*x ", 0., 150.);
 fitFunc->SetParNames("c0","s");
 fitFunc->SetParameters(10.,1.2);
 fitFunc->SetParLimits(0,0.,30.);
 fitFunc->SetParLimits(1,0.,10.);
 
-fitFunc->FixParameter(0,0.);
+//fitFunc->FixParameter(0,0.);
 //fitFunc->FixParameter(1,1.280);
+
+// draw polynom from DsK analysis for comparison
+
+TF1 *fitFunc_DsK_data = new TF1("fitFunc_DsK_data", "[0]+[1]*x ", 0., 150.);
+fitFunc_DsK_data->SetParNames("c0_data","s_data");
+fitFunc_DsK_data->SetLineColor(2);
+fitFunc_DsK_data->SetParameters(10.,1.2);
+fitFunc_DsK_data->FixParameter(0,10.262);
+fitFunc_DsK_data->FixParameter(1,1.280);
+
+TF1 *fitFunc_DsK_mc = new TF1("fitFunc_DsK_mc", "[0]+[1]*x ", 0., 150.);
+fitFunc_DsK_mc->SetParNames("c0_mc","s_mc");
+fitFunc_DsK_mc->SetLineColor(4);
+fitFunc_DsK_mc->SetParameters(10.,1.2);
+fitFunc_DsK_mc->FixParameter(0,0.);
+fitFunc_DsK_mc->FixParameter(1,1.201);
 
 //fill histo
 TH1D* ResoRelation = new TH1D("ResoRelation" ,"ResoRelation", 8, sigma_t_BinCenter);
@@ -447,6 +462,9 @@ ResoRelation->Fit(fitFunc,"RL");
 
 ResoRelation->Draw("e1");
 fitFunc->Draw("same");
+fitFunc_DsK_data->Draw("same");
+fitFunc_DsK_mc->Draw("same");
+
 canvas->Print("Plots/ProperTimeReso_MC.eps");
 
 }
