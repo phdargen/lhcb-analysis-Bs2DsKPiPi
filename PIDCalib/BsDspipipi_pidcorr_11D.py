@@ -3,7 +3,7 @@ import os
 # List of input ROOT files with MC ntuples. Format: 
 #   (inputfile, outputfile, dataset)
 files = [
-         ("/auto/data/dargent/BsDsKpipi/Mini/MC/norm_Ds2KKpi_11_step3.root", "/auto/data/dargent/BsDsKpipi/Mini/MC/norm_Ds2KKpi_11_PID.root", "MagDown_2011"), 
+         ("/auto/data/dargent/BsDsKpipi/Mini/MC/norm_Ds2KKpi_11_PID_step2.root", "/auto/data/dargent/BsDsKpipi/Mini/MC/norm_Ds2KKpi_11_PID_step3.root", "MagDown_2011"), 
          ]
 
 # Name of the input tree

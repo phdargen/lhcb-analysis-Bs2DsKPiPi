@@ -85,24 +85,24 @@ TTree* DecayTree::GetInputTree(){
 
     else if(_decay==Decay::signal && _data==DataType::data && _year == 16){
         TString loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16U/";
-        chain->Add(loc+"b2dhhh*.root");
+        if(_polarity != "Down")chain->Add(loc+"b2dhhh*.root");
 	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/38/";
         TString file = "/output/b2dhhh.root";
-        for(int i = 0; i<1000; i++){
+        for(int i = 0; i<2000; i++){
             TString dir_i = TString::Format("%d",i);
-            chain->Add(loc + dir_i + file);
+            if(_polarity != "Down")chain->Add(loc + dir_i + file);
         }
 	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/40/";
         for(int i = 0; i<10; i++){
             TString dir_i = TString::Format("%d",i);
-            chain->Add(loc + dir_i + file);
+            if(_polarity != "Down")chain->Add(loc + dir_i + file);
         }
         loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16D/";
-        chain->Add(loc+"b2dhhh*.root");
+        if(_polarity != "Up")chain->Add(loc+"b2dhhh*.root");
         loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16Db/";
-        chain->Add(loc+"b2dhhh*.root");
+        if(_polarity != "Up")chain->Add(loc+"b2dhhh*.root");
         loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16Dc/";
-        chain->Add(loc+"b2dhhh*.root");
+        if(_polarity != "Up")chain->Add(loc+"b2dhhh*.root");
     }
 
     else if(_decay==Decay::norm && _data==DataType::data && _year == 15){
@@ -152,8 +152,8 @@ TTree* DecayTree::GetInputTree(){
     return (TTree*)chain;
 }
 
-DecayTree::DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString inFileLoc, TString outFileLoc, Bool_t bkg ) : 
-fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataType), _inFileLoc(inFileLoc), _outFileLoc(outFileLoc), _bkg(bkg)
+DecayTree::DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString polarity, TString inFileLoc, TString outFileLoc, Bool_t bkg ) : 
+fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataType), _polarity(polarity), _inFileLoc(inFileLoc), _outFileLoc(outFileLoc), _bkg(bkg)
 {    
     cout << "Requested to process files with options: " << endl << endl;
 
@@ -170,7 +170,8 @@ fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataTyp
     cout << "DataType: " << s1 << endl;
     cout << "Decay: " << s2 << endl;
     cout << "Ds finalState: " << s3 << endl;
-    cout << "Year: " << _year << endl << endl;
+    cout << "Year: " << _year << endl;
+    cout << "Polarity: " << _polarity << endl << endl;
 
     _outFileName = _outFileLoc;    
     _outFileName += "Mini/";
@@ -181,6 +182,8 @@ fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataTyp
     _outFileName += s3; 
     _outFileName += "_";     
     _outFileName += _year;
+    if(_polarity == "Up") _outFileName += "_up";
+    if(_polarity == "Down") _outFileName += "_down";
     if(_bkg)_outFileName += "_Dstar_bkg";
     _outFileName += ".root";    
 }
