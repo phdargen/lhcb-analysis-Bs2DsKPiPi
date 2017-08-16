@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  8 MAY 2017 15:59
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  16 AUG 2017 16:37
 entering extended mode
  %&-line parsing enabled.
 **main
@@ -30,8 +30,8 @@ File: size12.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
 )
 (/usr/share/texmf/tex/latex/base/ifthen.sty
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
-) (./preamble.tex
-(/usr/share/texmf/tex/latex/geometry/geometry.sty
+) (./usefulCommands.tex)
+(./preamble.tex (/usr/share/texmf/tex/latex/geometry/geometry.sty
 Package: geometry 2002/07/08 v3.2 Page Geometry
 
 (/usr/share/texmf/tex/latex/graphics/keyval.sty
@@ -277,7 +277,19 @@ Package: mciteplus 2008/09/30 v1.1 enhanced mcite
 \c@mcitesubitemcount=\count121
 
 ** mciteplus: Detected cite.sty. Invoking hooks.
-) (/usr/share/texmf/tex/latex/tools/longtable.sty
+) (/usr/share/texmf/tex/latex/psnfss/pifont.sty
+Package: pifont 2005/04/12 PSNFSS-v9.2a Pi font support (SPQR) 
+LaTeX Font Info:    Try loading font information for U+pzd on input line 63.
+
+(/usr/share/texmf/tex/latex/psnfss/upzd.fd
+File: upzd.fd 2001/06/04 font definitions for U/pzd.
+)
+LaTeX Font Info:    Try loading font information for U+psy on input line 64.
+
+(/usr/share/texmf/tex/latex/psnfss/upsy.fd
+File: upsy.fd 2001/06/04 font definitions for U/psy.
+))
+(/usr/share/texmf/tex/latex/tools/longtable.sty
 Package: longtable 2004/02/01 v4.11 Multi-page Table package (DPC)
 \LTleft=\skip49
 \LTright=\skip50
@@ -301,20 +313,20 @@ LaTeX Warning: Label `table:InputVars' multiply defined.
 )
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 33.
-LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
 -------------------- Geometry parameters
 paper: a4paper
 landscape: --
@@ -344,14 +356,14 @@ driver: pdftex
 \headheight 12.0pt
 \headsep    25.0pt
 \footskip   30.0pt
-\marginparwidth 35.0pt
+\marginparwidth 64.01869pt
 \marginparsep   10.0pt
 \columnsep  14.22636pt
 \skip\footins  10.8pt plus 4.0pt minus 2.0pt
 \hoffset 0.0pt
 \voffset 0.0pt
 \mag 1000
-
+\@reversemargintrue 
 (1in=72.27pt, 1cm=28.45pt)
 -----------------------
 Package microtype Info: Generating PDF output.
@@ -390,12 +402,12 @@ LaTeX Info: Redefining \selectfont on input line 125.
 \JustifyingParindent=\skip66
 )
 Package caption Info: hyperref package v6.74m (or newer) detected on input line
- 33.
-Package caption Info: hypcap package v1.0 (or newer) detected on input line 33.
+ 56.
+Package caption Info: hypcap package v1.0 (or newer) detected on input line 56.
 
 Package caption Info: longtable package v3.15 (or newer) detected on input line
- 33.
-Package hyperref Info: Link coloring OFF on input line 33.
+ 56.
+Package hyperref Info: Link coloring OFF on input line 56.
 
 (/usr/share/texmf/tex/latex/hyperref/nameref.sty
 Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
@@ -405,8 +417,8 @@ Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
 )
 \c@section@level=\count127
 )
-LaTeX Info: Redefining \ref on input line 33.
-LaTeX Info: Redefining \pageref on input line 33.
+LaTeX Info: Redefining \ref on input line 56.
+LaTeX Info: Redefining \pageref on input line 56.
  (./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
@@ -431,57 +443,213 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 (/usr/share/texmf/tex/latex/microtype/mt-eur.cfg
 File: mt-eur.cfg 2006/07/31 v1.1 microtype config. file: AMS Euler Roman (RS)
 )
-<lhcb-logo.pdf, id=31, 86.3225pt x 59.22125pt>
+<lhcb-logo.pdf, id=63, 86.3225pt x 59.22125pt>
 File: lhcb-logo.pdf Graphic file (type pdf)
  <use lhcb-logo.pdf> [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} </usr/share/texmf/tex/latex
-/cern/lhcb-logo.pdf>] [2]) (./introduction.tex
-<figs/FeynmannGraphs.png, id=57, 565.51276pt x 148.75575pt>
-File: figs/FeynmannGraphs.png Graphic file (type png)
+/cern/lhcb-logo.pdf>] [2]) (./main.toc)
+\tf@toc=\write4
+\openout4 = `main.toc'.
 
-<use figs/FeynmannGraphs.png>) (./selection.texpdfTeX warning (ext4): destinati
-on with the same identifier (name{page.1}) has been already used, duplicate ign
-ored
+ [1
+
+] (./todo.texpdfTeX warning (ext4): destination with the same identifier (name{
+page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.12 
-      [1
+l.36 \clearpage
+                [1
 
- <./figs/FeynmannGraphs.png>]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 19.
 
+]) (./introduction.tex
+<figs/FeynmannGraphs.png, id=124, 565.51276pt x 148.75575pt>
+File: figs/FeynmannGraphs.png Graphic file (type png)
+
+<use figs/FeynmannGraphs.png>)pdfTeX warning (ext4): destination with the same 
+identifier (name{page.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.103 \clearpage
+                 [2
+
+
+ <./figs/FeynmannGraphs.png>] (./sensitivity.tex
+Underfull \hbox (badness 10000) in paragraph at lines 32--35
+
+ []
+
+
+Overfull \hbox (56.44153pt too wide) in paragraph at lines 48--48
+[] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 54--58
+
+ []
+
+[3
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 62--63
+
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 66.
 (/usr/share/texmf/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 19.
-pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has 
-been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.70 
-      [2] [3]
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 66.
+
+
+pdfTeX warning: pdflatex (file ./figs/plots/k-eps-converted-to.pdf): PDF inclus
+ion: found PDF version <1.5>, but at most version <1.4> allowed
+<figs/plots/k-eps-converted-to.pdf, id=150, 569.12625pt x 385.44pt>
+File: figs/plots/k-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/plots/k-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots/k_Ks-eps-converted-to.pdf): PDF inc
+lusion: found PDF version <1.5>, but at most version <1.4> allowed
+<figs/plots/k_Ks-eps-converted-to.pdf, id=151, 569.12625pt x 385.44pt>
+File: figs/plots/k_Ks-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/plots/k_Ks-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots/k_rho-eps-converted-to.pdf): PDF in
+clusion: found PDF version <1.5>, but at most version <1.4> allowed
+<figs/plots/k_rho-eps-converted-to.pdf, id=152, 569.12625pt x 385.44pt>
+File: figs/plots/k_rho-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/plots/k_rho-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots/k_K1-eps-converted-to.pdf): PDF inc
+lusion: found PDF version <1.5>, but at most version <1.4> allowed
+<figs/plots/k_K1-eps-converted-to.pdf, id=153, 569.12625pt x 385.44pt>
+File: figs/plots/k_K1-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/plots/k_K1-eps-converted-to.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[4 <./figs/plots/k-eps-converted-to.pdf> <./figs/plots/k_Ks-eps-converted-to.pd
+f> <./figs/plots/k_rho-eps-converted-to.pdf> <./figs/plots/k_K1-eps-converted-t
+o.pdf>] [5]
+
+pdfTeX warning: pdflatex (file ./figs/plots_toy/h_t-eps-converted-to.pdf): PDF 
+inclusion: found PDF version <1.5>, but at most version <1.4> allowed
+<figs/plots_toy/h_t-eps-converted-to.pdf, id=206, 569.12625pt x 385.44pt>
+File: figs/plots_toy/h_t-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/plots_toy/h_t-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots_toy/s_Dspipi-eps-converted-to.pdf):
+ PDF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
+
+<figs/plots_toy/s_Dspipi-eps-converted-to.pdf, id=207, 569.12625pt x 385.44pt>
+File: figs/plots_toy/s_Dspipi-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/plots_toy/s_Dspipi-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots_toy/s_DsK-eps-converted-to.pdf): PD
+F inclusion: found PDF version <1.5>, but at most version <1.4> allowed
+<figs/plots_toy/s_DsK-eps-converted-to.pdf, id=208, 569.12625pt x 385.44pt>
+File: figs/plots_toy/s_DsK-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/plots_toy/s_DsK-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots_toy/s_Kpipi-eps-converted-to.pdf): 
+PDF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
+<figs/plots_toy/s_Kpipi-eps-converted-to.pdf, id=209, 569.12625pt x 385.44pt>
+File: figs/plots_toy/s_Kpipi-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/plots_toy/s_Kpipi-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots_toy/s_Kpi-eps-converted-to.pdf): PD
+F inclusion: found PDF version <1.5>, but at most version <1.4> allowed
+<figs/plots_toy/s_Kpi-eps-converted-to.pdf, id=210, 569.12625pt x 385.44pt>
+File: figs/plots_toy/s_Kpi-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/plots_toy/s_Kpi-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots_toy/s_pipi-eps-converted-to.pdf): P
+DF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
+<figs/plots_toy/s_pipi-eps-converted-to.pdf, id=211, 569.12625pt x 385.44pt>
+File: figs/plots_toy/s_pipi-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/plots_toy/s_pipi-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots/LL_scan-eps-converted-to.pdf): PDF 
+inclusion: found PDF version <1.5>, but at most version <1.4> allowed
+
+<./figs/plots/LL_scan-eps-converted-to.pdf, id=212, 569.12625pt x 298.11375pt>
+File: ./figs/plots/LL_scan-eps-converted-to.pdf Graphic file (type pdf)
+
+<use ./figs/plots/LL_scan-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots_toy/r_pull-eps-converted-to.pdf): P
+DF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
+<figs/plots_toy/r_pull-eps-converted-to.pdf, id=213, 569.12625pt x 385.44pt>
+File: figs/plots_toy/r_pull-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/plots_toy/r_pull-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots_toy/k_pull-eps-converted-to.pdf): P
+DF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
+<figs/plots_toy/k_pull-eps-converted-to.pdf, id=214, 569.12625pt x 385.44pt>
+File: figs/plots_toy/k_pull-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/plots_toy/k_pull-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots_toy/gamma_pull-eps-converted-to.pdf
+): PDF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
+
+<figs/plots_toy/gamma_pull-eps-converted-to.pdf, id=215, 569.12625pt x 385.44pt
+>
+File: figs/plots_toy/gamma_pull-eps-converted-to.pdf Graphic file (type pdf)
+ <use figs/plots_toy/gamma_pull-eps-converted-to.pdf>
+
+pdfTeX warning: pdflatex (file ./figs/plots_toy/delta_pull-eps-converted-to.pdf
+): PDF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
+
+<figs/plots_toy/delta_pull-eps-converted-to.pdf, id=216, 569.12625pt x 385.44pt
+>
+File: figs/plots_toy/delta_pull-eps-converted-to.pdf Graphic file (type pdf)
+ <use figs/plots_toy/delta_pull-eps-converted-to.pdf> [6
+
+ <./figs/plots_toy/h_t-eps-converted-to.pdf> <./figs/plots_toy/s_Dspipi-eps-con
+verted-to.pdf> <./figs/plots_toy/s_DsK-eps-converted-to.pdf> <./figs/plots_toy/
+s_Kpipi-eps-converted-to.pdf> <./figs/plots_toy/s_Kpi-eps-converted-to.pdf> <./
+figs/plots_toy/s_pipi-eps-converted-to.pdf>] [7 <./figs/plots/LL_scan-eps-conve
+rted-to.pdf> <./figs/plots_toy/r_pull-eps-converted-to.pdf> <./figs/plots_toy/k
+_pull-eps-converted-to.pdf> <./figs/plots_toy/gamma_pull-eps-converted-to.pdf> 
+<./figs/plots_toy/delta_pull-eps-converted-to.pdf>]) [8
+
+] (./selection.tex [9
+
+] [10]
 Underfull \hbox (badness 10000) in paragraph at lines 165--170
 
  []
 
-<figs/mass_Bs_forBDT_12_AnA.png, id=101, 419.166pt x 284.262pt>
+<figs/mass_Bs_forBDT_12_AnA.png, id=356, 419.166pt x 284.262pt>
 File: figs/mass_Bs_forBDT_12_AnA.png Graphic file (type png)
 
 <use figs/mass_Bs_forBDT_12_AnA.png>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figs/BDT_Input_1.pdf, id=103, 569.12625pt x 296.10625pt>
+<figs/BDT_Input_1.pdf, id=358, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_1.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_1.pdf>
-<figs/BDT_Input_2.pdf, id=104, 569.12625pt x 296.10625pt>
+<figs/BDT_Input_2.pdf, id=359, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_2.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_2.pdf>
-<figs/BDT_Input_3.pdf, id=105, 569.12625pt x 296.10625pt>
+<figs/BDT_Input_3.pdf, id=360, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_3.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_3.pdf>
@@ -500,7 +668,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figs/BDT_Response_new.pdf, id=108, 569.12625pt x 421.575pt>
+<figs/BDT_Response_new.pdf, id=363, 569.12625pt x 421.575pt>
 File: figs/BDT_Response_new.pdf Graphic file (type pdf)
 
 <use figs/BDT_Response_new.pdf>
@@ -508,30 +676,31 @@ File: figs/BDT_Response_new.pdf Graphic file (type pdf)
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Reference `sec: fitting' on page 4 undefined on input line 237.
+LaTeX Warning: Reference `sec: fitting' on page 11 undefined on input line 237.
 
 
-LaTeX Warning: Reference `sec: efficiency' on page 4 undefined on input line 24
-0.
 
-[4] [5 <./figs/mass_Bs_forBDT_12_AnA.png>]
-<figs/BDT_CutEfficiency.pdf, id=127, 569.12625pt x 421.575pt>
+LaTeX Warning: Reference `sec: efficiency' on page 11 undefined on input line 2
+40.
+
+[11] [12 <./figs/mass_Bs_forBDT_12_AnA.png>]
+<figs/BDT_CutEfficiency.pdf, id=380, 569.12625pt x 421.575pt>
 File: figs/BDT_CutEfficiency.pdf Graphic file (type pdf)
 
 <use figs/BDT_CutEfficiency.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) (./acceptance.tex [6 <./figs/BDT_Input_1.pdf, page is rotated 90 degrees> <./
-figs/BDT_Input_2.pdf, page is rotated 90 degrees> <./figs/BDT_Input_3.pdf, page
- is rotated 90 degrees>] [7 <./figs/BDT_Response_new.pdf, page is rotated 90 de
-grees> <./figs/BDT_CutEfficiency.pdf, page is rotated 90 degrees>]
+) [13 <./figs/BDT_Input_1.pdf, page is rotated 90 degrees> <./figs/BDT_Input_2.
+pdf, page is rotated 90 degrees> <./figs/BDT_Input_3.pdf, page is rotated 90 de
+grees>] [14 <./figs/BDT_Response_new.pdf, page is rotated 90 degrees> <./figs/B
+DT_CutEfficiency.pdf, page is rotated 90 degrees>] (./acceptance.tex
 Underfull \hbox (badness 6461) in paragraph at lines 20--31
 \OT1/cmr/m/n/12 (+20) For fits shown in the fol-low-ing, the knots have been pl
 aced at $\OML/cmm/m/it/12 t \OT1/cmr/m/n/12 (+20) =
  []
 
-<figs/SplineAcc_data_Fit.pdf, id=362, 569.12625pt x 367.3725pt>
+<figs/SplineAcc_data_Fit.pdf, id=616, 569.12625pt x 367.3725pt>
 File: figs/SplineAcc_data_Fit.pdf Graphic file (type pdf)
 
 <use figs/SplineAcc_data_Fit.pdf>
@@ -539,18 +708,20 @@ File: figs/SplineAcc_data_Fit.pdf Graphic file (type pdf)
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-<figs/SplineAcc_MCFit_combined_trueCT_Norm.pdf, id=364, 569.12625pt x 367.3725p
+<figs/SplineAcc_MCFit_combined_trueCT_Norm.pdf, id=618, 569.12625pt x 367.3725p
 t>
 File: figs/SplineAcc_MCFit_combined_trueCT_Norm.pdf Graphic file (type pdf)
  <use figs/SplineAcc_MCFit_combined_trueCT_Norm.pdf>
-<figs/SplineAcc_MCFit_combined_trueCT_Sig.pdf, id=365, 569.12625pt x 367.3725pt
+<figs/SplineAcc_MCFit_combined_trueCT_Sig.pdf, id=619, 569.12625pt x 367.3725pt
 >
 File: figs/SplineAcc_MCFit_combined_trueCT_Sig.pdf Graphic file (type pdf)
  <use figs/SplineAcc_MCFit_combined_trueCT_Sig.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
+[15
 
+]
 Overfull \hbox (31.86165pt too wide) in paragraph at lines 65--76
  [][] 
  []
@@ -558,10 +729,25 @@ Overfull \hbox (31.86165pt too wide) in paragraph at lines 65--76
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) (./main.bbl [8] [9 <./figs/SplineAcc_data_Fit.pdf, page is rotated 90 degrees
-> <./figs/SplineAcc_MCFit_combined_trueCT_Norm.pdf, page is rotated 90 degrees>
- <./figs/SplineAcc_MCFit_combined_trueCT_Sig.pdf, page is rotated 90 degrees>])
-[10] (./main.aux)
+) [16 <./figs/SplineAcc_data_Fit.pdf, page is rotated 90 degrees> <./figs/Splin
+eAcc_MCFit_combined_trueCT_Norm.pdf, page is rotated 90 degrees> <./figs/Spline
+Acc_MCFit_combined_trueCT_Sig.pdf, page is rotated 90 degrees>] [17]
+(./resolution.tex <figs/ProperTimeReso_MC.pdf, id=774, 569.12625pt x 385.44pt>
+File: figs/ProperTimeReso_MC.pdf Graphic file (type pdf)
+
+<use figs/ProperTimeReso_MC.pdf>
+Overfull \hbox (20.7724pt too wide) in paragraph at lines 35--48
+ [][] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) [18
+
+ <./figs/ProperTimeReso_MC.pdf>] [19] (./main.bbl) [20
+
+] (./main.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -570,13 +756,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 7270 strings out of 256216
- 101194 string characters out of 1917072
- 205722 words of memory out of 1500000
- 10304 multiletter control sequences out of 10000+200000
- 23670 words of font info for 112 fonts, out of 1200000 for 2000
+ 7500 strings out of 256216
+ 106185 string characters out of 1917072
+ 206046 words of memory out of 1500000
+ 10445 multiletter control sequences out of 10000+200000
+ 24358 words of font info for 114 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 37i,12n,38p,1279b,500s stack positions out of 5000i,500n,6000p,200000b,15000s
+ 37i,12n,38p,1283b,479s stack positions out of 5000i,500n,6000p,200000b,15000s
 </usr/share/texmf/fonts/type1/bluesky/cm/cmbsy10.pfb></usr/share/texmf/fonts/
 type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx12.pfb
 ></usr/share/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/ty
@@ -588,12 +774,13 @@ uesky/cm/cmr12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr6.pfb></usr/shar
 e/texmf/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf/fonts/type1/bluesky/c
 m/cmr8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmss8.pfb></usr/share/texmf
 /fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cms
-y6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy8.pfb></usr/share/texmf/fon
-ts/type1/bluesky/cm/cmti10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti12.
-pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmtt12.pfb>
-Output written on main.pdf (12 pages, 489378 bytes).
+y6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy7.pfb></usr/share/texmf/fon
+ts/type1/bluesky/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti10.p
+fb></usr/share/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/
+type1/bluesky/cm/cmtt12.pfb>
+Output written on main.pdf (23 pages, 658683 bytes).
 PDF statistics:
- 610 PDF objects out of 1000 (max. 8388607)
- 49 named destinations out of 1000 (max. 131072)
- 19064 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 908 PDF objects out of 1000 (max. 8388607)
+ 92 named destinations out of 1000 (max. 131072)
+ 19208 words of extra memory for PDF output out of 20736 (max. 10000000)
 

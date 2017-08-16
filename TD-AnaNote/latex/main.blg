@@ -7,45 +7,45 @@ Database file #3: LHCb-CONF.bib
 Database file #4: LHCb-DP.bib
 Database file #5: LHCb-TDR.bib
 Warning--empty booktitle in Blusk:2012it
-You've used 7 entries,
+You've used 9 entries,
             2829 wiz_defined-function locations,
-            686 strings with 6661 characters,
-and the built_in function-call counts, 36581 in all, are:
-= -- 4010
-> -- 49
+            707 strings with 7001 characters,
+and the built_in function-call counts, 42277 in all, are:
+= -- 4627
+> -- 65
 < -- 0
-+ -- 139
-- -- 12
-* -- 3816
-:= -- 4383
-add.period$ -- 8
-call.type$ -- 7
-change.case$ -- 7
++ -- 207
+- -- 16
+* -- 4359
+:= -- 5134
+add.period$ -- 10
+call.type$ -- 9
+change.case$ -- 9
 chr.to.int$ -- 0
-cite$ -- 8
-duplicate$ -- 425
-empty$ -- 3913
-format.name$ -- 12
-if$ -- 7996
+cite$ -- 10
+duplicate$ -- 579
+empty$ -- 4490
+format.name$ -- 16
+if$ -- 9226
 int.to.chr$ -- 0
-int.to.str$ -- 7
-missing$ -- 24
-newline$ -- 54
-num.names$ -- 7
-pop$ -- 104
+int.to.str$ -- 9
+missing$ -- 33
+newline$ -- 66
+num.names$ -- 9
+pop$ -- 138
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 29
+skip$ -- 49
 stack$ -- 0
-substring$ -- 11294
+substring$ -- 12843
 swap$ -- 0
-text.length$ -- 14
+text.length$ -- 18
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 1
-while$ -- 148
-width$ -- 8
-write$ -- 105
+while$ -- 204
+width$ -- 10
+write$ -- 139
 (There was 1 warning)

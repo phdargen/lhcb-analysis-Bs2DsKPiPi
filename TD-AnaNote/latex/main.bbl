@@ -82,4 +82,25 @@ T.~M. Karbach, G.~Raven, and M.~Schiller,
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
+\bibitem{PDG2014}
+Particle Data Group, K.~A. Olive {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{\href{http://pdg.lbl.gov/}{Review
+  of particle physics}}},
+  }{}\href{http://dx.doi.org/10.1088/1674-1137/38/9/090001}{Chin.\ Phys.\
+  \textbf{C38} (2014) 090001}, {and 2015 update}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{LHCb-DP-2014-002}
+LHCb collaboration, R.~Aaij {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{LHCb detector performance}},
+  }{}\href{http://dx.doi.org/10.1142/S0217751X15300227}{Int.\ J.\ Mod.\ Phys.\
+  \textbf{A30} (2015) 1530022},
+  \href{http://arxiv.org/abs/1412.6352}{{\normalfont\ttfamily
+  arXiv:1412.6352}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
 \end{mcitethebibliography}
