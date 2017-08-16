@@ -9,6 +9,7 @@ int main(int argc, char** argv){
     Year::Type year;
     Ds_finalState::Type finalState;
     DataType::Type dataType;
+    TString polarity = "Both";
     
     if((string)argv[1] == "Signal") decay = Decay::signal ;
     else if((string)argv[1] == "Norm") decay = Decay::norm ;
@@ -41,7 +42,12 @@ int main(int argc, char** argv){
 		throw "ERROR" ;
 	}    
 
-    DecayTree d(decay, year, finalState, dataType);
+    if(argv[5] != 0){
+	    if((string)argv[5] == "Up") polarity = "Up" ;
+	    if((string)argv[5] == "Down") polarity = "Down" ;
+    }
+
+    DecayTree d(decay, year, finalState, dataType,polarity);
     d.Loop();
 
     return 0;

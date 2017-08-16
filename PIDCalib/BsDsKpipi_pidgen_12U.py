@@ -59,7 +59,7 @@ treename = input_tree
 
 for input_file, output_file, dataset in files : 
   tmpinfile = input_file
-  tmpoutfile = "tmp1.root"
+  tmpoutfile = "tmp3.root"
   for track, subst in tracks.iteritems() : 
     for var, config in subst.iteritems() : 
 #      command = "python $PIDPERFSCRIPTSROOT/scripts/python/PIDGenUser/PIDGen.py"
@@ -79,10 +79,10 @@ for input_file, output_file, dataset in files :
 
       treename = output_tree
       tmpinfile = tmpoutfile
-      if tmpoutfile == "tmp1.root" : 
-        tmpoutfile = "tmp2.root"
+      if tmpoutfile == "tmp3.root" : 
+        tmpoutfile = "tmp4.root"
       else : 
-        tmpoutfile = "tmp1.root"
+        tmpoutfile = "tmp3.root"
 
       print command
       os.system(command)

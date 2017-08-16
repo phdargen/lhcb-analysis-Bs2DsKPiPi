@@ -49,7 +49,8 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
 	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_11.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_12.root");
 	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_15.root");
-   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_16.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_16_up.root");
+	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_16_down.root");
 
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_11.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_12.root");

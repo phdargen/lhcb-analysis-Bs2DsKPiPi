@@ -3,7 +3,7 @@ import os
 # List of input ROOT files with MC ntuples. Format: 
 #   (inputfile, outputfile, dataset)
 files = [
-         ("/auto/data/dargent/BsDsKpipi/Mini/MC/signal_Ds2KKpi_12_step3.root", "/auto/data/dargent/BsDsKpipi/Mini/MC/signal_Ds2KKpi_12_PID.root", "MagDown_2012"), 
+         ("/auto/data/dargent/BsDsKpipi/Mini/MC/signal_Ds2KKpi_12_PID_step2.root", "/auto/data/dargent/BsDsKpipi/Mini/MC/signal_Ds2KKpi_12_PID_step3.root", "MagDown_2012"), 
          ]
 
 # Name of the input tree
@@ -58,7 +58,7 @@ treename = input_tree
 
 for input_file, output_file, dataset in files : 
     tmpinfile = input_file
-    tmpoutfile = "tmp1.root"
+    tmpoutfile = "tmp3.root"
     for track, subst in tracks.iteritems() : 
         for var, config in subst.iteritems() : 
             #command = "python $PIDPERFSCRIPTSROOT/scripts/python/PIDGenUser/PIDCorr.py"
@@ -78,10 +78,10 @@ for input_file, output_file, dataset in files :
             
             treename = output_tree
             tmpinfile = tmpoutfile
-            if tmpoutfile == "tmp1.root" : 
-                tmpoutfile = "tmp2.root"
+            if tmpoutfile == "tmp3.root" : 
+                tmpoutfile = "tmp4.root"
             else : 
-                tmpoutfile = "tmp1.root"
+                tmpoutfile = "tmp3.root"
             
             print command
             os.system(command)
