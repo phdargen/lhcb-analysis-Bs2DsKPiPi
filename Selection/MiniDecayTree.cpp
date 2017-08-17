@@ -313,7 +313,10 @@ void MiniDecayTree::Loop()
     summary_tree->Branch("sample", &sample, "sample/I");
     summary_tree->Branch("year", &year, "year/I");
     summary_tree->Branch("NTracks", &NTracks, "NTracks/D");
-
+  
+    double weight = 1.;
+    summary_tree->Branch("weight",&weight,"weight/D"); 
+    
     // Variables for BDT 
     double DsDaughters_min_IPCHI2 = 0;
     double XsDaughters_min_IPCHI2 = 0;

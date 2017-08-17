@@ -1,6 +1,6 @@
 #include "Mint/Plotter.h"
 
-TString Plotter::s_imageformat     = ".pdf";
+TString Plotter::s_imageformat     = ".eps";
 TString Plotter::s_imageformat2    = "";
 TString Plotter::s_legend_position = "RightTop";
 int     Plotter::s_plotterCount    = 0;
