@@ -1,0 +1,3 @@
+"nIterations"   1
+"minEventsPerBin"  60
+"maxBinsPerDim"    200
