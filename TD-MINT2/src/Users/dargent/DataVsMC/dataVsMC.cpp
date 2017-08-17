@@ -164,19 +164,19 @@ void dataVsMC(int Year = 11, TString finalState = "KKpi", bool useWeights=false,
     plot("Bs_ETA","#eta(B)",nBins,1,6,Year, finalState,useWeights, Decay, selection);
     plot("Bs_FDCHI2_OWNPV","#chi^{2}_{FD}(B)",nBins,0,100000,Year, finalState,useWeights, Decay, selection);
     plot("Bs_ENDVERTEX_CHI2","#chi^{2}_{vtx}(B)",nBins,0,35,Year, finalState,useWeights, Decay, selection);
-    plot("Bs_TAU","#tau(B) [ns]",nBins,0,0.012,Year, finalState,useWeights, Decay, selection);
+    plot("Bs_TAU","#tau(B) [ns]",nBins,0,16.,Year, finalState,useWeights, Decay, selection);
 
     /// BDT
     plot("DTF_CHI2NDOF","DTF CHI2",nBins,0.,7,Year, finalState,useWeights, Decay, selection);    
     plot("Bs_IPCHI2_OWNPV","#chi^{2}_{IP}(B)",nBins,0,16,Year, finalState,useWeights, Decay, selection);
     plot("Bs_DIRA_OWNPV","#chi^{2}_{IP}(B)",nBins,0.99997,1,Year, finalState,useWeights, Decay, selection);
 
-    plot("XsDaughters_min_IPCHI2","X_{s} min(#chi^{2}_{IP})",nBins, 0, 10 ,Year, finalState,useWeights, Decay, selection);
+    plot("XsDaughters_min_IPCHI2","X_{s} min(#chi^{2}_{IP})",nBins, 0, 10000 ,Year, finalState,useWeights, Decay, selection);
     if(Decay == "norm")plot("a_1_1260_plus_ptasy_1.00","Xs_ptasy_1.00",nBins, -1, 2.5 ,Year, finalState,useWeights, Decay, selection);
     else plot("K_1_1270_plus_ptasy_1.00","Xs_ptasy_1.00",nBins, -1, 2.5 ,Year, finalState,useWeights, Decay, selection);
     plot("Xs_max_DOCA","X_{s} max DOCA [mm]",nBins, 0, 0.4 ,Year, finalState,useWeights, Decay, selection);
 
-    plot("DsDaughters_min_IPCHI2","D_{s} min(#chi^{2}_{IP})",nBins, 0, 10 ,Year, finalState,useWeights, Decay, selection);
+    plot("DsDaughters_min_IPCHI2","D_{s} min(#chi^{2}_{IP})",nBins, 0, 10000 ,Year, finalState,useWeights, Decay, selection);
     plot("Ds_ptasy_1.00","Ds_ptasy_1.00",nBins, -1, 2.5 ,Year, finalState,useWeights, Decay, selection);
     plot("Ds_FDCHI2_ORIVX","#chi^{2}_{FD}(D_{s})",nBins,0,40000,Year, finalState,useWeights, Decay, selection);
     plot("Ds_RFD","Ds RFD",nBins,0,10,Year, finalState,useWeights, Decay, selection);
@@ -193,19 +193,19 @@ void dataVsMC(int Year = 11, TString finalState = "KKpi", bool useWeights=false,
     if(Decay, selection == "signal"){
 	plot("K_plus_PT","p_{T}(K^{+}) [MeV]",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("K_plus_ETA","#eta(K^{+})",nBins,1,6,Year, finalState,useWeights, Decay, selection);
-	plot("K_plus_IPCHI2_OWNPV","#chi^{2}_{IP}(K^{+})",nBins,0,13000,Year, finalState,useWeights, Decay, selection);
+	plot("K_plus_IPCHI2_OWNPV","#chi^{2}_{IP}(K^{+})",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("K_plus_PIDK","DLL_{K#pi}(K^{+}) ",nBins,-20,100,Year, finalState,useWeights, Decay, selection);
 	plot("K_plus_TRACK_GhostProb","ghost prob (K^{+})",nBins,0,0.4,Year, finalState,useWeights, Decay, selection);
 
 	plot("pi_plus_PT","p_{T}(#pi^{+}) [MeV]",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("pi_plus_ETA","#eta(#pi^{+})",nBins,1,6,Year, finalState,useWeights, Decay, selection);
-	plot("pi_plus_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{+})",nBins,0,13000,Year, finalState,useWeights, Decay, selection);
+	plot("pi_plus_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{+})",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("pi_plus_PIDK","DLL_{K#pi}(#pi^{+}) ",nBins,-100,100,Year, finalState,useWeights, Decay, selection);
 	plot("pi_plus_TRACK_GhostProb","ghost prob (#pi^{+})",nBins,0,0.4,Year, finalState,useWeights, Decay, selection);
 
 	plot("pi_minus_PT","p_{T}(#pi^{-}) [MeV]",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("pi_minus_ETA","#eta(#pi^{-})",nBins,1,6,Year, finalState,useWeights, Decay, selection);
-	plot("pi_minus_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{-})",nBins,0,13000,Year, finalState,useWeights, Decay, selection);
+	plot("pi_minus_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{-})",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("pi_minus_PIDK","DLL_{K#pi}(#pi^{-}) ",nBins,-100,100,Year, finalState,useWeights, Decay, selection);
 	plot("pi_minus_TRACK_GhostProb","ghost prob (#pi^{-})",nBins,0,0.4,Year, finalState,useWeights, Decay, selection);
     }   
@@ -213,19 +213,19 @@ void dataVsMC(int Year = 11, TString finalState = "KKpi", bool useWeights=false,
     else {
 	plot("pi_plus1_PT","p_{T}(K^{+}) [MeV]",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("pi_plus1_ETA","#eta(K^{+})",nBins,1,6,Year, finalState,useWeights, Decay, selection);
-	plot("pi_plus1_IPCHI2_OWNPV","#chi^{2}_{IP}(K^{+})",nBins,0,13000,Year, finalState,useWeights, Decay, selection);
+	plot("pi_plus1_IPCHI2_OWNPV","#chi^{2}_{IP}(K^{+})",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("pi_plus1_PIDK","DLL_{K#pi}(#pi^{+}) ",nBins,-100,100,Year, finalState,useWeights, Decay, selection);
 	plot("pi_plus1_TRACK_GhostProb","ghost prob (K^{+})",nBins,0,0.4,Year, finalState,useWeights, Decay, selection);
 
 	plot("pi_plus2_PT","p_{T}(#pi^{+}) [MeV]",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("pi_plus2_ETA","#eta(#pi^{+})",nBins,1,6,Year, finalState,useWeights, Decay, selection);
-	plot("pi_plus2_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{+})",nBins,0,13000,Year, finalState,useWeights, Decay, selection);
+	plot("pi_plus2_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{+})",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("pi_plus2_PIDK","DLL_{K#pi}(#pi^{+}) ",nBins,-100,100,Year, finalState,useWeights, Decay, selection);
 	plot("pi_plus2_TRACK_GhostProb","ghost prob (#pi^{+})",nBins,0,0.4,Year, finalState,useWeights, Decay, selection);
 
 	plot("pi_minus_PT","p_{T}(#pi^{-}) [MeV]",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("pi_minus_ETA","#eta(#pi^{-})",nBins,1,6,Year, finalState,useWeights, Decay, selection);
-	plot("pi_minus_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{-})",nBins,0,13000,Year, finalState,useWeights, Decay, selection);
+	plot("pi_minus_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{-})",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("pi_minus_PIDK","DLL_{K#pi}(#pi^{-}) ",nBins,-100,100,Year, finalState,useWeights, Decay, selection);
 	plot("pi_minus_TRACK_GhostProb","ghost prob (#pi^{-})",nBins,0,0.4,Year, finalState,useWeights, Decay, selection);
     }
@@ -233,19 +233,19 @@ void dataVsMC(int Year = 11, TString finalState = "KKpi", bool useWeights=false,
     if(finalState == "KKpi") {
 	plot("K_plus_fromDs_PT","p_{T}(K^{+} from D_{s}) [MeV]",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("K_plus_fromDs_ETA","#eta(K^{+} from D_{s})",nBins,1,6,Year, finalState,useWeights, Decay, selection);
-	plot("K_plus_fromDs_IPCHI2_OWNPV","#chi^{2}_{IP}(K^{+} from D_{s})",nBins,0,13000,Year, finalState,useWeights, Decay, selection);
+	plot("K_plus_fromDs_IPCHI2_OWNPV","#chi^{2}_{IP}(K^{+} from D_{s})",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("K_plus_fromDs_TRACK_GhostProb","ghost prob (K^{+} from D_{s})",nBins,0,0.4,Year, finalState,useWeights, Decay, selection);
 	plot("K_plus_fromDs_PIDK","DLL_{K#pi}(K^{+}) ",nBins,-20,100,Year, finalState,useWeights, Decay, selection);
 
 	plot("pi_minus_fromDs_PT","p_{T}(#pi^{-} from D_{s}) [MeV]",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("pi_minus_fromDs_ETA","#eta(#pi^{-} from D_{s})",nBins,1,6,Year, finalState,useWeights, Decay, selection);
-	plot("pi_minus_fromDs_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{-} from D_{s})",nBins,0,13000,Year, finalState,useWeights, Decay, selection);
+	plot("pi_minus_fromDs_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{-} from D_{s})",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("pi_minus_fromDs_TRACK_GhostProb","ghost prob (#pi^{-} from D_{s})",nBins,0,0.4,Year, finalState,useWeights, Decay, selection);
 	plot("pi_minus_fromDs_PIDK","DLL_{K#pi}(#pi^{-} from D_{s}) ",nBins,-100,100,Year, finalState,useWeights, Decay, selection);
 
 	plot("K_minus_fromDs_PT","p_{T}(K^{-} from D_{s}) [MeV]",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("K_minus_fromDs_ETA","#eta(K^{-} from D_{s})",nBins,1,6,Year, finalState,useWeights, Decay, selection);
-	plot("K_minus_fromDs_IPCHI2_OWNPV","#chi^{2}_{IP}(K^{-} from D_{s})",nBins,0,13000,Year, finalState,useWeights, Decay, selection);
+	plot("K_minus_fromDs_IPCHI2_OWNPV","#chi^{2}_{IP}(K^{-} from D_{s})",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("K_minus_fromDs_TRACK_GhostProb","ghost prob (K^{-} from D_{s})",nBins,0,0.4,Year, finalState,useWeights, Decay, selection);
 	plot("K_minus_fromDs_PIDK","DLL_{K#pi}(K^{-} from D_{s}) ",nBins,-20,100,Year, finalState,useWeights, Decay, selection);
     }    
@@ -254,6 +254,7 @@ void dataVsMC(int Year = 11, TString finalState = "KKpi", bool useWeights=false,
     if(selection == "Final") plot("BDTG_response","BDTG",nBins,0,1,Year, finalState,useWeights, Decay, selection);
 }
 
+/*
 void plotPID(string Branch,string TitleX, int bins, double min, double max, bool useWeights=true) {
     
     ///Load files
@@ -336,117 +337,7 @@ void plotPID(string Branch,string TitleX, int bins, double min, double max, bool
     h_MC_rw->Draw("histsame");
     c->Print(("DataVsReweightedMC/"+Branch+".eps").c_str());
 }
-
-void compareBDTresponse(){
-    ///Load files
-    TFile* file= new TFile("/auto/data/dargent/Bu2JpsiKpipi/data/data_bdt_PIDK.root");
-    TTree* tree = (TTree*) file->Get("DecayTree");	
-    tree->SetBranchStatus("*",0);
-    tree->SetBranchStatus("BDT_response2",1);
-    tree->SetBranchStatus("n_sig_sw",1);
-    tree->SetBranchStatus("DTF_mKpipi",1);
-    tree->SetBranchStatus("Bplus_MM",1);
-    tree->SetBranchStatus("sample",1);
-    
-    double var,sw;
-    double mKpipi,Bplus_MM;
-    int sample;
-    
-    tree->SetBranchAddress("BDT_response2",&var);
-    tree->SetBranchAddress("n_sig_sw",&sw);
-    tree->SetBranchAddress("DTF_mKpipi",&mKpipi);
-    tree->SetBranchAddress("Bplus_MM",&Bplus_MM);
-    tree->SetBranchAddress("sample",&sample);
-    
-    TString fileNameMC;
-    fileNameMC="/auto/data/dargent/Bu2JpsiKpipi/MC/MC_bdt_PIDcorr_cat10.root";
-    TFile* fileMC= new TFile(fileNameMC);
-    TTree* treeMC = (TTree*) fileMC->Get("DecayTree");	
-    treeMC->SetBranchStatus("*",0);
-    treeMC->SetBranchStatus("BDT_response2",1);
-    treeMC->SetBranchStatus("weight",1);
-    treeMC->SetBranchStatus("DTF_mKpipi",1);
-    treeMC->SetBranchStatus("Bplus_MM",1);
-    double varMC, w, mKpipiMC, mB_mc;
-    treeMC->SetBranchAddress("BDT_response2",&varMC);
-    treeMC->SetBranchAddress("weight",&w);
-    treeMC->SetBranchAddress("DTF_mKpipi",&mKpipiMC);
-    treeMC->SetBranchAddress("Bplus_MM",&mB_mc);
-    
-    ///Make histograms
-    TH1::SetDefaultSumw2();
-    TH2::SetDefaultSumw2();
-    TString title= "; BDT ; Yield [norm.]";
-    TH1D* h= new TH1D("BDT",title,100,-1,1);
-    TH1D* h_MC= new TH1D("BDT_MC",title,100,-1,1);
-    TH1D* h_MC_rw= new TH1D("BDT_MC_rw",title,100,-1,1);
-    
-    TProfile* prof_S = new TProfile("prof_S",";m^{2}(K^{+} #pi^{+} #pi^{-}) [GeV^{2}]; <BDT>",30,0.6,4.8,-0.5,1.);
-    TProfile* prof_B = new TProfile("prof_B",";m^{2}(K^{+} #pi^{+} #pi^{-}) [GeV^{2}]; <BDT>",30,0.6,4.8,-0.5,1.);
-    TProfile* prof_S_mB = new TProfile("prof_S_mB",";m(J/#psi K^{+} #pi^{+} #pi^{-}) [MeV]; <BDT>",20,5200,5600,-0.5,1.);
-    TProfile* prof_B_mB = new TProfile("prof_S_mB",";m(J/#psi K^{+} #pi^{+} #pi^{-}) [MeV]; <BDT>",20,5200,5600,-0.5,1.);
-    
-    ///loop over data events
-    int numEvents = tree->GetEntries();
-    for(int i=0; i< numEvents; i++)
-    {	
-        if (0ul == (i % 100000ul)) cout << "Read event " << i << "/" << numEvents << endl;
-        tree->GetEntry(i);
-        h->Fill(var,sw);
-        if(sample==1 && Bplus_MM>5350.) {
-            prof_B->Fill(mKpipi/1000000.,var);
-            prof_B_mB->Fill(Bplus_MM,var);
-        }
-        //prof_S->Fill(mKpipi/1000000.,var,sw);
-    }
-    
-    ///loop over MC events
-    int numEventsMC = treeMC->GetEntries();
-    for(int i=0; i< numEventsMC; i++)
-    {	
-        if (0ul == (i % 100000ul)) cout << "Read event " << i << "/" << numEventsMC << endl;
-        treeMC->GetEntry(i);
-        h_MC->Fill(varMC);
-        h_MC_rw->Fill(varMC,w);
-        prof_S->Fill(mKpipiMC/1000000.,varMC,w);
-        prof_S_mB->Fill(mB_mc,varMC,w);
-    }
-    
-    ///Plot it
-    TCanvas* c= new TCanvas();
-    
-    h->Scale(1./h->Integral());
-    h_MC->Scale(1./h_MC->Integral());
-    h_MC_rw->Scale(1./h_MC_rw->Integral());
-    double maxY= h->GetMaximum();
-    if(h_MC->GetMaximum()>maxY)maxY=h_MC->GetMaximum();
-    h->SetMinimum(0.);
-    h->SetMaximum(maxY*1.2);
-    h->SetLineColor(kBlack);
-    h->Draw("");
-    h_MC->SetLineColor(kRed);
-    h_MC->Draw("histsame");
-    h_MC_rw->SetLineColor(kBlue);
-    h_MC_rw->Draw("histsame");
-    c->Print("DataVsReweightedMC/BDT.eps");
-    
-    prof_S->SetLineColor(kBlue);
-    prof_B->SetLineColor(kRed);
-    prof_S->SetMinimum(-0.4);
-    prof_S->SetMaximum(0.6);
-    prof_S->Draw();
-    prof_B->Draw("SAME");
-    c->Print("BDT_corr_prof.eps");
-    
-    prof_S_mB->SetLineColor(kBlue);
-    prof_B_mB->SetLineColor(kRed);
-    prof_S_mB->SetMinimum(-0.4);
-    prof_S_mB->SetMaximum(0.6);
-    prof_S_mB->Draw();
-    prof_B_mB->Draw("SAME");
-    c->Print("BDT_corr_prof_mB.eps");
-    
-}
+*/
    
 void applyCorrectionHisto(vector<TString> vars, vector<double> min, vector<double> max, int Year, TString FinalState = "KKpi", TString Decay = "norm"){
     const int dim = vars.size();
@@ -508,20 +399,9 @@ void applyCorrectionHisto(vector<TString> vars, vector<double> min, vector<doubl
    return;
 }
 
+void resetWeights(int Year, TString FinalState = "KKpi", TString Decay = "norm"){
 
-
-void resetWeights(int Year, TString FinalState = "KKpi"){
-
-    TFile* f;
-    if( FinalState == "KKpi" ){    
-	if(Year == 11)f = new TFile("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2KKpi_11.root","UPDATE");
-	else if (Year == 12)f = new TFile("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2KKpi_12.root","UPDATE");
-    }
-    else {
-	cout << "Error::No file found";
-	throw "EROOR";
-    }
-
+    TFile* f = new TFile("/auto/data/dargent/BsDsKpipi/Preselected/MC/" + Decay + "_Ds2" + FinalState + "_" + anythingToString(Year) + ".root","UPDATE");
     TTree* treeMC =dynamic_cast<TTree*>(f->Get("DecayTree"));
     treeMC->SetBranchStatus("weight",0);
 
@@ -537,7 +417,6 @@ void resetWeights(int Year, TString FinalState = "KKpi"){
 
     return;
 }
-
 
 void produceCorrectionHisto(vector<TString> vars, vector<double> min, vector<double> max, int Year, TString FinalState = "KKpi"){
 
@@ -722,7 +601,7 @@ int main(int argc, char** argv){
      
     vars_1.push_back("Bs_PT");
     min_1.push_back(0.);
-    max_1.push_back(100000.);
+    max_1.push_back(200000.);
     vars_1.push_back("Bs_ETA");
     min_1.push_back(1.5);
     max_1.push_back(5.5);
@@ -732,17 +611,17 @@ int main(int argc, char** argv){
     
     vars_2.push_back("NTracks");
     min_2.push_back(0.);
-    max_2.push_back(600.);
+    max_2.push_back(1000.);
     vars_2.push_back("max_ghostProb");
     min_2.push_back(0.);
     max_2.push_back(0.4);
 
     vars_3.push_back("NTracks");
     min_3.push_back(0.);
-    max_3.push_back(600.);
+    max_3.push_back(1000.);
     vars_3.push_back("Bs_PT");
     min_3.push_back(0.);
-    max_3.push_back(100000.);
+    max_3.push_back(200000.);
 
     vars_4.push_back("DTF_CHI2NDOF");
     min_4.push_back(0.);
@@ -768,8 +647,10 @@ int main(int argc, char** argv){
     max_set.push_back(max_4);
 
     /// Reset weights to 1
-    if(reweight)for(int i= 0; i < years.size(); i++) for(int j= 0; j < Ds_finalStates.size(); j++)resetWeights(years[i],Ds_finalStates[j]);
-
+    if(reweight)for(int i= 0; i < years.size(); i++) for(int j= 0; j < Ds_finalStates.size(); j++){ 
+		resetWeights(years[i],Ds_finalStates[j],"norm");
+		resetWeights(years[i],Ds_finalStates[j],"signal");
+    }
     /// Produce MC correction histos and apply weights
     /// Weights are applied on top of each other with the previous weighting applied
     if(reweight)for(int n= 0; n < nIterations; n++)
