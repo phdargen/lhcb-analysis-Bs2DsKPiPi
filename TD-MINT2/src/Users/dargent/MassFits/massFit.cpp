@@ -473,22 +473,26 @@ return params;
 }
 
 vector<double> fitSignalShape(TString channel = "signal"){
+	
+        /// Options
+	NamedParameter<double> cut_BDT("cut_BDT",0.);
 
 	/// Load file
-	TFile* file = new TFile("/auto/data/dargent/BsDsKpipi/BDT/MC/"+channel+".root");	
+	TString inFileName = "/auto/data/dargent/BsDsKpipi/BDT/MC/"+channel+".root";
+	TFile* file = new TFile(inFileName);	
 	TTree* tree = (TTree*) file->Get("DecayTree");	
-   	tree->SetBranchStatus("*",0);
-	tree->SetBranchStatus("Bs_DTF_MM",1);
-	tree->SetBranchStatus("BDTG_response",1);
-	tree->SetBranchStatus("Ds_finalState",1);
-	tree->SetBranchStatus("Bs_BKGCAT",1);
+
+	TFile* output = new TFile(inFileName.ReplaceAll("/BDT/","/Final/"),"RECREATE");
+	TTree* out_tree = tree->CopyTree(("Bs_DTF_MM >= 5320. && Bs_DTF_MM <= 5420 && Bs_BKGCAT <= 20 && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
 
         RooRealVar DTF_Bs_M("Bs_DTF_MM", "m(D_{s} K #pi #pi)", 5320., 5420.,"MeV");
         RooRealVar BDTG_response("BDTG_response", "BDTG_response", 0.);
         RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
         RooRealVar Bs_BKGCAT("Bs_BKGCAT", "Bs_BKGCAT", 0.);
-	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState,Bs_BKGCAT);
-        RooDataSet* data = new RooDataSet("data","data",tree,list,"BDTG_response > 0.35 && Ds_finalState <= 3 && Bs_BKGCAT <= 20");
+	RooRealVar EventWeight("weight","weight", 0.);
+
+	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState,Bs_BKGCAT,EventWeight);
+        RooDataSet* data = new RooDataSet("data","data",list,Import(*out_tree),WeightVar(EventWeight));
 	
 	/// Signal pdf
 	RooRealVar mean("mean", "#mu", 5366.89,5350.,5390.); 
@@ -498,7 +502,7 @@ vector<double> fitSignalShape(TString channel = "signal"){
 	RooJohnsonSU* signal= new RooJohnsonSU("signal","signal",DTF_Bs_M, mean,sigma,gamma,delta);
 
 	/// Fit
-	RooFitResult* result = signal->fitTo(*data,Save(kTRUE),NumCPU(3));
+	RooFitResult* result = signal->fitTo(*data,Save(kTRUE),NumCPU(3),SumW2Error(kTRUE));
 	result->Print();
 
 	/// Plotting
@@ -529,8 +533,9 @@ vector<double> fitSignalShape(TString channel = "signal"){
 	params.push_back(gamma.getVal());
 	params.push_back(delta.getVal());
 
+	out_tree->Write();
 	file->Close();
-
+	output->Close();
 	return params;
 }
 
@@ -750,10 +755,6 @@ vector< vector<double> > fitNorm(){
 
 	if(sWeight){
 		output = new TFile(((string)outFileName).c_str(),"RECREATE");
-		//tree->SetBranchStatus("*TAU*",1);
-		//tree->SetBranchStatus("BsDTF*",1);
-		//tree->SetBranchStatus("m*",1);
-		//tree->SetBranchStatus("*_m*",1);
 		tree->SetBranchStatus("*",1);
 
 		out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
@@ -977,7 +978,7 @@ void fitSignal(){
 	RooRealVar scale_sigma_B0("scale_sigma_B0", "scale #sigma_B0", 1.,0.,2.);
 	RooFormulaVar sigma_B0("sigma_B0","@0 * @1", RooArgSet(scale_sigma_B0,sigma_MC)); 
 
-	RooJohnsonSU signal_B0("signal_B0","signal_B0",DTF_Bs_M, mean_B0,sigma,alpha,beta);
+	RooJohnsonSU signal_B0("signal_B0","signal_B0",DTF_Bs_M, mean_B0,sigma_B0,alpha,beta);
 
 	/// Combinatorial bkg pdf
 	RooRealVar exp_par("exp_par","#lambda",-1.6508e-03,-10.,0.);	
@@ -1217,10 +1218,7 @@ void fitSignal(){
 
 	if(sWeight){
 		output = new TFile(((string)outFileName).c_str(),"RECREATE");
-		tree->SetBranchStatus("*TAU*",1);
-		tree->SetBranchStatus("BsDTF*",1);
-		tree->SetBranchStatus("m*",1);
-		tree->SetBranchStatus("*_m*",1);
+		tree->SetBranchStatus("*",1);
 
 		out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
     		b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
@@ -1238,7 +1236,7 @@ void fitSignal(){
 	/// Calculate total signal yield
 	double signal_yield = 0.;
 	double comb_bkg_yield = 0.;
-	DTF_Bs_M.setRange("signal_range",mean.getVal()-50.,mean.getVal()+50.);
+	DTF_Bs_M.setRange("signal_range",mean.getVal()-45.,mean.getVal()+45.);
 
 	/// Loop over pdf slices
 	for(int i=0; i<str_year.size(); i++){

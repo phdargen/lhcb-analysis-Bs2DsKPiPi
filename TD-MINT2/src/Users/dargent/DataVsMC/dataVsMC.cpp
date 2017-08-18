@@ -34,7 +34,7 @@ void plot(string Branch,string TitleX, int bins, double min, double max, int Yea
     TChain* tree=new TChain("DecayTree");
     TString decay = Decay;
     if(Decay == "signal") selection = "Final" ;
-    if(Decay == "norm") decay.ReplaceAll(Decay,Decay+"_sweight");
+    if(selection == "Preselected") decay.ReplaceAll(Decay,Decay+"_sweight");
     tree->Add("/auto/data/dargent/BsDsKpipi/" + selection + "/Data/" + decay + ".root");
     tree->SetBranchStatus("*",0);
     tree->SetBranchStatus(Branch.c_str(),1);
@@ -50,7 +50,9 @@ void plot(string Branch,string TitleX, int bins, double min, double max, int Yea
     tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
     
     TChain* treeMC =new TChain("DecayTree");
-    treeMC->Add("/auto/data/dargent/BsDsKpipi/" + selection + "/MC/" + Decay + "_Ds2" + finalState + "_" + anythingToString(Year) + ".root");
+    TString fileNameMC = "/auto/data/dargent/BsDsKpipi/" + selection + "/MC/" + Decay + "_Ds2" + finalState + "_" + anythingToString(Year) + ".root";
+    if(selection == "Final") fileNameMC = "/auto/data/dargent/BsDsKpipi/" + selection + "/MC/" + Decay + ".root";
+    treeMC->Add(fileNameMC);
     treeMC->SetBranchStatus("*",0);
     treeMC->SetBranchStatus(Branch.c_str(),1);
     treeMC->SetBranchStatus("Ds_finalState",1);
@@ -664,8 +666,8 @@ int main(int argc, char** argv){
 	
     /// Draw comparison plots 
     for(int i= 0; i < years.size(); i++) for(int j= 0; j < Ds_finalStates.size(); j++){ 
-		dataVsMC(years[i],Ds_finalStates[j], true,"norm");
-		//dataVsMC(years[i],Ds_finalStates[j], true,"signal");
+		dataVsMC(years[i],Ds_finalStates[j], true,"norm","Final");
+		dataVsMC(years[i],Ds_finalStates[j], true,"signal","Final");
     }
 
     cout << "==============================================" << endl;
