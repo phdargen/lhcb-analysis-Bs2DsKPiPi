@@ -1263,7 +1263,7 @@ void fitSignal(){
 			/// Get pdf slice
 			RooAddPdf* pdf_slice = (RooAddPdf*)simPdf->getPdf("{" + str_year[i] + ";" + str_Ds[j] + "}");
 			RooArgList pdf_slice_comp( pdf_slice->pdfList());
-			//pdf_slice->Print();
+			pdf_slice->Print();
 			/// Plot data and pdf slices
 			frame=DTF_Bs_M.frame();
 			data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(nBins));
@@ -1278,8 +1278,8 @@ void fitSignal(){
 			pdf_slice->plotOn(frame,LineColor(kRed+1),Components("signal_{" + str_year[i] + ";" + str_Ds[j] + "}"),Normalization(1.,RooAbsReal::RelativeExpected));
 			pdf_slice->plotOn(frame,DrawOption("F"),FillStyle(3353),FillColor(kRed+1),Components("signal_{" + str_year[i] + ";" + str_Ds[j] + "}"),Normalization(1.,RooAbsReal::RelativeExpected));
 
-			pdf_slice->plotOn(frame,LineColor(kGreen+3),Components("signal_B0_{" + str_year[i] + ";" + str_Ds[j] + "}"),Normalization(1.,RooAbsReal::RelativeExpected));
-			pdf_slice->plotOn(frame,DrawOption("F"),FillStyle(3335),FillColor(kGreen+3),Components("signal_B0_{" + str_year[i] + ";" + str_Ds[j] + "}"),Normalization(1.,RooAbsReal::RelativeExpected));
+			pdf_slice->plotOn(frame,LineColor(kGreen+3),Components("signal_B0"),Normalization(1.,RooAbsReal::RelativeExpected));
+			pdf_slice->plotOn(frame,DrawOption("F"),FillStyle(3335),FillColor(kGreen+3),Components("signal_B0"),Normalization(1.,RooAbsReal::RelativeExpected));
 
 			pdf_slice->plotOn(frame,LineStyle(kDashed),LineColor(kBlack),Components("bkg_exp_{" + str_year[i] + ";" + str_Ds[j] + "}"),Normalization(1.,RooAbsReal::RelativeExpected));
 			//data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(nBins));
