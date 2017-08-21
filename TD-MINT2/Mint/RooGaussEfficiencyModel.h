@@ -16,7 +16,7 @@
 #include "RooResolutionModel.h"
 #include "RooRealProxy.h"
 
-#include "Mint/RooAbsEffResModel.h"
+#include "RooAbsEffResModel.h"
 
 class RooAbsReal;
 class RooRealVar;

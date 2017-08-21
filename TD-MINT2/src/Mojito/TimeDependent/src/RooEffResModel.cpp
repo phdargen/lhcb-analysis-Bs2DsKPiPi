@@ -91,11 +91,11 @@ RooEffResModel::CacheElem::CacheElem(const RooEffResModel& parent, const RooArgS
 	effInt->Print("V");
     }
     assert(effInt->getSize() < 2); // for now, we only do 1D efficiency histograms...
-    //TODO: instead of the above, verify whether things factorize, i.e. 
+    //TODO: instead of the above, verify whether things factorize, i.e.
     //      allow the case where the overlap of effInt and model is 1D, and
     //      all 'other' dependencies are from the efficiency only...
     //      That works because we can then ingrate the 'ceff' coefficient below
-    //      over the remaining dependencies... 
+    //      over the remaining dependencies...
     if (0 == effInt->getSize()) {
         _int = parent.model().createIntegral(iset, RooNameReg::str(rangeName));
         return;

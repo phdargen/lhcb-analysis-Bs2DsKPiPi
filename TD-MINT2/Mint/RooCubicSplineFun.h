@@ -15,8 +15,8 @@
 
 #include "RooRealProxy.h"
 #include "RooListProxy.h"
-#include "Mint/RooCubicSplineKnot.h"
-#include "Mint/RooAbsGaussModelEfficiency.h"
+#include "RooCubicSplineKnot.h"
+#include "RooAbsGaussModelEfficiency.h"
 
 class RooRealVar;
 class RooArgList ;
@@ -25,6 +25,7 @@ class TGraph;
 class TGraphErrors;
 
 class RooCubicSplineFun : public  RooAbsGaussModelEfficiency {
+  friend class RooSplineProduct;
 public:
   RooCubicSplineFun() ;
   RooCubicSplineFun(const char* name, const char* title, RooRealVar& x,
@@ -66,8 +67,6 @@ public:
   double u(int i) const { return _aux.u(i); }
   const std::vector<double>& knots() const { return _aux.knots(); }
   const RooArgList& coefficients() const { return _coefList; }
-  
-  //virtual ShowMembers(TMemberInspector&)
 
 private:
 

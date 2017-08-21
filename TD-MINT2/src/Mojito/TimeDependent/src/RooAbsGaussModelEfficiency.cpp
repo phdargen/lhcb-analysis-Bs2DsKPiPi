@@ -1,9 +1,10 @@
 #include <cmath>
 
-#include "Mint/RooAbsGaussModelEfficiency.h"
 #include "RVersion.h"
 #include "RooMath.h"
 #include "TMath.h"
+
+#include "Mint/RooAbsGaussModelEfficiency.h"
 
 //ClassImp(RooAbsGaussModelEfficiency);
 RooAbsGaussModelEfficiency::~RooAbsGaussModelEfficiency() {}
@@ -62,7 +63,7 @@ namespace {
 
 N::N(double x, const std::complex<double>& z)
 {
-          _N[0] =  TMath::Erf(x);
+          _N[0] = TMath::Erf(x);
           _N[1] =  exp(-x*x);
           _N[2] =  eval(x,z);
 }
@@ -133,7 +134,7 @@ RooGaussModelAcceptance::M_n<MaxOrder>::M_n(double x, const std::complex<double>
 std::complex<double>
 RooGaussModelAcceptance::K_n::operator()(unsigned i) const {
     assert(i<14);
-    const std::complex<double> zi2 = _zi*_zi ; 
+    const std::complex<double> zi2 = _zi*_zi ;
     std::complex<double> f(1,0);
     switch(i) {
 	// mathematica:
@@ -167,5 +168,6 @@ template class RooGaussModelAcceptance::M_n<1U>;
 template class RooGaussModelAcceptance::M_n<2U>;
 template class RooGaussModelAcceptance::M_n<3U>;
 template class RooGaussModelAcceptance::M_n<4U>;
-// template class RooGaussModelAcceptance::M_n<5U>;
-// template class RooGaussModelAcceptance::M_n<6U>;
+template class RooGaussModelAcceptance::M_n<5U>;
+template class RooGaussModelAcceptance::M_n<6U>;
+template class RooGaussModelAcceptance::M_n<7U>;

@@ -1,4 +1,8 @@
 * options for acceptance 
 "Ds_finalState"			"Ds2KKpi"
-"year"				"all"
-"makePlots"			1
+"year"				"Run1"
+"makePlots"			0
+
+* options for acceptance correction
+"CorrectFromMC"			0
+"applyCorrection" 		1

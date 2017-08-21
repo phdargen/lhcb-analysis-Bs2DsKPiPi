@@ -29,13 +29,13 @@
 
 #include "RVersion.h"
 
-#include "Mint/RooGaussEfficiencyModel.h"
-#include "Mint/RooEffConvGenContext.h"
-#include "Mint/RooAbsGaussModelEfficiency.h"
-
 #include "RooMath.h"
 #include "RooRealConstant.h"
 #include "RooRandom.h"
+
+#include "Mint/RooGaussEfficiencyModel.h"
+#include "Mint/RooEffConvGenContext.h"
+#include "Mint/RooAbsGaussModelEfficiency.h"
 
 #if __cplusplus < 201102L
 #define myunique_ptr std::auto_ptr
@@ -269,14 +269,12 @@ Int_t RooGaussEfficiencyModel::getAnalyticalIntegral(RooArgSet& allVars, RooArgS
 //_____________________________________________________________________________
 Double_t RooGaussEfficiencyModel::analyticalIntegral(Int_t code, const char* rangeName) const
 {
-
   // Code must be 1 or 2
   assert(code==1||code==2) ;
   Double_t ssfInt( code==2 ? (ssf.max(rangeName)-ssf.min(rangeName)) : 1.0 );
 
   basisType basisCode = (basisType) _basisCode ;
-  
-  Double_t tau    =(basisCode!=noBasis)                           ? ((RooAbsReal*)basis().getParameter(1))->getVal() : 0 ;
+  Double_t tau    = (basisCode!=noBasis)                           ? ((RooAbsReal*)basis().getParameter(1))->getVal() : 0 ;
   Double_t omega  = (basisCode==sinBasis  || basisCode==cosBasis)  ? ((RooAbsReal*)basis().getParameter(2))->getVal() : 0 ;
   Double_t dGamma = (basisCode==sinhBasis || basisCode==coshBasis) ? ((RooAbsReal*)basis().getParameter(2))->getVal() : 0 ;
   if (basisCode == coshBasis && basisCode!=noBasis && dGamma==0 ) basisCode = expBasis;
@@ -339,7 +337,7 @@ RooAbsGenContext* RooGaussEfficiencyModel::modelGenContext
 //_____________________________________________________________________________
 Bool_t RooGaussEfficiencyModel::isDirectGenSafe(const RooAbsArg& arg) const
 {
-   return (!TString(convVar().GetName()).CompareTo(arg.GetName())) 
+   return (!TString(convVar().GetName()).CompareTo(arg.GetName()))
        || RooResolutionModel::isDirectGenSafe(arg);
 }
 
@@ -372,4 +370,3 @@ void RooGaussEfficiencyModel::generateEvent(Int_t code)
     }
   }
 }
-

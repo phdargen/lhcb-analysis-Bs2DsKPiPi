@@ -260,7 +260,8 @@ RooCubicSplineFun::productAnalyticalIntegral(Double_t umin, Double_t umax,
     for (unsigned int i=0;i<knotSize();++i) {
         double x = (u(i)-offset)/scale ;
         // TODO: remove unnecessary calculation of integral (that gives 0) if lo>u(i) and/or u(i+1)<hi
-        if (lo>=u(i)) x = umin ; // take M[i] if lo<=u(i) else M_n(lo) 
+        if (lo>=u(i)) x = umin ; // take M[i] if lo<=u(i) else M_n(lo)
+        if (u(i)>=hi) x = umax ; // take M[i+1] if u(i+1)<=hi else M_n(hi)
         M.push_back( M_n( x, z ) );
     }
     double sc[4]; for (int i=0;i<4;++i) sc[i] = pow(scale,i);

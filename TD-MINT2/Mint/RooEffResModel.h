@@ -21,7 +21,7 @@
 #include "RooRealProxy.h"
 #include "RooSetProxy.h"
 #include "RooObjCacheManager.h"
-#include "Mint/RooAbsEffResModel.h"
+#include "RooAbsEffResModel.h"
 #include "RooResolutionModel.h"
 
 class RooAbsAnaConvPdf;
