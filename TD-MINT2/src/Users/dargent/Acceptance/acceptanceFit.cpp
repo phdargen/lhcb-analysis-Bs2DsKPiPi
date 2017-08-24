@@ -47,6 +47,7 @@
 #include "RooBinning.h"
 #include "RooBifurGauss.h"
 #include "RooRealVar.h"
+#include "RooFormulaVar.h"
 #include "RooDataSet.h"
 #include "RooConstVar.h"
 #include "RooWorkspace.h"
@@ -61,6 +62,7 @@
 #include "Mint/RooCubicSplineFun.h"
 #include "Mint/RooGaussEfficiencyModel.h"
 #include "Mint/RooSplineProduct.h"
+#include "Mint/Utils.h"
 
 using namespace std;
 using namespace RooFit ;
@@ -68,312 +70,264 @@ using namespace RooStats;
 using namespace MINT;
 
 
-vector<double> fitSplineAcc(string CutString){
-
-// Read Dataset
-TFile* file;
-TTree* tree;
-
-file= new TFile("/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
-tree = (TTree*) file->Get("DecayTree");
-
-//Define RooRealVar for observables
-RooRealVar DTF_Bs_M("DTF_Bs_M", "DTF_Bs_M", 4975., 5800., "MeV");
-RooRealVar Bs_TAU("Bs_TAU", "Bs_TAU", 0.4, 10., "ps");
-RooRealVar Bs_TAUERR("Bs_TAUERR", "Bs_TAUERR", 0.0001, 1.,"ps");
-RooRealVar N_Bs_sw("N_Bs_sw", "N_Bs_sw", -0.3, 1.3);
-RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0, 3);
-RooRealVar year("year", "year", 11, 16);
-
-RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, N_Bs_sw);
-
-RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(N_Bs_sw.GetName()), Cut(CutString.c_str()));
-
-
-///SETUP FITTER AND FIT TO DECAYTIME DISTRIBUTION
-//SPLINE KNOTS
-
-double myknots [7] = { 0.5, 1., 1.5, 2., 3., 6., 9.5};
-cout << "Bs_TAU_min:   " << Bs_TAU.getMin() << endl;
-cout << "Bs_TAU_max:   " << Bs_TAU.getMax() << endl;
-
-
-std::vector<double> myBinning;
-
-myBinning.push_back(myknots[0]);
-myBinning.push_back(myknots[1]);
-myBinning.push_back(myknots[2]);
-myBinning.push_back(myknots[3]);
-myBinning.push_back(myknots[4]);
-myBinning.push_back(myknots[5]);
-myBinning.push_back(myknots[6]);
-
-double values [6] =  {3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.7757e+00};
-int numKnots = 6;
-
-RooRealVar coeff_55("coeff_55", "coeff_55", 1., 0.0, 10.0);
-
-//SPLINE COEFFICIENTS
-RooRealVar coeff_0("coeff_0", "coeff_0", values[0], 0.0, 10.0);
-RooRealVar coeff_1("coeff_1", "coeff_1", values[1], 0.0, 10.0);
-RooRealVar coeff_2("coeff_2", "coeff_2", values[2], 0.0, 10.0);
-RooRealVar coeff_3("coeff_3", "coeff_3", values[3], 0.0, 10.0);
-RooRealVar coeff_4("coeff_4", "coeff_4", values[4], 0.0, 10.0);
-RooRealVar coeff_5("coeff_5", "coeff_5", values[5], 0.0, 10.0);
-
-RooRealVar coeff_6("coeff_6", "coeff_6", 1.0);
-
-
-//#############Implement GetCoefffomBinning directly###################
-//Do linear extrapolation for last coeff
-/*
-double deltaY = values[6] - values[5];
-double deltaX= myknots[5] - myknots[4];
-double gradient = deltaY / deltaX;
-double lastcoeff = 1 + gradient * (Bs_TAU.getMax() - myknots[5]);
-*/
-
-RooRealVar knot_4("knot_4","knot_4",myknots[4]);
-RooRealVar knot_5("knot_5","knot_5",myknots[5]);
-RooRealVar knot_6("knot_6","knot_6",myknots[6]);
-RooRealVar Bs_TAU_max("Bs_TAU_max","Bs_TAU_max", Bs_TAU.getMax());
-
-RooGenericPdf coeff_7("coeff_7","coeff_7", "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(coeff_6, coeff_55, knot_6, knot_5, Bs_TAU_max) );
-
-
-//RooArgList* tacc_list;
-RooArgList tacc_list(coeff_0, coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_55, coeff_6, coeff_7);
-
-double tauH = 1.661000;
-double tauL = 1.405000;
-double gammaH = 1.0/tauH;
-double gammaL = 1.0/tauL;
-double gamma = (gammaH + gammaL) / 2.0;
+// double tauH = 1.661000;
+// double tauL = 1.405000;
+// double gammaH = 1.0/tauH;
+// double gammaL = 1.0/tauL;
+// double gamma = (gammaH + gammaL) / 2.0;
 double tau = 1.512;
-double dgamma = -0.082; //gammaH - gammaL
+double dgamma = 0.082; //gammaH - gammaL
 double DeltaMs = 17.768;
 
 
-//CUBIC SPLINE FUNCTION 
-RooCubicSplineFun* spl = new RooCubicSplineFun("splinePdf", "splinePdf", Bs_TAU, myBinning, tacc_list);
+vector<double> fitSplineAcc(string CutString){
 
+	// Options
+	NamedParameter<string> BinningName("BinningName",(string)"default");
+	NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");
+	NamedParameter<double> min_TAU("min_TAU", 0.4);
+	NamedParameter<double> max_TAU("max_TAU", 10.);
+	NamedParameter<int> numCPU("numCPU", 6);
+	
+	// Read Dataset
+	TFile* file= new TFile("/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
+	TTree* tree = (TTree*) file->Get("DecayTree");
+	tree->SetBranchStatus("*",0);
+	tree->SetBranchStatus("*TAU*",1);
+	tree->SetBranchStatus("*sw",1);
+	tree->SetBranchStatus("year",1);
+	tree->SetBranchStatus("*finalState",1);
+	
+	//Define RooRealVar for observables
+	RooRealVar Bs_TAU("Bs_TAU", "Bs_TAU", min_TAU, max_TAU, "ps");
+	RooRealVar Bs_TAUERR("Bs_TAUERR", "Bs_TAUERR", 0.00001, 1.,"ps");
+	RooRealVar N_Bs_sw("N_Bs_sw", "N_Bs_sw", 0.);
+	RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
+	RooRealVar year("year", "year", 0.);
+	
+	RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, N_Bs_sw);
+	
+	RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(N_Bs_sw.GetName()), Cut(CutString.c_str()));
+	
+	///SETUP FITTER AND FIT TO DECAYTIME DISTRIBUTION
+	
+	//SPLINE KNOTS
+   	NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
+	vector<double> myBinning = knot_positions.getVector();
+	
+   	NamedParameter<double> knot_values("knot_values", 3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.0, 1.7757e+00);
+	vector<double> values = knot_values.getVector() ;
 
-RooRealVar trm_mean( "trm_mean" , "Gaussian resolution model mean", 0.0, "ps" );
-//RooRealVar trm_sigma( "trm_sigma" , "Gaussian resolution model sigma" , 0.040 , "ps");
-RooRealVar trm_scale( "trm_scale", "Gaussian resolution model scale factor", 1.20);
-RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *spl, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
+	//SPLINE COEFFICIENTS
+	RooArgList tacc_list;
+        for(int i= 0; i< values.size(); i++){
+		tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(i)).c_str(), ("coeff_"+anythingToString(i)).c_str(), values[i], 0.0, 10.0)));
+	}
 
+	tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(values.size())).c_str(), ("coeff_"+anythingToString(values.size())).c_str(), 1.0)));
 
-RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau),
-                     RooRealConstant::value(dgamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
-                     RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(DeltaMs),
-                     trm, RooBDecay::SingleSided);
+	RooFormulaVar* coeff_last = new RooFormulaVar(("coeff_"+anythingToString(values.size()+1)).c_str(),("coeff_"+anythingToString(values.size()+1)).c_str(), "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(RooRealConstant::value(1.0), *tacc_list.find(("coeff_"+anythingToString(values.size()-1)).c_str())  , RooRealConstant::value(myBinning[myBinning.size()-1]), RooRealConstant::value(myBinning[myBinning.size()-2]), RooRealConstant::value(Bs_TAU.getMax()) ));
 
+	tacc_list.add(*coeff_last);	
 
-///Fit and Print
-//Fit
-RooFitResult *myfitresult;
-myfitresult = timePDF->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE));
-myfitresult->Print("v");
+	//CUBIC SPLINE FUNCTION 
+ 	RooCubicSplineFun* spl = new RooCubicSplineFun("splinePdf", "splinePdf", Bs_TAU, myBinning, tacc_list);
+		
+	RooRealVar trm_mean( "trm_mean" , "Gaussian resolution model mean", 0.0, "ps" );
+	//RooRealVar trm_sigma( "trm_sigma" , "Gaussian resolution model sigma" , 0.040 , "ps");
+	RooRealVar trm_scale( "trm_scale", "Gaussian resolution model scale factor", 1.20);
+	RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *spl, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
+	
+	RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau),
+			RooRealConstant::value(dgamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
+			RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(DeltaMs),
+			trm, RooBDecay::SingleSided);
+	
+	
+	///Fit and Print
+	//Fit
+	RooFitResult *myfitresult;
+	myfitresult = timePDF->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
+	myfitresult->Print("v");
+	
+	//put coefficients into vector
+	std::vector<double> myCoeffs;
+	for(int i= 0; i< values.size()+2; i++){
+		((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal();
+	}
+	for(int i= 0; i< values.size(); i++){
+		((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError();
+	}
 
-//put coefficients into vector
-std::vector<double> myCoeffs;
-//values
-myCoeffs.push_back(coeff_0.getValV());
-myCoeffs.push_back(coeff_1.getValV());
-myCoeffs.push_back(coeff_2.getValV());
-myCoeffs.push_back(coeff_3.getValV());
-myCoeffs.push_back(coeff_4.getValV());
-myCoeffs.push_back(coeff_5.getValV());
-myCoeffs.push_back(coeff_55.getValV());
-myCoeffs.push_back(coeff_6.getVal());
-myCoeffs.push_back(coeff_7.getVal());
-//errors
-myCoeffs.push_back(coeff_0.getError());
-myCoeffs.push_back(coeff_1.getError());
-myCoeffs.push_back(coeff_2.getError());
-myCoeffs.push_back(coeff_3.getError());
-myCoeffs.push_back(coeff_4.getError());
-myCoeffs.push_back(coeff_5.getError());
-myCoeffs.push_back(coeff_55.getError());
-
-//Print
-double range_dw = Bs_TAU.getMin();
-double range_up = Bs_TAU.getMax();
-
-TLegend* legend = new TLegend( 0.62, 0.70, 0.88, 0.88 );
-
-legend->SetTextSize(0.05);
-legend->SetTextFont(12);
-legend->SetFillColor(4000);
-legend->SetShadowColor(0);
-legend->SetBorderSize(0);
-legend->SetTextFont(132);
-
-TLine* l1 = new TLine();
-l1->SetLineColor(kBlue+3);
-l1->SetLineWidth(4);
-l1->SetLineStyle(kSolid);
-legend->AddEntry(l1, "decay PDF", "L");
-
-TLine* l2 = new TLine();
-l2->SetLineColor(kRed);
-l2->SetLineWidth(4);
-l2->SetLineStyle(kSolid);
-legend->AddEntry(l2, "spline acceptance", "L");
-
-RooPlot* frame_m = Bs_TAU.frame();
-frame_m->SetTitle("");
-
-frame_m->GetXaxis()->SetLabelSize( 0.06 );
-frame_m->GetYaxis()->SetLabelSize( 0.06 );
-frame_m->GetXaxis()->SetLabelFont( 132 );
-frame_m->GetYaxis()->SetLabelFont( 132 );
-frame_m->GetXaxis()->SetLabelOffset( 0.006 );
-frame_m->GetYaxis()->SetLabelOffset( 0.006 );
-frame_m->GetXaxis()->SetLabelColor( kWhite);
-
-frame_m->GetXaxis()->SetTitleSize( 0.06 );
-frame_m->GetYaxis()->SetTitleSize( 0.06 );
-frame_m->GetYaxis()->SetNdivisions(512);
-frame_m->GetXaxis()->SetTitleOffset( 1.00 );
-frame_m->GetYaxis()->SetTitleOffset( 1.00 );
-
-int bin = 150;
-dataset->plotOn(frame_m, Binning(bin), Name("dataSetCut"));
-timePDF->plotOn(frame_m, LineColor(kBlue+3),  Name("FullPdf"));
-spl->plotOn(frame_m, LineColor(kRed), Normalization(350, RooAbsReal::Relative));
-
-TLatex* lhcbtext = new TLatex();
-lhcbtext->SetTextFont(132);
-lhcbtext->SetTextColor(1);
-lhcbtext->SetTextSize(0.07);
-lhcbtext->SetTextAlign(12);
-
-TCanvas* canvas = new TCanvas("canvas", "canvas", 1200, 800);
-canvas->cd();
-canvas->SetLeftMargin(0.01);
-canvas->SetRightMargin(0.01);
-canvas->SetTopMargin(0.05);
-canvas->SetBottomMargin(0.05);
-TPad* pad1 = new TPad("upperPad", "upperPad", .050, .22, 1.0, 1.0);
-pad1->SetBorderMode(0);
-pad1->SetBorderSize(-1);
-pad1->SetFillStyle(0);
-pad1->SetTickx(0);
-pad1->SetLeftMargin(0.115);
-pad1->SetRightMargin(0.05);
-pad1->Draw();
-pad1->cd();
-frame_m->GetYaxis()->SetRangeUser(0.1,frame_m->GetMaximum()*1.0);
-frame_m->Draw();
-
-legend->Draw("same");
-lhcbtext->DrawTextNDC(0.70,0.55,"LHCb Run 1&2 data");
-lhcbtext->DrawTextNDC(0.70,0.45,"preliminary");
-
-canvas->cd();
-TPad* pad2 = new TPad("lowerPad", "lowerPad", .050, .005, 1.0, .3275);
-pad2->SetBorderMode(0);
-pad2->SetBorderSize(-1);
-pad2->SetFillStyle(0);
-pad2->SetBottomMargin(0.35);
-pad2->SetLeftMargin(0.115);
-pad2->SetRightMargin(0.05);
-pad2->SetTickx(0);
-pad2->Draw();
-pad2->SetLogy(0);
-pad2->cd();
-
-frame_m->Print("v");
-RooPlot* frame_p = Bs_TAU.frame(Title("pull_frame"));
-frame_p->Print("v");
-frame_p->SetTitle("");
-frame_p->GetYaxis()->SetTitle("");
-frame_p->GetYaxis()->SetTitleSize(0.09);
-frame_p->GetYaxis()->SetTitleOffset(0.26);
-frame_p->GetYaxis()->SetTitleFont(62);
-frame_p->GetYaxis()->SetNdivisions(106);
-frame_p->GetYaxis()->SetLabelSize(0.12);
-frame_p->GetYaxis()->SetLabelOffset(0.006);
-frame_p->GetXaxis()->SetTitleSize(0.15);
-frame_p->GetXaxis()->SetTitleFont(132);
-frame_p->GetXaxis()->SetTitleOffset(0.85);
-frame_p->GetXaxis()->SetNdivisions(515);
-frame_p->GetYaxis()->SetNdivisions(5);
-frame_p->GetXaxis()->SetLabelSize(0.12);
-frame_p->GetXaxis()->SetLabelFont( 132 );
-frame_p->GetYaxis()->SetLabelFont( 132 );
-frame_p->GetXaxis()->SetTitle("#font[132]{t(B_{s}) [ps]}");
-
-TString* obsTS = new TString(Bs_TAU.GetName());
-TString* pullnameTS = new TString("FullPdf");
-TString* pullname2TS = new TString("dataSetCut");
-RooHist* pullHist  = frame_m->pullHist(pullname2TS->Data(),pullnameTS->Data());
-frame_p->addPlotable(pullHist,"P");
-
-double chi2 = frame_m->chiSquare();
-double chi22 = frame_m->chiSquare(pullnameTS->Data(),pullname2TS->Data());
-
-TAxis* axisX = pullHist->GetXaxis();
-RooBinning* Bin = new RooBinning(range_dw,range_up,"P");
-Bin->addUniform(bin, range_dw, range_up);
-axisX->Set(Bin->numBins(), Bin->array());
-
-TAxis* axisY = pullHist->GetYaxis();
-double max = 5.0 ;
-double min = -5.0 ;
-axisY->SetLabelSize(0.12);
-axisY->SetNdivisions(5);
-axisX->SetLabelSize(0.12);
-
-double rangeX = max-min;
-double zero = max/rangeX;
-
-TGraph* graph = new TGraph(2);
-graph->SetMaximum(max);
-graph->SetMinimum(min);
-graph->SetPoint(1,range_dw,0);
-graph->SetPoint(2,range_up,0);
-
-TGraph* graph2 = new TGraph(2);
-graph2->SetMaximum(max);
-graph2->SetMinimum(min);
-graph2->SetPoint(1,range_dw,-3);
-graph2->SetPoint(2,range_up,-3);
-graph2->SetLineColor(kRed);
-
-TGraph* graph3 = new TGraph(2);
-graph3->SetMaximum(max);
-graph3->SetMinimum(min);
-graph3->SetPoint(1,range_dw,3);
-graph3->SetPoint(2,range_up,3);
-graph3->SetLineColor(kRed);
-
-pullHist->GetXaxis()->SetLabelFont( 132 );
-pullHist->GetYaxis()->SetLabelFont( 132 );
-pullHist->SetTitle("");
-
-frame_p->GetYaxis()->SetRangeUser(-5.0,5.0);
-frame_p->Draw();
-
-graph->Draw("same");
-
-pad2->Update();
-canvas->Update();
-
-string epsName = "Plot/";
-string PlotName = "timeAccFit.eps";
-string epsFullName = epsName.append(PlotName);
-
-canvas->SaveAs(epsFullName.c_str());
-
-cout << "used datasets:     "<< CutString.c_str() << endl;
-
-file->Close();
-
-return myCoeffs;
-
+	//Print
+	double range_dw = Bs_TAU.getMin();
+	double range_up = Bs_TAU.getMax();
+	
+	TLegend* legend = new TLegend( 0.62, 0.70, 0.88, 0.88 );
+	
+	legend->SetTextSize(0.05);
+	legend->SetTextFont(12);
+	legend->SetFillColor(4000);
+	legend->SetShadowColor(0);
+	legend->SetBorderSize(0);
+	legend->SetTextFont(132);
+	
+	TLine* l1 = new TLine();
+	l1->SetLineColor(kBlue+3);
+	l1->SetLineWidth(4);
+	l1->SetLineStyle(kSolid);
+	legend->AddEntry(l1, "decay PDF", "L");
+	
+	TLine* l2 = new TLine();
+	l2->SetLineColor(kRed);
+	l2->SetLineWidth(4);
+	l2->SetLineStyle(kSolid);
+	legend->AddEntry(l2, "spline acceptance", "L");
+	
+	RooPlot* frame_m = Bs_TAU.frame();
+	frame_m->SetTitle("");
+	
+	frame_m->GetXaxis()->SetLabelSize( 0.06 );
+	frame_m->GetYaxis()->SetLabelSize( 0.06 );
+	frame_m->GetXaxis()->SetLabelFont( 132 );
+	frame_m->GetYaxis()->SetLabelFont( 132 );
+	frame_m->GetXaxis()->SetLabelOffset( 0.006 );
+	frame_m->GetYaxis()->SetLabelOffset( 0.006 );
+	frame_m->GetXaxis()->SetLabelColor( kWhite);
+	
+	frame_m->GetXaxis()->SetTitleSize( 0.06 );
+	frame_m->GetYaxis()->SetTitleSize( 0.06 );
+	frame_m->GetYaxis()->SetNdivisions(512);
+	frame_m->GetXaxis()->SetTitleOffset( 1.00 );
+	frame_m->GetYaxis()->SetTitleOffset( 1.00 );
+	
+	int bin = 150;
+	dataset->plotOn(frame_m, Binning(bin), Name("dataSetCut"));
+	timePDF->plotOn(frame_m, LineColor(kBlue+3),  Name("FullPdf"));
+	spl->plotOn(frame_m, LineColor(kRed), Normalization(350, RooAbsReal::Relative));
+	
+	TLatex* lhcbtext = new TLatex();
+	lhcbtext->SetTextFont(132);
+	lhcbtext->SetTextColor(1);
+	lhcbtext->SetTextSize(0.07);
+	lhcbtext->SetTextAlign(12);
+	
+	TCanvas* canvas = new TCanvas("canvas", "canvas", 1200, 800);
+	canvas->cd();
+	canvas->SetLeftMargin(0.01);
+	canvas->SetRightMargin(0.01);
+	canvas->SetTopMargin(0.05);
+	canvas->SetBottomMargin(0.05);
+	TPad* pad1 = new TPad("upperPad", "upperPad", .050, .22, 1.0, 1.0);
+	pad1->SetBorderMode(0);
+	pad1->SetBorderSize(-1);
+	pad1->SetFillStyle(0);
+	pad1->SetTickx(0);
+	pad1->SetLeftMargin(0.115);
+	pad1->SetRightMargin(0.05);
+	pad1->Draw();
+	pad1->cd();
+	frame_m->GetYaxis()->SetRangeUser(0.1,frame_m->GetMaximum()*1.0);
+	frame_m->Draw();
+	
+	legend->Draw("same");
+	lhcbtext->DrawTextNDC(0.70,0.55,"LHCb Run 1&2 data");
+	lhcbtext->DrawTextNDC(0.70,0.45,"preliminary");
+	
+	canvas->cd();
+	TPad* pad2 = new TPad("lowerPad", "lowerPad", .050, .005, 1.0, .3275);
+	pad2->SetBorderMode(0);
+	pad2->SetBorderSize(-1);
+	pad2->SetFillStyle(0);
+	pad2->SetBottomMargin(0.35);
+	pad2->SetLeftMargin(0.115);
+	pad2->SetRightMargin(0.05);
+	pad2->SetTickx(0);
+	pad2->Draw();
+	pad2->SetLogy(0);
+	pad2->cd();
+	
+	frame_m->Print("v");
+	RooPlot* frame_p = Bs_TAU.frame(Title("pull_frame"));
+	frame_p->Print("v");
+	frame_p->SetTitle("");
+	frame_p->GetYaxis()->SetTitle("");
+	frame_p->GetYaxis()->SetTitleSize(0.09);
+	frame_p->GetYaxis()->SetTitleOffset(0.26);
+	frame_p->GetYaxis()->SetTitleFont(62);
+	frame_p->GetYaxis()->SetNdivisions(106);
+	frame_p->GetYaxis()->SetLabelSize(0.12);
+	frame_p->GetYaxis()->SetLabelOffset(0.006);
+	frame_p->GetXaxis()->SetTitleSize(0.15);
+	frame_p->GetXaxis()->SetTitleFont(132);
+	frame_p->GetXaxis()->SetTitleOffset(0.85);
+	frame_p->GetXaxis()->SetNdivisions(515);
+	frame_p->GetYaxis()->SetNdivisions(5);
+	frame_p->GetXaxis()->SetLabelSize(0.12);
+	frame_p->GetXaxis()->SetLabelFont( 132 );
+	frame_p->GetYaxis()->SetLabelFont( 132 );
+	frame_p->GetXaxis()->SetTitle("#font[132]{t(B_{s}) [ps]}");
+	
+	TString* obsTS = new TString(Bs_TAU.GetName());
+	TString* pullnameTS = new TString("FullPdf");
+	TString* pullname2TS = new TString("dataSetCut");
+	RooHist* pullHist  = frame_m->pullHist(pullname2TS->Data(),pullnameTS->Data());
+	frame_p->addPlotable(pullHist,"P");
+	
+	double chi2 = frame_m->chiSquare();
+	double chi22 = frame_m->chiSquare(pullnameTS->Data(),pullname2TS->Data());
+	
+	TAxis* axisX = pullHist->GetXaxis();
+	RooBinning* Bin = new RooBinning(range_dw,range_up,"P");
+	Bin->addUniform(bin, range_dw, range_up);
+	axisX->Set(Bin->numBins(), Bin->array());
+	
+	TAxis* axisY = pullHist->GetYaxis();
+	double max = 5.0 ;
+	double min = -5.0 ;
+	axisY->SetLabelSize(0.12);
+	axisY->SetNdivisions(5);
+	axisX->SetLabelSize(0.12);
+	
+	double rangeX = max-min;
+	double zero = max/rangeX;
+	
+	TGraph* graph = new TGraph(2);
+	graph->SetMaximum(max);
+	graph->SetMinimum(min);
+	graph->SetPoint(1,range_dw,0);
+	graph->SetPoint(2,range_up,0);
+	
+	TGraph* graph2 = new TGraph(2);
+	graph2->SetMaximum(max);
+	graph2->SetMinimum(min);
+	graph2->SetPoint(1,range_dw,-3);
+	graph2->SetPoint(2,range_up,-3);
+	graph2->SetLineColor(kRed);
+	
+	TGraph* graph3 = new TGraph(2);
+	graph3->SetMaximum(max);
+	graph3->SetMinimum(min);
+	graph3->SetPoint(1,range_dw,3);
+	graph3->SetPoint(2,range_up,3);
+	graph3->SetLineColor(kRed);
+	
+	pullHist->GetXaxis()->SetLabelFont( 132 );
+	pullHist->GetYaxis()->SetLabelFont( 132 );
+	pullHist->SetTitle("");
+	
+	frame_p->GetYaxis()->SetRangeUser(-5.0,5.0);
+	frame_p->Draw();
+	graph->Draw("same");
+	
+	pad2->Update();
+	canvas->Update();
+	canvas->SaveAs(("Plot/timeAccFit_"+(string)BinningName+ ".eps").c_str());
+	
+	cout << "used datasets:     "<< CutString.c_str() << endl;
+	
+	file->Close();
+	return myCoeffs;
 }
 
 vector<double> fitSplineAccMC(string CutString){
@@ -432,11 +386,6 @@ RooRealVar fixedcoeff_7("fixedcoeff_7", "fixedcoeff_7", fixed_coeffs[7]);
 RooRealVar fixedcoeff_8("fixedcoeff_8", "fixedcoeff_8", fixed_coeffs[8]);
 
 RooArgList tacc_list_fixed(fixedcoeff_0, fixedcoeff_1, fixedcoeff_2, fixedcoeff_3, fixedcoeff_4, fixedcoeff_5, fixedcoeff_6, fixedcoeff_7, fixedcoeff_8);
-
-
-double tau = 1.512;
-double dgamma = -0.082; //gammaH - gammaL
-double DeltaMs = 17.768;
 
 //Setup fixed SPLINE FUNCTION 
 RooCubicSplineFun* fixed_spl = new RooCubicSplineFun("fixed splinePdf", "fixed splinePdf", Bs_TAU, myBinning, tacc_list_fixed);
@@ -759,9 +708,6 @@ RooRealVar fixedcoeff_8("fixedcoeff_8", "fixedcoeff_8", fixed_coeffs[8]);
 
 RooArgList tacc_list_fixed(fixedcoeff_0, fixedcoeff_1, fixedcoeff_2, fixedcoeff_3, fixedcoeff_4, fixedcoeff_5, fixedcoeff_6, fixedcoeff_7, fixedcoeff_8);
 
-double tau = 1.512;
-double dgamma = -0.082; //gammaH - gammaL
-double DeltaMs = 17.768;
 
 //Setup fixed SPLINE FUNCTION 
 RooCubicSplineFun* fixed_spl = new RooCubicSplineFun("fixed splinePdf", "fixed splinePdf", Bs_TAU, SplineBinning, tacc_list_fixed);
@@ -1016,6 +962,13 @@ int main(int argc, char** argv){
     time_t startTime = time(0);
     gROOT->ProcessLine(".x ../lhcbStyle.C");
     gStyle->SetOptStat(1000000001);
+
+    fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState !=3)");
+
+    cout << "==============================================" << endl;
+    cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
+    cout << "==============================================" << endl;
+    return 0;
 
     NamedParameter<int> makePlots("makePlots", 0);
     NamedParameter<string> Ds_finalState("Ds_finalState", (std::string) "all");
