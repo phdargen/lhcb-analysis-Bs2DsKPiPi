@@ -84,6 +84,7 @@ vector<double> fitSplineAcc(string CutString){
 
 	// Options
 	NamedParameter<string> BinningName("BinningName",(string)"default");
+        NamedParameter<int> makePlots("makePlots", 0);
 	NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");
 	NamedParameter<double> min_TAU("min_TAU", 0.4);
 	NamedParameter<double> max_TAU("max_TAU", 10.);
@@ -151,12 +152,16 @@ vector<double> fitSplineAcc(string CutString){
 	myfitresult->Print("v");
 	
 	//put coefficients into vector
-	std::vector<double> myCoeffs;
+	vector<double> myCoeffs;
 	for(int i= 0; i< values.size()+2; i++){
-		((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal();
+	myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal());
 	}
-	for(int i= 0; i< values.size(); i++){
-		((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError();
+
+	//only fill errors for comparison plots
+	if(makePlots != 0){
+		for(int i= 0; i< values.size(); i++){
+		myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError());
+		}
 	}
 
 	//Print
@@ -332,131 +337,100 @@ vector<double> fitSplineAcc(string CutString){
 
 vector<double> fitSplineAccMC(string CutString){
 
-TFile* file;
-TTree* tree;
 
-file= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm.root");
-tree = (TTree*) file->Get("DecayTree");
+	// Options
+	NamedParameter<string> BinningName("BinningName",(string)"default");
+	NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");
+	NamedParameter<double> min_TAU("min_TAU", 0.4);
+	NamedParameter<double> max_TAU("max_TAU", 10.);
+	NamedParameter<int> numCPU("numCPU", 6);
+	
+	// Read Dataset
+	TFile* file= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm.root");
+	TTree* tree = (TTree*) file->Get("DecayTree");
+	tree->SetBranchStatus("*",0);
+	tree->SetBranchStatus("*TAU*",1);
+	tree->SetBranchStatus("weight",1);
+	tree->SetBranchStatus("year",1);
+	tree->SetBranchStatus("*finalState",1);
+	
+	//Define RooRealVar for observables
+	RooRealVar Bs_TAU("Bs_TAU", "Bs_TAU", min_TAU, max_TAU, "ps");
+	RooRealVar Bs_TAUERR("Bs_TAUERR", "Bs_TAUERR", 0.00001, 1.,"ps");
+	RooRealVar weight("weight" , "weight", 0., 12.);
+	RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
+	RooRealVar year("year", "year", 0.);
+	
+	RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, weight);
+	
+	RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(weight.GetName()), Cut(CutString.c_str()));
+	
+	///SETUP FITTER AND FIT TO DECAYTIME DISTRIBUTION
+	
+	//SPLINE KNOTS
+   	NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
+	vector<double> myBinning = knot_positions.getVector();
+	
 
+	//fix the first spline from Bs->Dspipipi data fit 
+	vector<double> fixed_coeffs = fitSplineAcc(CutString.c_str());
 
-//Define RooRealVar for observables
-RooRealVar DTF_Bs_M("DTF_Bs_M", "DTF_Bs_M", 4975., 5800., "MeV");
-RooRealVar Bs_TAU("Bs_TAU", "Bs_TAU", 0.4, 10., "ps");
-RooRealVar Bs_TAUERR("Bs_TAUERR", "Bs_TAUERR", 0.0001, 1.,"ps");
-RooRealVar weight("weight" , "weight", 0., 12.);
-RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0, 3);
-RooRealVar year("year", "year", 11, 16);
+	//SPLINE COEFFICIENTS
+	RooArgList tacc_list_fixed;
+        for(int i= 0; i< fixed_coeffs.size(); i++){
+		tacc_list_fixed.add(*(new RooRealVar(("fixedcoeff_"+anythingToString(i)).c_str(), ("fixedcoeff_"+anythingToString(i)).c_str(), fixed_coeffs[i])));
+	}
 
-RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, weight);
-
-RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(weight.GetName()), Cut(CutString.c_str()));
-
-
-///SETUP FITTER AND FIT TO DECAYTIME DISTRIBUTION
-//SPLINE KNOTS
-
-double myknots [7] = { 0.5, 1., 1.5, 2., 3., 6., 9.5};
-cout << "Bs_TAU_min:   " << Bs_TAU.getMin() << endl;
-cout << "Bs_TAU_max:   " << Bs_TAU.getMax() << endl;
-
-
-std::vector<double> myBinning;
-
-myBinning.push_back(myknots[0]);
-myBinning.push_back(myknots[1]);
-myBinning.push_back(myknots[2]);
-myBinning.push_back(myknots[3]);
-myBinning.push_back(myknots[4]);
-myBinning.push_back(myknots[5]);
-myBinning.push_back(myknots[6]);
-
-//fix the first spline from Bs->Dspipipi data fit 
-
-vector<double> fixed_coeffs;
-fixed_coeffs = fitSplineAcc(CutString.c_str());
-
-RooRealVar fixedcoeff_0("fixedcoeff_0", "fixedcoeff_0", fixed_coeffs[0]);
-RooRealVar fixedcoeff_1("fixedcoeff_1", "fixedcoeff_1", fixed_coeffs[1]);
-RooRealVar fixedcoeff_2("fixedcoeff_2", "fixedcoeff_2", fixed_coeffs[2]);
-RooRealVar fixedcoeff_3("fixedcoeff_3", "fixedcoeff_3", fixed_coeffs[3]);
-RooRealVar fixedcoeff_4("fixedcoeff_4", "fixedcoeff_4", fixed_coeffs[4]);
-RooRealVar fixedcoeff_5("fixedcoeff_5", "fixedcoeff_5", fixed_coeffs[5]);
-RooRealVar fixedcoeff_6("fixedcoeff_6", "fixedcoeff_6", fixed_coeffs[6]);
-RooRealVar fixedcoeff_7("fixedcoeff_7", "fixedcoeff_7", fixed_coeffs[7]);
-RooRealVar fixedcoeff_8("fixedcoeff_8", "fixedcoeff_8", fixed_coeffs[8]);
-
-RooArgList tacc_list_fixed(fixedcoeff_0, fixedcoeff_1, fixedcoeff_2, fixedcoeff_3, fixedcoeff_4, fixedcoeff_5, fixedcoeff_6, fixedcoeff_7, fixedcoeff_8);
-
-//Setup fixed SPLINE FUNCTION 
-RooCubicSplineFun* fixed_spl = new RooCubicSplineFun("fixed splinePdf", "fixed splinePdf", Bs_TAU, myBinning, tacc_list_fixed);
+	//Setup fixed SPLINE FUNCTION 
+	RooCubicSplineFun* fixed_spl = new RooCubicSplineFun("fixed splinePdf", "fixed splinePdf", Bs_TAU, myBinning, tacc_list_fixed);
 
 
 
 //define floating correction spline
+   	NamedParameter<double> knot_values("knot_values", 3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.0, 1.7757e+00);
+	vector<double> values = knot_values.getVector() ;
 
-double values [6] =  {3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.7757e+00};
+	//SPLINE COEFFICIENTS
+	RooArgList tacc_list;
+        for(int i= 0; i< values.size(); i++){
+		tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(i)).c_str(), ("coeff_"+anythingToString(i)).c_str(), values[i], 0.0, 10.0)));
+	}
 
+	tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(values.size())).c_str(), ("coeff_"+anythingToString(values.size())).c_str(), 1.0)));
 
-//SPLINE COEFFICIENTS
-RooRealVar coeff_0("coeff_0", "coeff_0", values[0], 0.0, 10.0);
-RooRealVar coeff_1("coeff_1", "coeff_1", values[1], 0.0, 10.0);
-RooRealVar coeff_2("coeff_2", "coeff_2", values[2], 0.0, 10.0);
-RooRealVar coeff_3("coeff_3", "coeff_3", values[3], 0.0, 10.0);
-RooRealVar coeff_4("coeff_4", "coeff_4", values[4], 0.0, 10.0);
-RooRealVar coeff_5("coeff_5", "coeff_5", values[5], 0.0, 10.0);
-RooRealVar coeff_55("coeff_55", "coeff_55", 1., 0.0, 10.0);
+	RooFormulaVar* coeff_last = new RooFormulaVar(("coeff_"+anythingToString(values.size()+1)).c_str(),("coeff_"+anythingToString(values.size()+1)).c_str(), "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(RooRealConstant::value(1.0), *tacc_list.find(("coeff_"+anythingToString(values.size()-1)).c_str())  , RooRealConstant::value(myBinning[myBinning.size()-1]), RooRealConstant::value(myBinning[myBinning.size()-2]), RooRealConstant::value(Bs_TAU.getMax()) ));
 
-RooRealVar coeff_6("coeff_6", "coeff_6", 1.0);
+	tacc_list.add(*coeff_last);	
 
+	//CUBIC SPLINE FUNCTION 
+ 	RooCubicSplineFun* R_spl = new RooCubicSplineFun("splinePdf", "splinePdf", Bs_TAU, myBinning, tacc_list);
+		
 
-RooRealVar knot_5("knot_5","knot_5",myknots[5]);
-RooRealVar knot_6("knot_6","knot_6",myknots[6]);
-RooRealVar Bs_TAU_max("Bs_TAU_max","Bs_TAU_max", Bs_TAU.getMax());
-
-RooGenericPdf coeff_7("coeff_7","coeff_7", "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(coeff_6, coeff_55, knot_6, knot_5, Bs_TAU_max) );
-
-
-RooArgList tacc_list(coeff_0, coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_55, coeff_6, coeff_7);
+	///setup product of fixed and floated spline
+	RooSplineProduct* splineProd = new RooSplineProduct("spline Product","spline Product", Bs_TAU, *fixed_spl, *R_spl);
 
 
-//setup floated spline 
-RooCubicSplineFun* R_spl = new RooCubicSplineFun("splinePdf", "splinePdf", Bs_TAU, myBinning, tacc_list);
+	//combine spline product and time resolution
+	RooRealVar trm_mean( "trm_mean" , "Gaussian resolution model mean", 0.0, "ps" );
+	RooRealVar trm_scale( "trm_scale", "Gaussian resolution model scale factor", 1.20);
+	RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *splineProd, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
 
 
-
-///setup product of fixed and floated spline
-RooSplineProduct* splineProd = new RooSplineProduct("spline Product","spline Product", Bs_TAU, *fixed_spl, *R_spl);
-
-
-//combine spline product and time resolution
-RooRealVar trm_mean( "trm_mean" , "Gaussian resolution model mean", 0.0, "ps" );
-RooRealVar trm_scale( "trm_scale", "Gaussian resolution model scale factor", 1.20);
-RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *splineProd, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
-
-
-RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau),
+	RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau),
                      RooRealConstant::value(dgamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
                      RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(DeltaMs),
                      trm, RooBDecay::SingleSided);
 
-///Fit and Print
-//Fit
-RooFitResult *myfitresult;
-myfitresult = timePDF->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE));
-myfitresult->Print("v");
+	///Fit and Print
+	//Fit
+	RooFitResult *myfitresult;
+	myfitresult = timePDF->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
+	myfitresult->Print("v");
 
-
-std::vector<double> myCoeffs;
-//values
-myCoeffs.push_back(coeff_0.getValV());
-myCoeffs.push_back(coeff_1.getValV());
-myCoeffs.push_back(coeff_2.getValV());
-myCoeffs.push_back(coeff_3.getValV());
-myCoeffs.push_back(coeff_4.getValV());
-myCoeffs.push_back(coeff_5.getValV());
-myCoeffs.push_back(coeff_55.getValV());
-myCoeffs.push_back(coeff_6.getVal());
-myCoeffs.push_back(coeff_7.getVal());
+	std::vector<double> myCoeffs;
+	for(int i= 0; i< values.size()+2; i++){
+	myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal());
+	}
 
 
 double range_dw = Bs_TAU.getMin();
@@ -638,12 +612,7 @@ graph->Draw("same");
 pad2->Update();
 canvas->Update();
 
-string epsName = "Plot/";
-string PlotName = "timeAccFit_MC_Norm.eps";;
-
-string epsFullName = epsName.append(PlotName);
-
-canvas->SaveAs(epsFullName.c_str());
+canvas->SaveAs(("Plot/timeAccFit_MC_Norm_"+(string)BinningName+ ".eps").c_str());
 
 cout << "used datasets:     "<< CutString.c_str() << endl;
 
@@ -653,108 +622,84 @@ return myCoeffs;
 
 void SplineAccCorrection(string CutString){
 
-TFile* file;
-TTree* tree;
+	// Options
+	NamedParameter<string> BinningName("BinningName",(string)"default");
+	NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");
+	NamedParameter<double> min_TAU("min_TAU", 0.4);
+	NamedParameter<double> max_TAU("max_TAU", 10.);
+	NamedParameter<int> numCPU("numCPU", 6);
+	
+	// Read Dataset
+	TFile* file= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal.root");
+	TTree* tree = (TTree*) file->Get("DecayTree");
+	tree->SetBranchStatus("*",0);
+	tree->SetBranchStatus("*TAU*",1);
+	tree->SetBranchStatus("weight",1);
+	tree->SetBranchStatus("year",1);
+	tree->SetBranchStatus("*finalState",1);
+	
+	//Define RooRealVar for observables
+	RooRealVar Bs_TAU("Bs_TAU", "Bs_TAU", min_TAU, max_TAU, "ps");
+	RooRealVar Bs_TAUERR("Bs_TAUERR", "Bs_TAUERR", 0.00001, 1.,"ps");
+	RooRealVar weight("weight" , "weight", 0., 12.);
+	RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
+	RooRealVar year("year", "year", 0.);
+	
+	RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, weight);
+	
+	RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(weight.GetName()), Cut(CutString.c_str()));
+	
+	///SETUP FITTER AND FIT TO DECAYTIME DISTRIBUTION
+	
+	//SPLINE KNOTS
+   	NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
+	vector<double> myBinning = knot_positions.getVector();
+	
 
-file= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal.root");
-tree = (TTree*) file->Get("DecayTree");
+	//fix the first spline from Bs->Dspipipi mc fit 
+	vector<double> fixed_coeffs = fitSplineAccMC(CutString.c_str());
 
+	//SPLINE COEFFICIENTS
+	RooArgList tacc_list_fixed;
+        for(int i= 0; i< fixed_coeffs.size(); i++){
+		tacc_list_fixed.add(*(new RooRealVar(("fixedcoeff_"+anythingToString(i)).c_str(), ("fixedcoeff_"+anythingToString(i)).c_str(), fixed_coeffs[i])));
+	}
 
-//Define RooRealVar for observables
-RooRealVar DTF_Bs_M("DTF_Bs_M", "DTF_Bs_M", 4975., 5800., "MeV");
-RooRealVar Bs_TAU("Bs_TAU", "Bs_TAU", 0.4, 10., "ps");
-RooRealVar Bs_TAUERR("Bs_TAUERR", "Bs_TAUERR", 0.0001, 1.,"ps");
-RooRealVar weight("weight" , "weight", 0., 12.);
-RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0, 3);
-RooRealVar year("year", "year", 11, 16);
-
-RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, weight);
-
-RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(weight.GetName()), Cut(CutString.c_str()));
-
-
-///SETUP FITTER AND FIT TO DECAYTIME DISTRIBUTION
-//SPLINE KNOTS
-
-double myknots [7] = { 0.5, 1., 1.5, 2., 3., 6., 9.5};
-cout << "Bs_TAU_min:   " << Bs_TAU.getMin() << endl;
-cout << "Bs_TAU_max:   " << Bs_TAU.getMax() << endl;
-
-
-std::vector<double> SplineBinning;
-
-SplineBinning.push_back(myknots[0]);
-SplineBinning.push_back(myknots[1]);
-SplineBinning.push_back(myknots[2]);
-SplineBinning.push_back(myknots[3]);
-SplineBinning.push_back(myknots[4]);
-SplineBinning.push_back(myknots[5]);
-SplineBinning.push_back(myknots[6]);
-
-//fix the first spline from Bs->Dspipipi data fit 
-
-vector<double> fixed_coeffs;
-fixed_coeffs = fitSplineAccMC(CutString.c_str());
-
-RooRealVar fixedcoeff_0("fixedcoeff_0", "fixedcoeff_0", fixed_coeffs[0]);
-RooRealVar fixedcoeff_1("fixedcoeff_1", "fixedcoeff_1", fixed_coeffs[1]);
-RooRealVar fixedcoeff_2("fixedcoeff_2", "fixedcoeff_2", fixed_coeffs[2]);
-RooRealVar fixedcoeff_3("fixedcoeff_3", "fixedcoeff_3", fixed_coeffs[3]);
-RooRealVar fixedcoeff_4("fixedcoeff_4", "fixedcoeff_4", fixed_coeffs[4]);
-RooRealVar fixedcoeff_5("fixedcoeff_5", "fixedcoeff_5", fixed_coeffs[5]);
-RooRealVar fixedcoeff_6("fixedcoeff_6", "fixedcoeff_6", fixed_coeffs[6]);
-RooRealVar fixedcoeff_7("fixedcoeff_7", "fixedcoeff_7", fixed_coeffs[7]);
-RooRealVar fixedcoeff_8("fixedcoeff_8", "fixedcoeff_8", fixed_coeffs[8]);
-
-RooArgList tacc_list_fixed(fixedcoeff_0, fixedcoeff_1, fixedcoeff_2, fixedcoeff_3, fixedcoeff_4, fixedcoeff_5, fixedcoeff_6, fixedcoeff_7, fixedcoeff_8);
+	//Setup fixed SPLINE FUNCTION 
+	RooCubicSplineFun* fixed_spl = new RooCubicSplineFun("fixed splinePdf", "fixed splinePdf", Bs_TAU, myBinning, tacc_list_fixed);
 
 
-//Setup fixed SPLINE FUNCTION 
-RooCubicSplineFun* fixed_spl = new RooCubicSplineFun("fixed splinePdf", "fixed splinePdf", Bs_TAU, SplineBinning, tacc_list_fixed);
+   	NamedParameter<double> knot_values("knot_values", 3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.0, 1.7757e+00);
+	vector<double> values = knot_values.getVector() ;
+
+	//SPLINE COEFFICIENTS
+	RooArgList tacc_list;
+        for(int i= 0; i< values.size(); i++){
+		tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(i)).c_str(), ("coeff_"+anythingToString(i)).c_str(), values[i], 0.0, 10.0)));
+	}
+
+	tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(values.size())).c_str(), ("coeff_"+anythingToString(values.size())).c_str(), 1.0)));
+
+	RooFormulaVar* coeff_last = new RooFormulaVar(("coeff_"+anythingToString(values.size()+1)).c_str(),("coeff_"+anythingToString(values.size()+1)).c_str(), "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(RooRealConstant::value(1.0), *tacc_list.find(("coeff_"+anythingToString(values.size()-1)).c_str())  , RooRealConstant::value(myBinning[myBinning.size()-1]), RooRealConstant::value(myBinning[myBinning.size()-2]), RooRealConstant::value(Bs_TAU.getMax()) ));
+
+	tacc_list.add(*coeff_last);
 
 
-//define floating correction spline
-
-double values [6] =  {3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.7757e+00};
-
-
-//SPLINE COEFFICIENTS
-RooRealVar coeff_0("coeff_0", "coeff_0", values[0], 0.0, 10.0);
-RooRealVar coeff_1("coeff_1", "coeff_1", values[1], 0.0, 10.0);
-RooRealVar coeff_2("coeff_2", "coeff_2", values[2], 0.0, 10.0);
-RooRealVar coeff_3("coeff_3", "coeff_3", values[3], 0.0, 10.0);
-RooRealVar coeff_4("coeff_4", "coeff_4", values[4], 0.0, 10.0);
-RooRealVar coeff_5("coeff_5", "coeff_5", values[5], 0.0, 10.0);
-RooRealVar coeff_55("coeff_55", "coeff_55", 1., 0.0, 10.0);
-
-RooRealVar coeff_6("coeff_6", "coeff_6", 1.0);
+	//setup floated spline 
+	RooCubicSplineFun* aDataSig_spl = new RooCubicSplineFun("splinePdf", "splinePdf", Bs_TAU, myBinning, tacc_list);
 
 
-RooRealVar knot_5("knot_5","knot_5",myknots[5]);
-RooRealVar knot_6("knot_6","knot_6",myknots[6]);
-RooRealVar Bs_TAU_max("Bs_TAU_max","Bs_TAU_max", Bs_TAU.getMax());
-
-RooGenericPdf coeff_7("coeff_7","coeff_7", "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(coeff_6, coeff_55, knot_6, knot_5, Bs_TAU_max) );
+	///setup product of fixed and floated spline
+	RooSplineProduct* splineProd = new RooSplineProduct("spline Product","spline Product", Bs_TAU, *fixed_spl, *aDataSig_spl);
 
 
-RooArgList tacc_list(coeff_0, coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_55, coeff_6, coeff_7);
-
-//setup floated spline 
-RooCubicSplineFun* aDataSig_spl = new RooCubicSplineFun("splinePdf", "splinePdf", Bs_TAU, SplineBinning, tacc_list);
-
-
-
-///setup product of fixed and floated spline
-RooSplineProduct* splineProd = new RooSplineProduct("spline Product","spline Product", Bs_TAU, *fixed_spl, *aDataSig_spl);
+	//combine spline product and time resolution
+	RooRealVar trm_mean( "trm_mean" , "Gaussian resolution model mean", 0.0, "ps" );
+	RooRealVar trm_scale( "trm_scale", "Gaussian resolution model scale factor", 1.20);
+	RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *splineProd, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
 
 
-//combine spline product and time resolution
-RooRealVar trm_mean( "trm_mean" , "Gaussian resolution model mean", 0.0, "ps" );
-RooRealVar trm_scale( "trm_scale", "Gaussian resolution model scale factor", 1.20);
-RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *splineProd, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
-
-
-RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau),
+	RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau),
                      RooRealConstant::value(dgamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
                      RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(DeltaMs),
                      trm, RooBDecay::SingleSided);
@@ -946,12 +891,7 @@ graph->Draw("same");
 pad2->Update();
 canvas->Update();
 
-string epsName = "Plot/";
-string PlotName = "timeAccFit_MC_Sig.eps";;
-
-string epsFullName = epsName.append(PlotName);
-
-canvas->SaveAs(epsFullName.c_str());
+canvas->SaveAs(("Plot/timeAccFit_MC_Sig_"+(string)BinningName+ ".eps").c_str());
 
 cout << "used datasets:     "<< CutString.c_str() << endl;
 
@@ -963,18 +903,12 @@ int main(int argc, char** argv){
     gROOT->ProcessLine(".x ../lhcbStyle.C");
     gStyle->SetOptStat(1000000001);
 
-    fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState !=3)");
-
-    cout << "==============================================" << endl;
-    cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
-    cout << "==============================================" << endl;
-    return 0;
-
     NamedParameter<int> makePlots("makePlots", 0);
     NamedParameter<string> Ds_finalState("Ds_finalState", (std::string) "all");
     NamedParameter<string> year("year", (std::string) "all");
     NamedParameter<int> CorrectFromMC("CorrectFromMC", 0);
     NamedParameter<int> applyCorrection("applyCorrection", 0);
+    NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
     string Run1 = "Run1";
     string Run2 = "Run2";
     string all = "all";
@@ -1172,26 +1106,26 @@ if(makePlots == 1)
     if(makePlots != 1)
     {
 
-    	vector<double> dummy;
+    	//vector<double> dummy;
 
     	if(year_convert.compare(all) == 0)
     	{
 		if(Ds_finalState_convert.compare(all) == 0)
 		{
-		if(CorrectFromMC != 1 && applyCorrection != 1) dummy = fitSplineAcc("year == 16 || year == 15 || year == 12 || year == 11");
-		if(CorrectFromMC == 1) dummy = fitSplineAccMC("year == 16 || year == 15 || year == 12 || year == 11");
+		if(CorrectFromMC != 1 && applyCorrection != 1) fitSplineAcc("year == 16 || year == 15 || year == 12 || year == 11");
+		if(CorrectFromMC == 1) fitSplineAccMC("year == 16 || year == 15 || year == 12 || year == 11");
 		if(applyCorrection == 1) SplineAccCorrection("year == 16 || year == 15 || year == 12 || year == 11");
 		}
 		else if(Ds_finalState_convert.compare(Ds2KKpi) == 0)
 		{
-		if(CorrectFromMC != 1 && applyCorrection != 1) dummy = fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState !=3)");
-		if(CorrectFromMC == 1) dummy = fitSplineAccMC("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState !=3)");
+		if(CorrectFromMC != 1 && applyCorrection != 1) fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState !=3)");
+		if(CorrectFromMC == 1) fitSplineAccMC("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState !=3)");
 		if(applyCorrection == 1) SplineAccCorrection("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState !=3)");
 		}
 		else if(Ds_finalState_convert.compare(Ds2pipipi) == 0)
 		{
-		if(CorrectFromMC != 1 && applyCorrection != 1) dummy = fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState ==3)");
-		if(CorrectFromMC == 1) dummy = fitSplineAccMC("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState ==3)");
+		if(CorrectFromMC != 1 && applyCorrection != 1) fitSplineAcc("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState ==3)");
+		if(CorrectFromMC == 1) fitSplineAccMC("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState ==3)");
 		if(applyCorrection == 1) SplineAccCorrection("(year == 16 || year == 15 || year == 12 || year == 11) && (Ds_finalState ==3)");
 		}
     	}
@@ -1200,20 +1134,20 @@ if(makePlots == 1)
     	{
 		if(year_convert.compare(all) == 0)
 		{
-		if(CorrectFromMC != 1 && applyCorrection != 1) dummy = fitSplineAcc("year == 16 || year == 15 || year == 12 || year == 11");
-		if(CorrectFromMC == 1) dummy = fitSplineAccMC("year == 16 || year == 15 || year == 12 || year == 11");
+		if(CorrectFromMC != 1 && applyCorrection != 1) fitSplineAcc("year == 16 || year == 15 || year == 12 || year == 11");
+		if(CorrectFromMC == 1) fitSplineAccMC("year == 16 || year == 15 || year == 12 || year == 11");
 		if(applyCorrection == 1) SplineAccCorrection("year == 16 || year == 15 || year == 12 || year == 11");
 		}
 		else if(year_convert.compare(Run1) == 0)
 		{
-		if(CorrectFromMC != 1 && applyCorrection != 1) dummy = fitSplineAcc("year == 12 || year == 11");
-		if(CorrectFromMC == 1) dummy = fitSplineAccMC("year == 12 || year == 11");
+		if(CorrectFromMC != 1 && applyCorrection != 1) fitSplineAcc("year == 12 || year == 11");
+		if(CorrectFromMC == 1) fitSplineAccMC("year == 12 || year == 11");
 		if(applyCorrection == 1) SplineAccCorrection("year == 12 || year == 11");
 		}
 		else if(year_convert.compare(Run2) == 0)
 		{
-		if(CorrectFromMC != 1 && applyCorrection != 1) dummy = fitSplineAcc("year == 15 || year == 16");
-		if(CorrectFromMC == 1) dummy = fitSplineAccMC("year == 15 || year == 16");
+		if(CorrectFromMC != 1 && applyCorrection != 1) fitSplineAcc("year == 15 || year == 16");
+		if(CorrectFromMC == 1) fitSplineAccMC("year == 15 || year == 16");
 		if(applyCorrection == 1) SplineAccCorrection("year == 15 || year == 16");
 		}
     	}
@@ -1222,26 +1156,26 @@ if(makePlots == 1)
    	{
 		if((year_convert.compare(Run1) == 0) && (Ds_finalState_convert.compare(Ds2KKpi) == 0))
 		{
-		if(CorrectFromMC != 1 && applyCorrection != 1) dummy = fitSplineAcc("(year == 12 || year == 11) && (Ds_finalState !=3)");
-		if(CorrectFromMC == 1) dummy = fitSplineAccMC("(year == 12 || year == 11) && (Ds_finalState !=3)");
+		if(CorrectFromMC != 1 && applyCorrection != 1) fitSplineAcc("(year == 12 || year == 11) && (Ds_finalState !=3)");
+		if(CorrectFromMC == 1) fitSplineAccMC("(year == 12 || year == 11) && (Ds_finalState !=3)");
 		if(applyCorrection == 1) SplineAccCorrection("(year == 12 || year == 11) && (Ds_finalState !=3)");
 		}
 		else if((year_convert.compare(Run1) == 0) && (Ds_finalState_convert.compare(Ds2pipipi) == 0))
 		{
-		if(CorrectFromMC != 1 && applyCorrection != 1) dummy = fitSplineAcc("(year == 12 || year == 11) && (Ds_finalState ==3)");
-		if(CorrectFromMC == 1) dummy = fitSplineAccMC("(year == 12 || year == 11) && (Ds_finalState ==3)");
+		if(CorrectFromMC != 1 && applyCorrection != 1) fitSplineAcc("(year == 12 || year == 11) && (Ds_finalState ==3)");
+		if(CorrectFromMC == 1) fitSplineAccMC("(year == 12 || year == 11) && (Ds_finalState ==3)");
 		if(applyCorrection == 1) SplineAccCorrection("(year == 12 || year == 11) && (Ds_finalState ==3)");
 		}
 		else if((year_convert.compare(Run2) == 0) && (Ds_finalState_convert.compare(Ds2KKpi) == 0))
 		{
-		if(CorrectFromMC != 1 && applyCorrection != 1) dummy = fitSplineAcc("(year == 15 || year == 16) && (Ds_finalState !=3)");
-		if(CorrectFromMC == 1) dummy = fitSplineAccMC("(year == 15 || year == 16) && (Ds_finalState !=3)");
+		if(CorrectFromMC != 1 && applyCorrection != 1) fitSplineAcc("(year == 15 || year == 16) && (Ds_finalState !=3)");
+		if(CorrectFromMC == 1) fitSplineAccMC("(year == 15 || year == 16) && (Ds_finalState !=3)");
 		if(applyCorrection == 1) SplineAccCorrection("(year == 15 || year == 16) && (Ds_finalState !=3)");
 		}
 		else if((year_convert.compare(Run2) == 0) && (Ds_finalState_convert.compare(Ds2pipipi) == 0))
 		{
-		if(CorrectFromMC != 1 && applyCorrection != 1) dummy = fitSplineAcc("(year == 15 || year == 16) && (Ds_finalState ==3)");
-		if(CorrectFromMC == 1) dummy = fitSplineAccMC("(year == 15 || year == 16) && (Ds_finalState ==3)");
+		if(CorrectFromMC != 1 && applyCorrection != 1) fitSplineAcc("(year == 15 || year == 16) && (Ds_finalState ==3)");
+		if(CorrectFromMC == 1) fitSplineAccMC("(year == 15 || year == 16) && (Ds_finalState ==3)");
 		if(applyCorrection == 1) SplineAccCorrection("(year == 15 || year == 16) && (Ds_finalState ==3)");
 		}
    	}
