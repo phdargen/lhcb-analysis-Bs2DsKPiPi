@@ -2,16 +2,23 @@
 "Event Pattern"         531 -431 321 211 -211
 
 "Nevents"               3000
-"pdf_max"               10
+"pdf_max"               20
 
 "doToyFit"		1
 "useCPcoefficients"	1
 "doSplineTest"	 	0
 
 
+"min_TAU" 	0.4
+"max_TAU" 	10
+
+"knot_positions"	 0.5 1. 1.5 2. 3. 6. 9.5
+"knot_values" 		 0.38 0.63 0.86 1.05 1.14 1.24 1.22
+
+
 ** name		Fix?	init	step	min	max
 
-"tau"		2 	1 	0.01	0.0	0.0
+"tau"		2 	1.5 	0.01	0.0	0.0
 "dGamma" 	2 	0.1 	0.01	0.0	0.0
 "dm" 		2 	20 	0.01	0.0	0.0
 "eff_tag"	2 	0.66 	1 	0.0	0.0
@@ -23,6 +30,6 @@
 "D_bar"	0	-0.8	0.1
 "S"	0	-1.25	0.1
 "S_bar" 0	0.08	0.1
-"k"  	2 	0.5   	0.01  	0.0	1.0
+"k"  	2 	1.0   	0.01  	0.0	1.0
 
 
