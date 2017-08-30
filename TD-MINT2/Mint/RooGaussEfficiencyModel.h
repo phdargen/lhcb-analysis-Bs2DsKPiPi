@@ -40,6 +40,10 @@ public:
   virtual TObject* clone(const char* newname) const { return new RooGaussEfficiencyModel(*this,newname) ; }
 
   virtual Int_t basisCode(const char* name) const ;
+  void set_basisCode(int b){
+      _basisCode = b;
+  }
+  
   virtual Int_t getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName=0) const ;
   virtual Double_t analyticalIntegral(Int_t code, const char* rangeName) const ;
 
@@ -55,6 +59,10 @@ public:
 
   virtual const RooAbsReal* efficiency() const;
   virtual RooArgSet* observables() const;
+  
+  virtual Double_t evaluate(Int_t basisCodeInt, Double_t tau, Double_t omega, Double_t dGamma ) const ;
+  virtual Double_t analyticalIntegral(Int_t basisCodeInt, Double_t tau, Double_t omega, Double_t dGamma, Int_t code = 1 , const char* rangeName = 0) const;
+
 
 private:
 

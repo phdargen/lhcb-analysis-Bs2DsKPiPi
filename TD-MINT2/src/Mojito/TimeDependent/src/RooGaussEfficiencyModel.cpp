@@ -241,6 +241,66 @@ Double_t RooGaussEfficiencyModel::evaluate() const
   return _eff*val;
 }
 
+
+Double_t RooGaussEfficiencyModel::evaluate(Int_t basisCodeInt, Double_t tau, Double_t omega, Double_t dGamma ) const
+{
+    basisType basisCode = (basisType) basisCodeInt ;
+    tau    = (basisCode!=noBasis)                           ? tau : 0 ;
+    omega  = (basisCode==sinBasis  || basisCode==cosBasis)  ? omega : 0 ;
+    dGamma = (basisCode==sinhBasis || basisCode==coshBasis) ? dGamma : 0 ;
+    if (basisCode  == coshBasis && basisCode!=noBasis && dGamma==0 ) basisCode = expBasis;
+    
+    Double_t scale = sigma*ssf*TMath::Sqrt2();
+    Double_t u = (x-mean*msf)/scale;
+    // *** 1st form: Straight Gaussian, used for unconvoluted PDF or expBasis with 0 lifetime ***
+    if (basisCode==noBasis || ((basisCode==expBasis || basisCode==cosBasis) && tau==0)) {
+        if (verboseEval()>2) cout << "RooGaussEfficiencyModel::evaluate(" << GetName() << ") 1st form" << endl ;
+        Double_t eff=efficiency()->getVal();
+        if (TMath::IsNaN(eff))
+            cxcoutE(Tracing) << "RooGaussEfficiencyModel::evaluate(" << GetName()
+            << ") got nan during efficiency " << endl;
+        return eff * exp(-u*u)/(scale*rootpi) ; // ???
+    }
+    
+    // *** 2nd form: 0, used for sinBasis, linBasis, and quadBasis with tau=0 ***
+    if (tau==0) {
+        if (verboseEval()>2) cout << "RooGaussEfficiencyModel::evaluate(" << GetName() << ") 2nd form" << endl ;
+        return 0. ;
+    }
+    std::complex<double> z( double(1)/tau, -omega ); z*=0.5*scale;
+    
+    Double_t val(0);
+    if (verboseEval()>2) cout << "RooGaussEfficiencyModel::evaluate(" << GetName() << ") basisCode = " <<  basisCode << " z = " << z << ", u = " << u << endl ;
+    
+    switch (basisCode) {
+        case expBasis:
+        case cosBasis:
+            val +=             evalRe(u,z);
+            break;
+        case sinBasis:
+            val += z.imag()!=0 ? evalIm(u,z) : 0;
+            break;
+        case coshBasis:
+        case sinhBasis: {
+            std::complex<double> y( scale * dGamma / 4 , 0 );
+            val += (                                      evalRe(u,z-y)
+                    + ( basisCode == coshBasis ? +1 : -1 )*evalRe(u,z+y) )/2;
+            break;
+        }
+        default:
+            assert(0);
+    }
+    if (TMath::IsNaN(val))
+        cxcoutE(Tracing) << "RooGaussEfficiencyModel::evaluate(" << GetName()
+        << ") got nan during basisCode = " << basisCode << endl;
+    Double_t _eff=eff;
+    if (TMath::IsNaN(_eff))
+        cxcoutE(Tracing) << "RooGaussEfficiencyModel::evaluate(" << GetName()
+        << ") got nan during efficiency " << endl;
+    return _eff*val;
+}
+
+
 //_____________________________________________________________________________
 Int_t RooGaussEfficiencyModel::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* /*rangeName*/) const
 {
@@ -323,6 +383,65 @@ Double_t RooGaussEfficiencyModel::analyticalIntegral(Int_t code, const char* ran
                                                << basisCode << endl;
   }
   return scale*result*ssfInt;
+}
+
+
+Double_t RooGaussEfficiencyModel::analyticalIntegral(Int_t basisCodeInt, Double_t tau, Double_t omega, Double_t dGamma, Int_t code, const char* rangeName) const
+{
+    // Code must be 1 or 2
+    assert(code==1||code==2) ;
+    Double_t ssfInt( code==2 ? (ssf.max(rangeName)-ssf.min(rangeName)) : 1.0 );
+    
+    basisType basisCode = (basisType) basisCodeInt ;
+    tau    = (basisCode!=noBasis)                           ? tau : 0 ;
+    omega  = (basisCode==sinBasis  || basisCode==cosBasis)  ? omega : 0 ;
+    dGamma = (basisCode==sinhBasis || basisCode==coshBasis) ? dGamma : 0 ;
+    if (basisCode  == coshBasis && basisCode!=noBasis && dGamma==0 ) basisCode = expBasis;
+    
+    Double_t scale  = sigma*ssf*TMath::Sqrt2();
+    Double_t offset = mean*msf;
+    Double_t umin = (x.min(rangeName)-offset)/scale;
+    Double_t umax = (x.max(rangeName)-offset)/scale;
+    
+    if (basisCode==noBasis || ((basisCode==expBasis || basisCode==cosBasis) && tau==0)) {
+        if (verboseEval()>0) cout << "RooGaussEfficiencyModel::analyticalIntegral(" << GetName() << ") 1st form" << endl ;
+        Double_t result =  0.5*(RooMath::erf( umax )-RooMath::erf( umin )) ;
+        if (TMath::IsNaN(result)) { cxcoutE(Tracing) << "RooGaussEfficiencyModel::analyticalIntegral(" << GetName() << ") got nan during case 1 " << endl; }
+        return result*ssfInt ; // ???
+    }
+    if (tau==0) {
+        if (verboseEval()>0) cout << "RooGaussEfficiencyModel::analyticalIntegral(" << GetName() << ") 2nd form" << endl ;
+        return 0. ;
+    }
+    
+    std::complex<double> z( double(1)/tau, -omega ); z=0.5*z*scale;
+    
+    if (verboseEval()>0) cout << "RooGaussEfficiencyModel::analyticalIntegral(" << GetName() << ") basisCode = " << basisCode << " z = " << z << endl ;
+    
+    Double_t result(0);
+    switch (basisCode) {
+        case expBasis:
+        case cosBasis:
+            result +=               evalInt(umin,umax,scale,offset,z).real();
+            break;
+        case sinBasis:
+            result += z.imag()!=0 ? evalInt(umin,umax,scale,offset,z).imag() : 0 ;
+            break;
+        case coshBasis:
+        case sinhBasis: {
+            std::complex<double> y( scale * dGamma / 4 , 0 );
+            result += 0.5 * (                                      evalInt(umin,umax,scale,offset,z-y).real()
+                             + ( basisCode == coshBasis ? +1 : -1 )*evalInt(umin,umax,scale,offset,z+y).real() );
+            break;
+        }
+        default:
+            assert(0) ;
+    }
+    if (TMath::IsNaN(result)) { cxcoutE(Tracing) << "RooGaussEfficiencyModel::analyticalIntegral("
+        << GetName() << ") got nan for basisCode = "
+        << basisCode << endl;
+    }
+    return scale*result*ssfInt;
 }
 
 
