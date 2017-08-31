@@ -48,13 +48,14 @@
 #include "RooGaussModel.h"
 #include "RooProdPdf.h"
 #include "RooConstVar.h"
+#include "RooCategory.h"
 #ifndef __CINT__
 #include "RooGlobalFunc.h"
 #endif
 #include "Mint/RooCubicSplineFun.h"
 #include "Mint/RooCubicSplineKnot.h"
 #include "Mint/RooGaussEfficiencyModel.h"
-
+#include "Mint/DecRateCoeff_Bd.h"
 #include "TGraph.h"
 #include "TFile.h"
 #include "TCanvas.h"
@@ -564,203 +565,343 @@ void fullTimeFit(){
     NamedParameter<string> OutputDir("OutputDir", (std::string) "", (char*) 0);
     NamedParameter<double> min_TAU("min_TAU", 0.4);
     NamedParameter<double> max_TAU("max_TAU", 10.);
-    
-    FitParameter  C("C",0,1,0.1);
-    FitParameter  D("D",0,-1.3,0.1);
-    FitParameter  D_bar("D_bar",0,-0.8,0.1);
-    FitParameter  S("S",0,-1.25,0.1);
-    FitParameter  S_bar("S_bar",0,0.08,0.1);
-    FitParameter  k("k");
-    
-    FitParameter  tau("tau");
-    FitParameter  dGamma("dGamma");
-    FitParameter  dm("dm");
-    FitParameter  eff_tag("eff_tag");
-    FitParameter  mistag("mistag");
-    
-    FullTimePdf t_pdf(C,D,D_bar,S,S_bar,k,tau,dGamma,dm,eff_tag,mistag );
+    NamedParameter<int> nIterations("nIterations", 1);
 
-    DalitzEventList eventList;
-    DalitzEventList eventList_f, eventList_fbar;
     
-    DalitzEventPattern _pat(pat);
-    DalitzEvent evt(_pat);
-    evt.generateThisToPhaseSpace();
     
-    RooRealVar* _r_t = new RooRealVar("t", "time", min_TAU, max_TAU);
-    RooRealVar* _r_dt = new RooRealVar("dt", "per-candidate time resolution estimate",0., 0.25);
-    RooRealVar* _r_q = new RooRealVar("qt", "qt",-1, 1);
-    RooRealVar* _r_mistag = new RooRealVar("mistag", "mistag",0., 0.5);
-    RooRealVar* _r_f = new RooRealVar("qf", "qf",-1, 1);
+    // Calculate pulls
+    gDirectory->cd();
+    TFile* paraFile = new TFile(((string)OutputDir+"pull.root").c_str(), "RECREATE");
+    paraFile->cd();
+    TNtupleD* ntp=0;
+    TTree* tree = new TTree("pull","pull");
+    double C_pull,D_pull,Dbar_pull,S_pull,Sbar_pull;
+    TBranch* br_C_pull = tree->Branch( "C_pull", &C_pull, "C_pull/D" );
+    TBranch* br_D_pull = tree->Branch( "D_pull", &D_pull, "D_pull/D" );
+    TBranch* br_Dbar_pull = tree->Branch( "Dbar_pull", &Dbar_pull, "Dbar_pull/D" );
+    TBranch* br_S_pull = tree->Branch( "S_pull", &S_pull, "S_pull/D" );
+    TBranch* br_Sbar_pull = tree->Branch( "Sbar_pull", &Sbar_pull, "Sbar_pull/D" );
     
-    RooDataSet* data = new RooDataSet("data","data",RooArgSet(*_r_t,*_r_dt,*_r_q,*_r_mistag,*_r_f));
+    for(int i = 0; i < nIterations; i++){
+    
+        FitParameter  C("C",0,1,0.1);
+        FitParameter  D("D",0,-1.3,0.1);
+        FitParameter  D_bar("D_bar",0,-0.8,0.1);
+        FitParameter  S("S",0,-1.25,0.1);
+        FitParameter  S_bar("S_bar",0,0.08,0.1);
+        FitParameter  k("k");
+        
+        FitParameter  tau("tau");
+        FitParameter  dGamma("dGamma");
+        FitParameter  dm("dm");
+        FitParameter  eff_tag("eff_tag");
+        FitParameter  mistag("mistag");
+        
+        FullTimePdf t_pdf(C,D,D_bar,S,S_bar,k,tau,dGamma,dm,eff_tag,mistag );
 
-    //simple hit and miss
-    for(int i = 0; i < Nevents; i++){
-        while(true){
-            const double t = ranLux.Exp(tau);
-            const double dt = ranLux.Uniform(0., 0.25);
-            const double q_rand = ranLux.Uniform();
-            int q = 0;
-            if (q_rand < 1./3.) q = -1;
-            if (q_rand > 2./3.) q = 1;
-            int f;
-            if(i<=Nevents/2)f = 1; 
-            else f = -1;
-            
-            evt.setValueInVector(0, t);
-            evt.setValueInVector(1, dt);
-            evt.setValueInVector(2, q);
-            evt.setValueInVector(3, mistag);
-            evt.setValueInVector(4, f);
-            
-            const double pdfVal = t_pdf.un_normalised(evt);
-            
-            double maxVal = exp(-fabs(t)/(tau))/(tau)*pdf_max;
-            const double height = ranLux.Uniform(0,maxVal);
-            
-            //Safety check on the maxmimum generated height
-            if( pdfVal > maxVal ){
-                std::cout << "ERROR: PDF above determined maximum." << std::endl;
-                std::cout << pdfVal << " > " << maxVal << std::endl;
-                //exit(1);
-                pdf_max = pdf_max * 2.;
-            }
-            
-            //Hit-and-miss
-            if( height < pdfVal ){
-                eventList.Add(evt);
-                _r_t->setVal(t);
-                _r_dt->setVal(dt);
-                _r_q->setVal(q);
-                _r_mistag->setVal(mistag);
-                _r_f->setVal(f);
-                data->add(RooArgSet(*_r_t,*_r_dt,*_r_q,*_r_mistag,*_r_f));
-                if(f==1)eventList_f.Add(evt);
-                else eventList_fbar.Add(evt);
-                break;
+        DalitzEventList eventList;
+        DalitzEventList eventList_f, eventList_fbar;
+        
+        DalitzEventPattern _pat(pat);
+        DalitzEvent evt(_pat);
+        evt.generateThisToPhaseSpace();
+        
+        RooRealVar* _r_t = new RooRealVar("t", "time", min_TAU, max_TAU);
+        RooRealVar* _r_dt = new RooRealVar("dt", "per-candidate time resolution estimate",0., 0.1);
+        RooRealVar* _r_mistag = new RooRealVar("mistag", "mistag",0., 0.5);
+        
+        RooCategory* _r_f = new RooCategory("qf", "qf");
+        _r_f->defineType("h+", +1);
+        _r_f->defineType("h-", -1);
+        
+        RooCategory* _r_q = new RooCategory("qt", "qt");
+        _r_q->defineType("B+", +1);
+        _r_q->defineType("B-", -1) ;   
+        _r_q->defineType("untagged", 0);    
+        
+        RooDataSet* data = new RooDataSet("data","data",RooArgSet(*_r_t,*_r_dt,*_r_q,*_r_mistag,*_r_f));
+
+        //simple hit and miss
+        for(int i = 0; i < Nevents; i++){
+            while(true){
+                const double t = ranLux.Exp(tau);
+                const double dt = ranLux.Uniform(0., 0.25);
+                const double q_rand = ranLux.Uniform();
+                int q = 0;
+                if (q_rand < 1./3.) q = -1;
+                if (q_rand > 2./3.) q = 1;
+                int f;
+                if(i<=Nevents/2)f = 1; 
+                else f = -1;
+                
+                evt.setValueInVector(0, t);
+                evt.setValueInVector(1, dt);
+                evt.setValueInVector(2, q);
+                evt.setValueInVector(3, mistag);
+                evt.setValueInVector(4, f);
+                
+                const double pdfVal = t_pdf.un_normalised(evt);
+                
+                double maxVal = exp(-fabs(t)/(tau))/(tau)*pdf_max;
+                const double height = ranLux.Uniform(0,maxVal);
+                
+                //Safety check on the maxmimum generated height
+                if( pdfVal > maxVal ){
+                    std::cout << "ERROR: PDF above determined maximum." << std::endl;
+                    std::cout << pdfVal << " > " << maxVal << std::endl;
+                    //exit(1);
+                    pdf_max = pdf_max * 2.;
+                }
+                
+                //Hit-and-miss
+                if( height < pdfVal ){
+                    eventList.Add(evt);
+                    _r_t->setVal(t);
+                    _r_dt->setVal(dt);
+                    _r_q->setIndex(q);
+                    _r_mistag->setVal(mistag);
+                    _r_f->setIndex(f);
+                    data->add(RooArgSet(*_r_t,*_r_dt,*_r_q,*_r_mistag,*_r_f));
+                    if(f==1)eventList_f.Add(evt);
+                    else eventList_fbar.Add(evt);
+                    break;
+                }
             }
         }
-    }
 
-    // Fit with MINT Pdf
-    Neg2LL fcn_t(t_pdf, eventList_f);
-    Neg2LL fcn_t_bar(t_pdf, eventList_fbar);
-    Neg2LLSum neg2LLSum_t(&fcn_t,&fcn_t_bar);
-    
-    Minimiser mini_t(&neg2LLSum_t);
-    mini_t.doFit();
-    mini_t.printResultVsInput();
-    
-    
-    int nBinst = 100;
-    TH1D* h_t = new TH1D("",";t (ps);Events (norm.) ",nBinst,0,max_TAU);
-    TH1D* h_dt = new TH1D("",";dt (ps);Events (norm.) ",nBinst,0,0.25);
-    
-    for (int i=0; i<eventList.size(); i++) {
-        h_t->Fill(eventList[i].getValueFromVector(0));
-        h_dt->Fill(eventList[i].getValueFromVector(1));
-    }     
-    
-    TH1D* h_t_fit = new TH1D("",";t",nBinst,0,max_TAU);
-    TH1D* h_dt_fit = new TH1D("",";dt (ps);Events (norm.) ",nBinst,0,0.25);
-    
-    for(int i = 0; i < 20000000; i++){
+        // Fit with MINT Pdf
+        Neg2LL fcn_t(t_pdf, eventList_f);
+        Neg2LL fcn_t_bar(t_pdf, eventList_fbar);
+        Neg2LLSum neg2LLSum_t(&fcn_t,&fcn_t_bar);
         
-        const double t = ranLux.Exp(tau);
-        const double dt = ranLux.Uniform(0., 0.25);
-        const double q_rand = ranLux.Uniform();
-        int q = 0;
-        if (q_rand < 1./3.) q = -1;
-        if (q_rand > 2./3.) q = 1;
-        int f;
-        if(i<=Nevents/2)f = 1; 
-        else f = -1;
+        Minimiser mini_t(&neg2LLSum_t);
+        mini_t.doFit();
+        mini_t.printResultVsInput();
         
-        evt.setValueInVector(0, t);
-        evt.setValueInVector(1, dt);
-        evt.setValueInVector(2, q);
-        evt.setValueInVector(3, mistag);
-        evt.setValueInVector(4, f);
+        TCanvas* c = new TCanvas();
+        if(i==0){
+            int nBinst = 100;
+            TH1D* h_t = new TH1D("",";t (ps);Events (norm.) ",nBinst,0,max_TAU);
+            TH1D* h_dt = new TH1D("",";dt (ps);Events (norm.) ",nBinst,0,0.25);
+            
+            for (int i=0; i<eventList.size(); i++) {
+                h_t->Fill(eventList[i].getValueFromVector(0));
+                h_dt->Fill(eventList[i].getValueFromVector(1));
+            }     
+            
+            TH1D* h_t_fit = new TH1D("",";t",nBinst,0,max_TAU);
+            TH1D* h_dt_fit = new TH1D("",";dt (ps);Events (norm.) ",nBinst,0,0.25);
+            
+            for(int i = 0; i < 2000000; i++){
+                
+                const double t = ranLux.Exp(tau);
+                const double dt = ranLux.Uniform(0., 0.25);
+                const double q_rand = ranLux.Uniform();
+                int q = 0;
+                if (q_rand < 1./3.) q = -1;
+                if (q_rand > 2./3.) q = 1;
+                int f;
+                if(i<=Nevents/2)f = 1; 
+                else f = -1;
+                
+                evt.setValueInVector(0, t);
+                evt.setValueInVector(1, dt);
+                evt.setValueInVector(2, q);
+                evt.setValueInVector(3, mistag);
+                evt.setValueInVector(4, f);
+                
+                const double pdfVal = t_pdf.un_normalised(evt);
+                double weight = pdfVal/exp(-fabs(t)/(tau));
+                
+                h_t_fit->Fill(t,weight);
+                h_dt_fit->Fill(dt,weight);
+                
+            }
+            
+            h_t->SetLineColor(kBlack);
+            h_t->DrawNormalized("e1",1);
+            h_t_fit->SetLineColor(kBlue);
+            h_t_fit->SetLineWidth(3);
+            h_t_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"h_t.eps").c_str());
+            gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"h_t_log.eps").c_str());
+            gPad->SetLogy(0);
+            
+            h_dt->SetLineColor(kBlack);
+            h_dt->DrawNormalized("e1",1);
+            h_dt_fit->SetLineColor(kBlue);
+            h_dt_fit->SetLineWidth(3);
+            h_dt_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"h_dt.eps").c_str());
+        }
         
-        const double pdfVal = t_pdf.un_normalised(evt);
-        double weight = pdfVal/exp(-fabs(t)/(tau));
+        // Fit with B2DX Pdf
+        RooRealVar* _r_scale_mean_dt = new RooRealVar("scale_mean_dt", "scale_mean_dt", 0);
+        RooRealVar* _r_scale_sigma_dt = new RooRealVar("scale_sigma_dt", "scale_sigma_dt", 1.2);
         
-        h_t_fit->Fill(t,weight);
-        h_dt_fit->Fill(dt,weight);
+        NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
+        vector<double> myBinning = knot_positions.getVector();
         
+        NamedParameter<double> knot_values("knot_values", 0.38,0.63,0.86,1.05,1.14,1.24,1.22);
+        vector<double> values = knot_values.getVector() ;
+        
+        RooArgList tacc_list;
+        for(int i= 0; i< values.size(); i++){
+            tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(i)).c_str(), ("coeff_"+anythingToString(i)).c_str(), values[i]*0.1)));
+        }
+        tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(values.size())).c_str(), ("coeff_"+anythingToString(values.size())).c_str(), .1)));
+        
+        RooFormulaVar* coeff_last = new RooFormulaVar(("coeff_"+anythingToString(values.size()+1)).c_str(),("coeff_"+anythingToString(values.size()+1)).c_str(), "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(RooRealConstant::value(1.0), *tacc_list.find(("coeff_"+anythingToString(values.size()-1)).c_str())  , RooRealConstant::value(myBinning[myBinning.size()-1]), RooRealConstant::value(myBinning[myBinning.size()-2]), RooRealConstant::value(_r_t->getMax()) ));
+        
+        tacc_list.add(*coeff_last);	
+        
+        RooCubicSplineFun* _spline = new RooCubicSplineFun("splinePdf", "splinePdf", *_r_t, myBinning, tacc_list);        
+        RooGaussEfficiencyModel* _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt, *_r_scale_mean_dt, *_r_scale_sigma_dt );
+        RooGenericPdf* _pdf_sigma_t = new RooGenericPdf("pdf_sigma_t","pow(7. / @1, 7) / 720. * pow(@0, 6) * exp(-7. * @0 / @1)",RooArgList(*_r_dt, RooRealConstant::value(0.04)));
+        
+        
+        RooRealVar _r_tau("tau", "decay time", tau);    
+        RooRealVar _r_dgamma("dgamma", "dgamma", dGamma);
+        RooRealVar _r_dm("dm", "dm", dm);
+
+        RooRealVar _r_C("C", "C",C,-4,4 );
+        RooFormulaVar _r_Cbar("Cbar","-1. * @0",RooArgList(_r_C));
+        RooRealVar _r_D("D", "D",D,-4,4  );
+        RooRealVar _r_Dbar("Dbar", "Dbar",D_bar,-4,4 );
+        RooRealVar _r_S("S", "S",S,-4,4 );
+        RooRealVar _r_Sbar("Sbar", "Sbar",S_bar,-4,4 );
+        
+        DecRateCoeff_Bd cosh_coeff("cosh_coeff",
+                        "cosh_coeff",
+                        DecRateCoeff_Bd::kCosh ,
+                        *_r_f,
+                        RooRealConstant::value(1.),
+                        RooRealConstant::value(1.),
+                        *_r_q,
+                        *_r_mistag,
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(1.),
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(eff_tag),
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(0.)); 
+                        
+        DecRateCoeff_Bd cos_coeff("cos_coeff",
+                                   "cos_coeff",
+                                   DecRateCoeff_Bd::kCos ,
+                                   *_r_f,
+                                   _r_C,
+                                   _r_Cbar,
+                                   *_r_q,
+                                  *_r_mistag,
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(1.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(eff_tag),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.));  
+                                            
+        DecRateCoeff_Bd sinh_coeff("sinh_coeff",
+                                   "sinh_coeff",
+                                   DecRateCoeff_Bd::kSinh ,
+                                   *_r_f,
+                                   _r_D,
+                                   _r_Dbar,
+                                   *_r_q,
+                                   *_r_mistag,
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(1.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(eff_tag),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.));  
+                                   
+        DecRateCoeff_Bd sin_coeff("sin_coeff",
+                                   "sin_coeff",
+                                   DecRateCoeff_Bd::kSin,
+                                   *_r_f,
+                                   _r_S,
+                                   _r_Sbar,
+                                   *_r_q,
+                                   *_r_mistag,
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(1.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(eff_tag),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.));       
+                    
+        
+        /*                           
+        RooFormulaVar sigma_dt("sigma_dt","@0*@1",RooArgList(*_r_dt,*_r_scale_sigma_dt));
+        RooGaussModel resmodel("resmodel", "resolution model", *_r_t, RooRealConstant::value(0), sigma_dt);
+         
+        RooBDecay gendecay("gendecay", "decay time PDF for fitting",
+                           *_r_t,_r_tau, _r_dgamma, 
+                           cosh_coeff,sinh_coeff,cos_coeff,sin_coeff,
+                           _r_dm, resmodel, RooBDecay::SingleSided);                                                                                                            
+        
+        RooEffProd genpdf_t("genpdf_t", "PDF for generation", gendecay, *_spline);
+        
+        RooProdPdf genpdf("genpdf", "Full PDF for generation",
+                          RooArgSet(*_pdf_sigma_t),
+                          RooFit::Conditional(RooArgSet(genpdf_t), RooArgSet(*_r_t,*_r_q,*_r_mistag,*_r_f)));                                                                                                                                                                               
+                                          
+        RooDataSet* data_2 = genpdf.generate(RooArgSet(*_r_t,*_r_dt,*_r_q,*_r_mistag,*_r_f), 300);
+        */                                                                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                                                                                                                            
+        RooBDecay fitpdf_t("fitpdf_t", "decay time PDF for fitting",
+                           *_r_t,_r_tau, _r_dgamma, 
+                           cosh_coeff,sinh_coeff,cos_coeff,sin_coeff,
+                           _r_dm, *_efficiency, RooBDecay::SingleSided);
+        
+        RooProdPdf fitpdf("fitpdf", "Full PDF for fitting",
+                          RooArgSet(*_pdf_sigma_t),
+                          RooFit::Conditional(RooArgSet(fitpdf_t), RooArgSet(*_r_t,*_r_q,*_r_mistag,*_r_f)));
+        
+        
+        fitpdf.fitTo(*data);
+        if(i==0){
+            RooPlot* tframefit = _r_t->frame();
+            data->plotOn(tframefit);
+            /// WTF is this doing ???
+            fitpdf.plotOn(tframefit,ProjWData(RooArgSet(*_r_dt,*_r_q,*_r_mistag,*_r_f),*data));
+            tframefit->Draw();
+            c->Print("B2DX_fit.eps");        
+            cout << " C = " << _r_C.getVal() << " ; Pull = " << (_r_C.getVal()-C)/_r_C.getError() << endl;
+            cout << " D = " << _r_D.getVal() << " ; Pull = " << (_r_D.getVal()-D)/_r_D.getError() << endl;
+            cout << " Dbar = " << _r_Dbar.getVal() << " ; Pull = " << (_r_Dbar.getVal()-D_bar)/_r_Dbar.getError() << endl;
+            cout << " S = " << _r_S.getVal() << " ; Pull = " << (_r_S.getVal()-S)/_r_S.getError() << endl;
+            cout << " Sbar = " << _r_Sbar.getVal() << " ; Pull = " << (_r_Sbar.getVal()-S_bar)/_r_Sbar.getError() << endl;
+        }
+        C_pull = (_r_C.getVal()-C)/_r_C.getError();
+        D_pull = (_r_D.getVal()-D)/_r_D.getError();
+        Dbar_pull =(_r_Dbar.getVal()-D_bar)/_r_Dbar.getError();
+        S_pull = (_r_S.getVal()-S)/_r_S.getError();
+        Sbar_pull = (_r_Sbar.getVal()-S_bar)/_r_Sbar.getError();
+        
+        tree->Fill();
+    
     }
     
-    TCanvas* c = new TCanvas();
-    h_t->SetLineColor(kBlack);
-    h_t->DrawNormalized("e1",1);
-    h_t_fit->SetLineColor(kBlue);
-    h_t_fit->SetLineWidth(3);
-    h_t_fit->DrawNormalized("histcsame",1);
-    c->Print(((string)OutputDir+"h_t.eps").c_str());
-    gPad->SetLogy(1);
-    c->Print(((string)OutputDir+"h_t_log.eps").c_str());
-    gPad->SetLogy(0);
-    
-    h_dt->SetLineColor(kBlack);
-    h_dt->DrawNormalized("e1",1);
-    h_dt_fit->SetLineColor(kBlue);
-    h_dt_fit->SetLineWidth(3);
-    h_dt_fit->DrawNormalized("histcsame",1);
-    c->Print(((string)OutputDir+"h_dt.eps").c_str());
-    
-    
-    // Fit with B2DX Pdf
-    /*
-    RooRealVar* _r_scale_mean_dt = new RooRealVar("scale_mean_dt", "scale_mean_dt", 0);
-    RooRealVar* _r_scale_sigma_dt = new RooRealVar("scale_sigma_dt", "scale_sigma_dt", 1.2);
-    
-    NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
-    vector<double> myBinning = knot_positions.getVector();
-    
-    NamedParameter<double> knot_values("knot_values", 0.38,0.63,0.86,1.05,1.14,1.24,1.22);
-    vector<double> values = knot_values.getVector() ;
-    
-    RooArgList tacc_list;
-    for(int i= 0; i< values.size(); i++){
-        tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(i)).c_str(), ("coeff_"+anythingToString(i)).c_str(), values[i])));
-    }
-    tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(values.size())).c_str(), ("coeff_"+anythingToString(values.size())).c_str(), 1.0)));
-    
-    RooFormulaVar* coeff_last = new RooFormulaVar(("coeff_"+anythingToString(values.size()+1)).c_str(),("coeff_"+anythingToString(values.size()+1)).c_str(), "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(RooRealConstant::value(1.0), *tacc_list.find(("coeff_"+anythingToString(values.size()-1)).c_str())  , RooRealConstant::value(myBinning[myBinning.size()-1]), RooRealConstant::value(myBinning[myBinning.size()-2]), RooRealConstant::value(_r_t->getMax()) ));
-    
-    tacc_list.add(*coeff_last);	
-    
-    RooCubicSplineFun* _spline = new RooCubicSplineFun("splinePdf", "splinePdf", *_r_t, myBinning, tacc_list);        
-    RooGaussEfficiencyModel* _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt, *_r_scale_mean_dt, *_r_scale_sigma_dt );
-    RooGenericPdf* _pdf_sigma_t = new RooGenericPdf("pdf_sigma_t","pow(7. / @1, 7) / 720. * pow(@0, 6) * exp(-7. * @0 / @1)",RooArgList(*_r_dt, RooRealConstant::value(0.04)));
-    
-    
-    RooRealVar _r_tau("tau", "decay time", 1., 0., 2.);    
-    RooRealVar _r_dgamma("dgamma", "dgamma", 0.1);
-    RooRealVar _r_dm("dm", "dm", 20);
-    RooRealVar _r_f0("f0", "f0",0,-2,2 );
-    RooRealVar _r_f1("f1", "f1",0,-2,2  );
-    RooRealVar _r_f2("f2", "f2",0,-2,2  );
-    RooRealVar _r_f3("f3", "f3",0,-2,2  );
-    
-    RooBDecay fitpdf_t("fitpdf_t", "decay time PDF for fitting",
-                       *_r_t,_r_tau, _r_dgamma, 
-                       _r_f0, _r_f1, _r_f2, _r_f3,
-                       _r_dm, *_efficiency, RooBDecay::SingleSided);
-    
-    RooProdPdf fitpdf("fitpdf", "Full PDF for fitting",
-                      RooArgSet(*_pdf_sigma_t),
-                      RooFit::Conditional(RooArgSet(fitpdf_t), RooArgSet(*_r_t)));
-    
-    fitpdf.fitTo(*data);
-    
-    RooPlot* tframefit = _r_t->frame();
-    data->plotOn(tframefit);
-    fitpdf.plotOn(tframefit);
-    tframefit->DrawClone();
-    c->Print("B2DX_fit.eps");        
-    */
+    paraFile->cd();
+    tree->SetDirectory(paraFile);
+    tree->Write();
+    paraFile->Close();
+    delete paraFile;
     
     return;
 }
