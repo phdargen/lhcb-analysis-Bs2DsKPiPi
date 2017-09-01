@@ -1,0 +1,19 @@
+* options for acceptance 
+"Bs_TAU_Var"		"Bs_DTF_TAU"
+"Ds_finalState"			"Ds2KKpi"
+"year"				"all"
+"makePlots"			0
+
+* options for acceptance correction
+"CorrectFromMC"			0
+"applyCorrection" 		0
+
+* binning options
+"BinningName"		"default"
+"knot_positions" 	0.3 0.5 0.7 1. 1.5  2.  3.   9.5
+"knot_values"	 	1 1 1 1 1 1 1 1
+
+* fit options
+"min_TAU"	 0.2
+"max_TAU" 	 15.
+"numCPU"         6

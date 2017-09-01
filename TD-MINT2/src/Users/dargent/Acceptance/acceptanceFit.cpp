@@ -69,16 +69,15 @@ using namespace RooFit ;
 using namespace RooStats;
 using namespace MINT;
 
+/// HFLAV summer 17 values
+double tau = 1.509;
+double dgamma = 0.09; 
+double deltaMs = 17.757;
 
-// double tauH = 1.661000;
-// double tauL = 1.405000;
-// double gammaH = 1.0/tauH;
-// double gammaL = 1.0/tauL;
-// double gamma = (gammaH + gammaL) / 2.0;
-double tau = 1.512;
-double dgamma = 0.082; //gammaH - gammaL
-double DeltaMs = 17.768;
-
+/// MC values
+double tau_MC = 1.512; // ?
+double dgamma_MC = .109; // ?
+double deltaMs_MC = 17.8; // or 20.0 ??? 
 
 vector<double> fitSplineAcc(string CutString){
 
@@ -100,14 +99,13 @@ vector<double> fitSplineAcc(string CutString){
 	tree->SetBranchStatus("*finalState",1);
 	
 	//Define RooRealVar for observables
-	RooRealVar Bs_TAU("Bs_TAU", "Bs_TAU", min_TAU, max_TAU, "ps");
-	RooRealVar Bs_TAUERR("Bs_TAUERR", "Bs_TAUERR", 0.00001, 1.,"ps");
+	RooRealVar Bs_TAU(((string)Bs_TAU_Var).c_str(), ((string)Bs_TAU_Var).c_str(), min_TAU, max_TAU, "ps");
+	RooRealVar Bs_TAUERR(((string)Bs_TAU_Var+"ERR").c_str(), ((string)Bs_TAU_Var+"ERR").c_str(), 0.00001, 1.,"ps");
 	RooRealVar N_Bs_sw("N_Bs_sw", "N_Bs_sw", 0.);
 	RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
 	RooRealVar year("year", "year", 0.);
 	
 	RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, N_Bs_sw);
-	
 	RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(N_Bs_sw.GetName()), Cut(CutString.c_str()));
 	
 	///SETUP FITTER AND FIT TO DECAYTIME DISTRIBUTION
@@ -141,12 +139,11 @@ vector<double> fitSplineAcc(string CutString){
 	
 	RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau),
 			RooRealConstant::value(dgamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
-			RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(DeltaMs),
+			RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMs),
 			trm, RooBDecay::SingleSided);
 	
 	
 	///Fit and Print
-	//Fit
 	RooFitResult *myfitresult;
 	myfitresult = timePDF->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
 	myfitresult->Print("v");
@@ -154,181 +151,120 @@ vector<double> fitSplineAcc(string CutString){
 	//put coefficients into vector
 	vector<double> myCoeffs;
 	for(int i= 0; i< values.size()+2; i++){
-	myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal());
+		myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal());
 	}
 
 	//only fill errors for comparison plots
 	if(makePlots != 0){
 		for(int i= 0; i< values.size(); i++){
-		myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError());
+			myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError());
 		}
 	}
 
-	//Print
-	double range_dw = Bs_TAU.getMin();
-	double range_up = Bs_TAU.getMax();
-	
-	TLegend* legend = new TLegend( 0.62, 0.70, 0.88, 0.88 );
-	
-	legend->SetTextSize(0.05);
-	legend->SetTextFont(12);
-	legend->SetFillColor(4000);
-	legend->SetShadowColor(0);
-	legend->SetBorderSize(0);
-	legend->SetTextFont(132);
-	
-	TLine* l1 = new TLine();
-	l1->SetLineColor(kBlue+3);
-	l1->SetLineWidth(4);
-	l1->SetLineStyle(kSolid);
-	legend->AddEntry(l1, "decay PDF", "L");
-	
-	TLine* l2 = new TLine();
-	l2->SetLineColor(kRed);
-	l2->SetLineWidth(4);
-	l2->SetLineStyle(kSolid);
-	legend->AddEntry(l2, "spline acceptance", "L");
-	
-	RooPlot* frame_m = Bs_TAU.frame();
-	frame_m->SetTitle("");
-	
-	frame_m->GetXaxis()->SetLabelSize( 0.06 );
-	frame_m->GetYaxis()->SetLabelSize( 0.06 );
-	frame_m->GetXaxis()->SetLabelFont( 132 );
-	frame_m->GetYaxis()->SetLabelFont( 132 );
-	frame_m->GetXaxis()->SetLabelOffset( 0.006 );
-	frame_m->GetYaxis()->SetLabelOffset( 0.006 );
-	frame_m->GetXaxis()->SetLabelColor( kWhite);
-	
-	frame_m->GetXaxis()->SetTitleSize( 0.06 );
-	frame_m->GetYaxis()->SetTitleSize( 0.06 );
-	frame_m->GetYaxis()->SetNdivisions(512);
-	frame_m->GetXaxis()->SetTitleOffset( 1.00 );
-	frame_m->GetYaxis()->SetTitleOffset( 1.00 );
-	
-	int bin = 150;
-	dataset->plotOn(frame_m, Binning(bin), Name("dataSetCut"));
-	timePDF->plotOn(frame_m, LineColor(kBlue+3),  Name("FullPdf"));
-	spl->plotOn(frame_m, LineColor(kRed), Normalization(350, RooAbsReal::Relative));
-	
-	TLatex* lhcbtext = new TLatex();
-	lhcbtext->SetTextFont(132);
-	lhcbtext->SetTextColor(1);
-	lhcbtext->SetTextSize(0.07);
-	lhcbtext->SetTextAlign(12);
-	
-	TCanvas* canvas = new TCanvas("canvas", "canvas", 1200, 800);
+	/// Plot
+	int bin = 80;
+
+	TCanvas* canvas = new TCanvas();
 	canvas->cd();
-	canvas->SetLeftMargin(0.01);
-	canvas->SetRightMargin(0.01);
 	canvas->SetTopMargin(0.05);
 	canvas->SetBottomMargin(0.05);
-	TPad* pad1 = new TPad("upperPad", "upperPad", .050, .22, 1.0, 1.0);
+
+	TLegend leg(0.65,0.65,0.9,0.9,"");
+    	leg.SetLineStyle(0);
+    	leg.SetLineColor(0);
+	leg.SetFillColor(0);
+	leg.SetTextFont(22);
+	leg.SetTextColor(1);
+	leg.SetTextSize(0.06);
+	leg.SetTextAlign(12);
+
+	RooPlot* frame_m = Bs_TAU.frame();	
+	frame_m->GetXaxis()->SetLabelColor( kWhite);
+	frame_m->GetYaxis()->SetTitleOffset(0.95);
+
+	dataset->plotOn(frame_m, Binning(bin), Name("data"));
+	timePDF->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf"));
+	spl->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline"));
+	
+	leg.AddEntry(frame_m->findObject("data"),"LHCb data","ep");
+	leg.AddEntry(frame_m->findObject("pdf"),"Fit","l");
+	leg.AddEntry(frame_m->findObject("spline"),"Acceptance","l");
+	
+	TPad* pad1 = new TPad("upperPad", "upperPad", .0, .3, 1.0, 1.0);
 	pad1->SetBorderMode(0);
 	pad1->SetBorderSize(-1);
-	pad1->SetFillStyle(0);
-	pad1->SetTickx(0);
-	pad1->SetLeftMargin(0.115);
-	pad1->SetRightMargin(0.05);
+	pad1->SetBottomMargin(0.);
 	pad1->Draw();
 	pad1->cd();
-	frame_m->GetYaxis()->SetRangeUser(0.1,frame_m->GetMaximum()*1.0);
+	frame_m->GetYaxis()->SetRangeUser(0.011,frame_m->GetMaximum()*1.1);
 	frame_m->Draw();
-	
-	legend->Draw("same");
-	lhcbtext->DrawTextNDC(0.70,0.55,"LHCb Run 1&2 data");
-	lhcbtext->DrawTextNDC(0.70,0.45,"preliminary");
-	
+	leg.Draw();
+
 	canvas->cd();
-	TPad* pad2 = new TPad("lowerPad", "lowerPad", .050, .005, 1.0, .3275);
+	TPad* pad2 = new TPad("lowerPad", "lowerPad", .0, .005, 1.0, .3);
 	pad2->SetBorderMode(0);
 	pad2->SetBorderSize(-1);
 	pad2->SetFillStyle(0);
+	pad2->SetTopMargin(0.);
 	pad2->SetBottomMargin(0.35);
-	pad2->SetLeftMargin(0.115);
-	pad2->SetRightMargin(0.05);
-	pad2->SetTickx(0);
 	pad2->Draw();
-	pad2->SetLogy(0);
 	pad2->cd();
 	
-	frame_m->Print("v");
-	RooPlot* frame_p = Bs_TAU.frame(Title("pull_frame"));
-	frame_p->Print("v");
-	frame_p->SetTitle("");
-	frame_p->GetYaxis()->SetTitle("");
-	frame_p->GetYaxis()->SetTitleSize(0.09);
-	frame_p->GetYaxis()->SetTitleOffset(0.26);
-	frame_p->GetYaxis()->SetTitleFont(62);
-	frame_p->GetYaxis()->SetNdivisions(106);
-	frame_p->GetYaxis()->SetLabelSize(0.12);
-	frame_p->GetYaxis()->SetLabelOffset(0.006);
-	frame_p->GetXaxis()->SetTitleSize(0.15);
-	frame_p->GetXaxis()->SetTitleFont(132);
-	frame_p->GetXaxis()->SetTitleOffset(0.85);
-	frame_p->GetXaxis()->SetNdivisions(515);
+	RooPlot* frame_p = Bs_TAU.frame();
 	frame_p->GetYaxis()->SetNdivisions(5);
+	frame_p->GetYaxis()->SetLabelSize(0.12);
 	frame_p->GetXaxis()->SetLabelSize(0.12);
-	frame_p->GetXaxis()->SetLabelFont( 132 );
-	frame_p->GetYaxis()->SetLabelFont( 132 );
+	frame_p->GetXaxis()->SetTitleOffset(0.75);
+	frame_p->GetXaxis()->SetTitleSize(0.2);
 	frame_p->GetXaxis()->SetTitle("#font[132]{t(B_{s}) [ps]}");
 	
-	TString* obsTS = new TString(Bs_TAU.GetName());
-	TString* pullnameTS = new TString("FullPdf");
-	TString* pullname2TS = new TString("dataSetCut");
-	RooHist* pullHist  = frame_m->pullHist(pullname2TS->Data(),pullnameTS->Data());
-	frame_p->addPlotable(pullHist,"P");
+	RooHist* pullHist  = frame_m->pullHist("data","pdf");
+	frame_p->addPlotable(pullHist,"BX");
 	
-	double chi2 = frame_m->chiSquare();
-	double chi22 = frame_m->chiSquare(pullnameTS->Data(),pullname2TS->Data());
-	
-	TAxis* axisX = pullHist->GetXaxis();
-	RooBinning* Bin = new RooBinning(range_dw,range_up,"P");
-	Bin->addUniform(bin, range_dw, range_up);
-	axisX->Set(Bin->numBins(), Bin->array());
-	
-	TAxis* axisY = pullHist->GetYaxis();
 	double max = 5.0 ;
 	double min = -5.0 ;
-	axisY->SetLabelSize(0.12);
-	axisY->SetNdivisions(5);
-	axisX->SetLabelSize(0.12);
-	
+
 	double rangeX = max-min;
 	double zero = max/rangeX;
-	
+	frame_p->GetYaxis()->SetRangeUser(min,max);
+
 	TGraph* graph = new TGraph(2);
 	graph->SetMaximum(max);
 	graph->SetMinimum(min);
-	graph->SetPoint(1,range_dw,0);
-	graph->SetPoint(2,range_up,0);
+	graph->SetPoint(1,min_TAU,0);
+	graph->SetPoint(2,max_TAU,0);
 	
 	TGraph* graph2 = new TGraph(2);
 	graph2->SetMaximum(max);
 	graph2->SetMinimum(min);
-	graph2->SetPoint(1,range_dw,-3);
-	graph2->SetPoint(2,range_up,-3);
+	graph2->SetPoint(1,min_TAU,-3);
+	graph2->SetPoint(2,max_TAU,-3);
 	graph2->SetLineColor(kRed);
 	
 	TGraph* graph3 = new TGraph(2);
 	graph3->SetMaximum(max);
 	graph3->SetMinimum(min);
-	graph3->SetPoint(1,range_dw,3);
-	graph3->SetPoint(2,range_up,3);
+	graph3->SetPoint(1,min_TAU,3);
+	graph3->SetPoint(2,max_TAU,3);
 	graph3->SetLineColor(kRed);
 	
-	pullHist->GetXaxis()->SetLabelFont( 132 );
-	pullHist->GetYaxis()->SetLabelFont( 132 );
-	pullHist->SetTitle("");
-	
-	frame_p->GetYaxis()->SetRangeUser(-5.0,5.0);
 	frame_p->Draw();
 	graph->Draw("same");
-	
+	graph2->Draw("same");
+	graph3->Draw("same");
+		
 	pad2->Update();
 	canvas->Update();
 	canvas->SaveAs(("Plot/timeAccFit_"+(string)BinningName+ ".eps").c_str());
 	
+	pad1->SetLogy(1);
+	pad1->Update();
+	canvas->Update();
+	canvas->SaveAs(("Plot/timeAccFit_"+(string)BinningName+ "_log.eps").c_str());
+	
+	// ???
+	double chi2 = frame_m->chiSquare("pdf","data",values.size());
+	cout << "chi2 = " << chi2 << endl;
 	cout << "used datasets:     "<< CutString.c_str() << endl;
 	
 	file->Close();
@@ -336,7 +272,6 @@ vector<double> fitSplineAcc(string CutString){
 }
 
 vector<double> fitSplineAccMC(string CutString){
-
 
 	// Options
 	NamedParameter<string> BinningName("BinningName",(string)"default");
@@ -355,9 +290,9 @@ vector<double> fitSplineAccMC(string CutString){
 	tree->SetBranchStatus("*finalState",1);
 	
 	//Define RooRealVar for observables
-	RooRealVar Bs_TAU("Bs_TAU", "Bs_TAU", min_TAU, max_TAU, "ps");
-	RooRealVar Bs_TAUERR("Bs_TAUERR", "Bs_TAUERR", 0.00001, 1.,"ps");
-	RooRealVar weight("weight" , "weight", 0., 12.);
+	RooRealVar Bs_TAU(((string)Bs_TAU_Var).c_str(), ((string)Bs_TAU_Var).c_str(), min_TAU, max_TAU, "ps");
+	RooRealVar Bs_TAUERR(((string)Bs_TAU_Var+"ERR").c_str(), ((string)Bs_TAU_Var+"ERR").c_str(), 0.00001, 1.,"ps");
+	RooRealVar weight("weight" , "weight", 0.);
 	RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
 	RooRealVar year("year", "year", 0.);
 	
@@ -371,7 +306,6 @@ vector<double> fitSplineAccMC(string CutString){
    	NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
 	vector<double> myBinning = knot_positions.getVector();
 	
-
 	//fix the first spline from Bs->Dspipipi data fit 
 	vector<double> fixed_coeffs = fitSplineAcc(CutString.c_str());
 
@@ -384,9 +318,7 @@ vector<double> fitSplineAccMC(string CutString){
 	//Setup fixed SPLINE FUNCTION 
 	RooCubicSplineFun* fixed_spl = new RooCubicSplineFun("fixed splinePdf", "fixed splinePdf", Bs_TAU, myBinning, tacc_list_fixed);
 
-
-
-//define floating correction spline
+	//define floating correction spline
    	NamedParameter<double> knot_values("knot_values", 3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.0, 1.7757e+00);
 	vector<double> values = knot_values.getVector() ;
 
@@ -405,20 +337,17 @@ vector<double> fitSplineAccMC(string CutString){
 	//CUBIC SPLINE FUNCTION 
  	RooCubicSplineFun* R_spl = new RooCubicSplineFun("splinePdf", "splinePdf", Bs_TAU, myBinning, tacc_list);
 		
-
 	///setup product of fixed and floated spline
 	RooSplineProduct* splineProd = new RooSplineProduct("spline Product","spline Product", Bs_TAU, *fixed_spl, *R_spl);
-
 
 	//combine spline product and time resolution
 	RooRealVar trm_mean( "trm_mean" , "Gaussian resolution model mean", 0.0, "ps" );
 	RooRealVar trm_scale( "trm_scale", "Gaussian resolution model scale factor", 1.20);
 	RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *splineProd, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
 
-
-	RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau),
-                     RooRealConstant::value(dgamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
-                     RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(DeltaMs),
+	RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau_MC),
+                     RooRealConstant::value(dgamma_MC), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
+                     RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMs_MC),
                      trm, RooBDecay::SingleSided);
 
 	///Fit and Print
@@ -429,7 +358,7 @@ vector<double> fitSplineAccMC(string CutString){
 
 	std::vector<double> myCoeffs;
 	for(int i= 0; i< values.size()+2; i++){
-	myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal());
+		myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal());
 	}
 
 
@@ -639,9 +568,9 @@ void SplineAccCorrection(string CutString){
 	tree->SetBranchStatus("*finalState",1);
 	
 	//Define RooRealVar for observables
-	RooRealVar Bs_TAU("Bs_TAU", "Bs_TAU", min_TAU, max_TAU, "ps");
-	RooRealVar Bs_TAUERR("Bs_TAUERR", "Bs_TAUERR", 0.00001, 1.,"ps");
-	RooRealVar weight("weight" , "weight", 0., 12.);
+	RooRealVar Bs_TAU(((string)Bs_TAU_Var).c_str(), ((string)Bs_TAU_Var).c_str(), min_TAU, max_TAU, "ps");
+	RooRealVar Bs_TAUERR(((string)Bs_TAU_Var+"ERR").c_str(), ((string)Bs_TAU_Var+"ERR").c_str(), 0.00001, 1.,"ps");
+	RooRealVar weight("weight" , "weight", 0.);
 	RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
 	RooRealVar year("year", "year", 0.);
 	
@@ -668,7 +597,6 @@ void SplineAccCorrection(string CutString){
 	//Setup fixed SPLINE FUNCTION 
 	RooCubicSplineFun* fixed_spl = new RooCubicSplineFun("fixed splinePdf", "fixed splinePdf", Bs_TAU, myBinning, tacc_list_fixed);
 
-
    	NamedParameter<double> knot_values("knot_values", 3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.0, 1.7757e+00);
 	vector<double> values = knot_values.getVector() ;
 
@@ -684,14 +612,11 @@ void SplineAccCorrection(string CutString){
 
 	tacc_list.add(*coeff_last);
 
-
 	//setup floated spline 
 	RooCubicSplineFun* aDataSig_spl = new RooCubicSplineFun("splinePdf", "splinePdf", Bs_TAU, myBinning, tacc_list);
 
-
 	///setup product of fixed and floated spline
 	RooSplineProduct* splineProd = new RooSplineProduct("spline Product","spline Product", Bs_TAU, *fixed_spl, *aDataSig_spl);
-
 
 	//combine spline product and time resolution
 	RooRealVar trm_mean( "trm_mean" , "Gaussian resolution model mean", 0.0, "ps" );
@@ -699,9 +624,9 @@ void SplineAccCorrection(string CutString){
 	RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *splineProd, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
 
 
-	RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau),
-                     RooRealConstant::value(dgamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
-                     RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(DeltaMs),
+	RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau_MC),
+                     RooRealConstant::value(dgamma_MC), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
+                     RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMs_MC),
                      trm, RooBDecay::SingleSided);
 
 
@@ -900,15 +825,15 @@ cout << "used datasets:     "<< CutString.c_str() << endl;
 int main(int argc, char** argv){
     
     time_t startTime = time(0);
+    TH1::SetDefaultSumw2();
+    TH2::SetDefaultSumw2();
     gROOT->ProcessLine(".x ../lhcbStyle.C");
-    gStyle->SetOptStat(1000000001);
 
     NamedParameter<int> makePlots("makePlots", 0);
     NamedParameter<string> Ds_finalState("Ds_finalState", (std::string) "all");
     NamedParameter<string> year("year", (std::string) "all");
     NamedParameter<int> CorrectFromMC("CorrectFromMC", 0);
     NamedParameter<int> applyCorrection("applyCorrection", 0);
-    NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
     string Run1 = "Run1";
     string Run2 = "Run2";
     string all = "all";
@@ -1102,11 +1027,8 @@ if(makePlots == 1)
 
 }
 
-
     if(makePlots != 1)
     {
-
-    	//vector<double> dummy;
 
     	if(year_convert.compare(all) == 0)
     	{
