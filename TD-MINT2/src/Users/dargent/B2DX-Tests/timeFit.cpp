@@ -297,7 +297,7 @@ public:
         
         if(t < _min_TAU || t > _max_TAU )return 0.;
         
-        const double e_eff = fabs(q)*_eff_tag + (1.-fabs(q))*(1.-_eff_tag);
+        const double e_eff = fabs(q)*_eff_tag/2. + (1.-fabs(q))*(1.-_eff_tag);
         
         const double D = 1./2. * ((1.+f) * _D + (1.-f) * _D_bar);
         const double S = 1./2. * ((1.+f) * _S + (1.-f) * _S_bar);
@@ -311,8 +311,8 @@ public:
         (
          (2.-fabs(q))*cosh_term
          +f*q*(1.-2.*w)* _C *cos_term
-         -(2.-fabs(q))*2.0*_k* D *sinh_term
-         -f*2.0*q*(1.-2.*w)*_k* S *sin_term
+         +(2.-fabs(q))*_k* D *sinh_term
+         -f*q*(1.-2.*w)*_k* S *sin_term
          )*e_eff * _pdf_sigma_t->getVal();
         
         return val;
@@ -320,12 +320,12 @@ public:
     
     virtual double getVal(IDalitzEvent& evt){
         
-        const double f = static_cast<double>((int)evt.getValueFromVector(4));
-        const double D = 1./2. * ((1.+f) * _D + (1.-f) * _D_bar);
+        //const double f = static_cast<double>((int)evt.getValueFromVector(4));
+        //const double D = 1./2. * ((1.+f) * _D + (1.-f) * _D_bar);
                 
         double val = un_normalised(evt);
         
-        double norm = 2. * (_efficiency->analyticalIntegral(coshBasis,_tau,_dm,_dGamma) - 2. * _k * D * _efficiency->analyticalIntegral(sinhBasis,_tau,_dm,_dGamma) );
+        double norm = 2. * (2. * _efficiency->analyticalIntegral(coshBasis,_tau,_dm,_dGamma) + _k * (_D + _D_bar) * _efficiency->analyticalIntegral(sinhBasis,_tau,_dm,_dGamma) );
         
         return val/norm;
     }
@@ -566,6 +566,7 @@ void fullTimeFit(){
     NamedParameter<double> min_TAU("min_TAU", 0.4);
     NamedParameter<double> max_TAU("max_TAU", 10.);
     NamedParameter<int> nIterations("nIterations", 1);
+    NamedParameter<int> numCPU("numCPU", 2);
 
     // Calculate pulls
     gDirectory->cd();
@@ -628,10 +629,10 @@ void fullTimeFit(){
                 int q = 0;
                 if (q_rand < 1./3.) q = -1;
                 if (q_rand > 2./3.) q = 1;
-                int f;
-                if(i<=Nevents/2)f = 1; 
-                else f = -1;
-                
+                const double f_rand = ranLux.Uniform();
+                int f = 1;
+                if (f_rand < .5) f = -1;
+
                 evt.setValueInVector(0, t);
                 evt.setValueInVector(1, dt);
                 evt.setValueInVector(2, q);
@@ -746,9 +747,9 @@ void fullTimeFit(){
         
         RooArgList tacc_list;
         for(int i= 0; i< values.size(); i++){
-            tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(i)).c_str(), ("coeff_"+anythingToString(i)).c_str(), values[i]*0.1)));
+            tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(i)).c_str(), ("coeff_"+anythingToString(i)).c_str(), values[i])));
         }
-        tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString((int)values.size())).c_str(), ("coeff_"+anythingToString((int)values.size())).c_str(), .1)));
+        tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString((int)values.size())).c_str(), ("coeff_"+anythingToString((int)values.size())).c_str(), 1.)));
         
         RooFormulaVar* coeff_last = new RooFormulaVar(("coeff_"+anythingToString((int)values.size()+1)).c_str(),("coeff_"+anythingToString((int)values.size()+1)).c_str(), "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(RooRealConstant::value(1.0), *tacc_list.find(("coeff_"+anythingToString((int)values.size()-1)).c_str())  , RooRealConstant::value(myBinning[myBinning.size()-1]), RooRealConstant::value(myBinning[myBinning.size()-2]), RooRealConstant::value(_r_t->getMax()) ));
         
@@ -765,10 +766,10 @@ void fullTimeFit(){
 
         RooRealVar _r_C("C", "C",C,-4,4 );
         RooFormulaVar _r_Cbar("Cbar","-1. * @0",RooArgList(_r_C));
-        RooRealVar _r_D("D", "D",D,-4,4  );
-        RooRealVar _r_Dbar("Dbar", "Dbar",D_bar,-4,4 );
+        RooRealVar _r_D("D", "D",D,-4,4   );
+        RooRealVar _r_Dbar("Dbar", "Dbar",D_bar,-4,4  );
         RooRealVar _r_S("S", "S",S,-4,4 );
-        RooRealVar _r_Sbar("Sbar", "Sbar",S_bar,-4,4 );
+        RooRealVar _r_Sbar("Sbar", "Sbar",-S_bar,-4,4 );
         
         DecRateCoeff_Bd cosh_coeff("cosh_coeff",
                         "cosh_coeff",
@@ -842,8 +843,13 @@ void fullTimeFit(){
                                    RooRealConstant::value(0.),
                                    RooRealConstant::value(0.));       
                     
+        /*          
+        cout << cosh_coeff.analyticalIntegral(1) << endl;
+        cout << cos_coeff.analyticalIntegral(1) << endl;
+        cout << sinh_coeff.analyticalIntegral(1) << endl;
+        cout << sin_coeff.analyticalIntegral(1) << endl;
+        //throw "";
         
-        /*                           
         RooFormulaVar sigma_dt("sigma_dt","@0*@1",RooArgList(*_r_dt,*_r_scale_sigma_dt));
         RooGaussModel resmodel("resmodel", "resolution model", *_r_t, RooRealConstant::value(0), sigma_dt);
          
@@ -871,11 +877,10 @@ void fullTimeFit(){
                           RooFit::Conditional(RooArgSet(fitpdf_t), RooArgSet(*_r_t,*_r_q,*_r_mistag,*_r_f)));
         
         
-        fitpdf.fitTo(*data);
+        fitpdf.fitTo(*data,NumCPU(numCPU));
         if(n==0){
             RooPlot* tframefit = _r_t->frame();
             data->plotOn(tframefit);
-            /// WTF is this doing ???
             fitpdf.plotOn(tframefit,ProjWData(RooArgSet(*_r_dt,*_r_q,*_r_mistag,*_r_f),*data));
             tframefit->Draw();
             c->Print("B2DX_fit.eps");        
@@ -883,13 +888,13 @@ void fullTimeFit(){
             cout << " D = " << _r_D.getVal() << " ; Pull = " << (_r_D.getVal()-D)/_r_D.getError() << endl;
             cout << " Dbar = " << _r_Dbar.getVal() << " ; Pull = " << (_r_Dbar.getVal()-D_bar)/_r_Dbar.getError() << endl;
             cout << " S = " << _r_S.getVal() << " ; Pull = " << (_r_S.getVal()-S)/_r_S.getError() << endl;
-            cout << " Sbar = " << _r_Sbar.getVal() << " ; Pull = " << (_r_Sbar.getVal()-S_bar)/_r_Sbar.getError() << endl;
+            cout << " Sbar = " << _r_Sbar.getVal() << " ; Pull = " << (_r_Sbar.getVal()+S_bar)/_r_Sbar.getError() << endl;
         }
         C_pull = (_r_C.getVal()-C)/_r_C.getError();
         D_pull = (_r_D.getVal()-D)/_r_D.getError();
         Dbar_pull =(_r_Dbar.getVal()-D_bar)/_r_Dbar.getError();
         S_pull = (_r_S.getVal()-S)/_r_S.getError();
-        Sbar_pull = (_r_Sbar.getVal()-S_bar)/_r_Sbar.getError();
+        Sbar_pull = (_r_Sbar.getVal()+S_bar)/_r_Sbar.getError();
         
         tree->Fill();
     
