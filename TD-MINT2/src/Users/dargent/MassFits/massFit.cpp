@@ -3,6 +3,8 @@
 #include <cmath>
 #include <algorithm>
 #include <iostream>
+#include <iomanip>
+#include <fstream>
 #include <TChain.h>
 #include <TTree.h>
 #include <TH1D.h>
@@ -775,6 +777,10 @@ vector< vector<double> > fitNorm(){
 	vector< double> signal_yields;
 	vector< double> partReco_yields;
 	vector< double> scaleFactors;
+	vector< double> signal_yields_err;
+	vector< double> partReco_yields_err;
+	vector< double> expBkg_yields;
+	vector< double> expBkg_yields_err;
 
 	/// Loop over pdf slices
 	for(int i=0; i<str_year.size(); i++){
@@ -838,7 +844,11 @@ vector< vector<double> > fitNorm(){
 			/// Get signal yield
 			yield += ((RooRealVar*) fitParams->find("n_sig_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getVal();
 			signal_yields.push_back(((RooRealVar*) fitParams->find("n_sig_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getVal());
+			signal_yields_err.push_back(((RooRealVar*) fitParams->find("n_sig_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getError());
 			partReco_yields.push_back(((RooRealVar*) fitParams->find("n_partReco_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getVal());
+			partReco_yields_err.push_back(((RooRealVar*) fitParams->find("n_partReco_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getError());
+			expBkg_yields.push_back(((RooRealVar*) fitParams->find("n_exp_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getVal());
+			expBkg_yields_err.push_back(((RooRealVar*) fitParams->find("n_exp_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getError());
 
 			/// Calculate sWeights
 			if(sWeight){
@@ -908,6 +918,10 @@ vector< vector<double> > fitNorm(){
 	return_vec.push_back(scaleFactors);
 	return_vec.push_back(partReco_yields);
 	return_vec.push_back(partReco_params);
+	return_vec.push_back(signal_yields_err);
+	return_vec.push_back(partReco_yields_err);
+	return_vec.push_back(expBkg_yields);
+	return_vec.push_back(expBkg_yields_err);
 
 	return return_vec;
 }
@@ -924,6 +938,7 @@ void fitSignal(){
 	NamedParameter<int> fixMisIDyields("fixMisIDyields",1);
 	NamedParameter<int> useNormScaleFactors("useNormScaleFactors",1);
 	NamedParameter<int> optimizeBDT("optimizeBDT",0);
+	NamedParameter<int> newTable("newTable",0);
 
 	NamedParameter<string> inFileName("inFileNameSignal",(string)"/auto/data/dargent/BsDsKpipi/BDT/Data/signal.root");
 	NamedParameter<string> outFileName("outFileNameSignal",(string)"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
@@ -1405,6 +1420,216 @@ void fitSignal(){
 		//cout << "S/B = " << n_s/n_b << endl;
 		//cout << "S/(S+B) = " << n_s/(n_s+n_b) << endl;
 		cout << "Sig = " << n_s/sqrt(n_s+n_b) << endl;			
+	}
+
+
+	///create a new table for Ana Note
+	if(newTable == 1){
+
+		int Yields_sig_11 = 0;
+		int Yields_sig_11_err = 0;
+		int Yields_sig_12 = 0;
+		int Yields_sig_12_err = 0;
+		int Yields_sig_15 = 0;
+		int Yields_sig_15_err = 0;
+		int Yields_sig_16 = 0;
+		int Yields_sig_16_err = 0;
+
+		int Yields_sigB0_11 = 0;
+		int Yields_sigB0_11_err = 0;
+		int Yields_sigB0_12 = 0;
+		int Yields_sigB0_12_err = 0;
+		int Yields_sigB0_15 = 0;
+		int Yields_sigB0_15_err = 0;
+		int Yields_sigB0_16 = 0;
+		int Yields_sigB0_16_err = 0;
+
+		int Yields_partRecoBkg_11 = 0;
+		int Yields_partRecoBkg_11_err = 0;
+		int Yields_partRecoBkg_12 = 0;
+		int Yields_partRecoBkg_12_err = 0;
+		int Yields_partRecoBkg_15 = 0;
+		int Yields_partRecoBkg_15_err = 0;
+		int Yields_partRecoBkg_16 = 0;
+		int Yields_partRecoBkg_16_err = 0;
+
+		int Yields_misIDBkg_11 = 0;
+		int Yields_misIDBkg_11_err = 0;
+		int Yields_misIDBkg_12 = 0;
+		int Yields_misIDBkg_12_err = 0;
+		int Yields_misIDBkg_15 = 0;
+		int Yields_misIDBkg_15_err = 0;
+		int Yields_misIDBkg_16 = 0;
+		int Yields_misIDBkg_16_err = 0;
+
+		int Yields_expBkg_11 = 0;
+		int Yields_expBkg_11_err = 0;
+		int Yields_expBkg_12 = 0;
+		int Yields_expBkg_12_err = 0;
+		int Yields_expBkg_15 = 0;
+		int Yields_expBkg_15_err = 0;
+		int Yields_expBkg_16 = 0;
+		int Yields_expBkg_16_err = 0;
+
+
+
+		vector<double> norm_yields = norm_paramSet[0];
+		vector<double> norm_yields_err = norm_paramSet[4];
+
+		vector<double> norm_yields_partBkg = norm_paramSet[2];
+		vector<double> norm_yields_partBkg_err = norm_paramSet[5];
+
+		vector<double> norm_yields_expBkg = norm_paramSet[6];
+		vector<double> norm_yields_expBkg_err = norm_paramSet[7];
+
+		int Yields_norm_sig_11 =  norm_yields[0] + norm_yields[1] + norm_yields[2] + norm_yields[3];
+		int Yields_norm_sig_11_err =  norm_yields_err[0] + norm_yields_err[1] + norm_yields_err[2] + norm_yields_err[3];
+
+		int Yields_norm_sig_12 =  norm_yields[4] + norm_yields[5] + norm_yields[6] + norm_yields[7];
+		int Yields_norm_sig_12_err =  norm_yields_err[4] + norm_yields_err[5] + norm_yields_err[6] + norm_yields_err[7];
+
+		int Yields_norm_sig_15 =  norm_yields[8] + norm_yields[9] + norm_yields[10] + norm_yields[11];
+		int Yields_norm_sig_15_err =  norm_yields_err[8] + norm_yields_err[9] + norm_yields_err[10] + norm_yields_err[11];
+
+		int Yields_norm_sig_16 =  norm_yields[12] + norm_yields[13] + norm_yields[14] + norm_yields[15];
+		int Yields_norm_sig_16_err =  norm_yields_err[12] + norm_yields_err[13] + norm_yields_err[14] + norm_yields_err[15];
+
+
+		int Yields_norm_partBkg_11 =  norm_yields_partBkg[0] + norm_yields_partBkg[1] + norm_yields_partBkg[2] + norm_yields_partBkg[3];
+		int Yields_norm_partBkg_11_err =  norm_yields_partBkg_err[0] + norm_yields_partBkg_err[1] + norm_yields_partBkg_err[2] + norm_yields_partBkg_err[3];
+
+		int Yields_norm_partBkg_12 =  norm_yields_partBkg[4] + norm_yields_partBkg[5] + norm_yields_partBkg[6] + norm_yields_partBkg[7];
+		int Yields_norm_partBkg_12_err =  norm_yields_partBkg_err[4] + norm_yields_partBkg_err[5] + norm_yields_partBkg_err[6] + norm_yields_partBkg_err[7];
+
+		int Yields_norm_partBkg_15 =  norm_yields_partBkg[8] + norm_yields_partBkg[9] + norm_yields_partBkg[10] + norm_yields_partBkg[11];
+		int Yields_norm_partBkg_15_err =  norm_yields_partBkg_err[8] + norm_yields_partBkg_err[9] + norm_yields_partBkg_err[10] + norm_yields_partBkg_err[11];
+
+		int Yields_norm_partBkg_16 =  norm_yields_partBkg[12] + norm_yields_partBkg[13] + norm_yields_partBkg[14] + norm_yields_partBkg[15];
+		int Yields_norm_partBkg_16_err =  norm_yields_partBkg_err[12] + norm_yields_partBkg_err[13] + norm_yields_partBkg_err[14] + norm_yields_partBkg_err[15];
+
+
+		int Yields_norm_expBkg_11 =  norm_yields_expBkg[0] + norm_yields_expBkg[1] + norm_yields_expBkg[2] + norm_yields_expBkg[3];
+		int Yields_norm_expBkg_11_err =  norm_yields_expBkg_err[0] + norm_yields_expBkg_err[1] + norm_yields_expBkg_err[2] + norm_yields_expBkg_err[3];
+
+		int Yields_norm_expBkg_12 =  norm_yields_expBkg[4] + norm_yields_expBkg[5] + norm_yields_expBkg[6] + norm_yields_expBkg[7];
+		int Yields_norm_expBkg_12_err =  norm_yields_expBkg_err[4] + norm_yields_expBkg_err[5] + norm_yields_expBkg_err[6] + norm_yields_expBkg_err[7];
+
+		int Yields_norm_expBkg_15 =  norm_yields_expBkg[8] + norm_yields_expBkg[9] + norm_yields_expBkg[10] + norm_yields_expBkg[11];
+		int Yields_norm_expBkg_15_err =  norm_yields_expBkg_err[8] + norm_yields_expBkg_err[9] + norm_yields_expBkg_err[10] + norm_yields_expBkg_err[11];
+
+		int Yields_norm_expBkg_16 =  norm_yields_expBkg[12] + norm_yields_expBkg[13] + norm_yields_expBkg[14] + norm_yields_expBkg[15];
+		int Yields_norm_expBkg_16_err =  norm_yields_expBkg_err[12] + norm_yields_expBkg_err[13] + norm_yields_expBkg_err[14] + norm_yields_expBkg_err[15];
+
+		//add yields for same year
+		for(int j=0; j<str_Ds.size(); j++){
+
+			Yields_sig_11 += ((RooRealVar*) fitParams->find("n_sig_{y11;" + str_Ds[j] + "}"))->getVal();
+			Yields_sig_11_err += ((RooRealVar*) fitParams->find("n_sig_{y11;" + str_Ds[j] + "}"))->getError();
+
+			Yields_sig_12 += ((RooRealVar*) fitParams->find("n_sig_{y12;" + str_Ds[j] + "}"))->getVal();
+			Yields_sig_12_err += ((RooRealVar*) fitParams->find("n_sig_{y12;" + str_Ds[j] + "}"))->getError();
+
+			Yields_sig_15 += ((RooRealVar*) fitParams->find("n_sig_{y15;" + str_Ds[j] + "}"))->getVal();
+			Yields_sig_15_err += ((RooRealVar*) fitParams->find("n_sig_{y15;" + str_Ds[j] + "}"))->getError();
+
+			Yields_sig_16 += ((RooRealVar*) fitParams->find("n_sig_{y16;" + str_Ds[j] + "}"))->getVal();
+			Yields_sig_16_err += ((RooRealVar*) fitParams->find("n_sig_{y16;" + str_Ds[j] + "}"))->getError();
+
+
+			Yields_sigB0_11 += ((RooRealVar*) fitParams->find("n_sig_B0_{y11;" + str_Ds[j] + "}"))->getVal();
+			Yields_sigB0_11_err += ((RooRealVar*) fitParams->find("n_sig_B0_{y11;" + str_Ds[j] + "}"))->getError();
+
+			Yields_sigB0_12 += ((RooRealVar*) fitParams->find("n_sig_B0_{y12;" + str_Ds[j] + "}"))->getVal();
+			Yields_sigB0_12_err += ((RooRealVar*) fitParams->find("n_sig_B0_{y12;" + str_Ds[j] + "}"))->getError();
+
+			Yields_sigB0_15 += ((RooRealVar*) fitParams->find("n_sig_B0_{y15;" + str_Ds[j] + "}"))->getVal();
+			Yields_sigB0_15_err += ((RooRealVar*) fitParams->find("n_sig_B0_{y15;" + str_Ds[j] + "}"))->getError();
+
+			Yields_sigB0_16 += ((RooRealVar*) fitParams->find("n_sig_B0_{y16;" + str_Ds[j] + "}"))->getVal();
+			Yields_sigB0_16_err += ((RooRealVar*) fitParams->find("n_sig_B0_{y16;" + str_Ds[j] + "}"))->getError();
+
+
+			Yields_partRecoBkg_11 += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y11;" + str_Ds[j] + "}"))->getVal();
+			Yields_partRecoBkg_11_err += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y11;" + str_Ds[j] + "}"))->getError();
+
+			Yields_partRecoBkg_12 += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y12;" + str_Ds[j] + "}"))->getVal();
+			Yields_partRecoBkg_12_err += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y12;" + str_Ds[j] + "}"))->getError();
+
+			Yields_partRecoBkg_15 += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y15;" + str_Ds[j] + "}"))->getVal();
+			Yields_partRecoBkg_15_err += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y15;" + str_Ds[j] + "}"))->getError();
+
+			Yields_partRecoBkg_16 += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y16;" + str_Ds[j] + "}"))->getVal();
+			Yields_partRecoBkg_16_err += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y16;" + str_Ds[j] + "}"))->getError();
+
+
+			Yields_misIDBkg_11 += ((RooRealVar*) fitParams->find("n_misID_bkg_{y11;" + str_Ds[j] + "}"))->getVal();
+			Yields_misIDBkg_11_err += ((RooRealVar*) fitParams->find("n_misID_bkg_{y11;" + str_Ds[j] + "}"))->getError();
+
+			Yields_misIDBkg_12 += ((RooRealVar*) fitParams->find("n_misID_bkg_{y12;" + str_Ds[j] + "}"))->getVal();
+			Yields_misIDBkg_12_err += ((RooRealVar*) fitParams->find("n_misID_bkg_{y12;" + str_Ds[j] + "}"))->getError();
+
+			Yields_misIDBkg_15 += ((RooRealVar*) fitParams->find("n_misID_bkg_{y15;" + str_Ds[j] + "}"))->getVal();
+			Yields_misIDBkg_15_err += ((RooRealVar*) fitParams->find("n_misID_bkg_{y15;" + str_Ds[j] + "}"))->getError();
+
+			Yields_misIDBkg_16 += ((RooRealVar*) fitParams->find("n_misID_bkg_{y16;" + str_Ds[j] + "}"))->getVal();
+			Yields_misIDBkg_16_err += ((RooRealVar*) fitParams->find("n_misID_bkg_{y16;" + str_Ds[j] + "}"))->getError();
+
+
+			Yields_expBkg_11 += ((RooRealVar*) fitParams->find("n_exp_bkg_{y11;" + str_Ds[j] + "}"))->getVal();
+			Yields_expBkg_11_err += ((RooRealVar*) fitParams->find("n_exp_bkg_{y11;" + str_Ds[j] + "}"))->getError();
+
+			Yields_expBkg_12 += ((RooRealVar*) fitParams->find("n_exp_bkg_{y12;" + str_Ds[j] + "}"))->getVal();
+			Yields_expBkg_12_err += ((RooRealVar*) fitParams->find("n_exp_bkg_{y12;" + str_Ds[j] + "}"))->getError();
+
+			Yields_expBkg_15 += ((RooRealVar*) fitParams->find("n_exp_bkg_{y15;" + str_Ds[j] + "}"))->getVal();
+			Yields_expBkg_15_err += ((RooRealVar*) fitParams->find("n_exp_bkg_{y15;" + str_Ds[j] + "}"))->getError();
+
+			Yields_expBkg_16 += ((RooRealVar*) fitParams->find("n_exp_bkg_{y16;" + str_Ds[j] + "}"))->getVal();
+			Yields_expBkg_16_err += ((RooRealVar*) fitParams->find("n_exp_bkg_{y16;" + str_Ds[j] + "}"))->getError();
+		}
+
+		ofstream datafile;
+		datafile.open ("YieldsTable.tex");
+
+        	datafile << "\\begin{table}[h]" << "\n";
+        	datafile << "\\centering" << "\n";
+        	datafile << " \\begin{tabular}{l || l l l l}" << "\n";
+        	datafile << "fit component & yield 2011 & yield 2012 & yield 2015 & yield 2016\\" << " \\\\" << "\n";
+        	datafile << "\\hline\\hline" << "\n";
+		datafile << "$m(\\Ds\\kaon\\pion\\pion)$" << " & " << " & " << " & " << " & "<< " \\\\" << "\n";
+        	datafile << "\\hline" << "\n";
+
+
+		datafile << std::setprecision(0) << "$\\Bs\\to\\Ds\\kaon\\pion\\pion$" << " & "<< Yields_sig_11 << " $\\pm$ " << Yields_sig_11_err << " & " << Yields_sig_12 << " $\\pm$ " << Yields_sig_12_err << " & " << Yields_sig_15 << " $\\pm$ " << Yields_sig_15_err << " & " << Yields_sig_16 << " $\\pm$ " <<  Yields_sig_16_err << " \\\\" << "\n";
+
+		datafile << std::setprecision(0) << "$\\Bz\\to\\Ds\\kaon\\pion\\pion$" << " & "<< Yields_sigB0_11 << " $\\pm$ " << Yields_sigB0_11_err << " & " << Yields_sigB0_12 << " $\\pm$ " << Yields_sigB0_12_err << " & " << Yields_sigB0_15 << " $\\pm$ " << Yields_sigB0_15_err << " & " << Yields_sigB0_16 << " $\\pm$ " <<  Yields_sigB0_16_err << " \\\\" << "\n";
+
+		datafile << std::setprecision(0) << "$\\Bz/\\Bs\\to\\Ds^{*}\\kaon\\pion\\pion$" << " & "<< Yields_partRecoBkg_11 << " $\\pm$ " << Yields_partRecoBkg_11_err << " & " << Yields_partRecoBkg_12 << " $\\pm$ " << Yields_partRecoBkg_12_err << " & " << Yields_partRecoBkg_15 << " $\\pm$ " << Yields_partRecoBkg_15_err << " & " << Yields_partRecoBkg_16 << " $\\pm$ " <<  Yields_partRecoBkg_16_err << " \\\\" << "\n";
+
+		datafile << std::setprecision(0) << "$\\Bs\\to\\Ds^{(*)}\\pion\\pion\\pion$" << " & "<< Yields_misIDBkg_11 << " $\\pm$ " << Yields_misIDBkg_11_err << " & " << Yields_misIDBkg_12 << " $\\pm$ " << Yields_misIDBkg_12_err << " & " << Yields_misIDBkg_15 << " $\\pm$ " << Yields_misIDBkg_15_err << " & " << Yields_misIDBkg_16 << " $\\pm$ " <<  Yields_misIDBkg_16_err << " \\\\" << "\n";
+
+		datafile << std::setprecision(0) << "combinatorial" << " & "<< Yields_expBkg_11 << " $\\pm$ " << Yields_expBkg_11_err << " & " << Yields_expBkg_12 << " $\\pm$ " << Yields_expBkg_12_err << " & " << Yields_expBkg_15 << " $\\pm$ " << Yields_expBkg_15_err << " & " << Yields_expBkg_16 << " $\\pm$ " <<  Yields_expBkg_16_err << " \\\\" << "\n";
+
+
+        	datafile << "\\hline\\hline" << "\n";
+		datafile << "$m(\\Ds\\pion\\pion\\pion)$" << " & " << " & " << " & " << " & "<< " \\\\" << "\n";
+        	datafile << "\\hline" << "\n";
+
+
+		datafile << std::setprecision(0) << "$\\Bs\\to\\Ds\\pion\\pion\\pion$" << " & "<< Yields_norm_sig_11 << " $\\pm$ " << Yields_norm_sig_11_err << " & " << Yields_norm_sig_12 << " $\\pm$ " << Yields_norm_sig_12_err << " & " << Yields_norm_sig_15 << " $\\pm$ " << Yields_norm_sig_15_err  << " & " << Yields_norm_sig_16 << " $\\pm$ " << Yields_norm_sig_16_err << " \\\\" << "\n";
+
+		datafile << std::setprecision(0) << "$\\Bs\\to\\Ds^{*}\\pion\\pion\\pion$" << " & "<< Yields_norm_partBkg_11 << " $\\pm$ " << Yields_norm_partBkg_11_err  << " & " << Yields_norm_partBkg_12 << " $\\pm$ " << Yields_norm_partBkg_12_err << " & " << Yields_norm_partBkg_15 << " $\\pm$ " << Yields_norm_partBkg_15_err << " & " << Yields_norm_partBkg_16 << " $\\pm$ " << Yields_norm_partBkg_16_err << " \\\\" << "\n";
+
+		datafile << std::setprecision(0) << "combinatorial" << " & "<< Yields_norm_expBkg_11 << " $\\pm$ " << Yields_norm_expBkg_11_err << " & " << Yields_norm_expBkg_12 << " $\\pm$ " << Yields_norm_expBkg_12_err << " & " << Yields_norm_expBkg_15 << " $\\pm$ " << Yields_norm_expBkg_15_err << " & " << Yields_norm_expBkg_16 << " $\\pm$ " << Yields_norm_expBkg_16_err << " \\\\" << "\n";
+
+
+        	datafile << "\\hline" << "\n";
+        	datafile << "\\end{tabular}" << "\n";
+        	datafile << "\\caption{Summary of yields obtained from the fits to Run1 and Run2 data.}" << "\n";
+        	datafile << "\\label{table:YieldsFromMassfit}" << "\n";
+        	datafile << "\\end{table}" << "\n";
+		datafile.close();
+
 	}
 }
 
