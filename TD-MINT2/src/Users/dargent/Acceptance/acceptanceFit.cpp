@@ -3,6 +3,7 @@
 #include <cmath>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 #include <TChain.h>
 #include <TTree.h>
 #include <TH1D.h>
@@ -147,11 +148,23 @@ vector<double> fitSplineAcc(string CutString){
 	RooFitResult *myfitresult;
 	myfitresult = timePDF->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
 	myfitresult->Print("v");
-	
-	//put coefficients into vector
+
+
+        ofstream datafile;
+	datafile.open ("SplineCoeffs_Bs2DsPiPiPi_Data.tex");
+	datafile << "\\begin{table}[h]" << "\n";
+	datafile << "\\centering" << "\n";
+	datafile << "\\begin{tabular}{l l}" << "\n";
+	datafile << "Parameter & Fit to $\\Bs\\to\\Ds\\pion\\pion\\pion$ data \\\\" << "\n";
+	datafile << "\\hline" << "\n";
+
+
+	//put coefficients into vector and table
 	vector<double> myCoeffs;
 	for(int i= 0; i< values.size()+2; i++){
 		myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal());
+
+		datafile << ("$v_{"+anythingToString(i)).c_str()<<"}$ & " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() << " $\\pm$ "  << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << "\\\\" << "\n"; 
 	}
 
 	//only fill errors for comparison plots
@@ -160,6 +173,12 @@ vector<double> fitSplineAcc(string CutString){
 			myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError());
 		}
 	}
+
+
+	datafile << "\\end{tabular}" << "\n";
+	datafile << "\\caption{Summary of the obtained parameters from the acceptance fit to " <<CutString.c_str()<<  ".} " << "\n";
+	datafile << "\\label{table: Splines}" << "\n";
+	datafile << "\\end{table}" << "\n";
 
 	/// Plot
 	int bin = 80;
@@ -356,10 +375,28 @@ vector<double> fitSplineAccMC(string CutString){
 	myfitresult = timePDF->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
 	myfitresult->Print("v");
 
+
+        ofstream datafile;
+	datafile.open ("SplineCoeffs_Bs2DsPiPiPi_MC.tex");
+	datafile << "\\begin{table}[h]" << "\n";
+	datafile << "\\centering" << "\n";
+	datafile << "\\begin{tabular}{l l}" << "\n";
+	datafile << "Parameter & Fit to $\\Bs\\to\\Ds\\pion\\pion\\pion$ mc \\\\" << "\n";
+	datafile << "\\hline" << "\n";
+
+
 	std::vector<double> myCoeffs;
 	for(int i= 0; i< values.size()+2; i++){
 		myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal());
+
+		datafile << ("$v_{"+anythingToString(i)).c_str()<<"}$ & " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() << " $\\pm$ "  << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << "\\\\" << "\n"; 
 	}
+
+
+	datafile << "\\end{tabular}" << "\n";
+	datafile << "\\caption{Summary of the obtained parameters from the acceptance fit to " <<CutString.c_str()<<  ".} " << "\n";
+	datafile << "\\label{table: Splines}" << "\n";
+	datafile << "\\end{table}" << "\n";
 
 
 double range_dw = Bs_TAU.getMin();
@@ -635,6 +672,23 @@ void SplineAccCorrection(string CutString){
 RooFitResult *myfitresult;
 myfitresult = timePDF->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE));
 myfitresult->Print("v");
+
+        ofstream datafile;
+	datafile.open ("SplineCoeffs_Bs2DsKPiPi_MC.tex");
+	datafile << "\\begin{table}[h]" << "\n";
+	datafile << "\\centering" << "\n";
+	datafile << "\\begin{tabular}{l l}" << "\n";
+	datafile << "Parameter & Fit to $\\Bs\\to\\Ds\\kaon\\pion\\pion$ mc \\\\" << "\n";
+	datafile << "\\hline" << "\n";
+
+	for(int i= 0; i< values.size()+2; i++){
+		datafile << ("$v_{"+anythingToString(i)).c_str()<<"}$ & " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() << " $\\pm$ "  << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << "\\\\" << "\n"; 
+	}
+
+	datafile << "\\end{tabular}" << "\n";
+	datafile << "\\caption{Summary of the obtained parameters from the acceptance fit to " <<CutString.c_str()<<  ".} " << "\n";
+	datafile << "\\label{table: Splines}" << "\n";
+	datafile << "\\end{table}" << "\n";
 
 
 double range_dw = Bs_TAU.getMin();
