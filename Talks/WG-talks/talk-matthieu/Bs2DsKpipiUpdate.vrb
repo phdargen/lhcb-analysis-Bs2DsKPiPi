@@ -1,0 +1,25 @@
+\frametitle{Fit fractions}
+
+	\centering
+%      $F_i = \frac{\int ( \vert a_i  A_i(x) \vert^2 + \vert \bar a_i  \bar A_i(x) \vert^2 ) \, \text{d}x}{\int ( \vert A(x) \vert^2 + \vert\bar A(x) \vert^2 ) \, \text{d}x} $ \\
+      $F^{eff}_i = \frac{\int  \vert a^{eff}_i  A^{eff}_i(x) \vert^2  \, \text{d}x}{\int  \vert A^{eff}(x) \vert^2 \, \text{d}x} $ \\
+
+
+	\tiny
+%	\centering
+\begin{verbatim}
+	(1) Bs0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds- = 0.0520926 +/- 0.0145326
+	(2) Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds- = 0.090921 +/- 0.0214
+	(3) Bs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds- = 0.315657 +/- 0.0320033
+	(4) Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds- = 0.127998 +/- 0.0175661
+	(5) Bs0->NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-) = 0.0265594 +/- 0.0114541
+	(6) Bs0[D]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-) = 0.0108669 +/- 0.0069929
+	(7) Bs0->NonResA0(->sigma10(->pi+,pi-),Ds-),K+ = 0.0715845 +/- 0.0247102
+	(8) Bs0->NonResV0(->Ds-,K+),sigma10(->pi+,pi-) = 0.139525 +/- 0.0321404
+	(9) Bs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds- = 0.16488 +/- 0.0379784
+	(10) Bs0->K(1)(1400)+(->rho(770)0(->pi+,pi-),K+),Ds- = 0.071005 +/- 0.0218139
+	(11) Bs0->K*(1410)+(->rho(770)0(->pi+,pi-),K+),Ds- = 0.0766048 +/- 0.014699
+	(12) Bs0->NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+ = 0.0210193 +/- 0.0104696
+	 sum = 1.16871 +/- 0.0595647(fit)
+\end{verbatim}
+
