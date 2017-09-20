@@ -6,6 +6,7 @@
 "cut_BDT" 	0.35
 "numCPU"	 10
 "newTable"	1
+"updateAnaNotePlots"  1
 
 * Norm fit :
 "fixExpBkgFromSidebands"	 0

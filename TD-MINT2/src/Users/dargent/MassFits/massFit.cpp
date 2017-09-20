@@ -554,6 +554,7 @@ vector< vector<double> > fitNorm(){
 	NamedParameter<double> cut_BDT("cut_BDT",0.);
 	NamedParameter<string> inFileName("inFileNameNorm",(string)"/auto/data/dargent/BsDsKpipi/BDT/Data/norm.root");
 	NamedParameter<string> outFileName("outFileNameNorm",(string)"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
+        NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 
 	/// Define categories
 	RooCategory year("year","year") ;
@@ -738,22 +739,89 @@ vector< vector<double> > fitNorm(){
 	frame->Draw();
 	leg.Draw();
 	c->Print("eps/norm.eps");
+        if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/norm.pdf");
 
 	double chi2 = 0.;
 	double covmatr = result->covQual();
 	double edm = result->edm();
-	RooHist* hpull = frame->pullHist("data","pdf") ;
-	frame= DTF_Bs_M.frame();
-	frame->addPlotable(hpull,"P") ;
-        frame->Draw();
-        c->Print("eps/norm_pull.eps");
 
+	TCanvas* canvas = new TCanvas();
+        canvas->SetTopMargin(0.05);
+        canvas->SetBottomMargin(0.05);
+        
+        double max = 5.0 ;
+        double min = -5.0 ;
+        double rangeX = max-min;
+        double zero = max/rangeX;
+        
+        TGraph* graph = new TGraph(2);
+        graph->SetMaximum(max);
+        graph->SetMinimum(min);
+        graph->SetPoint(1,min_MM,0);
+        graph->SetPoint(2,max_MM,0);
+        
+        TGraph* graph2 = new TGraph(2);
+        graph2->SetMaximum(max);
+        graph2->SetMinimum(min);
+        graph2->SetPoint(1,min_MM,-3);
+        graph2->SetPoint(2,max_MM,-3);
+        graph2->SetLineColor(kRed);
+        
+        TGraph* graph3 = new TGraph(2);
+        graph3->SetMaximum(max);
+        graph3->SetMinimum(min);
+        graph3->SetPoint(1,min_MM,3);
+        graph3->SetPoint(2,max_MM,3);
+        graph3->SetLineColor(kRed);
+       
+        TPad* pad1 = new TPad("upperPad", "upperPad", .0, .3, 1.0, 1.0);
+        pad1->SetBorderMode(0);
+        pad1->SetBorderSize(-1);
+        pad1->SetBottomMargin(0.);
+        pad1->Draw();
+        pad1->cd();
+        frame->GetYaxis()->SetRangeUser(0.01,frame->GetMaximum()*1.);
+        frame->Draw();
+        leg.Draw();
+        
+        canvas->cd();
+        TPad* pad2 = new TPad("lowerPad", "lowerPad", .0, .005, 1.0, .3);
+        pad2->SetBorderMode(0);
+        pad2->SetBorderSize(-1);
+        pad2->SetFillStyle(0);
+        pad2->SetTopMargin(0.);
+        pad2->SetBottomMargin(0.35);
+        pad2->Draw();
+        pad2->cd();
+        
+        RooPlot* frame_p = DTF_Bs_M.frame();
+        frame_p->GetYaxis()->SetNdivisions(5);
+        frame_p->GetYaxis()->SetLabelSize(0.12);
+        frame_p->GetXaxis()->SetLabelSize(0.12);
+        frame_p->GetXaxis()->SetTitleOffset(0.75);
+        frame_p->GetXaxis()->SetTitleSize(0.2);
+        frame_p->GetXaxis()->SetTitle("m(D_{s}^{-} #pi^{+}#pi^{+}#pi^{-}) [MeV/c^{2}]");
+        
+        RooHist* hpull  = frame->pullHist("data","pdf");
+        frame_p->addPlotable(hpull,"BX");
+        frame_p->GetYaxis()->SetRangeUser(min,max);
+        
+        frame_p->Draw();
+        graph->Draw("same");
+        graph2->Draw("same");
+        graph3->Draw("same");
+        
+        pad2->Update();
+        canvas->Update();
+        canvas->SaveAs("eps/norm_pull.eps");
+        if(updateAnaNotePlots)canvas->Print("../../../../../TD-AnaNote/latex/figs/MassFit/norm_pull.pdf");
+        
 	/// Output file
 	TFile *output;
 	TTree* out_tree = 0;
 	double sw;
 	Int_t t_year, t_Ds_finalState;
-	TBranch *b_sw, *b_year,*b_Ds_finalState;
+	TBranch *b_sw, *b_w, *b_year,*b_Ds_finalState;
 
 	if(sWeight){
 		output = new TFile(((string)outFileName).c_str(),"RECREATE");
@@ -761,6 +829,8 @@ vector< vector<double> > fitNorm(){
 
 		out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
     		b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
+    		b_w = out_tree->Branch("weight", &sw, "weight/D");
+
         	out_tree->SetBranchAddress("year", &t_year, &b_year);
         	out_tree->SetBranchAddress("Ds_finalState", &t_Ds_finalState, &b_Ds_finalState);
 		if(out_tree->GetEntries() != data->numEntries()) {
@@ -835,11 +905,13 @@ vector< vector<double> > fitNorm(){
 			lhcbtext->SetTextFont(132);
 			lhcbtext->DrawLatex(0.6,0.78,label);
 			c->Print("eps/norm_" + str_year[i] + "_" + str_Ds[j] + ".eps");
+			if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/norm_" + str_year[i] + "_" + str_Ds[j] + ".pdf");
 			hpull = frame->pullHist("data_slice2","pdf_slice2") ;
 			frame= DTF_Bs_M.frame();
 			frame->addPlotable(hpull,"P") ;
         		frame->Draw();
         		c->Print("eps/norm_pull_" + str_year[i] + "_" + str_Ds[j] + ".eps");
+			if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/norm_pull_" + str_year[i] + "_" + str_Ds[j] + ".pdf");
 
 			/// Get signal yield
 			yield += ((RooRealVar*) fitParams->find("n_sig_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getVal();
@@ -886,6 +958,7 @@ vector< vector<double> > fitNorm(){
 		for(int n = 0; n < out_tree->GetEntries(); n++){
 			sw = weights[n];
 			b_sw->Fill();
+			b_w->Fill();
 		}
 	 	out_tree->Write();
    		output->Close();
@@ -939,6 +1012,7 @@ void fitSignal(){
 	NamedParameter<int> useNormScaleFactors("useNormScaleFactors",1);
 	NamedParameter<int> optimizeBDT("optimizeBDT",0);
 	NamedParameter<int> newTable("newTable",0);
+        NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 
 	NamedParameter<string> inFileName("inFileNameSignal",(string)"/auto/data/dargent/BsDsKpipi/BDT/Data/signal.root");
 	NamedParameter<string> outFileName("outFileNameSignal",(string)"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
@@ -1213,22 +1287,92 @@ void fitSignal(){
 	frame->Draw();
 	leg.Draw();
 	c->Print("eps/signal.eps");
+	if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/signal.pdf");
 
 	double chi2 = 0.;
 	double covmatr = result->covQual();
 	double edm = result->edm();
-	RooHist* hpull = frame->pullHist("data","pdf") ;
-	frame= DTF_Bs_M.frame();
-	frame->addPlotable(hpull,"P") ;
+
+	TCanvas* canvas = new TCanvas();
+	canvas->cd();
+	canvas->UseCurrentStyle();
+        canvas->SetTopMargin(0.05);
+        canvas->SetBottomMargin(0.05);
+        
+        double max = 5.0 ;
+        double min = -5.0 ;
+        double rangeX = max-min;
+        double zero = max/rangeX;
+        
+        TGraph* graph = new TGraph(2);
+        graph->SetMaximum(max);
+        graph->SetMinimum(min);
+        graph->SetPoint(1,min_MM,0);
+        graph->SetPoint(2,max_MM,0);
+        
+        TGraph* graph2 = new TGraph(2);
+        graph2->SetMaximum(max);
+        graph2->SetMinimum(min);
+        graph2->SetPoint(1,min_MM,-3);
+        graph2->SetPoint(2,max_MM,-3);
+        graph2->SetLineColor(kRed);
+        
+        TGraph* graph3 = new TGraph(2);
+        graph3->SetMaximum(max);
+        graph3->SetMinimum(min);
+        graph3->SetPoint(1,min_MM,3);
+        graph3->SetPoint(2,max_MM,3);
+        graph3->SetLineColor(kRed);
+       
+        TPad* pad1 = new TPad("upperPad", "upperPad", .0, .3, 1.0, 1.0);
+        pad1->SetBorderMode(0);
+        pad1->SetBorderSize(-1);
+        pad1->SetBottomMargin(0.);
+        pad1->Draw();
+        pad1->cd();
+        frame->GetYaxis()->SetRangeUser(0.01,frame->GetMaximum()*1.);
         frame->Draw();
-        c->Print("eps/signal_pull.eps");
+        leg.Draw();
+        
+        canvas->cd();
+        TPad* pad2 = new TPad("lowerPad", "lowerPad", .0, .005, 1.0, .3);
+        pad2->SetBorderMode(0);
+        pad2->SetBorderSize(-1);
+        pad2->SetFillStyle(0);
+        pad2->SetTopMargin(0.);
+        pad2->SetBottomMargin(0.35);
+        pad2->Draw();
+        pad2->cd();
+        
+        RooPlot* frame_p = DTF_Bs_M.frame();
+        frame_p->GetYaxis()->SetNdivisions(5);
+        frame_p->GetYaxis()->SetLabelSize(0.12);
+        frame_p->GetXaxis()->SetLabelSize(0.12);
+        frame_p->GetXaxis()->SetTitleOffset(0.75);
+        frame_p->GetXaxis()->SetTitleSize(0.2);
+        frame_p->GetXaxis()->SetTitle("m(D_{s}^{-} K^{+}#pi^{+}#pi^{-}) [MeV/c^{2}]");
+        
+        RooHist* hpull  = frame->pullHist("data","pdf");
+        frame_p->addPlotable(hpull,"BX");
+        frame_p->GetYaxis()->SetRangeUser(min,max);
+        
+        frame_p->Draw();
+        graph->Draw("same");
+        graph2->Draw("same");
+        graph3->Draw("same");
+        
+        pad2->Update();
+        canvas->Update();
+        canvas->Print("eps/signal_pull.eps");
+        if(updateAnaNotePlots)canvas->Print("../../../../../TD-AnaNote/latex/figs/MassFit/signal_pull.pdf");
+	c->cd();
 
 	/// Output file
 	TFile *output;
 	TTree* out_tree;
 	double sw;
 	Int_t t_year, t_Ds_finalState;
-	TBranch *b_sw, *b_year,*b_Ds_finalState;
+	TBranch *b_sw,*b_w, *b_year,*b_Ds_finalState;
 
 	if(sWeight){
 		output = new TFile(((string)outFileName).c_str(),"RECREATE");
@@ -1236,6 +1380,8 @@ void fitSignal(){
 
 		out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
     		b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
+    		b_w = out_tree->Branch("weight", &sw, "weight/D");
+
         	out_tree->SetBranchAddress("year", &t_year, &b_year);
         	out_tree->SetBranchAddress("Ds_finalState", &t_Ds_finalState, &b_Ds_finalState);
 		if(out_tree->GetEntries() != data->numEntries()) {
@@ -1267,6 +1413,7 @@ void fitSignal(){
         	simPdf->plotOn(frame,Name("pdf_slice"),Slice(year,str_year[i]),ProjWData(year,*data),LineColor(kBlue),LineWidth(3));
         	frame->Draw();
         	c->Print("eps/signal_" + str_year[i] + ".eps");
+
 		hpull = frame->pullHist("data_slice","pdf_slice") ;
 		frame= DTF_Bs_M.frame();
 		frame->addPlotable(hpull,"P") ;
@@ -1311,11 +1458,13 @@ void fitSignal(){
 			lhcbtext->SetTextFont(132);
 			lhcbtext->DrawLatex(0.6,0.78,label);
 			c->Print("eps/signal_" + str_year[i] + "_" + str_Ds[j] + ".eps");
+			if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/signal_" + str_year[i] + "_" + str_Ds[j] + ".pdf");
 			hpull = frame->pullHist("data_slice2","pdf_slice2") ;
 			frame= DTF_Bs_M.frame();
 			frame->addPlotable(hpull,"P") ;
         		frame->Draw();
         		c->Print("eps/signal_pull_" + str_year[i] + "_" + str_Ds[j] + ".eps");
+			if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/signal_pull_" + str_year[i] + "_" + str_Ds[j] + ".pdf");
 
 			/// Get signal yield
 			signal_yield += ((RooRealVar*) fitParams->find("n_sig_{"+str_year[i] + ";" + str_Ds[j] + "}"))->getVal();
@@ -1359,6 +1508,7 @@ void fitSignal(){
 		for(int n = 0; n < out_tree->GetEntries(); n++){
 			sw = weights[n];
 			b_sw->Fill();
+			b_w->Fill();
 		}
 
 	 	out_tree->Write();
@@ -1471,8 +1621,6 @@ void fitSignal(){
 		int Yields_expBkg_16 = 0;
 		int Yields_expBkg_16_err = 0;
 
-
-
 		vector<double> norm_yields = norm_paramSet[0];
 		vector<double> norm_yields_err = norm_paramSet[4];
 
@@ -1494,7 +1642,6 @@ void fitSignal(){
 		int Yields_norm_sig_16 =  norm_yields[12] + norm_yields[13] + norm_yields[14] + norm_yields[15];
 		int Yields_norm_sig_16_err =  norm_yields_err[12] + norm_yields_err[13] + norm_yields_err[14] + norm_yields_err[15];
 
-
 		int Yields_norm_partBkg_11 =  norm_yields_partBkg[0] + norm_yields_partBkg[1] + norm_yields_partBkg[2] + norm_yields_partBkg[3];
 		int Yields_norm_partBkg_11_err =  norm_yields_partBkg_err[0] + norm_yields_partBkg_err[1] + norm_yields_partBkg_err[2] + norm_yields_partBkg_err[3];
 
@@ -1506,7 +1653,6 @@ void fitSignal(){
 
 		int Yields_norm_partBkg_16 =  norm_yields_partBkg[12] + norm_yields_partBkg[13] + norm_yields_partBkg[14] + norm_yields_partBkg[15];
 		int Yields_norm_partBkg_16_err =  norm_yields_partBkg_err[12] + norm_yields_partBkg_err[13] + norm_yields_partBkg_err[14] + norm_yields_partBkg_err[15];
-
 
 		int Yields_norm_expBkg_11 =  norm_yields_expBkg[0] + norm_yields_expBkg[1] + norm_yields_expBkg[2] + norm_yields_expBkg[3];
 		int Yields_norm_expBkg_11_err =  norm_yields_expBkg_err[0] + norm_yields_expBkg_err[1] + norm_yields_expBkg_err[2] + norm_yields_expBkg_err[3];
@@ -1599,7 +1745,6 @@ void fitSignal(){
 		datafile << "$m(\\Ds\\kaon\\pion\\pion)$" << " & " << " & " << " & " << " & "<< " \\\\" << "\n";
         	datafile << "\\hline" << "\n";
 
-
 		datafile << std::setprecision(0) << "$\\Bs\\to\\Ds\\kaon\\pion\\pion$" << " & "<< Yields_sig_11 << " $\\pm$ " << Yields_sig_11_err << " & " << Yields_sig_12 << " $\\pm$ " << Yields_sig_12_err << " & " << Yields_sig_15 << " $\\pm$ " << Yields_sig_15_err << " & " << Yields_sig_16 << " $\\pm$ " <<  Yields_sig_16_err << " \\\\" << "\n";
 
 		datafile << std::setprecision(0) << "$\\Bz\\to\\Ds\\kaon\\pion\\pion$" << " & "<< Yields_sigB0_11 << " $\\pm$ " << Yields_sigB0_11_err << " & " << Yields_sigB0_12 << " $\\pm$ " << Yields_sigB0_12_err << " & " << Yields_sigB0_15 << " $\\pm$ " << Yields_sigB0_15_err << " & " << Yields_sigB0_16 << " $\\pm$ " <<  Yields_sigB0_16_err << " \\\\" << "\n";
@@ -1610,11 +1755,9 @@ void fitSignal(){
 
 		datafile << std::setprecision(0) << "combinatorial" << " & "<< Yields_expBkg_11 << " $\\pm$ " << Yields_expBkg_11_err << " & " << Yields_expBkg_12 << " $\\pm$ " << Yields_expBkg_12_err << " & " << Yields_expBkg_15 << " $\\pm$ " << Yields_expBkg_15_err << " & " << Yields_expBkg_16 << " $\\pm$ " <<  Yields_expBkg_16_err << " \\\\" << "\n";
 
-
         	datafile << "\\hline\\hline" << "\n";
 		datafile << "$m(\\Ds\\pion\\pion\\pion)$" << " & " << " & " << " & " << " & "<< " \\\\" << "\n";
         	datafile << "\\hline" << "\n";
-
 
 		datafile << std::setprecision(0) << "$\\Bs\\to\\Ds\\pion\\pion\\pion$" << " & "<< Yields_norm_sig_11 << " $\\pm$ " << Yields_norm_sig_11_err << " & " << Yields_norm_sig_12 << " $\\pm$ " << Yields_norm_sig_12_err << " & " << Yields_norm_sig_15 << " $\\pm$ " << Yields_norm_sig_15_err  << " & " << Yields_norm_sig_16 << " $\\pm$ " << Yields_norm_sig_16_err << " \\\\" << "\n";
 
@@ -1622,14 +1765,12 @@ void fitSignal(){
 
 		datafile << std::setprecision(0) << "combinatorial" << " & "<< Yields_norm_expBkg_11 << " $\\pm$ " << Yields_norm_expBkg_11_err << " & " << Yields_norm_expBkg_12 << " $\\pm$ " << Yields_norm_expBkg_12_err << " & " << Yields_norm_expBkg_15 << " $\\pm$ " << Yields_norm_expBkg_15_err << " & " << Yields_norm_expBkg_16 << " $\\pm$ " << Yields_norm_expBkg_16_err << " \\\\" << "\n";
 
-
         	datafile << "\\hline" << "\n";
         	datafile << "\\end{tabular}" << "\n";
         	datafile << "\\caption{Summary of yields obtained from the fits to Run1 and Run2 data.}" << "\n";
         	datafile << "\\label{table:YieldsFromMassfit}" << "\n";
         	datafile << "\\end{table}" << "\n";
 		datafile.close();
-
 	}
 }
 
