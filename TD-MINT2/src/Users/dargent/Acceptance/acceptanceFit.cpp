@@ -340,11 +340,11 @@ void fitSplineAccRatio(string CutString){
     /// SETUP FITTER AND FIT TO DECAYTIME DISTRIBUTION
     
     // SPLINE KNOTS
-   NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
+    NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
     vector<double> myBinning = knot_positions.getVector();
     
     // Spline for DsKpipi acceptance
-   NamedParameter<double> knot_values("knot_values", 3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.0, 1.7757e+00);
+    NamedParameter<double> knot_values("knot_values", 3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.0, 1.7757e+00);
     vector<double> values = knot_values.getVector() ;
     
     RooArgList tacc_list;
@@ -357,6 +357,10 @@ void fitSplineAccRatio(string CutString){
     
     tacc_list.add(*coeff_last);
     
+    cout << myBinning.size() << endl;
+    cout << values.size() << endl;
+    tacc_list.Print();
+
     RooCubicSplineFun* spline_signal = new RooCubicSplineFun("spline_signal", "spline_signal", Bs_TAU, myBinning, tacc_list);
     
     // Spline for DsKpipi MC acceptance
