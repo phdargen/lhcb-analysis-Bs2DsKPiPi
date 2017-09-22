@@ -21,6 +21,8 @@
 #include <TPaveText.h>
 #include <TNtuple.h>
 #include "TRandom3.h"
+#include <TGraphErrors.h>
+#include "TGraphAsymmErrors.h"
 #include <sstream>
 #include <RooDataSet.h>
 #include <RooMCStudy.h>
@@ -96,14 +98,16 @@ vector<double> FitTimeRes(double min, double max, string binName = ""){
 	Bs_DeltaTau->setRange(-0.2,0.2);
 
 	RooRealVar meanBs1("meanBs1", "B_{s} #mu", 0., -0.2, 0.2);
-	RooRealVar sigmaBs1("sigmaBs1", "B_{s} #sigma_{1}", 0.010,0.,0.2);
-	RooRealVar sigmaBs2("sigmaBs2", "B_{s} #sigma_{2}", 0.045,0.,0.2);
+	RooRealVar sigmaBs1("sigmaBs1", "B_{s} #sigma_{1}", 0.020,0.,0.1);
+	RooRealVar scale("scale", "scale", 2.,1.,10.);
+	RooFormulaVar sigmaBs2("sigmaBs2", "@0*@1", RooArgList(scale,sigmaBs1));
+	//RooRealVar sigmaBs2("sigmaBs2", "B_{s} #sigma_{2}", 0.045,0.,0.2);
 	RooRealVar sigmaBs3("sigmaBs3", "B_{s} #sigma_{3}", 0.040,0.,0.2);
 	RooGaussian GaussBs1("GaussBs1", "GaussBs1", *Bs_DeltaTau, meanBs1, sigmaBs1);
 	RooGaussian GaussBs2("GaussBs2", "GaussBs2", *Bs_DeltaTau, meanBs1, sigmaBs2);
 	RooGaussian GaussBs3("GaussBs3", "GaussBs3", *Bs_DeltaTau, meanBs1, sigmaBs3);
 	RooGaussian GaussBs("GaussBs", "GaussBs", *Bs_DeltaTau, meanBs1, sigmaBs1);
-	RooRealVar f_GaussBs("f_GaussBs" , "f__{B_{s}}", 0.5, 0., 1.);
+	RooRealVar f_GaussBs("f_GaussBs" , "f__{B_{s}}", 0.8, 0., 1.);
 	RooRealVar f_GaussBs2("f_GaussBs2" , "2f__{B_{s}}", 0.5, 0., 1.);
 	RooAddPdf DoubleGaussBs("DoubleGaussBs", "DoubleGaussBs", RooArgList(GaussBs1,GaussBs2),RooArgList(f_GaussBs));
 	RooAddPdf TripleGaussBs("TripleGaussBs", "TripleGaussBs", RooArgList(GaussBs1,GaussBs2,GaussBs3),RooArgList(f_GaussBs,f_GaussBs2));
@@ -131,120 +135,100 @@ vector<double> FitTimeRes(double min, double max, string binName = ""){
 	frame_m->GetXaxis()->SetTitleOffset( 1.00 );
 	frame_m->GetYaxis()->SetTitleOffset( 1.00 );
 	
-	data->plotOn(frame_m,Name("dataSetCut"),MarkerSize(0.5),Binning(bin));
-	DoubleGaussBs.plotOn(frame_m,Name("FullPdf"),LineColor(kBlack),LineWidth(2));
-	DoubleGaussBs.plotOn(frame_m,Components(GaussBs1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
-	DoubleGaussBs.plotOn(frame_m,Components(GaussBs2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
+	data->plotOn(frame_m,Name("dataSetCut"),Binning(bin));
+	DoubleGaussBs.plotOn(frame_m,Name("FullPdf"),LineColor(kBlue),LineWidth(2));
+	//DoubleGaussBs.plotOn(frame_m,Components(GaussBs1),LineColor(kRed+1),LineStyle(kDashed),LineWidth(1));
+	//DoubleGaussBs.plotOn(frame_m,Components(GaussBs2),LineColor(kMagenta+3),LineStyle(kDashed),LineWidth(1));
 	
-	TLatex* lhcbtext = new TLatex();
-	lhcbtext->SetTextFont(132);
-	lhcbtext->SetTextColor(1);
-	lhcbtext->SetTextSize(0.07);
-	lhcbtext->SetTextAlign(12);
-	
-	TCanvas* canvas = new TCanvas("canvas", "canvas", 1200, 800);
+	TCanvas* canvas = new TCanvas();
 	canvas->cd();
-	canvas->SetLeftMargin(0.01);
-	canvas->SetRightMargin(0.01);
-	canvas->SetTopMargin(0.05);
-	canvas->SetBottomMargin(0.05);
-	TPad* pad1 = new TPad("upperPad", "upperPad", .050, .22, 1.0, 1.0);
-	pad1->SetBorderMode(0);
-	pad1->SetBorderSize(-1);
-	pad1->SetFillStyle(0);
-	pad1->SetTickx(0);
-	pad1->SetLeftMargin(0.115);
-	pad1->SetRightMargin(0.05);
-	pad1->Draw();
-	pad1->cd();
-	frame_m->GetYaxis()->SetRangeUser(0.1,frame_m->GetMaximum()*1.0);
-	frame_m->Draw();
-	
-	lhcbtext->DrawTextNDC(0.70,0.85,"LHCb simulation");
-	lhcbtext->DrawTextNDC(0.70,0.75,"preliminary");
-	//lhcbtext->DrawTextNDC(0.70,0.65,"Bin(19 - 24) fs");
-	
-	canvas->cd();
-	TPad* pad2 = new TPad("lowerPad", "lowerPad", .050, .005, 1.0, .3275);
-	pad2->SetBorderMode(0);
-	pad2->SetBorderSize(-1);
-	pad2->SetFillStyle(0);
-	pad2->SetBottomMargin(0.35);
-	pad2->SetLeftMargin(0.115);
-	pad2->SetRightMargin(0.05);
-	pad2->SetTickx(0);
-	pad2->Draw();
-	pad2->SetLogy(0);
-	pad2->cd();
-	
-	frame_m->Print("v");
-	RooPlot* frame_p = Bs_DeltaTau->frame(Title("pull_frame"));
-	frame_p->Print("v");
-	frame_p->SetTitle("");
-	frame_p->GetYaxis()->SetTitle("");
-	frame_p->GetYaxis()->SetTitleSize(0.09);
-	frame_p->GetYaxis()->SetTitleOffset(0.26);
-	frame_p->GetYaxis()->SetTitleFont(62);
-	frame_p->GetYaxis()->SetNdivisions(106);
-	frame_p->GetYaxis()->SetLabelSize(0.12);
-	frame_p->GetYaxis()->SetLabelOffset(0.006);
-	frame_p->GetXaxis()->SetTitleSize(0.15);
-	frame_p->GetXaxis()->SetTitleFont(132);
-	frame_p->GetXaxis()->SetTitleOffset(0.85);
-	frame_p->GetXaxis()->SetNdivisions(515);
-	frame_p->GetYaxis()->SetNdivisions(5);
-	frame_p->GetXaxis()->SetLabelSize(0.12);
-	frame_p->GetXaxis()->SetLabelFont( 132 );
-	frame_p->GetYaxis()->SetLabelFont( 132 );
-	frame_p->GetXaxis()->SetTitle("#font[132]{#Deltat(B_{s}) [ps]}");
-	
-	TString* obsTS = new TString(Bs_DeltaTau->GetName());
-	TString* pullnameTS = new TString("FullPdf");
-	TString* pullname2TS = new TString("dataSetCut");
-	RooHist* pullHist  = frame_m->pullHist(pullname2TS->Data(),pullnameTS->Data());
-	frame_p->addPlotable(pullHist,"P");
-	
-	double chi2 = frame_m->chiSquare();
-	double chi22 = frame_m->chiSquare(pullnameTS->Data(),pullname2TS->Data());
-	
-	TAxis* axisY = pullHist->GetYaxis();
-	axisY->SetLabelSize(0.12);
-	axisY->SetNdivisions(5);
-	//axisX->SetLabelSize(0.12);
-	
-        double maxPull = 5.0 ;
-        double minPull = -5.0 ;
+        canvas->SetTopMargin(0.05);
+        canvas->SetBottomMargin(0.05);
+
+        TPad* pad1 = new TPad("upperPad", "upperPad", .0, .3, 1.0, 1.0);
+        pad1->SetBorderMode(0);
+        pad1->SetBorderSize(-1);
+        pad1->SetBottomMargin(0.);
+        pad1->Draw();
+        pad1->cd();
+        frame_m->GetYaxis()->SetRangeUser(0.01,frame_m->GetMaximum()*1.);
+        frame_m->Draw();
+
+	stringstream ss ;
+    	TString leg_min = " fs";
+    	ss << std::fixed << std::setprecision(1) << min*1000. ;
+    	leg_min = ss.str() + leg_min; 
+	ss.str("");
+    	TString leg_max = " fs";
+    	ss << std::fixed << std::setprecision(1) << max*1000. ;
+    	leg_max = ss.str() + leg_max; 
+
+        TLegend leg(0.6,0.5,0.9,0.9,"");
+        leg.SetLineStyle(0);
+        leg.SetLineColor(0);
+        leg.SetFillColor(0);
+        leg.SetTextFont(132);
+        leg.SetTextColor(1);
+        leg.SetTextSize(0.06);
+        leg.SetTextAlign(12);
+	leg.AddEntry((TObject*)0,"#font[22]{LHCb Simulation}","");
+	leg.AddEntry("dataSetCut",leg_min + " < #sigma_{t} < " + leg_max,"ep");
+	leg.AddEntry("FullPdf","Fit","l");
+        leg.Draw();
+
+        canvas->cd();
+        TPad* pad2 = new TPad("lowerPad", "lowerPad", .0, .005, 1.0, .3);
+        pad2->SetBorderMode(0);
+        pad2->SetBorderSize(-1);
+        pad2->SetFillStyle(0);
+        pad2->SetTopMargin(0.);
+        pad2->SetBottomMargin(0.35);
+        pad2->Draw();
+        pad2->cd();
         
+	RooPlot* frame_p = Bs_DeltaTau->frame();
+        frame_p->GetYaxis()->SetNdivisions(5);
+        frame_p->GetYaxis()->SetLabelSize(0.12);
+        frame_p->GetXaxis()->SetLabelSize(0.12);
+        frame_p->GetXaxis()->SetTitleOffset(0.75);
+        frame_p->GetXaxis()->SetTitleSize(0.2);
+	frame_p->GetXaxis()->SetTitle("#font[132]{#Deltat(B_{s}) [ps]}");
+        
+        RooHist* pullHist  = frame_m->pullHist("dataSetCut","FullPdf");
+        frame_p->addPlotable(pullHist,"BX");
+        
+        double maxPull = 5.0 ;
+        double minPull = -5.0 ;        
         TGraph* graph = new TGraph(2);
         graph->SetMaximum(maxPull);
         graph->SetMinimum(minPull);
-        graph->SetPoint(1,Bs_DeltaTau->getMin(),0);
-        graph->SetPoint(2,Bs_DeltaTau->getMax(),0);
+        graph->SetPoint(0,Bs_DeltaTau->getMin(),0);
+        graph->SetPoint(1,Bs_DeltaTau->getMax(),0);
         
         TGraph* graph2 = new TGraph(2);
         graph2->SetMaximum(maxPull);
         graph2->SetMinimum(minPull);
-        graph2->SetPoint(1,Bs_DeltaTau->getMin(),-3);
-        graph2->SetPoint(2,Bs_DeltaTau->getMax(),-3);
+        graph2->SetPoint(0,Bs_DeltaTau->getMin(),-3);
+        graph2->SetPoint(1,Bs_DeltaTau->getMax(),-3);
         graph2->SetLineColor(kRed);
         
         TGraph* graph3 = new TGraph(2);
         graph3->SetMaximum(maxPull);
         graph3->SetMinimum(minPull);
-        graph3->SetPoint(1,Bs_DeltaTau->getMin(),3);
-        graph3->SetPoint(2,Bs_DeltaTau->getMax(),3);
+        graph3->SetPoint(0,Bs_DeltaTau->getMin(),3);
+        graph3->SetPoint(1,Bs_DeltaTau->getMax(),3);
         graph3->SetLineColor(kRed);
 	
 	pullHist->GetXaxis()->SetLabelFont( 132 );
 	pullHist->GetYaxis()->SetLabelFont( 132 );
 	pullHist->SetTitle("");
 	
-	frame_p->GetYaxis()->SetRangeUser(-5.0,5.0);
+	frame_p->GetYaxis()->SetRangeUser(minPull,maxPull);
 	frame_p->Draw();
 	
-	graph->Draw("same");
-	//graph2->Draw("same");
-	//graph3->Draw("same");
+	graph->Draw("sameL");
+	graph2->Draw("sameL");
+	graph3->Draw("sameL");
 	
 	pad2->Update();
 	canvas->Update();
@@ -253,57 +237,35 @@ vector<double> FitTimeRes(double min, double max, string binName = ""){
 	
 	double f1 = f_GaussBs.getVal();
 	double df1 = f_GaussBs.getError();
-	double f2 = 1. - f1;
-	double df2 = f_GaussBs.getError();
-	
 	double sig1 = sigmaBs1.getVal();
 	double dsig1 = sigmaBs1.getError();
 	double sig2 = sigmaBs2.getVal();
-	double dsig2 = sigmaBs2.getError();
-	/*
-	///compute resolution from combination of Gauss sigmas
-	double resolution = TMath::Sqrt( (f1*sig1*sig1) + (f2*sig2*sig2) );
-	double dresolution = TMath::Sqrt(TMath::Power(((sig1*f1*dsig1)/resolution),2)+TMath::Power(((sig2*f2*dsig2)/resolution),2)+TMath::Power(((sig1*sig1*df1)/(2*resolution)),2)+TMath::Power(((sig2*sig2*df2)/(2*resolution)),2));
-	
-	cout << "Measured resolution from GaussComb:   " << resolution*1000 << " +/- " << dresolution*1000 <<" fs" << endl; 
-	cout << "***********************************************************************" << endl;
-	
-	///compute resolution from dilution
-	double dms = 17.757; // [1/ps]
-	
-	double dilution = f1*TMath::Exp(-1*(sig1*sig1*dms*dms)/2.) + f2*TMath::Exp(-1*(sig2*sig2*dms*dms)/2.);
-	
-	double Term1 = f1*TMath::Exp(-1*(sig1*sig1*dms*dms)/2.);
-	double Term2 = f2*TMath::Exp(-1*(sig2*sig2*dms*dms)/2.);
-	
-	double ddilution = TMath::Sqrt( TMath::Power(df1*(Term1/f1),2) + TMath::Power(df2*(Term2/f2),2) + TMath::Power((Term1*dms*dms*sig1)*dsig1,2) + TMath::Power((Term2*dms*dms*sig2)*dsig2,2) );
-	
-	double resolution_eff = TMath::Sqrt((-2/(dms*dms))*log(dilution));
-	double dresolution_eff = ((2/(dms*dms))/(2*dilution*TMath::Sqrt((-2/(dms*dms))*log(dilution)))) * ddilution;
-	*/
-
+	double dsig2 = sigmaBs2.getPropagatedError(*result);
 	double dms = 17.757;
+
 	RooFormulaVar dilution("dilution","@0 * exp(-@1*@1*@2*@2/2.) + (1. - @0) * exp(-@3*@3*@2*@2/2.)",RooArgList(f_GaussBs,sigmaBs1,RooRealConstant::value(dms),sigmaBs2));
 
 	double dilution_val = dilution.getVal();
 	double dilution_error = dilution.getPropagatedError(*result);
 
-	double resolution_eff = sqrt(-2./pow(dms,2)*log(dilution_val));
+	RooFormulaVar resolution_eff("resolution_eff","sqrt(-2./@0/@0*log(@1))",RooArgList(RooRealConstant::value(dms),dilution)); 
+	//double resolution_eff = sqrt(-2./pow(dms,2)*log(dilution_val));
 	//double resolution_eff_error = -1./(dms*dilution_val*sqrt(log(1./pow(dilution_val,2))))*dilution_error;
-	double resolution_eff_error = ((2/(dms*dms))/(2*dilution_val*TMath::Sqrt((-2/(dms*dms))*log(dilution_val)))) * dilution_error;
+	//double resolution_eff_error = ((2/(dms*dms))/(2*dilution_val*TMath::Sqrt((-2/(dms*dms))*log(dilution_val)))) * dilution_error;
 
-	cout << "Measured resolution from dilution:   " << resolution_eff*1000 << " +/- " << resolution_eff_error*1000 <<" fs" << endl;
+	cout << "Measured resolution from dilution:   " << resolution_eff.getVal()*1000 << " +/- " << resolution_eff.getPropagatedError(*result)*1000 <<" fs" << endl;
 
 	vector<double> resoValues;
-	resoValues.push_back(resolution_eff);
-	resoValues.push_back(resolution_eff_error);
+	resoValues.push_back(resolution_eff.getVal());
+	resoValues.push_back(resolution_eff.getPropagatedError(*result));
+	resoValues.push_back(data->mean(Bs_TAUERR));
 	
 	file->Close();
 	///create a new table for Ana Note
 	if(updateTable){
 		ofstream datafile;
 		datafile.open ("ResoTable.txt", std::ios_base::app);
-		datafile << std::setprecision(3) << binName.c_str() << " & "<< sig1 * 1000 << " $\\pm$ " << dsig1 * 1000 << " & " << sig2 * 1000 << " $\\pm$ " << dsig2 * 1000 << " & " << f1 << " $\\pm$ " << df1 << " & " << dilution_val << " $\\pm$ " <<  dilution_error << " & " << resolution_eff * 1000 << " $\\pm$ " << resolution_eff_error * 1000 << " \\\\" << "\n";
+		datafile << std::setprecision(3) << leg_min.ReplaceAll("fs","") + " - " + leg_max.ReplaceAll("fs","") << " & "<< sig1 * 1000 << " $\\pm$ " << dsig1 * 1000 << " & " << sig2 * 1000 << " $\\pm$ " << dsig2 * 1000 << " & " << f1 << " $\\pm$ " << df1 << " & " << dilution_val << " $\\pm$ " <<  dilution_error << " & " << resolution_eff.getVal() * 1000 << " $\\pm$ " << resolution_eff.getPropagatedError(*result)* 1000 << " \\\\" << "\n";
 		datafile.close();
 	}
 
@@ -312,7 +274,9 @@ vector<double> FitTimeRes(double min, double max, string binName = ""){
 
 TH1D* createBinning(){
 
-	NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");
+	NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");		
+	NamedParameter<double> TAUERR_min("TAUERR_min", 0.);		
+	NamedParameter<double> TAUERR_max("TAUERR_max", 0.15);		
         NamedParameter<int> minEventsPerBin("minEventsPerBin", 1000); 
 	int dim = 1;
 
@@ -325,8 +289,8 @@ TH1D* createBinning(){
 	tree->SetBranchAddress("weight",&weight);
 	tree->SetBranchAddress(((string)Bs_TAU_Var+"ERR").c_str(),&dt);
 	
-	HyperPoint Min(0.);
-    	HyperPoint Max(0.15);
+	HyperPoint Min((double)TAUERR_min);
+    	HyperPoint Max((double)TAUERR_max);
     	HyperCuboid limits(Min, Max );
 	HyperPointSet points( dim );
 
@@ -396,11 +360,30 @@ void FitResoRelation(){
 		datafile.close();
 	}
 
+	const int nBins = binning->GetNbinsX();
+ 	double x[nBins]; 
+        double xerr[nBins]; 
+        double xerrL[nBins]; 
+        double xerrH[nBins]; 
+        double y[nBins]; 
+        double yerr[nBins]; 
+
 	for(int i = 1; i <= binning->GetNbinsX(); i++){
 		vector<double> reso_bin = FitTimeRes(binning->GetBinLowEdge(i),binning->GetBinLowEdge(i+1),anythingToString((int)i));
+		
 		ResoRelation->SetBinContent(i, reso_bin[0]);
 		ResoRelation->SetBinError(i, reso_bin[1]);
+
+		x[i-1] = reso_bin[2];
+		xerr[i-1] = 0.;
+		xerrL[i-1]= reso_bin[2]- binning->GetBinLowEdge(i) ;
+		xerrH[i-1]= binning->GetBinLowEdge(i+1) - reso_bin[2] ;
+		y[i-1] = reso_bin[0];
+		yerr[i-1] = reso_bin[1];
 	}
+
+        TGraphErrors *ResoRelation_g = new TGraphErrors(nBins, x,y,xerr,yerr);
+	TGraphAsymmErrors *ResoRelation_ga = new TGraphAsymmErrors(nBins, x,y,xerrL,xerrH,yerr,yerr);
 
 	if(updateTable){
 		datafile.open ("ResoTable.txt", std::ios_base::app);
@@ -412,12 +395,13 @@ void FitResoRelation(){
 		datafile.close();
 	}
 
-	ResoRelation->SetTitle(";#sigma_{t} [ps];#sigma_{eff} [ps]");
-	ResoRelation->SetMinimum(0);
-	ResoRelation->SetMaximum(0.15);
+	ResoRelation_ga->SetTitle(";#sigma_{t} [ps];#sigma_{eff} [ps]");
+	ResoRelation_ga->SetMinimum(0);
+	ResoRelation_ga->SetMaximum(0.12);
 
 	//define polynom for fit
 	TF1 *fitFunc = new TF1("fitFunc", "[0]+[1]*x ", 0., 0.15);
+	fitFunc->SetLineColor(kBlue);
 	fitFunc->SetParNames("c0","s");
 	fitFunc->SetParameters(0.,1.2);
 	fitFunc->SetParLimits(0,0.,0.1);
@@ -428,26 +412,44 @@ void FitResoRelation(){
 	// draw polynom from DsK analysis for comparison
 	TF1 *fitFunc_DsK_data = new TF1("fitFunc_DsK_data", "[0]+[1]*x ", 0., 0.15);
 	fitFunc_DsK_data->SetParNames("c0_data","s_data");
-	fitFunc_DsK_data->SetLineColor(2);
+	fitFunc_DsK_data->SetLineColor(kMagenta+3);
+	fitFunc_DsK_data->SetLineStyle(kDotted);
 	fitFunc_DsK_data->SetParameters(10.,1.2);
 	fitFunc_DsK_data->FixParameter(0,0.010262);
 	fitFunc_DsK_data->FixParameter(1,1.280);
 	
 	TF1 *fitFunc_DsK_mc = new TF1("fitFunc_DsK_mc", "[0]+[1]*x ", 0., 0.15);
 	fitFunc_DsK_mc->SetParNames("c0_mc","s_mc");
-	fitFunc_DsK_mc->SetLineColor(4);
+	fitFunc_DsK_mc->SetLineColor(kRed);
+	fitFunc_DsK_mc->SetLineStyle(kDotted);
 	fitFunc_DsK_mc->SetParameters(10.,1.2);
 	fitFunc_DsK_mc->FixParameter(0,0.);
 	fitFunc_DsK_mc->FixParameter(1,1.201);
 
 	TCanvas* c = new TCanvas();
 
-	ResoRelation->Fit(fitFunc,"RL");
-	
-	ResoRelation->Draw("e1");
+        TLegend leg(0.6,0.65,0.9,0.9,"");
+        leg.SetLineStyle(0);
+        leg.SetLineColor(0);
+        leg.SetFillColor(0);
+        leg.SetTextFont(132);
+        leg.SetTextColor(1);
+        leg.SetTextSize(0.05);
+        leg.SetTextAlign(12);
+
+	ResoRelation_g->Fit(fitFunc,"R");
+	ResoRelation_ga->Draw("AP");
 	fitFunc->Draw("same");
-	fitFunc_DsK_data->Draw("same");
+	//fitFunc_DsK_data->Draw("same");
 	fitFunc_DsK_mc->Draw("same");
+	ResoRelation_ga->Draw("Psame");
+
+        //leg.AddEntry((TObject*)0,"LHCb Simulation","");
+        leg.AddEntry(ResoRelation_ga,"B_{s} #rightarrow D_{s}K#pi#pi MC","ep");
+        leg.AddEntry(fitFunc,"Fit","l");
+        leg.AddEntry(fitFunc_DsK_mc,"B_{s} #rightarrow D_{s}K MC","l");
+	leg.Draw();
+	
 	c->Print("Plots/ProperTimeReso_MC.eps");
 }
 
