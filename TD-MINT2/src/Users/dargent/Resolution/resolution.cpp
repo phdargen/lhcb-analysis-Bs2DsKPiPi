@@ -72,6 +72,7 @@ using namespace MINT;
 
 vector<double> FitTimeRes(double min, double max, string binName = ""){
 	
+	NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 1);
 	NamedParameter<int> updateTable("updateTable", 1);
 	NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");
 
@@ -234,7 +235,8 @@ vector<double> FitTimeRes(double min, double max, string binName = ""){
 	canvas->Update();
 	
 	canvas->Print(("Plots/SignalMC_bin_"+binName+".eps").c_str());
-	
+	if(updateAnaNotePlots)canvas->Print(("../../../../../TD-AnaNote/latex/figs/Resolution/+SignalMC_bin_"+binName+".pdf").c_str());
+
 	double f1 = f_GaussBs.getVal();
 	double df1 = f_GaussBs.getError();
 	double sig1 = sigmaBs1.getVal();
@@ -264,7 +266,8 @@ vector<double> FitTimeRes(double min, double max, string binName = ""){
 	///create a new table for Ana Note
 	if(updateTable){
 		ofstream datafile;
-		datafile.open ("ResoTable.txt", std::ios_base::app);
+		if(updateAnaNotePlots)datafile.open("../../../../../TD-AnaNote/latex/tables/ResoTable.txt", std::ios_base::app);
+		else datafile.open("ResoTable.txt", std::ios_base::app);
 		datafile << std::setprecision(3) << leg_min.ReplaceAll("fs","") + " - " + leg_max.ReplaceAll("fs","") << " & "<< sig1 * 1000 << " $\\pm$ " << dsig1 * 1000 << " & " << sig2 * 1000 << " $\\pm$ " << dsig2 * 1000 << " & " << f1 << " $\\pm$ " << df1 << " & " << dilution_val << " $\\pm$ " <<  dilution_error << " & " << resolution_eff.getVal() * 1000 << " $\\pm$ " << resolution_eff.getPropagatedError(*result)* 1000 << " \\\\" << "\n";
 		datafile.close();
 	}
@@ -344,6 +347,7 @@ TH1D* createBinning(){
 
 void FitResoRelation(){
 
+        NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 1);
 	NamedParameter<int> updateTable("updateTable", 1);
 
 	TH1D* binning = createBinning();	
@@ -351,8 +355,8 @@ void FitResoRelation(){
 	
 	ofstream datafile;
 	if(updateTable){
-		datafile.open ("ResoTable.txt", std::ios_base::app);
-		datafile << "\\begin{table}[h]" << "\n";
+		if(updateAnaNotePlots)datafile.open("../../../../../TD-AnaNote/latex/tables/ResoTable.txt", std::ios_base::app);
+		else datafile.open("ResoTable.txt", std::ios_base::app);		datafile << "\\begin{table}[h]" << "\n";
 		datafile << "\\centering" << "\n";
 		datafile << " \\begin{tabular}{l || l l l | l l}" << "\n";
 		datafile << "$\\sigma_{t}$ Bin [fs] & $\\sigma_{1}$ [fs] & $\\sigma_{2}$ [fs] & $f_{1}$ & D & $\\sigma_{eff}$ [fs]" << " \\\\" << "\n";
@@ -386,8 +390,8 @@ void FitResoRelation(){
 	TGraphAsymmErrors *ResoRelation_ga = new TGraphAsymmErrors(nBins, x,y,xerrL,xerrH,yerr,yerr);
 
 	if(updateTable){
-		datafile.open ("ResoTable.txt", std::ios_base::app);
-		datafile << "\\hline" << "\n";
+		if(updateAnaNotePlots)datafile.open("../../../../../TD-AnaNote/latex/tables/ResoTable.txt", std::ios_base::app);
+		else datafile.open("ResoTable.txt", std::ios_base::app);		datafile << "\\hline" << "\n";
 		datafile << "\\end{tabular}" << "\n";
 		datafile << "\\caption{Summary of the obtained parameters from the resolution fits described above.}" << "\n";
 		datafile << "\\label{table:ResoParams}" << "\n";
@@ -451,6 +455,7 @@ void FitResoRelation(){
 	leg.Draw();
 	
 	c->Print("Plots/ProperTimeReso_MC.eps");
+        if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Resolution/ProperTimeReso_MC.pdf");
 }
 
 int main(int argc, char** argv){

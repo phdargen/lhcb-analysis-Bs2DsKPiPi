@@ -1,5 +1,7 @@
 "minEventsPerBin"	 1200
 "Bs_TAU_Var"		"Bs_DTF_TAU"
-"updateTable"			1
 "TAUERR_min"	 0.
 "TAUERR_max"	 0.15
+
+"updateTable"			1
+"updateAnaNotePlots"		1
