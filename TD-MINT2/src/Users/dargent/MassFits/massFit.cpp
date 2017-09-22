@@ -1631,108 +1631,135 @@ void fitSignal(){
 		vector<double> norm_yields_expBkg_err = norm_paramSet[7];
 
 		int Yields_norm_sig_11 =  norm_yields[0] + norm_yields[1] + norm_yields[2] + norm_yields[3];
-		int Yields_norm_sig_11_err =  norm_yields_err[0] + norm_yields_err[1] + norm_yields_err[2] + norm_yields_err[3];
+		int Yields_norm_sig_11_err =   TMath::Sqrt(TMath::Power(norm_yields_err[0],2) +  TMath::Power(norm_yields_err[1],2) +  TMath::Power(norm_yields_err[2],2) +  TMath::Power(norm_yields_err[3],2));
 
 		int Yields_norm_sig_12 =  norm_yields[4] + norm_yields[5] + norm_yields[6] + norm_yields[7];
-		int Yields_norm_sig_12_err =  norm_yields_err[4] + norm_yields_err[5] + norm_yields_err[6] + norm_yields_err[7];
+		int Yields_norm_sig_12_err =  TMath::Sqrt(TMath::Power(norm_yields_err[4],2) + TMath::Power(norm_yields_err[5],2) + TMath::Power(norm_yields_err[6],2) + TMath::Power(norm_yields_err[7],2));
 
 		int Yields_norm_sig_15 =  norm_yields[8] + norm_yields[9] + norm_yields[10] + norm_yields[11];
-		int Yields_norm_sig_15_err =  norm_yields_err[8] + norm_yields_err[9] + norm_yields_err[10] + norm_yields_err[11];
+		int Yields_norm_sig_15_err =  TMath::Sqrt(TMath::Power(norm_yields_err[8],2) + TMath::Power(norm_yields_err[9],2) + TMath::Power(norm_yields_err[10],2) + TMath::Power(norm_yields_err[11],2));
 
 		int Yields_norm_sig_16 =  norm_yields[12] + norm_yields[13] + norm_yields[14] + norm_yields[15];
-		int Yields_norm_sig_16_err =  norm_yields_err[12] + norm_yields_err[13] + norm_yields_err[14] + norm_yields_err[15];
+		int Yields_norm_sig_16_err =  TMath::Sqrt(TMath::Power(norm_yields_err[12],2) + TMath::Power(norm_yields_err[13],2) + TMath::Power(norm_yields_err[14],2) + TMath::Power(norm_yields_err[15],2));
 
 		int Yields_norm_partBkg_11 =  norm_yields_partBkg[0] + norm_yields_partBkg[1] + norm_yields_partBkg[2] + norm_yields_partBkg[3];
-		int Yields_norm_partBkg_11_err =  norm_yields_partBkg_err[0] + norm_yields_partBkg_err[1] + norm_yields_partBkg_err[2] + norm_yields_partBkg_err[3];
+		int Yields_norm_partBkg_11_err =  TMath::Sqrt(TMath::Power(norm_yields_partBkg_err[0],2) + TMath::Power(norm_yields_partBkg_err[1],2) + TMath::Power(norm_yields_partBkg_err[2],2) + TMath::Power(norm_yields_partBkg_err[3],2));
 
 		int Yields_norm_partBkg_12 =  norm_yields_partBkg[4] + norm_yields_partBkg[5] + norm_yields_partBkg[6] + norm_yields_partBkg[7];
-		int Yields_norm_partBkg_12_err =  norm_yields_partBkg_err[4] + norm_yields_partBkg_err[5] + norm_yields_partBkg_err[6] + norm_yields_partBkg_err[7];
+		int Yields_norm_partBkg_12_err =  TMath::Sqrt(TMath::Power(norm_yields_partBkg_err[4],2) + TMath::Power(norm_yields_partBkg_err[5],2) + TMath::Power(norm_yields_partBkg_err[6],2) + TMath::Power(norm_yields_partBkg_err[7],2));
 
 		int Yields_norm_partBkg_15 =  norm_yields_partBkg[8] + norm_yields_partBkg[9] + norm_yields_partBkg[10] + norm_yields_partBkg[11];
-		int Yields_norm_partBkg_15_err =  norm_yields_partBkg_err[8] + norm_yields_partBkg_err[9] + norm_yields_partBkg_err[10] + norm_yields_partBkg_err[11];
+		int Yields_norm_partBkg_15_err =  TMath::Sqrt(TMath::Power(norm_yields_partBkg_err[8],2) + TMath::Power(norm_yields_partBkg_err[9],2) + TMath::Power(norm_yields_partBkg_err[10],2) + TMath::Power(norm_yields_partBkg_err[11],2));
 
 		int Yields_norm_partBkg_16 =  norm_yields_partBkg[12] + norm_yields_partBkg[13] + norm_yields_partBkg[14] + norm_yields_partBkg[15];
-		int Yields_norm_partBkg_16_err =  norm_yields_partBkg_err[12] + norm_yields_partBkg_err[13] + norm_yields_partBkg_err[14] + norm_yields_partBkg_err[15];
+		int Yields_norm_partBkg_16_err =  TMath::Sqrt(TMath::Power(norm_yields_partBkg_err[12],2) + TMath::Power(norm_yields_partBkg_err[13],2) + TMath::Power(norm_yields_partBkg_err[14],2) + TMath::Power(norm_yields_partBkg_err[15],2));
 
 		int Yields_norm_expBkg_11 =  norm_yields_expBkg[0] + norm_yields_expBkg[1] + norm_yields_expBkg[2] + norm_yields_expBkg[3];
-		int Yields_norm_expBkg_11_err =  norm_yields_expBkg_err[0] + norm_yields_expBkg_err[1] + norm_yields_expBkg_err[2] + norm_yields_expBkg_err[3];
+		int Yields_norm_expBkg_11_err =  TMath::Sqrt(TMath::Power(norm_yields_expBkg_err[0],2) + TMath::Power(norm_yields_expBkg_err[1],2) + TMath::Power(norm_yields_expBkg_err[2],2) + TMath::Power(norm_yields_expBkg_err[3],2));
 
 		int Yields_norm_expBkg_12 =  norm_yields_expBkg[4] + norm_yields_expBkg[5] + norm_yields_expBkg[6] + norm_yields_expBkg[7];
-		int Yields_norm_expBkg_12_err =  norm_yields_expBkg_err[4] + norm_yields_expBkg_err[5] + norm_yields_expBkg_err[6] + norm_yields_expBkg_err[7];
+		int Yields_norm_expBkg_12_err =  TMath::Sqrt(TMath::Power(norm_yields_expBkg_err[4],2) + TMath::Power(norm_yields_expBkg_err[5],2) + TMath::Power(norm_yields_expBkg_err[6],2) + TMath::Power(norm_yields_expBkg_err[7],2));
 
 		int Yields_norm_expBkg_15 =  norm_yields_expBkg[8] + norm_yields_expBkg[9] + norm_yields_expBkg[10] + norm_yields_expBkg[11];
-		int Yields_norm_expBkg_15_err =  norm_yields_expBkg_err[8] + norm_yields_expBkg_err[9] + norm_yields_expBkg_err[10] + norm_yields_expBkg_err[11];
+		int Yields_norm_expBkg_15_err =  TMath::Sqrt(TMath::Power(norm_yields_expBkg_err[8],2) + TMath::Power(norm_yields_expBkg_err[9],2) + TMath::Power(norm_yields_expBkg_err[10],2) + TMath::Power(norm_yields_expBkg_err[11],2));
 
 		int Yields_norm_expBkg_16 =  norm_yields_expBkg[12] + norm_yields_expBkg[13] + norm_yields_expBkg[14] + norm_yields_expBkg[15];
-		int Yields_norm_expBkg_16_err =  norm_yields_expBkg_err[12] + norm_yields_expBkg_err[13] + norm_yields_expBkg_err[14] + norm_yields_expBkg_err[15];
+		int Yields_norm_expBkg_16_err =  TMath::Sqrt(TMath::Power(norm_yields_expBkg_err[12],2) + TMath::Power(norm_yields_expBkg_err[13],2) + TMath::Power(norm_yields_expBkg_err[14],2) + TMath::Power(norm_yields_expBkg_err[15],2));
 
 		//add yields for same year
 		for(int j=0; j<str_Ds.size(); j++){
 
 			Yields_sig_11 += ((RooRealVar*) fitParams->find("n_sig_{y11;" + str_Ds[j] + "}"))->getVal();
-			Yields_sig_11_err += ((RooRealVar*) fitParams->find("n_sig_{y11;" + str_Ds[j] + "}"))->getError();
+			Yields_sig_11_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_{y11;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_sig_12 += ((RooRealVar*) fitParams->find("n_sig_{y12;" + str_Ds[j] + "}"))->getVal();
-			Yields_sig_12_err += ((RooRealVar*) fitParams->find("n_sig_{y12;" + str_Ds[j] + "}"))->getError();
+			Yields_sig_12_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_{y12;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_sig_15 += ((RooRealVar*) fitParams->find("n_sig_{y15;" + str_Ds[j] + "}"))->getVal();
-			Yields_sig_15_err += ((RooRealVar*) fitParams->find("n_sig_{y15;" + str_Ds[j] + "}"))->getError();
+			Yields_sig_15_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_{y15;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_sig_16 += ((RooRealVar*) fitParams->find("n_sig_{y16;" + str_Ds[j] + "}"))->getVal();
-			Yields_sig_16_err += ((RooRealVar*) fitParams->find("n_sig_{y16;" + str_Ds[j] + "}"))->getError();
+			Yields_sig_16_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_{y16;" + str_Ds[j] + "}"))->getError(),2);
 
 
 			Yields_sigB0_11 += ((RooRealVar*) fitParams->find("n_sig_B0_{y11;" + str_Ds[j] + "}"))->getVal();
-			Yields_sigB0_11_err += ((RooRealVar*) fitParams->find("n_sig_B0_{y11;" + str_Ds[j] + "}"))->getError();
+			Yields_sigB0_11_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_B0_{y11;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_sigB0_12 += ((RooRealVar*) fitParams->find("n_sig_B0_{y12;" + str_Ds[j] + "}"))->getVal();
-			Yields_sigB0_12_err += ((RooRealVar*) fitParams->find("n_sig_B0_{y12;" + str_Ds[j] + "}"))->getError();
+			Yields_sigB0_12_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_B0_{y12;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_sigB0_15 += ((RooRealVar*) fitParams->find("n_sig_B0_{y15;" + str_Ds[j] + "}"))->getVal();
-			Yields_sigB0_15_err += ((RooRealVar*) fitParams->find("n_sig_B0_{y15;" + str_Ds[j] + "}"))->getError();
+			Yields_sigB0_15_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_B0_{y15;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_sigB0_16 += ((RooRealVar*) fitParams->find("n_sig_B0_{y16;" + str_Ds[j] + "}"))->getVal();
-			Yields_sigB0_16_err += ((RooRealVar*) fitParams->find("n_sig_B0_{y16;" + str_Ds[j] + "}"))->getError();
+			Yields_sigB0_16_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_B0_{y16;" + str_Ds[j] + "}"))->getError(),2);
 
 
 			Yields_partRecoBkg_11 += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y11;" + str_Ds[j] + "}"))->getVal();
-			Yields_partRecoBkg_11_err += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y11;" + str_Ds[j] + "}"))->getError();
+			Yields_partRecoBkg_11_err += TMath::Power(((RooRealVar*) fitParams->find("n_partReco_bkg_{y11;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_partRecoBkg_12 += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y12;" + str_Ds[j] + "}"))->getVal();
-			Yields_partRecoBkg_12_err += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y12;" + str_Ds[j] + "}"))->getError();
+			Yields_partRecoBkg_12_err += TMath::Power(((RooRealVar*) fitParams->find("n_partReco_bkg_{y12;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_partRecoBkg_15 += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y15;" + str_Ds[j] + "}"))->getVal();
-			Yields_partRecoBkg_15_err += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y15;" + str_Ds[j] + "}"))->getError();
+			Yields_partRecoBkg_15_err += TMath::Power(((RooRealVar*) fitParams->find("n_partReco_bkg_{y15;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_partRecoBkg_16 += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y16;" + str_Ds[j] + "}"))->getVal();
-			Yields_partRecoBkg_16_err += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y16;" + str_Ds[j] + "}"))->getError();
+			Yields_partRecoBkg_16_err += TMath::Power(((RooRealVar*) fitParams->find("n_partReco_bkg_{y16;" + str_Ds[j] + "}"))->getError(),2);
 
 
 			Yields_misIDBkg_11 += ((RooRealVar*) fitParams->find("n_misID_bkg_{y11;" + str_Ds[j] + "}"))->getVal();
-			Yields_misIDBkg_11_err += ((RooRealVar*) fitParams->find("n_misID_bkg_{y11;" + str_Ds[j] + "}"))->getError();
+			Yields_misIDBkg_11_err += TMath::Power(((RooRealVar*) fitParams->find("n_misID_bkg_{y11;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_misIDBkg_12 += ((RooRealVar*) fitParams->find("n_misID_bkg_{y12;" + str_Ds[j] + "}"))->getVal();
-			Yields_misIDBkg_12_err += ((RooRealVar*) fitParams->find("n_misID_bkg_{y12;" + str_Ds[j] + "}"))->getError();
+			Yields_misIDBkg_12_err += TMath::Power(((RooRealVar*) fitParams->find("n_misID_bkg_{y12;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_misIDBkg_15 += ((RooRealVar*) fitParams->find("n_misID_bkg_{y15;" + str_Ds[j] + "}"))->getVal();
-			Yields_misIDBkg_15_err += ((RooRealVar*) fitParams->find("n_misID_bkg_{y15;" + str_Ds[j] + "}"))->getError();
+			Yields_misIDBkg_15_err += TMath::Power(((RooRealVar*) fitParams->find("n_misID_bkg_{y15;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_misIDBkg_16 += ((RooRealVar*) fitParams->find("n_misID_bkg_{y16;" + str_Ds[j] + "}"))->getVal();
-			Yields_misIDBkg_16_err += ((RooRealVar*) fitParams->find("n_misID_bkg_{y16;" + str_Ds[j] + "}"))->getError();
+			Yields_misIDBkg_16_err += TMath::Power(((RooRealVar*) fitParams->find("n_misID_bkg_{y16;" + str_Ds[j] + "}"))->getError(),2);
 
 
 			Yields_expBkg_11 += ((RooRealVar*) fitParams->find("n_exp_bkg_{y11;" + str_Ds[j] + "}"))->getVal();
-			Yields_expBkg_11_err += ((RooRealVar*) fitParams->find("n_exp_bkg_{y11;" + str_Ds[j] + "}"))->getError();
+			Yields_expBkg_11_err += TMath::Power(((RooRealVar*) fitParams->find("n_exp_bkg_{y11;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_expBkg_12 += ((RooRealVar*) fitParams->find("n_exp_bkg_{y12;" + str_Ds[j] + "}"))->getVal();
-			Yields_expBkg_12_err += ((RooRealVar*) fitParams->find("n_exp_bkg_{y12;" + str_Ds[j] + "}"))->getError();
+			Yields_expBkg_12_err += TMath::Power(((RooRealVar*) fitParams->find("n_exp_bkg_{y12;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_expBkg_15 += ((RooRealVar*) fitParams->find("n_exp_bkg_{y15;" + str_Ds[j] + "}"))->getVal();
-			Yields_expBkg_15_err += ((RooRealVar*) fitParams->find("n_exp_bkg_{y15;" + str_Ds[j] + "}"))->getError();
+			Yields_expBkg_15_err += TMath::Power(((RooRealVar*) fitParams->find("n_exp_bkg_{y15;" + str_Ds[j] + "}"))->getError(),2);
 
 			Yields_expBkg_16 += ((RooRealVar*) fitParams->find("n_exp_bkg_{y16;" + str_Ds[j] + "}"))->getVal();
-			Yields_expBkg_16_err += ((RooRealVar*) fitParams->find("n_exp_bkg_{y16;" + str_Ds[j] + "}"))->getError();
+			Yields_expBkg_16_err += TMath::Power(((RooRealVar*) fitParams->find("n_exp_bkg_{y16;" + str_Ds[j] + "}"))->getError(),2);
 		}
+
+		//take sqrt of quadratically combined errors to correctly add them
+		Yields_sig_11_err = TMath::Sqrt(Yields_sig_11_err);
+		Yields_sig_12_err = TMath::Sqrt(Yields_sig_12_err);
+		Yields_sig_15_err = TMath::Sqrt(Yields_sig_15_err);
+		Yields_sig_16_err = TMath::Sqrt(Yields_sig_16_err);
+
+		Yields_sigB0_11_err = TMath::Sqrt(Yields_sigB0_11_err);
+		Yields_sigB0_12_err = TMath::Sqrt(Yields_sigB0_12_err);
+		Yields_sigB0_15_err = TMath::Sqrt(Yields_sigB0_15_err);
+		Yields_sigB0_16_err = TMath::Sqrt(Yields_sigB0_16_err);
+
+		Yields_partRecoBkg_11_err = TMath::Sqrt(Yields_partRecoBkg_11_err);
+		Yields_partRecoBkg_12_err = TMath::Sqrt(Yields_partRecoBkg_12_err);
+		Yields_partRecoBkg_15_err = TMath::Sqrt(Yields_partRecoBkg_15_err);
+		Yields_partRecoBkg_16_err = TMath::Sqrt(Yields_partRecoBkg_16_err);
+
+		Yields_misIDBkg_11_err = TMath::Sqrt(Yields_misIDBkg_11_err);
+		Yields_misIDBkg_12_err = TMath::Sqrt(Yields_misIDBkg_12_err);
+		Yields_misIDBkg_15_err = TMath::Sqrt(Yields_misIDBkg_15_err);
+		Yields_misIDBkg_16_err = TMath::Sqrt(Yields_misIDBkg_16_err);
+
+		Yields_expBkg_11_err = TMath::Sqrt(Yields_expBkg_11_err);
+		Yields_expBkg_12_err = TMath::Sqrt(Yields_expBkg_12_err);
+		Yields_expBkg_15_err = TMath::Sqrt(Yields_expBkg_15_err);
+		Yields_expBkg_16_err = TMath::Sqrt(Yields_expBkg_16_err);
+
 
 		ofstream datafile;
 		datafile.open ("YieldsTable.tex");
