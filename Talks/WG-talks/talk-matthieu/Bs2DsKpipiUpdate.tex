@@ -217,6 +217,8 @@ $\rightarrow$ 3700 Signals in total !
 
 \item fix $\Delta\Gamma$ and $\Gamma$ to PDG, float polynomials
 
+\item We also imported the Spline Product class \textcolor{blue}{\href{https://indico.cern.ch/event/606600/contributions/2692163/attachments/1508860/2352208/2017-08-16-DsK-SplineProduct.pdf}{(see talk by Agnieszka)}} to check corrections between $B_{s}\to D_{s} \pi\pi\pi$ and $B_{s}\to D_{s} K\pi\pi$ 
+
 \end{itemize} 
 
 \end{frame}
@@ -225,24 +227,21 @@ $\rightarrow$ 3700 Signals in total !
 \begin{frame}
 \frametitle{Time-Acceptance}
 
-\begin{figure}[h]
-\includegraphics[width=0.8\textwidth,height=5.7cm]{plots/timeAccFit_test.pdf}
-\end{figure}
+\centering
 
-knots at 0.5, 1, 1.5, 2, 3, 6. 9.5, 10 ps
+\begin{itemize}
+	\item Fit MC samples and Data simultaneously to propagate error correctly
+	\item $Acc(t)_{D_{s}K\pi\pi}^{MC}$
+	\item $Acc(t)_{D_{s}\pi\pi\pi}^{MC} = Acc(t)^{MC}_{D_{s}K\pi\pi} \cdot R(t) $
+	\item $Acc(t)_{D_{s}\pi\pi\pi}^{Data} = Acc(t)_{D_{s}K\pi\pi}^{Data}(t) \cdot R(t) $
+	\item knots at 0.3, 0.5, 1, 1.5, 2, 3, 9, 11, 12 ps
+\end{itemize}
 
-\end{frame}
+\includegraphics[width=0.35\textwidth,height=!]{plots/timeAccRatioFit_signal_mc_alternative.pdf}
+\includegraphics[width=0.35\textwidth,height=!]{plots/timeAccRatioFit_norm_mc_alternative.pdf}
+\includegraphics[width=0.35\textwidth,height=!]{plots/timeAccRatioFit_norm_alternative.pdf}
 
-\begin{frame}
-\frametitle{Spline Products}
-
-\begin{figure}[h]
-\includegraphics[width=0.8\textwidth,height=5.7cm]{plots/timeAccFit_MC_Norm_default.pdf}
-\end{figure}
-
-We also imported the Spline Product class \textcolor{blue}{\href{https://indico.cern.ch/event/606600/contributions/2692163/attachments/1508860/2352208/2017-08-16-DsK-SplineProduct.pdf}{(see talk by Agnieszka)}} to check corrections between $B_{s}\to D_{s} \pi\pi\pi$ and $B_{s}\to D_{s} K\pi\pi$ \newline
-
-need more MC statistic for this fit
+Need more MC statistic for this fit !
 
 \end{frame}
 
@@ -277,7 +276,7 @@ Derive effective resolution from Dilution of CP-observables
 
 
 \begin{figure}
-\includegraphics[width=6.0cm,height=4.7cm]{plots/SignalMC_19to24.pdf}
+\includegraphics[width=6.0cm,height=4.7cm]{plots/SignalMC_bin_2.pdf}
 \end{figure}
 
 \[\mathcal{D} = f_{1}e^{-\sigma_{1}^{2}\Delta m_{s}^{2}/2} + (1-f_{1})e^{-\sigma_{1}^{2}\Delta m_{s}^{2}/2}, \mathcal{D}\in [0,1]\] 
