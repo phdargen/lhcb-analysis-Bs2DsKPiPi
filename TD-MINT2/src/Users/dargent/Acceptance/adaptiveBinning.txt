@@ -1,0 +1,17 @@
+* options for acceptance 
+"Bs_TAU_Var"		"Bs_DTF_TAU"
+
+"CompareAcceptance"	0
+"FitSplineAccRatio"	1
+"updateAnaNotePlots"	1
+
+* binning options
+"BinningName"		"adaptive"
+"min_TAU"	 0.3
+"max_TAU" 	 12.
+
+"useAdaptiveBinningKnots"	 1
+"minEventsPerBin"	 1500
+
+* fit options
+"numCPU"         10

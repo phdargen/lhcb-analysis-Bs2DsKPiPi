@@ -66,7 +66,8 @@
 #include "Mint/RooSplineProduct.h"
 #include "Mint/Utils.h"
 #include <fstream>
-
+#include "Mint/HyperHistogram.h"
+#include "Mint/HyperBinningPainter1D.h"
 using namespace std;
 using namespace RooFit ;
 using namespace RooStats;
@@ -82,6 +83,77 @@ double tau_MC = 1.512; // ?
 double dgamma_MC = .109; // ?
 double deltaMs_MC = 17.8; // or 20.0 ??? 
 
+TH1D* createBinning(){
+
+	NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");		
+	NamedParameter<double> TAU_min("TAU_min", 0.4);		
+	NamedParameter<double> TAU_max("TAU_max", 10);		
+        NamedParameter<int> minEventsPerBin("minEventsPerBin", 1000); 
+	int dim = 1;
+
+	TFile* file= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal.root");
+	TTree* tree= (TTree*) file->Get("DecayTree");
+	tree->SetBranchStatus("*",0);
+	tree->SetBranchStatus("weight",1);
+	tree->SetBranchStatus(((string)Bs_TAU_Var).c_str(),1);
+	double weight,t;
+	tree->SetBranchAddress("weight",&weight);
+	tree->SetBranchAddress(((string)Bs_TAU_Var).c_str(),&t);
+	
+	HyperPoint Min((double)TAU_min);
+    	HyperPoint Max((double)TAU_max);
+    	HyperCuboid limits(Min, Max );
+	HyperPointSet points( dim );
+
+	for (int i = 0; i < tree->GetEntries(); i++){
+		tree->GetEntry(i);
+		
+		HyperPoint point( dim );
+		point.at(0)= t;
+		point.addWeight(weight);
+		points.push_back(point);
+	}
+	
+   	/// Define binning based on MC
+    	HyperHistogram hist(limits, points,                     
+                         /*** Name of the binning algorithm you want to use     */
+                         HyperBinningAlgorithms::SMART_MULTI, 
+                         /***  The minimum number of events allowed in each bin */
+                         /***  from the HyperPointSet provided (points1)        */
+                         AlgOption::MinBinContent      (minEventsPerBin),    
+                         /*** This minimum bin width allowed. Can also pass a   */
+                         /*** HyperPoint if you would like different min bin    */
+                         /*** widths for each dimension                         */
+                         AlgOption::MinBinWidth        (0.001),
+                         /*** If you want to use the sum of weights rather than */
+                         /*** the number of events, set this to true.           */    
+                         AlgOption::UseWeights         (true),
+                         /*** Some algorithms use a random number generator. Set*/
+                         /*** the seed here                                     */
+                         AlgOption::RandomSeed         (1),
+                         /*** What dimesnion would you like to split first? Only*/
+                         /*** applies to certain algortihms                     */
+                         AlgOption::StartDimension     (0)
+                         /*** What dimesnions would you like to bin in?         */
+                         //AlgOption::BinningDimensions  (binningDims),
+                         /*** Setting this option will make the agorithm draw   */
+                         /*** the binning scheme at each iteration              */
+                         //AlgOption::DrawAlgorithm("Algorithm")
+                         );
+	/// Draw binning
+// 	hist.setNames(HyperName(vars));
+	hist.draw("Plot/binning");
+	hist.drawDensity("Plot/density");
+
+	TCanvas* c = new TCanvas();
+        HyperBinningPainter1D painter(&hist);
+ 	TH1D* h = painter.getHistogram("binning");
+	//h->Draw();
+	//c->Print("test.eps");
+	return h;
+}
+
+
 vector< vector<double> > fitSplineAcc(string CutString){
 
 	// Options
@@ -91,7 +163,8 @@ vector< vector<double> > fitSplineAcc(string CutString){
 	NamedParameter<double> min_TAU("min_TAU", 0.4);
 	NamedParameter<double> max_TAU("max_TAU", 10.);
 	NamedParameter<int> numCPU("numCPU", 6);
-	
+	NamedParameter<int> useAdaptiveBinningKnots("useAdaptiveBinningKnots", 0);
+
 	// Read Dataset
 	TFile* file= new TFile("/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
 	TTree* tree = (TTree*) file->Get("DecayTree");
@@ -114,11 +187,25 @@ vector< vector<double> > fitSplineAcc(string CutString){
 	///SETUP FITTER AND FIT TO DECAYTIME DISTRIBUTION
 	
 	//SPLINE KNOTS
-   	NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
-	vector<double> myBinning = knot_positions.getVector();
-	
-   	NamedParameter<double> knot_values("knot_values", 3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.0, 1.7757e+00);
-	vector<double> values = knot_values.getVector() ;
+ 	NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
+        NamedParameter<double> knot_values("knot_values", 3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.0, 1.7757e+00);
+        vector<double> myBinning;    
+        vector<double> values;
+
+    	if(useAdaptiveBinningKnots){
+		TH1D* binning = createBinning();	
+		cout << endl << "knot positios: " << endl;
+		for(int i = 1; i <= binning->GetNbinsX(); i++){
+			cout << binning->GetBinCenter(i) << " , ";
+			myBinning.push_back(binning->GetBinCenter(i));
+			values.push_back(1.);
+		}
+		cout << endl << endl;
+    	}
+    	else { 
+		myBinning = knot_positions.getVector();
+    		values = knot_values.getVector() ;
+    	}
 
 	//SPLINE COEFFICIENTS
 	RooArgList tacc_list;
@@ -282,6 +369,7 @@ void fitSplineAccRatio(string CutString){
     NamedParameter<double> max_TAU("max_TAU", 10.);
     NamedParameter<int> numCPU("numCPU", 6);
     NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 1);
+    NamedParameter<int> useAdaptiveBinningKnots("useAdaptiveBinningKnots", 0);
 
     // Read Datasets
     TFile* file= new TFile("/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
@@ -341,12 +429,28 @@ void fitSplineAccRatio(string CutString){
     
     // SPLINE KNOTS
     NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
-    vector<double> myBinning = knot_positions.getVector();
-    
-    // Spline for DsKpipi acceptance
     NamedParameter<double> knot_values("knot_values", 3.1692e-01, 5.9223e-01, 1.1015e+00, 1.3984e+00, 1.7174e+00, 1.0, 1.7757e+00);
-    vector<double> values = knot_values.getVector() ;
-    
+
+    vector<double> myBinning;    
+    vector<double> values;
+
+    if(useAdaptiveBinningKnots){
+	TH1D* binning = createBinning();	
+	cout << endl << "knot positios: " << endl;
+	for(int i = 1; i <= binning->GetNbinsX(); i++){
+		cout << binning->GetBinCenter(i) << " , " ;
+		myBinning.push_back(binning->GetBinCenter(i));
+		values.push_back(1.);
+	}
+	
+	cout << endl << endl;
+    }
+    else { 
+	myBinning = knot_positions.getVector();
+    	values = knot_values.getVector() ;
+    }
+
+    // Spline for DsKpipi acceptance    
     RooArgList tacc_list;
     for(int i= 0; i< values.size(); i++){
         tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(i)).c_str(), ("coeff_"+anythingToString(i)).c_str(), values[i], 0.0, 10.0)));
@@ -377,8 +481,7 @@ void fitSplineAccRatio(string CutString){
     RooCubicSplineFun* spline_signal_mc = new RooCubicSplineFun("spline_signal_mc", "spline_signal_mc", Bs_TAU, myBinning, mc_tacc_list);
     
     // Spline for Ds3pi/DsKpipi ratio
-    NamedParameter<double> ratio_knot_values("ratio_knot_values", 1,1,1,1,1,1,1 );
-    vector<double> ratio_values = ratio_knot_values.getVector() ;
+    vector<double> ratio_values(values.size(),1.) ;
     
     RooArgList ratio_tacc_list;
     for(int i= 0; i< ratio_values.size(); i++){
