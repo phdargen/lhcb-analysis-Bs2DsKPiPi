@@ -11,7 +11,7 @@
 "IntegratorSource"        "file"
 
 * options for toy generation
-"InputFileName"		""
+"InputFileName"		"toys.root"
 "Nevents"               3700
 "pdf_max"               40
 "saveEvents"		1
@@ -21,7 +21,7 @@
 "doDalitzFit"		0
 
 "do2DScan"		0
-"doPlots"		1
+"doPlots"		0
 "OutputDir"		"plots/"
 
 

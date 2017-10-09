@@ -316,7 +316,7 @@ public:
         _r_t->setVal(t);
         _r_dt->setVal(dt);
         
-        const double e_eff = fabs(q)*_eff_tag/2. + (1.-fabs(q))*(1.-_eff_tag);
+        const double e_eff = fabs(q)*_eff_tag/2. + (1.-fabs(q))/2.*(1.-_eff_tag);
         
         double r = (double)_r; // * sqrt(_intA/_intAbar);
         const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma*f)/360.*2*pi);
@@ -347,7 +347,7 @@ public:
         const double val = un_normalised_noPs(evt);
         
         double r = (double)_r; // * sqrt(_intA/_intAbar);
-        const double Gamma = 1./((double) _tau);
+        //const double Gamma = 1./((double) _tau);
         
         const complex<double> phase_diff_m = polar((double)r,((double) _delta + (double)_gamma)/360.*2*pi);
         const double int_interference_m = (phase_diff_m*_intAAbar).real();
@@ -360,8 +360,8 @@ public:
             throw "can't deal with that";
         }
         
-        double norm = 2. * (2. * (_intA + r* r * _intAbar) *  _efficiency->analyticalIntegral(coshBasis,_tau,_dm,_dGamma) 
-                            +  (int_interference_m + int_interference_p) * _efficiency->analyticalIntegral(sinhBasis,_tau,_dm,_dGamma) );        
+        double norm = 2. * (_intA + r* r * _intAbar) *  _efficiency->analyticalIntegral(coshBasis,_tau,_dm,_dGamma) 
+                            -  2. * (int_interference_m + int_interference_p) * _efficiency->analyticalIntegral(sinhBasis,_tau,_dm,_dGamma) ;        
         
         return val/norm;
     }
@@ -987,7 +987,7 @@ int ampFit(int step=0){
     AmpsPdfFlexiFast ampsSum(pat, &fas_sum, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
     
     // Make full time-dependent PDF
-    AmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSigCC,&ampsSum, r, delta, gamma, tau, dGamma, dm, eff_tag, mistag );
+    FullAmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSigCC,&ampsSum, r, delta, gamma, tau, dGamma, dm, eff_tag, mistag );
     
     // Generate toys
     if(generateNew){
@@ -1015,13 +1015,14 @@ int ampFit(int step=0){
         for(int i = 0; i < Nevents; i++){
             while(true){
                 t = ranLux.Exp(tau);
-                dt = 0;
+                dt = ranLux.Uniform(0.,0.25);
                 const double q_rand = ranLux.Uniform();
                 q = 0;
                 if (q_rand < 1./3.) q = -1;
                 if (q_rand > 2./3.) q = 1;
                 w = mistag;
-                if(i<=Nevents/2)f = 1; 
+                const double f_rand = ranLux.Uniform();
+                if(f_rand < 0.5)f = 1; 
                 else f = -1;
                 
                 counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
@@ -1111,13 +1112,16 @@ int ampFit(int step=0){
     }
     
     // Fit
-    Neg2LL fcn(pdf, eventList_f);
-    Neg2LL fcn_bar(pdf, eventList_fbar);
-    
-    Neg2LLSum neg2LLSum(&fcn,&fcn_bar);
-    //neg2LLSum.addConstraints();
-    
-    Minimiser mini(&neg2LLSum);
+    //Neg2LL fcn(pdf, eventList_f);
+    //Neg2LL fcn_bar(pdf, eventList_fbar);
+    //Neg2LLSum neg2LLSum(&fcn,&fcn_bar);
+    //neg2LLSum.addConstraints();    
+    //Minimiser mini(&neg2LLSum);
+
+    Neg2LL fcn(pdf, eventList);
+    Neg2LLSum neg2LLSum(&fcn);
+    //neg2LLSum.addConstraints();    
+    Minimiser mini(&neg2LLSum);    
     mini.doFit();
     mini.printResultVsInput();
     
@@ -1343,9 +1347,9 @@ int ampFit(int step=0){
         for(int i = 0; i < 2000000; i++){
             
             const double t = ranLux.Exp(tau);
-            double dt = 0;
-            double w = mistag;
-            
+            const double dt = ranLux.Uniform(0.00001,0.25);
+            const double w = mistag;
+                
             counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
             DalitzEvent evt(evtPtr.get());
             
@@ -1645,7 +1649,7 @@ int ampFit(int step=0){
         c->Print(((string)OutputDir+"s_Dspim.eps").c_str());
         
     }
-    
+    /*
     if(do2DScan == 1){
         cout << "Now doing 2D scan:" << endl;
         int scanBins=20;
@@ -1728,7 +1732,7 @@ int ampFit(int step=0){
         
         cout<< "done 2-D scan" << endl;
     }
-    
+    */
     
     return 0;
 }
