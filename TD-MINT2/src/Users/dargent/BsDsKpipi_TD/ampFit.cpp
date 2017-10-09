@@ -40,6 +40,7 @@
 #include "TNtupleD.h"
 #include "TTree.h"
 #include "TFile.h"
+#include "TLegend.h"
 #include <TStyle.h>
 #include "TRandom2.h"
 #include "TRandom3.h"
@@ -669,6 +670,26 @@ int ampFit(int step=0){
     NamedParameter<int>  doTimeFit("doTimeFit", 1);
     NamedParameter<int>  doDalitzFit("doDalitzFit", 1);
     
+    vector<int> s123;
+    s123.push_back(1);
+    s123.push_back(2);
+    s123.push_back(3);
+       
+    vector<int> s234;
+    s234.push_back(2);
+    s234.push_back(3);
+    s234.push_back(4);
+        
+    vector<int> s134;
+    s134.push_back(1);
+    s134.push_back(3);
+    s134.push_back(4);
+        
+    vector<int> s124;
+    s124.push_back(1);
+    s124.push_back(2);
+    s124.push_back(4);
+
     // Fit parameters for time-dependent part
     FitParameter  tau("tau");
     FitParameter  dGamma("dGamma");
@@ -777,6 +798,8 @@ int ampFit(int step=0){
                 
                 counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
                 DalitzEvent evt(evtPtr.get());
+		if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
+
                 double maxVal = evt.getGeneratorPdfRelativeToPhaseSpace()*exp(-fabs(t)/(tau))/(tau)*pdf_max;
                 
                 evt.setValueInVector(0, t);
@@ -1027,34 +1050,18 @@ int ampFit(int step=0){
         //datH.drawWithFitNorm(fitH, ((string)OutputDir+(string)"datFit_"+anythingToString((int)RandomSeed)+"_").c_str(),"eps");
         
         int nBinst = 60;
-        int nBins = 40;
-        vector<int> s123;
-        s123.push_back(1);
-        s123.push_back(2);
-        s123.push_back(3);
-        
-        vector<int> s234;
-        s234.push_back(2);
-        s234.push_back(3);
-        s234.push_back(4);
-        
-        vector<int> s134;
-        s134.push_back(1);
-        s134.push_back(3);
-        s134.push_back(4);
-        
-        vector<int> s124;
-        s124.push_back(1);
-        s124.push_back(2);
-        s124.push_back(4);
+        int nBins = 50;
         
         TH1D* h_t = new TH1D("",";t (ps);Events (norm.) ",nBinst,0,6);
-        TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,3.5);
-        TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.3,2.);
-        TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2.);
-        TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",20,4,25);
-        TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",20,4,26);
-        
+        TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,4);
+        TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,2);
+        TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
+        TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+        TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30)  ;
+        TH1D* s_DsKpi = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
+        TH1D* s_Dspi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+        TH1D* s_Dspim = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+
         for (int i=0; i<eventList.size(); i++) {
             h_t->Fill(eventList[i].getValueFromVector(0));
             s_Kpipi->Fill(eventList[i].sij(s234)/(GeV*GeV));
@@ -1062,6 +1069,9 @@ int ampFit(int step=0){
             s_pipi->Fill(eventList[i].s(3,4)/(GeV*GeV));
             s_Dspipi->Fill(eventList[i].sij(s134)/(GeV*GeV));
             s_DsK->Fill(eventList[i].s(1,2)/(GeV*GeV));
+            s_DsKpi->Fill(eventList[i].sij(s124)/(GeV*GeV));
+            s_Dspi->Fill(eventList[i].s(1,3)/(GeV*GeV));
+            s_Dspim->Fill(eventList[i].s(1,4)/(GeV*GeV));
         }    
         
         TH1D* h_t_fit = new TH1D("",";t",nBinst,0,6);
@@ -1072,12 +1082,15 @@ int ampFit(int step=0){
         TH1D* h_t_fit_0m = new TH1D("",";t",nBinst,0,6);
         TH1D* h_t_fit_pm = new TH1D("",";t",nBinst,0,6);
         
-        TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,3.5);
-        TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.3,2.);
-        TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2.);
-        TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",20,4,25);
-        TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",20,4,26);
-        
+        TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,4);
+        TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,2);
+        TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
+        TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+        TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+        TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
+        TH1D* s_Dspi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+        TH1D* s_Dspim_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+            
         TH1D* s_Kpipi_fitBs = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,3.5);
         TH1D* s_Kpi_fitBs = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.3,2.);
         TH1D* s_pipi_fitBs = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
@@ -1108,6 +1121,8 @@ int ampFit(int step=0){
             counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
             DalitzEvent evt(evtPtr.get());
             
+	    if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
+
             evt.setValueInVector(0, t);
             evt.setValueInVector(1, dt);
             evt.setValueInVector(3, w);
@@ -1158,7 +1173,10 @@ int ampFit(int step=0){
             s_pipi_fit->Fill(evt.s(3,4)/(GeV*GeV),weight);
             s_Dspipi_fit->Fill(evt.sij(s134)/(GeV*GeV),weight);
             s_DsK_fit->Fill(evt.s(1,2)/(GeV*GeV),weight);
-            
+            s_DsKpi_fit->Fill(evt.sij(s124)/(GeV*GeV),weight);
+            s_Dspi_fit->Fill(evt.s(1,3)/(GeV*GeV),weight);
+            s_Dspim_fit->Fill(evt.s(1,4)/(GeV*GeV),weight);
+
             s_Kpipi_fitBs->Fill(evt.sij(s234)/(GeV*GeV),weight_B);
             s_Kpi_fitBs->Fill(evt.s(2,4)/(GeV*GeV),weight_B);
             s_pipi_fitBs->Fill(evt.s(3,4)/(GeV*GeV),weight_B);
@@ -1226,7 +1244,24 @@ int ampFit(int step=0){
         gPad->SetLogy(1);
         c->Print(((string)OutputDir+"h_t_2_log.eps").c_str());
         gPad->SetLogy(0);
-        
+
+	TLegend leg_t(0,0,1,1,"");
+   	leg_t.SetLineStyle(0);
+    	leg_t.SetLineColor(0);
+	leg_t.SetFillColor(0);
+	//leg_t.SetTextFont(22);
+	leg_t.SetTextColor(1);
+	//leg_t.SetTextSize(0.05);
+	leg_t.SetTextAlign(12);
+
+	leg_t.AddEntry(h_t_fit_pm,"B_{s} #rightarrow D_{s}^{-} K^{+} #pi^{+} #pi^{-}","l");
+	leg_t.AddEntry(h_t_fit_mm,"#bar{B}_{s} #rightarrow D_{s}^{-} K^{+} #pi^{+} #pi^{-}","l");
+	leg_t.AddEntry(h_t_fit_0m,"Untagged #rightarrow D_{s}^{-} K^{+} #pi^{+} #pi^{-}","l");
+	leg_t.AddEntry(h_t_fit_mp,"#bar{B}_{s} #rightarrow D_{s}^{+} K^{-} #pi^{-} #pi^{+}","l");
+	leg_t.AddEntry(h_t_fit_pp,"B_{s} #rightarrow D_{s}^{+} K^{-} #pi^{-} #pi^{+}","l");
+	leg_t.AddEntry(h_t_fit_0p,"Untagged #rightarrow D_{s}^{+} K^{-} #pi^{-} #pi^{+}","l");
+        leg_t.Draw();
+        c->Print(((string)OutputDir+"leg_t.eps").c_str());
         
         s_Kpipi->SetLineColor(kBlack);
         s_Kpipi->DrawNormalized("e1",1);
@@ -1359,6 +1394,28 @@ int ampFit(int step=0){
         s_DsK_fit_notag->SetLineStyle(kDashed);
         s_DsK_fit_notag->DrawNormalized("histcsame",(1.-eff_tag));
         c->Print(((string)OutputDir+"s_DsK_2.eps").c_str());
+
+        s_DsKpi->SetLineColor(kBlack);
+        s_DsKpi->DrawNormalized("e1",1);
+        s_DsKpi_fit->SetLineColor(kBlue);
+        s_DsKpi_fit->SetLineWidth(3);
+        s_DsKpi_fit->DrawNormalized("histcsame",1);
+        c->Print(((string)OutputDir+"s_DsKpi.eps").c_str());
+        
+        s_Dspi->SetLineColor(kBlack);
+        s_Dspi->DrawNormalized("e1",1);
+        s_Dspi_fit->SetLineColor(kBlue);
+        s_Dspi_fit->SetLineWidth(3);
+        s_Dspi_fit->DrawNormalized("histcsame",1);
+        c->Print(((string)OutputDir+"s_Dspi.eps").c_str());
+        
+        s_Dspim->SetLineColor(kBlack);
+        s_Dspim->DrawNormalized("e1",1);
+        s_Dspim_fit->SetLineColor(kBlue);
+        s_Dspim_fit->SetLineWidth(3);
+        s_Dspim_fit->DrawNormalized("histcsame",1);
+        c->Print(((string)OutputDir+"s_Dspim.eps").c_str());
+        
     }
     
     if(do2DScan == 1){
@@ -1759,27 +1816,39 @@ void coherence_plot(){
 
 void makeIntegratorFile(){
     
+    FitAmplitude::AutogenerateFitFile();
+
     NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
-    
     NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
     DalitzEventPattern pat(EventPattern.getVector());
     cout << " got event pattern: " << pat << endl;
     
     NamedParameter<int>  IntegratorEvents("IntegratorEvents", 300000);
     
-    DalitzEventList eventListPhsp,eventList;
+    DalitzEventList eventListPhsp,eventList,eventList_cut;
     
     eventListPhsp.generatePhaseSpaceEvents(100000,pat);
     
     FitAmpIncoherentSum fas((DalitzEventPattern)pat);
+    fas.print();
     fas.getVal(eventListPhsp[0]);
     fas.normalizeAmps(eventListPhsp);
     
     SignalGenerator sg(pat,&fas);
     
     sg.FillEventList(eventList, IntegratorEvents);
-    eventList.saveAsNtuple(IntegratorEventFile);
+    vector<int> s234;
+    s234.push_back(2);
+    s234.push_back(3);
+    s234.push_back(4);
+
+    for(int i = 0; i < eventList.size(); i++){
+	if(sqrt(eventList[i].sij(s234)/(GeV*GeV)) < 1.95 && sqrt(eventList[i].s(2,4)/(GeV*GeV)) < 1.2 && sqrt(eventList[i].s(3,4)/(GeV*GeV)) < 1.2)eventList_cut.Add(eventList[i]);
+    }
+
+    cout << "Generated " << eventList_cut.size() << " events inside selected phasespace region" << endl;
     
+    eventList_cut.saveAsNtuple(IntegratorEventFile);
     return;
 }
 
@@ -1788,6 +1857,8 @@ int main(int argc, char** argv){
 
   time_t startTime = time(0);
 
+  TH1::SetDefaultSumw2();
+  TH2::SetDefaultSumw2();
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
   NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);

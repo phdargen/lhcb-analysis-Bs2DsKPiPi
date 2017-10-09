@@ -367,9 +367,7 @@ int ampFit(int step=0){
             std::vector<DalitzHistoSet> EachAmpsHistos = ampsSig.GetEachAmpsHistograms();
             datH.drawWithFitAndEachAmps(datH, fitH, EachAmpsHistos, ((string)OutputDir+(string)"WithAmps").c_str(), "eps");
             
-            
-            int nBinst = 100;
-            int nBins = 60;
+            int nBins = 50;
             vector<int> s123;
             s123.push_back(1);
             s123.push_back(2);
@@ -390,81 +388,152 @@ int ampFit(int step=0){
             s124.push_back(2);
             s124.push_back(4);
             
-            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,4);
-            TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
+            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,4);
+            TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,2);
             TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
-            TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,25);
-            TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+            TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+            TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+            TH1D* s_DsKpi = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
+            TH1D* s_Dspi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+            TH1D* s_Dspim = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
             
+            TH2D* s_Kpi_pipi = new TH2D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4}) ",60,0.2,1.6,60,0.,1.6);
+            TH2D* s_DsKpi_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",80,5,30,80,0,25);
+            TH2D* s_DsK_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",60,0,30,60,0,25);
+
             for (int i=0; i<eventList.size(); i++) {
-                s_Kpipi->Fill(eventList[i].sij(s234)/(GeV*GeV));
-                s_Kpi->Fill(eventList[i].s(2,4)/(GeV*GeV));
-                s_pipi->Fill(eventList[i].s(3,4)/(GeV*GeV));
-                s_Dspipi->Fill(eventList[i].sij(s134)/(GeV*GeV));
-                s_DsK->Fill(eventList[i].s(1,2)/(GeV*GeV));
+                s_Kpipi->Fill(eventList[i].sij(s234)/(GeV*GeV),eventList[i].getWeight());
+                s_Kpi->Fill(eventList[i].s(2,4)/(GeV*GeV),eventList[i].getWeight());
+                s_pipi->Fill(eventList[i].s(3,4)/(GeV*GeV),eventList[i].getWeight());
+                s_Dspipi->Fill(eventList[i].sij(s134)/(GeV*GeV),eventList[i].getWeight());
+                s_DsK->Fill(eventList[i].s(1,2)/(GeV*GeV),eventList[i].getWeight());
+                s_DsKpi->Fill(eventList[i].sij(s124)/(GeV*GeV),eventList[i].getWeight());
+                s_Dspi->Fill(eventList[i].s(1,3)/(GeV*GeV),eventList[i].getWeight());
+                s_Dspim->Fill(eventList[i].s(1,4)/(GeV*GeV),eventList[i].getWeight());
+
+                s_Kpi_pipi->Fill(eventList[i].s(2,4)/(GeV*GeV),eventList[i].s(3,4)/(GeV*GeV),eventList[i].getWeight());
+                s_DsKpi_Dspi->Fill(eventList[i].sij(s124)/(GeV*GeV),eventList[i].s(1,3)/(GeV*GeV),eventList[i].getWeight());
+                s_DsK_Dspi->Fill(eventList[i].s(1,2)/(GeV*GeV),eventList[i].s(1,3)/(GeV*GeV),eventList[i].getWeight());
+
             }    
             
-            
-            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,4);
-            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
+            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,4);
+            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,2);
             TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
-            TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,25);
-            TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+            TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+            TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+            TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
+            TH1D* s_Dspi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+            TH1D* s_Dspim_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
                         
-            SignalGenerator sg(pat,&fas);
-            sg.setWeighted();
+            //SignalGenerator sg(pat,&fas);
+            //sg.setWeighted();
+
+	    DalitzEventList eventListMC;
+	    TFile *FileMC =  TFile::Open(((string) IntegratorEventFile).c_str());
+	    TTree* treeMC = dynamic_cast<TTree*>(FileMC->Get("DalitzEventList"));
+	    eventListMC.fromNtuple(treeMC,1);
+	    FileMC->Close();
             
-            for(int i = 0; i < 2000000; i++){
+            for(int i = 0; i < eventListMC.size(); i++){
                                 
-                counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
-                DalitzEvent evt(evtPtr.get());
-                
-                double weight = amps.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
-                                                
-                s_Kpipi_fit->Fill(evt.sij(s234)/(GeV*GeV),weight);
-                s_Kpi_fit->Fill(evt.s(2,4)/(GeV*GeV),weight);
-                s_pipi_fit->Fill(evt.s(3,4)/(GeV*GeV),weight);
-                s_Dspipi_fit->Fill(evt.sij(s134)/(GeV*GeV),weight);
-                s_DsK_fit->Fill(evt.s(1,2)/(GeV*GeV),weight);
-                                
+                //counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
+                //DalitzEvent evt(evtPtr.get());
+                double weight = amps.RealVal(eventListMC[i])*eventListMC[i].getWeight()/eventListMC[i].getGeneratorPdfRelativeToPhaseSpace();
+                s_Kpipi_fit->Fill(eventListMC[i].sij(s234)/(GeV*GeV),weight);
+                s_Kpi_fit->Fill(eventListMC[i].s(2,4)/(GeV*GeV),weight);
+                s_pipi_fit->Fill(eventListMC[i].s(3,4)/(GeV*GeV),weight);
+                s_Dspipi_fit->Fill(eventListMC[i].sij(s134)/(GeV*GeV),weight);
+                s_DsK_fit->Fill(eventListMC[i].s(1,2)/(GeV*GeV),weight);
+                s_DsKpi_fit->Fill(eventListMC[i].sij(s124)/(GeV*GeV),weight);
+                s_Dspi_fit->Fill(eventListMC[i].s(1,3)/(GeV*GeV),weight);
+                s_Dspim_fit->Fill(eventListMC[i].s(1,4)/(GeV*GeV),weight);
             }
             
             TCanvas* c = new TCanvas();
-                        
+                     
+            s_Kpi_pipi->SetMinimum(0);
+            s_Kpi_pipi->Draw("colz");
+            c->Print(((string)OutputDir+"s_Kpi_pipi.eps").c_str());
+            s_Kpi_pipi->Draw();
+            c->Print(((string)OutputDir+"s_Kpi_pipi_scatter.eps").c_str());
+
+            s_DsKpi_Dspi->SetMinimum(0);
+            s_DsKpi_Dspi->Draw("colz");
+            c->Print(((string)OutputDir+"s_DsKpi_Dspi.eps").c_str());
+
+            s_DsK_Dspi->SetMinimum(0);
+            s_DsK_Dspi->Draw("colz");
+            c->Print(((string)OutputDir+"s_DsK_Dspi.eps").c_str());
+            s_DsK_Dspi->Draw();
+            c->Print(((string)OutputDir+"s_DsK_Dspi_scatter.eps").c_str());
+
+            s_Kpipi->SetMinimum(0);
             s_Kpipi->SetLineColor(kBlack);
             s_Kpipi->DrawNormalized("e1",1);
-            s_Kpipi_fit->SetLineColor(kBlack);
+            s_Kpipi_fit->SetLineColor(kBlue);
             s_Kpipi_fit->SetLineWidth(3);
             s_Kpipi_fit->DrawNormalized("histcsame",1);
-            c->Print("s_Kpipi.pdf");
+            c->Print(((string)OutputDir+"s_Kpipi.eps").c_str());
+
+            s_Kpipi->DrawNormalized("e1",1);
+            c->Print(((string)OutputDir+"s_Kpipi_data.eps").c_str());
             
+            s_Kpi->SetMinimum(0);
             s_Kpi->SetLineColor(kBlack);
             s_Kpi->DrawNormalized("e1",1);
-            s_Kpi_fit->SetLineColor(kBlack);
+            s_Kpi_fit->SetLineColor(kBlue);
             s_Kpi_fit->SetLineWidth(3);
             s_Kpi_fit->DrawNormalized("histcsame",1);
-            c->Print("s_Kpi.pdf");
+            c->Print(((string)OutputDir+"s_Kpi.eps").c_str());
             
+	    s_pipi->SetMinimum(0);            
             s_pipi->SetLineColor(kBlack);
             s_pipi->DrawNormalized("e1",1);
-            s_pipi_fit->SetLineColor(kBlack);
+            s_pipi_fit->SetLineColor(kBlue);
             s_pipi_fit->SetLineWidth(3);
             s_pipi_fit->DrawNormalized("histcsame",1);
-            c->Print("s_pipi.pdf");
+            c->Print(((string)OutputDir+"s_pipi.eps").c_str());
             
+	    s_Dspipi->SetMinimum(0);            
             s_Dspipi->SetLineColor(kBlack);
             s_Dspipi->DrawNormalized("e1",1);
-            s_Dspipi_fit->SetLineColor(kBlack);
+            s_Dspipi_fit->SetLineColor(kBlue);
             s_Dspipi_fit->SetLineWidth(3);
             s_Dspipi_fit->DrawNormalized("histcsame",1);
-            c->Print("s_Dspipi.pdf");
-            
+            c->Print(((string)OutputDir+"s_Dspipi.eps").c_str());
+           
+	    s_DsK->SetMinimum(0);
             s_DsK->SetLineColor(kBlack);
             s_DsK->DrawNormalized("e1",1);
-            s_DsK_fit->SetLineColor(kBlack);
+            s_DsK_fit->SetLineColor(kBlue);
             s_DsK_fit->SetLineWidth(3);
             s_DsK_fit->DrawNormalized("histcsame",1);
-            c->Print("s_DsK.pdf");
+            c->Print(((string)OutputDir+"s_DsK.eps").c_str());
+
+	    s_DsKpi->SetMinimum(0);            
+            s_DsKpi->SetLineColor(kBlack);
+            s_DsKpi->DrawNormalized("e1",1);
+            s_DsKpi_fit->SetLineColor(kBlue);
+            s_DsKpi_fit->SetLineWidth(3);
+            s_DsKpi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"s_DsKpi.eps").c_str());
+
+	    s_Dspi->SetMinimum(0);
+            s_Dspi->SetLineColor(kBlack);
+            s_Dspi->DrawNormalized("e1",1);
+            s_Dspi_fit->SetLineColor(kBlue);
+            s_Dspi_fit->SetLineWidth(3);
+            s_Dspi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"s_Dspi.eps").c_str());
+
+	    s_Dspim->SetMinimum(0);
+            s_Dspim->SetLineColor(kBlack);
+            s_Dspim->DrawNormalized("e1",1);
+            s_Dspim_fit->SetLineColor(kBlue);
+            s_Dspim_fit->SetLineWidth(3);
+            s_Dspim_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"s_Dspim.eps").c_str());
         }
         
         
@@ -500,7 +569,7 @@ void makeIntegratorFile(){
     s234.push_back(4);
 
     for(int i = 0; i < eventList.size(); i++){
-	if(sqrt(eventList[i].sij(s234)/(GeV*GeV)) < 1.95 && sqrt(eventList[i].s(2,4)/(GeV*GeV)) < 1.2 && sqrt(eventList[i].s(3,4)/(GeV*GeV) < 1.2))eventList_cut.Add(eventList[i]);
+	if(sqrt(eventList[i].sij(s234)/(GeV*GeV)) < 1.95 && sqrt(eventList[i].s(2,4)/(GeV*GeV)) < 1.2 && sqrt(eventList[i].s(3,4)/(GeV*GeV)) < 1.2)eventList_cut.Add(eventList[i]);
     }
 
     cout << "Generated " << eventList_cut.size() << " events inside selected phasespace region" << endl;
@@ -516,6 +585,7 @@ int main(int argc, char** argv){
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
     gROOT->ProcessLine(".x ../lhcbStyle.C");
+    gStyle->SetPalette(1);
 
     NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
     if(! std::ifstream(((string)IntegratorEventFile).c_str()).good()) makeIntegratorFile();

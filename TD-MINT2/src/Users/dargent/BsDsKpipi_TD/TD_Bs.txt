@@ -12,15 +12,15 @@
 
 * options for toy generation
 "InputFileName"		""
-"Nevents"               3000
+"Nevents"               3700
 "pdf_max"               40
 "saveEvents"		1
 "OutputRootFile"	"toys.root"
 
-"doTimeFit"		1
+"doTimeFit"		0
 "doDalitzFit"		0
 
-"do2DScan"		1
+"do2DScan"		0
 "doPlots"		1
 "OutputDir"		"plots/"
 
