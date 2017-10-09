@@ -50,8 +50,31 @@
 #include <algorithm>
 //#include <omp.h>
 #include <TROOT.h>
+#include "RooRealConstant.h"
+#include "RooAbsReal.h"
+#include "RooRealVar.h"
+#include "RooDataSet.h"
+#include "RooGlobalFunc.h"
+#include "RooRealVar.h"
+#include "RooDecay.h"
+#include "RooBDecay.h"
+#include "RooPlot.h"
+#include "RooEffProd.h"
+#include "RooGenericPdf.h"
+#include "RooGaussModel.h"
+#include "RooProdPdf.h"
+#include "RooConstVar.h"
+#include "RooCategory.h"
+#ifndef __CINT__
+#include "RooGlobalFunc.h"
+#endif
+#include "Mint/RooCubicSplineFun.h"
+#include "Mint/RooCubicSplineKnot.h"
+#include "Mint/RooGaussEfficiencyModel.h"
+#include "Mint/DecRateCoeff_Bd.h"
 
 using namespace std;
+using namespace RooFit ;
 using namespace MINT;
 
 class AmpsPdfFlexiFast
@@ -218,7 +241,212 @@ std::vector<double> coherenceFactor(FitAmpSum& fas, FitAmpSum& fas_bar, double r
     return result;
 }
 
+enum basisType { noBasis=0  ,  expBasis= 3
+    , sinBasis=13,  cosBasis=23
+    , sinhBasis=63, coshBasis=53 };
+
 // Full time-dependent PDF
+class FullAmpsPdfFlexiFastCPV : public MINT::PdfBase<IDalitzEvent>
+, virtual public IDalitzPdf{
+    
+protected:
+    AmpsPdfFlexiFast* _amps1;
+    AmpsPdfFlexiFast* _amps2;
+    AmpsPdfFlexiFast* _ampsSum;
+    
+    FitParameter& _r;
+    FitParameter& _delta;
+    FitParameter& _gamma;
+    
+    FitParameter& _tau;
+    FitParameter& _dGamma;
+    FitParameter& _dm;
+    FitParameter& _eff_tag;
+    FitParameter& _w;
+    
+    // cast of MINT parameters to B2DX parameters
+    RooRealVar* _r_t;
+    RooRealVar* _r_dt;
+    
+    RooRealVar* _r_scale_mean_dt;
+    RooRealVar* _r_scale_sigma_dt;
+    RooAbsPdf* _pdf_sigma_t;
+    
+    RooCubicSplineFun* _spline;
+    RooGaussEfficiencyModel* _efficiency;
+    
+    NamedParameter<double> _min_TAU;
+    NamedParameter<double> _max_TAU;
+    
+    double _intA;
+    double _intAbar;
+    complex<double> _intAAbar;
+    
+public:
+    void parametersChanged(){
+        _ampsSum->parametersChanged();
+        _intA = _ampsSum->integralForMatchingPatterns(true,1);
+        _intAbar = _ampsSum->integralForMatchingPatterns(true,-1);        
+        _intAAbar = _ampsSum->ComplexSumForMatchingPatterns(false);
+    }
+    void beginFit(){
+        _ampsSum->beginFit();
+        printIntegralVals();
+    }
+    void endFit(){
+        printIntegralVals();
+        _ampsSum->endFit();
+    }
+    
+    void printIntegralVals(){
+        cout << "intSum = " << _ampsSum->getIntegralValue() << endl;
+        cout << "intA = " << _intA << endl;
+        cout << "intAbar = " << _intAbar << endl;
+        cout << "intAAbar = " << _intAAbar.real() << endl;
+    }
+    
+    inline double un_normalised_noPs(IDalitzEvent& evt){
+        const double t = (double) evt.getValueFromVector(0);
+        const double dt = (double) evt.getValueFromVector(1);
+        const double q = static_cast<double>((int)evt.getValueFromVector(2)); 
+        const double w = (double) evt.getValueFromVector(3);
+        const double f = static_cast<double>((int)evt.getValueFromVector(4));
+        
+        if(t < _min_TAU || t > _max_TAU )return 0.;        
+        _r_t->setVal(t);
+        _r_dt->setVal(dt);
+        
+        const double e_eff = fabs(q)*_eff_tag/2. + (1.-fabs(q))*(1.-_eff_tag);
+        
+        double r = (double)_r; // * sqrt(_intA/_intAbar);
+        const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma*f)/360.*2*pi);
+        
+        const std::complex<double> amp = _amps1->ComplexVal_un_normalised_noPs(evt) ;
+        const std::complex<double> amp_bar = _amps2->ComplexVal_un_normalised_noPs(evt) * phase_diff;
+        
+        const double cosh_term = _efficiency->evaluate(coshBasis,_tau,_dm,_dGamma);
+        const double cos_term = _efficiency->evaluate(cosBasis,_tau,_dm,_dGamma);
+        const double sinh_term = _efficiency->evaluate(sinhBasis,_tau,_dm,_dGamma);
+        const double sin_term = _efficiency->evaluate(sinBasis,_tau,_dm,_dGamma);
+        
+        const double val =
+        (
+         (2.-fabs(q))*(norm(amp) + norm(amp_bar))*cosh_term
+         +f*q*(1.-2.*w)*(norm(amp) - norm(amp_bar)) *cos_term
+         -(2.-fabs(q))*2.0*real(amp_bar*conj(amp))*sinh_term
+         -f*2.0*q*(1.-2.*w)*imag(amp_bar*conj(amp))*sin_term
+         )*e_eff* _pdf_sigma_t->getVal();
+        
+        return val;
+    }
+    
+    virtual double getVal(IDalitzEvent& evt){
+        
+        //const double f = static_cast<double>((int)evt.getValueFromVector(4));
+        
+        const double val = un_normalised_noPs(evt);
+        
+        double r = (double)_r; // * sqrt(_intA/_intAbar);
+        const double Gamma = 1./((double) _tau);
+        
+        const complex<double> phase_diff_m = polar((double)r,((double) _delta + (double)_gamma)/360.*2*pi);
+        const double int_interference_m = (phase_diff_m*_intAAbar).real();
+        
+        const complex<double> phase_diff_p = polar((double)r,((double) _delta -(double)_gamma)/360.*2*pi);
+        const double int_interference_p = (phase_diff_p*_intAAbar).real();
+        
+        if(_intA == -1 ){
+            cout << "AmpsPdfFlexiFastCPV:: _norm = -1, should not have happened." << endl;
+            throw "can't deal with that";
+        }
+        
+        double norm = 2. * (2. * (_intA + r* r * _intAbar) *  _efficiency->analyticalIntegral(coshBasis,_tau,_dm,_dGamma) 
+                            +  (int_interference_m + int_interference_p) * _efficiency->analyticalIntegral(sinhBasis,_tau,_dm,_dGamma) );        
+        
+        return val/norm;
+    }
+    
+    virtual double getVal_withPs(IDalitzEvent& evt){return getVal(evt);}
+    virtual double getVal_noPs(IDalitzEvent& evt){return getVal(evt);}
+    
+    virtual double getVal(IDalitzEvent* evt){
+        if(0 == evt) return 0;
+        return getVal(*evt);
+    }
+    virtual double getVal_withPs(IDalitzEvent* evt){
+        if(0 == evt) return 0;
+        return getVal_withPs(*evt);
+    }
+    virtual double getVal_noPs(IDalitzEvent* evt){
+        if(0 == evt) return 0;
+        return getVal_noPs(*evt);
+    }
+    
+    virtual DalitzHistoSet histoSet(){return _ampsSum->histoSet();}
+    
+    void doFinalStatsAndSaveForAmp12(MINT::Minimiser* min=0,const std::string& fname = "FitAmpResults", const std::string& fnameROOT="fitFractions"){
+        _amps1->redoIntegrator();
+        _amps2->redoIntegrator();
+        _amps1->doFinalStatsAndSave(min,((string)fname+".txt").c_str(),((string)fnameROOT+".root").c_str());
+        _amps2->doFinalStatsAndSave(min,((string)fname+"_CC.txt").c_str(),((string)fnameROOT+"_CC.root").c_str());        
+    }
+    
+    FullAmpsPdfFlexiFastCPV(AmpsPdfFlexiFast* amps1, AmpsPdfFlexiFast* amps2, AmpsPdfFlexiFast* ampsSum, 
+                            MINT::FitParameter& r, MINT::FitParameter& delta,MINT::FitParameter& gamma,
+                            MINT::FitParameter& tau, MINT::FitParameter& dGamma, MINT::FitParameter& dm, MINT::FitParameter& eff_tag, MINT::FitParameter& w ):
+    _amps1(amps1),_amps2(amps2),_ampsSum(ampsSum),_r(r),_delta(delta),_gamma(gamma),_tau(tau),_dGamma(dGamma),_dm(dm),_eff_tag(eff_tag),_w(w),
+    _intA(-1),_intAbar(-1),_intAAbar(-1),_min_TAU("min_TAU", 0.4), _max_TAU("max_TAU", 10.)
+    {
+        // Init B2DX parameters
+        _r_t = new RooRealVar("t", "time", _min_TAU, _max_TAU);
+        _r_dt = new RooRealVar("dt", "per-candidate time resolution estimate",0., 0.25);
+        
+        _r_scale_mean_dt = new RooRealVar("scale_mean_dt", "scale_mean_dt", 0);
+        _r_scale_sigma_dt = new RooRealVar("scale_sigma_dt", "scale_sigma_dt", 1.2);
+        
+        //SPLINE KNOTS
+        NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
+        vector<double> myBinning = knot_positions.getVector();
+        
+        NamedParameter<double> knot_values("knot_values", 0.38,0.63,0.86,1.05,1.14,1.24,1.22);
+        vector<double> values = knot_values.getVector() ;
+        
+        //SPLINE COEFFICIENTS
+        RooArgList tacc_list;
+        for(int i= 0; i< values.size(); i++){
+            tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(i)).c_str(), ("coeff_"+anythingToString(i)).c_str(), values[i], 0.0, 10.0)));
+        }
+        tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString((int)values.size())).c_str(), ("coeff_"+anythingToString((int)values.size())).c_str(), 1.0)));
+        
+        RooFormulaVar* coeff_last = new RooFormulaVar(("coeff_"+anythingToString((int)values.size()+1)).c_str(),("coeff_"+anythingToString((int)values.size()+1)).c_str(), "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(RooRealConstant::value(1.0), *tacc_list.find(("coeff_"+anythingToString((int)values.size()-1)).c_str())  , RooRealConstant::value(myBinning[myBinning.size()-1]), RooRealConstant::value(myBinning[myBinning.size()-2]), RooRealConstant::value(_r_t->getMax()) ));
+        
+        tacc_list.add(*coeff_last);	
+        
+        //CUBIC SPLINE FUNCTION 
+        _spline = new RooCubicSplineFun("splinePdf", "splinePdf", *_r_t, myBinning, tacc_list);        
+        _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt, *_r_scale_mean_dt, *_r_scale_sigma_dt );
+        
+        // Plot acceptance
+        TH1F *h_spline = new TH1F("", "", 100, _min_TAU, _max_TAU);
+        for (int i = 1; i<=h_spline->GetNbinsX(); i++) {
+            _r_t->setVal(h_spline->GetXaxis()->GetBinCenter(i));
+            h_spline->SetBinContent(i,_spline->getVal());
+        }
+        
+        TCanvas* c = new TCanvas();
+        h_spline->SetLineColor(kRed);
+        h_spline->Draw("histc");
+        c->Print("spline.eps");
+        c->Print("spline.pdf");
+        
+        // Init pdf for sigma_t
+        _pdf_sigma_t = new RooGenericPdf("pdf_sigma_t","pow(7. / @1, 7) / 720. * pow(@0, 6) * exp(-7. * @0 / @1)",RooArgList(*_r_dt, RooRealConstant::value(0.04)));
+        
+    }
+};
+
+
+// Time-dependent PDF
 class AmpsPdfFlexiFastCPV : public MINT::PdfBase<IDalitzEvent>
 , virtual public IDalitzPdf{
     
