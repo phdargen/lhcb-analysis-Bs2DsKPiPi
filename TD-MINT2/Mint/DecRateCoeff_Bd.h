@@ -82,6 +82,8 @@ public:
     Int_t getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName=0) const ;
     Int_t getAnalyticalIntegralWN(RooArgSet& allVars, RooArgSet& analVars, const RooArgSet* normSet, const char* rangeName=0) const ;
     Double_t analyticalIntegral(Int_t code, const char* rangeName=0) const ;
+    Double_t evaluate() const ;
+
     
 protected:
     
@@ -114,9 +116,7 @@ protected:
     RooRealProxy detection_asym_ ;
     
     Bool_t onetagger_;
-    
-    Double_t evaluate() const ;
-    
+        
 private:
     
     std::pair<double, double> calibrate(double eta, double avg_eta, double p0, double p1, double delta_p0, double delta_p1) const ;
