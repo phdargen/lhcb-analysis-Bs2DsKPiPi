@@ -305,6 +305,45 @@ public:
         cout << "intAAbar = " << _intAAbar.real() << endl;
     }
     
+    inline double getValForGeneration(IDalitzEvent& evt){
+        const double t = (double) evt.getValueFromVector(0);
+        const double dt = (double) evt.getValueFromVector(1);
+        const double q = static_cast<double>((int)evt.getValueFromVector(2)); 
+        const double w = (double) evt.getValueFromVector(3);
+        const double f = static_cast<double>((int)evt.getValueFromVector(4));
+        
+        if(t < _min_TAU || t > _max_TAU )return 0.;        
+        _r_t->setVal(t);
+        _r_dt->setVal(dt);
+        
+        const double e_eff = fabs(q)*_eff_tag/2. + (1.-fabs(q))/2.*(1.-_eff_tag);
+        
+        double r = (double)_r; // * sqrt(_intA/_intAbar);
+        const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma*f)/360.*2*pi);
+        
+        const std::complex<double> amp = _amps1->ComplexVal_un_normalised_noPs(evt) ;
+        const std::complex<double> amp_bar = _amps2->ComplexVal_un_normalised_noPs(evt) * phase_diff;
+        
+        const double val =  exp(-fabs(t)/(double)_tau) *
+         (
+         (2.-fabs(q))*(norm(amp) + norm(amp_bar))*cosh((double)_dGamma/2.*t)
+         +f*q*(1.-2.*w)*(norm(amp) - norm(amp_bar)) *cos((double)_dm*t)
+         -(2.-fabs(q))*2.0*real(amp_bar*conj(amp))*sinh((double)_dGamma/2.*t)
+         -f*2.0*q*(1.-2.*w)*imag(amp_bar*conj(amp))*sin((double)_dm*t)
+         )*e_eff *_pdf_sigma_t->getVal()*_spline->getVal();
+        
+        return val;
+    }
+
+    inline void getSmearedTime(double& t, double& dt, TRandom3& r){
+	while(true){
+                t = r.Exp(_tau);
+                dt = r.Uniform(0.,0.25);
+		t = t + r.Gaus(0,_r_scale_sigma_dt->getVal()*dt);
+		if(_min_TAU< t && t < _max_TAU) return; 
+	}
+    }
+
     inline double un_normalised_noPs(IDalitzEvent& evt){
         const double t = (double) evt.getValueFromVector(0);
         const double dt = (double) evt.getValueFromVector(1);
@@ -1014,8 +1053,9 @@ int ampFit(int step=0){
         //simple hit and miss
         for(int i = 0; i < Nevents; i++){
             while(true){
-                t = ranLux.Exp(tau);
-                dt = ranLux.Uniform(0.,0.25);
+                //t = ranLux.Exp(tau);
+                //dt = ranLux.Uniform(0.,0.25);
+		pdf.getSmearedTime(t,dt,ranLux);
                 const double q_rand = ranLux.Uniform();
                 q = 0;
                 if (q_rand < 1./3.) q = -1;
@@ -1037,10 +1077,10 @@ int ampFit(int step=0){
                 evt.setValueInVector(3, w);
                 evt.setValueInVector(4, f);
                 
-                const double pdfVal = pdf.un_normalised_noPs(evt);
+                //const double pdfVal = pdf.un_normalised_noPs(evt);
+                const double pdfVal = pdf.getValForGeneration(evt);
                 
                 const double height = ranLux.Uniform(0,maxVal);
-                
                 //Safety check on the maxmimum generated height
                 if( pdfVal > maxVal ){
                     std::cout << "ERROR: PDF above determined maximum." << std::endl;
