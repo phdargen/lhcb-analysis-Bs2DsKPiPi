@@ -267,16 +267,25 @@ protected:
     // cast of MINT parameters to B2DX parameters
     RooRealVar* _r_t;
     RooRealVar* _r_dt;
+    RooCategory* _r_q;    
+    RooRealVar* _r_mistag;
+    RooCategory* _r_f;
     
     RooRealVar* _r_scale_mean_dt;
     RooRealVar* _r_scale_sigma_dt;
     RooAbsPdf* _pdf_sigma_t;
+    RooAbsPdf* _pdf_omega_os;
+    RooAbsPdf* _pdf_omega_ss;
     
     RooCubicSplineFun* _spline;
     RooGaussEfficiencyModel* _efficiency;
-    
     NamedParameter<double> _min_TAU;
     NamedParameter<double> _max_TAU;
+    
+    DecRateCoeff_Bd* _cos_coeff;
+    DecRateCoeff_Bd* _cosh_coeff;
+    DecRateCoeff_Bd* _sin_coeff;
+    DecRateCoeff_Bd* _sinh_coeff;
     
     double _intA;
     double _intAbar;
@@ -315,9 +324,10 @@ public:
         if(t < _min_TAU || t > _max_TAU )return 0.;        
         _r_t->setVal(t);
         _r_dt->setVal(dt);
-        
-        const double e_eff = fabs(q)*_eff_tag/2. + (1.-fabs(q))/2.*(1.-_eff_tag);
-        
+        _r_q->setIndex(q);
+        _r_mistag->setVal(w);
+        _r_f->setIndex(f);
+                
         double r = (double)_r; // * sqrt(_intA/_intAbar);
         const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma*f)/360.*2*pi);
         
@@ -326,22 +336,22 @@ public:
         
         const double val =  exp(-fabs(t)/(double)_tau) *
          (
-         (2.-fabs(q))*(norm(amp) + norm(amp_bar))*cosh((double)_dGamma/2.*t)
-         +f*q*(1.-2.*w)*(norm(amp) - norm(amp_bar)) *cos((double)_dm*t)
-         -(2.-fabs(q))*2.0*real(amp_bar*conj(amp))*sinh((double)_dGamma/2.*t)
-         -f*2.0*q*(1.-2.*w)*imag(amp_bar*conj(amp))*sin((double)_dm*t)
-         )*e_eff *_pdf_sigma_t->getVal()*_spline->getVal();
+           (norm(amp) + norm(amp_bar)) *cosh((double)_dGamma/2.*t) * _cosh_coeff->evaluate()
+          +(norm(amp) - norm(amp_bar)) *cos((double)_dm*t) * _cos_coeff->evaluate()
+          +real(amp_bar*conj(amp)) *sinh((double)_dGamma/2.*t) * _sinh_coeff->evaluate()
+          +imag(amp_bar*conj(amp)) *sin((double)_dm*t) * _sin_coeff->evaluate()
+         ) *_pdf_sigma_t->getVal()*_spline->getVal();
         
         return val;
     }
 
     inline void getSmearedTime(double& t, double& dt, TRandom3& r){
-	while(true){
+        while(true){
                 t = r.Exp(_tau);
                 dt = r.Uniform(0.,0.25);
-		t = t + r.Gaus(0,_r_scale_sigma_dt->getVal()*dt);
-		if(_min_TAU< t && t < _max_TAU) return; 
-	}
+                t = t + r.Gaus(0,_r_scale_sigma_dt->getVal()*dt);
+            if(_min_TAU< t && t < _max_TAU) return; 
+        }
     }
 
     inline double un_normalised_noPs(IDalitzEvent& evt){
@@ -354,9 +364,10 @@ public:
         if(t < _min_TAU || t > _max_TAU )return 0.;        
         _r_t->setVal(t);
         _r_dt->setVal(dt);
-        
-        const double e_eff = fabs(q)*_eff_tag/2. + (1.-fabs(q))/2.*(1.-_eff_tag);
-        
+        _r_q->setIndex(q);
+        _r_mistag->setVal(w);
+        _r_f->setIndex(f);
+                
         double r = (double)_r; // * sqrt(_intA/_intAbar);
         const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma*f)/360.*2*pi);
         
@@ -370,37 +381,35 @@ public:
         
         const double val =
         (
-         (2.-fabs(q))*(norm(amp) + norm(amp_bar))*cosh_term
-         +f*q*(1.-2.*w)*(norm(amp) - norm(amp_bar)) *cos_term
-         -(2.-fabs(q))*2.0*real(amp_bar*conj(amp))*sinh_term
-         -f*2.0*q*(1.-2.*w)*imag(amp_bar*conj(amp))*sin_term
-         )*e_eff* _pdf_sigma_t->getVal();
+           (norm(amp) + norm(amp_bar)) *cosh_term * _cosh_coeff->evaluate()
+         + (norm(amp) - norm(amp_bar)) *cos_term * _cos_coeff->evaluate()
+         + real(amp_bar*conj(amp)) *sinh_term * _sinh_coeff->evaluate()
+         + imag(amp_bar*conj(amp)) *sin_term * _sin_coeff->evaluate()
+         )* _pdf_sigma_t->getVal();
         
         return val;
     }
     
     virtual double getVal(IDalitzEvent& evt){
         
-        //const double f = static_cast<double>((int)evt.getValueFromVector(4));
-        
         const double val = un_normalised_noPs(evt);
-        
         double r = (double)_r; // * sqrt(_intA/_intAbar);
-        //const double Gamma = 1./((double) _tau);
         
         const complex<double> phase_diff_m = polar((double)r,((double) _delta + (double)_gamma)/360.*2*pi);
-        const double int_interference_m = (phase_diff_m*_intAAbar).real();
+        const complex<double> int_interference_m =  phase_diff_m * _intAAbar ;
         
         const complex<double> phase_diff_p = polar((double)r,((double) _delta -(double)_gamma)/360.*2*pi);
-        const double int_interference_p = (phase_diff_p*_intAAbar).real();
+        const complex<double> int_interference_p = phase_diff_p * _intAAbar ;
         
         if(_intA == -1 ){
             cout << "AmpsPdfFlexiFastCPV:: _norm = -1, should not have happened." << endl;
             throw "can't deal with that";
         }
         
-        double norm = 2. * (_intA + r* r * _intAbar) *  _efficiency->analyticalIntegral(coshBasis,_tau,_dm,_dGamma) 
-                            -  2. * (int_interference_m + int_interference_p) * _efficiency->analyticalIntegral(sinhBasis,_tau,_dm,_dGamma) ;        
+        double norm =  (_intA + r* r * _intAbar) *  _efficiency->analyticalIntegral(coshBasis,_tau,_dm,_dGamma) * _cosh_coeff->analyticalIntegral(1)
+                    +  (_intA - r* r * _intAbar) *  _efficiency->analyticalIntegral(cosBasis,_tau,_dm,_dGamma) * _cos_coeff->analyticalIntegral(1)
+                    +  (int_interference_m.real() * _sinh_coeff->analyticalIntegral(1,"Range_m") +  int_interference_p.real() * _sinh_coeff->analyticalIntegral(1,"Range_p")) * _efficiency->analyticalIntegral(sinhBasis,_tau,_dm,_dGamma)
+                    +  (int_interference_m.imag() * _sin_coeff->analyticalIntegral(1,"Range_m") +  int_interference_p.imag() * _sin_coeff->analyticalIntegral(1,"Range_p")) *  _efficiency->analyticalIntegral(sinBasis,_tau,_dm,_dGamma) ;
         
         return val/norm;
     }
@@ -439,6 +448,88 @@ public:
         // Init B2DX parameters
         _r_t = new RooRealVar("t", "time", _min_TAU, _max_TAU);
         _r_dt = new RooRealVar("dt", "per-candidate time resolution estimate",0., 0.25);
+        _r_mistag = new RooRealVar("mistag", "mistag",0.);
+        _r_f = new RooCategory("qf", "qf");
+        _r_f->defineType("h+", +1);
+        _r_f->defineType("h-", -1);
+        _r_f->setRange("Range_p","h+");
+        _r_f->setRange("Range_m","h-");
+        _r_q = new RooCategory("qt", "qt");
+        _r_q->defineType("B+", +1);
+        _r_q->defineType("B-", -1) ;   
+        _r_q->defineType("untagged", 0); 
+        
+        _cosh_coeff = new DecRateCoeff_Bd("cosh_coeff",
+                                   "cosh_coeff",
+                                   DecRateCoeff_Bd::kCosh ,
+                                   *_r_f,
+                                   RooRealConstant::value(1.),
+                                   RooRealConstant::value(1.),
+                                   *_r_q,
+                                   *_r_mistag,
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(1.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(_eff_tag),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.));
+                                   
+        _cos_coeff = new DecRateCoeff_Bd("cos_coeff",
+                                  "cos_coeff",
+                                  DecRateCoeff_Bd::kCos ,
+                                  *_r_f,
+                                  RooRealConstant::value(1.),
+                                  RooRealConstant::value(-1.),
+                                  *_r_q,
+                                  *_r_mistag,
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(1.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(_eff_tag),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.));  
+        
+        _sinh_coeff = new DecRateCoeff_Bd("sinh_coeff",
+                                   "sinh_coeff",
+                                   DecRateCoeff_Bd::kSinh ,
+                                   *_r_f,
+                                   RooRealConstant::value(-2.),
+                                   RooRealConstant::value(-2.),
+                                   *_r_q,
+                                   *_r_mistag,
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(1.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(_eff_tag),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.));  
+        
+         _sin_coeff = new DecRateCoeff_Bd("sin_coeff",
+                                  "sin_coeff",
+                                  DecRateCoeff_Bd::kSin,
+                                  *_r_f,
+                                  RooRealConstant::value(2.),
+                                  RooRealConstant::value(-2.),
+                                  *_r_q,
+                                  *_r_mistag,
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(1.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(_eff_tag),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.));  
         
         _r_scale_mean_dt = new RooRealVar("scale_mean_dt", "scale_mean_dt", 0);
         _r_scale_sigma_dt = new RooRealVar("scale_sigma_dt", "scale_sigma_dt", 1.2);
