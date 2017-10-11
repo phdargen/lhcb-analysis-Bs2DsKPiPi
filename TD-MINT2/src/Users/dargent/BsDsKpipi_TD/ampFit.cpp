@@ -394,24 +394,68 @@ public:
         
         const double val = un_normalised_noPs(evt);
         double r = (double)_r; // * sqrt(_intA/_intAbar);
-        
+        const double f = static_cast<double>((int)evt.getValueFromVector(4));
+
         const complex<double> phase_diff_m = polar((double)r,((double) _delta + (double)_gamma)/360.*2*pi);
         const complex<double> int_interference_m =  phase_diff_m * _intAAbar ;
         
         const complex<double> phase_diff_p = polar((double)r,((double) _delta -(double)_gamma)/360.*2*pi);
         const complex<double> int_interference_p = phase_diff_p * _intAAbar ;
+
+        const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma*f)/360.*2*pi);
+        const complex<double> int_interference =  phase_diff * _intAAbar ;
+
+	TString range = "";
+	//if(f == 1) range = "Range_p";
+	//else range = "Range_m";
+        
         
         if(_intA == -1 ){
             cout << "AmpsPdfFlexiFastCPV:: _norm = -1, should not have happened." << endl;
             throw "can't deal with that";
         }
         
-        double norm =  (_intA + r* r * _intAbar) *  _efficiency->analyticalIntegral(coshBasis,_tau,_dm,_dGamma) * _cosh_coeff->analyticalIntegral(1)
-                    +  (_intA - r* r * _intAbar) *  _efficiency->analyticalIntegral(cosBasis,_tau,_dm,_dGamma) * _cos_coeff->analyticalIntegral(1)
-                    +  (int_interference_m.real() * _sinh_coeff->analyticalIntegral(1,"Range_m") +  int_interference_p.real() * _sinh_coeff->analyticalIntegral(1,"Range_p")) * _efficiency->analyticalIntegral(sinhBasis,_tau,_dm,_dGamma)
-                    +  (int_interference_m.imag() * _sin_coeff->analyticalIntegral(1,"Range_m") +  int_interference_p.imag() * _sin_coeff->analyticalIntegral(1,"Range_p")) *  _efficiency->analyticalIntegral(sinBasis,_tau,_dm,_dGamma) ;
-        
-        return val/norm;
+        double norm =  (_intA + r* r * _intAbar) *  _efficiency->analyticalIntegral(coshBasis,_tau,_dm,_dGamma) * _cosh_coeff->analyticalIntegral(1,range)
+                    +  (_intA - r* r * _intAbar) *  _efficiency->analyticalIntegral(cosBasis,_tau,_dm,_dGamma) * _cos_coeff->analyticalIntegral(1,range) 
+                    //+  (int_interference_m.real() * _sinh_coeff->analyticalIntegral(1,"Range_m") +  int_interference_p.real() * _sinh_coeff->analyticalIntegral(1,"Range_p")) * _efficiency->analyticalIntegral(sinhBasis,_tau,_dm,_dGamma)
+                    //+  (int_interference_m.imag() * _sin_coeff->analyticalIntegral(1,"Range_m") +  int_interference_p.imag() * _sin_coeff->analyticalIntegral(1,"Range_p")) *  _efficiency->analyticalIntegral(sinBasis,_tau,_dm,_dGamma) ;
+                    +  int_interference.real()/2. * _sinh_coeff->analyticalIntegral(1,range) * _efficiency->analyticalIntegral(sinhBasis,_tau,_dm,_dGamma)
+                    +  int_interference.imag()/2. * _sin_coeff->analyticalIntegral(1,range)  * _efficiency->analyticalIntegral(sinBasis,_tau,_dm,_dGamma) ;
+
+   /*     
+        const double t = (double) evt.getValueFromVector(0);
+        const double dt = (double) evt.getValueFromVector(1);
+        const double q = static_cast<double>((int)evt.getValueFromVector(2)); 
+        const double w = (double) evt.getValueFromVector(3);
+	cout << t << endl;
+	cout << dt << endl;
+	cout << q << endl;
+	cout << w << endl;
+	cout << f << endl << endl;
+
+	cout << _cosh_coeff->evaluate() << endl;
+	cout << _cosh_coeff->analyticalIntegral(1) << endl;
+	cout << _cosh_coeff->analyticalIntegral(1,"Range_p") << endl;
+	cout << _cosh_coeff->analyticalIntegral(1,"Range_m") << endl << endl;
+
+	cout << _cos_coeff->evaluate() << endl;	
+	cout << _cos_coeff->analyticalIntegral(1) << endl;
+	cout << _cos_coeff->analyticalIntegral(1,"Range_p") << endl;
+	cout << _cos_coeff->analyticalIntegral(1,"Range_m") << endl << endl;
+
+	cout << _sinh_coeff->evaluate() << endl;
+	cout << _sinh_coeff->analyticalIntegral(1) << endl;
+	cout << _sinh_coeff->analyticalIntegral(1,"Range_p") << endl;
+	cout << _sinh_coeff->analyticalIntegral(1,"Range_m") << endl << endl;
+
+	cout << _sin_coeff->evaluate() << endl;
+	cout << _sin_coeff->analyticalIntegral(1) << endl;
+	cout << _sin_coeff->analyticalIntegral(1,"Range_p") << endl;
+	cout << _sin_coeff->analyticalIntegral(1,"Range_m") << endl << endl;
+
+	throw "";
+	*/
+        return val/norm*2.;
     }
     
     virtual double getVal_withPs(IDalitzEvent& evt){return getVal(evt);}
@@ -574,6 +618,248 @@ public:
         
     }
 };
+
+
+
+class AmpsPdfFlexiFastCPV_mod : public MINT::PdfBase<IDalitzEvent>
+, virtual public IDalitzPdf{
+    
+protected:
+    AmpsPdfFlexiFast* _amps1;
+    AmpsPdfFlexiFast* _amps2;
+    AmpsPdfFlexiFast* _ampsSum;
+    
+    FitParameter& _r;
+    FitParameter& _delta;
+    FitParameter& _gamma;
+    
+    FitParameter& _tau;
+    FitParameter& _dGamma;
+    FitParameter& _dm;
+    FitParameter& _eff_tag;
+    FitParameter& _w;
+    
+    double _intA;
+    double _intAbar;
+    complex<double> _intAAbar;
+
+    // cast of MINT parameters to B2DX parameters
+    RooRealVar* _r_t;
+    RooRealVar* _r_dt;
+    RooCategory* _r_q;    
+    RooRealVar* _r_mistag;
+    RooCategory* _r_f;
+    
+    RooRealVar* _r_scale_mean_dt;
+    RooRealVar* _r_scale_sigma_dt;
+    RooAbsPdf* _pdf_sigma_t;
+    RooAbsPdf* _pdf_omega_os;
+    RooAbsPdf* _pdf_omega_ss;
+    
+    RooCubicSplineFun* _spline;
+    RooGaussEfficiencyModel* _efficiency;
+    NamedParameter<double> _min_TAU;
+    NamedParameter<double> _max_TAU;
+    
+    DecRateCoeff_Bd* _cos_coeff;
+    DecRateCoeff_Bd* _cosh_coeff;
+    DecRateCoeff_Bd* _sin_coeff;
+    DecRateCoeff_Bd* _sinh_coeff;
+    
+public:
+    void parametersChanged(){
+        _ampsSum->parametersChanged();
+        _intA = _ampsSum->integralForMatchingPatterns(true,1);
+        _intAbar = _ampsSum->integralForMatchingPatterns(true,-1);        
+        _intAAbar = _ampsSum->ComplexSumForMatchingPatterns(false);
+    }
+    void beginFit(){
+        _ampsSum->beginFit();
+        printIntegralVals();
+    }
+    void endFit(){
+        printIntegralVals();
+        _ampsSum->endFit();
+    }
+    
+    void printIntegralVals(){
+        cout << "intSum = " << _ampsSum->getIntegralValue() << endl;
+        cout << "intA = " << _intA << endl;
+        cout << "intAbar = " << _intAbar << endl;
+        cout << "intAAbar = " << _intAAbar.real() << endl;
+    }
+    
+    inline double un_normalised_noPs(IDalitzEvent& evt){
+        const double t = (double) evt.getValueFromVector(0);
+        const double dt = (double) evt.getValueFromVector(1);
+        const double q = static_cast<double>((int)evt.getValueFromVector(2)); 
+        const double w = (double) evt.getValueFromVector(3);
+        const double f = static_cast<double>((int)evt.getValueFromVector(4));
+        _r_t->setVal(t);
+        _r_dt->setVal(dt);
+        _r_q->setIndex(q);
+        _r_mistag->setVal(w);
+        _r_f->setIndex(f);
+
+        //const double e_eff = fabs(q)*_eff_tag + (1.-fabs(q))*(1.-_eff_tag);
+        double r = (double)_r; // * sqrt(_intA/_intAbar);
+        const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma*f)/360.*2*pi);
+        
+        const std::complex<double> amp = _amps1->ComplexVal_un_normalised_noPs(evt) ;
+        const std::complex<double> amp_bar = _amps2->ComplexVal_un_normalised_noPs(evt) * phase_diff;
+        
+        const double val =  exp(-fabs(t)/(double)_tau) *
+        (
+          (norm(amp) + norm(amp_bar))*cosh((double)_dGamma/2.*t)* _cosh_coeff->evaluate()
+         +(norm(amp) - norm(amp_bar)) *cos((double)_dm*t) * _cos_coeff->evaluate()
+         +real(amp_bar*conj(amp))*sinh((double)_dGamma/2.*t) * _sinh_coeff->evaluate()
+         +imag(amp_bar*conj(amp))*sin((double)_dm*t) * _sin_coeff->evaluate()
+         );
+        
+        return val;
+    }
+    
+    virtual double getVal(IDalitzEvent& evt){
+        
+        const double f = static_cast<double>((int)evt.getValueFromVector(4));
+        const double val = un_normalised_noPs(evt);
+        
+        double r = (double)_r; // * sqrt(_intA/_intAbar);
+        const double Gamma = 1./((double) _tau);
+        const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma*f)/360.*2*pi);
+        const double int_interference = (phase_diff*_intAAbar).real();
+        
+        if(_intA == -1 ){
+            cout << "AmpsPdfFlexiFastCPV:: _norm = -1, should not have happened." << endl;
+            throw "can't deal with that";
+        }
+        
+        return val/(( _cosh_coeff->analyticalIntegral(1) * (_intA + r* r * _intAbar) * 4.*Gamma + _sinh_coeff->analyticalIntegral(1) * int_interference/2. * 2. * _dGamma )/ (4.*Gamma*Gamma-_dGamma*_dGamma))*2.;
+    }
+    
+    virtual double getVal_withPs(IDalitzEvent& evt){return getVal(evt);}
+    virtual double getVal_noPs(IDalitzEvent& evt){return getVal(evt);}
+    
+    virtual double getVal(IDalitzEvent* evt){
+        if(0 == evt) return 0;
+        return getVal(*evt);
+    }
+    virtual double getVal_withPs(IDalitzEvent* evt){
+        if(0 == evt) return 0;
+        return getVal_withPs(*evt);
+    }
+    virtual double getVal_noPs(IDalitzEvent* evt){
+        if(0 == evt) return 0;
+        return getVal_noPs(*evt);
+    }
+    
+    virtual DalitzHistoSet histoSet(){return _ampsSum->histoSet();}
+    
+    void doFinalStatsAndSaveForAmp12(MINT::Minimiser* min=0,const std::string& fname = "FitAmpResults", const std::string& fnameROOT="fitFractions"){
+        _amps1->redoIntegrator();
+        _amps2->redoIntegrator();
+        _amps1->doFinalStatsAndSave(min,((string)fname+".txt").c_str(),((string)fnameROOT+".root").c_str());
+        _amps2->doFinalStatsAndSave(min,((string)fname+"_CC.txt").c_str(),((string)fnameROOT+"_CC.root").c_str());        
+    }
+    
+    AmpsPdfFlexiFastCPV_mod(AmpsPdfFlexiFast* amps1, AmpsPdfFlexiFast* amps2, AmpsPdfFlexiFast* ampsSum, 
+                        MINT::FitParameter& r, MINT::FitParameter& delta,MINT::FitParameter& gamma,
+                        MINT::FitParameter& tau, MINT::FitParameter& dGamma, MINT::FitParameter& dm, MINT::FitParameter& eff_tag, MINT::FitParameter& w ):
+    _amps1(amps1),_amps2(amps2),_ampsSum(ampsSum),_r(r),_delta(delta),_gamma(gamma),_tau(tau),_dGamma(dGamma),_dm(dm),_eff_tag(eff_tag),_w(w),
+    _intA(-1),_intAbar(-1),_intAAbar(-1),_min_TAU("min_TAU", 0.4), _max_TAU("max_TAU", 10.)
+    {
+        // Init B2DX parameters
+        _r_t = new RooRealVar("t", "time", _min_TAU, _max_TAU);
+        _r_dt = new RooRealVar("dt", "per-candidate time resolution estimate",0., 0.25);
+        _r_mistag = new RooRealVar("mistag", "mistag",0.);
+        _r_f = new RooCategory("qf", "qf");
+        _r_f->defineType("h+", +1);
+        _r_f->defineType("h-", -1);
+        _r_f->setRange("Range_p","h+");
+        _r_f->setRange("Range_m","h-");
+        _r_q = new RooCategory("qt", "qt");
+        _r_q->defineType("B+", +1);
+        _r_q->defineType("B-", -1) ;   
+        _r_q->defineType("untagged", 0); 
+        
+        _cosh_coeff = new DecRateCoeff_Bd("cosh_coeff",
+                                   "cosh_coeff",
+                                   DecRateCoeff_Bd::kCosh ,
+                                   *_r_f,
+                                   RooRealConstant::value(1.),
+                                   RooRealConstant::value(1.),
+                                   *_r_q,
+                                   *_r_mistag,
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(1.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(_eff_tag),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.));
+                                   
+        _cos_coeff = new DecRateCoeff_Bd("cos_coeff",
+                                  "cos_coeff",
+                                  DecRateCoeff_Bd::kCos ,
+                                  *_r_f,
+                                  RooRealConstant::value(1.),
+                                  RooRealConstant::value(-1.),
+                                  *_r_q,
+                                  *_r_mistag,
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(1.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(_eff_tag),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.));  
+        
+        _sinh_coeff = new DecRateCoeff_Bd("sinh_coeff",
+                                   "sinh_coeff",
+                                   DecRateCoeff_Bd::kSinh ,
+                                   *_r_f,
+                                   RooRealConstant::value(-2.),
+                                   RooRealConstant::value(-2.),
+                                   *_r_q,
+                                   *_r_mistag,
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(1.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(_eff_tag),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.));  
+        
+         _sin_coeff = new DecRateCoeff_Bd("sin_coeff",
+                                  "sin_coeff",
+                                  DecRateCoeff_Bd::kSin,
+                                  *_r_f,
+                                  RooRealConstant::value(2.),
+                                  RooRealConstant::value(-2.),
+                                  *_r_q,
+                                  *_r_mistag,
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(1.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(_eff_tag),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.));
+     	   // Init pdf for sigma_t
+        _pdf_sigma_t = new RooGenericPdf("pdf_sigma_t","pow(7. / @1, 7) / 720. * pow(@0, 6) * exp(-7. * @0 / @1)",RooArgList(*_r_dt, RooRealConstant::value(0.04)));
+        
+    }
+
+};
+
 
 
 // Time-dependent PDF
@@ -1104,7 +1390,7 @@ int ampFit(int step=0){
     counted_ptr<IReturnComplex> r_4_minus = new CPV_amp_polar(r_4_re,r_4_im,-1);
     AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResA0(->sigma10(->pi+,pi-),Ds-)", r_4_plus, r_4_minus );
     AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+", r_4_plus, r_4_minus );
-    
+
     vector<double> k_gen = coherenceFactor(fas,fasCC,(double)r, (double)delta,eventListPhsp);
     
     counted_ptr<FitAmpList> sumList = fas.GetCloneSameFitParameters();
@@ -1144,16 +1430,18 @@ int ampFit(int step=0){
         //simple hit and miss
         for(int i = 0; i < Nevents; i++){
             while(true){
-                //t = ranLux.Exp(tau);
-                //dt = ranLux.Uniform(0.,0.25);
-		pdf.getSmearedTime(t,dt,ranLux);
+                t = ranLux.Exp(tau);
+                dt = ranLux.Uniform(0.,0.25);
+		//pdf.getSmearedTime(t,dt,ranLux);
                 const double q_rand = ranLux.Uniform();
                 q = 0;
                 if (q_rand < 1./3.) q = -1;
                 if (q_rand > 2./3.) q = 1;
                 w = mistag;
-                const double f_rand = ranLux.Uniform();
-                if(f_rand < 0.5)f = 1; 
+                //const double f_rand = ranLux.Uniform();
+                //if(f_rand < 0.5)f = 1; 
+                //else f = -1;
+                if(i < Nevents/2)f = 1; 
                 else f = -1;
                 
                 counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
@@ -1168,8 +1456,8 @@ int ampFit(int step=0){
                 evt.setValueInVector(3, w);
                 evt.setValueInVector(4, f);
                 
-                //const double pdfVal = pdf.un_normalised_noPs(evt);
-                const double pdfVal = pdf.getValForGeneration(evt);
+                const double pdfVal = pdf.un_normalised_noPs(evt);
+                //const double pdfVal = pdf.getValForGeneration(evt);
                 
                 const double height = ranLux.Uniform(0,maxVal);
                 //Safety check on the maxmimum generated height
@@ -1243,14 +1531,12 @@ int ampFit(int step=0){
     }
     
     // Fit
-    //Neg2LL fcn(pdf, eventList_f);
-    //Neg2LL fcn_bar(pdf, eventList_fbar);
-    //Neg2LLSum neg2LLSum(&fcn,&fcn_bar);
-    //neg2LLSum.addConstraints();    
-    //Minimiser mini(&neg2LLSum);
-
-    Neg2LL fcn(pdf, eventList);
-    Neg2LLSum neg2LLSum(&fcn);
+    Neg2LL fcn(pdf, eventList_f);
+    Neg2LL fcn_bar(pdf, eventList_fbar);
+  
+    Neg2LL neg2LL(pdf, eventList);
+    //Neg2LLSum neg2LLSum(&neg2LL);
+    Neg2LLSum neg2LLSum(&fcn,&fcn_bar);
     //neg2LLSum.addConstraints();    
     Minimiser mini(&neg2LLSum);    
     mini.doFit();
@@ -1780,7 +2066,7 @@ int ampFit(int step=0){
         c->Print(((string)OutputDir+"s_Dspim.eps").c_str());
         
     }
-    /*
+    
     if(do2DScan == 1){
         cout << "Now doing 2D scan:" << endl;
         int scanBins=20;
@@ -1863,7 +2149,6 @@ int ampFit(int step=0){
         
         cout<< "done 2-D scan" << endl;
     }
-    */
     
     return 0;
 }
