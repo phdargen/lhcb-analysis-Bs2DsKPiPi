@@ -1,16 +1,17 @@
 * general options
-"channel"	"Signal"
+"channel"	"Norm"
 "nBins"		60
 "min_MM"	5050.
 "max_MM"	5700.
 "cut_BDT" 	0.35
 "numCPU"	 10
-"newTable"	1
-"updateAnaNotePlots"  1
+"newTable"	0
+"updateAnaNotePlots"  0
 
 * Norm fit :
 "fixExpBkgFromSidebands"	 0
 "sWeightNorm"	 0
+"altPartBkg"     1
 
 * Signal fit:
 "fixMisIDyields"	1
