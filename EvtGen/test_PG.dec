@@ -1,0 +1,200 @@
+# EventType: 13266008
+#
+# Descriptor: [B_s0 -> K+ (D_s- -> K+ K- pi-) pi+ pi-]cc
+#
+# NickName: Bs_DsKpipi-DDalitz=DecProdCut,TightCut
+#
+# Cuts: LoKi::GenCutTool/TightCut
+#
+# InsertPythonCode:
+# # 
+# from Configurables import LoKi__GenCutTool 
+# gen = Generation() 
+# gen.SignalRepeatedHadronization.addTool ( LoKi__GenCutTool , 'TightCut' ) 
+# # 
+# tightCut = gen.SignalRepeatedHadronization.TightCut
+# tightCut.Decay     = '^[[B_s0]cc ==>  ^K+ ^pi+ ^pi- ^(D_s- ==> ^K+ ^K- ^pi-) ]CC'
+# tightCut.Cuts      =    {
+##     '[B_s0]cc'   : ' goodB  ' , 
+#     '[K+]cc'    : ' goodKaon  ' , 
+#     '[pi+]cc'   : ' goodPion  '  }
+# tightCut.Preambulo += [
+#     'from GaudiKernel.SystemOfUnits import ns,MeV',
+#     'from GaudiKernel.PhysicalConstants import c_light',
+#     'inAcc = in_range( 0.010, GTHETA, 0.400)', 
+#     'goodKaon  = ( GPT > 150  * MeV )  & inAcc' , 
+#     'goodPion  = ( GPT > 150  * MeV ) & inAcc' ,
+#     "goodB  = ( GCTAU > 0.1e-3 * ns * c_light) "  ]
+#EndInsertPythonCode
+#
+# Documentation: Ds Dalitz
+# EndDocumentation
+#
+# PhysicsWG: B2OC
+# Tested: Yes
+# Responsible: Philippe d'Argent
+# Email: p.dargent@cern.ch
+# Date: 20170724
+# CPUTime: < 1 min
+#
+Alias      MyD_s-     D_s-
+Alias      MyD_s+     D_s+
+ChargeConj MyD_s+     MyD_s-
+#
+Alias      MyK_0*0      K_0*0
+Alias      Myanti-K_0*0 anti-K_0*0
+ChargeConj MyK_0*0      Myanti-K_0*0
+#
+#
+Alias      MyK*0      K*0
+Alias      Myanti-K*0 anti-K*0
+ChargeConj MyK*0      Myanti-K*0
+#
+#
+Alias      MyK_0*+      K_0*+
+Alias      MyK_0*- 	K_0*-
+ChargeConj MyK_0*+      MyK_0*-
+#
+Alias      Myphi      phi
+ChargeConj Myphi      Myphi
+#
+Alias      Myrho0     rho0
+ChargeConj Myrho0     Myrho0
+#
+Alias      MyK_1-     K_1-
+Alias      MyK_1+     K_1+
+ChargeConj MyK_1+     MyK_1-
+#
+Alias      MyK'_1-     K'_1-
+Alias      MyK'_1+     K'_1+
+ChargeConj MyK'_1+     MyK'_1-
+#
+
+#LSFLAT	MyK_1+
+
+noPhotos
+
+LSNONRELBW MyK_0*+
+BlattWeisskopf MyK_0*+ 3.0
+Particle MyK_0*+ 1.26 0.15
+#IncludeBirthFactor MyK_0*+ no
+#IncludeDecayFactor MyK_0*+ no
+ChangeMassMin MyK_0*+ 0.75
+ChangeMassMax MyK_0*+ 3.5
+
+LSNONRELBW MyK_0*-
+BlattWeisskopf MyK_0*- 3.0
+Particle MyK_0*- 1.26 0.15
+#IncludeBirthFactor MyK_0*- no
+#IncludeDecayFactor MyK_0*- no
+ChangeMassMin MyK_0*- 0.75
+ChangeMassMax MyK_0*- 3.5
+
+LSNONRELBW MyK_1+
+BlattWeisskopf MyK_1+ 3.0
+Particle MyK_1+ 1.4 0.35
+#IncludeBirthFactor MyK_1+ no
+#IncludeDecayFactor MyK_1+ no
+ChangeMassMin MyK_1+ 0.75
+ChangeMassMax MyK_1+ 3.5
+
+LSNONRELBW MyK_1-
+BlattWeisskopf MyK_1- 3.0
+Particle MyK_1- 1.4 0.35
+#IncludeBirthFactor MyK_1- no
+#IncludeDecayFactor MyK_1- no
+ChangeMassMin MyK_1- 0.75
+ChangeMassMax MyK_1- 3.5
+
+LSNONRELBW Myrho0
+BlattWeisskopf Myrho0 0.0
+Particle Myrho0 0.775 0.15
+#IncludeBirthFactor Myrho0 no
+#IncludeDecayFactor Myrho0 no
+ChangeMassMin Myrho0 0.25
+ChangeMassMax Myrho0 3.0
+
+LSNONRELBW MyK*0
+BlattWeisskopf MyK*0 3.0
+Particle MyK*0 0.892 0.051
+#IncludeBirthFactor MyK*0 no
+#IncludeDecayFactor MyK*0 no
+ChangeMassMin MyK*0 0.6
+ChangeMassMax MyK*0 3.3
+
+LSNONRELBW Myanti-K*0
+BlattWeisskopf Myanti-K*0 3.0
+Particle Myanti-K*0 0.892 0.051
+#IncludeBirthFactor Myanti-K*0 no
+#IncludeDecayFactor Myanti-K*0 no
+ChangeMassMin Myanti-K*0 0.6
+ChangeMassMax Myanti-K*0 3.3
+
+LSNONRELBW MyK_0*0
+BlattWeisskopf MyK_0*0 3.0
+Particle MyK_0*0 0.892 0.051
+#IncludeBirthFactor MyK_0*0 no
+#IncludeDecayFactor MyK_0*0 no
+ChangeMassMin MyK_0*0 0.6
+ChangeMassMax MyK_0*0 3.3
+
+LSNONRELBW Myanti-K_0*0
+BlattWeisskopf Myanti-K_0*0 3.0
+Particle Myanti-K_0*0 0.892 0.051
+#IncludeBirthFactor Myanti-K_0*0 no
+#IncludeDecayFactor Myanti-K_0*0 no
+ChangeMassMin Myanti-K_0*0 0.6
+ChangeMassMax Myanti-K_0*0 3.3
+
+Decay B_s0
+  0.05     MyD_s- K+ pi+ pi-         PHSP;
+  0.70     MyK_1+  MyD_s-           PHSP;
+  0.25     MyK_0*+ MyD_s-          PHSP;
+#  0.02     MyD_s- MyK*0 pi+        PHSP;
+#  0.05     MyD_s- Myrho0 K+          PHSP;
+Enddecay
+CDecay anti-B_s0
+#
+Decay MyK_1+
+  0.6300   MyK*0  pi+                       PHSP;
+#  0.0100   rho0 K+                         VVS_PWAVE 1.0 0.0 0.0 0.0 0.0 0.0;
+#  0.0133   K+  pi+  pi-                    PHSP;
+Enddecay
+CDecay MyK_1-
+#
+Decay MyK_0*+
+#  0.6300    MyK_0*0  pi+                    PHSP;
+  0.0100   Myrho0 K+                          PHSP;
+#  0.0133   K+  pi+  pi-                    PHSP;
+Enddecay
+CDecay MyK_0*-
+#
+#
+Decay MyD_s-
+  1.000     K+    K-     pi-          D_DALITZ;
+Enddecay
+CDecay MyD_s+
+#
+#
+Decay Myphi
+  1.000 K+   K-                    VSS;
+Enddecay
+#
+#
+Decay MyK*0
+  1.000 K+   pi-                  PHSP;
+Enddecay
+CDecay Myanti-K*0
+#
+#
+Decay MyK_0*0
+  1.000 K+   pi-                  PHSP;
+Enddecay
+CDecay Myanti-K_0*0
+#
+#
+Decay Myrho0
+  1.000 pi+  pi-                    PHSP;
+Enddecay
+#
+End
