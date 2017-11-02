@@ -113,7 +113,9 @@ class BW_BW : virtual public ILineshape, public MINT::FitParDependent{
   //virtual double mumsPDGRadius() const; // fixed default value
   virtual double globalRadius() const; // global resonance radius (equal for all resonances)
   virtual double Radius() const;  // returns either global (default) or individual radius depending on options
-    
+  double GetAlpha() const{
+	  return _RPL->get(mumsPID())->alpha();
+  }
   virtual int lowestPossibleTwoLPlusOne() const;
   // none of all this can handle half-integer spins
   // (i.e. only mesons - so far - should be easy to

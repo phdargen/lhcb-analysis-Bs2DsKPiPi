@@ -984,6 +984,7 @@ int NamedDecayTreeList::makeDsKpipiList() {
     dk->addDgtr(-431);
     dk->addDgtr(&k1);
     this->add(*dk); 
+    this->add(AmpInitialiser(*dk, "SBW_313"));
     k1.getVal().setL(2);
     this->add(*dk);
     delete dk;
@@ -997,12 +998,17 @@ int NamedDecayTreeList::makeDsKpipiList() {
     this->add(*dk); 
     this->add(AmpInitialiser(*dk, "GS"));
     this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
+    this->add(AmpInitialiser(*dk, "SBW_113"));
     k1.getVal().setL(2);
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "GS"));
     this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     delete dk;
     
+    dk = new DecayTree(531);
+    dk->addDgtr(-431, 10323)->addDgtr(321, 9993)->addDgtr(211,-211);
+    this->add(*dk);
+
     // B->Ds K1(1270); K1-> K0^*(1430) pi; K0^*->K pi
     dk = new DecayTree(531);
     dk->addDgtr(-431, 10323)->addDgtr(211, 10311)->addDgtr(321,-211);
@@ -1017,6 +1023,7 @@ int NamedDecayTreeList::makeDsKpipiList() {
     dk->addDgtr(-431);
     dk->addDgtr(&k1);
     this->add(*dk); 
+    this->add(AmpInitialiser(*dk, "SBW_313"));
     k1.getVal().setL(2);
     this->add(*dk);
     delete dk;
@@ -1030,12 +1037,17 @@ int NamedDecayTreeList::makeDsKpipiList() {
     this->add(*dk); 
     this->add(AmpInitialiser(*dk, "GS"));
     this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
+    this->add(AmpInitialiser(*dk, "SBW_113"));
     k1.getVal().setL(2);
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "GS"));
     this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     delete dk;
     
+    dk = new DecayTree(531);
+    dk->addDgtr(-431, 20323)->addDgtr(321, 9993)->addDgtr(211,-211);
+    this->add(*dk);
+
     // B->Ds K*(1410); K*(1410)->K*(892) pi; K*->K pi
     dk = new DecayTree(531);
     dk->addDgtr(-431, 100323)->addDgtr(211, 313)->addDgtr(321,-211);
@@ -1067,6 +1079,7 @@ int NamedDecayTreeList::makeDsKpipiList() {
     dk->addDgtr(-431, 100321)->addDgtr(211, 313)->addDgtr(321,-211);
     this->add(*dk);   
     this->add(AmpInitialiser(*dk, "MI_100321"));
+    this->add(AmpInitialiser(*dk, "SBW_313"));
     delete dk;
     
     // B->Ds K(1460); K->K rho(770); rho->pi pi  
@@ -1086,6 +1099,7 @@ int NamedDecayTreeList::makeDsKpipiList() {
     this->add(AmpInitialiser(*dk, "Flatte"));
     this->add(AmpInitialiser(*dk, "MI_100321"));
     this->add(AmpInitialiser(*dk, "MI_100321Flatte"));
+    this->add(AmpInitialiser(*dk, "SBW_9010221"));
     this->add(*dk);   
     delete dk;
     
@@ -1161,6 +1175,8 @@ int NamedDecayTreeList::makeDsKpipiList() {
     this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(AmpInitialiser(*dk, "GS"));
     this->add(AmpInitialiser(*dk, "NonResGS"));
+    this->add(AmpInitialiser(*dk, "SBW_113"));
+    this->add(AmpInitialiser(*dk, "NonResEvtGenSBW_113"));
     delete dk;
     
     //Bs -> (Ds K)_V rho(770), rho(770)->pi+pi-
@@ -1287,6 +1303,8 @@ int NamedDecayTreeList::makeDsKpipiList() {
     dk->addDgtr(9981)->addDgtr(211, -431);
     dk->addDgtr(313)->addDgtr(321, -211);
     add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_313"));
+    this->add(AmpInitialiser(*dk, "NonResEvtGenSBW_313"));
     delete dk;
     
     //Bs -> (Ds pi)_S kappa
@@ -1372,7 +1390,12 @@ int NamedDecayTreeList::makeDsKpipiList() {
     this->add(AmpInitialiser(*dk, "NonRes"));
     this->add(AmpInitialiser(*dk,"NonResPow"));
     delete dk;
-    
+
+    dk = new DecayTree(531);
+    dk->addDgtr(-431,321,211,-211);
+    add(*dk);
+    delete dk;
+
     //Bs -> NA K+
     dk = new DecayTree(531);
     dk->addDgtr(321, 9983)->addDgtr(-431,999981)->addDgtr(211, -211);
@@ -1393,6 +1416,13 @@ int NamedDecayTreeList::makeDsKpipiList() {
     this->add(AmpInitialiser(*dk, "GS"));
     this->add(AmpInitialiser(*dk, "NonResRhoOmegaGS"));
     this->add(AmpInitialiser(*dk, "NonResGS"));
+    this->add(AmpInitialiser(*dk, "NonResEvtGenSBW_113"));
+    delete dk;
+
+    dk = new DecayTree(531);
+    dk->addDgtr(-431, 9983)->addDgtr(321,113)->addDgtr(211, -211);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "NonResEvtGenSBW_113"));
     delete dk;
     
     //Bs -> NA K+, NA -> Ds sigma
