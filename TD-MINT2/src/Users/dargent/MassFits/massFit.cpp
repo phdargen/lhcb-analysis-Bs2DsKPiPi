@@ -62,6 +62,8 @@
 #include <ctime>
 #include "Mint/NamedParameter.h"
 #include "Mint/Utils.h"
+#include "Mint/RooHILLdini.h"
+#include "Mint/RooHORNSdini.h"
 
 using namespace std;
 using namespace RooFit ;
@@ -555,6 +557,7 @@ vector< vector<double> > fitNorm(){
 	NamedParameter<string> inFileName("inFileNameNorm",(string)"/auto/data/dargent/BsDsKpipi/BDT/Data/norm.root");
 	NamedParameter<string> outFileName("outFileNameNorm",(string)"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
+        NamedParameter<int> altPartBkg("altPartBkg", 0);
 
 	/// Define categories
 	RooCategory year("year","year") ;
@@ -627,6 +630,24 @@ vector< vector<double> > fitNorm(){
 		while(next=iterat.next()) ((RooRealVar*)next)->setConstant();
 	}
 
+	///alternative modelling using RooHILLdini & RooHORNSdini
+
+	RooRealVar a("a","a", 5059.,3040.,5970.);
+	RooRealVar b("b","b", 5182.,4140.,5905.);
+	RooRealVar a_HORNS("a_HORNS","a_HORNS", 5059.,3040.,5970.);
+	RooRealVar b_HORNS("b_HORNS","b_HORNS", 5182.,4140.,5905.);
+	RooRealVar csi("csi","csi", 1.,0.,10.);
+	RooRealVar csi_HORNS("csi_HORNS","csi_HORNS", 1.,0.,10.);
+	RooRealVar shift("shift","shift", 1.,0.,1000.);
+	RooRealVar sigma_HILL("sigma_HILL", "sigma_HILL", 25.9,0.,100.);
+	RooRealVar sigma_HORNS("sigma_HORNS", "sigma_HORNS", 25.9,0.,100.);
+	RooRealVar ratio_sigma("ratio_sigma", "ratio_sigma", 1.,0.,50.);
+	RooRealVar fraction_sigma("fraction_sigma", "fraction_sigma", 0.5,0.,1.);
+
+	RooHILLdini RooHILLBkgShape("RooHILLBkgShape", "RooHILLBkgShape", DTF_Bs_M, a, b, csi, shift, sigma_HILL, ratio_sigma, fraction_sigma );
+	RooHORNSdini RooHORNSBkgShape("RooHORNSBkgShape", "RooHORNSBkgShape", DTF_Bs_M, a_HORNS, b_HORNS, csi_HORNS, shift, sigma_HORNS, ratio_sigma, fraction_sigma );
+	RooAddPdf bkg_partReco_alt("bkg_partReco_alt", "bkg_partReco_alt", RooArgList(RooHILLBkgShape, RooHORNSBkgShape), RooArgList(f_1),kTRUE);
+
 	/// Total pdf
 	RooRealVar n_sig("n_sig", "n_sig", data->numEntries()/4., 0., data->numEntries());
 	RooRealVar n_exp_bkg("n_exp_bkg", "n_exp_bkg", data->numEntries()/2., 0., data->numEntries());
@@ -636,10 +657,12 @@ vector< vector<double> > fitNorm(){
 		n_partReco_bkg.setConstant();
 	}
 
-	RooAddPdf pdf("pdf", "pdf", RooArgList(signal, bkg_exp, bkg_partReco), RooArgList(n_sig, n_exp_bkg, n_partReco_bkg));
+	RooAddPdf* pdf;
+	if(altPartBkg == 0) pdf = new RooAddPdf("pdf", "pdf", RooArgList(signal, bkg_exp, bkg_partReco), RooArgList(n_sig, n_exp_bkg, n_partReco_bkg));
+	if(altPartBkg == 1) pdf = new RooAddPdf("pdf", "pdf", RooArgList(signal, bkg_exp, bkg_partReco_alt), RooArgList(n_sig, n_exp_bkg, n_partReco_bkg));
 
 	/// Generate simultaneous pdf out of prototype pdf 
-  	RooSimPdfBuilder* mgr = new RooSimPdfBuilder(pdf) ;
+  	RooSimPdfBuilder* mgr = new RooSimPdfBuilder(*pdf) ;
   	RooArgSet* config = mgr->createProtoBuildConfig() ;
   	config->setStringValue("physModels","pdf") ;
   	config->setStringValue("splitCats" ,"year Ds_finalState") ;
@@ -1802,6 +1825,51 @@ void fitSignal(){
 }
 
 
+void AnalyticPartBkg(){
+
+
+	///define shape of Bs->Ds*pipipi BG using analytical shape RooHILLdini
+	
+	RooRealVar Bs_MM("Bs_DTF_MM", "m(D_{s}*#pi#pi#pi)", 5000., 5350.,"MeV/c^{2}");
+
+	RooRealVar a("a","a", 5059.,3040.,5970.);
+	RooRealVar b("b","b", 5182.,4140.,5905.);
+	RooRealVar csi("csi","csi", 1.,0.,10.);
+	RooRealVar shift("shift","shift", 1.,0.,1000.);
+	RooRealVar sigma("sigma", "sigma", 25.9,0.,100.);
+	RooRealVar ratio_sigma("ratio_sigma", "ratio_sigma", 1.,0.,50.);
+	RooRealVar fraction_sigma("fraction_sigma", "fraction_sigma", 0.5,0.,1.);
+
+	RooHILLdini* pdf =new RooHILLdini("RooHILLBkgShape", "RooHILLBkgShape", Bs_MM, a, b, csi, shift, sigma, ratio_sigma, fraction_sigma );
+
+	/// Load file
+	TFile* file = new TFile("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2KKpi_12_Dstar_bkg.root");
+	TTree* tree = (TTree*) file->Get("DecayTree");
+	tree->SetBranchStatus("*",0);
+	tree->SetBranchStatus("Bs*MM",1);
+	tree->SetBranchStatus("m_*",1);
+
+	//Fill needed variable in RooDataSet
+	RooDataSet* data = new RooDataSet("data","data",RooArgSet(Bs_MM),Import(*tree));
+	
+	/// Fit
+	RooFitResult *result = pdf->fitTo(*data,Save(kTRUE),NumCPU(3));
+	cout << "result is --------------- "<<endl;
+	result->Print(); 
+	//plot mass distribution and fit results
+	TCanvas* c1= new TCanvas("");
+	RooPlot* frame_m= Bs_MM.frame();
+	frame_m->SetTitle("");
+	data->plotOn(frame_m,Name("data"),MarkerSize(1),Binning(50));
+	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlue),LineWidth(3));
+	frame_m->Draw();
+	c1->Print("eps/BkgShape/RooHILLBkgShape_Bs2Dsstartpipipi.eps");
+
+	file->Close();
+	
+
+}
+
 int main(int argc, char** argv){
 
     time_t startTime = time(0);
@@ -1824,6 +1892,7 @@ int main(int argc, char** argv){
     
     if(channel == "Norm") fitNorm();
     else if(channel == "Signal") fitSignal();
+    else if(channel == "PartBkg") AnalyticPartBkg();
     else{
 	cout << "*********************************************************" << endl;
     	cout << "please specify 'Signal' or 'Norm' in options file" << endl;
