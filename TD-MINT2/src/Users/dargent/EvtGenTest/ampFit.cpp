@@ -244,7 +244,6 @@ int ampFit(int step=0){
     NamedParameter<string> InputTreeName("InputTreeName", (std::string) "DalitzEventList");
     std::string inputFile = InputFileName;
     std::string inputTreeName = InputTreeName;
-    bool generateNew = (std::string) InputFileName == "";
     std::cout << "InputFileName: " << InputFileName << std::endl;
     
     NamedParameter<string> IntegratorEventFile("IntegratorEventFile"
@@ -258,13 +257,8 @@ int ampFit(int step=0){
     
     NamedParameter<int>  Nevents("Nevents", 1000);
     NamedParameter<double> integPrecision("IntegPrecision", 1.e-2);
-    NamedParameter<std::string> integMethod("IntegMethod", (std::string)"efficient");
-    NamedParameter<int> fitLineshapeParameters("FitLineshapeParameters", 0);
-    
+    NamedParameter<std::string> integMethod("IntegMethod", (std::string)"efficient");   
     NamedParameter<string> OutputDir("OutputDir", (std::string) "", (char*) 0);
-    
-    NamedParameter<int>  useLASSO("useLASSO", 1);
-    NamedParameter<double>  lambda("lambda", 1.);
     
     NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
     DalitzEventPattern pat(EventPattern.getVector());
@@ -282,52 +276,8 @@ int ampFit(int step=0){
 //          eventNorm2.generatePhaseSpaceEvents(200000,pat); 
 //          fas.normalizeAmps(eventNorm2);
 //     }
-        
-    DalitzEventList eventList;
-    
-    if(generateNew){
-        SignalGenerator sg(pat,&fas);
-        cout << "Generating " << Nevents << " MC events." << endl;
-        sg.FillEventList(eventList, Nevents);
-        eventList.saveAsNtuple(OutputRootFile);
-    }
-    
-    if(!generateNew){
-        TFile *_InputFile =  TFile::Open(inputFile.c_str());
-        TTree* in_tree;
-        in_tree=dynamic_cast<TTree*>(_InputFile->Get(inputTreeName.c_str()));
-        cout << "reading events from file " << inputFile << endl;
-        eventList.fromNtuple(in_tree,1);
-        cout << " I've got " << eventList.size() << " events." << endl;
-        _InputFile->Close();
-    }
-    
-    DalitzHistoSet datH = eventList.weightedHistoSet();
-    
-        AmpsPdfFlexiFast amps(pat, &fas, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);        
-        Neg2LL neg2ll(amps, eventList);
-        
-        double stepSize = 1;
-        lambda = lambda + (step-1) * stepSize;
-        LASSO_flexi lasso(&amps,lambda);
-        Neg2LLSum fcn(&neg2ll,&lasso);
-        
-        Minimiser mini;
-        if(useLASSO)mini.attachFunction(&fcn);
-        else mini.attachFunction(&neg2ll);
-        mini.doFit();
-        
-        mini.printResultVsInput();
-          amps.doFinalStats(&mini);
-                
-            cout << "Now plotting:" << endl;
             
-            DalitzHistoSet fitH = amps.histoSet();
-            datH.drawWithFitNorm(fitH, ((string)OutputDir+(string)"datFit_l_"+anythingToString(step)+"_").c_str(),"eps");
-            std::vector<DalitzHistoSet> EachAmpsHistos = amps.GetEachAmpsHistograms();
-            datH.drawWithFitAndEachAmps(datH, fitH, EachAmpsHistos, ((string)OutputDir+(string)"WithAmps").c_str(), "eps");
-            
-            int nBins = 100;
+            int nBins = 150;
             vector<int> s123;
             s123.push_back(1);
             s123.push_back(2);
@@ -379,8 +329,43 @@ int ampFit(int step=0){
             TH2D* s_DsKpi_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",80,5,30,80,0,25);
             TH2D* s_DsK_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",60,0,30,60,0,25);
 
-	    int counter = 0;
+            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.4,12);
+            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,6);
+            TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,10);
+            TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+            TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+            TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
+            TH1D* s_Dspi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+            TH1D* s_Dspim_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
 
+
+{
+    DalitzEventList eventList;
+        TFile *_InputFile =  TFile::Open(inputFile.c_str());
+        TTree* in_tree;
+        in_tree=dynamic_cast<TTree*>(_InputFile->Get(inputTreeName.c_str()));
+        cout << "reading events from file " << inputFile << endl;
+        eventList.fromNtuple(in_tree,0.5);
+        cout << " I've got " << eventList.size() << " events." << endl;
+        _InputFile->Close();
+    
+//     DalitzHistoSet datH = eventList.weightedHistoSet();
+    
+//         AmpsPdfFlexiFast amps(pat, &fas, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);        
+//         Neg2LL neg2ll(amps, eventList);
+//         Minimiser mini(&neg2ll);    
+// 
+//         mini.doFit();        
+//         mini.printResultVsInput();
+//         amps.doFinalStats(&mini);
+                
+            cout << "Now plotting:" << endl;
+            
+            //DalitzHistoSet fitH = amps.histoSet();
+            //datH.drawWithFitNorm(fitH, ((string)OutputDir+(string)"datFit_l_"+anythingToString(step)+"_").c_str(),"eps");
+            //std::vector<DalitzHistoSet> EachAmpsHistos = amps.GetEachAmpsHistograms();
+            //datH.drawWithFitAndEachAmps(datH, fitH, EachAmpsHistos, ((string)OutputDir+(string)"WithAmps").c_str(), "eps");
+            
             for (int i=0; i<eventList.size(); i++) {
 		//if(eventList[i].phaseSpace()==0.000000) continue;
  		//else counter++;
@@ -415,16 +400,9 @@ int ampFit(int step=0){
 // 		eventList[i].setWeight(weight);
             }    
 
-	    cout << "bad evt = " << counter << endl;            
-            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.4,12);
-            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,6);
-            TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,10);
-            TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
-            TH1D* s_Dspi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
-            TH1D* s_Dspim_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
-                       
+}
+///
+{                       
             //SignalGenerator sg(pat,&fas);
             //sg.setWeighted();
 	    DalitzEventList eventListMC;
@@ -459,7 +437,9 @@ int ampFit(int step=0){
 //                 s_Dspim_phsp->Fill(eventListMC[i].s(1,4)/(GeV*GeV),weight);
 		eventListMC[i].setWeight(weight);
             }
-             
+}
+///
+{  
 	    DalitzEventList eventListPhsp;
 	    TFile *FilePhsp =  TFile::Open("SignalIntegrationEvents_Phsp.root");
 	    TTree* treePhsp = dynamic_cast<TTree*>(FilePhsp->Get("DalitzEventList"));
@@ -477,7 +457,7 @@ int ampFit(int step=0){
                 s_Dspi_phsp->Fill(eventListPhsp[i].s(1,3)/(GeV*GeV),weight);
                 s_Dspim_phsp->Fill(eventListPhsp[i].s(1,4)/(GeV*GeV),weight);
             }
-
+}
 
             TCanvas* c = new TCanvas();
                      
@@ -518,13 +498,13 @@ int ampFit(int step=0){
             s_Kpipi_rw->DrawNormalized("esame",1);
             c->Print(((string)OutputDir+"phsp_Kpipi.eps").c_str());
 
+  	    gPad->SetLogy(0);
 	    s_Kpipi_rw->Scale(1./s_Kpipi_rw->Integral());
     	    s_Kpipi_phsp->Scale(1./s_Kpipi_phsp->Integral());
    	    s_Kpipi_rw->Divide(s_Kpipi_rw,s_Kpipi_phsp);
     	    s_Kpipi_rw->Draw("e");
 	    f->Draw("same");
     	    c->Print(((string)OutputDir+"eff_Kpipi.eps").c_str());
-
 
  	    s_Kpipi_fit->Scale(1./s_Kpipi_fit->Integral());
      	    s_Kpipi->Scale(1./s_Kpipi->Integral());
@@ -534,7 +514,8 @@ int ampFit(int step=0){
 
             s_Kpipi->DrawNormalized("e1",1);
             c->Print(((string)OutputDir+"s_Kpipi_data.eps").c_str());
-            
+
+  	    gPad->SetLogy(1);            
             s_Kpi->SetMinimum(0.1);
             s_Kpi->SetLineColor(kBlack);
             s_Kpi->DrawNormalized("e1",1);
@@ -703,13 +684,18 @@ int ampFit(int step=0){
     	    s_Dspim_rw->Draw("e");
     	    c->Print(((string)OutputDir+"eff_Dspim.eps").c_str());
 
- 	    getChi2(eventList,eventListMC);        
+//  	    getChi2(eventList,eventListMC);        
         
     return 0;
 }
 
-void makeIntegratorFile(){
-    
+void makeIntegratorFile(int step = 0){
+    TRandom3 ranLux;
+    NamedParameter<int> RandomSeed("RandomSeed", 0);
+    int seed = RandomSeed + step;
+    ranLux.SetSeed((int)seed);
+    gRandom = &ranLux;
+
     FitAmplitude::AutogenerateFitFile();
 
     NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
@@ -741,7 +727,10 @@ void makeIntegratorFile(){
     //}
     //cout << "Generated " << eventList_cut.size() << " events inside selected phasespace region" << endl;
     
-    eventList.saveAsNtuple(IntegratorEventFile);
+
+    TString outputName = (string)IntegratorEventFile;
+    if(step>0) outputName.ReplaceAll(".root",("_" + anythingToString(step) + ".root").c_str());
+    eventList.saveAsNtuple((string)outputName);
     return;
 }
 
@@ -798,16 +787,23 @@ int makeMINTtupleGen(){
 
     // Read the momenta from ntuple
     TChain* tree_gen=new TChain("MCDecayTreeTuple/MCDecayTree");
-    tree_gen->Add("EvtGen.root");
+//     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_1.root");
+//     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_2.root");
+    tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_3.root");
+//     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_4.root");
+//     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_5.root");
+//      tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_6.root");
+//      tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_13266007.root");
 
-   
     if (dbThis) cout << "Read the file" << endl;	
-
     double K_gen[5]; 
     double pip_gen[5]; 
     double pim_gen[5]; 
     double Ds_Kp_gen[5],Ds_Km_gen[5],Ds_pim_gen[5];
-    
+
+    tree_gen->SetBranchStatus("*",0);
+    tree_gen->SetBranchStatus("*TRUEP*",1);
+
     tree_gen->SetBranchAddress("Kplus_TRUEP_X",&K_gen[0]);
     tree_gen->SetBranchAddress("Kplus_TRUEP_Y",&K_gen[1]);
     tree_gen->SetBranchAddress("Kplus_TRUEP_Z",&K_gen[2]); 
@@ -899,7 +895,7 @@ int makeMINTtupleGen(){
         if(numSelected==N)break;
     }
     
-    TString output = outputDir + "GenMC";
+    TString output = outputDir + "GenMC_EvtGen_3";
     if(!addSweight){
 	if(bkg) output+="_bkg";
 	else output+="_3sigma";
@@ -925,7 +921,7 @@ void reweightEvtGen(){
   FitAmpIncoherentSum fas(pat);
 
   DalitzEventList eventListMC;
-  TFile *FileMC =  TFile::Open("/auto/data/dargent/BsDsKpipi/MINT/GenMC.root");
+  TFile *FileMC =  TFile::Open("/auto/data/dargent/BsDsKpipi/MINT/GenMC_EvtGen.root");
   TTree* treeMC = dynamic_cast<TTree*>(FileMC->Get("DalitzEventList"));
   eventListMC.fromNtuple(treeMC,1);
   FileMC->Close();
@@ -933,8 +929,126 @@ void reweightEvtGen(){
   for(int i = 0; i < eventListMC.size(); i++){                                
 		eventListMC[i].setGeneratorPdfRelativeToPhaseSpace(fas.getVal(eventListMC[i]));
   }
-  eventListMC.save("/auto/data/dargent/BsDsKpipi/MINT/GenMC_rw.root");
+  eventListMC.save("/auto/data/dargent/BsDsKpipi/MINT/GenMC_EvtGen_rw.root");
 }
+
+
+int makeMINTtupleGenForToys(){
+    
+    string outputDir = "/auto/data/dargent/BsDsKpipi/MINT/";
+
+    bool dbThis=false;
+    if(dbThis) cout << "read ntuple" << endl;
+	
+    NamedParameter<int> EventPattern("Event Pattern", 521, -431, 321, 211, -211);
+    DalitzEventPattern pdg(EventPattern.getVector());
+    cout << " got event pattern: " << pdg << endl
+    DalitzEventList eventList; 
+    // Read the momenta from ntuple
+    TChain* tree_gen=new TChain("MCDecayTreeTuple/MCDecayTree");
+//     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_1.root");
+//     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_2.root");
+    tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_3.root");
+//     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_4.root");
+//     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_5.root");
+//      tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_6.root");
+//      tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_13266007.root");
+
+    if (dbThis) cout << "Read the file" << endl;	
+    double K_gen[5]; 
+    double pip_gen[5]; 
+    double pim_gen[5]; 
+    double Ds_Kp_gen[5],Ds_Km_gen[5],Ds_pim_gen[5];
+
+    tree_gen->SetBranchStatus("*",0);
+    tree_gen->SetBranchStatus("*TRUEP*",1);
+
+    tree_gen->SetBranchAddress("Kplus_TRUEP_X",&K_gen[0]);
+    tree_gen->SetBranchAddress("Kplus_TRUEP_Y",&K_gen[1]);
+    tree_gen->SetBranchAddress("Kplus_TRUEP_Z",&K_gen[2]); 
+    tree_gen->SetBranchAddress("Kplus_TRUEP_E",&K_gen[3]); 
+    tree_gen->SetBranchAddress("Kplus_TRUEPT",&K_gen[4]); 
+	
+    tree_gen->SetBranchAddress("piplus_TRUEP_X",&pip_gen[0]);
+    tree_gen->SetBranchAddress("piplus_TRUEP_Y",&pip_gen[1]);
+    tree_gen->SetBranchAddress("piplus_TRUEP_Z",&pip_gen[2]); 
+    tree_gen->SetBranchAddress("piplus_TRUEP_E",&pip_gen[3]); 
+    tree_gen->SetBranchAddress("piplus_TRUEPT",&pip_gen[4]); 
+
+    tree_gen->SetBranchAddress("piminus_TRUEP_X",&pim_gen[0]);
+    tree_gen->SetBranchAddress("piminus_TRUEP_Y",&pim_gen[1]);
+    tree_gen->SetBranchAddress("piminus_TRUEP_Z",&pim_gen[2]); 
+    tree_gen->SetBranchAddress("piminus_TRUEP_E",&pim_gen[3]); 
+    tree_gen->SetBranchAddress("piminus_TRUEPT",&pim_gen[4]); 
+	
+    tree_gen->SetBranchAddress("Kplus0_TRUEP_X",&Ds_Kp_gen[0]);
+    tree_gen->SetBranchAddress("Kplus0_TRUEP_Y",&Ds_Kp_gen[1]);
+    tree_gen->SetBranchAddress("Kplus0_TRUEP_Z",&Ds_Kp_gen[2]); 
+    tree_gen->SetBranchAddress("Kplus0_TRUEP_E",&Ds_Kp_gen[3]); 
+    tree_gen->SetBranchAddress("Kplus0_TRUEPT",&Ds_Kp_gen[4]); 
+    
+    tree_gen->SetBranchAddress("Kminus_TRUEP_X",&Ds_Km_gen[0]);
+    tree_gen->SetBranchAddress("Kminus_TRUEP_Y",&Ds_Km_gen[1]);
+    tree_gen->SetBranchAddress("Kminus_TRUEP_Z",&Ds_Km_gen[2]); 
+    tree_gen->SetBranchAddress("Kminus_TRUEP_E",&Ds_Km_gen[3]); 
+    tree_gen->SetBranchAddress("Kminus_TRUEPT",&Ds_Km_gen[4]); 
+
+    tree_gen->SetBranchAddress("piminus0_TRUEP_X",&Ds_pim_gen[0]);
+    tree_gen->SetBranchAddress("piminus0_TRUEP_Y",&Ds_pim_gen[1]);
+    tree_gen->SetBranchAddress("piminus0_TRUEP_Z",&Ds_pim_gen[2]); 
+    tree_gen->SetBranchAddress("piminus0_TRUEP_E",&Ds_pim_gen[3]); 
+    tree_gen->SetBranchAddress("piminus0_TRUEPT",&Ds_pim_gen[4]); 
+    
+    int numEvents = tree_gen->GetEntries();
+    int numSelected =0;
+
+    //loop over tree and fill eventList
+    for(int i=0; i< numEvents; i++)
+    {
+	if(dbThis)cout << " getting " << i << " th entry" << endl;	
+	tree_gen->GetEntry(i);
+        
+        // Lorentz vectors: P=(Px,Py,Pz,E)
+        TLorentzVector K_p(K_gen[0],K_gen[1],K_gen[2],K_gen[3]);
+        TLorentzVector pip_p(pip_gen[0],pip_gen[1],pip_gen[2],pip_gen[3]);
+	TLorentzVector pim_p(pim_gen[0],pim_gen[1],pim_gen[2],pim_gen[3]);
+        TLorentzVector D_Kp_p(Ds_Kp_gen[0],Ds_Kp_gen[1],Ds_Kp_gen[2],Ds_Kp_gen[3]);
+        TLorentzVector D_Km_p(Ds_Km_gen[0],Ds_Km_gen[1],Ds_Km_gen[2],Ds_Km_gen[3]);
+        TLorentzVector D_pim_p(Ds_pim_gen[0],Ds_pim_gen[1],Ds_pim_gen[2],Ds_pim_gen[3]);
+	TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+	TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+        // array of vectors
+	vector<TLorentzVector> vectorOfvectors; 
+
+	// define the order of the vectors in the vectorOfvectors
+        // include the 'MeV' to get the correct units, need to include CLHEPSystemOfUnits.h
+        vectorOfvectors.push_back(B_p*MeV);      
+        vectorOfvectors.push_back(D_p*MeV);
+        vectorOfvectors.push_back(K_p*MeV); 
+	vectorOfvectors.push_back(pip_p*MeV);
+	vectorOfvectors.push_back(pim_p*MeV);
+
+	if(dbThis) cout << "make event" << endl;
+		
+	DalitzEvent evt(pdg, vectorOfvectors);
+	eventList.Add(evt); // this fills the event list		
+	if(dbThis) cout << " added event" << endl;
+
+        numSelected++;
+        if(numSelected==N)break;
+    }
+    
+    TString output = outputDir + "GenMC_EvtGen_3";
+    output+=".root";
+    
+    eventList.save((string)output);
+   
+    cout << "Created File: " << output << endl;    
+
+    return 0;
+}
+
+
 
 class FracLL : public Minimisable{
   FlexiFastAmplitudeIntegrator* _integ;
@@ -982,14 +1096,14 @@ int main(int argc, char** argv){
     TH2::SetDefaultSumw2();
     gROOT->ProcessLine(".x ../lhcbStyle.C");
     gStyle->SetPalette(1);
+//     gStyle->SetMarkerSize(0.2);
+//      NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
+//      if(! std::ifstream(((string)IntegratorEventFile).c_str()).good()) makeIntegratorFile();
 
-    NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
-    if(! std::ifstream(((string)IntegratorEventFile).c_str()).good()) makeIntegratorFile();
-  
+//       makeIntegratorFile(atoi(argv[1]));
 //      makeMINTtupleGen();
-//     ampFit(atoi(argv[1]));
-
-    fracFit();
+      ampFit(atoi(argv[1]));
+//      fracFit();
     
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
