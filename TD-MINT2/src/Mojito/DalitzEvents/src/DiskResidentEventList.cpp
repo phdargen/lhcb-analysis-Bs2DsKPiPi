@@ -405,13 +405,14 @@ bool DiskResidentEventList::Close(){
   if(0 == _ntp) return false;
 
 
-  success &= save();
-  if(dbThis && ! success){
-    cout << "DiskResidentEventList::Close() failure in saving when closing" 
-	 << endl;
+  if(_opt != "OPEN"){
+	success &= save();
+	if(dbThis && ! success){
+	cout << "DiskResidentEventList::Close() failure in saving when closing" 
+		<< endl;
+	}
+	if(dbThis) cout << "saved file with success = " << success << endl;
   }
-  if(dbThis) cout << "saved file with success = " << success << endl;
-  
   //_f->cd();
   //_ntp->Write();
   //_f->Write();

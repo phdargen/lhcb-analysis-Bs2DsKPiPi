@@ -619,8 +619,6 @@ public:
     }
 };
 
-
-
 class AmpsPdfFlexiFastCPV_mod : public MINT::PdfBase<IDalitzEvent>
 , virtual public IDalitzPdf{
     
@@ -728,12 +726,21 @@ public:
         const double Gamma = 1./((double) _tau);
         const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma*f)/360.*2*pi);
         const double int_interference = (phase_diff*_intAAbar).real();
+
+        const complex<double> phase_diff_m = polar((double)r,((double) _delta + (double)_gamma)/360.*2*pi);
+        const complex<double> int_interference_m =  phase_diff_m * _intAAbar ;
+        
+        const complex<double> phase_diff_p = polar((double)r,((double) _delta -(double)_gamma)/360.*2*pi);
+        const complex<double> int_interference_p =  phase_diff_p * _intAAbar ;
+
         
         if(_intA == -1 ){
             cout << "AmpsPdfFlexiFastCPV:: _norm = -1, should not have happened." << endl;
             throw "can't deal with that";
         }
         
+        //return val/(( _cosh_coeff->analyticalIntegral(1) * (_intA + r* r * _intAbar) * 4.*Gamma + _sinh_coeff->analyticalIntegral(1) * (int_interference_m.real() + int_interference_p.real())/4. * 2. * _dGamma )/ (4.*Gamma*Gamma-_dGamma*_dGamma));
+
         return val/(( _cosh_coeff->analyticalIntegral(1) * (_intA + r* r * _intAbar) * 4.*Gamma + _sinh_coeff->analyticalIntegral(1) * int_interference/2. * 2. * _dGamma )/ (4.*Gamma*Gamma-_dGamma*_dGamma))*2.;
     }
     
@@ -859,8 +866,6 @@ public:
     }
 
 };
-
-
 
 // Time-dependent PDF
 class AmpsPdfFlexiFastCPV : public MINT::PdfBase<IDalitzEvent>
@@ -1297,7 +1302,12 @@ int ampFit(int step=0){
     NamedParameter<string> OutputDir("OutputDir", (std::string) "", (char*) 0);
     NamedParameter<string> OutputRootFile("OutputRootFile", (std::string) "OutputRootFile.root", (char*) 0);
     
+    NamedParameter<int>  EvtGenTest("EvtGenTest", 0);
     NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
+    TString integratorEventFile = (string) IntegratorEventFile;
+    if(EvtGenTest) integratorEventFile.ReplaceAll(".root",("_" + anythingToString(seed) + ".root").c_str() );
+
+
     NamedParameter<double> integPrecision("IntegPrecision", 1.e-2);
     NamedParameter<std::string> integMethod("IntegMethod", (std::string)"efficient");
     
@@ -1383,14 +1393,15 @@ int ampFit(int step=0){
     AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_3_plus, r_3_minus );
     AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_3_plus, r_3_minus );
     AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResV0(->Ds-,K+),sigma10(->pi+,pi-)", r_3_plus, r_3_minus );
-    
+     
+    /*
     FitParameter r_4_re("r_4_Re",2,0,0.01);
     FitParameter r_4_im("r_4_Im",2,0,0.01); 
     counted_ptr<IReturnComplex> r_4_plus = new CPV_amp_polar(r_4_re,r_4_im,1);
     counted_ptr<IReturnComplex> r_4_minus = new CPV_amp_polar(r_4_re,r_4_im,-1);
     AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResA0(->sigma10(->pi+,pi-),Ds-)", r_4_plus, r_4_minus );
     AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+", r_4_plus, r_4_minus );
-
+    */
     vector<double> k_gen = coherenceFactor(fas,fasCC,(double)r, (double)delta,eventListPhsp);
     
     counted_ptr<FitAmpList> sumList = fas.GetCloneSameFitParameters();
@@ -1398,12 +1409,12 @@ int ampFit(int step=0){
     fas_sum.addAsList(fasCC,1.);
     fas_sum.getVal(eventListPhsp[0]);
     
-    AmpsPdfFlexiFast ampsSig(pat, &fas, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
-    AmpsPdfFlexiFast ampsSigCC(pat, &fasCC, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
-    AmpsPdfFlexiFast ampsSum(pat, &fas_sum, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
+    AmpsPdfFlexiFast ampsSig(pat, &fas, 0, integPrecision,integMethod, (std::string) integratorEventFile);
+    AmpsPdfFlexiFast ampsSigCC(pat, &fasCC, 0, integPrecision,integMethod, (std::string) integratorEventFile);
+    AmpsPdfFlexiFast ampsSum(pat, &fas_sum, 0, integPrecision,integMethod, (std::string) integratorEventFile);
     
     // Make full time-dependent PDF
-    FullAmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSigCC,&ampsSum, r, delta, gamma, tau, dGamma, dm, eff_tag, mistag );
+    AmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSigCC,&ampsSum, r, delta, gamma, tau, dGamma, dm, eff_tag, mistag );
     
     // Generate toys
     if(generateNew){
@@ -1438,15 +1449,15 @@ int ampFit(int step=0){
                 if (q_rand < 1./3.) q = -1;
                 if (q_rand > 2./3.) q = 1;
                 w = mistag;
-                //const double f_rand = ranLux.Uniform();
-                //if(f_rand < 0.5)f = 1; 
-                //else f = -1;
-                if(i < Nevents/2)f = 1; 
+                const double f_rand = ranLux.Uniform();
+                if(f_rand < 0.5)f = 1; 
                 else f = -1;
+                //if(i < Nevents/2)f = 1; 
+                //else f = -1;
                 
                 counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
                 DalitzEvent evt(evtPtr.get());
-		if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
+		//if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
 
                 double maxVal = evt.getGeneratorPdfRelativeToPhaseSpace()*exp(-fabs(t)/(tau))/(tau)*pdf_max;
                 
@@ -1702,8 +1713,8 @@ int ampFit(int step=0){
         int nBins = 50;
         
         TH1D* h_t = new TH1D("",";t (ps);Events (norm.) ",nBinst,0,6);
-        TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,4);
-        TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,2);
+        TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,12);
+        TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,4);
         TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
         TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
         TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30)  ;
@@ -1731,8 +1742,8 @@ int ampFit(int step=0){
         TH1D* h_t_fit_0m = new TH1D("",";t",nBinst,0,6);
         TH1D* h_t_fit_pm = new TH1D("",";t",nBinst,0,6);
         
-        TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,4);
-        TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,2);
+        TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,12);
+        TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,4);
         TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
         TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
         TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
@@ -1770,7 +1781,7 @@ int ampFit(int step=0){
             counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
             DalitzEvent evt(evtPtr.get());
             
-	    if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
+// 	    if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
 
             evt.setValueInVector(0, t);
             evt.setValueInVector(1, dt);
@@ -2509,8 +2520,10 @@ int main(int argc, char** argv){
   TH2::SetDefaultSumw2();
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
+  NamedParameter<int>  EvtGenTest("EvtGenTest", 0);
   NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
-  if(! std::ifstream(((string)IntegratorEventFile).c_str()).good()) makeIntegratorFile();
+
+  if(!EvtGenTest) if(! std::ifstream(((string)IntegratorEventFile).c_str()).good()) makeIntegratorFile();
   
   ampFit(atoi(argv[1]));
   
