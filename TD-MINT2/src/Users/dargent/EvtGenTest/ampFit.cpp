@@ -266,19 +266,20 @@ double getChi2(DiskResidentEventList& data, DiskResidentEventList& mc){
       	point.at(3)= evt.sij(s124);
       	point.at(4)= evt.sij(s234);
       	point.addWeight(evt.getWeight());
+	if(!(evt.phaseSpace() > 0.))continue;
       	points.push_back(point);
     }
 
     HyperHistogram dataHist(limits, points, 
                          /*** Name of the binning algorithm you want to use     */
-                         HyperBinningAlgorithms::SMART_MULTI,  
+                         HyperBinningAlgorithms::MINT,  
                          /***  The minimum number of events allowed in each bin */
                          /***  from the HyperPointSet provided (points1)        */
                          AlgOption::MinBinContent      (minEventsPerBin),                    
                          /*** This minimum bin width allowed. Can also pass a   */
                          /*** HyperPoint if you would like different min bin    */
                          /*** widths for each dimension                         */
-                         AlgOption::MinBinWidth        (0.),                                                 
+                         AlgOption::MinBinWidth        ((pdg.sijMax(1,3)-pdg.sijMin(1,3))/100.),                                                 
                          /*** If you want to use the sum of weights rather than */
                          /*** the number of events, set this to true.           */    
                          AlgOption::UseWeights         (true),                         
@@ -287,7 +288,7 @@ double getChi2(DiskResidentEventList& data, DiskResidentEventList& mc){
                          AlgOption::RandomSeed         (1),                         
                          /*** What dimesnion would you like to split first? Only*/
                          /*** applies to certain algortihms                     */
-                         AlgOption::StartDimension     (0)                        
+                         AlgOption::StartDimension     (4)                        
                          /*** What dimesnions would you like to bin in?         */
                          //AlgOption::BinningDimensions  (binningDims),                      
                          /*** Setting this option will make the agorithm draw   */
@@ -295,10 +296,11 @@ double getChi2(DiskResidentEventList& data, DiskResidentEventList& mc){
                          //AlgOption::DrawAlgorithm("Algorithm")                 
                          );
 
-    //hist.save("histData.root");
-    //HyperBinningHistogram binningHist("histData.root",5);    
-    //HyperBinningHistogram dataHist( binningHist.getBinning() );
-    //dataHist.fill(points); 
+    dataHist.save("histData.root");
+
+//     HyperHistogram binningHist("histData.root",5);    
+//     HyperHistogram dataHist( binningHist.getBinning() );
+//     dataHist.fill(points); 
 
     HyperPointSet pointsMC( dim);
     for (int i = 0; i < mc.size(); i++){
@@ -310,16 +312,25 @@ double getChi2(DiskResidentEventList& data, DiskResidentEventList& mc){
       	point.at(3)= evt.sij(s124);
       	point.at(4)= evt.sij(s234);
       	point.addWeight(evt.getWeight());
+	if(!(evt.phaseSpace() > 0.))continue;
       	pointsMC.push_back(point);
     }
 
+
     HyperHistogram mcHist( dataHist.getBinning() );
     mcHist.fill(pointsMC); 
+    mcHist.save("histMC.root");
+
+    cout << mcHist.integral() << endl;
+
     //data.normalise(1);
     mcHist.normalise(dataHist.integral());
 
     double chi2 = dataHist.chi2(mcHist);
     int nBins   = dataHist.getNBins();
+
+    cout << dataHist.integral() << endl;
+    cout << mcHist.integral() << endl;
 
     cout << "chi2 = " << (double)chi2/(nBins-1.) << endl;
 
@@ -372,7 +383,7 @@ int ampFit(int step=0){
 //          fas.normalizeAmps(eventNorm2);
 //     }
             
-            int nBins = 100;
+            int nBins = 75;
             vector<int> s123;
             s123.push_back(1);
             s123.push_back(2);
@@ -393,12 +404,12 @@ int ampFit(int step=0){
             s124.push_back(2);
             s124.push_back(4);
             
-            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.4,12);
-            TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,6);
+            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,pat.sijMin(2,3,4)/GeV/GeV,pat.sijMax(2,3,4)/GeV/GeV);
+            TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,12);
             TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,10);
             TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_DsKpi = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
+            TH1D* s_DsKpi = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_Dspi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
             TH1D* s_Dspim = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
             
@@ -410,6 +421,9 @@ int ampFit(int step=0){
 	    TH1D* s_DsKpi_rw = (TH1D*)s_DsKpi->Clone();
 	    TH1D* s_Dspi_rw = (TH1D*)s_Dspi->Clone();
 	    TH1D* s_Dspim_rw = (TH1D*)s_Dspim->Clone();
+
+	    TH1D* s_Kpipi_pull = (TH1D*)s_Kpipi->Clone();
+	    TH1D* s_Kpipi_pull2 = (TH1D*)s_Kpipi->Clone();
 
 	    TH1D* s_Kpipi_phsp = (TH1D*)s_Kpipi->Clone();
 	    TH1D* s_Kpi_phsp = (TH1D*)s_Kpi->Clone();
@@ -424,34 +438,57 @@ int ampFit(int step=0){
             TH2D* s_DsKpi_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",80,5,30,80,0,25);
             TH2D* s_DsK_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",60,0,30,60,0,25);
 
-            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.4,12);
-            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,6);
+            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,pat.sijMin(2,3,4)/GeV/GeV,pat.sijMax(2,3,4)/GeV/GeV);
+            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,12);
             TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,10);
             TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
+            TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_Dspi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
             TH1D* s_Dspim_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
 
-	DiskResidentEventList eventList(inputFile.c_str(),"OPEN");
-        
-//         AmpsPdfFlexiFast amps(pat, &fas, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);        
-//         Neg2LL neg2ll(amps, eventList);
-//         Minimiser mini(&neg2ll);    
+// {       
+//   	DalitzEventList eventList;
+//         TFile *_InputFile =  TFile::Open(inputFile.c_str());
+//         TTree* in_tree;
+//         in_tree=dynamic_cast<TTree*>(_InputFile->Get(inputTreeName.c_str()));
+//         cout << "reading events from file " << inputFile << endl;
+//         eventList.fromNtuple(in_tree,0.2);
+//         cout << " I've got " << eventList.size() << " events." << endl;
+//         _InputFile->Close();
 // 
-//         mini.doFit();        
-//         mini.printResultVsInput();
-//         amps.doFinalStats(&mini);
-                
-            cout << "Now plotting:" << endl;
-            
+//          AmpsPdfFlexiFast amps(pat, &fas, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);        
+//          Neg2LL neg2ll(amps, eventList);
+//          Minimiser mini(&neg2ll);    
+//  
+//          mini.doFit();        
+//          mini.printResultVsInput();
+//          amps.doFinalStats(&mini);
+// }  
+              
             //DalitzHistoSet fitH = amps.histoSet();
             //datH.drawWithFitNorm(fitH, ((string)OutputDir+(string)"datFit_l_"+anythingToString(step)+"_").c_str(),"eps");
             //std::vector<DalitzHistoSet> EachAmpsHistos = amps.GetEachAmpsHistograms();
             //datH.drawWithFitAndEachAmps(datH, fitH, EachAmpsHistos, ((string)OutputDir+(string)"WithAmps").c_str(), "eps");
-            
+	    int badEvents = 0;
+	    double sumw = 0.;
+	    double sumw2 = 0.;
+
+            DiskResidentEventList eventList(inputFile.c_str(),"OPEN");
             for (int i=0; i<eventList.size(); i++) {
 		DalitzEvent evt(eventList.getEvent(i));
+
+// 		if(evt.sij(s234)/(GeV*GeV)> 4) continue;
+		if(!(evt.phaseSpace() > 0.)){
+		 	//cout << "evt " << i << " 0 phsp " << endl << evt << endl;
+			badEvents++;
+			continue;
+		}
+		if(TMath::IsNaN(fas.getVal(evt))){
+		 	//cout << "evt " << i << " isNaN " << endl << evt << endl;
+			badEvents++;
+			continue;
+		}
 
 		s_Kpipi->Fill(evt.sij(s234)/(GeV*GeV),evt.getWeight());
                 s_Kpi->Fill(evt.s(2,4)/(GeV*GeV),evt.getWeight());
@@ -479,21 +516,57 @@ int ampFit(int step=0){
                 s_Dspi_rw->Fill(evt.s(1,3)/(GeV*GeV),weight);
                 s_Dspim_rw->Fill(evt.s(1,4)/(GeV*GeV),weight);
 // 		evt.setWeight(weight);
+
+		sumw += weight;
+		sumw2 += weight*weight;
             }    
-                     
+	    cout << endl << "bad EvtGen events " << badEvents << " ( " << badEvents/(double)eventList.size() << " %)" << endl << endl;
+
+	    cout << "sumw = " << sumw << endl;
+	    cout << "weff = " << sumw/sumw2 << endl;
+	    cout << "Neff = " << sumw*sumw/sumw2 << endl;
+		
+	    sumw =  0.;
+	    sumw2 = 0.;
+	    for(int i = 1; i <= s_Kpipi_rw->GetNbinsX(); i++){
+		sumw += s_Kpipi_rw->GetBinContent(i);
+		sumw2 += s_Kpipi_rw->GetBinError(i)*s_Kpipi_rw->GetBinError(i);
+            
+		cout << "bin " << i << endl;
+		cout << " n = " <<  s_Kpipi_rw->GetBinContent(i) << endl;
+		cout << " e = " <<  s_Kpipi_rw->GetBinError(i) << endl;
+		cout << " neff = " <<  s_Kpipi_rw->GetBinContent(i)*s_Kpipi_rw->GetBinContent(i)/(s_Kpipi_rw->GetBinError(i)*s_Kpipi_rw->GetBinError(i)) << endl;
+		}
+
+	    cout << "sumw = " << sumw << endl;
+	    cout << "weff = " << sumw/sumw2 << endl;
+	    cout << "Neff = " << sumw*sumw/sumw2 << endl;
+
             //SignalGenerator sg(pat,&fas);
             //sg.setWeighted();
 
 	    // Need dummy file because of large event number
-	    DiskResidentEventList eventListMC_rw(pat,"dummy.root","RECREATE");
+	    DiskResidentEventList eventListMC_rw(pat,("dummy_"+anythingToString(step)+".root").c_str(),"RECREATE");
 /// Don't remove brackets, ensures memory is released
 {
+	    badEvents = 0;
 	    DiskResidentEventList eventListMC(((string) IntegratorEventFile).c_str(),"OPEN");
 
             for(int i = 0; i < eventListMC.size(); i++){
                 //counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
                 //DalitzEvent evt(evtPtr.get());
 		DalitzEvent evt(eventListMC.getEvent(i));
+		
+		if(!(evt.phaseSpace() > 0.)){
+		 	//cout << "evt " << i << " 0 phsp " << endl << evt << endl;
+			badEvents++;
+			continue;
+		}
+		if(TMath::IsNaN(fas.getVal(evt))){
+		 	//cout << "evt " << i << " isNaN " << endl << evt << endl;
+			badEvents++;
+			continue;
+		}
 
                 double weight = fas.getVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
                 //double weight = evt.phaseSpace()*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
@@ -518,14 +591,27 @@ int ampFit(int step=0){
 		evt.setWeight(weight);
 		eventListMC_rw.Add(evt);
             }
+	    cout << endl << "bad MINT events " << badEvents << " ( " << badEvents/(double)eventListMC.size() << " %)" << endl << endl;
 }
 /// Don't remove brackets, ensures memory is released
 {  
+	    badEvents = 0;
 	    DiskResidentEventList eventListPhsp("/auto/data/dargent/BsDsKpipi/MINT/SignalIntegrationEvents_Phsp_15M.root","OPEN");
-         
+        
             for(int i = 0; i < eventListPhsp.size(); i++){                                
                 double weight = 1.;//eventListPhsp[i].getWeight()/eventListPhsp[i].getGeneratorPdfRelativeToPhaseSpace();
 		DalitzEvent evt(eventListPhsp.getEvent(i));
+		
+		if(!(evt.phaseSpace() > 0.)){
+		 	//cout << "evt " << i << " 0 phsp " << endl << evt << endl;
+			badEvents++;
+			continue;
+		}
+		if(TMath::IsNaN(fas.getVal(evt))){
+		 	//cout << "evt " << i << " isNaN " << endl << evt << endl;
+			badEvents++;
+			continue;
+		}
 
 		s_Kpipi_phsp->Fill(evt.sij(s234)/(GeV*GeV),weight);
                 s_Kpi_phsp->Fill(evt.s(2,4)/(GeV*GeV),weight);
@@ -536,6 +622,7 @@ int ampFit(int step=0){
                 s_Dspi_phsp->Fill(evt.s(1,3)/(GeV*GeV),weight);
                 s_Dspim_phsp->Fill(evt.s(1,4)/(GeV*GeV),weight);
             }
+	    cout << endl << "bad Phsp events " << badEvents << " ( " << badEvents/(double)eventListPhsp.size() << " %)" << endl << endl;
 }
 
             TCanvas* c = new TCanvas();
@@ -564,7 +651,16 @@ int ampFit(int step=0){
 
 	    s_Kpipi_rw->Scale(1./s_Kpipi_rw->Integral());
     	    s_Kpipi_phsp->Scale(1./s_Kpipi_phsp->Integral());
-   	    s_Kpipi_rw->Divide(s_Kpipi_rw,s_Kpipi_phsp);
+   
+	    for(int i = 1; i <= s_Kpipi_fit->GetNbinsX(); i++){
+		double pull =  (s_Kpipi_rw->GetBinContent(i)-s_Kpipi_phsp->GetBinContent(i))/sqrt( pow(s_Kpipi_rw->GetBinError(i),2) + pow(s_Kpipi_phsp->GetBinError(i),2));
+		s_Kpipi_pull->SetBinContent(i,pull);
+		s_Kpipi_pull->SetBinError(i,1);
+	    }
+	    s_Kpipi_pull->Draw("e");
+	    c->Print(((string)OutputDir+"pull_Kpipi.eps").c_str());
+	    
+	    s_Kpipi_rw->Divide(s_Kpipi_rw,s_Kpipi_phsp);
     	    s_Kpipi_rw->GetYaxis()->SetTitle("Reweighted EvtGen / PHSP");
     	    s_Kpipi_rw->Draw("e");
 	    f->Draw("same");
@@ -572,6 +668,15 @@ int ampFit(int step=0){
 
  	    s_Kpipi_fit->Scale(1./s_Kpipi_fit->Integral());
      	    s_Kpipi->Scale(1./s_Kpipi->Integral());
+
+	    for(int i = 1; i <= s_Kpipi_fit->GetNbinsX(); i++){
+		double pull =  (s_Kpipi_fit->GetBinContent(i)-s_Kpipi->GetBinContent(i))/sqrt( pow(s_Kpipi_fit->GetBinError(i),2) + pow(s_Kpipi->GetBinError(i),2));
+		s_Kpipi_pull2->SetBinContent(i,pull);
+		s_Kpipi_pull2->SetBinError(i,1);
+	    }
+	    s_Kpipi_pull2->Draw("e");
+	    c->Print(((string)OutputDir+"pull2_Kpipi.eps").c_str());
+
     	    s_Kpipi_fit->Divide(s_Kpipi_fit,s_Kpipi);
      	    s_Kpipi_fit->Draw("e");
      	    c->Print(((string)OutputDir+"eff2_Kpipi.eps").c_str());
@@ -765,7 +870,7 @@ int ampFit(int step=0){
 	    f->Draw("same");
     	    c->Print(((string)OutputDir+"eff_Dspim.eps").c_str());
 
-  	    getChi2(eventList,eventListMC_rw);        
+      	    getChi2(eventList,eventListMC_rw);        
         
     return 0;
 }
@@ -815,7 +920,6 @@ void makeIntegratorFile(int step = 0){
     return;
 }
 
-
 void makeIntegratorFilePhsp(){
     
     NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
@@ -847,7 +951,6 @@ void makeIntegratorFilePhsp(){
     eventList.save();
     return;
 }
-
 
 int makeMINTtupleGen(){
     
@@ -1013,7 +1116,6 @@ void reweightEvtGen(){
   eventListMC.save("/auto/data/dargent/BsDsKpipi/MINT/GenMC_EvtGen_rw.root");
 }
 
-
 int makeMINTtupleGenForToys(){
     
     string outputDir = "/auto/data/dargent/BsDsKpipi/MINT/";
@@ -1124,7 +1226,6 @@ int makeMINTtupleGenForToys(){
 }
 
 
-
 class FracLL : public Minimisable{
   FlexiFastAmplitudeIntegrator* _integ;
 public:
@@ -1176,6 +1277,11 @@ int main(int argc, char** argv){
 //      if(! std::ifstream(((string)IntegratorEventFile).c_str()).good()) makeIntegratorFile();
 
 // makeIntegratorFilePhsp();
+
+//     HyperHistogram binningHist("histData.root",5);    
+//  cout << endl << binningHist.integral();
+// return 0;
+
 
 //        makeIntegratorFile(atoi(argv[1]));
 //      makeMINTtupleGen();
