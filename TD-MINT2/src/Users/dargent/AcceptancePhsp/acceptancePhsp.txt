@@ -1,5 +1,5 @@
 "channel"	 	"signal"
 "Event Pattern"         531 -431 321 211 -211
-"InputSelectedMC"	"../test/signal.root"
-"InputGenMC"		"../test/GenMC_EvtGen_13266007.root"
+*"InputSelectedMC"	"../test/signal.root"
+*"InputGenMC"		"../test/GenMC_EvtGen_13266007.root"
 

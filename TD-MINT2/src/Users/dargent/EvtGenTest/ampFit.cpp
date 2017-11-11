@@ -383,7 +383,7 @@ int ampFit(int step=0){
 //          fas.normalizeAmps(eventNorm2);
 //     }
             
-            int nBins = 75;
+            int nBins = 100;
             vector<int> s123;
             s123.push_back(1);
             s123.push_back(2);
@@ -404,9 +404,9 @@ int ampFit(int step=0){
             s124.push_back(2);
             s124.push_back(4);
             
-            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,pat.sijMin(2,3,4)/GeV/GeV,pat.sijMax(2,3,4)/GeV/GeV);
-            TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,12);
-            TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,10);
+            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,5);
+            TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,4);
+            TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,4);
             TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_DsKpi = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
@@ -438,9 +438,9 @@ int ampFit(int step=0){
             TH2D* s_DsKpi_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",80,5,30,80,0,25);
             TH2D* s_DsK_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",60,0,30,60,0,25);
 
-            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,pat.sijMin(2,3,4)/GeV/GeV,pat.sijMax(2,3,4)/GeV/GeV);
-            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,12);
-            TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,10);
+            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,5);
+            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,4);
+            TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,4);
             TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
@@ -478,7 +478,7 @@ int ampFit(int step=0){
             for (int i=0; i<eventList.size(); i++) {
 		DalitzEvent evt(eventList.getEvent(i));
 
-// 		if(evt.sij(s234)/(GeV*GeV)> 4) continue;
+ 		if(evt.sij(s234)/(GeV*GeV)> 4) continue;
 		if(!(evt.phaseSpace() > 0.)){
 		 	//cout << "evt " << i << " 0 phsp " << endl << evt << endl;
 			badEvents++;
@@ -522,9 +522,9 @@ int ampFit(int step=0){
             }    
 	    cout << endl << "bad EvtGen events " << badEvents << " ( " << badEvents/(double)eventList.size() << " %)" << endl << endl;
 
-	    cout << "sumw = " << sumw << endl;
-	    cout << "weff = " << sumw/sumw2 << endl;
-	    cout << "Neff = " << sumw*sumw/sumw2 << endl;
+	    //cout << "sumw = " << sumw << endl;
+	    //cout << "weff = " << sumw/sumw2 << endl;
+	    //cout << "Neff = " << sumw*sumw/sumw2 << endl;
 		
 	    sumw =  0.;
 	    sumw2 = 0.;
@@ -532,15 +532,15 @@ int ampFit(int step=0){
 		sumw += s_Kpipi_rw->GetBinContent(i);
 		sumw2 += s_Kpipi_rw->GetBinError(i)*s_Kpipi_rw->GetBinError(i);
             
-		cout << "bin " << i << endl;
-		cout << " n = " <<  s_Kpipi_rw->GetBinContent(i) << endl;
-		cout << " e = " <<  s_Kpipi_rw->GetBinError(i) << endl;
-		cout << " neff = " <<  s_Kpipi_rw->GetBinContent(i)*s_Kpipi_rw->GetBinContent(i)/(s_Kpipi_rw->GetBinError(i)*s_Kpipi_rw->GetBinError(i)) << endl;
+		//cout << "bin " << i << endl;
+		//cout << " n = " <<  s_Kpipi_rw->GetBinContent(i) << endl;
+		//cout << " e = " <<  s_Kpipi_rw->GetBinError(i) << endl;
+		//cout << " neff = " <<  s_Kpipi_rw->GetBinContent(i)*s_Kpipi_rw->GetBinContent(i)/(s_Kpipi_rw->GetBinError(i)*s_Kpipi_rw->GetBinError(i)) << endl;
 		}
 
-	    cout << "sumw = " << sumw << endl;
-	    cout << "weff = " << sumw/sumw2 << endl;
-	    cout << "Neff = " << sumw*sumw/sumw2 << endl;
+	    //cout << "sumw = " << sumw << endl;
+	    //cout << "weff = " << sumw/sumw2 << endl;
+	    //cout << "Neff = " << sumw*sumw/sumw2 << endl;
 
             //SignalGenerator sg(pat,&fas);
             //sg.setWeighted();
@@ -556,7 +556,8 @@ int ampFit(int step=0){
                 //counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
                 //DalitzEvent evt(evtPtr.get());
 		DalitzEvent evt(eventListMC.getEvent(i));
-		
+		if(evt.sij(s234)/(GeV*GeV)> 4) continue;
+
 		if(!(evt.phaseSpace() > 0.)){
 		 	//cout << "evt " << i << " 0 phsp " << endl << evt << endl;
 			badEvents++;
@@ -596,12 +597,13 @@ int ampFit(int step=0){
 /// Don't remove brackets, ensures memory is released
 {  
 	    badEvents = 0;
-	    DiskResidentEventList eventListPhsp("/auto/data/dargent/BsDsKpipi/MINT/SignalIntegrationEvents_Phsp_15M.root","OPEN");
+	    DiskResidentEventList eventListPhsp("/auto/data/dargent/BsDsKpipi/MINT/SignalIntegrationEvents_Phsp_15M_new.root","OPEN");
         
             for(int i = 0; i < eventListPhsp.size(); i++){                                
                 double weight = 1.;//eventListPhsp[i].getWeight()/eventListPhsp[i].getGeneratorPdfRelativeToPhaseSpace();
 		DalitzEvent evt(eventListPhsp.getEvent(i));
-		
+		if(evt.sij(s234)/(GeV*GeV)> 4) continue;
+
 		if(!(evt.phaseSpace() > 0.)){
 		 	//cout << "evt " << i << " 0 phsp " << endl << evt << endl;
 			badEvents++;
@@ -630,7 +632,7 @@ int ampFit(int step=0){
 	    TF1* f = new TF1("f","1.0",0,30);
 	    f->SetLineColor(kBlue);
 
-  	    gPad->SetLogy(1);
+  	    //gPad->SetLogy(1);
             s_Kpipi->SetMinimum(1);
             s_Kpipi->SetLineColor(kBlack);
             s_Kpipi->DrawNormalized("e",1);
@@ -662,6 +664,8 @@ int ampFit(int step=0){
 	    
 	    s_Kpipi_rw->Divide(s_Kpipi_rw,s_Kpipi_phsp);
     	    s_Kpipi_rw->GetYaxis()->SetTitle("Reweighted EvtGen / PHSP");
+	    s_Kpipi_rw->SetMinimum(0.5);
+	    s_Kpipi_rw->SetMaximum(1.5);
     	    s_Kpipi_rw->Draw("e");
 	    f->Draw("same");
     	    c->Print(((string)OutputDir+"eff_Kpipi.eps").c_str());
@@ -681,7 +685,7 @@ int ampFit(int step=0){
      	    s_Kpipi_fit->Draw("e");
      	    c->Print(((string)OutputDir+"eff2_Kpipi.eps").c_str());
 
-	    gPad->SetLogy(1);
+// 	    gPad->SetLogy(1);
   	    s_Kpi->SetMinimum(1);
             s_Kpi->SetLineColor(kBlack);
             s_Kpi->DrawNormalized("e",1);
@@ -704,11 +708,13 @@ int ampFit(int step=0){
     	    s_Kpi_phsp->Scale(1./s_Kpi_phsp->Integral());
    	    s_Kpi_rw->Divide(s_Kpi_rw,s_Kpi_phsp);
     	    s_Kpi_rw->GetYaxis()->SetTitle("Reweighted EvtGen / PHSP");
+	    s_Kpi_rw->SetMinimum(0.5);
+	    s_Kpi_rw->SetMaximum(1.5);
     	    s_Kpi_rw->Draw("e");
 	    f->Draw("same");
     	    c->Print(((string)OutputDir+"eff_Kpi.eps").c_str());
 
-            gPad->SetLogy(1);
+//             gPad->SetLogy(1);
             s_pipi->SetMinimum(1);
             s_pipi->SetLineColor(kBlack);
             s_pipi->DrawNormalized("e",1);
@@ -731,11 +737,13 @@ int ampFit(int step=0){
     	    s_pipi_phsp->Scale(1./s_pipi_phsp->Integral());
    	    s_pipi_rw->Divide(s_pipi_rw,s_pipi_phsp);
     	    s_pipi_rw->GetYaxis()->SetTitle("Reweighted EvtGen / PHSP");
+	    s_pipi_rw->SetMinimum(0.5);
+	    s_pipi_rw->SetMaximum(1.5);
     	    s_pipi_rw->Draw("e");
 	    f->Draw("same");
     	    c->Print(((string)OutputDir+"eff_pipi.eps").c_str());
 
-  	    gPad->SetLogy(1);
+//   	    gPad->SetLogy(1);
             s_Dspi->SetMinimum(1);
             s_Dspi->SetLineColor(kBlack);
             s_Dspi->DrawNormalized("e",1);
@@ -758,11 +766,13 @@ int ampFit(int step=0){
     	    s_Dspi_phsp->Scale(1./s_Dspi_phsp->Integral());
    	    s_Dspi_rw->Divide(s_Dspi_rw,s_Dspi_phsp);
     	    s_Dspi_rw->GetYaxis()->SetTitle("Reweighted EvtGen / PHSP");
+	    s_Dspi_rw->SetMinimum(0.5);
+	    s_Dspi_rw->SetMaximum(1.5);
     	    s_Dspi_rw->Draw("e");
 	    f->Draw("same");
     	    c->Print(((string)OutputDir+"eff_Dspi.eps").c_str());
 
-  	    gPad->SetLogy(1);
+//   	    gPad->SetLogy(1);
             s_Dspipi->SetMinimum(1);
             s_Dspipi->SetLineColor(kBlack);
             s_Dspipi->DrawNormalized("e",1);
@@ -785,11 +795,13 @@ int ampFit(int step=0){
     	    s_Dspipi_phsp->Scale(1./s_Dspipi_phsp->Integral());
    	    s_Dspipi_rw->Divide(s_Dspipi_rw,s_Dspipi_phsp);
     	    s_Dspipi_rw->GetYaxis()->SetTitle("Reweighted EvtGen / PHSP");
+	    s_Dspipi_rw->SetMinimum(0.5);
+	    s_Dspipi_rw->SetMaximum(1.5);
     	    s_Dspipi_rw->Draw("e");
 	    f->Draw("same");
     	    c->Print(((string)OutputDir+"eff_Dspipi.eps").c_str());
 
-  	    gPad->SetLogy(1);
+//   	    gPad->SetLogy(1);
             s_DsK->SetMinimum(1);
             s_DsK->SetLineColor(kBlack);
             s_DsK->DrawNormalized("e",1);
@@ -812,11 +824,13 @@ int ampFit(int step=0){
     	    s_DsK_phsp->Scale(1./s_DsK_phsp->Integral());
    	    s_DsK_rw->Divide(s_DsK_rw,s_DsK_phsp);
     	    s_DsK_rw->GetYaxis()->SetTitle("Reweighted EvtGen / PHSP");
+	    s_DsK_rw->SetMinimum(0.5);
+	    s_DsK_rw->SetMaximum(1.5);
     	    s_DsK_rw->Draw("e");
 	    f->Draw("same");
     	    c->Print(((string)OutputDir+"eff_DsK.eps").c_str());
 
-  	    gPad->SetLogy(1);
+//   	    gPad->SetLogy(1);
             s_DsKpi->SetMinimum(1);
             s_DsKpi->SetLineColor(kBlack);
             s_DsKpi->DrawNormalized("e",1);
@@ -839,11 +853,13 @@ int ampFit(int step=0){
     	    s_DsKpi_phsp->Scale(1./s_DsKpi_phsp->Integral());
    	    s_DsKpi_rw->Divide(s_DsKpi_rw,s_DsKpi_phsp);
     	    s_DsKpi_rw->GetYaxis()->SetTitle("Reweighted EvtGen / PHSP");
+	    s_DsKpi_rw->SetMinimum(0.5);
+	    s_DsKpi_rw->SetMaximum(1.5);
     	    s_DsKpi_rw->Draw("e");
 	    f->Draw("same");
     	    c->Print(((string)OutputDir+"eff_DsKpi.eps").c_str());
 
-  	    gPad->SetLogy(1);
+//   	    gPad->SetLogy(1);
             s_Dspim->SetMinimum(1);
             s_Dspim->SetLineColor(kBlack);
             s_Dspim->DrawNormalized("e",1);
@@ -866,6 +882,8 @@ int ampFit(int step=0){
     	    s_Dspim_phsp->Scale(1./s_Dspim_phsp->Integral());
    	    s_Dspim_rw->Divide(s_Dspim_rw,s_Dspim_phsp);
     	    s_Dspim_rw->GetYaxis()->SetTitle("Reweighted EvtGen / PHSP");
+	    s_Dspim_rw->SetMinimum(0.5);
+	    s_Dspim_rw->SetMaximum(1.5);
     	    s_Dspim_rw->Draw("e");
 	    f->Draw("same");
     	    c->Print(((string)OutputDir+"eff_Dspim.eps").c_str());
@@ -973,10 +991,10 @@ int makeMINTtupleGen(){
     TChain* tree_gen=new TChain("MCDecayTreeTuple/MCDecayTree");
 //     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_1.root");
 //     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_2.root");
-    tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_3.root");
+//    tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_3.root");
 //     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_4.root");
 //     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_5.root");
-//      tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_6.root");
+      tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_test.root");
 //      tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_13266007.root");
 
     if (dbThis) cout << "Read the file" << endl;	
@@ -1032,7 +1050,8 @@ int makeMINTtupleGen(){
     {
 	if(dbThis)cout << " getting " << i << " th entry" << endl;	
 	tree_gen->GetEntry(i);
-        
+ 
+/*      
         // Lorentz vectors: P=(Px,Py,Pz,E)
         TLorentzVector K_p(K_gen[0],K_gen[1],K_gen[2],K_gen[3]);
         TLorentzVector pip_p(pip_gen[0],pip_gen[1],pip_gen[2],pip_gen[3]);
@@ -1044,7 +1063,28 @@ int makeMINTtupleGen(){
 	TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
         // array of vectors
 	vector<TLorentzVector> vectorOfvectors; 
+*/
+	TLorentzVector K_p;
+	K_p.SetXYZM(K_gen[0],K_gen[1],K_gen[2],pdg[2].mass());
+        TLorentzVector pip_p;
+	pip_p.SetXYZM(pip_gen[0],pip_gen[1],pip_gen[2],pdg[3].mass());
+	TLorentzVector pim_p;
+	pim_p.SetXYZM(pim_gen[0],pim_gen[1],pim_gen[2],pdg[3].mass());
+        TLorentzVector D_Kp_p;
+	D_Kp_p.SetXYZM(Ds_Kp_gen[0],Ds_Kp_gen[1],Ds_Kp_gen[2],pdg[2].mass());
+        TLorentzVector D_Km_p;
+	D_Km_p.SetXYZM(Ds_Km_gen[0],Ds_Km_gen[1],Ds_Km_gen[2],pdg[2].mass());
+        TLorentzVector D_pim_p;
+	D_pim_p.SetXYZM(Ds_pim_gen[0],Ds_pim_gen[1],Ds_pim_gen[2],pdg[3].mass());
+	TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+	TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+        // array of vectors
+	vector<TLorentzVector> vectorOfvectors; 
 
+	//cout << std::fixed << std::setprecision(10) << K_p.M() << endl;
+	//cout << std::fixed << std::setprecision(10) <<pip_p.M() << endl;
+	//cout << std::fixed << std::setprecision(10) <<D_p.M() << endl;
+	//cout << std::fixed << std::setprecision(10) <<B_p.M() << endl << endl;
 
 	// define the order of the vectors in the vectorOfvectors
         // include the 'MeV' to get the correct units, need to include CLHEPSystemOfUnits.h
@@ -1079,7 +1119,7 @@ int makeMINTtupleGen(){
         if(numSelected==N)break;
     }
     
-    TString output = outputDir + "GenMC_EvtGen_3";
+    TString output = outputDir + "GenMC_EvtGen_test";
     if(!addSweight){
 	if(bkg) output+="_bkg";
 	else output+="_3sigma";
@@ -1225,6 +1265,181 @@ int makeMINTtupleGenForToys(){
     return 0;
 }
 
+void makeMINTtupleGenInAcc(){
+
+    DalitzEventPattern pdg(531, -431, 321, 211, -211);
+    vector<int> pdg_full_ids;
+    pdg_full_ids.push_back(531); 
+    pdg_full_ids.push_back(321); 
+    pdg_full_ids.push_back(-321);
+    pdg_full_ids.push_back(-211);
+    pdg_full_ids.push_back(321); 
+    pdg_full_ids.push_back(211);
+    pdg_full_ids.push_back(-211);
+    DalitzEventPattern pdg_full(pdg_full_ids);
+
+    FitAmpIncoherentSum fas(pdg);
+
+    vector<int> s234;
+    s234.push_back(2);
+    s234.push_back(3);
+    s234.push_back(4);
+
+    TRandom3 ranLux;
+    ranLux.SetSeed(0);
+    gRandom = &ranLux;
+
+    TFile* kinBs= new TFile("../AcceptancePhsp/LHCb8.root","Open");
+    TH1D* h_Bs_pt = (TH1D*)kinBs->Get("pT");
+    TH1D* h_Bs_eta = (TH1D*)kinBs->Get("eta");
+
+    HyperHistogram hist_weights("../AcceptancePhsp/plots/weights.root");
+    int dim = 1;
+
+    TChain* tree_gen=new TChain("MCDecayTreeTuple/MCDecayTree");
+    tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_6.root");
+    double K_gen[5]; 
+    double pip_gen[5]; 
+    double pim_gen[5]; 
+    double Ds_Kp_gen[5],Ds_Km_gen[5],Ds_pim_gen[5];
+    
+    tree_gen->SetBranchAddress("Kplus_TRUEP_X",&K_gen[0]);
+    tree_gen->SetBranchAddress("Kplus_TRUEP_Y",&K_gen[1]);
+    tree_gen->SetBranchAddress("Kplus_TRUEP_Z",&K_gen[2]); 
+    tree_gen->SetBranchAddress("Kplus_TRUEP_E",&K_gen[3]); 
+    tree_gen->SetBranchAddress("Kplus_TRUEPT",&K_gen[4]); 
+	
+    tree_gen->SetBranchAddress("piplus_TRUEP_X",&pip_gen[0]);
+    tree_gen->SetBranchAddress("piplus_TRUEP_Y",&pip_gen[1]);
+    tree_gen->SetBranchAddress("piplus_TRUEP_Z",&pip_gen[2]); 
+    tree_gen->SetBranchAddress("piplus_TRUEP_E",&pip_gen[3]); 
+    tree_gen->SetBranchAddress("piplus_TRUEPT",&pip_gen[4]); 
+
+    tree_gen->SetBranchAddress("piminus_TRUEP_X",&pim_gen[0]);
+    tree_gen->SetBranchAddress("piminus_TRUEP_Y",&pim_gen[1]);
+    tree_gen->SetBranchAddress("piminus_TRUEP_Z",&pim_gen[2]); 
+    tree_gen->SetBranchAddress("piminus_TRUEP_E",&pim_gen[3]); 
+    tree_gen->SetBranchAddress("piminus_TRUEPT",&pim_gen[4]); 
+	
+    tree_gen->SetBranchAddress("Kplus0_TRUEP_X",&Ds_Kp_gen[0]);
+    tree_gen->SetBranchAddress("Kplus0_TRUEP_Y",&Ds_Kp_gen[1]);
+    tree_gen->SetBranchAddress("Kplus0_TRUEP_Z",&Ds_Kp_gen[2]); 
+    tree_gen->SetBranchAddress("Kplus0_TRUEP_E",&Ds_Kp_gen[3]); 
+    tree_gen->SetBranchAddress("Kplus0_TRUEPT",&Ds_Kp_gen[4]); 
+    
+    tree_gen->SetBranchAddress("Kminus_TRUEP_X",&Ds_Km_gen[0]);
+    tree_gen->SetBranchAddress("Kminus_TRUEP_Y",&Ds_Km_gen[1]);
+    tree_gen->SetBranchAddress("Kminus_TRUEP_Z",&Ds_Km_gen[2]); 
+    tree_gen->SetBranchAddress("Kminus_TRUEP_E",&Ds_Km_gen[3]); 
+    tree_gen->SetBranchAddress("Kminus_TRUEPT",&Ds_Km_gen[4]); 
+
+    tree_gen->SetBranchAddress("piminus0_TRUEP_X",&Ds_pim_gen[0]);
+    tree_gen->SetBranchAddress("piminus0_TRUEP_Y",&Ds_pim_gen[1]);
+    tree_gen->SetBranchAddress("piminus0_TRUEP_Z",&Ds_pim_gen[2]); 
+    tree_gen->SetBranchAddress("piminus0_TRUEP_E",&Ds_pim_gen[3]); 
+    tree_gen->SetBranchAddress("piminus0_TRUEPT",&Ds_pim_gen[4]); 
+
+    DiskResidentEventList eventList(pdg,"SignalIntegrationEvents_EvtGen_inAcc.root","RECREATE");
+
+    for(int i=0; i< tree_gen->GetEntries(); i++)
+    {	
+        tree_gen->GetEntry(i);
+
+        TLorentzVector K_p(K_gen[0],K_gen[1],K_gen[2],K_gen[3]);
+        TLorentzVector pip_p(pip_gen[0],pip_gen[1],pip_gen[2],pip_gen[3]);
+        TLorentzVector pim_p(pim_gen[0],pim_gen[1],pim_gen[2],pim_gen[3]);
+        TLorentzVector D_Kp_p(Ds_Kp_gen[0],Ds_Kp_gen[1],Ds_Kp_gen[2],Ds_Kp_gen[3]);
+        TLorentzVector D_Km_p(Ds_Km_gen[0],Ds_Km_gen[1],Ds_Km_gen[2],Ds_Km_gen[3]);
+        TLorentzVector D_pim_p(Ds_pim_gen[0],Ds_pim_gen[1],Ds_pim_gen[2],Ds_pim_gen[3]);
+        TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+        TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+
+        // array of vectors
+        vector<TLorentzVector> vectorOfvectors_full; 
+        vectorOfvectors_full.push_back(B_p*MeV);      
+        vectorOfvectors_full.push_back(D_Kp_p*MeV);
+        vectorOfvectors_full.push_back(D_Km_p*MeV);
+        vectorOfvectors_full.push_back(D_pim_p*MeV);
+        vectorOfvectors_full.push_back(K_p*MeV); 
+        vectorOfvectors_full.push_back(pip_p*MeV);
+        vectorOfvectors_full.push_back(pim_p*MeV);
+        DalitzEvent evt_full(pdg_full, vectorOfvectors_full);
+         
+        TLorentzVector mumsP4;
+        mumsP4.SetPtEtaPhiM(h_Bs_pt->GetRandom()*1000.,h_Bs_eta->GetRandom(),ranLux.Uniform(0.,2*pi), pdg[0].mass());
+        evt_full.setMothers3Momentum(mumsP4.Vect()); 
+        
+        double min_pt = evt_full.p(1).Pt(); 
+        double max_pt = evt_full.p(1).Pt(); 
+        for (int j = 1; j <= 6; j++) {
+            if(evt_full.p(j).Pt()<min_pt)min_pt=evt_full.p(j).Pt();
+            if(evt_full.p(j).Pt()>max_pt)max_pt=evt_full.p(j).Pt();
+        }
+         
+        vector<TLorentzVector> vectorOfvectors; 
+        vectorOfvectors.push_back(B_p*MeV);      
+        vectorOfvectors.push_back(D_p*MeV);
+        vectorOfvectors.push_back(K_p*MeV); 
+        vectorOfvectors.push_back(pip_p*MeV);
+        vectorOfvectors.push_back(pim_p*MeV);
+        DalitzEvent evt(pdg, vectorOfvectors);
+      
+	double w = 1;
+        /// LHCb Acceptance
+        for (int j = 1; j <= 6; j++) {            
+            if (TMath::Abs(evt_full.p(j).Px()/evt_full.p(j).Pz()) > 0.3) w = 0;
+            if (TMath::Abs(evt_full.p(j).Py()/evt_full.p(j).Pz()) > 0.25) w = 0;
+            if (sqrt(pow(evt_full.p(j).Px()/evt_full.p(j).Pz(),2) + pow(evt_full.p(j).Py()/evt_full.p(j).Pz(),2)) <0.01) w = 0;
+            if(evt_full.p(j).Pz() < 0.) w = 0;
+        }
+        
+        /// Momentum cuts
+        if( min_pt < 100  ) w = 0;
+        if( max_pt < 1700  ) w = 0;
+        
+        int pt_counter = 0;
+        if(evt_full.p(4).Pt() > 300)pt_counter++;
+        if(evt_full.p(5).Pt() > 300)pt_counter++;
+        if(evt_full.p(6).Pt() > 300)pt_counter++;
+        if(pt_counter < 2) w = 0;
+        
+        if( min(evt_full.p(4).P(),min(evt_full.p(5).P(),evt_full.p(6).P())) < 2000 ) w = 0;
+        if( evt_full.p(4).Pt()+evt_full.p(5).Pt()+evt_full.p(6).Pt() < 1250 ) w = 0;
+
+        if( min(evt_full.p(1).P(),min(evt_full.p(2).P(),evt_full.p(3).P())) < 1000 ) w = 0;
+        if( evt_full.p(1).Pt()+evt_full.p(2).Pt()+evt_full.p(3).Pt() < 1800 ) w = 0;
+
+        /// PHSP cuts
+        if(sqrt(evt.sij(s234)/(GeV*GeV)) > 1.95 || sqrt(evt.s(2,4)/(GeV*GeV)) > 1.2 || sqrt(evt.s(3,4)/(GeV*GeV)) > 1.2) w = 0;
+        //if(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.) w = 0;            
+
+	if(w==0)continue;
+
+	HyperPoint point( dim );
+        point.at(0)= 	log( min_pt  );
+        /*
+	if(K_gen[4] == min_pt) point.at(1)= 1/2. * log( (K_gen[3]+K_gen[2])/(K_gen[3]-K_gen[2]));
+        else if(pip_gen[4] == min_pt) point.at(1)= 1/2. * log( (pip_gen[3]+pip_gen[2])/(pip_gen[3]-pip_gen[2]));
+        else if(pim_gen[4] == min_pt) point.at(1)= 1/2. * log( (pim_gen[3]+pim_gen[2])/(pim_gen[3]-pim_gen[2]));
+        else if(Ds_Kp_gen[4] == min_pt) point.at(1)= 1/2. * log( (Ds_Kp_gen[3]+Ds_Kp_gen[2])/(Ds_Kp_gen[3]-Ds_Kp_gen[2]));
+        else if(Ds_Km_gen[4] == min_pt) point.at(1)= 1/2. * log( (Ds_Km_gen[3]+Ds_Km_gen[2])/(Ds_Km_gen[3]-Ds_Km_gen[2]));
+        else if(Ds_pim_gen[4] == min_pt) point.at(1)= 1/2. * log( (Ds_pim_gen[3]+Ds_pim_gen[2])/(Ds_pim_gen[3]-Ds_pim_gen[2]));
+	*/
+        int bin = hist_weights.getBinning().getBinNum(point);
+        if(hist_weights.checkBinNumber(bin)!= bin){
+         	w = 0; //? should't happen
+         	cout << "ERROR:: Event outside limits" << endl;	
+        	cout << point.at(0) << endl;
+        	cout << point.at(1) << endl << endl;
+        }else w = hist_weights.getBinContent(bin);    
+     
+	evt.setWeight(w);
+	evt.setGeneratorPdfRelativeToPhaseSpace(fas.getVal(evt));
+	eventList.Add(evt);
+    }
+
+    eventList.save();
+}
 
 class FracLL : public Minimisable{
   FlexiFastAmplitudeIntegrator* _integ;
@@ -1283,9 +1498,10 @@ int main(int argc, char** argv){
 // return 0;
 
 
-//        makeIntegratorFile(atoi(argv[1]));
-//      makeMINTtupleGen();
-       ampFit(atoi(argv[1]));
+   //    makeIntegratorFile(atoi(argv[1]));
+ //    makeMINTtupleGen();
+	makeMINTtupleGenInAcc();
+  //     ampFit(atoi(argv[1]));
 //      fracFit();
 //     makeMINTtupleGenForToys();
 
