@@ -1,0 +1,17 @@
+# setup Gauss
+lb-dev --name GaussDev_v49r7 Gauss/v49r7
+cd GaussDev_v49r7/
+getpack Gen/DecFiles head
+make
+
+# old decFile, no cuts
+lb-run Gauss/v49r7 gaudirun.py '$GAUSSOPTS/Gauss-2012.py' '$LBPGUNSROOT/options/PGuns.py' Gauss-13266007_PG.py '$GAUSSOPTS/GenStandAlone.py' 13266007_PG.py
+
+# old decFile, inAcc
+lb-run Gauss/v49r7 gaudirun.py '$GAUSSOPTS/Gauss-2012.py' '$GAUSSOPTS/GenStandAlone.py' '$DECFILESROOT/options/13266007.py' '$LBPYTHIA8ROOT/options/Pythia8.py' Gauss-Job.py
+
+# new decFile, no cuts
+lb-run Gauss/v49r7 gaudirun.py '$GAUSSOPTS/Gauss-2012.py' '$LBPGUNSROOT/options/PGuns.py' Gauss-test_PG.py '$GAUSSOPTS/GenStandAlone.py' test_PG.py
+
+# produce tuple from .xgen
+lb-run DaVinci/v41r0 gaudirun.py tupleResult.py 
