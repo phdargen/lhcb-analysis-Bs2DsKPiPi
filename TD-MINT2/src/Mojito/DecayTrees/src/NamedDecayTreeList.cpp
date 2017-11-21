@@ -1491,6 +1491,7 @@ int NamedDecayTreeList::makeDspipipiList() {
     add(*dk);
     this->add(AmpInitialiser(*dk, "GS"));
     this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
+    this->add(AmpInitialiser(*dk, "SBW_113"));
     delete dk;
     
     //Bs -> a1(1260) Ds, a1(1260)->rho(770)pi+, rho->pi+pi-   [D-WAVE decay of a1]
@@ -1530,6 +1531,7 @@ int NamedDecayTreeList::makeDspipipiList() {
     dk->addDgtr(-431, 20213)->addDgtr(211,999001)->addDgtr(211, -211);
     add(*dk);
     this->add(AmpInitialiser(*dk, "Bugg"));
+    this->add(AmpInitialiser(*dk, "SBW_999001"));
     delete dk;
     
     //Bs -> a1(1260) Ds, a1(1260)->f2(1270) pi+, rho->pi+pi-
@@ -1783,6 +1785,11 @@ int NamedDecayTreeList::makeDspipipiList() {
     add(*dk);
     delete dk;
     
+    dk = new DecayTree(531);
+    dk->addDgtr(-431,211,211,-211);
+    add(*dk);
+    delete dk;
+
     return _trees.size();
 }
 

@@ -96,6 +96,7 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
               << endl;
               if( A_is_in_B("Exp", lopt) ) return new NonRes(*tree, "Exp", lineshapePrefix);
               else if( A_is_in_B("Pow", lopt) ) return new NonRes(*tree, "Pow", lineshapePrefix);
+              else if( A_is_in_B("EvtGen", lopt) ) return new NonRes(*tree, "EvtGen", lineshapePrefix);
               else return new NonRes(*tree, "", lineshapePrefix);
           }
       }
@@ -179,17 +180,13 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
     }
   }else if(tree->getVal().isNonResonant()){
       if( A_is_in_B("NonRes", lopt) ){
-          cout << "LineshapeMaker: "
-          << "\n\t> returning Non-resonant lineshape"
-          << endl;
-      if( A_is_in_B("Exp", lopt) )
-	return new NonRes(*tree, "Exp", lineshapePrefix);
-      else if( A_is_in_B("Pow", lopt) )
-	return new NonRes(*tree, "Pow", lineshapePrefix);
-      else
-	return new NonRes(*tree, "", lineshapePrefix);
+          	cout << "LineshapeMaker: "<< "\n\t> returning Non-resonant lineshape"<< endl;
+         	if( A_is_in_B("Exp", lopt) )return new NonRes(*tree, "Exp", lineshapePrefix);
+         	else if( A_is_in_B("Pow", lopt) )return new NonRes(*tree, "Pow", lineshapePrefix);
+		else if( A_is_in_B("EvtGen", lopt) ) return new NonRes(*tree, "EvtGen", lineshapePrefix);
+	      	else return new NonRes(*tree, "", lineshapePrefix);
       }else if(A_is_in_B("TopHats", lopt) && numOptions.size() >= 2){
-	return new singleTopHatShape(*tree, numOptions[0], numOptions[1], lineshapePrefix); // options[0]=from, options[1]=to
+		return new singleTopHatShape(*tree, numOptions[0], numOptions[1], lineshapePrefix); // options[0]=from, options[1]=to
       }else{
           cout << "WARNING: LineshapeMaker:"
           << " returning plain Breit-Wigner (BW_BW) for non-resonant"

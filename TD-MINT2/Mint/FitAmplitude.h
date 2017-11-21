@@ -184,6 +184,10 @@ class FitAmplitude
     return amp().getVal(evt);
   }
 
+  //virtual std::complex<double> getNewVal(IDalitzEvent& evt);
+
+  virtual std::complex<double> getNewOnePermutationsVal(IDalitzEvent& evt);
+
   double Prob(IDalitzEvent& evt){
     std::complex<double> z = getVal(evt);
     return z.real()*z.real() + z.imag()*z.imag();

@@ -299,6 +299,19 @@ std::complex<double> FitAmplitude::getVal(IDalitzEvent& evt){
   return  ap * getValWithoutFitParameters(evt);
 }
 
+/*
+std::complex<double> FitAmplitude::getNewVal(IDalitzEvent& evt){
+ 	complex<double> ap(AmpPhase());
+  	return  ap * amp().getNewVal(evt);
+}
+*/
+
+std::complex<double> FitAmplitude::getNewOnePermutationsVal(IDalitzEvent& evt){
+ 	complex<double> ap(AmpPhase());
+  	return  ap * amp().getOnePermutationsVal(evt);
+}
+
+
 void FitAmplitude::multiply(double r){ // by value
   _preFactors.addTerm(r);
 }

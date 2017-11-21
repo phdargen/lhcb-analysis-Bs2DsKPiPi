@@ -43,6 +43,9 @@ std::complex<double> NonRes::getVal( IDalitzEvent& evt ) {
       + c4()*(8.* pow(x,4) - 8.*pow(x,2)+1.)
       + c5()*(16.* pow(x,5) - 20.*pow(x,3)+5.*x);
   }
+  else if( _type == "EvtGen" ){
+      non_res = pow(pABSq(),GetAlpha());
+  }
   else
     non_res = 1.0;
 
