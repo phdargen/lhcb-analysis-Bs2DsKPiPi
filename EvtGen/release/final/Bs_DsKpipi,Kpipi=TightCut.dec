@@ -1,0 +1,143 @@
+# EventType: 13266058
+#
+# Descriptor: [[B_s0]cc ==> (D_s- ==> pi+ K- pi-) K+ pi+ pi- ]CC
+#
+# NickName: Bs_DsKpipi,Kpipi=TightCut
+#
+# Cuts: LoKi::GenCutTool/TightCut
+#
+# InsertPythonCode:
+# # 
+# from Configurables import LoKi__GenCutTool 
+# gen = Generation() 
+# gen.SignalRepeatedHadronization.addTool ( LoKi__GenCutTool , 'TightCut' ) 
+# # 
+#tightCut = gen.SignalRepeatedHadronization.TightCut
+#tightCut.Decay     = '^[[B_s0]cc ==> ^(D_s- ==> ^pi+ ^K- ^pi-) ^K+ ^pi+ ^pi- ]CC'
+#tightCut.Cuts      =    {
+#'[B_s0]cc'   : " (goodB ) & ( ( Xs_SumPT ) > 1200 * MeV ) & ( ( Ds_SumPT ) > 1750 * MeV ) & ( (Xs_daughter_1_P) > 1950 * MeV ) & ( (Xs_daughter_2_P) > 1950 * MeV ) & ( (Xs_daughter_3_P) > 1950 * MeV ) " ,
+#'[K+]cc'    : ' goodTrack  ' ,
+#'[pi+]cc'   : ' goodTrack  '
+#}
+#tightCut.Preambulo += [
+#'from GaudiKernel.SystemOfUnits import ns, MeV',
+#'from GaudiKernel.PhysicalConstants import c_light',
+#"CS  = LoKi.GenChild.Selector",
+#'inAcc = ( in_range( 0.010, GTHETA, 0.400) ) & ( in_range( 1.6, GETA, 5.6) )  ',
+#'goodTrack  = ( GPT > 95  * MeV ) & ( GP > 1000 * MeV ) &  ( inAcc )' ,
+#"goodB  =  ( GCTAU > 0.15e-3 * ns * c_light) & ( GPT > 1500 * MeV ) & ( GP > 30000 * MeV ) ",
+#'Xs_SumPT = GCHILD(GPT, CS("[[B_s0]cc ==> D_s- ^K+ pi+ pi-]CC")) + GCHILD(GPT, CS("[[B_s0]cc ==> D_s- K+ ^pi+ pi-]CC")) + GCHILD(GPT, CS("[[B_s0]cc ==> D_s- K+ pi+ ^pi-]CC"))  ',
+#'Xs_daughter_1_P =  GCHILD(GP, CS("[[B_s0]cc ==> D_s- ^K+ pi+ pi-]CC")) ',
+#'Xs_daughter_2_P =  GCHILD(GP, CS("[[B_s0]cc ==> D_s- K+ ^pi+ pi-]CC")) ',
+#'Xs_daughter_3_P =  GCHILD(GP, CS("[[B_s0]cc ==> D_s- K+ pi+ ^pi-]CC")) ',
+#'Ds_SumPT = GCHILD(GPT, CS("[[B_s0]cc ==> (D_s- ==> ^pi+ K- pi-) K+ pi+ pi-]CC")) + GCHILD(GPT, CS("[[B_s0]cc ==> (D_s- ==> pi+ ^K- pi-) K+ pi+ pi-]CC")) + GCHILD(GPT, CS("[[B_s0]cc ==> (D_s- ==> pi+ K- ^pi-) K+ pi+ pi-]CC")) ' 
+#]
+#EndInsertPythonCode
+#
+# Documentation: Bs->DsKpipi, Ds->Kpipi, tight generator level cuts
+# EndDocumentation
+#
+# PhysicsWG: B2OC
+# Tested: Yes
+# Responsible: Philippe d'Argent
+# Email: p.dargent@cern.ch
+# Date: 20171121
+# CPUTime: < 2 min
+#
+Alias      MyD_s-     D_s-
+Alias      MyD_s+     D_s+
+ChargeConj MyD_s+     MyD_s-
+#
+Alias      MyK*0      K*0
+Alias      Myanti-K*0 anti-K*0
+ChargeConj MyK*0      Myanti-K*0
+#
+Alias      Myrho0     rho0
+ChargeConj Myrho0     Myrho0
+#
+Alias      MyK_1-     K_1-
+Alias      MyK_1+     K_1+
+ChargeConj MyK_1+     MyK_1-
+#
+Alias      MyK'_1-     K'_1-
+Alias      MyK'_1+     K'_1+
+ChargeConj MyK'_1+     MyK'_1-
+#
+
+noPhotos
+
+LSNONRELBW MyK_1+
+BlattWeisskopf MyK_1+ 0.0
+Particle MyK_1+ 1.26 0.15
+ChangeMassMin MyK_1+ 0.5
+ChangeMassMax MyK_1+ 3.6
+
+LSNONRELBW MyK_1-
+BlattWeisskopf MyK_1- 0.0
+Particle MyK_1- 1.26 0.15
+ChangeMassMin MyK_1- 0.5
+ChangeMassMax MyK_1- 3.6
+
+LSNONRELBW MyK'_1+
+BlattWeisskopf MyK'_1+ 0.0
+Particle MyK'_1+ 1.4 0.35
+ChangeMassMin MyK'_1+ 0.5
+ChangeMassMax MyK'_1+ 3.6
+
+LSNONRELBW MyK'_1-
+BlattWeisskopf MyK'_1- 0.0
+Particle MyK'_1- 1.4 0.35
+ChangeMassMin MyK'_1- 0.5
+ChangeMassMax MyK'_1- 3.6
+
+LSNONRELBW Myrho0
+BlattWeisskopf Myrho0 0.0
+Particle Myrho0 0.775 0.15
+ChangeMassMin Myrho0 0.2
+ChangeMassMax Myrho0 3.3
+
+LSNONRELBW MyK*0
+BlattWeisskopf MyK*0 0.0
+Particle MyK*0 0.892 0.051
+ChangeMassMin MyK*0 0.5
+ChangeMassMax MyK*0 3.5
+
+LSNONRELBW Myanti-K*0
+BlattWeisskopf Myanti-K*0 0.0
+Particle Myanti-K*0 0.892 0.051
+ChangeMassMin Myanti-K*0 0.5
+ChangeMassMax Myanti-K*0 3.5
+#
+#
+Decay B_s0sig
+0.050     MyD_s-  K+ pi+ pi-         PHSP;
+0.700     MyK'_1+  MyD_s-           PHSP;
+0.250     MyK_1+ MyD_s-          PHSP;
+Enddecay
+CDecay anti-B_s0sig
+#
+Decay MyK'_1+
+1.000   MyK*0  pi+                       PHSP;
+Enddecay
+CDecay MyK'_1-
+#
+Decay MyK_1+
+1.000   Myrho0 K+                          PHSP;
+Enddecay
+CDecay MyK_1-
+#
+Decay MyD_s-
+1.000     pi+    K-     pi-          D_DALITZ;
+Enddecay
+CDecay MyD_s+
+#
+Decay MyK*0
+1.000 K+   pi-                  PHSP;
+Enddecay
+CDecay Myanti-K*0
+#
+Decay Myrho0
+1.000 pi+  pi-                    PHSP;
+Enddecay
+#
+End

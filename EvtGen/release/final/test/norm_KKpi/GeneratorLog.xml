@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<generatorCounters>
+  <version>1.1</version>
+  <eventType>13266068</eventType>
+  <counter name = "all events (including empty events)">
+    <value> 873617 </value>
+  </counter>
+  <counter name = "events with 0 interaction">
+    <value> 71711 </value>
+  </counter>
+  <counter name = "generated events">
+    <value> 801906 </value>
+  </counter>
+  <counter name = "generated interactions">
+    <value> 2186648 </value>
+  </counter>
+  <counter name = "generated interactions with >= 1b">
+    <value> 11124 </value>
+  </counter>
+  <counter name = "generated interactions with >= 3b">
+    <value> 112 </value>
+  </counter>
+  <counter name = "generated interactions with 1 prompt B">
+    <value> 438 </value>
+  </counter>
+  <counter name = "generated interactions with >= 1c">
+    <value> 157196 </value>
+  </counter>
+  <counter name = "generated interactions with >= 3c">
+    <value> 17606 </value>
+  </counter>
+  <counter name = "generated interactions with >= prompt C">
+    <value> 5526 </value>
+  </counter>
+  <counter name = "generated interactions with b and c">
+    <value> 2466 </value>
+  </counter>
+  <counter name = "accepted events">
+    <value> 400 </value>
+  </counter>
+  <counter name = "interactions in accepted events">
+    <value> 1236 </value>
+  </counter>
+  <counter name = "accepted interactions with >= 1b">
+    <value> 400 </value>
+  </counter>
+  <counter name = "accepted interactions with >= 3b">
+    <value> 6 </value>
+  </counter>
+  <counter name = "accepted interactions with 1 prompt B">
+    <value> 0 </value>
+  </counter>
+  <counter name = "accepted interactions with >= 1c">
+    <value> 141 </value>
+  </counter>
+  <counter name = "accepted interactions with >= 3c">
+    <value> 15 </value>
+  </counter>
+  <counter name = "accepted interactions with >= prompt C">
+    <value> 2 </value>
+  </counter>
+  <counter name = "accepted interactions with b and c">
+    <value> 85 </value>
+  </counter>
+  <efficiency name = "generator level cut">
+    <after> 205 </after>
+    <before> 2911 </before>
+    <value> 0.070423 </value>
+    <error> 0.0047422 </error>
+  </efficiency>
+  <counter name = "z-inverted events">
+    <value> 195 </value>
+  </counter>
+  <efficiency name = "generator particle level cut">
+    <after> 97 </after>
+    <before> 1443 </before>
+    <value> 0.067221 </value>
+    <error> 0.0065919 </error>
+  </efficiency>
+  <efficiency name = "generator anti-particle level cut">
+    <after> 108 </after>
+    <before> 1468 </before>
+    <value> 0.073569 </value>
+    <error> 0.0068138 </error>
+  </efficiency>
+  <fraction name = "signal B_s0 in sample">
+    <number> 199 </number>
+    <value> 0.4975 </value>
+    <error> 0.025 </error>
+  </fraction>
+  <fraction name = "signal B_s~0 in sample">
+    <number> 201 </number>
+    <value> 0.5025 </value>
+    <error> 0.025 </error>
+  </fraction>
+  <fraction name = "accepted B0">
+    <number> 78 </number>
+    <value> 0.37681 </value>
+    <error> 0.033681 </error>
+  </fraction>
+  <fraction name = "accepted B+">
+    <number> 80 </number>
+    <value> 0.38647 </value>
+    <error> 0.033845 </error>
+  </fraction>
+  <fraction name = "accepted Bs0">
+    <number> 29 </number>
+    <value> 0.1401 </value>
+    <error> 0.024124 </error>
+  </fraction>
+  <fraction name = "accepted b-Baryon">
+    <number> 20 </number>
+    <value> 0.096618 </value>
+    <error> 0.020534 </error>
+  </fraction>
+  <fraction name = "accepted Bc+">
+    <number> 0 </number>
+    <value> 0 </value>
+    <error> 0 </error>
+  </fraction>
+  <fraction name = "accepted anti-B0">
+    <number> 86 </number>
+    <value> 0.41951 </value>
+    <error> 0.034466 </error>
+  </fraction>
+  <fraction name = "accepted B-">
+    <number> 81 </number>
+    <value> 0.39512 </value>
+    <error> 0.034145 </error>
+  </fraction>
+  <fraction name = "accepted anti-Bs0">
+    <number> 20 </number>
+    <value> 0.097561 </value>
+    <error> 0.020724 </error>
+  </fraction>
+  <fraction name = "accepted anti-b-Baryon">
+    <number> 18 </number>
+    <value> 0.087805 </value>
+    <error> 0.019766 </error>
+  </fraction>
+  <fraction name = "accepted Bc-">
+    <number> 0 </number>
+    <value> 0 </value>
+    <error> 0 </error>
+  </fraction>
+  <counter name = "accepted (bb)">
+    <value> 0 </value>
+  </counter>
+  <fraction name = "accepted D0">
+    <number> 158 </number>
+    <value> 0.51634 </value>
+    <error> 0.028568 </error>
+  </fraction>
+  <fraction name = "accepted D+">
+    <number> 88 </number>
+    <value> 0.28758 </value>
+    <error> 0.025875 </error>
+  </fraction>
+  <fraction name = "accepted Ds+">
+    <number> 27 </number>
+    <value> 0.088235 </value>
+    <error> 0.016214 </error>
+  </fraction>
+  <fraction name = "accepted c-Baryon">
+    <number> 33 </number>
+    <value> 0.10784 </value>
+    <error> 0.017732 </error>
+  </fraction>
+  <fraction name = "accepted anti-D0">
+    <number> 159 </number>
+    <value> 0.52824 </value>
+    <error> 0.028774 </error>
+  </fraction>
+  <fraction name = "accepted D-">
+    <number> 91 </number>
+    <value> 0.30233 </value>
+    <error> 0.026472 </error>
+  </fraction>
+  <fraction name = "accepted Ds-">
+    <number> 23 </number>
+    <value> 0.076412 </value>
+    <error> 0.015312 </error>
+  </fraction>
+  <fraction name = "accepted anti-c-Baryon">
+    <number> 28 </number>
+    <value> 0.093023 </value>
+    <error> 0.016742 </error>
+  </fraction>
+  <counter name = "accepted (cc)">
+    <value> 14 </value>
+  </counter>
+  <fraction name = "accepted B(L=0,J=0)">
+    <number> 91 </number>
+    <value> 0.2275 </value>
+    <error> 0.020961 </error>
+  </fraction>
+  <fraction name = "accepted B* (L=0, J=1)">
+    <number> 309 </number>
+    <value> 0.7725 </value>
+    <error> 0.020961 </error>
+  </fraction>
+  <fraction name = "accepted B** (L=1, J=0,1,2)">
+    <number> 0 </number>
+    <value> 0 </value>
+    <error> 0 </error>
+  </fraction>
+  <fraction name = "accepted D(L=0,J=0)">
+    <number> 400 </number>
+    <value> 1 </value>
+    <error> 0 </error>
+  </fraction>
+  <fraction name = "accepted D* (L=0, J=1)">
+    <number> 0 </number>
+    <value> 0 </value>
+    <error> 0 </error>
+  </fraction>
+  <fraction name = "accepted D** (L=1, J=0,1,2)">
+    <number> 0 </number>
+    <value> 0 </value>
+    <error> 0 </error>
+  </fraction>
+  <method>Generation.SignalRepeatedHadronization</method>
+  <generator>Pythia8</generator>
+  <crosssection id = "101">
+    <description> "non-diffractive" </description>
+    <generated> 1227366 </generated>
+    <value> 52.116 </value>
+  </crosssection>
+  <crosssection id = "102">
+    <description> "A B -> A B elastic" </description>
+    <generated> 470369 </generated>
+    <value> 19.892 </value>
+  </crosssection>
+  <crosssection id = "103">
+    <description> "A B -> X B single diffractive" </description>
+    <generated> 147668 </generated>
+    <value> 6.24 </value>
+  </crosssection>
+  <crosssection id = "104">
+    <description> "A B -> A X single diffractive" </description>
+    <generated> 147109 </generated>
+    <value> 6.24 </value>
+  </crosssection>
+  <crosssection id = "105">
+    <description> "A B -> X X double diffractive" </description>
+    <generated> 194675 </generated>
+    <value> 8.2542 </value>
+  </crosssection>
+</generatorCounters>

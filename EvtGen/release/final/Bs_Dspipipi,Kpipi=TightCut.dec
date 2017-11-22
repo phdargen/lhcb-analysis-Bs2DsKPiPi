@@ -1,0 +1,113 @@
+# EventType: 13266088
+#
+# Descriptor: [[B_s0]cc ==> (D_s- ==> pi+ K- pi-) pi+ pi+ pi- ]CC
+#
+# NickName: Bs_Dspipipi,Kpipi=TightCut
+#
+# Cuts: LoKi::GenCutTool/TightCut
+#
+# InsertPythonCode:
+# # 
+# from Configurables import LoKi__GenCutTool 
+# gen = Generation() 
+# gen.SignalRepeatedHadronization.addTool ( LoKi__GenCutTool , 'TightCut' ) 
+# # 
+#tightCut = gen.SignalRepeatedHadronization.TightCut
+#tightCut.Decay     = '^[[B_s0]cc ==> ^(D_s- ==> ^pi+ ^K- ^pi-) ^pi+ ^pi+ ^pi- ]CC'
+#tightCut.Cuts      =    {
+#'[B_s0]cc'   : " (goodB ) & ( ( Xs_SumPT ) > 1200 * MeV ) & ( ( Ds_SumPT ) > 1750 * MeV ) & ( (Xs_daughter_1_P) > 1950 * MeV ) & ( (Xs_daughter_2_P) > 1950 * MeV ) & ( (Xs_daughter_3_P) > 1950 * MeV ) " ,
+#'[K+]cc'    : ' goodTrack  ' ,
+#'[pi+]cc'   : ' goodTrack  '
+#}
+#tightCut.Preambulo += [
+#'from GaudiKernel.SystemOfUnits import ns, MeV',
+#'from GaudiKernel.PhysicalConstants import c_light',
+#"CS  = LoKi.GenChild.Selector",
+#'inAcc = ( in_range( 0.010, GTHETA, 0.400) ) & ( in_range( 1.6, GETA, 5.6) )  ',
+#'goodTrack  = ( GPT > 95  * MeV ) & ( GP > 1000 * MeV ) &  ( inAcc )' ,
+#"goodB  =  ( GCTAU > 0.15e-3 * ns * c_light) & ( GPT > 1500 * MeV ) & ( GP > 30000 * MeV ) ",
+#'Xs_SumPT = GCHILD(GPT, CS("[[B_s0]cc ==> D_s- ^pi+ pi+ pi-]CC")) + GCHILD(GPT, CS("[[B_s0]cc ==> D_s- pi+ ^pi+ pi-]CC")) + GCHILD(GPT, CS("[[B_s0]cc ==> D_s- pi+ pi+ ^pi-]CC"))  ',
+#'Xs_daughter_1_P =  GCHILD(GP, CS("[[B_s0]cc ==> D_s- ^pi+ pi+ pi-]CC")) ',
+#'Xs_daughter_2_P =  GCHILD(GP, CS("[[B_s0]cc ==> D_s- pi+ ^pi+ pi-]CC")) ',
+#'Xs_daughter_3_P =  GCHILD(GP, CS("[[B_s0]cc ==> D_s- pi+ pi+ ^pi-]CC")) ',
+#'Ds_SumPT = GCHILD(GPT, CS("[[B_s0]cc ==> (D_s- ==> ^pi+ K- pi-) pi+ pi+ pi-]CC")) + GCHILD(GPT, CS("[[B_s0]cc ==> (D_s- ==> pi+ ^K- pi-) pi+ pi+ pi-]CC")) + GCHILD(GPT, CS("[[B_s0]cc ==> (D_s- ==> pi+ K- ^pi-) pi+ pi+ pi-]CC")) ' 
+#]
+#EndInsertPythonCode
+#
+# Documentation: Bs->Dspipipi, Ds->Kpipi, tight generator level cuts
+# EndDocumentation
+#
+# PhysicsWG: B2OC
+# Tested: Yes
+# Responsible: Philippe d'Argent
+# Email: p.dargent@cern.ch
+# Date: 20171121
+# CPUTime: < 2 min
+#
+Alias      MyD_s-     D_s-
+Alias      MyD_s+     D_s+
+ChargeConj MyD_s+     MyD_s-
+#
+Alias      Myf_0      f_0
+ChargeConj Myf_0      Myf_0
+#
+Alias      Myrho0     rho0
+ChargeConj Myrho0     Myrho0
+#
+Alias      MyK_1-     K_1-
+Alias      MyK_1+     K_1+
+ChargeConj MyK_1+     MyK_1-
+
+noPhotos
+
+LSNONRELBW MyK_1+
+BlattWeisskopf MyK_1+ 0.0
+Particle MyK_1+ 1.18 0.4
+ChangeMassMin MyK_1+ 0.
+ChangeMassMax MyK_1+ 3.5
+
+LSNONRELBW MyK_1-
+BlattWeisskopf MyK_1- 0.0
+Particle MyK_1- 1.18 0.4
+ChangeMassMin MyK_1- 0.
+ChangeMassMax MyK_1- 3.5
+
+LSNONRELBW Myrho0
+BlattWeisskopf Myrho0 0.0
+Particle Myrho0 0.775 0.15
+ChangeMassMin Myrho0 0.
+ChangeMassMax Myrho0 3.3
+
+LSNONRELBW Myf_0
+BlattWeisskopf Myf_0 0.0
+Particle Myf_0 0.550 0.400
+ChangeMassMin Myf_0 0.
+ChangeMassMax Myf_0 3.3
+
+#
+Decay B_s0sig
+0.050     MyD_s-  pi+ pi+ pi-         PHSP;
+0.950     MyK_1+  MyD_s-           PHSP;
+Enddecay
+CDecay anti-B_s0sig
+#
+Decay MyK_1+
+0.900   Myrho0 pi+                          PHSP;
+0.100   Myf_0 pi+                           PHSP;
+Enddecay
+CDecay MyK_1-
+#
+Decay MyD_s-
+1.000     pi+    K-     pi-          D_DALITZ;
+Enddecay
+CDecay MyD_s+
+#
+Decay Myf_0
+1.000 pi+   pi-                  PHSP;
+Enddecay
+#
+Decay Myrho0
+1.000 pi+  pi-                    PHSP;
+Enddecay
+#
+End

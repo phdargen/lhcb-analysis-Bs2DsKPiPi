@@ -1,0 +1,1573 @@
+# setting LC_ALL to "C"
+# --> Including file '/auto/lhcb/lib/lhcb/GAUSS/GAUSS_v49r7/Sim/Gauss/options/Gauss-2012.py'
+# --> Including file '/auto/lhcb/lib/lhcb/DBASE/AppConfig/v3r343/options/Gauss/Sim08-Beam4000GeV-md100-2012-nu2.5.py'
+# --> Including file '/auto/lhcb/lib/lhcb/DBASE/AppConfig/v3r343/options/Gauss/VertexSmear_SignalPGun.py'
+# <-- End of file '/auto/lhcb/lib/lhcb/DBASE/AppConfig/v3r343/options/Gauss/VertexSmear_SignalPGun.py'
+# <-- End of file '/auto/lhcb/lib/lhcb/DBASE/AppConfig/v3r343/options/Gauss/Sim08-Beam4000GeV-md100-2012-nu2.5.py'
+# --> Including file '/auto/lhcb/lib/lhcb/DBASE/AppConfig/v3r343/options/Gauss/DataType-2012.py'
+# <-- End of file '/auto/lhcb/lib/lhcb/DBASE/AppConfig/v3r343/options/Gauss/DataType-2012.py'
+# --> Including file '/auto/lhcb/lib/lhcb/DBASE/AppConfig/v3r343/options/Gauss/RICHRandomHits.py'
+# <-- End of file '/auto/lhcb/lib/lhcb/DBASE/AppConfig/v3r343/options/Gauss/RICHRandomHits.py'
+# --> Including file '/auto/lhcb/lib/lhcb/DBASE/AppConfig/v3r343/options/Gauss/NoPacking.py'
+# <-- End of file '/auto/lhcb/lib/lhcb/DBASE/AppConfig/v3r343/options/Gauss/NoPacking.py'
+# <-- End of file '/auto/lhcb/lib/lhcb/GAUSS/GAUSS_v49r7/Sim/Gauss/options/Gauss-2012.py'
+# --> Including file '/auto/lhcb/lib/lhcb/GAUSS/GAUSS_v49r7/Sim/Gauss/options/GenStandAlone.py'
+# <-- End of file '/auto/lhcb/lib/lhcb/GAUSS/GAUSS_v49r7/Sim/Gauss/options/GenStandAlone.py'
+# --> Including file '/auto/sigma0/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/GaussDev_v49r7/Gen/DecFiles/options/13266008.py'
+# <-- End of file '/auto/sigma0/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/GaussDev_v49r7/Gen/DecFiles/options/13266008.py'
+# --> Including file '/auto/lhcb/lib/lhcb/GAUSS/GAUSS_v49r7/Gen/LbPythia8/options/Pythia8.py'
+# <-- End of file '/auto/lhcb/lib/lhcb/GAUSS/GAUSS_v49r7/Gen/LbPythia8/options/Pythia8.py'
+# --> Including file '/auto/sigma0/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test/Gauss-Job.py'
+# <-- End of file '/auto/sigma0/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test/Gauss-Job.py'
+# applying configuration of Gauss
+Ecut value = 5.0
+# WARNING: No simulation phase.
+WARNING: OutputType not supported for this phase. Use default : .xgen
+# /***** User Gauss/Gauss ****************************************************************************
+# |-B2Particle          = 'p'
+# |-DatasetName         = 'Gauss'
+# |-RandomGenerator     = 'Ranlux'
+# |-DetectorGeo         = {'Detectors': []}
+# |                     (default: {'Detectors': ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet']})
+# |-Histograms          = 'DEFAULT'
+# |-BeamEmittance       = 0.0038  (default: 0.0037)
+# |-Phases              = ['Generator', 'GenToMCTree']  (default: ['Generator', 'Simulation'])
+# |-Production          = 'PHYS'
+# |-TotalCrossSection   = 9.32e-24  (default: 9.109999999999999e-24)
+# |-BeamPipe            = 'BeamPipeOn'
+# |-ReplaceWithGDML     = [{'volsToReplace': [], 'gdmlFile': ''}]
+# |                     (default: [{'volsToReplace': [], 'gdmlFile': ''}])
+# |-InteractionPosition = [0.626, 0.1, 25.732]  (default: [0.459, -0.015, 0.5])
+# |-BeamLineAngles      = [0.0, 0.0]  (default: [-7.5e-05, 3.5000000000000004e-05])
+# |-BeamHCrossingAngle  = -0.000236  (default: -0.0005200000000000001)
+# |-PhysicsList         = {'Em': 'NoCuts', 'GeneralPhys': True, 'Other': '', 'Hadron': 'FTFP_BERT', 'LHCbPhys': True}
+# |                     (default: {'Em': 'NoCuts', 'GeneralPhys': True, 'Other': '', 'Hadron': 'FTFP_BERT', 'LHCbPhys': True})
+# |-RICHRandomHits      = True  (default: False)
+# |-OutputType          = 'SIM'
+# |-B2Momentum          = 3500000.0
+# |-DetectorMoni        = {'Detectors': []}
+# |                     (default: {'Detectors': ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon']})
+# |-DeltaRays           = True
+# |-EnablePack          = False  (default: True)
+# |-BeamBetaStar        = 3200.0  (default: 3100.0)
+# |-BeamVCrossingAngle  = 0.0001  (default: 0.0)
+# |-Luminosity          = 3.02e+18  (default: 2.47e+18)
+# |-DataPackingChecks   = True
+# |-Debug               = False
+# |-BeamMomentum        = 4000000.0  (default: 3500000.0)
+# |-DataType            = '2012'  (default: '')
+# |-B1Particle          = 'p'
+# |-BunchRMS            = 73.54  (default: 82.03)
+# |-WriteFSR            = True
+# |-DetectorSim         = {'Detectors': []}
+# |                     (default: {'Detectors': ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet']})
+# |-Redecay             = {'active': False, 'rd_mode': 1, 'N': 100}
+# |                     (default: {'active': False, 'rd_mode': 1, 'N': 100})
+# |-SpilloverPaths      = []  (default: [])
+# \----- (End of User Gauss/Gauss) -------------------------------------------------------------------
+# GaussTape.ItemList    = ['/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/Gen/BeamParameters#1', '/Event/Gen/Collisions#1', '/Event/MC/Vertices#1', '/Event/MC/Particles#1']
+# GaussTape.OptItemList = ['/Event/Gen/HepMCEvents#1']
+ApplicationMgr    SUCCESS 
+====================================================================================================================================
+                                                   Welcome to Gauss version v49r6
+                                          running on d0new on Wed Nov 22 00:27:21 2017
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersistencySvc     INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc         SUCCESS Detector description database: conddb:/lhcb.xml
+ChronoStatSvc              INFO  Number of skipped events for MemStat-1
+
+*************************************************************
+ Geant4 version Name: geant4-09-06-patch-04    (30-January-2015)
+                      Copyright : Geant4 Collaboration
+                      Reference : NIM A 506 (2003), 250-303
+                            WWW : http://cern.ch/geant4
+*************************************************************
+
+SimulationSvc              INFO Loading simulation attributes file "/cvmfs/lhcb.cern.ch/lib/lhcb/GAUSS/GAUSS_v49r7/Sim/Gauss/xml/Simulation.xml" ...
+GiGa.ModularPL             INFO GiGaPhysListModular initializing
+GiGa.ModularPL             INFO Registered GiGa.ModularPL.EmOpt1NoCutsPhysics
+GiGa.ModularPL             INFO Registered GiGa.ModularPL.DecayPhysics
+GiGa.ModularPL             INFO Registered GiGa.ModularPL.EmExtraPhysics
+GiGa.ModularPL             INFO Registered GiGa.ModularPL.IonPhysics
+GiGa.ModularPL             INFO Registered GiGa.ModularPL.ElasticPhysics
+GiGa.ModularPL             INFO Registered GiGa.ModularPL.FTFP_BERTPhysics
+WARNING: G4QStoppingPhysics is deprecated and will be removed in GEANT4 version 10.0.
+GiGa.ModularPL             INFO Registered GiGa.ModularPL.QStoppingPhysics
+GiGa.ModularPL             INFO Registered GiGa.ModularPL.NeutronTrkCut
+GiGa.ModularPL             INFO Registered GiGa.ModularPL.GiGaPhysConstructorOp
+GiGa.ModularPL             INFO Registered GiGa.ModularPL.GiGaPhysConstructorHpd
+GiGa.ModularPL             INFO Registered GiGa.ModularPL.GiGaPhysUnknownParticles
+
+-------- WWWW ------- G4Exception-START -------- WWWW -------
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding 
+*** This is just a warning message. ***
+-------- WWWW -------- G4Exception-END --------- WWWW -------
+
+
+-------- WWWW ------- G4Exception-START -------- WWWW -------
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding 
+*** This is just a warning message. ***
+-------- WWWW -------- G4Exception-END --------- WWWW -------
+
+
+-------- WWWW ------- G4Exception-START -------- WWWW -------
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding 
+*** This is just a warning message. ***
+-------- WWWW -------- G4Exception-END --------- WWWW -------
+
+
+-------- WWWW ------- G4Exception-START -------- WWWW -------
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding 
+*** This is just a warning message. ***
+-------- WWWW -------- G4Exception-END --------- WWWW -------
+
+
+-------- WWWW ------- G4Exception-START -------- WWWW -------
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding 
+*** This is just a warning message. ***
+-------- WWWW -------- G4Exception-END --------- WWWW -------
+
+GiGa                       INFO Used Physics List Object is GiGaPhysListModular/GiGa.ModularPL
+GiGa                       INFO Stacking Action Object is not required to be loaded
+COOLConfSvc                INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc                INFO CORAL Connection Retrial Time-Out set to 900s
+DDDB                       INFO Connected to database "sqlite_file:/cvmfs/lhcb.cern.ch/lib/lhcb/SQLite/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                       INFO Using TAG "dddb-20150928"
+GiGa                       INFO Used Tracking Action Object is GiGaTrackActionSequence/GiGa.TrackSeq
+GiGa                       INFO Used  Stepping Action Object is GiGaStepActionSequence/GiGa.StepSeq
+GiGa                       INFO Used  Event Action Object is GiGaEventActionSequence/GiGa.EventSeq
+GiGa                       INFO Used  Run Action Object is GiGaRunActionSequence/GiGa.RunSeq
+GiGa                       INFO GiGa User Interface session is not required to be launched
+GiGa                       INFO Visualisation Manager is not required to be created.
+RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
+RndmGenSvc.Engine          INFO This is the GEANT4 engine!
+RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+TimingAuditor.TIMER        INFO This machine has a speed about   2.07 times the speed of a 2.8 GHz Xeon.
+GaussSequencer             INFO Member list: GaudiSequencer/Generator, GaudiSequencer/SkipGeant4
+ToolSvc.SequencerTime...   INFO This machine has a speed about   2.08 times the speed of a 2.8 GHz Xeon.
+Generator                  INFO Member list: GaudiSequencer/GeneratorSlotMainSeq
+GeneratorSlotMainSeq       INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
+GaussGen                SUCCESS ==================================================================
+GaussGen                SUCCESS Requested to process 400 events
+GaussGen                SUCCESS ==================================================================
+RootHistSvc                INFO Writing ROOT histograms to: Gen-histos.root
+HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
+GaussGen                   INFO Create BeamForInitialization
+GaussGen                   INFO Beam Parameters :
+GaussGen                   INFO Energy = 4 TeV
+GaussGen                   INFO Bunch length RMS = 73.54 mm
+GaussGen                   INFO Normalized emittance = 0.0038 mm
+GaussGen                   INFO Revolution frequency = 11.245 kHz
+GaussGen                   INFO Total cross-section assumed = 93.2 mb
+GaussGen                   INFO Horizontal crossing angle = -0.236 mrad
+GaussGen                   INFO Vertical crossing angle = 0.1 mrad
+GaussGen                   INFO Horizontal beam line angle = 0 mrad
+GaussGen                   INFO Vertical beam line angle = 0 mrad
+GaussGen                   INFO beta star = 3.2 m
+GaussGen                   INFO Bunch spacing = 50 ns
+GaussGen                   INFO Beam spot = (0.626,0.1,25.732) mm
+GaussGen                   INFO Luminosity = 3.02e+29 /cm2/s
+GaussGen                   INFO Nu = 2.50301
+GaussGen                   INFO emittance = 8.91358e-07
+GaussGen                   INFO Luminous region = ( 0.0377647, 0.0377647, 52.0006 ), mm 
+Message from PHCORK(MODCOR):: initialization
+MODOP=5 -- corrects Energy from mass+flow
+
+********************************************************************************
+
+                            =========================
+                              PHOTOS, Version:  3.56
+                              Released at:  3/5/14
+                            =========================
+
+                     Photos QED corrections in Particle Decays
+
+           Monte Carlo Program - by E. Barberio, B. van Eijk and Z. Was
+           From version 2.09   - by P. Golonka and Z. Was
+           From version 3.00   - by N. Davidson, T. Przedzinski and Z. Was
+********************************************************************************
+
+                  Internal (default) input parameters: 
+
+                    INTERF= 1 ISEC= 0 ITRE= 0 IEXP= 1 IFTOP= 1 IFW= 1
+                    ALPHA_QED= 0.00729735 XPHCUT= 1e-07
+
+                    Option with interference is active
+                    Option with exponentiation is active EPSEXP=0.0001
+                    Emision in t tbar production is active
+                    Correction wt in decay of W is active
+
+          WARNING:  /HEPEVT/ is not anymore used.
+
+********************************************************************************
+MODOP=2 -- blocks emission in Kl  to gamma e+e-: DEFAULT
+MODOP=2 -- blocks emission in pi0 to gamma e+e-: DEFAULT
+ IPHQRK_setQarknoEmission MODOP=1 -- blocks emission from light quarks:  DEFAULT
+Message from PHCORK(MODCOR):: initialization
+MODOP=5 -- corrects Energy from mass+flow
+
+ *------------------------------------------------------------------------------------* 
+ |                                                                                    | 
+ |  *------------------------------------------------------------------------------*  | 
+ |  |                                                                              |  | 
+ |  |                                                                              |  | 
+ |  |   PPP   Y   Y  TTTTT  H   H  III    A      Welcome to the Lund Monte Carlo!  |  | 
+ |  |   P  P   Y Y     T    H   H   I    A A     This is PYTHIA version 8.186      |  | 
+ |  |   PPP     Y      T    HHHHH   I   AAAAA    Last date of change:  8 Jul 2014  |  | 
+ |  |   P       Y      T    H   H   I   A   A                                      |  | 
+ |  |   P       Y      T    H   H  III  A   A    Now is 22 Nov 2017 at 00:27:27    |  | 
+ |  |                                                                              |  | 
+ |  |   Torbjorn Sjostrand;  Department of Astronomy and Theoretical Physics,      |  | 
+ |  |      Lund University, Solvegatan 14A, SE-223 62 Lund, Sweden;                |  | 
+ |  |      phone: + 46 - 46 - 222 48 16; e-mail: torbjorn@thep.lu.se               |  | 
+ |  |   Jesper Roy Christiansen;  Department of Astronomy and Theoretical Physics, |  | 
+ |  |      Lund University, Solvegatan 14A, SE-223 62 Lund, Sweden;                |  | 
+ |  |      e-mail: Jesper.Roy.Christiansen@thep.lu.se                              |  | 
+ |  |   Nishita Desai;  Institut fuer Theoretische Physik,                         |  | 
+ |  |     Universitaet Heidelberg, Philosophenweg 16, D-69120 Heidelberg, Germany; |  | 
+ |  |      phone: +49 - 6221 54 9424; e-mail: Nishita.Desai@cern.ch                |  | 
+ |  |   Philip Ilten;  Massachusetts Institute of Technology,                      |  | 
+ |  |      stationed at CERN, CH-1211 Geneva 23, Switzerland;                      |  | 
+ |  |      e-mail: philten@cern.ch                                                 |  | 
+ |  |   Stephen Mrenna;  Computing Division, Simulations Group,                    |  | 
+ |  |      Fermi National Accelerator Laboratory, MS 234, Batavia, IL 60510, USA;  |  | 
+ |  |      phone: + 1 - 630 - 840 - 2556; e-mail: mrenna@fnal.gov                  |  | 
+ |  |   Stefan Prestel;  Theory Group, DESY,                                       |  | 
+ |  |      Notkestrasse 85, D-22607 Hamburg, Germany;                              |  | 
+ |  |      phone: + 49 - 40 - 8998-4250; e-mail: stefan.prestel@thep.lu.se         |  | 
+ |  |   Peter Skands;  Theoretical Physics, CERN, CH-1211 Geneva 23, Switzerland;  |  | 
+ |  |      phone: + 41 - 22 - 767 2447; e-mail: peter.skands@cern.ch               |  | 
+ |  |   Stefan Ask; former author; e-mail: ask.stefan@gmail.com                    |  | 
+ |  |   Richard Corke; former author; e-mail: r.corke@errno.net                    |  | 
+ |  |                                                                              |  | 
+ |  |   The main program reference is the 'Brief Introduction to PYTHIA 8.1',      |  | 
+ |  |   T. Sjostrand, S. Mrenna and P. Skands, Comput. Phys. Comm. 178 (2008) 85   |  | 
+ |  |   [arXiv:0710.3820]                                                          |  | 
+ |  |                                                                              |  | 
+ |  |   The main physics reference is the 'PYTHIA 6.4 Physics and Manual',         |  | 
+ |  |   T. Sjostrand, S. Mrenna and P. Skands, JHEP05 (2006) 026 [hep-ph/0603175]. |  | 
+ |  |                                                                              |  | 
+ |  |   An archive of program versions and documentation is found on the web:      |  | 
+ |  |   http://www.thep.lu.se/~torbjorn/Pythia.html                                |  | 
+ |  |                                                                              |  | 
+ |  |   This program is released under the GNU General Public Licence version 2.   |  | 
+ |  |   Please respect the MCnet Guidelines for Event Generator Authors and Users. |  | 
+ |  |                                                                              |  | 
+ |  |   Disclaimer: this program comes without any guarantees.                     |  | 
+ |  |   Beware of errors and use common sense when interpreting results.           |  | 
+ |  |                                                                              |  | 
+ |  |   Copyright (C) 2014 Torbjorn Sjostrand                                      |  | 
+ |  |                                                                              |  | 
+ |  |                                                                              |  | 
+ |  *------------------------------------------------------------------------------*  | 
+ |                                                                                    | 
+ *------------------------------------------------------------------------------------* 
+
+
+ *------------------------------------------------------------------------------------* 
+ |                                                                                    | 
+ |  *------------------------------------------------------------------------------*  | 
+ |  |                                                                              |  | 
+ |  |                                                                              |  | 
+ |  |   PPP   Y   Y  TTTTT  H   H  III    A      Welcome to the Lund Monte Carlo!  |  | 
+ |  |   P  P   Y Y     T    H   H   I    A A     This is PYTHIA version 8.186      |  | 
+ |  |   PPP     Y      T    HHHHH   I   AAAAA    Last date of change:  8 Jul 2014  |  | 
+ |  |   P       Y      T    H   H   I   A   A                                      |  | 
+ |  |   P       Y      T    H   H  III  A   A    Now is 22 Nov 2017 at 00:27:27    |  | 
+ |  |                                                                              |  | 
+ |  |   Torbjorn Sjostrand;  Department of Astronomy and Theoretical Physics,      |  | 
+ |  |      Lund University, Solvegatan 14A, SE-223 62 Lund, Sweden;                |  | 
+ |  |      phone: + 46 - 46 - 222 48 16; e-mail: torbjorn@thep.lu.se               |  | 
+ |  |   Jesper Roy Christiansen;  Department of Astronomy and Theoretical Physics, |  | 
+ |  |      Lund University, Solvegatan 14A, SE-223 62 Lund, Sweden;                |  | 
+ |  |      e-mail: Jesper.Roy.Christiansen@thep.lu.se                              |  | 
+ |  |   Nishita Desai;  Institut fuer Theoretische Physik,                         |  | 
+ |  |     Universitaet Heidelberg, Philosophenweg 16, D-69120 Heidelberg, Germany; |  | 
+ |  |      phone: +49 - 6221 54 9424; e-mail: Nishita.Desai@cern.ch                |  | 
+ |  |   Philip Ilten;  Massachusetts Institute of Technology,                      |  | 
+ |  |      stationed at CERN, CH-1211 Geneva 23, Switzerland;                      |  | 
+ |  |      e-mail: philten@cern.ch                                                 |  | 
+ |  |   Stephen Mrenna;  Computing Division, Simulations Group,                    |  | 
+ |  |      Fermi National Accelerator Laboratory, MS 234, Batavia, IL 60510, USA;  |  | 
+ |  |      phone: + 1 - 630 - 840 - 2556; e-mail: mrenna@fnal.gov                  |  | 
+ |  |   Stefan Prestel;  Theory Group, DESY,                                       |  | 
+ |  |      Notkestrasse 85, D-22607 Hamburg, Germany;                              |  | 
+ |  |      phone: + 49 - 40 - 8998-4250; e-mail: stefan.prestel@thep.lu.se         |  | 
+ |  |   Peter Skands;  Theoretical Physics, CERN, CH-1211 Geneva 23, Switzerland;  |  | 
+ |  |      phone: + 41 - 22 - 767 2447; e-mail: peter.skands@cern.ch               |  | 
+ |  |   Stefan Ask; former author; e-mail: ask.stefan@gmail.com                    |  | 
+ |  |   Richard Corke; former author; e-mail: r.corke@errno.net                    |  | 
+ |  |                                                                              |  | 
+ |  |   The main program reference is the 'Brief Introduction to PYTHIA 8.1',      |  | 
+ |  |   T. Sjostrand, S. Mrenna and P. Skands, Comput. Phys. Comm. 178 (2008) 85   |  | 
+ |  |   [arXiv:0710.3820]                                                          |  | 
+ |  |                                                                              |  | 
+ |  |   The main physics reference is the 'PYTHIA 6.4 Physics and Manual',         |  | 
+ |  |   T. Sjostrand, S. Mrenna and P. Skands, JHEP05 (2006) 026 [hep-ph/0603175]. |  | 
+ |  |                                                                              |  | 
+ |  |   An archive of program versions and documentation is found on the web:      |  | 
+ |  |   http://www.thep.lu.se/~torbjorn/Pythia.html                                |  | 
+ |  |                                                                              |  | 
+ |  |   This program is released under the GNU General Public Licence version 2.   |  | 
+ |  |   Please respect the MCnet Guidelines for Event Generator Authors and Users. |  | 
+ |  |                                                                              |  | 
+ |  |   Disclaimer: this program comes without any guarantees.                     |  | 
+ |  |   Beware of errors and use common sense when interpreting results.           |  | 
+ |  |                                                                              |  | 
+ |  |   Copyright (C) 2014 Torbjorn Sjostrand                                      |  | 
+ |  |                                                                              |  | 
+ |  |                                                                              |  | 
+ |  *------------------------------------------------------------------------------*  | 
+ |                                                                                    | 
+ *------------------------------------------------------------------------------------* 
+
+
+ *************************************
+ *     TAUOLA C++ Interface v1.1.6   *
+ *-----------------------------------*
+ *                                   *
+ *   (c) Nadia    Davidson,   (1,2)  *
+ *   (c) Gizo     Nanava,     (3)    *
+ *       Tomasz   Przedzinski,(4)    *
+ *       Elzbieta Richter-Was,(2,4)  *
+ *       Zbigniew Was         (2,5)  *
+ *                                   *
+ *  1) Unimelb, Melbourne, Australia *
+ *  2)     INP, Krakow, Poland       *
+ *  3) University Bonn, Germany      *
+ *  4)      UJ, Krakow, Poland       *
+ *  5)    CERN, Geneva, Switzerland  *
+ *************************************
+Reading SANC input files.
+File 'table1-1.txt'  missing... skipped.
+File 'table2-2.txt'  missing... skipped.
+File 'table11-11.txt' missing... skipped.
+
+Generation.SignalRepe...SUCCESS ==================================================================
+Generation.SignalRepe...SUCCESS Using as production engine Pythia8Production
+Generation.SignalRepe...SUCCESS ==================================================================
+LoKiSvc                 SUCCESS 
+
+
+Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
+LoKi                                                                                               LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                        Welcome to LoKi!                                       LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                      (LOops & KInematics)                                     LoKi 
+LoKi                                                                                               LoKi 
+LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                                                                               LoKi 
+LoKi                         Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl                         LoKi 
+LoKi                     With the kind help of Galina Pakhlova & Sergey Barsuk                     LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                       Have fun and enjoy!                                     LoKi 
+LoKi                                                                                               LoKi 
+Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
+Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
+
+
+
+[?1034hLHAPDF 6.1.4 loading /cvmfs/lhcb.cern.ch/lib/lhcb/DBASE/LHAPDFSets/v2r1/data/CT09MCS/CT09MCS_0000.dat
+CT09MCS PDF set, member #0, version 1; LHAPDF ID = 10770
+ PYTHIA Warning in MultipartonInteractions::init: maximum increased by factor 5.188
+Generation.SignalRepe...   INFO Generating Signal events of B_s~0 B_s0 
+Generation.SignalRepe...WARNING The signal decay mode is not defined in the main DECAY.DEC table
+Please add it there !
+Generation.BeamSpotSm...   INFO Smearing of interaction point with Gaussian distribution 
+Generation              SUCCESS ==================================================================
+Generation              SUCCESS Requested to generate EventType 13266008
+Generation              SUCCESS ==================================================================
+GenMonitor                 INFO Member list: GenMonitorAlg
+GenMonitorAlg              INFO Monitor will be applied to all events in container /Event/Gen/HepMCEvents
+SkipGeant4                 INFO Member list: GaudiSequencer/MainEventSeq
+MainEventSeq               INFO Member list: SimInit/MainEventGaussSkipGeant4, GaudiSequencer/MainSkipGeant4
+MainEventGaussSkipGeant4SUCCESS ==================================================================
+MainEventGaussSkipGeant4SUCCESS Requested to process 400 events
+MainEventGaussSkipGeant4SUCCESS ==================================================================
+MainSkipGeant4             INFO Member list: GaudiSequencer/MakeMainSkipGeant4
+MakeMainSkipGeant4         INFO Member list: GenerationToSimulation/GenToSim
+EventPersistencySvc        INFO Added successfully Conversion service:RootCnvSvc
+GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gen.xgen' SVC='RootCnvSvc' OPT='REC'
+FileRecordPersistencySvc   INFO Added successfully Conversion service:FileRecordCnvSvc
+FSROutputStreamGaussTape   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:Gen.xgen' SVC='FileRecordCnvSvc' OPT='REC'
+EventLoopMgr            WARNING Unable to locate service "EventSelector" 
+EventLoopMgr            WARNING No events will be processed from external input.
+ApplicationMgr             INFO Application Manager Initialized successfully
+ApplicationMgr             INFO Application Manager Started successfully
+GaussGen                   INFO Evt 1,  Run 1088,  Nr. in job = 1 with seeds [1088, 1, 646281081, 0]
+ PYTHIA Warning in SpaceShower::pT2nextQCD: weight above unity  
+ PYTHIA Warning in StringFragmentation::fragmentToJunction: bad convergence junction rest frame  
+ PYTHIA Error in BeamRemnants::setKinematics: kinematics construction failed  
+ PYTHIA Error in StringFragmentation::fragment: stuck in joining  
+ PYTHIA Error in Pythia::forceHadronLevel: hadronLevel failed; try again  
+ PYTHIA Error in ProcessLevel::findJunctions: N(unmatched (anti)colour tags) != 3  
+ PYTHIA Error in HadronLevel::traceFromCol: colour tracing failed  
+ PYTHIA Abort from Pythia::forceHadronLevel: hadronLevel failed; giving up  
+ PYTHIA Error in Pythia::check: unmatched particle energy/momentum/mass  
+ PYTHIA Abort from Pythia::next: check of event revealed problems  
+ PYTHIA Error in Pythia::next: partonLevel failed; try again  
+MainEventGaussSkipGeant4   INFO Evt 1,  Run 1088,  Nr. in job = 1 with seeds [1088, 1, 1911947384, 0]
+IODataManager              INFO Referring to dataset Gen.xgen by its file ID:9A7AC9B4-13CF-E711-932D-002590ADA67E
+GaussGen                   INFO Evt 2,  Run 1088,  Nr. in job = 2 with seeds [1088, 2, 278460099, 0]
+DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
+ PYTHIA Warning in TauDecays::decay: unknown tau production, assuming unpolarized and uncorrelated  
+ PYTHIA Error in Pythia::check: charge not conserved  
+ PYTHIA Abort from Pythia::forceHadronLevel: check of event revealed problems  
+MainEventGaussSkipGeant4   INFO Evt 2,  Run 1088,  Nr. in job = 2 with seeds [1088, 2, 1160572367, 0]
+GaussGen                   INFO Evt 3,  Run 1088,  Nr. in job = 3 with seeds [1088, 3, 32091714, 0]
+ PYTHIA Error in MiniStringFragmentation::fragment: no 1- or 2-body state found above mass threshold  
+MainEventGaussSkipGeant4   INFO Evt 3,  Run 1088,  Nr. in job = 3 with seeds [1088, 3, 855066980, 0]
+GaussGen                   INFO Evt 4,  Run 1088,  Nr. in job = 4 with seeds [1088, 4, 1269907916, 0]
+MainEventGaussSkipGeant4   INFO Evt 4,  Run 1088,  Nr. in job = 4 with seeds [1088, 4, 1896283794, 0]
+GaussGen                   INFO Evt 5,  Run 1088,  Nr. in job = 5 with seeds [1088, 5, 1568597351, 0]
+ PYTHIA Warning in MultipartonInteractions::pTnext: weight above unity  
+MainEventGaussSkipGeant4   INFO Evt 5,  Run 1088,  Nr. in job = 5 with seeds [1088, 5, 994087686, 0]
+GaussGen                   INFO Evt 6,  Run 1088,  Nr. in job = 6 with seeds [1088, 6, 1969689955, 0]
+ PYTHIA Warning in SpaceShower::pT2nextQCD: small daughter PDF  
+MainEventGaussSkipGeant4   INFO Evt 6,  Run 1088,  Nr. in job = 6 with seeds [1088, 6, 2055755909, 0]
+GaussGen                   INFO Evt 7,  Run 1088,  Nr. in job = 7 with seeds [1088, 7, 2084720112, 0]
+MainEventGaussSkipGeant4   INFO Evt 7,  Run 1088,  Nr. in job = 7 with seeds [1088, 7, 1581013245, 0]
+GaussGen                   INFO Evt 8,  Run 1088,  Nr. in job = 8 with seeds [1088, 8, 656712626, 0]
+MainEventGaussSkipGeant4   INFO Evt 8,  Run 1088,  Nr. in job = 8 with seeds [1088, 8, 233733975, 0]
+GaussGen                   INFO Evt 9,  Run 1088,  Nr. in job = 9 with seeds [1088, 9, 414910175, 0]
+MainEventGaussSkipGeant4   INFO Evt 9,  Run 1088,  Nr. in job = 9 with seeds [1088, 9, 72820020, 0]
+GaussGen                   INFO Evt 10,  Run 1088,  Nr. in job = 10 with seeds [1088, 10, 638252836, 0]
+MainEventGaussSkipGeant4   INFO Evt 10,  Run 1088,  Nr. in job = 10 with seeds [1088, 10, 222461423, 0]
+GaussGen                   INFO Evt 11,  Run 1088,  Nr. in job = 11 with seeds [1088, 11, 369055501, 0]
+MainEventGaussSkipGeant4   INFO Evt 11,  Run 1088,  Nr. in job = 11 with seeds [1088, 11, 572022982, 0]
+GaussGen                   INFO Evt 12,  Run 1088,  Nr. in job = 12 with seeds [1088, 12, 940786967, 0]
+MainEventGaussSkipGeant4   INFO Evt 12,  Run 1088,  Nr. in job = 12 with seeds [1088, 12, 390744874, 0]
+GaussGen                   INFO Evt 13,  Run 1088,  Nr. in job = 13 with seeds [1088, 13, 1425243863, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 13,  Run 1088,  Nr. in job = 13 with seeds [1088, 13, 861555230, 0]
+GaussGen                   INFO Evt 14,  Run 1088,  Nr. in job = 14 with seeds [1088, 14, 610311602, 0]
+ PYTHIA Error in SpaceShower::pT2nearQCDthreshold: stuck in loop  
+
+ Pythia::next(): 1000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 14,  Run 1088,  Nr. in job = 14 with seeds [1088, 14, 1166798465, 0]
+GaussGen                   INFO Evt 15,  Run 1088,  Nr. in job = 15 with seeds [1088, 15, 1301803044, 0]
+ PYTHIA Error in StringFragmentation::fragmentToJunction: caught in junction flavour loop  
+MainEventGaussSkipGeant4   INFO Evt 15,  Run 1088,  Nr. in job = 15 with seeds [1088, 15, 268338023, 0]
+GaussGen                   INFO Evt 16,  Run 1088,  Nr. in job = 16 with seeds [1088, 16, 1760434897, 0]
+ PYTHIA Warning in MultipartonInteractions::pTfirst: weight above unity  
+MainEventGaussSkipGeant4   INFO Evt 16,  Run 1088,  Nr. in job = 16 with seeds [1088, 16, 1616742896, 0]
+GaussGen                   INFO Evt 17,  Run 1088,  Nr. in job = 17 with seeds [1088, 17, 626491832, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 17,  Run 1088,  Nr. in job = 17 with seeds [1088, 17, 2067279164, 0]
+GaussGen                   INFO Evt 18,  Run 1088,  Nr. in job = 18 with seeds [1088, 18, 1114553318, 0]
+MainEventGaussSkipGeant4   INFO Evt 18,  Run 1088,  Nr. in job = 18 with seeds [1088, 18, 1146568567, 0]
+GaussGen                   INFO Evt 19,  Run 1088,  Nr. in job = 19 with seeds [1088, 19, 1334433308, 0]
+MainEventGaussSkipGeant4   INFO Evt 19,  Run 1088,  Nr. in job = 19 with seeds [1088, 19, 833067544, 0]
+GaussGen                   INFO Evt 20,  Run 1088,  Nr. in job = 20 with seeds [1088, 20, 1067857497, 0]
+MainEventGaussSkipGeant4   INFO Evt 20,  Run 1088,  Nr. in job = 20 with seeds [1088, 20, 988823318, 0]
+GaussGen                   INFO Evt 21,  Run 1088,  Nr. in job = 21 with seeds [1088, 21, 1309725486, 0]
+MainEventGaussSkipGeant4   INFO Evt 21,  Run 1088,  Nr. in job = 21 with seeds [1088, 21, 1004552438, 0]
+GaussGen                   INFO Evt 22,  Run 1088,  Nr. in job = 22 with seeds [1088, 22, 355005252, 0]
+MainEventGaussSkipGeant4   INFO Evt 22,  Run 1088,  Nr. in job = 22 with seeds [1088, 22, 1768720805, 0]
+GaussGen                   INFO Evt 23,  Run 1088,  Nr. in job = 23 with seeds [1088, 23, 124999641, 0]
+MainEventGaussSkipGeant4   INFO Evt 23,  Run 1088,  Nr. in job = 23 with seeds [1088, 23, 693869549, 0]
+GaussGen                   INFO Evt 24,  Run 1088,  Nr. in job = 24 with seeds [1088, 24, 143280162, 0]
+MainEventGaussSkipGeant4   INFO Evt 24,  Run 1088,  Nr. in job = 24 with seeds [1088, 24, 234312380, 0]
+GaussGen                   INFO Evt 25,  Run 1088,  Nr. in job = 25 with seeds [1088, 25, 390555036, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 25,  Run 1088,  Nr. in job = 25 with seeds [1088, 25, 379516528, 0]
+GaussGen                   INFO Evt 26,  Run 1088,  Nr. in job = 26 with seeds [1088, 26, 1570571427, 0]
+MainEventGaussSkipGeant4   INFO Evt 26,  Run 1088,  Nr. in job = 26 with seeds [1088, 26, 1425732399, 0]
+GaussGen                   INFO Evt 27,  Run 1088,  Nr. in job = 27 with seeds [1088, 27, 1921724031, 0]
+MainEventGaussSkipGeant4   INFO Evt 27,  Run 1088,  Nr. in job = 27 with seeds [1088, 27, 835824861, 0]
+GaussGen                   INFO Evt 28,  Run 1088,  Nr. in job = 28 with seeds [1088, 28, 2130261130, 0]
+ PYTHIA Warning in Pythia::check: energy-momentum not quite conserved  
+MainEventGaussSkipGeant4   INFO Evt 28,  Run 1088,  Nr. in job = 28 with seeds [1088, 28, 529336404, 0]
+GaussGen                   INFO Evt 29,  Run 1088,  Nr. in job = 29 with seeds [1088, 29, 905393508, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 29,  Run 1088,  Nr. in job = 29 with seeds [1088, 29, 1573810837, 0]
+GaussGen                   INFO Evt 30,  Run 1088,  Nr. in job = 30 with seeds [1088, 30, 1250975382, 0]
+MainEventGaussSkipGeant4   INFO Evt 30,  Run 1088,  Nr. in job = 30 with seeds [1088, 30, 244934201, 0]
+GaussGen                   INFO Evt 31,  Run 1088,  Nr. in job = 31 with seeds [1088, 31, 1500642393, 0]
+MainEventGaussSkipGeant4   INFO Evt 31,  Run 1088,  Nr. in job = 31 with seeds [1088, 31, 37763962, 0]
+GaussGen                   INFO Evt 32,  Run 1088,  Nr. in job = 32 with seeds [1088, 32, 1883420745, 0]
+MainEventGaussSkipGeant4   INFO Evt 32,  Run 1088,  Nr. in job = 32 with seeds [1088, 32, 1584826178, 0]
+GaussGen                   INFO Evt 33,  Run 1088,  Nr. in job = 33 with seeds [1088, 33, 1594922469, 0]
+MainEventGaussSkipGeant4   INFO Evt 33,  Run 1088,  Nr. in job = 33 with seeds [1088, 33, 1857491738, 0]
+GaussGen                   INFO Evt 34,  Run 1088,  Nr. in job = 34 with seeds [1088, 34, 382403927, 0]
+
+ Pythia::next(): 2000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 34,  Run 1088,  Nr. in job = 34 with seeds [1088, 34, 674432527, 0]
+GaussGen                   INFO Evt 35,  Run 1088,  Nr. in job = 35 with seeds [1088, 35, 2063638078, 0]
+MainEventGaussSkipGeant4   INFO Evt 35,  Run 1088,  Nr. in job = 35 with seeds [1088, 35, 1828660307, 0]
+GaussGen                   INFO Evt 36,  Run 1088,  Nr. in job = 36 with seeds [1088, 36, 978701420, 0]
+MainEventGaussSkipGeant4   INFO Evt 36,  Run 1088,  Nr. in job = 36 with seeds [1088, 36, 605885072, 0]
+GaussGen                   INFO Evt 37,  Run 1088,  Nr. in job = 37 with seeds [1088, 37, 677652617, 0]
+MainEventGaussSkipGeant4   INFO Evt 37,  Run 1088,  Nr. in job = 37 with seeds [1088, 37, 1502838140, 0]
+GaussGen                   INFO Evt 38,  Run 1088,  Nr. in job = 38 with seeds [1088, 38, 1861006725, 0]
+MainEventGaussSkipGeant4   INFO Evt 38,  Run 1088,  Nr. in job = 38 with seeds [1088, 38, 2134422557, 0]
+GaussGen                   INFO Evt 39,  Run 1088,  Nr. in job = 39 with seeds [1088, 39, 2090488032, 0]
+MainEventGaussSkipGeant4   INFO Evt 39,  Run 1088,  Nr. in job = 39 with seeds [1088, 39, 906475109, 0]
+GaussGen                   INFO Evt 40,  Run 1088,  Nr. in job = 40 with seeds [1088, 40, 1838580610, 0]
+MainEventGaussSkipGeant4   INFO Evt 40,  Run 1088,  Nr. in job = 40 with seeds [1088, 40, 289500373, 0]
+GaussGen                   INFO Evt 41,  Run 1088,  Nr. in job = 41 with seeds [1088, 41, 606150635, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 41,  Run 1088,  Nr. in job = 41 with seeds [1088, 41, 42717034, 0]
+GaussGen                   INFO Evt 42,  Run 1088,  Nr. in job = 42 with seeds [1088, 42, 655259199, 0]
+MainEventGaussSkipGeant4   INFO Evt 42,  Run 1088,  Nr. in job = 42 with seeds [1088, 42, 897496399, 0]
+GaussGen                   INFO Evt 43,  Run 1088,  Nr. in job = 43 with seeds [1088, 43, 399890382, 0]
+MainEventGaussSkipGeant4   INFO Evt 43,  Run 1088,  Nr. in job = 43 with seeds [1088, 43, 1589839831, 0]
+GaussGen                   INFO Evt 44,  Run 1088,  Nr. in job = 44 with seeds [1088, 44, 93533001, 0]
+MainEventGaussSkipGeant4   INFO Evt 44,  Run 1088,  Nr. in job = 44 with seeds [1088, 44, 1938169020, 0]
+GaussGen                   INFO Evt 45,  Run 1088,  Nr. in job = 45 with seeds [1088, 45, 262600491, 0]
+MainEventGaussSkipGeant4   INFO Evt 45,  Run 1088,  Nr. in job = 45 with seeds [1088, 45, 317643647, 0]
+GaussGen                   INFO Evt 46,  Run 1088,  Nr. in job = 46 with seeds [1088, 46, 1580852385, 0]
+MainEventGaussSkipGeant4   INFO Evt 46,  Run 1088,  Nr. in job = 46 with seeds [1088, 46, 607157762, 0]
+GaussGen                   INFO Evt 47,  Run 1088,  Nr. in job = 47 with seeds [1088, 47, 777323732, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 47,  Run 1088,  Nr. in job = 47 with seeds [1088, 47, 696786274, 0]
+GaussGen                   INFO Evt 48,  Run 1088,  Nr. in job = 48 with seeds [1088, 48, 119857851, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 48,  Run 1088,  Nr. in job = 48 with seeds [1088, 48, 1444181514, 0]
+GaussGen                   INFO Evt 49,  Run 1088,  Nr. in job = 49 with seeds [1088, 49, 110409912, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 49,  Run 1088,  Nr. in job = 49 with seeds [1088, 49, 1228561494, 0]
+GaussGen                   INFO Evt 50,  Run 1088,  Nr. in job = 50 with seeds [1088, 50, 1572759302, 0]
+ PYTHIA Error in BeamRemnants::setKinematics: no momentum left for beam remnants  
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 50,  Run 1088,  Nr. in job = 50 with seeds [1088, 50, 990560247, 0]
+GaussGen                   INFO Evt 51,  Run 1088,  Nr. in job = 51 with seeds [1088, 51, 741639155, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 51,  Run 1088,  Nr. in job = 51 with seeds [1088, 51, 1917164203, 0]
+GaussGen                   INFO Evt 52,  Run 1088,  Nr. in job = 52 with seeds [1088, 52, 1635053175, 0]
+MainEventGaussSkipGeant4   INFO Evt 52,  Run 1088,  Nr. in job = 52 with seeds [1088, 52, 2139965691, 0]
+GaussGen                   INFO Evt 53,  Run 1088,  Nr. in job = 53 with seeds [1088, 53, 799804134, 0]
+
+ Pythia::next(): 3000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 53,  Run 1088,  Nr. in job = 53 with seeds [1088, 53, 1915203120, 0]
+GaussGen                   INFO Evt 54,  Run 1088,  Nr. in job = 54 with seeds [1088, 54, 1049471145, 0]
+MainEventGaussSkipGeant4   INFO Evt 54,  Run 1088,  Nr. in job = 54 with seeds [1088, 54, 1678742016, 0]
+GaussGen                   INFO Evt 55,  Run 1088,  Nr. in job = 55 with seeds [1088, 55, 1799334643, 0]
+MainEventGaussSkipGeant4   INFO Evt 55,  Run 1088,  Nr. in job = 55 with seeds [1088, 55, 1385983786, 0]
+GaussGen                   INFO Evt 56,  Run 1088,  Nr. in job = 56 with seeds [1088, 56, 1541737534, 0]
+MainEventGaussSkipGeant4   INFO Evt 56,  Run 1088,  Nr. in job = 56 with seeds [1088, 56, 1131565270, 0]
+GaussGen                   INFO Evt 57,  Run 1088,  Nr. in job = 57 with seeds [1088, 57, 2024250588, 0]
+MainEventGaussSkipGeant4   INFO Evt 57,  Run 1088,  Nr. in job = 57 with seeds [1088, 57, 906999313, 0]
+GaussGen                   INFO Evt 58,  Run 1088,  Nr. in job = 58 with seeds [1088, 58, 811175017, 0]
+MainEventGaussSkipGeant4   INFO Evt 58,  Run 1088,  Nr. in job = 58 with seeds [1088, 58, 1123242364, 0]
+GaussGen                   INFO Evt 59,  Run 1088,  Nr. in job = 59 with seeds [1088, 59, 1050159334, 0]
+MainEventGaussSkipGeant4   INFO Evt 59,  Run 1088,  Nr. in job = 59 with seeds [1088, 59, 181717527, 0]
+GaussGen                   INFO Evt 60,  Run 1088,  Nr. in job = 60 with seeds [1088, 60, 1796811390, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 60,  Run 1088,  Nr. in job = 60 with seeds [1088, 60, 535688265, 0]
+GaussGen                   INFO Evt 61,  Run 1088,  Nr. in job = 61 with seeds [1088, 61, 442206348, 0]
+MainEventGaussSkipGeant4   INFO Evt 61,  Run 1088,  Nr. in job = 61 with seeds [1088, 61, 295694034, 0]
+GaussGen                   INFO Evt 62,  Run 1088,  Nr. in job = 62 with seeds [1088, 62, 1220863326, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 62,  Run 1088,  Nr. in job = 62 with seeds [1088, 62, 57817938, 0]
+GaussGen                   INFO Evt 63,  Run 1088,  Nr. in job = 63 with seeds [1088, 63, 922698195, 0]
+MainEventGaussSkipGeant4   INFO Evt 63,  Run 1088,  Nr. in job = 63 with seeds [1088, 63, 1379817705, 0]
+GaussGen                   INFO Evt 64,  Run 1088,  Nr. in job = 64 with seeds [1088, 64, 85498627, 0]
+MainEventGaussSkipGeant4   INFO Evt 64,  Run 1088,  Nr. in job = 64 with seeds [1088, 64, 624714890, 0]
+GaussGen                   INFO Evt 65,  Run 1088,  Nr. in job = 65 with seeds [1088, 65, 144703594, 0]
+MainEventGaussSkipGeant4   INFO Evt 65,  Run 1088,  Nr. in job = 65 with seeds [1088, 65, 310263566, 0]
+GaussGen                   INFO Evt 66,  Run 1088,  Nr. in job = 66 with seeds [1088, 66, 671498038, 0]
+MainEventGaussSkipGeant4   INFO Evt 66,  Run 1088,  Nr. in job = 66 with seeds [1088, 66, 1623022475, 0]
+GaussGen                   INFO Evt 67,  Run 1088,  Nr. in job = 67 with seeds [1088, 67, 850678930, 0]
+MainEventGaussSkipGeant4   INFO Evt 67,  Run 1088,  Nr. in job = 67 with seeds [1088, 67, 1845130757, 0]
+GaussGen                   INFO Evt 68,  Run 1088,  Nr. in job = 68 with seeds [1088, 68, 1138816747, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 68,  Run 1088,  Nr. in job = 68 with seeds [1088, 68, 1013945072, 0]
+GaussGen                   INFO Evt 69,  Run 1088,  Nr. in job = 69 with seeds [1088, 69, 1369150048, 0]
+
+ Pythia::next(): 4000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 69,  Run 1088,  Nr. in job = 69 with seeds [1088, 69, 1308177923, 0]
+GaussGen                   INFO Evt 70,  Run 1088,  Nr. in job = 70 with seeds [1088, 70, 1632850959, 0]
+MainEventGaussSkipGeant4   INFO Evt 70,  Run 1088,  Nr. in job = 70 with seeds [1088, 70, 1673571690, 0]
+GaussGen                   INFO Evt 71,  Run 1088,  Nr. in job = 71 with seeds [1088, 71, 1883042274, 0]
+MainEventGaussSkipGeant4   INFO Evt 71,  Run 1088,  Nr. in job = 71 with seeds [1088, 71, 1451660022, 0]
+GaussGen                   INFO Evt 72,  Run 1088,  Nr. in job = 72 with seeds [1088, 72, 2049041112, 0]
+MainEventGaussSkipGeant4   INFO Evt 72,  Run 1088,  Nr. in job = 72 with seeds [1088, 72, 2009827759, 0]
+GaussGen                   INFO Evt 73,  Run 1088,  Nr. in job = 73 with seeds [1088, 73, 1809532491, 0]
+MainEventGaussSkipGeant4   INFO Evt 73,  Run 1088,  Nr. in job = 73 with seeds [1088, 73, 2063686635, 0]
+GaussGen                   INFO Evt 74,  Run 1088,  Nr. in job = 74 with seeds [1088, 74, 222398737, 0]
+MainEventGaussSkipGeant4   INFO Evt 74,  Run 1088,  Nr. in job = 74 with seeds [1088, 74, 975199246, 0]
+GaussGen                   INFO Evt 75,  Run 1088,  Nr. in job = 75 with seeds [1088, 75, 17634184, 0]
+MainEventGaussSkipGeant4   INFO Evt 75,  Run 1088,  Nr. in job = 75 with seeds [1088, 75, 678803641, 0]
+GaussGen                   INFO Evt 76,  Run 1088,  Nr. in job = 76 with seeds [1088, 76, 375078436, 0]
+MainEventGaussSkipGeant4   INFO Evt 76,  Run 1088,  Nr. in job = 76 with seeds [1088, 76, 429202168, 0]
+GaussGen                   INFO Evt 77,  Run 1088,  Nr. in job = 77 with seeds [1088, 77, 615832279, 0]
+MainEventGaussSkipGeant4   INFO Evt 77,  Run 1088,  Nr. in job = 77 with seeds [1088, 77, 2066484876, 0]
+GaussGen                   INFO Evt 78,  Run 1088,  Nr. in job = 78 with seeds [1088, 78, 705029497, 0]
+MainEventGaussSkipGeant4   INFO Evt 78,  Run 1088,  Nr. in job = 78 with seeds [1088, 78, 2010273649, 0]
+GaussGen                   INFO Evt 79,  Run 1088,  Nr. in job = 79 with seeds [1088, 79, 67335825, 0]
+MainEventGaussSkipGeant4   INFO Evt 79,  Run 1088,  Nr. in job = 79 with seeds [1088, 79, 1696903702, 0]
+GaussGen                   INFO Evt 80,  Run 1088,  Nr. in job = 80 with seeds [1088, 80, 1453245502, 0]
+MainEventGaussSkipGeant4   INFO Evt 80,  Run 1088,  Nr. in job = 80 with seeds [1088, 80, 1092151615, 0]
+GaussGen                   INFO Evt 81,  Run 1088,  Nr. in job = 81 with seeds [1088, 81, 1243851592, 0]
+MainEventGaussSkipGeant4   INFO Evt 81,  Run 1088,  Nr. in job = 81 with seeds [1088, 81, 817494629, 0]
+GaussGen                   INFO Evt 82,  Run 1088,  Nr. in job = 82 with seeds [1088, 82, 989990149, 0]
+MainEventGaussSkipGeant4   INFO Evt 82,  Run 1088,  Nr. in job = 82 with seeds [1088, 82, 595353578, 0]
+GaussGen                   INFO Evt 83,  Run 1088,  Nr. in job = 83 with seeds [1088, 83, 1666264991, 0]
+MainEventGaussSkipGeant4   INFO Evt 83,  Run 1088,  Nr. in job = 83 with seeds [1088, 83, 85271324, 0]
+GaussGen                   INFO Evt 84,  Run 1088,  Nr. in job = 84 with seeds [1088, 84, 1827619547, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 84,  Run 1088,  Nr. in job = 84 with seeds [1088, 84, 172850089, 0]
+GaussGen                   INFO Evt 85,  Run 1088,  Nr. in job = 85 with seeds [1088, 85, 1959428249, 0]
+MainEventGaussSkipGeant4   INFO Evt 85,  Run 1088,  Nr. in job = 85 with seeds [1088, 85, 1752263123, 0]
+GaussGen                   INFO Evt 86,  Run 1088,  Nr. in job = 86 with seeds [1088, 86, 442178996, 0]
+MainEventGaussSkipGeant4   INFO Evt 86,  Run 1088,  Nr. in job = 86 with seeds [1088, 86, 1513475420, 0]
+GaussGen                   INFO Evt 87,  Run 1088,  Nr. in job = 87 with seeds [1088, 87, 673298753, 0]
+MainEventGaussSkipGeant4   INFO Evt 87,  Run 1088,  Nr. in job = 87 with seeds [1088, 87, 1082071535, 0]
+GaussGen                   INFO Evt 88,  Run 1088,  Nr. in job = 88 with seeds [1088, 88, 903599285, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 88,  Run 1088,  Nr. in job = 88 with seeds [1088, 88, 1305576108, 0]
+GaussGen                   INFO Evt 89,  Run 1088,  Nr. in job = 89 with seeds [1088, 89, 1134522428, 0]
+MainEventGaussSkipGeant4   INFO Evt 89,  Run 1088,  Nr. in job = 89 with seeds [1088, 89, 1566515655, 0]
+GaussGen                   INFO Evt 90,  Run 1088,  Nr. in job = 90 with seeds [1088, 90, 704396482, 0]
+
+ Pythia::next(): 5000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 90,  Run 1088,  Nr. in job = 90 with seeds [1088, 90, 1600511696, 0]
+GaussGen                   INFO Evt 91,  Run 1088,  Nr. in job = 91 with seeds [1088, 91, 949869061, 0]
+MainEventGaussSkipGeant4   INFO Evt 91,  Run 1088,  Nr. in job = 91 with seeds [1088, 91, 1881276544, 0]
+GaussGen                   INFO Evt 92,  Run 1088,  Nr. in job = 92 with seeds [1088, 92, 1198192543, 0]
+MainEventGaussSkipGeant4   INFO Evt 92,  Run 1088,  Nr. in job = 92 with seeds [1088, 92, 2078267268, 0]
+GaussGen                   INFO Evt 93,  Run 1088,  Nr. in job = 93 with seeds [1088, 93, 553539858, 0]
+MainEventGaussSkipGeant4   INFO Evt 93,  Run 1088,  Nr. in job = 93 with seeds [1088, 93, 1779315681, 0]
+GaussGen                   INFO Evt 94,  Run 1088,  Nr. in job = 94 with seeds [1088, 94, 782988396, 0]
+MainEventGaussSkipGeant4   INFO Evt 94,  Run 1088,  Nr. in job = 94 with seeds [1088, 94, 1448938623, 0]
+GaussGen                   INFO Evt 95,  Run 1088,  Nr. in job = 95 with seeds [1088, 95, 175472085, 0]
+MainEventGaussSkipGeant4   INFO Evt 95,  Run 1088,  Nr. in job = 95 with seeds [1088, 95, 1151494410, 0]
+GaussGen                   INFO Evt 96,  Run 1088,  Nr. in job = 96 with seeds [1088, 96, 265040554, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 96,  Run 1088,  Nr. in job = 96 with seeds [1088, 96, 1617764851, 0]
+GaussGen                   INFO Evt 97,  Run 1088,  Nr. in job = 97 with seeds [1088, 97, 316609192, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 97,  Run 1088,  Nr. in job = 97 with seeds [1088, 97, 1929299734, 0]
+GenToSim                  ERROR No particle with barcode equal to 1!
+GaussGen                   INFO Evt 98,  Run 1088,  Nr. in job = 98 with seeds [1088, 98, 1121317525, 0]
+MainEventGaussSkipGeant4   INFO Evt 98,  Run 1088,  Nr. in job = 98 with seeds [1088, 98, 2068256118, 0]
+GaussGen                   INFO Evt 99,  Run 1088,  Nr. in job = 99 with seeds [1088, 99, 882398746, 0]
+MainEventGaussSkipGeant4   INFO Evt 99,  Run 1088,  Nr. in job = 99 with seeds [1088, 99, 1480642402, 0]
+GaussGen                   INFO Memory has changed from 1166396 to 1292064 KB (125668KB, 10.774%) in last 100 events
+GaussGen                   INFO Evt 100,  Run 1088,  Nr. in job = 100 with seeds [1088, 100, 1734065056, 0]
+MainEventGaussSkipGeant4   INFO Memory has changed from 1172776 to 1292064 KB (119288KB, 10.1714%) in last 100 events
+MainEventGaussSkipGeant4   INFO Evt 100,  Run 1088,  Nr. in job = 100 with seeds [1088, 100, 1182477271, 0]
+GaussGen                   INFO Evt 101,  Run 1088,  Nr. in job = 101 with seeds [1088, 101, 1494556435, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 101,  Run 1088,  Nr. in job = 101 with seeds [1088, 101, 944476024, 0]
+GaussGen                   INFO Evt 102,  Run 1088,  Nr. in job = 102 with seeds [1088, 102, 1221066369, 0]
+MainEventGaussSkipGeant4   INFO Evt 102,  Run 1088,  Nr. in job = 102 with seeds [1088, 102, 646835197, 0]
+GaussGen                   INFO Evt 103,  Run 1088,  Nr. in job = 103 with seeds [1088, 103, 714523167, 0]
+MainEventGaussSkipGeant4   INFO Evt 103,  Run 1088,  Nr. in job = 103 with seeds [1088, 103, 327075295, 0]
+GaussGen                   INFO Evt 104,  Run 1088,  Nr. in job = 104 with seeds [1088, 104, 1566353322, 0]
+MainEventGaussSkipGeant4   INFO Evt 104,  Run 1088,  Nr. in job = 104 with seeds [1088, 104, 29106778, 0]
+GaussGen                   INFO Evt 105,  Run 1088,  Nr. in job = 105 with seeds [1088, 105, 1307740374, 0]
+MainEventGaussSkipGeant4   INFO Evt 105,  Run 1088,  Nr. in job = 105 with seeds [1088, 105, 17687354, 0]
+GaussGen                   INFO Evt 106,  Run 1088,  Nr. in job = 106 with seeds [1088, 106, 355538608, 0]
+MainEventGaussSkipGeant4   INFO Evt 106,  Run 1088,  Nr. in job = 106 with seeds [1088, 106, 1614274444, 0]
+GaussGen                   INFO Evt 107,  Run 1088,  Nr. in job = 107 with seeds [1088, 107, 593736469, 0]
+
+ Pythia::next(): 6000 events have been generated 
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 107,  Run 1088,  Nr. in job = 107 with seeds [1088, 107, 1115595802, 0]
+GaussGen                   INFO Evt 108,  Run 1088,  Nr. in job = 108 with seeds [1088, 108, 116957599, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 108,  Run 1088,  Nr. in job = 108 with seeds [1088, 108, 886671568, 0]
+GaussGen                   INFO Evt 109,  Run 1088,  Nr. in job = 109 with seeds [1088, 109, 114752000, 0]
+MainEventGaussSkipGeant4   INFO Evt 109,  Run 1088,  Nr. in job = 109 with seeds [1088, 109, 657190261, 0]
+GaussGen                   INFO Evt 110,  Run 1088,  Nr. in job = 110 with seeds [1088, 110, 594172546, 0]
+MainEventGaussSkipGeant4   INFO Evt 110,  Run 1088,  Nr. in job = 110 with seeds [1088, 110, 388910458, 0]
+GaussGen                   INFO Evt 111,  Run 1088,  Nr. in job = 111 with seeds [1088, 111, 291583608, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 111,  Run 1088,  Nr. in job = 111 with seeds [1088, 111, 110816792, 0]
+GaussGen                   INFO Evt 112,  Run 1088,  Nr. in job = 112 with seeds [1088, 112, 155975278, 0]
+MainEventGaussSkipGeant4   INFO Evt 112,  Run 1088,  Nr. in job = 112 with seeds [1088, 112, 648195915, 0]
+GaussGen                   INFO Evt 113,  Run 1088,  Nr. in job = 113 with seeds [1088, 113, 609115334, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 113,  Run 1088,  Nr. in job = 113 with seeds [1088, 113, 391614645, 0]
+GaussGen                   INFO Evt 114,  Run 1088,  Nr. in job = 114 with seeds [1088, 114, 712884429, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 114,  Run 1088,  Nr. in job = 114 with seeds [1088, 114, 1228764288, 0]
+GaussGen                   INFO Evt 115,  Run 1088,  Nr. in job = 115 with seeds [1088, 115, 1011967092, 0]
+MainEventGaussSkipGeant4   INFO Evt 115,  Run 1088,  Nr. in job = 115 with seeds [1088, 115, 1034378580, 0]
+GaussGen                   INFO Evt 116,  Run 1088,  Nr. in job = 116 with seeds [1088, 116, 215123319, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 116,  Run 1088,  Nr. in job = 116 with seeds [1088, 116, 1331134644, 0]
+GaussGen                   INFO Evt 117,  Run 1088,  Nr. in job = 117 with seeds [1088, 117, 517581189, 0]
+
+ Pythia::next(): 7000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 117,  Run 1088,  Nr. in job = 117 with seeds [1088, 117, 2146868713, 0]
+GaussGen                   INFO Evt 118,  Run 1088,  Nr. in job = 118 with seeds [1088, 118, 1898499618, 0]
+MainEventGaussSkipGeant4   INFO Evt 118,  Run 1088,  Nr. in job = 118 with seeds [1088, 118, 1944340941, 0]
+GaussGen                   INFO Evt 119,  Run 1088,  Nr. in job = 119 with seeds [1088, 119, 2089880914, 0]
+MainEventGaussSkipGeant4   INFO Evt 119,  Run 1088,  Nr. in job = 119 with seeds [1088, 119, 742603452, 0]
+GaussGen                   INFO Evt 120,  Run 1088,  Nr. in job = 120 with seeds [1088, 120, 1473551226, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 120,  Run 1088,  Nr. in job = 120 with seeds [1088, 120, 501718533, 0]
+GaussGen                   INFO Evt 121,  Run 1088,  Nr. in job = 121 with seeds [1088, 121, 1779515379, 0]
+MainEventGaussSkipGeant4   INFO Evt 121,  Run 1088,  Nr. in job = 121 with seeds [1088, 121, 1293319266, 0]
+GaussGen                   INFO Evt 122,  Run 1088,  Nr. in job = 122 with seeds [1088, 122, 1260267137, 0]
+MainEventGaussSkipGeant4   INFO Evt 122,  Run 1088,  Nr. in job = 122 with seeds [1088, 122, 1470418198, 0]
+GaussGen                   INFO Evt 123,  Run 1088,  Nr. in job = 123 with seeds [1088, 123, 1506788324, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 123,  Run 1088,  Nr. in job = 123 with seeds [1088, 123, 1934280898, 0]
+GaussGen                   INFO Evt 124,  Run 1088,  Nr. in job = 124 with seeds [1088, 124, 1873473434, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 124,  Run 1088,  Nr. in job = 124 with seeds [1088, 124, 906594784, 0]
+GaussGen                   INFO Evt 125,  Run 1088,  Nr. in job = 125 with seeds [1088, 125, 21697260, 0]
+MainEventGaussSkipGeant4   INFO Evt 125,  Run 1088,  Nr. in job = 125 with seeds [1088, 125, 1740991831, 0]
+GaussGen                   INFO Evt 126,  Run 1088,  Nr. in job = 126 with seeds [1088, 126, 396869541, 0]
+MainEventGaussSkipGeant4   INFO Evt 126,  Run 1088,  Nr. in job = 126 with seeds [1088, 126, 294568171, 0]
+GaussGen                   INFO Evt 127,  Run 1088,  Nr. in job = 127 with seeds [1088, 127, 627923760, 0]
+MainEventGaussSkipGeant4   INFO Evt 127,  Run 1088,  Nr. in job = 127 with seeds [1088, 127, 1131259048, 0]
+GaussGen                   INFO Evt 128,  Run 1088,  Nr. in job = 128 with seeds [1088, 128, 18050113, 0]
+MainEventGaussSkipGeant4   INFO Evt 128,  Run 1088,  Nr. in job = 128 with seeds [1088, 128, 1875051906, 0]
+GaussGen                   INFO Evt 129,  Run 1088,  Nr. in job = 129 with seeds [1088, 129, 817002314, 0]
+MainEventGaussSkipGeant4   INFO Evt 129,  Run 1088,  Nr. in job = 129 with seeds [1088, 129, 203308546, 0]
+GaussGen                   INFO Evt 130,  Run 1088,  Nr. in job = 130 with seeds [1088, 130, 1494796310, 0]
+MainEventGaussSkipGeant4   INFO Evt 130,  Run 1088,  Nr. in job = 130 with seeds [1088, 130, 1516853911, 0]
+GaussGen                   INFO Evt 131,  Run 1088,  Nr. in job = 131 with seeds [1088, 131, 181840787, 0]
+
+ Pythia::next(): 8000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 131,  Run 1088,  Nr. in job = 131 with seeds [1088, 131, 1757574985, 0]
+GaussGen                   INFO Evt 132,  Run 1088,  Nr. in job = 132 with seeds [1088, 132, 898498817, 0]
+MainEventGaussSkipGeant4   INFO Evt 132,  Run 1088,  Nr. in job = 132 with seeds [1088, 132, 922981324, 0]
+GaussGen                   INFO Evt 133,  Run 1088,  Nr. in job = 133 with seeds [1088, 133, 1734337700, 0]
+MainEventGaussSkipGeant4   INFO Evt 133,  Run 1088,  Nr. in job = 133 with seeds [1088, 133, 379114283, 0]
+GaussGen                   INFO Evt 134,  Run 1088,  Nr. in job = 134 with seeds [1088, 134, 1812524542, 0]
+MainEventGaussSkipGeant4   INFO Evt 134,  Run 1088,  Nr. in job = 134 with seeds [1088, 134, 609611429, 0]
+GaussGen                   INFO Evt 135,  Run 1088,  Nr. in job = 135 with seeds [1088, 135, 1565642896, 0]
+MainEventGaussSkipGeant4   INFO Evt 135,  Run 1088,  Nr. in job = 135 with seeds [1088, 135, 201585166, 0]
+GaussGen                   INFO Evt 136,  Run 1088,  Nr. in job = 136 with seeds [1088, 136, 1215964897, 0]
+MainEventGaussSkipGeant4   INFO Evt 136,  Run 1088,  Nr. in job = 136 with seeds [1088, 136, 29534591, 0]
+GaussGen                   INFO Evt 137,  Run 1088,  Nr. in job = 137 with seeds [1088, 137, 969935245, 0]
+MainEventGaussSkipGeant4   INFO Evt 137,  Run 1088,  Nr. in job = 137 with seeds [1088, 137, 2140808496, 0]
+GaussGen                   INFO Evt 138,  Run 1088,  Nr. in job = 138 with seeds [1088, 138, 518531034, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 138,  Run 1088,  Nr. in job = 138 with seeds [1088, 138, 390858958, 0]
+GaussGen                   INFO Evt 139,  Run 1088,  Nr. in job = 139 with seeds [1088, 139, 846941952, 0]
+MainEventGaussSkipGeant4   INFO Evt 139,  Run 1088,  Nr. in job = 139 with seeds [1088, 139, 621159490, 0]
+GaussGen                   INFO Evt 140,  Run 1088,  Nr. in job = 140 with seeds [1088, 140, 1076685411, 0]
+MainEventGaussSkipGeant4   INFO Evt 140,  Run 1088,  Nr. in job = 140 with seeds [1088, 140, 1005572629, 0]
+GaussGen                   INFO Evt 141,  Run 1088,  Nr. in job = 141 with seeds [1088, 141, 686909396, 0]
+MainEventGaussSkipGeant4   INFO Evt 141,  Run 1088,  Nr. in job = 141 with seeds [1088, 141, 1253240731, 0]
+GaussGen                   INFO Evt 142,  Run 1088,  Nr. in job = 142 with seeds [1088, 142, 442714808, 0]
+MainEventGaussSkipGeant4   INFO Evt 142,  Run 1088,  Nr. in job = 142 with seeds [1088, 142, 1918667401, 0]
+GaussGen                   INFO Evt 143,  Run 1088,  Nr. in job = 143 with seeds [1088, 143, 731344224, 0]
+MainEventGaussSkipGeant4   INFO Evt 143,  Run 1088,  Nr. in job = 143 with seeds [1088, 143, 1583453940, 0]
+GaussGen                   INFO Evt 144,  Run 1088,  Nr. in job = 144 with seeds [1088, 144, 220083678, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 144,  Run 1088,  Nr. in job = 144 with seeds [1088, 144, 1970720550, 0]
+GaussGen                   INFO Evt 145,  Run 1088,  Nr. in job = 145 with seeds [1088, 145, 142079310, 0]
+MainEventGaussSkipGeant4   INFO Evt 145,  Run 1088,  Nr. in job = 145 with seeds [1088, 145, 2017332292, 0]
+GaussGen                   INFO Evt 146,  Run 1088,  Nr. in job = 146 with seeds [1088, 146, 680717511, 0]
+
+ Pythia::next(): 9000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 146,  Run 1088,  Nr. in job = 146 with seeds [1088, 146, 1476531261, 0]
+GaussGen                   INFO Evt 147,  Run 1088,  Nr. in job = 147 with seeds [1088, 147, 316784997, 0]
+MainEventGaussSkipGeant4   INFO Evt 147,  Run 1088,  Nr. in job = 147 with seeds [1088, 147, 665479962, 0]
+GaussGen                   INFO Evt 148,  Run 1088,  Nr. in job = 148 with seeds [1088, 148, 1149660522, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 148,  Run 1088,  Nr. in job = 148 with seeds [1088, 148, 354502152, 0]
+GaussGen                   INFO Evt 149,  Run 1088,  Nr. in job = 149 with seeds [1088, 149, 775766232, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 149,  Run 1088,  Nr. in job = 149 with seeds [1088, 149, 1057382982, 0]
+GaussGen                   INFO Evt 150,  Run 1088,  Nr. in job = 150 with seeds [1088, 150, 689550993, 0]
+MainEventGaussSkipGeant4   INFO Evt 150,  Run 1088,  Nr. in job = 150 with seeds [1088, 150, 291276531, 0]
+GaussGen                   INFO Evt 151,  Run 1088,  Nr. in job = 151 with seeds [1088, 151, 315984393, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 151,  Run 1088,  Nr. in job = 151 with seeds [1088, 151, 249379196, 0]
+GaussGen                   INFO Evt 152,  Run 1088,  Nr. in job = 152 with seeds [1088, 152, 1916665888, 0]
+MainEventGaussSkipGeant4   INFO Evt 152,  Run 1088,  Nr. in job = 152 with seeds [1088, 152, 57535258, 0]
+GaussGen                   INFO Evt 153,  Run 1088,  Nr. in job = 153 with seeds [1088, 153, 2002965282, 0]
+MainEventGaussSkipGeant4   INFO Evt 153,  Run 1088,  Nr. in job = 153 with seeds [1088, 153, 709947491, 0]
+GaussGen                   INFO Evt 154,  Run 1088,  Nr. in job = 154 with seeds [1088, 154, 249594347, 0]
+MainEventGaussSkipGeant4   INFO Evt 154,  Run 1088,  Nr. in job = 154 with seeds [1088, 154, 41787633, 0]
+GaussGen                   INFO Evt 155,  Run 1088,  Nr. in job = 155 with seeds [1088, 155, 2081199089, 0]
+MainEventGaussSkipGeant4   INFO Evt 155,  Run 1088,  Nr. in job = 155 with seeds [1088, 155, 1437124422, 0]
+GaussGen                   INFO Evt 156,  Run 1088,  Nr. in job = 156 with seeds [1088, 156, 1973079902, 0]
+MainEventGaussSkipGeant4   INFO Evt 156,  Run 1088,  Nr. in job = 156 with seeds [1088, 156, 1348043960, 0]
+GaussGen                   INFO Evt 157,  Run 1088,  Nr. in job = 157 with seeds [1088, 157, 1334098650, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 157,  Run 1088,  Nr. in job = 157 with seeds [1088, 157, 2119458989, 0]
+GaussGen                   INFO Evt 158,  Run 1088,  Nr. in job = 158 with seeds [1088, 158, 1591550435, 0]
+MainEventGaussSkipGeant4   INFO Evt 158,  Run 1088,  Nr. in job = 158 with seeds [1088, 158, 1259155983, 0]
+GaussGen                   INFO Evt 159,  Run 1088,  Nr. in job = 159 with seeds [1088, 159, 1812493281, 0]
+MainEventGaussSkipGeant4   INFO Evt 159,  Run 1088,  Nr. in job = 159 with seeds [1088, 159, 1631135351, 0]
+GaussGen                   INFO Evt 160,  Run 1088,  Nr. in job = 160 with seeds [1088, 160, 141454307, 0]
+MainEventGaussSkipGeant4   INFO Evt 160,  Run 1088,  Nr. in job = 160 with seeds [1088, 160, 1544403120, 0]
+GaussGen                   INFO Evt 161,  Run 1088,  Nr. in job = 161 with seeds [1088, 161, 797869078, 0]
+MainEventGaussSkipGeant4   INFO Evt 161,  Run 1088,  Nr. in job = 161 with seeds [1088, 161, 1972103812, 0]
+GaussGen                   INFO Evt 162,  Run 1088,  Nr. in job = 162 with seeds [1088, 162, 1666968496, 0]
+
+ Pythia::next(): 10000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 162,  Run 1088,  Nr. in job = 162 with seeds [1088, 162, 2022404523, 0]
+GaussGen                   INFO Evt 163,  Run 1088,  Nr. in job = 163 with seeds [1088, 163, 1663050049, 0]
+MainEventGaussSkipGeant4   INFO Evt 163,  Run 1088,  Nr. in job = 163 with seeds [1088, 163, 652725861, 0]
+GaussGen                   INFO Evt 164,  Run 1088,  Nr. in job = 164 with seeds [1088, 164, 1050321454, 0]
+MainEventGaussSkipGeant4   INFO Evt 164,  Run 1088,  Nr. in job = 164 with seeds [1088, 164, 354167502, 0]
+GaussGen                   INFO Evt 165,  Run 1088,  Nr. in job = 165 with seeds [1088, 165, 506599282, 0]
+MainEventGaussSkipGeant4   INFO Evt 165,  Run 1088,  Nr. in job = 165 with seeds [1088, 165, 1133414322, 0]
+GenToSim                  ERROR No particle with barcode equal to 1!
+GaussGen                   INFO Evt 166,  Run 1088,  Nr. in job = 166 with seeds [1088, 166, 744534991, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 166,  Run 1088,  Nr. in job = 166 with seeds [1088, 166, 832562133, 0]
+GaussGen                   INFO Evt 167,  Run 1088,  Nr. in job = 167 with seeds [1088, 167, 1100930635, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 167,  Run 1088,  Nr. in job = 167 with seeds [1088, 167, 207820852, 0]
+GaussGen                   INFO Evt 168,  Run 1088,  Nr. in job = 168 with seeds [1088, 168, 1338145426, 0]
+MainEventGaussSkipGeant4   INFO Evt 168,  Run 1088,  Nr. in job = 168 with seeds [1088, 168, 515751145, 0]
+GaussGen                   INFO Evt 169,  Run 1088,  Nr. in job = 169 with seeds [1088, 169, 741571928, 0]
+MainEventGaussSkipGeant4   INFO Evt 169,  Run 1088,  Nr. in job = 169 with seeds [1088, 169, 402075776, 0]
+GaussGen                   INFO Evt 170,  Run 1088,  Nr. in job = 170 with seeds [1088, 170, 2043236007, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 170,  Run 1088,  Nr. in job = 170 with seeds [1088, 170, 360164177, 0]
+GaussGen                   INFO Evt 171,  Run 1088,  Nr. in job = 171 with seeds [1088, 171, 2020939222, 0]
+MainEventGaussSkipGeant4   INFO Evt 171,  Run 1088,  Nr. in job = 171 with seeds [1088, 171, 724162229, 0]
+GaussGen                   INFO Evt 172,  Run 1088,  Nr. in job = 172 with seeds [1088, 172, 1297577412, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+ PYTHIA Error in HadronLevel::traceFromAcol: colour tracing failed  
+MainEventGaussSkipGeant4   INFO Evt 172,  Run 1088,  Nr. in job = 172 with seeds [1088, 172, 1442556820, 0]
+GaussGen                   INFO Evt 173,  Run 1088,  Nr. in job = 173 with seeds [1088, 173, 456757641, 0]
+MainEventGaussSkipGeant4   INFO Evt 173,  Run 1088,  Nr. in job = 173 with seeds [1088, 173, 1195511329, 0]
+GaussGen                   INFO Evt 174,  Run 1088,  Nr. in job = 174 with seeds [1088, 174, 1416023482, 0]
+MainEventGaussSkipGeant4   INFO Evt 174,  Run 1088,  Nr. in job = 174 with seeds [1088, 174, 838591381, 0]
+GaussGen                   INFO Evt 175,  Run 1088,  Nr. in job = 175 with seeds [1088, 175, 1647077701, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+
+ Pythia::next(): 11000 events have been generated 
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 175,  Run 1088,  Nr. in job = 175 with seeds [1088, 175, 602359660, 0]
+GaussGen                   INFO Evt 176,  Run 1088,  Nr. in job = 176 with seeds [1088, 176, 592202926, 0]
+MainEventGaussSkipGeant4   INFO Evt 176,  Run 1088,  Nr. in job = 176 with seeds [1088, 176, 1267898298, 0]
+GaussGen                   INFO Evt 177,  Run 1088,  Nr. in job = 177 with seeds [1088, 177, 852582284, 0]
+MainEventGaussSkipGeant4   INFO Evt 177,  Run 1088,  Nr. in job = 177 with seeds [1088, 177, 1348837432, 0]
+GaussGen                   INFO Evt 178,  Run 1088,  Nr. in job = 178 with seeds [1088, 178, 1082063591, 0]
+MainEventGaussSkipGeant4   INFO Evt 178,  Run 1088,  Nr. in job = 178 with seeds [1088, 178, 1190104396, 0]
+GaussGen                   INFO Evt 179,  Run 1088,  Nr. in job = 179 with seeds [1088, 179, 1975739759, 0]
+MainEventGaussSkipGeant4   INFO Evt 179,  Run 1088,  Nr. in job = 179 with seeds [1088, 179, 2116025260, 0]
+GaussGen                   INFO Evt 180,  Run 1088,  Nr. in job = 180 with seeds [1088, 180, 66650588, 0]
+MainEventGaussSkipGeant4   INFO Evt 180,  Run 1088,  Nr. in job = 180 with seeds [1088, 180, 1667024422, 0]
+GaussGen                   INFO Evt 181,  Run 1088,  Nr. in job = 181 with seeds [1088, 181, 729210095, 0]
+MainEventGaussSkipGeant4   INFO Evt 181,  Run 1088,  Nr. in job = 181 with seeds [1088, 181, 786586926, 0]
+GaussGen                   INFO Evt 182,  Run 1088,  Nr. in job = 182 with seeds [1088, 182, 958429250, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 182,  Run 1088,  Nr. in job = 182 with seeds [1088, 182, 488618409, 0]
+GaussGen                   INFO Evt 183,  Run 1088,  Nr. in job = 183 with seeds [1088, 183, 1894049738, 0]
+MainEventGaussSkipGeant4   INFO Evt 183,  Run 1088,  Nr. in job = 183 with seeds [1088, 183, 1248662595, 0]
+GaussGen                   INFO Evt 184,  Run 1088,  Nr. in job = 184 with seeds [1088, 184, 23166145, 0]
+MainEventGaussSkipGeant4   INFO Evt 184,  Run 1088,  Nr. in job = 184 with seeds [1088, 184, 951546072, 0]
+GaussGen                   INFO Evt 185,  Run 1088,  Nr. in job = 185 with seeds [1088, 185, 466661791, 0]
+MainEventGaussSkipGeant4   INFO Evt 185,  Run 1088,  Nr. in job = 185 with seeds [1088, 185, 525844293, 0]
+GaussGen                   INFO Evt 186,  Run 1088,  Nr. in job = 186 with seeds [1088, 186, 417839065, 0]
+MainEventGaussSkipGeant4   INFO Evt 186,  Run 1088,  Nr. in job = 186 with seeds [1088, 186, 1210945484, 0]
+GaussGen                   INFO Evt 187,  Run 1088,  Nr. in job = 187 with seeds [1088, 187, 649679740, 0]
+MainEventGaussSkipGeant4   INFO Evt 187,  Run 1088,  Nr. in job = 187 with seeds [1088, 187, 903801647, 0]
+GaussGen                   INFO Evt 188,  Run 1088,  Nr. in job = 188 with seeds [1088, 188, 2085945010, 0]
+MainEventGaussSkipGeant4   INFO Evt 188,  Run 1088,  Nr. in job = 188 with seeds [1088, 188, 1682327549, 0]
+GaussGen                   INFO Evt 189,  Run 1088,  Nr. in job = 189 with seeds [1088, 189, 169777735, 0]
+MainEventGaussSkipGeant4   INFO Evt 189,  Run 1088,  Nr. in job = 189 with seeds [1088, 189, 1368695450, 0]
+GaussGen                   INFO Evt 190,  Run 1088,  Nr. in job = 190 with seeds [1088, 190, 949483317, 0]
+MainEventGaussSkipGeant4   INFO Evt 190,  Run 1088,  Nr. in job = 190 with seeds [1088, 190, 338864083, 0]
+GaussGen                   INFO Evt 191,  Run 1088,  Nr. in job = 191 with seeds [1088, 191, 986935200, 0]
+
+ Pythia::next(): 12000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 191,  Run 1088,  Nr. in job = 191 with seeds [1088, 191, 34145152, 0]
+GaussGen                   INFO Evt 192,  Run 1088,  Nr. in job = 192 with seeds [1088, 192, 1313578820, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 192,  Run 1088,  Nr. in job = 192 with seeds [1088, 192, 901802122, 0]
+GaussGen                   INFO Evt 193,  Run 1088,  Nr. in job = 193 with seeds [1088, 193, 786063458, 0]
+MainEventGaussSkipGeant4   INFO Evt 193,  Run 1088,  Nr. in job = 193 with seeds [1088, 193, 1359683359, 0]
+GaussGen                   INFO Evt 194,  Run 1088,  Nr. in job = 194 with seeds [1088, 194, 571066049, 0]
+MainEventGaussSkipGeant4   INFO Evt 194,  Run 1088,  Nr. in job = 194 with seeds [1088, 194, 1386160711, 0]
+GaussGen                   INFO Evt 195,  Run 1088,  Nr. in job = 195 with seeds [1088, 195, 317433989, 0]
+MainEventGaussSkipGeant4   INFO Evt 195,  Run 1088,  Nr. in job = 195 with seeds [1088, 195, 1788662338, 0]
+GaussGen                   INFO Evt 196,  Run 1088,  Nr. in job = 196 with seeds [1088, 196, 80088122, 0]
+MainEventGaussSkipGeant4   INFO Evt 196,  Run 1088,  Nr. in job = 196 with seeds [1088, 196, 2094757567, 0]
+GaussGen                   INFO Evt 197,  Run 1088,  Nr. in job = 197 with seeds [1088, 197, 1632419814, 0]
+MainEventGaussSkipGeant4   INFO Evt 197,  Run 1088,  Nr. in job = 197 with seeds [1088, 197, 1201738299, 0]
+GaussGen                   INFO Evt 198,  Run 1088,  Nr. in job = 198 with seeds [1088, 198, 787274535, 0]
+MainEventGaussSkipGeant4   INFO Evt 198,  Run 1088,  Nr. in job = 198 with seeds [1088, 198, 1714900839, 0]
+GaussGen                   INFO Evt 199,  Run 1088,  Nr. in job = 199 with seeds [1088, 199, 2094495483, 0]
+MainEventGaussSkipGeant4   INFO Evt 199,  Run 1088,  Nr. in job = 199 with seeds [1088, 199, 1787189213, 0]
+GaussGen                   INFO Evt 200,  Run 1088,  Nr. in job = 200 with seeds [1088, 200, 1247842830, 0]
+MainEventGaussSkipGeant4   INFO Evt 200,  Run 1088,  Nr. in job = 200 with seeds [1088, 200, 2084666195, 0]
+GaussGen                   INFO Evt 201,  Run 1088,  Nr. in job = 201 with seeds [1088, 201, 2043278920, 0]
+MainEventGaussSkipGeant4   INFO Evt 201,  Run 1088,  Nr. in job = 201 with seeds [1088, 201, 1288410824, 0]
+GaussGen                   INFO Evt 202,  Run 1088,  Nr. in job = 202 with seeds [1088, 202, 819061837, 0]
+
+ Pythia::next(): 13000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 202,  Run 1088,  Nr. in job = 202 with seeds [1088, 202, 1608237692, 0]
+GenToSim                  ERROR No particle with barcode equal to 1!
+GaussGen                   INFO Evt 203,  Run 1088,  Nr. in job = 203 with seeds [1088, 203, 7994954, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 203,  Run 1088,  Nr. in job = 203 with seeds [1088, 203, 1913743079, 0]
+GaussGen                   INFO Evt 204,  Run 1088,  Nr. in job = 204 with seeds [1088, 204, 1574944360, 0]
+MainEventGaussSkipGeant4   INFO Evt 204,  Run 1088,  Nr. in job = 204 with seeds [1088, 204, 418854068, 0]
+GaussGen                   INFO Evt 205,  Run 1088,  Nr. in job = 205 with seeds [1088, 205, 739433167, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 205,  Run 1088,  Nr. in job = 205 with seeds [1088, 205, 342500878, 0]
+GaussGen                   INFO Evt 206,  Run 1088,  Nr. in job = 206 with seeds [1088, 206, 1333666265, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 206,  Run 1088,  Nr. in job = 206 with seeds [1088, 206, 643944329, 0]
+GaussGen                   INFO Evt 207,  Run 1088,  Nr. in job = 207 with seeds [1088, 207, 568215194, 0]
+MainEventGaussSkipGeant4   INFO Evt 207,  Run 1088,  Nr. in job = 207 with seeds [1088, 207, 114266213, 0]
+GaussGen                   INFO Evt 208,  Run 1088,  Nr. in job = 208 with seeds [1088, 208, 289442748, 0]
+MainEventGaussSkipGeant4   INFO Evt 208,  Run 1088,  Nr. in job = 208 with seeds [1088, 208, 1983238264, 0]
+GaussGen                   INFO Evt 209,  Run 1088,  Nr. in job = 209 with seeds [1088, 209, 2126800574, 0]
+MainEventGaussSkipGeant4   INFO Evt 209,  Run 1088,  Nr. in job = 209 with seeds [1088, 209, 135441431, 0]
+GaussGen                   INFO Evt 210,  Run 1088,  Nr. in job = 210 with seeds [1088, 210, 1152807591, 0]
+MainEventGaussSkipGeant4   INFO Evt 210,  Run 1088,  Nr. in job = 210 with seeds [1088, 210, 159119110, 0]
+GaussGen                   INFO Evt 211,  Run 1088,  Nr. in job = 211 with seeds [1088, 211, 570174771, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 211,  Run 1088,  Nr. in job = 211 with seeds [1088, 211, 614294828, 0]
+GaussGen                   INFO Evt 212,  Run 1088,  Nr. in job = 212 with seeds [1088, 212, 2048789279, 0]
+MainEventGaussSkipGeant4   INFO Evt 212,  Run 1088,  Nr. in job = 212 with seeds [1088, 212, 315081089, 0]
+GaussGen                   INFO Evt 213,  Run 1088,  Nr. in job = 213 with seeds [1088, 213, 416422567, 0]
+MainEventGaussSkipGeant4   INFO Evt 213,  Run 1088,  Nr. in job = 213 with seeds [1088, 213, 1834612384, 0]
+GaussGen                   INFO Evt 214,  Run 1088,  Nr. in job = 214 with seeds [1088, 214, 1399853054, 0]
+MainEventGaussSkipGeant4   INFO Evt 214,  Run 1088,  Nr. in job = 214 with seeds [1088, 214, 1528320541, 0]
+GaussGen                   INFO Evt 215,  Run 1088,  Nr. in job = 215 with seeds [1088, 215, 1968853970, 0]
+MainEventGaussSkipGeant4   INFO Evt 215,  Run 1088,  Nr. in job = 215 with seeds [1088, 215, 149794249, 0]
+GaussGen                   INFO Evt 216,  Run 1088,  Nr. in job = 216 with seeds [1088, 216, 1337996900, 0]
+MainEventGaussSkipGeant4   INFO Evt 216,  Run 1088,  Nr. in job = 216 with seeds [1088, 216, 156038828, 0]
+GaussGen                   INFO Evt 217,  Run 1088,  Nr. in job = 217 with seeds [1088, 217, 1058247947, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 217,  Run 1088,  Nr. in job = 217 with seeds [1088, 217, 1992526203, 0]
+GaussGen                   INFO Evt 218,  Run 1088,  Nr. in job = 218 with seeds [1088, 218, 1463338345, 0]
+
+ Pythia::next(): 14000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 218,  Run 1088,  Nr. in job = 218 with seeds [1088, 218, 925108869, 0]
+GaussGen                   INFO Evt 219,  Run 1088,  Nr. in job = 219 with seeds [1088, 219, 493801938, 0]
+MainEventGaussSkipGeant4   INFO Evt 219,  Run 1088,  Nr. in job = 219 with seeds [1088, 219, 1701996321, 0]
+GaussGen                   INFO Evt 220,  Run 1088,  Nr. in job = 220 with seeds [1088, 220, 74936826, 0]
+MainEventGaussSkipGeant4   INFO Evt 220,  Run 1088,  Nr. in job = 220 with seeds [1088, 220, 1858158975, 0]
+GaussGen                   INFO Evt 221,  Run 1088,  Nr. in job = 221 with seeds [1088, 221, 606756677, 0]
+MainEventGaussSkipGeant4   INFO Evt 221,  Run 1088,  Nr. in job = 221 with seeds [1088, 221, 2131485204, 0]
+GaussGen                   INFO Evt 222,  Run 1088,  Nr. in job = 222 with seeds [1088, 222, 312523826, 0]
+MainEventGaussSkipGeant4   INFO Evt 222,  Run 1088,  Nr. in job = 222 with seeds [1088, 222, 27879189, 0]
+GaussGen                   INFO Evt 223,  Run 1088,  Nr. in job = 223 with seeds [1088, 223, 1193441107, 0]
+MainEventGaussSkipGeant4   INFO Evt 223,  Run 1088,  Nr. in job = 223 with seeds [1088, 223, 749794719, 0]
+GaussGen                   INFO Evt 224,  Run 1088,  Nr. in job = 224 with seeds [1088, 224, 24547818, 0]
+MainEventGaussSkipGeant4   INFO Evt 224,  Run 1088,  Nr. in job = 224 with seeds [1088, 224, 138782473, 0]
+GaussGen                   INFO Evt 225,  Run 1088,  Nr. in job = 225 with seeds [1088, 225, 319108359, 0]
+MainEventGaussSkipGeant4   INFO Evt 225,  Run 1088,  Nr. in job = 225 with seeds [1088, 225, 144505532, 0]
+GaussGen                   INFO Evt 226,  Run 1088,  Nr. in job = 226 with seeds [1088, 226, 1574029987, 0]
+MainEventGaussSkipGeant4   INFO Evt 226,  Run 1088,  Nr. in job = 226 with seeds [1088, 226, 1706254819, 0]
+GaussGen                   INFO Evt 227,  Run 1088,  Nr. in job = 227 with seeds [1088, 227, 1871146510, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 227,  Run 1088,  Nr. in job = 227 with seeds [1088, 227, 322670645, 0]
+GaussGen                   INFO Evt 228,  Run 1088,  Nr. in job = 228 with seeds [1088, 228, 977142652, 0]
+MainEventGaussSkipGeant4   INFO Evt 228,  Run 1088,  Nr. in job = 228 with seeds [1088, 228, 630797552, 0]
+GaussGen                   INFO Evt 229,  Run 1088,  Nr. in job = 229 with seeds [1088, 229, 1290283216, 0]
+MainEventGaussSkipGeant4   INFO Evt 229,  Run 1088,  Nr. in job = 229 with seeds [1088, 229, 817253162, 0]
+GaussGen                   INFO Evt 230,  Run 1088,  Nr. in job = 230 with seeds [1088, 230, 889051926, 0]
+MainEventGaussSkipGeant4   INFO Evt 230,  Run 1088,  Nr. in job = 230 with seeds [1088, 230, 1124921303, 0]
+GaussGen                   INFO Evt 231,  Run 1088,  Nr. in job = 231 with seeds [1088, 231, 569095410, 0]
+MainEventGaussSkipGeant4   INFO Evt 231,  Run 1088,  Nr. in job = 231 with seeds [1088, 231, 2007292106, 0]
+GaussGen                   INFO Evt 232,  Run 1088,  Nr. in job = 232 with seeds [1088, 232, 1223099116, 0]
+MainEventGaussSkipGeant4   INFO Evt 232,  Run 1088,  Nr. in job = 232 with seeds [1088, 232, 1991410661, 0]
+GaussGen                   INFO Evt 233,  Run 1088,  Nr. in job = 233 with seeds [1088, 233, 940204335, 0]
+MainEventGaussSkipGeant4   INFO Evt 233,  Run 1088,  Nr. in job = 233 with seeds [1088, 233, 338596319, 0]
+GaussGen                   INFO Evt 234,  Run 1088,  Nr. in job = 234 with seeds [1088, 234, 1958009443, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 234,  Run 1088,  Nr. in job = 234 with seeds [1088, 234, 919208957, 0]
+GaussGen                   INFO Evt 235,  Run 1088,  Nr. in job = 235 with seeds [1088, 235, 967599183, 0]
+
+ Pythia::next(): 15000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 235,  Run 1088,  Nr. in job = 235 with seeds [1088, 235, 1215080258, 0]
+GaussGen                   INFO Evt 236,  Run 1088,  Nr. in job = 236 with seeds [1088, 236, 1460641561, 0]
+MainEventGaussSkipGeant4   INFO Evt 236,  Run 1088,  Nr. in job = 236 with seeds [1088, 236, 931125397, 0]
+GaussGen                   INFO Evt 237,  Run 1088,  Nr. in job = 237 with seeds [1088, 237, 504212754, 0]
+MainEventGaussSkipGeant4   INFO Evt 237,  Run 1088,  Nr. in job = 237 with seeds [1088, 237, 213222145, 0]
+GaussGen                   INFO Evt 238,  Run 1088,  Nr. in job = 238 with seeds [1088, 238, 736053429, 0]
+MainEventGaussSkipGeant4   INFO Evt 238,  Run 1088,  Nr. in job = 238 with seeds [1088, 238, 2097123435, 0]
+GaussGen                   INFO Evt 239,  Run 1088,  Nr. in job = 239 with seeds [1088, 239, 484526287, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 239,  Run 1088,  Nr. in job = 239 with seeds [1088, 239, 1890306796, 0]
+GaussGen                   INFO Evt 240,  Run 1088,  Nr. in job = 240 with seeds [1088, 240, 864605936, 0]
+MainEventGaussSkipGeant4   INFO Evt 240,  Run 1088,  Nr. in job = 240 with seeds [1088, 240, 175417927, 0]
+GaussGen                   INFO Evt 241,  Run 1088,  Nr. in job = 241 with seeds [1088, 241, 516992384, 0]
+MainEventGaussSkipGeant4   INFO Evt 241,  Run 1088,  Nr. in job = 241 with seeds [1088, 241, 562015709, 0]
+GaussGen                   INFO Evt 242,  Run 1088,  Nr. in job = 242 with seeds [1088, 242, 1476632545, 0]
+MainEventGaussSkipGeant4   INFO Evt 242,  Run 1088,  Nr. in job = 242 with seeds [1088, 242, 254413106, 0]
+GaussGen                   INFO Evt 243,  Run 1088,  Nr. in job = 243 with seeds [1088, 243, 1160051240, 0]
+MainEventGaussSkipGeant4   INFO Evt 243,  Run 1088,  Nr. in job = 243 with seeds [1088, 243, 1022584004, 0]
+GaussGen                   INFO Evt 244,  Run 1088,  Nr. in job = 244 with seeds [1088, 244, 881785134, 0]
+MainEventGaussSkipGeant4   INFO Evt 244,  Run 1088,  Nr. in job = 244 with seeds [1088, 244, 715702319, 0]
+GaussGen                   INFO Evt 245,  Run 1088,  Nr. in job = 245 with seeds [1088, 245, 1183882549, 0]
+MainEventGaussSkipGeant4   INFO Evt 245,  Run 1088,  Nr. in job = 245 with seeds [1088, 245, 1416074096, 0]
+GaussGen                   INFO Evt 246,  Run 1088,  Nr. in job = 246 with seeds [1088, 246, 281293209, 0]
+MainEventGaussSkipGeant4   INFO Evt 246,  Run 1088,  Nr. in job = 246 with seeds [1088, 246, 2037024821, 0]
+GaussGen                   INFO Evt 247,  Run 1088,  Nr. in job = 247 with seeds [1088, 247, 557240958, 0]
+MainEventGaussSkipGeant4   INFO Evt 247,  Run 1088,  Nr. in job = 247 with seeds [1088, 247, 1961677946, 0]
+GaussGen                   INFO Evt 248,  Run 1088,  Nr. in job = 248 with seeds [1088, 248, 316708272, 0]
+MainEventGaussSkipGeant4   INFO Evt 248,  Run 1088,  Nr. in job = 248 with seeds [1088, 248, 253561052, 0]
+GaussGen                   INFO Evt 249,  Run 1088,  Nr. in job = 249 with seeds [1088, 249, 7794909, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 249,  Run 1088,  Nr. in job = 249 with seeds [1088, 249, 1855550095, 0]
+GaussGen                   INFO Evt 250,  Run 1088,  Nr. in job = 250 with seeds [1088, 250, 828666621, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 250,  Run 1088,  Nr. in job = 250 with seeds [1088, 250, 2041579656, 0]
+GaussGen                   INFO Evt 251,  Run 1088,  Nr. in job = 251 with seeds [1088, 251, 506416275, 0]
+MainEventGaussSkipGeant4   INFO Evt 251,  Run 1088,  Nr. in job = 251 with seeds [1088, 251, 1955681275, 0]
+GaussGen                   INFO Evt 252,  Run 1088,  Nr. in job = 252 with seeds [1088, 252, 215460324, 0]
+MainEventGaussSkipGeant4   INFO Evt 252,  Run 1088,  Nr. in job = 252 with seeds [1088, 252, 245532703, 0]
+GaussGen                   INFO Evt 253,  Run 1088,  Nr. in job = 253 with seeds [1088, 253, 403161152, 0]
+MainEventGaussSkipGeant4   INFO Evt 253,  Run 1088,  Nr. in job = 253 with seeds [1088, 253, 1021371547, 0]
+GaussGen                   INFO Evt 254,  Run 1088,  Nr. in job = 254 with seeds [1088, 254, 161817467, 0]
+
+ Pythia::next(): 16000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 254,  Run 1088,  Nr. in job = 254 with seeds [1088, 254, 1772043803, 0]
+GaussGen                   INFO Evt 255,  Run 1088,  Nr. in job = 255 with seeds [1088, 255, 192677575, 0]
+MainEventGaussSkipGeant4   INFO Evt 255,  Run 1088,  Nr. in job = 255 with seeds [1088, 255, 1474140824, 0]
+GaussGen                   INFO Evt 256,  Run 1088,  Nr. in job = 256 with seeds [1088, 256, 1047840574, 0]
+MainEventGaussSkipGeant4   INFO Evt 256,  Run 1088,  Nr. in job = 256 with seeds [1088, 256, 641365727, 0]
+GaussGen                   INFO Evt 257,  Run 1088,  Nr. in job = 257 with seeds [1088, 257, 324426839, 0]
+MainEventGaussSkipGeant4   INFO Evt 257,  Run 1088,  Nr. in job = 257 with seeds [1088, 257, 260109463, 0]
+GaussGen                   INFO Evt 258,  Run 1088,  Nr. in job = 258 with seeds [1088, 258, 920074243, 0]
+MainEventGaussSkipGeant4   INFO Evt 258,  Run 1088,  Nr. in job = 258 with seeds [1088, 258, 1700110359, 0]
+GaussGen                   INFO Evt 259,  Run 1088,  Nr. in job = 259 with seeds [1088, 259, 1298490655, 0]
+MainEventGaussSkipGeant4   INFO Evt 259,  Run 1088,  Nr. in job = 259 with seeds [1088, 259, 1468990602, 0]
+GaussGen                   INFO Evt 260,  Run 1088,  Nr. in job = 260 with seeds [1088, 260, 1436284308, 0]
+MainEventGaussSkipGeant4   INFO Evt 260,  Run 1088,  Nr. in job = 260 with seeds [1088, 260, 860983609, 0]
+GaussGen                   INFO Evt 261,  Run 1088,  Nr. in job = 261 with seeds [1088, 261, 1132941675, 0]
+MainEventGaussSkipGeant4   INFO Evt 261,  Run 1088,  Nr. in job = 261 with seeds [1088, 261, 2120143401, 0]
+GaussGen                   INFO Evt 262,  Run 1088,  Nr. in job = 262 with seeds [1088, 262, 843591405, 0]
+MainEventGaussSkipGeant4   INFO Evt 262,  Run 1088,  Nr. in job = 262 with seeds [1088, 262, 808105406, 0]
+GaussGen                   INFO Evt 263,  Run 1088,  Nr. in job = 263 with seeds [1088, 263, 537692790, 0]
+MainEventGaussSkipGeant4   INFO Evt 263,  Run 1088,  Nr. in job = 263 with seeds [1088, 263, 1641224466, 0]
+GaussGen                   INFO Evt 264,  Run 1088,  Nr. in job = 264 with seeds [1088, 264, 1744214605, 0]
+MainEventGaussSkipGeant4   INFO Evt 264,  Run 1088,  Nr. in job = 264 with seeds [1088, 264, 1820132239, 0]
+GaussGen                   INFO Evt 265,  Run 1088,  Nr. in job = 265 with seeds [1088, 265, 2127480829, 0]
+MainEventGaussSkipGeant4   INFO Evt 265,  Run 1088,  Nr. in job = 265 with seeds [1088, 265, 645571250, 0]
+GaussGen                   INFO Evt 266,  Run 1088,  Nr. in job = 266 with seeds [1088, 266, 810527432, 0]
+MainEventGaussSkipGeant4   INFO Evt 266,  Run 1088,  Nr. in job = 266 with seeds [1088, 266, 356865253, 0]
+GaussGen                   INFO Evt 267,  Run 1088,  Nr. in job = 267 with seeds [1088, 267, 2123384652, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 267,  Run 1088,  Nr. in job = 267 with seeds [1088, 267, 1024184252, 0]
+GaussGen                   INFO Evt 268,  Run 1088,  Nr. in job = 268 with seeds [1088, 268, 1936071841, 0]
+MainEventGaussSkipGeant4   INFO Evt 268,  Run 1088,  Nr. in job = 268 with seeds [1088, 268, 321846275, 0]
+GaussGen                   INFO Evt 269,  Run 1088,  Nr. in job = 269 with seeds [1088, 269, 1455219543, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 269,  Run 1088,  Nr. in job = 269 with seeds [1088, 269, 571371127, 0]
+GaussGen                   INFO Evt 270,  Run 1088,  Nr. in job = 270 with seeds [1088, 270, 1225148394, 0]
+MainEventGaussSkipGeant4   INFO Evt 270,  Run 1088,  Nr. in job = 270 with seeds [1088, 270, 1318766459, 0]
+GaussGen                   INFO Evt 271,  Run 1088,  Nr. in job = 271 with seeds [1088, 271, 95311234, 0]
+MainEventGaussSkipGeant4   INFO Evt 271,  Run 1088,  Nr. in job = 271 with seeds [1088, 271, 78012146, 0]
+GaussGen                   INFO Evt 272,  Run 1088,  Nr. in job = 272 with seeds [1088, 272, 1330141706, 0]
+MainEventGaussSkipGeant4   INFO Evt 272,  Run 1088,  Nr. in job = 272 with seeds [1088, 272, 631666355, 0]
+GaussGen                   INFO Evt 273,  Run 1088,  Nr. in job = 273 with seeds [1088, 273, 175462768, 0]
+MainEventGaussSkipGeant4   INFO Evt 273,  Run 1088,  Nr. in job = 273 with seeds [1088, 273, 1526554972, 0]
+GaussGen                   INFO Evt 274,  Run 1088,  Nr. in job = 274 with seeds [1088, 274, 734827283, 0]
+MainEventGaussSkipGeant4   INFO Evt 274,  Run 1088,  Nr. in job = 274 with seeds [1088, 274, 1363889656, 0]
+GaussGen                   INFO Evt 275,  Run 1088,  Nr. in job = 275 with seeds [1088, 275, 1644625799, 0]
+
+ Pythia::next(): 17000 events have been generated 
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 275,  Run 1088,  Nr. in job = 275 with seeds [1088, 275, 1180612639, 0]
+GaussGen                   INFO Evt 276,  Run 1088,  Nr. in job = 276 with seeds [1088, 276, 1724518940, 0]
+MainEventGaussSkipGeant4   INFO Evt 276,  Run 1088,  Nr. in job = 276 with seeds [1088, 276, 755991937, 0]
+GaussGen                   INFO Evt 277,  Run 1088,  Nr. in job = 277 with seeds [1088, 277, 2037692273, 0]
+MainEventGaussSkipGeant4   INFO Evt 277,  Run 1088,  Nr. in job = 277 with seeds [1088, 277, 1439006763, 0]
+GaussGen                   INFO Evt 278,  Run 1088,  Nr. in job = 278 with seeds [1088, 278, 1940923097, 0]
+MainEventGaussSkipGeant4   INFO Evt 278,  Run 1088,  Nr. in job = 278 with seeds [1088, 278, 1734026070, 0]
+GaussGen                   INFO Evt 279,  Run 1088,  Nr. in job = 279 with seeds [1088, 279, 1660846454, 0]
+MainEventGaussSkipGeant4   INFO Evt 279,  Run 1088,  Nr. in job = 279 with seeds [1088, 279, 2050640148, 0]
+GaussGen                   INFO Evt 280,  Run 1088,  Nr. in job = 280 with seeds [1088, 280, 829728654, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 280,  Run 1088,  Nr. in job = 280 with seeds [1088, 280, 1938494071, 0]
+GaussGen                   INFO Evt 281,  Run 1088,  Nr. in job = 281 with seeds [1088, 281, 524223267, 0]
+MainEventGaussSkipGeant4   INFO Evt 281,  Run 1088,  Nr. in job = 281 with seeds [1088, 281, 1323987569, 0]
+GaussGen                   INFO Evt 282,  Run 1088,  Nr. in job = 282 with seeds [1088, 282, 1994172666, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 282,  Run 1088,  Nr. in job = 282 with seeds [1088, 282, 310475144, 0]
+GaussGen                   INFO Evt 283,  Run 1088,  Nr. in job = 283 with seeds [1088, 283, 903360609, 0]
+MainEventGaussSkipGeant4   INFO Evt 283,  Run 1088,  Nr. in job = 283 with seeds [1088, 283, 465330931, 0]
+GaussGen                   INFO Evt 284,  Run 1088,  Nr. in job = 284 with seeds [1088, 284, 739122381, 0]
+
+ Pythia::next(): 18000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 284,  Run 1088,  Nr. in job = 284 with seeds [1088, 284, 1385353355, 0]
+GaussGen                   INFO Evt 285,  Run 1088,  Nr. in job = 285 with seeds [1088, 285, 1510144182, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 285,  Run 1088,  Nr. in job = 285 with seeds [1088, 285, 129645295, 0]
+GaussGen                   INFO Evt 286,  Run 1088,  Nr. in job = 286 with seeds [1088, 286, 1077658920, 0]
+MainEventGaussSkipGeant4   INFO Evt 286,  Run 1088,  Nr. in job = 286 with seeds [1088, 286, 908433329, 0]
+GenToSim                  ERROR No particle with barcode equal to 1!
+GaussGen                   INFO Evt 287,  Run 1088,  Nr. in job = 287 with seeds [1088, 287, 294215265, 0]
+MainEventGaussSkipGeant4   INFO Evt 287,  Run 1088,  Nr. in job = 287 with seeds [1088, 287, 1668313670, 0]
+GaussGen                   INFO Evt 288,  Run 1088,  Nr. in job = 288 with seeds [1088, 288, 1302089426, 0]
+MainEventGaussSkipGeant4   INFO Evt 288,  Run 1088,  Nr. in job = 288 with seeds [1088, 288, 52355731, 0]
+GaussGen                   INFO Evt 289,  Run 1088,  Nr. in job = 289 with seeds [1088, 289, 1544874947, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 289,  Run 1088,  Nr. in job = 289 with seeds [1088, 289, 177977570, 0]
+GaussGen                   INFO Evt 290,  Run 1088,  Nr. in job = 290 with seeds [1088, 290, 821400965, 0]
+MainEventGaussSkipGeant4   INFO Evt 290,  Run 1088,  Nr. in job = 290 with seeds [1088, 290, 1797847591, 0]
+GaussGen                   INFO Evt 291,  Run 1088,  Nr. in job = 291 with seeds [1088, 291, 1068577532, 0]
+MainEventGaussSkipGeant4   INFO Evt 291,  Run 1088,  Nr. in job = 291 with seeds [1088, 291, 1030168228, 0]
+GaussGen                   INFO Evt 292,  Run 1088,  Nr. in job = 292 with seeds [1088, 292, 1415011392, 0]
+MainEventGaussSkipGeant4   INFO Evt 292,  Run 1088,  Nr. in job = 292 with seeds [1088, 292, 244760836, 0]
+GaussGen                   INFO Evt 293,  Run 1088,  Nr. in job = 293 with seeds [1088, 293, 1653209253, 0]
+MainEventGaussSkipGeant4   INFO Evt 293,  Run 1088,  Nr. in job = 293 with seeds [1088, 293, 551314831, 0]
+GenToSim                  ERROR No particle with barcode equal to 1!
+GaussGen                   INFO Evt 294,  Run 1088,  Nr. in job = 294 with seeds [1088, 294, 938124135, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 294,  Run 1088,  Nr. in job = 294 with seeds [1088, 294, 1510314039, 0]
+GaussGen                   INFO Evt 295,  Run 1088,  Nr. in job = 295 with seeds [1088, 295, 230772513, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+
+ Pythia::next(): 19000 events have been generated 
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 295,  Run 1088,  Nr. in job = 295 with seeds [1088, 295, 1950649438, 0]
+GaussGen                   INFO Evt 296,  Run 1088,  Nr. in job = 296 with seeds [1088, 296, 451406190, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 296,  Run 1088,  Nr. in job = 296 with seeds [1088, 296, 1989232974, 0]
+GaussGen                   INFO Evt 297,  Run 1088,  Nr. in job = 297 with seeds [1088, 297, 254044842, 0]
+MainEventGaussSkipGeant4   INFO Evt 297,  Run 1088,  Nr. in job = 297 with seeds [1088, 297, 1539332950, 0]
+GaussGen                   INFO Evt 298,  Run 1088,  Nr. in job = 298 with seeds [1088, 298, 1104990242, 0]
+MainEventGaussSkipGeant4   INFO Evt 298,  Run 1088,  Nr. in job = 298 with seeds [1088, 298, 1004477200, 0]
+GaussGen                   INFO Evt 299,  Run 1088,  Nr. in job = 299 with seeds [1088, 299, 1931326119, 0]
+MainEventGaussSkipGeant4   INFO Evt 299,  Run 1088,  Nr. in job = 299 with seeds [1088, 299, 1105289327, 0]
+GaussGen                   INFO Memory has changed from 1292064 to 1292576 KB (512KB, 0.0396265%) in last 100 events
+GaussGen                   INFO Evt 300,  Run 1088,  Nr. in job = 300 with seeds [1088, 300, 1700665128, 0]
+MainEventGaussSkipGeant4   INFO Memory has changed from 1292064 to 1292576 KB (512KB, 0.0396265%) in last 100 events
+MainEventGaussSkipGeant4   INFO Evt 300,  Run 1088,  Nr. in job = 300 with seeds [1088, 300, 337544426, 0]
+GaussGen                   INFO Evt 301,  Run 1088,  Nr. in job = 301 with seeds [1088, 301, 1301702273, 0]
+MainEventGaussSkipGeant4   INFO Evt 301,  Run 1088,  Nr. in job = 301 with seeds [1088, 301, 828686198, 0]
+GaussGen                   INFO Evt 302,  Run 1088,  Nr. in job = 302 with seeds [1088, 302, 995803658, 0]
+MainEventGaussSkipGeant4   INFO Evt 302,  Run 1088,  Nr. in job = 302 with seeds [1088, 302, 73772062, 0]
+GaussGen                   INFO Evt 303,  Run 1088,  Nr. in job = 303 with seeds [1088, 303, 229888018, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 303,  Run 1088,  Nr. in job = 303 with seeds [1088, 303, 2087245173, 0]
+GaussGen                   INFO Evt 304,  Run 1088,  Nr. in job = 304 with seeds [1088, 304, 1764107917, 0]
+MainEventGaussSkipGeant4   INFO Evt 304,  Run 1088,  Nr. in job = 304 with seeds [1088, 304, 770801881, 0]
+GaussGen                   INFO Evt 305,  Run 1088,  Nr. in job = 305 with seeds [1088, 305, 1820361921, 0]
+MainEventGaussSkipGeant4   INFO Evt 305,  Run 1088,  Nr. in job = 305 with seeds [1088, 305, 1602970636, 0]
+GaussGen                   INFO Evt 306,  Run 1088,  Nr. in job = 306 with seeds [1088, 306, 843288644, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 306,  Run 1088,  Nr. in job = 306 with seeds [1088, 306, 1381583272, 0]
+GaussGen                   INFO Evt 307,  Run 1088,  Nr. in job = 307 with seeds [1088, 307, 1242939368, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+
+ Pythia::next(): 20000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 307,  Run 1088,  Nr. in job = 307 with seeds [1088, 307, 70593889, 0]
+GaussGen                   INFO Evt 308,  Run 1088,  Nr. in job = 308 with seeds [1088, 308, 1340099453, 0]
+MainEventGaussSkipGeant4   INFO Evt 308,  Run 1088,  Nr. in job = 308 with seeds [1088, 308, 1992102511, 0]
+GaussGen                   INFO Evt 309,  Run 1088,  Nr. in job = 309 with seeds [1088, 309, 1697347091, 0]
+MainEventGaussSkipGeant4   INFO Evt 309,  Run 1088,  Nr. in job = 309 with seeds [1088, 309, 1437042267, 0]
+GaussGen                   INFO Evt 310,  Run 1088,  Nr. in job = 310 with seeds [1088, 310, 346422670, 0]
+MainEventGaussSkipGeant4   INFO Evt 310,  Run 1088,  Nr. in job = 310 with seeds [1088, 310, 1691165862, 0]
+GaussGen                   INFO Evt 311,  Run 1088,  Nr. in job = 311 with seeds [1088, 311, 22009570, 0]
+MainEventGaussSkipGeant4   INFO Evt 311,  Run 1088,  Nr. in job = 311 with seeds [1088, 311, 1290583759, 0]
+GaussGen                   INFO Evt 312,  Run 1088,  Nr. in job = 312 with seeds [1088, 312, 688586191, 0]
+MainEventGaussSkipGeant4   INFO Evt 312,  Run 1088,  Nr. in job = 312 with seeds [1088, 312, 450662594, 0]
+GaussGen                   INFO Evt 313,  Run 1088,  Nr. in job = 313 with seeds [1088, 313, 153609878, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 313,  Run 1088,  Nr. in job = 313 with seeds [1088, 313, 2037599734, 0]
+GaussGen                   INFO Evt 314,  Run 1088,  Nr. in job = 314 with seeds [1088, 314, 638230639, 0]
+MainEventGaussSkipGeant4   INFO Evt 314,  Run 1088,  Nr. in job = 314 with seeds [1088, 314, 1332705763, 0]
+GaussGen                   INFO Evt 315,  Run 1088,  Nr. in job = 315 with seeds [1088, 315, 283200868, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 315,  Run 1088,  Nr. in job = 315 with seeds [1088, 315, 482415751, 0]
+GaussGen                   INFO Evt 316,  Run 1088,  Nr. in job = 316 with seeds [1088, 316, 1165713232, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+
+ Pythia::next(): 21000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 316,  Run 1088,  Nr. in job = 316 with seeds [1088, 316, 721006840, 0]
+GaussGen                   INFO Evt 317,  Run 1088,  Nr. in job = 317 with seeds [1088, 317, 1624937998, 0]
+MainEventGaussSkipGeant4   INFO Evt 317,  Run 1088,  Nr. in job = 317 with seeds [1088, 317, 96186482, 0]
+GaussGen                   INFO Evt 318,  Run 1088,  Nr. in job = 318 with seeds [1088, 318, 1866740449, 0]
+MainEventGaussSkipGeant4   INFO Evt 318,  Run 1088,  Nr. in job = 318 with seeds [1088, 318, 126609949, 0]
+GaussGen                   INFO Evt 319,  Run 1088,  Nr. in job = 319 with seeds [1088, 319, 2086423825, 0]
+MainEventGaussSkipGeant4   INFO Evt 319,  Run 1088,  Nr. in job = 319 with seeds [1088, 319, 708737399, 0]
+GaussGen                   INFO Evt 320,  Run 1088,  Nr. in job = 320 with seeds [1088, 320, 950060711, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 320,  Run 1088,  Nr. in job = 320 with seeds [1088, 320, 183560027, 0]
+GaussGen                   INFO Evt 321,  Run 1088,  Nr. in job = 321 with seeds [1088, 321, 266586669, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 321,  Run 1088,  Nr. in job = 321 with seeds [1088, 321, 397050062, 0]
+GaussGen                   INFO Evt 322,  Run 1088,  Nr. in job = 322 with seeds [1088, 322, 471600542, 0]
+MainEventGaussSkipGeant4   INFO Evt 322,  Run 1088,  Nr. in job = 322 with seeds [1088, 322, 1681070566, 0]
+GaussGen                   INFO Evt 323,  Run 1088,  Nr. in job = 323 with seeds [1088, 323, 1170039008, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 323,  Run 1088,  Nr. in job = 323 with seeds [1088, 323, 1777608040, 0]
+GaussGen                   INFO Evt 324,  Run 1088,  Nr. in job = 324 with seeds [1088, 324, 228214210, 0]
+MainEventGaussSkipGeant4   INFO Evt 324,  Run 1088,  Nr. in job = 324 with seeds [1088, 324, 1184226984, 0]
+GaussGen                   INFO Evt 325,  Run 1088,  Nr. in job = 325 with seeds [1088, 325, 954615626, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 325,  Run 1088,  Nr. in job = 325 with seeds [1088, 325, 1414822437, 0]
+GaussGen                   INFO Evt 326,  Run 1088,  Nr. in job = 326 with seeds [1088, 326, 250245959, 0]
+MainEventGaussSkipGeant4   INFO Evt 326,  Run 1088,  Nr. in job = 326 with seeds [1088, 326, 1670870448, 0]
+GaussGen                   INFO Evt 327,  Run 1088,  Nr. in job = 327 with seeds [1088, 327, 481485811, 0]
+MainEventGaussSkipGeant4   INFO Evt 327,  Run 1088,  Nr. in job = 327 with seeds [1088, 327, 1020667950, 0]
+GaussGen                   INFO Evt 328,  Run 1088,  Nr. in job = 328 with seeds [1088, 328, 703277396, 0]
+MainEventGaussSkipGeant4   INFO Evt 328,  Run 1088,  Nr. in job = 328 with seeds [1088, 328, 2029241191, 0]
+GaussGen                   INFO Evt 329,  Run 1088,  Nr. in job = 329 with seeds [1088, 329, 1875118604, 0]
+MainEventGaussSkipGeant4   INFO Evt 329,  Run 1088,  Nr. in job = 329 with seeds [1088, 329, 1916932869, 0]
+GaussGen                   INFO Evt 330,  Run 1088,  Nr. in job = 330 with seeds [1088, 330, 1198963074, 0]
+MainEventGaussSkipGeant4   INFO Evt 330,  Run 1088,  Nr. in job = 330 with seeds [1088, 330, 1856876235, 0]
+GaussGen                   INFO Evt 331,  Run 1088,  Nr. in job = 331 with seeds [1088, 331, 1891273741, 0]
+MainEventGaussSkipGeant4   INFO Evt 331,  Run 1088,  Nr. in job = 331 with seeds [1088, 331, 862786936, 0]
+GaussGen                   INFO Evt 332,  Run 1088,  Nr. in job = 332 with seeds [1088, 332, 1693720401, 0]
+
+ Pythia::next(): 22000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 332,  Run 1088,  Nr. in job = 332 with seeds [1088, 332, 1100919259, 0]
+GaussGen                   INFO Evt 333,  Run 1088,  Nr. in job = 333 with seeds [1088, 333, 451305558, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 333,  Run 1088,  Nr. in job = 333 with seeds [1088, 333, 1455807529, 0]
+GaussGen                   INFO Evt 334,  Run 1088,  Nr. in job = 334 with seeds [1088, 334, 230147577, 0]
+MainEventGaussSkipGeant4   INFO Evt 334,  Run 1088,  Nr. in job = 334 with seeds [1088, 334, 1693743238, 0]
+GaussGen                   INFO Evt 335,  Run 1088,  Nr. in job = 335 with seeds [1088, 335, 12474099, 0]
+MainEventGaussSkipGeant4   INFO Evt 335,  Run 1088,  Nr. in job = 335 with seeds [1088, 335, 625646594, 0]
+GaussGen                   INFO Evt 336,  Run 1088,  Nr. in job = 336 with seeds [1088, 336, 368370339, 0]
+MainEventGaussSkipGeant4   INFO Evt 336,  Run 1088,  Nr. in job = 336 with seeds [1088, 336, 1632867079, 0]
+GaussGen                   INFO Evt 337,  Run 1088,  Nr. in job = 337 with seeds [1088, 337, 129123870, 0]
+MainEventGaussSkipGeant4   INFO Evt 337,  Run 1088,  Nr. in job = 337 with seeds [1088, 337, 2007809977, 0]
+GaussGen                   INFO Evt 338,  Run 1088,  Nr. in job = 338 with seeds [1088, 338, 1193236408, 0]
+MainEventGaussSkipGeant4   INFO Evt 338,  Run 1088,  Nr. in job = 338 with seeds [1088, 338, 1020840462, 0]
+GaussGen                   INFO Evt 339,  Run 1088,  Nr. in job = 339 with seeds [1088, 339, 1423504171, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 339,  Run 1088,  Nr. in job = 339 with seeds [1088, 339, 1383920982, 0]
+GaussGen                   INFO Evt 340,  Run 1088,  Nr. in job = 340 with seeds [1088, 340, 1563324693, 0]
+MainEventGaussSkipGeant4   INFO Evt 340,  Run 1088,  Nr. in job = 340 with seeds [1088, 340, 1366643340, 0]
+GaussGen                   INFO Evt 341,  Run 1088,  Nr. in job = 341 with seeds [1088, 341, 1322767464, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 341,  Run 1088,  Nr. in job = 341 with seeds [1088, 341, 1131263613, 0]
+GaussGen                   INFO Evt 342,  Run 1088,  Nr. in job = 342 with seeds [1088, 342, 62012958, 0]
+MainEventGaussSkipGeant4   INFO Evt 342,  Run 1088,  Nr. in job = 342 with seeds [1088, 342, 1981815777, 0]
+GaussGen                   INFO Evt 343,  Run 1088,  Nr. in job = 343 with seeds [1088, 343, 211509885, 0]
+MainEventGaussSkipGeant4   INFO Evt 343,  Run 1088,  Nr. in job = 343 with seeds [1088, 343, 1686468780, 0]
+GaussGen                   INFO Evt 344,  Run 1088,  Nr. in job = 344 with seeds [1088, 344, 882352052, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 344,  Run 1088,  Nr. in job = 344 with seeds [1088, 344, 827920992, 0]
+GaussGen                   INFO Evt 345,  Run 1088,  Nr. in job = 345 with seeds [1088, 345, 1665372160, 0]
+MainEventGaussSkipGeant4   INFO Evt 345,  Run 1088,  Nr. in job = 345 with seeds [1088, 345, 591623721, 0]
+GaussGen                   INFO Evt 346,  Run 1088,  Nr. in job = 346 with seeds [1088, 346, 719036205, 0]
+MainEventGaussSkipGeant4   INFO Evt 346,  Run 1088,  Nr. in job = 346 with seeds [1088, 346, 1965038053, 0]
+GaussGen                   INFO Evt 347,  Run 1088,  Nr. in job = 347 with seeds [1088, 347, 1604356278, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+
+ Pythia::next(): 23000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 347,  Run 1088,  Nr. in job = 347 with seeds [1088, 347, 1958656473, 0]
+GaussGen                   INFO Evt 348,  Run 1088,  Nr. in job = 348 with seeds [1088, 348, 2057710552, 0]
+MainEventGaussSkipGeant4   INFO Evt 348,  Run 1088,  Nr. in job = 348 with seeds [1088, 348, 1718820162, 0]
+GaussGen                   INFO Evt 349,  Run 1088,  Nr. in job = 349 with seeds [1088, 349, 1313138175, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+ PYTHIA Error in Pythia::check: energy-momentum not conserved  
+MainEventGaussSkipGeant4   INFO Evt 349,  Run 1088,  Nr. in job = 349 with seeds [1088, 349, 481159446, 0]
+GaussGen                   INFO Evt 350,  Run 1088,  Nr. in job = 350 with seeds [1088, 350, 603684484, 0]
+MainEventGaussSkipGeant4   INFO Evt 350,  Run 1088,  Nr. in job = 350 with seeds [1088, 350, 771132307, 0]
+GaussGen                   INFO Evt 351,  Run 1088,  Nr. in job = 351 with seeds [1088, 351, 948517512, 0]
+MainEventGaussSkipGeant4   INFO Evt 351,  Run 1088,  Nr. in job = 351 with seeds [1088, 351, 1092334045, 0]
+GaussGen                   INFO Evt 352,  Run 1088,  Nr. in job = 352 with seeds [1088, 352, 1581410637, 0]
+MainEventGaussSkipGeant4   INFO Evt 352,  Run 1088,  Nr. in job = 352 with seeds [1088, 352, 902022080, 0]
+GenToSim                  ERROR No particle with barcode equal to 1!
+GaussGen                   INFO Evt 353,  Run 1088,  Nr. in job = 353 with seeds [1088, 353, 732103695, 0]
+MainEventGaussSkipGeant4   INFO Evt 353,  Run 1088,  Nr. in job = 353 with seeds [1088, 353, 1201301357, 0]
+GaussGen                   INFO Evt 354,  Run 1088,  Nr. in job = 354 with seeds [1088, 354, 1959532132, 0]
+MainEventGaussSkipGeant4   INFO Evt 354,  Run 1088,  Nr. in job = 354 with seeds [1088, 354, 992091654, 0]
+GaussGen                   INFO Evt 355,  Run 1088,  Nr. in job = 355 with seeds [1088, 355, 2096123157, 0]
+MainEventGaussSkipGeant4   INFO Evt 355,  Run 1088,  Nr. in job = 355 with seeds [1088, 355, 1452246367, 0]
+GaussGen                   INFO Evt 356,  Run 1088,  Nr. in job = 356 with seeds [1088, 356, 49427122, 0]
+MainEventGaussSkipGeant4   INFO Evt 356,  Run 1088,  Nr. in job = 356 with seeds [1088, 356, 1747495057, 0]
+GaussGen                   INFO Evt 357,  Run 1088,  Nr. in job = 357 with seeds [1088, 357, 567940850, 0]
+MainEventGaussSkipGeant4   INFO Evt 357,  Run 1088,  Nr. in job = 357 with seeds [1088, 357, 2044873732, 0]
+GaussGen                   INFO Evt 358,  Run 1088,  Nr. in job = 358 with seeds [1088, 358, 660863893, 0]
+MainEventGaussSkipGeant4   INFO Evt 358,  Run 1088,  Nr. in job = 358 with seeds [1088, 358, 2795544, 0]
+GaussGen                   INFO Evt 359,  Run 1088,  Nr. in job = 359 with seeds [1088, 359, 190147037, 0]
+MainEventGaussSkipGeant4   INFO Evt 359,  Run 1088,  Nr. in job = 359 with seeds [1088, 359, 271284372, 0]
+GaussGen                   INFO Evt 360,  Run 1088,  Nr. in job = 360 with seeds [1088, 360, 1720721501, 0]
+MainEventGaussSkipGeant4   INFO Evt 360,  Run 1088,  Nr. in job = 360 with seeds [1088, 360, 1554899229, 0]
+GaussGen                   INFO Evt 361,  Run 1088,  Nr. in job = 361 with seeds [1088, 361, 1487242376, 0]
+MainEventGaussSkipGeant4   INFO Evt 361,  Run 1088,  Nr. in job = 361 with seeds [1088, 361, 1256635791, 0]
+GaussGen                   INFO Evt 362,  Run 1088,  Nr. in job = 362 with seeds [1088, 362, 192997948, 0]
+MainEventGaussSkipGeant4   INFO Evt 362,  Run 1088,  Nr. in job = 362 with seeds [1088, 362, 1718809783, 0]
+GaussGen                   INFO Evt 363,  Run 1088,  Nr. in job = 363 with seeds [1088, 363, 631601168, 0]
+MainEventGaussSkipGeant4   INFO Evt 363,  Run 1088,  Nr. in job = 363 with seeds [1088, 363, 1017926021, 0]
+GaussGen                   INFO Evt 364,  Run 1088,  Nr. in job = 364 with seeds [1088, 364, 402447551, 0]
+MainEventGaussSkipGeant4   INFO Evt 364,  Run 1088,  Nr. in job = 364 with seeds [1088, 364, 727920371, 0]
+GaussGen                   INFO Evt 365,  Run 1088,  Nr. in job = 365 with seeds [1088, 365, 1922535983, 0]
+MainEventGaussSkipGeant4   INFO Evt 365,  Run 1088,  Nr. in job = 365 with seeds [1088, 365, 533718898, 0]
+GaussGen                   INFO Evt 366,  Run 1088,  Nr. in job = 366 with seeds [1088, 366, 1531283852, 0]
+MainEventGaussSkipGeant4   INFO Evt 366,  Run 1088,  Nr. in job = 366 with seeds [1088, 366, 1315894538, 0]
+GaussGen                   INFO Evt 367,  Run 1088,  Nr. in job = 367 with seeds [1088, 367, 1756603496, 0]
+MainEventGaussSkipGeant4   INFO Evt 367,  Run 1088,  Nr. in job = 367 with seeds [1088, 367, 1918647516, 0]
+GaussGen                   INFO Evt 368,  Run 1088,  Nr. in job = 368 with seeds [1088, 368, 1194081941, 0]
+
+ Pythia::next(): 24000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 368,  Run 1088,  Nr. in job = 368 with seeds [1088, 368, 1645615948, 0]
+GaussGen                   INFO Evt 369,  Run 1088,  Nr. in job = 369 with seeds [1088, 369, 1494573671, 0]
+MainEventGaussSkipGeant4   INFO Evt 369,  Run 1088,  Nr. in job = 369 with seeds [1088, 369, 734756985, 0]
+GaussGen                   INFO Evt 370,  Run 1088,  Nr. in job = 370 with seeds [1088, 370, 1758069204, 0]
+MainEventGaussSkipGeant4   INFO Evt 370,  Run 1088,  Nr. in job = 370 with seeds [1088, 370, 1231207335, 0]
+GaussGen                   INFO Evt 371,  Run 1088,  Nr. in job = 371 with seeds [1088, 371, 2055513417, 0]
+MainEventGaussSkipGeant4   INFO Evt 371,  Run 1088,  Nr. in job = 371 with seeds [1088, 371, 1460655873, 0]
+GaussGen                   INFO Evt 372,  Run 1088,  Nr. in job = 372 with seeds [1088, 372, 1903702705, 0]
+MainEventGaussSkipGeant4   INFO Evt 372,  Run 1088,  Nr. in job = 372 with seeds [1088, 372, 723823974, 0]
+GaussGen                   INFO Evt 373,  Run 1088,  Nr. in job = 373 with seeds [1088, 373, 1604783887, 0]
+MainEventGaussSkipGeant4   INFO Evt 373,  Run 1088,  Nr. in job = 373 with seeds [1088, 373, 1922469390, 0]
+GaussGen                   INFO Evt 374,  Run 1088,  Nr. in job = 374 with seeds [1088, 374, 1307208598, 0]
+MainEventGaussSkipGeant4   INFO Evt 374,  Run 1088,  Nr. in job = 374 with seeds [1088, 374, 2142775377, 0]
+GaussGen                   INFO Evt 375,  Run 1088,  Nr. in job = 375 with seeds [1088, 375, 975979546, 0]
+MainEventGaussSkipGeant4   INFO Evt 375,  Run 1088,  Nr. in job = 375 with seeds [1088, 375, 1909766857, 0]
+GaussGen                   INFO Evt 376,  Run 1088,  Nr. in job = 376 with seeds [1088, 376, 1178491970, 0]
+MainEventGaussSkipGeant4   INFO Evt 376,  Run 1088,  Nr. in job = 376 with seeds [1088, 376, 264652911, 0]
+GaussGen                   INFO Evt 377,  Run 1088,  Nr. in job = 377 with seeds [1088, 377, 880785605, 0]
+MainEventGaussSkipGeant4   INFO Evt 377,  Run 1088,  Nr. in job = 377 with seeds [1088, 377, 494756829, 0]
+GaussGen                   INFO Evt 378,  Run 1088,  Nr. in job = 378 with seeds [1088, 378, 474548356, 0]
+MainEventGaussSkipGeant4   INFO Evt 378,  Run 1088,  Nr. in job = 378 with seeds [1088, 378, 1090017497, 0]
+GaussGen                   INFO Evt 379,  Run 1088,  Nr. in job = 379 with seeds [1088, 379, 418374113, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 379,  Run 1088,  Nr. in job = 379 with seeds [1088, 379, 783430733, 0]
+GaussGen                   INFO Evt 380,  Run 1088,  Nr. in job = 380 with seeds [1088, 380, 112770419, 0]
+MainEventGaussSkipGeant4   INFO Evt 380,  Run 1088,  Nr. in job = 380 with seeds [1088, 380, 1937182723, 0]
+GaussGen                   INFO Evt 381,  Run 1088,  Nr. in job = 381 with seeds [1088, 381, 996484811, 0]
+MainEventGaussSkipGeant4   INFO Evt 381,  Run 1088,  Nr. in job = 381 with seeds [1088, 381, 209547236, 0]
+GaussGen                   INFO Evt 382,  Run 1088,  Nr. in job = 382 with seeds [1088, 382, 691700342, 0]
+
+ Pythia::next(): 25000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 382,  Run 1088,  Nr. in job = 382 with seeds [1088, 382, 96285841, 0]
+GaussGen                   INFO Evt 383,  Run 1088,  Nr. in job = 383 with seeds [1088, 383, 1608904652, 0]
+MainEventGaussSkipGeant4   INFO Evt 383,  Run 1088,  Nr. in job = 383 with seeds [1088, 383, 402086149, 0]
+GaussGen                   INFO Evt 384,  Run 1088,  Nr. in job = 384 with seeds [1088, 384, 157639653, 0]
+MainEventGaussSkipGeant4   INFO Evt 384,  Run 1088,  Nr. in job = 384 with seeds [1088, 384, 181007401, 0]
+GaussGen                   INFO Evt 385,  Run 1088,  Nr. in job = 385 with seeds [1088, 385, 601823396, 0]
+MainEventGaussSkipGeant4   INFO Evt 385,  Run 1088,  Nr. in job = 385 with seeds [1088, 385, 421761244, 0]
+GaussGen                   INFO Evt 386,  Run 1088,  Nr. in job = 386 with seeds [1088, 386, 841299248, 0]
+MainEventGaussSkipGeant4   INFO Evt 386,  Run 1088,  Nr. in job = 386 with seeds [1088, 386, 1230943315, 0]
+GaussGen                   INFO Evt 387,  Run 1088,  Nr. in job = 387 with seeds [1088, 387, 1089753806, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 387,  Run 1088,  Nr. in job = 387 with seeds [1088, 387, 934613248, 0]
+GaussGen                   INFO Evt 388,  Run 1088,  Nr. in job = 388 with seeds [1088, 388, 45667976, 0]
+MainEventGaussSkipGeant4   INFO Evt 388,  Run 1088,  Nr. in job = 388 with seeds [1088, 388, 770702710, 0]
+GaussGen                   INFO Evt 389,  Run 1088,  Nr. in job = 389 with seeds [1088, 389, 259706335, 0]
+MainEventGaussSkipGeant4   INFO Evt 389,  Run 1088,  Nr. in job = 389 with seeds [1088, 389, 471423433, 0]
+GaussGen                   INFO Evt 390,  Run 1088,  Nr. in job = 390 with seeds [1088, 390, 660447181, 0]
+MainEventGaussSkipGeant4   INFO Evt 390,  Run 1088,  Nr. in job = 390 with seeds [1088, 390, 2106841491, 0]
+GaussGen                   INFO Evt 391,  Run 1088,  Nr. in job = 391 with seeds [1088, 391, 367328480, 0]
+MainEventGaussSkipGeant4   INFO Evt 391,  Run 1088,  Nr. in job = 391 with seeds [1088, 391, 1890484978, 0]
+GaussGen                   INFO Evt 392,  Run 1088,  Nr. in job = 392 with seeds [1088, 392, 968901778, 0]
+MainEventGaussSkipGeant4   INFO Evt 392,  Run 1088,  Nr. in job = 392 with seeds [1088, 392, 1726443364, 0]
+GaussGen                   INFO Evt 393,  Run 1088,  Nr. in job = 393 with seeds [1088, 393, 666017911, 0]
+MainEventGaussSkipGeant4   INFO Evt 393,  Run 1088,  Nr. in job = 393 with seeds [1088, 393, 1430572063, 0]
+GenToSim                  ERROR No particle with barcode equal to 1!
+GaussGen                   INFO Evt 394,  Run 1088,  Nr. in job = 394 with seeds [1088, 394, 1953020382, 0]
+MainEventGaussSkipGeant4   INFO Evt 394,  Run 1088,  Nr. in job = 394 with seeds [1088, 394, 901188736, 0]
+GaussGen                   INFO Evt 395,  Run 1088,  Nr. in job = 395 with seeds [1088, 395, 1723202652, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
+MainEventGaussSkipGeant4   INFO Evt 395,  Run 1088,  Nr. in job = 395 with seeds [1088, 395, 1262974331, 0]
+GaussGen                   INFO Evt 396,  Run 1088,  Nr. in job = 396 with seeds [1088, 396, 1754267668, 0]
+MainEventGaussSkipGeant4   INFO Evt 396,  Run 1088,  Nr. in job = 396 with seeds [1088, 396, 965005814, 0]
+GaussGen                   INFO Evt 397,  Run 1088,  Nr. in job = 397 with seeds [1088, 397, 243747844, 0]
+
+ Pythia::next(): 26000 events have been generated 
+MainEventGaussSkipGeant4   INFO Evt 397,  Run 1088,  Nr. in job = 397 with seeds [1088, 397, 397315658, 0]
+GaussGen                   INFO Evt 398,  Run 1088,  Nr. in job = 398 with seeds [1088, 398, 818909332, 0]
+MainEventGaussSkipGeant4   INFO Evt 398,  Run 1088,  Nr. in job = 398 with seeds [1088, 398, 98626223, 0]
+GaussGen                   INFO Evt 399,  Run 1088,  Nr. in job = 399 with seeds [1088, 399, 334199009, 0]
+MainEventGaussSkipGeant4   INFO Evt 399,  Run 1088,  Nr. in job = 399 with seeds [1088, 399, 2118065563, 0]
+GaussGen                   INFO Memory has changed from 1292576 to 1293708 KB (1132KB, 0.0875771%) in last 100 events
+GaussGen                   INFO Evt 400,  Run 1088,  Nr. in job = 400 with seeds [1088, 400, 1631251386, 0]
+MainEventGaussSkipGeant4   INFO Memory has changed from 1292576 to 1293708 KB (1132KB, 0.0875771%) in last 100 events
+MainEventGaussSkipGeant4   INFO Evt 400,  Run 1088,  Nr. in job = 400 with seeds [1088, 400, 980785057, 0]
+ApplicationMgr             INFO Application Manager Stopped successfully
+GaussGen                SUCCESS ==================================================================
+GaussGen                SUCCESS 400 events processed
+GaussGen                SUCCESS ==================================================================
+GenMonitorAlg              INFO 
+======================== Generators Statistics ====================
+=                                                                 =
+= Number of particles generated: 883928
+= Number of events: 400
+= Mean multiplicity: 2209.82
+=                                                                 =
+= Number of pseudo stable particles generated: 405932
+= Number of events: 400
+= Mean pseudo stable multiplicity: 1014.83
+=                                                                 =
+= Number of charged stable particles generated: 125520
+= Number of events: 400
+= Mean charged stable multiplicity: 313.8
+=                                                                 =
+= Number of charged stable particles in LHCb eta 30885
+= Number of events: 400
+= Mean charged stable multiplicity in LHCb eta: 77.2125
+=                                                                 =
+===================================================================
+GenMonitorAlg           SUCCESS Booked 21 Histogram(s) : 1D=19 2D=2 
+MainEventGaussSkipGeant4SUCCESS ==================================================================
+MainEventGaussSkipGeant4SUCCESS 400 events processed
+MainEventGaussSkipGeant4SUCCESS ==================================================================
+GaussTape                  INFO Events output: 400
+FSROutputStreamGaussTape   INFO Set up File Summary Record
+FSROutputStreamGaussTape   INFO Events output: 1
+EventLoopMgr               INFO Histograms converted successfully according to request.
+LoKiSvc                 SUCCESS 
+
+
+Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
+Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
+LoKi                                                                                               LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                       Good Bye from LoKi!                                     LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                      (LOops & KInematics)                                     LoKi 
+LoKi                                                                                               LoKi 
+LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                                                                               LoKi 
+LoKi                      LoKi mailing list ('LoKi-club') : lhcb-loki@cern.ch                      LoKi 
+LoKi      Comments, suggestions, criticism, ideas, questions and requests are *ALWAYS* welcome     LoKi 
+LoKi                                                                                               LoKi 
+Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
+Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
+
+
+
+ToolSvc                    INFO Removing all tools created by ToolSvc
+MainEventGaussSkipGea...SUCCESS Booked 4 Histogram(s) : 1D=4 
+MainEventGaussSkipGea...SUCCESS Number of counters : 2
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "Delta Memory/MB"                               |       390 |      1.644 |  0.0042154 |   0.062770 |      0.0000 |      1.1320 |
+ | "Total Memory/MB"                               |       400 |   516847.3 |     1292.1 |     5.9956 |      1172.8 |      1293.7 |
+MainEventGaussSkipGea...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
+MainEventGaussSkipGea...SUCCESS  #WARNINGS   = 2        Message = 'Delta Memory for the event exceeds 3*sigma'
+Generation.SignalRepe...WARNING SignalRepeatedHadronization:: releaseSvc(IInterface):: IInterface* is not active StatusCode=FAILURE
+Generation.SignalRepe...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
+Generation.SignalRepe...SUCCESS  #WARNINGS   = 1        Message = 'releaseSvc(IInterface):: IInterface* is not active'
+GaussGen.GaussGenMemory SUCCESS Booked 4 Histogram(s) : 1D=4 
+GaussGen.GaussGenMemory SUCCESS Number of counters : 2
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "Delta Memory/MB"                               |       390 |      1.644 |  0.0042154 |   0.062770 |      0.0000 |      1.1320 |
+ | "Total Memory/MB"                               |       400 |   516775.3 |     1291.9 |     7.1398 |      1166.4 |      1293.7 |
+GaussGen.GaussGenMemory SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
+GaussGen.GaussGenMemory SUCCESS  #WARNINGS   = 2        Message = 'Delta Memory for the event exceeds 3*sigma'
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.SequencerTime...   INFO This machine has a speed about   2.08 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+Generation.SignalRepe...WARNING  # of bad/null bins: 0/5
+Generation.SignalRepe...SUCCESS Booked 3 Histogram(s) : 2D=3 
+Generation.SignalRepe...SUCCESS Number of counters : 2
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"accept_events"                                 |      2646 |        400 |(  15.1172 +- 0.696386 )%|   -------   |   -------   |
+ |*"accept_particles"                              |       400 |        400 |(  100.000 +- 0.250000 )%|   -------   |   -------   |
+
+ *-------  PYTHIA Event and Cross Section Statistics  -------------------------------------------------------------*
+ |                                                                                                                 |
+ | Subprocess                                    Code |            Number of events       |      sigma +- delta    |
+ |                                                    |       Tried   Selected   Accepted |     (estimated) (mb)   |
+ |                                                    |                                   |                        |
+ |-----------------------------------------------------------------------------------------------------------------|
+ |                                                    |                                   |                        |
+ | non-diffractive                                101 |     1080205    1080205    1080205 |   5.212e+01  0.000e+00 |
+ | A B -> A B elastic                             102 |      411054     411054     411054 |   1.989e+01  0.000e+00 |
+ | A B -> X B single diffractive                  103 |      129689     129689     129689 |   6.240e+00  1.230e-08 |
+ | A B -> A X single diffractive                  104 |      128800     128800     128800 |   6.240e+00  1.067e-08 |
+ | A B -> X X double diffractive                  105 |      170607     170607     170607 |   8.254e+00  0.000e+00 |
+ |                                                    |                                   |                        |
+ | sum                                                |     1920355    1920355    1920355 |   9.274e+01  1.628e-08 |
+ |                                                                                                                 |
+ *-------  End PYTHIA Event and Cross Section Statistics ----------------------------------------------------------*
+
+ *-------  PYTHIA Error and Warning Messages Statistics  ----------------------------------------------------------* 
+ |                                                                                                                 | 
+ |  times   message                                                                                                | 
+ |                                                                                                                 | 
+ |  54989   Abort from Pythia::forceHadronLevel: hadronLevel failed; giving up                                     | 
+ |    429   Abort from Pythia::next: check of event revealed problems                                              | 
+ |  46886   Error in BeamRemnants::setKinematics: kinematics construction failed                                   | 
+ |     10   Error in BeamRemnants::setKinematics: no momentum left for beam remnants                               | 
+ |     30   Error in HadronLevel::traceFromAcol: colour tracing failed                                             | 
+ | 549060   Error in HadronLevel::traceFromCol: colour tracing failed                                              | 
+ |     14   Error in MiniStringFragmentation::fragment: no 1- or 2-body state found above mass threshold           | 
+ |  54302   Error in ProcessLevel::findJunctions: N(unmatched (anti)colour tags) != 3                              | 
+ |      1   Error in Pythia::check: energy-momentum not conserved                                                  | 
+ |    565   Error in Pythia::check: unmatched particle energy/momentum/mass                                        | 
+ | 551375   Error in Pythia::forceHadronLevel: hadronLevel failed; try again                                       | 
+ |    808   Error in Pythia::next: partonLevel failed; try again                                                   | 
+ |     40   Error in SpaceShower::pT2nearQCDthreshold: stuck in loop                                               | 
+ |   2148   Error in StringFragmentation::fragment: stuck in joining                                               | 
+ |    123   Error in StringFragmentation::fragmentToJunction: caught in junction flavour loop                      | 
+ |      3   Warning in MultipartonInteractions::init: maximum increased                                            | 
+ |     40   Warning in MultipartonInteractions::pTfirst: weight above unity                                        | 
+ |    255   Warning in MultipartonInteractions::pTnext: weight above unity                                         | 
+ |     56   Warning in Pythia::check: energy-momentum not quite conserved                                          | 
+ |    188   Warning in SpaceShower::pT2nextQCD: small daughter PDF                                                 | 
+ |  11135   Warning in SpaceShower::pT2nextQCD: weight above unity                                                 | 
+ |   1135   Warning in StringFragmentation::fragmentToJunction: bad convergence junction rest frame                | 
+ |                                                                                                                 | 
+ *-------  End PYTHIA Error and Warning Messages Statistics  ------------------------------------------------------* 
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO This machine has a speed about   2.07 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO EVENT LOOP                    | 59017.168 | 59139.128 |  355.356  291119.5 |     400 | 23655.651 |
+TimingAuditor.TIMER        INFO  GaussSequencer               | 58081.620 | 58201.690 |  350.336  290591.5 |     400 | 23280.676 |
+TimingAuditor.TIMER        INFO   Generator                   | 58080.060 | 58200.005 |  349.637  290590.8 |     400 | 23280.002 |
+TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       | 58080.060 | 58200.002 |  349.634  290590.8 |     400 | 23280.001 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     0.150 |     0.168 |    0.083       1.2 |     400 |     0.067 |
+TimingAuditor.TIMER        INFO     Generation                | 58079.270 | 58199.252 |  349.186  290590.5 |     400 | 23279.701 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     0.620 |     0.567 |    0.117       1.8 |     400 |     0.227 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.620 |     0.563 |    0.113       1.8 |     400 |     0.225 |
+TimingAuditor.TIMER        INFO   SkipGeant4                  |     1.560 |     1.680 |    0.453       6.2 |     400 |     0.672 |
+TimingAuditor.TIMER        INFO    MainEventSeq               |     1.560 |     1.677 |    0.450       6.2 |     400 |     0.671 |
+TimingAuditor.TIMER        INFO     MainEventGaussSkipGeant4  |     0.270 |     0.247 |    0.157       1.3 |     400 |     0.099 |
+TimingAuditor.TIMER        INFO     MainSkipGeant4            |     1.280 |     1.424 |    0.252       4.9 |     400 |     0.570 |
+TimingAuditor.TIMER        INFO      MakeMainSkipGeant4       |     1.280 |     1.421 |    0.248       4.9 |     400 |     0.569 |
+TimingAuditor.TIMER        INFO       GenToSim                |     1.280 |     1.418 |    0.245       4.9 |     400 |     0.567 |
+TimingAuditor.TIMER        INFO  GaussTape                    |   935.518 |   937.394 |    1.890    3111.1 |     400 |   374.958 |
+TimingAuditor.TIMER        INFO  FSROutputStreamGaussTape     |     0.000 |     0.002 |    0.001       0.0 |     400 |     0.001 |
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+GiGa.GiGaMgr               INFO GiGaRunManager:: GiGaRunManager Finalization
+RootCnvSvc                 INFO Disconnected data IO:9A7AC9B4-13CF-E711-932D-002590ADA67E [Gen.xgen]
+XMLCatalog                 INFO File 'NewCatalog.xml' does not exist. New file created.
+*****Chrono*****           INFO ****************************************************************************************************
+*****Chrono*****           INFO  The Final CPU consumption ( Chrono ) Table (ordered)
+*****Chrono*****           INFO ****************************************************************************************************
+ChronoStatSvc              INFO Time User   : Tot=  394[min]                                             #=  1
+*****Chrono*****           INFO ****************************************************************************************************
+ChronoStatSvc.finalize()   INFO  Service finalized successfully 
+ApplicationMgr             INFO Application Manager Finalized successfully
+ApplicationMgr             INFO Application Manager Terminated successfully
+  In F3pi: chpt + 1 resonance + 2 resonance (RchT)
+  KORB: rho/rhop -> pi-pi0 mixing:
+  KORB: rho   =  0.769900024      0.151199996    
+  KORB: rhop  =   1.37000000      0.509999990     -0.109999999    
+  KORB: K*/K*prime -> Kpi mixing:
+  KORB: kstp  =   1.70000005      0.234999999      -3.79999988E-02
+  KORB: a1/a1prime -> 3pi, KKpi mixing:
+  KORB: a1    =   1.27499998      0.699999988    
+  KORB: a1prim=   1.46099997      0.250000000       0.00000000    
+  KORB: K1A/K1B -> Kpipi mixing:
+  KORB: K1A   =   1.26999998       9.00000036E-02   1.00000000    
+  KORB: K1B   =   1.40199995      0.173999995      0.800000012    
+  KORB: rho/rhop/rhopp -> 4pi mixing:
+  KORB: rho   =  0.769900024      0.151199996    
+  KORB: rhopp =   1.46500003      0.310000002     -0.109999999    
+  KORB: rhoppp=   1.70000005      0.234999999     -0.109999999    
+  KORB: 3PI-PI0 PARAMS:   0.00000000      0.124200001      0.160400003      0.271100014      0.444299996    
+  KORB: PI-3PI0 PARAMS:   0.00000000       1.00000000    
