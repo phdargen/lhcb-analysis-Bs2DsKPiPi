@@ -231,11 +231,29 @@ namespace MINT{
           //EVENT_TYPE & evt( (*_eventList)[i] );
           // sum += logPdf((*_eventList)[i]);
           double weight     = _eventList[i].getWeight();//eventWeight(i);
-	  double pdfVal     = getPdf(i);
+          double pdfVal     = getPdf(i);
           double logPdfVal  = log(pdfVal);
+          if(TMath::IsNaN(weight*logPdfVal))continue;
           sum              += weight*logPdfVal;
           sumweights       += weight;
           sumsquareweights += weight*weight;
+          
+          /*
+          //std::cout << sum << std::endl;
+          if(TMath::IsNaN(sum)){ std::cout << "ERROR for " << i << std::endl; 
+              std::cout << weight << std::endl;
+              std::cout << pdfVal << std::endl;
+              std::cout << weight*logPdfVal << std::endl  << std::endl;
+
+              std::cout << _eventList[i].getValueFromVector(0) << std::endl;
+              std::cout << _eventList[i].getValueFromVector(1) << std::endl;
+              std::cout << _eventList[i].getValueFromVector(2) << std::endl;
+              std::cout << _eventList[i].getValueFromVector(3) << std::endl;
+              std::cout << _eventList[i].getValueFromVector(4) << std::endl;
+              std::cout << _eventList[i].getValueFromVector(5) << std::endl;
+              std::cout << _eventList[i].getValueFromVector(6) << std::endl;
+          throw ""; }
+           */
 	  
 	  if(_useAnalyticGradient) doGradient(i, pdfVal, weight);
 	  /*
