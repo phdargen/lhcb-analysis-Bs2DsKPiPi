@@ -18,6 +18,7 @@
 #include "Mint/FitAmplitude.h"
 #include "Mint/FitAmpSum.h"
 #include "Mint/FitAmpIncoherentSum.h"
+#include "Mint/FitAmpIncoherentSumEvtGen.h"
 #include "Mint/DalitzEvent.h"
 #include "Mint/AmpRatios.h"
 #include "Mint/IEventGenerator.h"
@@ -55,6 +56,7 @@
 //#include "Mint/PermutationTest.h"
 #include "Mint/LASSO.h"
 #include "Mint/LASSO_flexi.h"
+#include "TRandom3.h"
 
 using namespace std;
 using namespace MINT;
@@ -245,8 +247,10 @@ double getChi2(DiskResidentEventList& data, DiskResidentEventList& mc){
     HyperPointSet points( dim );
     HyperPoint min(pdg.sijMin(1,3),pdg.sijMin(2,4),pdg.sijMin(3,4),pdg.sijMin(1,2,4),pdg.sijMin(2,3,4));
     HyperPoint max(pdg.sijMax(1,3),pdg.sijMax(2,4),pdg.sijMax(3,4),pdg.sijMax(1,2,4),pdg.sijMax(2,3,4));
+    //HyperPoint max(pdg.sijMax(1,3),pdg.sijMax(2,4),pdg.sijMax(3,4),pdg.sijMax(1,2,4),4 * GeV * GeV);
+
     HyperCuboid limits(min, max );
-                      
+
     vector<int> s124;
     s124.push_back(1);
     s124.push_back(2);
@@ -272,17 +276,17 @@ double getChi2(DiskResidentEventList& data, DiskResidentEventList& mc){
 
     HyperHistogram dataHist(limits, points, 
                          /*** Name of the binning algorithm you want to use     */
-                         HyperBinningAlgorithms::MINT,  
+                         HyperBinningAlgorithms::SMART,  
                          /***  The minimum number of events allowed in each bin */
                          /***  from the HyperPointSet provided (points1)        */
                          AlgOption::MinBinContent      (minEventsPerBin),                    
                          /*** This minimum bin width allowed. Can also pass a   */
                          /*** HyperPoint if you would like different min bin    */
                          /*** widths for each dimension                         */
-                         AlgOption::MinBinWidth        ((pdg.sijMax(1,3)-pdg.sijMin(1,3))/100.),                                                 
+                         AlgOption::MinBinWidth        (0.),                                                 
                          /*** If you want to use the sum of weights rather than */
                          /*** the number of events, set this to true.           */    
-                         AlgOption::UseWeights         (true),                         
+                         AlgOption::UseWeights         (false),                         
                          /*** Some algorithms use a random number generator. Set*/
                          /*** the seed here                                     */
                          AlgOption::RandomSeed         (1),                         
@@ -316,12 +320,9 @@ double getChi2(DiskResidentEventList& data, DiskResidentEventList& mc){
       	pointsMC.push_back(point);
     }
 
-
     HyperHistogram mcHist( dataHist.getBinning() );
     mcHist.fill(pointsMC); 
     mcHist.save("histMC.root");
-
-    cout << mcHist.integral() << endl;
 
     //data.normalise(1);
     mcHist.normalise(dataHist.integral());
@@ -329,10 +330,13 @@ double getChi2(DiskResidentEventList& data, DiskResidentEventList& mc){
     double chi2 = dataHist.chi2(mcHist);
     int nBins   = dataHist.getNBins();
 
-    cout << dataHist.integral() << endl;
-    cout << mcHist.integral() << endl;
-
     cout << "chi2 = " << (double)chi2/(nBins-1.) << endl;
+
+    mcHist.divide(dataHist);
+    mcHist.save("histMC_Data.root");
+
+    //dataHist.divide(mcHist);
+    //dataHist.save("histMC_Data.root");
 
     return (double)chi2/(nBins-1.);
 }
@@ -356,6 +360,8 @@ int ampFit(int step=0){
                                                , (std::string) "SignalIntegrationEvents.root"
                                                , (char*) 0);
 
+    NamedParameter<string> PhspEventFile("PhspEventFile", (std::string) "/auto/data/dargent/BsDsKpipi/MINT/SignalIntegrationEvents_Phsp_15M_new.root", (char*) 0);
+
     NamedParameter<string> OutputRootFile("OutputRootFile"
                                           , (std::string) "OutputRootFile.root"
                                           , (char*) 0);
@@ -373,7 +379,7 @@ int ampFit(int step=0){
     DalitzEventList eventNorm;
     eventNorm.generatePhaseSpaceEvents(1,pat); 
     
-    FitAmpIncoherentSum fas(pat);
+    FitAmpIncoherentSumEvtGen fas(pat);
     fas.getVal(eventNorm[0]);
     fas.print();
         
@@ -404,9 +410,9 @@ int ampFit(int step=0){
             s124.push_back(2);
             s124.push_back(4);
             
-            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,5);
-            TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,4);
-            TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,4);
+            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,14);
+            TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,12);
+            TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,10);
             TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_DsKpi = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
@@ -438,34 +444,39 @@ int ampFit(int step=0){
             TH2D* s_DsKpi_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",80,5,30,80,0,25);
             TH2D* s_DsK_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",60,0,30,60,0,25);
 
-            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,5);
-            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,4);
-            TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,4);
+            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,14);
+            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,12);
+            TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,10);
             TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
             TH1D* s_Dspi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
             TH1D* s_Dspim_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
 
-// {       
-//   	DalitzEventList eventList;
-//         TFile *_InputFile =  TFile::Open(inputFile.c_str());
-//         TTree* in_tree;
-//         in_tree=dynamic_cast<TTree*>(_InputFile->Get(inputTreeName.c_str()));
-//         cout << "reading events from file " << inputFile << endl;
-//         eventList.fromNtuple(in_tree,0.2);
-//         cout << " I've got " << eventList.size() << " events." << endl;
-//         _InputFile->Close();
-// 
-//          AmpsPdfFlexiFast amps(pat, &fas, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);        
-//          Neg2LL neg2ll(amps, eventList);
-//          Minimiser mini(&neg2ll);    
-//  
-//          mini.doFit();        
-//          mini.printResultVsInput();
-//          amps.doFinalStats(&mini);
-// }  
-              
+	    s_Kpipi->Sumw2();
+  	    s_Kpipi_rw->Sumw2();
+	    s_Kpipi_phsp->Sumw2();
+	    s_Kpipi_fit->Sumw2();
+/*
+ {       
+   	DalitzEventList eventList;
+         TFile *_InputFile =  TFile::Open(inputFile.c_str());
+         TTree* in_tree;
+         in_tree=dynamic_cast<TTree*>(_InputFile->Get(inputTreeName.c_str()));
+         cout << "reading events from file " << inputFile << endl;
+         eventList.fromNtuple(in_tree,0.25);
+         cout << " I've got " << eventList.size() << " events." << endl;
+         _InputFile->Close();
+ 
+          AmpsPdfFlexiFast amps(pat, &fas, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);        
+          Neg2LL neg2ll(amps, eventList);
+          Minimiser mini(&neg2ll);    
+  
+          mini.doFit();        
+          mini.printResultVsInput();
+          amps.doFinalStats(&mini);
+ }  
+    */          
             //DalitzHistoSet fitH = amps.histoSet();
             //datH.drawWithFitNorm(fitH, ((string)OutputDir+(string)"datFit_l_"+anythingToString(step)+"_").c_str(),"eps");
             //std::vector<DalitzHistoSet> EachAmpsHistos = amps.GetEachAmpsHistograms();
@@ -474,11 +485,14 @@ int ampFit(int step=0){
 	    double sumw = 0.;
 	    double sumw2 = 0.;
 
+            //HyperHistogram hist_weights("histMC_Data.root");
+	    DiskResidentEventList eventList_rw(pat,("Data_rw_"+anythingToString(step)+".root").c_str(),"RECREATE");
+
             DiskResidentEventList eventList(inputFile.c_str(),"OPEN");
             for (int i=0; i<eventList.size(); i++) {
 		DalitzEvent evt(eventList.getEvent(i));
 
- 		if(evt.sij(s234)/(GeV*GeV)> 4) continue;
+ 		//if(evt.sij(s234)/(GeV*GeV)> 4) continue;
 		if(!(evt.phaseSpace() > 0.)){
 		 	//cout << "evt " << i << " 0 phsp " << endl << evt << endl;
 			badEvents++;
@@ -507,6 +521,19 @@ int ampFit(int step=0){
 		if(fas.getVal(evt)>0.)weight = evt.getWeight()/fas.getVal(evt);
 		else weight = 0.;
 
+		/*
+		HyperPoint point( 5);
+      		point.at(0)= evt.s(1,3);
+      		point.at(1)= evt.s(2,4); 
+      		point.at(2)= evt.s(3,4);
+      		point.at(3)= evt.sij(s124);
+      		point.at(4)= evt.sij(s234);
+        	int bin = hist_weights.getBinning().getBinNum(point);
+           	 if(hist_weights.checkBinNumber(bin)!= bin){
+			 weight = 0; //? should't happen
+			 cout << "ERROR:: Event outside limits" << endl;
+          	  }else weight *= hist_weights.getBinContent(bin);
+		*/
 		s_Kpipi_rw->Fill(evt.sij(s234)/(GeV*GeV),weight);
                 s_Kpi_rw->Fill(evt.s(2,4)/(GeV*GeV),weight);
                 s_pipi_rw->Fill(evt.s(3,4)/(GeV*GeV),weight);
@@ -515,12 +542,14 @@ int ampFit(int step=0){
                 s_DsKpi_rw->Fill(evt.sij(s124)/(GeV*GeV),weight);
                 s_Dspi_rw->Fill(evt.s(1,3)/(GeV*GeV),weight);
                 s_Dspim_rw->Fill(evt.s(1,4)/(GeV*GeV),weight);
-// 		evt.setWeight(weight);
+
+ 		evt.setWeight(weight);
+		//eventList_rw.Add(evt);
 
 		sumw += weight;
 		sumw2 += weight*weight;
             }    
-	    cout << endl << "bad EvtGen events " << badEvents << " ( " << badEvents/(double)eventList.size() << " %)" << endl << endl;
+	    cout << endl << "bad EvtGen events " << badEvents << " ( " << badEvents/(double)eventList.size() * 100.<< " %)" << endl << endl;
 
 	    //cout << "sumw = " << sumw << endl;
 	    //cout << "weff = " << sumw/sumw2 << endl;
@@ -556,7 +585,7 @@ int ampFit(int step=0){
                 //counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
                 //DalitzEvent evt(evtPtr.get());
 		DalitzEvent evt(eventListMC.getEvent(i));
-		if(evt.sij(s234)/(GeV*GeV)> 4) continue;
+		//if(evt.sij(s234)/(GeV*GeV)> 4) continue;
 
 		if(!(evt.phaseSpace() > 0.)){
 		 	//cout << "evt " << i << " 0 phsp " << endl << evt << endl;
@@ -569,7 +598,11 @@ int ampFit(int step=0){
 			continue;
 		}
 
+   	 	//evt.setPermutationIndex(0);
                 double weight = fas.getVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
+   	 	//evt.setPermutationIndex(1);
+                //weight += fas.getVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
+
                 //double weight = evt.phaseSpace()*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
 		s_Kpipi_fit->Fill(evt.sij(s234)/(GeV*GeV),weight);
                 s_Kpi_fit->Fill(evt.s(2,4)/(GeV*GeV),weight);
@@ -592,17 +625,17 @@ int ampFit(int step=0){
 		evt.setWeight(weight);
 		eventListMC_rw.Add(evt);
             }
-	    cout << endl << "bad MINT events " << badEvents << " ( " << badEvents/(double)eventListMC.size() << " %)" << endl << endl;
+	    cout << endl << "bad MINT events " << badEvents << " ( " << badEvents/(double)eventListMC.size() *100.<< " %)" << endl << endl;
 }
 /// Don't remove brackets, ensures memory is released
+
+	    DiskResidentEventList eventListPhsp(((string) PhspEventFile).c_str(),"OPEN");
 {  
-	    badEvents = 0;
-	    DiskResidentEventList eventListPhsp("/auto/data/dargent/BsDsKpipi/MINT/SignalIntegrationEvents_Phsp_15M_new.root","OPEN");
-        
+	    badEvents = 0;        
             for(int i = 0; i < eventListPhsp.size(); i++){                                
                 double weight = 1.;//eventListPhsp[i].getWeight()/eventListPhsp[i].getGeneratorPdfRelativeToPhaseSpace();
 		DalitzEvent evt(eventListPhsp.getEvent(i));
-		if(evt.sij(s234)/(GeV*GeV)> 4) continue;
+		//if(evt.sij(s234)/(GeV*GeV)> 4) continue;
 
 		if(!(evt.phaseSpace() > 0.)){
 		 	//cout << "evt " << i << " 0 phsp " << endl << evt << endl;
@@ -624,7 +657,7 @@ int ampFit(int step=0){
                 s_Dspi_phsp->Fill(evt.s(1,3)/(GeV*GeV),weight);
                 s_Dspim_phsp->Fill(evt.s(1,4)/(GeV*GeV),weight);
             }
-	    cout << endl << "bad Phsp events " << badEvents << " ( " << badEvents/(double)eventListPhsp.size() << " %)" << endl << endl;
+	    cout << endl << "bad Phsp events " << badEvents << " ( " << badEvents/(double)eventListPhsp.size() * 100.<< " %)" << endl << endl;
 }
 
             TCanvas* c = new TCanvas();
@@ -889,6 +922,8 @@ int ampFit(int step=0){
     	    c->Print(((string)OutputDir+"eff_Dspim.eps").c_str());
 
       	    getChi2(eventList,eventListMC_rw);        
+      	    //getChi2(eventList_rw,eventListPhsp);        
+
         
     return 0;
 }
@@ -972,12 +1007,9 @@ void makeIntegratorFilePhsp(){
 
 int makeMINTtupleGen(){
     
-    string outputDir = "/auto/data/dargent/BsDsKpipi/MINT/";
+    string outputDir = "/auto/data/dargent/BsDsKpipi/MINT/DecFileTest/";
 
     bool dbThis=false;
-    bool addSweight = true;
-    bool bkg = false;
-    
     int N=-1;
     if(dbThis) cout << "read ntuple" << endl;
 	
@@ -994,14 +1026,18 @@ int makeMINTtupleGen(){
 //    tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_3.root");
 //     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_4.root");
 //     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_5.root");
-      tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_test.root");
 //      tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_13266007.root");
+      //tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_test_DsKpipi,pipipi.root");
+     // tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_test_DsKpipi,Kpipi.root");
+      //tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/signal_KKpi/Gen.root");
+      //tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/signal_Kpipi/Gen.root");
+      tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/signal_Kpipi/Gen.root");
 
     if (dbThis) cout << "Read the file" << endl;	
     double K_gen[5]; 
     double pip_gen[5]; 
     double pim_gen[5]; 
-    double Ds_Kp_gen[5],Ds_Km_gen[5],Ds_pim_gen[5];
+    double Ds_Kp_gen[5],Ds_Km_gen[5],Ds_pim_gen[5],Ds_gen[5];
 
     tree_gen->SetBranchStatus("*",0);
     tree_gen->SetBranchStatus("*TRUEP*",1);
@@ -1041,6 +1077,12 @@ int makeMINTtupleGen(){
     tree_gen->SetBranchAddress("piminus0_TRUEP_Z",&Ds_pim_gen[2]); 
     tree_gen->SetBranchAddress("piminus0_TRUEP_E",&Ds_pim_gen[3]); 
     tree_gen->SetBranchAddress("piminus0_TRUEPT",&Ds_pim_gen[4]); 
+
+    tree_gen->SetBranchAddress("D_sminus_TRUEP_X",&Ds_gen[0]);
+    tree_gen->SetBranchAddress("D_sminus_TRUEP_Y",&Ds_gen[1]);
+    tree_gen->SetBranchAddress("D_sminus_TRUEP_Z",&Ds_gen[2]); 
+    tree_gen->SetBranchAddress("D_sminus_TRUEP_E",&Ds_gen[3]); 
+    tree_gen->SetBranchAddress("D_sminus_TRUEPT",&Ds_gen[4]); 
     
     int numEvents = tree_gen->GetEntries();
     int numSelected =0;
@@ -1050,8 +1092,7 @@ int makeMINTtupleGen(){
     {
 	if(dbThis)cout << " getting " << i << " th entry" << endl;	
 	tree_gen->GetEntry(i);
- 
-/*      
+      
         // Lorentz vectors: P=(Px,Py,Pz,E)
         TLorentzVector K_p(K_gen[0],K_gen[1],K_gen[2],K_gen[3]);
         TLorentzVector pip_p(pip_gen[0],pip_gen[1],pip_gen[2],pip_gen[3]);
@@ -1059,11 +1100,12 @@ int makeMINTtupleGen(){
         TLorentzVector D_Kp_p(Ds_Kp_gen[0],Ds_Kp_gen[1],Ds_Kp_gen[2],Ds_Kp_gen[3]);
         TLorentzVector D_Km_p(Ds_Km_gen[0],Ds_Km_gen[1],Ds_Km_gen[2],Ds_Km_gen[3]);
         TLorentzVector D_pim_p(Ds_pim_gen[0],Ds_pim_gen[1],Ds_pim_gen[2],Ds_pim_gen[3]);
-	TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+        TLorentzVector D_p(Ds_gen[0],Ds_gen[1],Ds_gen[2],Ds_gen[3]);
+	//TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
 	TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
         // array of vectors
 	vector<TLorentzVector> vectorOfvectors; 
-*/
+/*
 	TLorentzVector K_p;
 	K_p.SetXYZM(K_gen[0],K_gen[1],K_gen[2],pdg[2].mass());
         TLorentzVector pip_p;
@@ -1080,7 +1122,7 @@ int makeMINTtupleGen(){
 	TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
         // array of vectors
 	vector<TLorentzVector> vectorOfvectors; 
-
+*/
 	//cout << std::fixed << std::setprecision(10) << K_p.M() << endl;
 	//cout << std::fixed << std::setprecision(10) <<pip_p.M() << endl;
 	//cout << std::fixed << std::setprecision(10) <<D_p.M() << endl;
@@ -1098,44 +1140,198 @@ int makeMINTtupleGen(){
 		
 	DalitzEvent evt(pdg, vectorOfvectors);
 	//if(evt.phaseSpace()==0) cout << evt << endl;
-	/*
-	if(evt.s(1,2)<0 || evt.s(2,3)<0 || evt.s(3,4)<0 || evt.t(4,0)<0 || evt.t(1,0)< 0) 
-	cout << "negative mass ?" << endl; 
-        if(evt.s(1,2)< pdg.sijMin(1,2) || evt.s(1,2)> pdg.sijMax(1,2) ) continue;
-        if(evt.s(2,3)< pdg.sijMin(2,3) || evt.s(2,3)> pdg.sijMax(2,3) )continue; 
-        if(evt.s(3,4)< pdg.sijMin(3,4) || evt.s(3,4)> pdg.sijMax(3,4) ) continue;
-        if(evt.t(0,4)< pdg.sijMin(1,2,3) || evt.t(4,0)> pdg.sijMax(1,2,3) ) continue;  
-        if(evt.t(1,0)< pdg.sijMin(2,3,4) || evt.t(1,0)> pdg.sijMax(2,3,4) ) continue; 	
-	if(dbThis) cout << "s12 =  " << ( evt.p(1) + evt.p(2) ).Mag2() << endl;
-	if(dbThis) cout << "adding event " << evt << endl;
-	*/
- 	//if(abs(D_p.M()-1968.2) < 0.2)
+// 	if(D_p.M()-1968.2 > 0.2) cout <<  D_p.M() << endl;
+
 	eventList.Add(evt); // this fills the event list		
 	if(dbThis) cout << " added event" << endl;
 
-// 	if(D_p.M()-1968.2 > 0.2) cout <<  D_p.M() << endl;
-		
         numSelected++;
         if(numSelected==N)break;
     }
     
-    TString output = outputDir + "GenMC_EvtGen_test";
-    if(!addSweight){
-	if(bkg) output+="_bkg";
-	else output+="_3sigma";
-    }
+    TString output = outputDir + "GenMC_EvtGen_DsKpipi,Kpipi";
     if(N != -1)output += "_small";
     output+=".root";
     
     eventList.save((string)output);
-    DalitzHistoSet datH = eventList.weightedHistoSet();
-    datH.draw("data_","eps"); 
    
     cout << numSelected << " / " << numEvents << " events selected" << endl;
     cout << "Created File: " << output << endl;    
 
     return 0;
 }
+
+
+int makeMINTtupleGen_Ds3pi(){
+    
+    string outputDir = "/auto/data/dargent/BsDsKpipi/MINT/DecFileTest/";
+
+    bool dbThis=false;
+    int N=-1;
+    if(dbThis) cout << "read ntuple" << endl;
+	
+    NamedParameter<int> EventPattern("Event Pattern", 521, -431, 321, 211, -211);
+    DalitzEventPattern pdg(EventPattern.getVector());
+    cout << " got event pattern: " << pdg << endl;
+	
+    DalitzEventList eventList; 
+
+    // Read the momenta from ntuple
+    TChain* tree_gen=new TChain("MCDecayTreeTuple/MCDecayTree");
+//     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_1.root");
+//     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_2.root");
+//    tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_3.root");
+//     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_4.root");
+//     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_5.root");
+//      tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_13266007.root");
+      //tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_test_DsKpipi,pipipi.root");
+     // tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_test_Dspipipi,KKpi.root");
+      tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/norm_KKpi/Gen.root");
+      //tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/norm_Kpipi/Gen.root");
+     // tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/norm_pipipi/Gen.root");
+
+    if (dbThis) cout << "Read the file" << endl;	
+    double K_gen[5]; 
+    double pip_gen[5]; 
+    double pim_gen[5]; 
+    double Ds_Kp_gen[5],Ds_Km_gen[5],Ds_pim_gen[5],Ds_gen[5];
+
+    tree_gen->SetBranchStatus("*",0);
+    tree_gen->SetBranchStatus("*TRUEP*",1);
+
+    tree_gen->SetBranchAddress("piplus_TRUEP_X",&K_gen[0]);
+    tree_gen->SetBranchAddress("piplus_TRUEP_Y",&K_gen[1]);
+    tree_gen->SetBranchAddress("piplus_TRUEP_Z",&K_gen[2]); 
+    tree_gen->SetBranchAddress("piplus_TRUEP_E",&K_gen[3]); 
+    tree_gen->SetBranchAddress("piplus_TRUEPT",&K_gen[4]); 
+	
+    tree_gen->SetBranchAddress("piplus0_TRUEP_X",&pip_gen[0]);
+    tree_gen->SetBranchAddress("piplus0_TRUEP_Y",&pip_gen[1]);
+    tree_gen->SetBranchAddress("piplus0_TRUEP_Z",&pip_gen[2]); 
+    tree_gen->SetBranchAddress("piplus0_TRUEP_E",&pip_gen[3]); 
+    tree_gen->SetBranchAddress("piplus0_TRUEPT",&pip_gen[4]); 
+
+    tree_gen->SetBranchAddress("piminus_TRUEP_X",&pim_gen[0]);
+    tree_gen->SetBranchAddress("piminus_TRUEP_Y",&pim_gen[1]);
+    tree_gen->SetBranchAddress("piminus_TRUEP_Z",&pim_gen[2]); 
+    tree_gen->SetBranchAddress("piminus_TRUEP_E",&pim_gen[3]); 
+    tree_gen->SetBranchAddress("piminus_TRUEPT",&pim_gen[4]); 
+	
+    tree_gen->SetBranchAddress("Kplus0_TRUEP_X",&Ds_Kp_gen[0]);
+    tree_gen->SetBranchAddress("Kplus0_TRUEP_Y",&Ds_Kp_gen[1]);
+    tree_gen->SetBranchAddress("Kplus0_TRUEP_Z",&Ds_Kp_gen[2]); 
+    tree_gen->SetBranchAddress("Kplus0_TRUEP_E",&Ds_Kp_gen[3]); 
+    tree_gen->SetBranchAddress("Kplus0_TRUEPT",&Ds_Kp_gen[4]); 
+    
+    tree_gen->SetBranchAddress("Kminus_TRUEP_X",&Ds_Km_gen[0]);
+    tree_gen->SetBranchAddress("Kminus_TRUEP_Y",&Ds_Km_gen[1]);
+    tree_gen->SetBranchAddress("Kminus_TRUEP_Z",&Ds_Km_gen[2]); 
+    tree_gen->SetBranchAddress("Kminus_TRUEP_E",&Ds_Km_gen[3]); 
+    tree_gen->SetBranchAddress("Kminus_TRUEPT",&Ds_Km_gen[4]); 
+
+    tree_gen->SetBranchAddress("piminus0_TRUEP_X",&Ds_pim_gen[0]);
+    tree_gen->SetBranchAddress("piminus0_TRUEP_Y",&Ds_pim_gen[1]);
+    tree_gen->SetBranchAddress("piminus0_TRUEP_Z",&Ds_pim_gen[2]); 
+    tree_gen->SetBranchAddress("piminus0_TRUEP_E",&Ds_pim_gen[3]); 
+    tree_gen->SetBranchAddress("piminus0_TRUEPT",&Ds_pim_gen[4]); 
+
+    tree_gen->SetBranchAddress("D_sminus_TRUEP_X",&Ds_gen[0]);
+    tree_gen->SetBranchAddress("D_sminus_TRUEP_Y",&Ds_gen[1]);
+    tree_gen->SetBranchAddress("D_sminus_TRUEP_Z",&Ds_gen[2]); 
+    tree_gen->SetBranchAddress("D_sminus_TRUEP_E",&Ds_gen[3]); 
+    tree_gen->SetBranchAddress("D_sminus_TRUEPT",&Ds_gen[4]); 
+    
+    int numEvents = tree_gen->GetEntries();
+    int numSelected =0;
+    TRandom3 r;
+
+    //loop over tree and fill eventList
+    for(int i=0; i< numEvents; i++)
+    {
+	if(dbThis)cout << " getting " << i << " th entry" << endl;	
+	tree_gen->GetEntry(i);
+      
+        // Lorentz vectors: P=(Px,Py,Pz,E)
+        TLorentzVector K_p(K_gen[0],K_gen[1],K_gen[2],K_gen[3]);
+        TLorentzVector pip_p(pip_gen[0],pip_gen[1],pip_gen[2],pip_gen[3]);
+	TLorentzVector pim_p(pim_gen[0],pim_gen[1],pim_gen[2],pim_gen[3]);
+        TLorentzVector D_Kp_p(Ds_Kp_gen[0],Ds_Kp_gen[1],Ds_Kp_gen[2],Ds_Kp_gen[3]);
+        TLorentzVector D_Km_p(Ds_Km_gen[0],Ds_Km_gen[1],Ds_Km_gen[2],Ds_Km_gen[3]);
+        TLorentzVector D_pim_p(Ds_pim_gen[0],Ds_pim_gen[1],Ds_pim_gen[2],Ds_pim_gen[3]);
+        TLorentzVector D_p(Ds_gen[0],Ds_gen[1],Ds_gen[2],Ds_gen[3]);
+
+	TLorentzVector pip1_p, pip2_p;
+	if(r.Rndm()<0.5) { 
+			pip1_p = K_p;
+			pip2_p = pip_p;
+		} 
+	else { 
+			pip1_p = pip_p;
+			pip2_p = K_p;
+		} 
+	K_p = pip1_p;
+	pip_p = pip2_p;
+
+	//TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+	TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+        // array of vectors
+	vector<TLorentzVector> vectorOfvectors; 
+/*
+	TLorentzVector K_p;
+	K_p.SetXYZM(K_gen[0],K_gen[1],K_gen[2],pdg[2].mass());
+        TLorentzVector pip_p;
+	pip_p.SetXYZM(pip_gen[0],pip_gen[1],pip_gen[2],pdg[3].mass());
+	TLorentzVector pim_p;
+	pim_p.SetXYZM(pim_gen[0],pim_gen[1],pim_gen[2],pdg[3].mass());
+        TLorentzVector D_Kp_p;
+	D_Kp_p.SetXYZM(Ds_Kp_gen[0],Ds_Kp_gen[1],Ds_Kp_gen[2],pdg[2].mass());
+        TLorentzVector D_Km_p;
+	D_Km_p.SetXYZM(Ds_Km_gen[0],Ds_Km_gen[1],Ds_Km_gen[2],pdg[2].mass());
+        TLorentzVector D_pim_p;
+	D_pim_p.SetXYZM(Ds_pim_gen[0],Ds_pim_gen[1],Ds_pim_gen[2],pdg[3].mass());
+	TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+	TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+        // array of vectors
+	vector<TLorentzVector> vectorOfvectors; 
+*/
+	//cout << std::fixed << std::setprecision(10) << K_p.M() << endl;
+	//cout << std::fixed << std::setprecision(10) <<pip_p.M() << endl;
+	//cout << std::fixed << std::setprecision(10) <<D_p.M() << endl;
+	//cout << std::fixed << std::setprecision(10) <<B_p.M() << endl << endl;
+
+	// define the order of the vectors in the vectorOfvectors
+        // include the 'MeV' to get the correct units, need to include CLHEPSystemOfUnits.h
+        vectorOfvectors.push_back(B_p*MeV);      
+        vectorOfvectors.push_back(D_p*MeV);
+        vectorOfvectors.push_back(K_p*MeV); 
+	vectorOfvectors.push_back(pip_p*MeV);
+	vectorOfvectors.push_back(pim_p*MeV);
+
+	if(dbThis) cout << "make event" << endl;
+		
+	DalitzEvent evt(pdg, vectorOfvectors);
+	//if(evt.phaseSpace()==0) cout << evt << endl;
+// 	if(D_p.M()-1968.2 > 0.2) cout <<  D_p.M() << endl;
+
+	eventList.Add(evt); // this fills the event list		
+	if(dbThis) cout << " added event" << endl;
+
+        numSelected++;
+        if(numSelected==N)break;
+    }
+    
+    TString output = outputDir + "GenMC_EvtGen_Dspipipi,KKpi";
+    if(N != -1)output += "_small";
+    output+=".root";
+    
+    eventList.save((string)output);
+   
+    cout << numSelected << " / " << numEvents << " events selected" << endl;
+    cout << "Created File: " << output << endl;    
+
+    return 0;
+}
+
 
 void reweightEvtGen(){
 
@@ -1459,7 +1655,7 @@ int fracFit(){
   NamedParameter<int> EventPattern("Event Pattern", 421, -321, 211, 211, -211);
   DalitzEventPattern pat(EventPattern);
 
-  FitAmpIncoherentSum fas(pat);
+  FitAmpIncoherentSumEvtGen fas(pat);
   //SignalGenerator sg(pat,&fas);
   //sg.setWeighted();
   FromFileGenerator* fileGen = new FromFileGenerator(IntegratorEventFile, 0, "UPDATE");
@@ -1499,10 +1695,13 @@ int main(int argc, char** argv){
 
 
    //    makeIntegratorFile(atoi(argv[1]));
- //    makeMINTtupleGen();
-	makeMINTtupleGenInAcc();
-  //     ampFit(atoi(argv[1]));
-//      fracFit();
+	//makeMINTtupleGen();
+     makeMINTtupleGen_Ds3pi();
+     //makeIntegratorFilePhsp();
+
+//	makeMINTtupleGenInAcc();
+      ampFit(atoi(argv[1]));
+    //  fracFit();
 //     makeMINTtupleGenForToys();
 
 

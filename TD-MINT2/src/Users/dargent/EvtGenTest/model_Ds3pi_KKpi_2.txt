@@ -1,0 +1,66 @@
+RandomSeed  0
+
+"Phases given in"       "degrees"
+"Event Pattern"         531 -431 211 211 -211
+
+"PhspEventFile"		"/auto/data/dargent/BsDsKpipi/MINT/SignalIntegrationEvents_Ds3pi_Phsp_10M.root"
+"IntegratorEventFile"	"/auto/data/dargent/BsDsKpipi/MINT/SignalIntegrationEvents_Ds3pi_Phsp_10M.root"
+*"IntegratorEventFile"	"/auto/data/dargent/BsDsKpipi/MINT/SignalIntegrationEvents_EvtGen_new.root"
+"IntegratorEvents"	10000000
+"IntegPrecision"        3.5e-3
+"IntegMethod"           "efficient"
+"IntegratorSource"        "file"
+
+"Nevents"               1000
+"minEventsPerBin"	 100
+
+*"InputFileName"		"toys.root"
+*"InputFileName"            "/auto/data/dargent/Bs2DsKpipi/MINT2/MINT_data_3sigma.root"
+"InputFileName"		   "/auto/data/dargent/BsDsKpipi/MINT/GenMC_EvtGen_Dspipipi,KKpi.root"
+"OutputRootFile"	"toys.root"
+
+"OutputDir"		"model_Ds3pi_KKpi/"
+
+"Default3bodyBW"	"SBW"
+"NormBF"			3
+"useZemachTensors"		1
+
+** name								Fix?	init	step	min	max
+*
+
+"NonRes::alpha_a(1)(1260)+"	2	-0.25  0.1
+"NonRes::alpha_rho(770)0"	2	-0.25  0.1
+"NonRes::alpha_Bs0"		2	-0.25  0.1
+"NonRes::alpha_sigma10"		2	-0.25  0.1
+
+
+"SigFraction"                     				2	0.999	0.1	0.0	0.0
+
+"mass_a(1)(1260)+"	                     		2	1180	2	0.0	0.0
+"width_a(1)(1260)+"                     		2	400	1	0.0	0.0
+
+"mass_rho(770)0"	                     	2	775	 1	0.0	0.0
+"width_rho(770)0"                     		2	150	 1  0.0	0.0
+
+"mass_sigma10"	                     	2	550	 1	450.0	550.0
+"width_sigma10"                     	2	400	 1      350.0	500.0
+
+
+*Baseline:
+*---------------------
+
+"Inco_BgSpinZeroBs0->Ds-,pi+,pi+,pi-_Frac"              0.08
+"Inco_BgSpinZeroBs0->Ds-,pi+,pi+,pi-_Re"              0  0.000105241   0.00001    	0.0 0.0
+"Inco_BgSpinZeroBs0->Ds-,pi+,pi+,pi-_Im"              2  0.      0.01    0.0 	0.0
+
+"Inco_SBW_113BgSpinZeroBs0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),Ds-_Frac"		0.92
+"Inco_SBW_113BgSpinZeroBs0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),Ds-_Re"		2       1      0.05     0.0     0.0
+"Inco_SBW_113BgSpinZeroBs0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),Ds-_Im"		2       0     0.05     0.0     0.0
+
+*"Inco_SBW_999001BgSpinZeroBs0->a(1)(1260)+(->sigma10(->pi+,pi-),pi+),Ds-_Frac"		0.095
+*"Inco_SBW_999001BgSpinZeroBs0->a(1)(1260)+(->sigma10(->pi+,pi-),pi+),Ds-_Re"		0        0.534159      0.01     0.0     0.0
+*"Inco_SBW_999001BgSpinZeroBs0->a(1)(1260)+(->sigma10(->pi+,pi-),pi+),Ds-_Im"		2        0.     0.01     0.0     0.0
+
+
+
+

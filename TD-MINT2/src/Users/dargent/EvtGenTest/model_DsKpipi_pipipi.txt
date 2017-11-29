@@ -1,0 +1,115 @@
+RandomSeed  0
+
+"Phases given in"       "degrees"
+"Event Pattern"         531 -431 321 211 -211
+
+*"IntegratorEventFile"	"/auto/data/dargent/BsDsKpipi/MINT/SignalIntegrationEvents_Phsp_15M_new.root"
+"IntegratorEventFile"	"/auto/data/dargent/BsDsKpipi/MINT/SignalIntegrationEvents_EvtGen_new.root"
+"IntegratorEvents"	100000
+"IntegPrecision"        4.5e-3
+"IntegMethod"           "efficient"
+"IntegratorSource"        "file"
+
+"Nevents"               1000
+"minEventsPerBin"	 100
+
+*"InputFileName"		"toys.root"
+*"InputFileName"            "/auto/data/dargent/Bs2DsKpipi/MINT2/MINT_data_3sigma.root"
+"InputFileName"		   "/auto/data/dargent/BsDsKpipi/MINT/DecFileTest/GenMC_EvtGen_DsKpipi,pipipi.root"
+"OutputRootFile"	"toys.root"
+
+"OutputDir"		"model_DsKpipi_pipipi/"
+
+"Default3bodyBW"	"SBW"
+"NormBF"			3
+"useZemachTensors"		1
+
+** name								Fix?	init	step	min	max
+*
+
+"mass_K(1)(1270)+"	                     		2	1260	 1	0.0	0.0
+"width_K(1)(1270)+"                     		2	150	 1 	0.0	0.0
+
+"mass_K(1)(1400)+"	                     		2	1400	 1	0.0	0.0
+"width_K(1)(1400)+"                     		2	350	 1 	0.0	0.0
+
+"mass_K*(892)0"	                     		2	892	 1	0.0	0.0
+"width_K*(892)0"                     		2	51	 1 	0.0	0.0
+
+"mass_rho(770)0"	                     		2	775	 1	0.0	0.0
+"width_rho(770)0"                     		2	150	 1  0.0	0.0
+
+*"BW_radius"                     		0	0.003	0.0001	
+
+*"UseGlobalRadiusFor_Bs0"	0
+*"radius_Bs0"			0	0.0	0.0001	
+
+*"UseGlobalRadiusFor_K(1)(1270)+"	0
+*"radius_K(1)(1270)+"		0	0.003	0.0001	
+
+*"UseGlobalRadiusFor_K*(892)0"	0
+*"radius_K*(892)0"		0	0.003	0.0001	
+
+"NonRes::alpha_K*(892)0"	2	-0.25  0.1
+"NonRes::alpha_K(1)(1270)+"	2	-0.25  0.1
+"NonRes::alpha_K(1)(1400)+"	2	-0.25  0.1
+"NonRes::alpha_rho(770)0"	2	-0.25  0.1
+"NonRes::alpha_NonResS0"	2	0.  0.1
+"NonRes::alpha_NonResA0"	2	0.  0.1
+"NonRes::alpha_Bs0"		2	-0.25  0.1
+
+"NonRes::c1_K*(892)0"		2	0.  0.1
+"NonRes::c2_K*(892)0"		2	0.  0.1
+"NonRes::c3_K*(892)0"		2	0.  0.1
+
+"NonRes::c1_K(1)(1400)+"	2	0.  0.1
+"NonRes::c2_K(1)(1400)+"	2	0.  0.1
+"NonRes::c3_K(1)(1400)+"	2	0.  0.1
+
+
+
+"Inco_SBW_113BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Frac"		0.25
+"Inco_SBW_113BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"		0        0.910285    0.001     0.0     0.0
+"Inco_SBW_113BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"		2       0     0.05     0.0     0.0
+
+"Inco_SBW_313BgSpinZeroBs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Frac"     	       0.70
+"Inco_SBW_313BgSpinZeroBs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"              2	1	0.01	0.0	0.0
+"Inco_SBW_313BgSpinZeroBs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"              2	0.	0.01	0.0	0.0
+
+"Inco_BgSpinZeroBs0->Ds-,K+,pi+,pi-_Frac"              0.05
+"Inco_BgSpinZeroBs0->Ds-,K+,pi+,pi-_Re"              0  0.000283122   0.0001    	0.0 0.0
+"Inco_BgSpinZeroBs0->Ds-,K+,pi+,pi-_Im"              2  0.      0.01    0.0 	0.0
+
+
+
+
+*"Inco_SBW_313BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"              2	1.	0.01	0.0	0.0
+*"Inco_SBW_313BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"              2	0.	0.01	0.0	0.0
+*"Inco_BgSpinZeroBs0->K(1)(1270)+(->NonResV0(->pi+,pi-),K+),Ds-_Amp"                           2	1.0	0.0	0.0	0.0
+*"Inco_BgSpinZeroBs0->K(1)(1270)+(->NonResV0(->pi+,pi-),K+),Ds-_Phase"                         2	0.0	0.0	0.0	0.0
+
+*"Inco_BgSpinZeroBs0->K(1)(1400)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"		0       1      0.05     0.0     0.0
+*"Inco_BgSpinZeroBs0->K(1)(1400)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"		2       0     0.05     0.0     0.0
+*"Inco_BgSpinZeroBs0->K(1)(1400)+(->NonResV0(->pi+,pi-),K+),Ds-_Amp"                           2	1.0	0.0	0.0	0.0
+*"Inco_BgSpinZeroBs0->K(1)(1400)+(->NonResV0(->pi+,pi-),K+),Ds-_Phase"                         2	0.0	0.0	0.0	0.0
+
+*"Inco_SBW_313BgSpinZeroBs0->NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)_Re"               0	0.25	0.01	0.0	0.0
+*"Inco_SBW_313BgSpinZeroBs0->NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)_Im"               2	0.	0.01	0.0	0.0
+
+*"Inco_NonResEvtGenSBW_113BgSpinZeroBs0->NonResS0(->Ds-,K+),rho(770)0(->pi+,pi-)_Re"              	2	0.38	0.01	0.0	0.0
+*"Inco_NonResEvtGenSBW_113BgSpinZeroBs0->NonResS0(->Ds-,K+),rho(770)0(->pi+,pi-)_Im"             	2	0.	0.01	0.0	0.0
+
+*"Inco_NonResEvtGenSBW_113BgSpinZeroBs0->NonResA0(->rho(770)0(->pi+,pi-),K+),Ds-_Re"		0       0.61      0.05     0.0     0.0
+*"Inco_NonResEvtGenSBW_113BgSpinZeroBs0->NonResA0(->rho(770)0(->pi+,pi-),K+),Ds-_Im"		2       0     0.05     0.0     0.0
+
+*"Inco_NonResEvtGenSBW_113BgSpinZeroBs0->NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+_Re"		0       0.61      0.05     0.0     0.0
+*"Inco_NonResEvtGenSBW_113BgSpinZeroBs0->NonResA0(->rho(770)0(->pi+,pi-),Ds-)K+_Im"		2       0     0.05     0.0     0.0
+
+*"Inco_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Re"              2	0.81	0.01	0.0	0.0
+*"Inco_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Im"              2	0.	0.01	0.0	0.0
+
+
+
+
+
+
