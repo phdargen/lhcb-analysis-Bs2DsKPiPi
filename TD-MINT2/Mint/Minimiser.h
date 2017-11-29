@@ -15,6 +15,7 @@ class TGraph;
 namespace MINT{
 
 class IMinuitParameter;
+class FitParameter;
 
 class Minimiser : public TMinuit{
   mutable Double_t arglist[10];
