@@ -1336,18 +1336,19 @@ void fullTimeFit(){
     FitParameter detection_asym("detection_asym",2,0.,0.);
 
 
+    /*
     FullTimePdf t_pdf(C,D,D_bar,S,S_bar,k,tau,dGamma,dm,
                       p0_os,p1_os,delta_p0_os,delta_p1_os,avg_eta_os,tageff_os,tageff_asym_os,
                       p0_ss,p1_ss,delta_p0_ss,delta_p1_ss,avg_eta_ss,tageff_ss,tageff_asym_ss,
                       production_asym,detection_asym);
-     
+     */
     /// Don't use yet, needs blinding first !
-    /*                    
+                        
     FullTimePdf_mod t_pdf(r,delta,gamma,k,tau,dGamma,dm,
                       p0_os,p1_os,delta_p0_os,delta_p1_os,avg_eta_os,tageff_os,tageff_asym_os,
                       p0_ss,p1_ss,delta_p0_ss,delta_p1_ss,avg_eta_ss,tageff_ss,tageff_asym_ss,
                       production_asym,detection_asym);
-    */
+    
                         
     /// Load data
     double t,dt;
@@ -1418,11 +1419,12 @@ void fullTimeFit(){
     /// Fit with MINT Pdf
     Neg2LL neg2LL(t_pdf, eventList);    
     
-    neg2LL.getVal();
-    
+    //cout << "tau = " << endl << tau.mean() << endl <<  tau.blindedMean() << endl;
+    neg2LL.getVal();    
     Minimiser mini_t(&neg2LL);
     mini_t.doFit();
     mini_t.printResultVsInput();
+    //cout << "tau = " << endl << tau.mean() << endl <<  tau.blindedMean() << endl;
     
     /// Plot
     TCanvas* c = new TCanvas();

@@ -1,0 +1,65 @@
+"RandomSeed"		0
+"Event Pattern"         531 -431 221 211 -211
+
+"InputDir"	"../Files/"
+"OutputDir"	"signal/"
+"channel"	"signal"
+
+"nBinst" 	20
+"min_TAU" 	0.4
+"max_TAU" 	10
+"max_TAU_ForMixingPlot" 	4
+
+"do2DScan"	0
+
+** name		Fix?	init	step	min	max
+
+"knot_positions"	 0.5 1. 1.5 2. 3. 6. 9.5
+"c0"	2	0.255478	0.001
+"c1"	2	0.449228	0.001
+"c2"	2	0.704922	0.001
+"c3"	2	0.944002	0.001
+"c4"	2	1.10001		0.001
+"c5"	2	1.24265		0.001
+"c6"	2	1.18554		0.001
+
+"scale_sigma_dt"	2	1.2	0.1
+
+* PDG values:
+"tau"		2	1.509 	0.01	
+*"tau_Blind"	1	
+
+"dGamma" 	2 	0.09 	0.01	0.0	0.0
+"dm" 		2 	17.757  0.01	0.0	0.0
+
+"C"	2	0.735	0.1	-2.	2.
+"D"	2	0.395	0.1	-2.	2.
+"D_bar"	2	0.314	0.1	-2.	2.
+"S"	2	-0.518	0.1	-2.	2.
+"S_bar" 2	-0.496	0.1	-2.	2.
+
+"r"	0	0.31	0.01	0.	2.
+"delta"	0	100	5			
+"gamma"	0	70	5	
+"gamma_Blind"	1	-180   180
+*"gamma_Scan"	0	360	
+"k" 	0	.5	0.05	0.	1.
+
+"p0_os"			2	0.374	0.005
+"p1_os"			2	1.094	0.06
+"delta_p0_os"		2	0.	0.
+"delta_p1_os"		2	0.	0.
+"avg_eta_os"		2	0.37	0.001
+"tageff_os"		2	0.3715	0.001
+"tageff_asym_os"	2	0.	0.
+
+"p0_ss"			2	0.441	0.005
+"p1_ss"			2	1.084	0.06
+"delta_p0_ss"		2	0.	0.
+"delta_p1_ss"		2	0.	0.
+"avg_eta_ss"		2	0.437	0.001
+"tageff_ss"		2	0.639	0.001
+"tageff_asym_ss"	2	0.	0.
+
+"production_asym"	2	0.	0.
+"detection_asym"	2	0.	0.
