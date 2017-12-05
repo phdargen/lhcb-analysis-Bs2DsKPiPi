@@ -166,6 +166,17 @@ The signal distributions are obtained using sWeights, the procedure is described
 \label{fig:kinematics_data_comparison}
 \end{figure}
 
+To justify the portability of the flavour tagging calibration obtained from $\Bs\to\Ds\pion\pion\pion$ to the $\Bs\to\Ds\kaon\pion\pion$ channel, 
+besides the good agreement of the distributions shown above, the dependence of the measured mistag $\omega$ on the predicted mistag $\eta$ has to be compatible in both channel.
+This dependence is shown in Fig. \ref{fig:etavsW_mc_comparison} for simulated signal events of both channels, where good agreement is observed. 
+
+\begin{figure}[h]
+\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/OS_combination_MCcomparison.pdf}
+\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/SS_nnetKaon_MCcomparison.pdf}
+\caption{Dependence of the observed mistag $\omega$ on the predicted mistag $\eta$ for the (left) OS combination and ther (right) SS kaon tagger, 
+found in the simulated $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\pion\pion\pion$ (red) signal samples.}
+\label{fig:etavsW_mc_comparison}
+\end{figure}
 
 
 \subsection{Combination of OS and SS taggers}
@@ -176,7 +187,7 @@ Events that aquire a mistag probability greater than 0.5 after the calibration w
 In those events where both taggers made a decision, we use the standard combination of taggers \cite{LHCb-PAPER-2011-027} provided by the flavour tagging group. 
 In the nominal fit, the calibrated mistags $\omega$ are combined event by event for the OS and SS tager, thus adding one variable to observable to the fit procedure. 
 This ensures that the uncertainties of the OS and SS tagging calibration parameters are propagated properly to the combined tagging response for each event. \newline
-The taggging performance for the combined tagger in the categories SS tagged only, OS tagged only and SS+OS tagged, are shown in Tab. xXx for the signal and normalization channel.
+The taggging performance for the combined tagger in the categories SS tagged only, OS tagged only and SS+OS tagged, are shown in Tab. \ref{tab: TaggingPerformanceTab} for the signal and normalization channel.
 The distribution of the observed mistag $\omega$ as a function of the combined mistag probability $\eta$ for $\Bs\to\Ds\pion\pion\pion$ decays is shown in Fig. \ref{fig:TaggingCombinationCalibration}.
 
 
@@ -187,3 +198,28 @@ The distribution of the observed mistag $\omega$ as a function of the combined m
 The fit with a linear polynomial, used to determine $p_{0}$ and $p_{1}$ is overlaid.}
 \label{fig:TaggingCombinationCalibration}
 \end{figure}
+
+
+\begin{table}
+\centering
+\begin{tabular}{rllll}
+\hline \hline
+$\Bs\to\Ds\pion\pion\pion$ & \multicolumn{1}{c}{$\epsilon_{tag}$} & \multicolumn{1}{c}{$\epsilon_{eff}$} \\
+\hline
+SS only& $(26.960\pm0.162)\%$    & $(1.416\pm0.017(\textrm{stat})\pm0.082(\textrm{cal}))\%$\\
+OS only& $(21.561\pm0.150)\%$     & $(1.808\pm0.022(\textrm{stat})\pm0.100(\textrm{cal}))\%$\\
+SS+OS& $(29.938\pm0.167)\%$ & $(3.498\pm0.033(\textrm{stat})\pm0.196(\textrm{cal}))\%$\\
+\hline
+total & & \\
+\hline \hline
+$\Bs\to\Ds\kaon\pion\pion$ &  \multicolumn{1}{c}{$\epsilon_{tag}$} & \multicolumn{1}{c}{$\epsilon_{eff}$} \\
+\hline
+SS only& $(26.945\pm0.928)\%$    & $(1.289\pm0.076(\textrm{stat})\pm0.076(\textrm{cal}))\%$\\
+OS only& $(20.881\pm0.850)\%$     & $(1.665\pm0.107(\textrm{stat})\pm0.092(\textrm{cal}))\%$\\
+SS+OS& $(30.192\pm0.960)\%$ & $(3.877\pm0.183(\textrm{stat})\pm0.219(\textrm{cal}))\%$\\
+\hline
+total & & \\
+\end{tabular}
+\label{tab: TaggingPerformanceTab}
+\caption{Flavour tagging performances for $\Bs\to\Ds\pion\pion\pion$ and $\Bs\to\Ds\kaon\pion\pion$ events which are only OS tagged, only SS tagged or tagged by both.}
+\end{table}
