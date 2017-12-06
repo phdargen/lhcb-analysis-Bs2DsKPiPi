@@ -1,0 +1,134 @@
+* general options
+"Event Pattern"         531 -431 321 211 -211
+"RandomSeed"  	1
+"Phases given in"       "degrees"
+
+* setup MC integrator
+"IntegratorEventFile"	"../EvtGenTest/SignalIntegrationEvents_EvtGen_inAcc.root"
+"IntegratorEvents"	300000
+"IntegPrecision"        7.0e-3
+"IntegMethod"           "efficient"
+"IntegratorSource"        "file"
+
+"channel"	"signal"
+
+* options for toy generation
+*"InputFileName"		"toys.root"
+"Nevents"               3700
+"pdf_max"               100
+"saveEvents"		1
+"OutputRootFile"	"toys.root"
+
+"doTimeFit"		0
+"doDalitzFit"		0
+
+"do2DScan"		0
+"doPlots"		1
+"OutputDir"		"signal/"
+
+
+** name		Fix?	init	step	min	max
+*
+
+"knot_positions"	 0.5 1. 1.5 2. 3. 6. 9.5
+"c0"	2	0.255478	0.001
+"c1"	2	0.449228	0.001
+"c2"	2	0.704922	0.001
+"c3"	2	0.944002	0.001
+"c4"	2	1.10001		0.001
+"c5"	2	1.24265		0.001
+"c6"	2	1.18554		0.001
+"scale_sigma_dt"	2	1.2	0.1
+
+"tau"		2	1.509 	0.01	
+"dGamma" 	2 	0.09 	0.01	0.0	0.0
+"dm" 		2 	17.757  0.01	0.0	0.0
+
+"r"	2	1.0	0.01	0.	2.
+"delta"	0	100	5	-360    360		
+"gamma"	0	70	5	
+"gamma_Blind"	1	-180   180
+*"gamma_Scan"	0	360	
+"k" 	1	1.	0.05	0.	1.
+
+"p0_os"			2	0.374	0.005
+"p1_os"			2	1.094	0.06
+"delta_p0_os"		2	0.	0.
+"delta_p1_os"		2	0.	0.
+"avg_eta_os"		2	0.37	0.001
+"tageff_os"		2	0.3715	0.001
+"tageff_asym_os"	2	0.	0.
+
+"p0_ss"			2	0.441	0.005
+"p1_ss"			2	1.084	0.06
+"delta_p0_ss"		2	0.	0.
+"delta_p1_ss"		2	0.	0.
+"avg_eta_ss"		2	0.437	0.001
+"tageff_ss"		2	0.639	0.001
+"tageff_asym_ss"	2	0.	0.
+
+"production_asym"	2	0.	0.
+"detection_asym"	2	0.	0.
+
+"r_K1_Re"	0 0.7 0.01 0.0 1.0
+"r_K1_Im"	2 0.0 1 0.0 0.0
+
+"r_2_Re"	0  0.7 0.01 0.0 1.0
+"r_2_Im"	0  0 1 0.0 0.0
+
+"r_3_Re"	0  0.7 0.01 0.0 1.0
+"r_3_Im"	0  30. 1 0.0 0.0
+
+"r_4_Re"	2  0.7 0.01 0.0 1.0
+"r_4_Im"	2  40.  1 0.0 0.0
+
+
+*"r_Scan" 0 1
+*"delta_Scan" 0 360
+*"gamma_Scan" 0 360
+
+*"mass_K(1)(1270)+"	                     		2	1270	 1	0.0	0.0
+*"width_K(1)(1270)+"                     		2	90	 1 	0.0	0.0
+
+*Baseline:
+*---------------------		
+"Bs0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Re"	0	-0.354728   0.01 0.0 0.0
+"Bs0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Im"	0       0.438042 0.01 0.0 0.0
+"Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"	0	0.71233 0.01 0.0 0.0
+"Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"	0	0.190022 0.01 0.0 0.0
+"Bs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"	0	1.33579 0.01 0.0 0.0
+"Bs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"	0	-0.405238 0.01 0.0 0.0
+"GSBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"	2	1 0.01 0.0 0.0
+"GSBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"	2	0 0.01 0.0 0.0
+*"GSBs0->K(1)(1400)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"	0	0.597884 0.01 0.0 0.0
+*"GSBs0->K(1)(1400)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"	0	-0.319665 0.01 0.0 0.0
+
+"Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"	0	-0.160556 0.01 0.0 0.0
+"Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"	0	0.89854 0.01 0.0 0.0
+"GSBs0->K*(1410)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"	0	0.526958 0.01 0.0 0.0
+"GSBs0->K*(1410)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"	0	-0.477173 0.01 0.0 0.0
+
+"Bs0->NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)_Re"	0	0.0367885 0.01 0.0 0.0
+"Bs0->NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)_Im"	0	0.40909 0.01 0.0 0.0
+*"Bs0[D]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Re"	0	-0.235637 0.01 0.0 0.0
+*"Bs0[D]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Im"	0	0.114895 0.01 0.0 0.0
+"BuggBs0->NonResV0(->Ds-,K+),sigma10(->pi+,pi-)_Re"	0	-0.936419 0.01 0.0 0.0
+"BuggBs0->NonResV0(->Ds-,K+),sigma10(->pi+,pi-)_Im"	0	-0.154612 0.01 0.0 0.0
+
+*"BuggBs0->NonResA0(->sigma10(->pi+,pi-),Ds-),K+_Re"	0	-0.644878 0.01 0.0 0.0
+*"BuggBs0->NonResA0(->sigma10(->pi+,pi-),Ds-),K+_Im"	0	-0.212484 0.01 0.0 0.0
+*"GSBs0->NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+_Re"	0	0.0171077 0.01 0.0 0.0
+*"GSBs0->NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+_Im"	0	0.361604 0.01 0.0 0.0
+
+"BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Re"	0	0.01	0.01	
+"BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Im" 	0	0.	0.01		
+
+* For toy and integrator event generation:
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"              2	1	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"              2	0.	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"		2       1      0.05     0.0     0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"		2       0     0.05     0.0     0.0
+*"Inco_BgSpinZeroBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Re"              	2	0.7	0.01	0.0	0.0
+*"Inco_BgSpinZeroBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Im"             	2	0.	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Re"	2	0.5	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Im" 2	0.	0.01	0.0	0.0
