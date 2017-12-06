@@ -23,18 +23,23 @@ The weak phase dependence is written latter explicitly in the pdf.
 \end{align}
 
 The full time-dependent amplitude pdf is given by:
-\begin{align*}
+\begin{equation}
+\begin{split}
+\label{eq:PDF_full}
 	P(x,t,q_t,q_f) &\propto  [
 	 \left( \vert A(x) \vert^2 + \vert \bar A(x) \vert^2 \right) \, \text{cosh} \left( \frac{\Delta \Gamma \, t}{2}\right) \\
 	 & + q_t q_f \left( \vert A(x) \vert^2 - \vert \bar A(x) \vert^2 \right) \, \text{cos} \left( m_s \, t \right)  \\
 	 & -2 \text{Re}\left( A(x)^{*}  \bar A(x) \, e^{-i q_f (\gamma - 2\beta_s)}  \right) \, \text{sinh} \left( \frac{\Delta \Gamma \, t}{2}\right)  \\
 	 & -2 q_t q_f \text{Im}\left( A(x)^{*}  \bar A(x) \, e^{-i q_f (\gamma - 2\beta_s)}  \right)\, \text{sin} \left( m_s \, t \right)  ]  e^{- \Gamma t}
-\end{align*}
+\end{split}
+\end{equation}
 where $q_t = +1$ $(-1) $for a $B_s^{0}$ ($\bar B_s^{0}$) tag and 
 $q_f$ = +1 $ $(-1) for $D_s^{-} K^{+} \pi\pi$ ($D_s^{+} K^{-} \pi\pi$) final states. \\
 
 Integrating over the phasespace, we get
-\begin{align*}
+\begin{equation}
+\begin{split}
+\label{eq:PDF_intX}
 	\int P(x,t,q_t,q_f) \text d x &\propto   [
 	\, \text{cosh} \left( \frac{\Delta \Gamma \, t}{2}\right) \\
 	 & + q_t q_f \left( \frac{1-r^2}{1+r^2} \right) \, \text{cos} \left( m_s \, t \right)  \\
@@ -45,10 +50,12 @@ Integrating over the phasespace, we get
 	  + q_t q_f \, C \, \text{cos} \left( m_s \, t \right)  
 	  - \textcolor{red}{\kappa} \, D_{q_f} \, \text{sinh} \left( \frac{\Delta \Gamma \, t}{2}\right)  
 	  - q_t \, \textcolor{red}{\kappa} \, S_{q_f}\, \text{sin} \left( m_s \, t \right)  ]  e^{- \Gamma t}
-\end{align*}
+\end{split}
+\end{equation}
 where the $C,D_{q_f},S_{q_f}$ are defined exactly as for $D_s K$.
 The coherence factor is defined as :
 \begin{align}
+\label{eq:coherenceFactor}
 	\kappa \, e^{i\delta} &\equiv \, \frac{\int A(x)^{*}  \bar A(x)  \text d x}{\sqrt{\int \vert A(x) \vert^2\text d x} \sqrt{\int \vert \bar A(x) \vert^2\text d x}  } \\
 	r &\equiv \, \frac{\sqrt{\int \vert \bar A(x) \vert^2\text d x }}{\sqrt{\int \vert A(x) \vert^2\text d x}} 
 \end{align}
