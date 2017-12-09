@@ -133,6 +133,12 @@ bool Amplitude::CConjugateFinalState(){
     return resetTree(dt);
 }
 
+bool Amplitude::CConjugateInitialState(){
+    DecayTree dt = theBareDecay();
+    dt.getVal().antiThis();
+    return resetTree(dt);
+}
+
 bool Amplitude::setL(int L){
     DecayTree dt = theBareDecay();
     dt.getVal().setL(L);

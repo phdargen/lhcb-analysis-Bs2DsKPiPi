@@ -33,7 +33,8 @@ class SpinFactor
  public:
   virtual double getVal(IDalitzEvent& evt)=0;
   virtual double RealVal(IDalitzEvent& evt){return getVal(evt);}// some dublication here...
-  virtual std::complex<double> ComplexVal(IDalitzEvent& evt){     
+  virtual std::complex<double> ComplexVal(IDalitzEvent& evt){   
+            //return getNewVal(evt);
             return getValWithCachingPermutation(evt);
             //return std::complex<double>(getVal(evt),0);
   }

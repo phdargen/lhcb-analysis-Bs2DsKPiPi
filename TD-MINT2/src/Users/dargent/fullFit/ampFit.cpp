@@ -228,8 +228,8 @@ void AddScaledAmpsToList(FitAmpSum& fas_tmp, FitAmpSum& fas, FitAmpSum& fasCC, s
     counted_ptr<FitAmpList> List = fas_tmp.GetCloneOfSubsetSameFitParameters(name);
     FitAmpSum fas_2(*List);
     FitAmpSum fasCC_2(*List);
-    fasCC_2.CPConjugateSameFitParameters();
-    fasCC_2.CConjugateFinalStateSameFitParameters();
+    //fasCC_2.CPConjugateSameFitParameters();
+    //fasCC_2.CConjugateFinalStateSameFitParameters();
     fas_2.multiply(r_plus); 
     fasCC_2.multiply(r_minus); 
     fas.addAsList(fas_2,1.);
@@ -239,8 +239,8 @@ void AddScaledAmpsToList(FitAmpSum& fas_tmp, FitAmpSum& fas, FitAmpSum& fasCC, s
 std::vector<double> coherenceFactor(FitAmpSum& fas, FitAmpSum& fas_bar, double r, double delta, DalitzEventList& eventList){
     
     cout << "Calculating coherence factor ..." << endl << endl;
-    //fas.print();
-    //fas_bar.print();
+    fas.print();
+    fas_bar.print();
     
     std::complex<double> valK(0,0);
     double val1 = 0;
@@ -268,6 +268,44 @@ std::vector<double> coherenceFactor(FitAmpSum& fas, FitAmpSum& fas_bar, double r
     return result;
 }
 
+
+std::vector<double> coherenceFactorCC(FitAmpSum& fas, FitAmpSum& fas_bar, double r, double delta, DalitzEventList& eventList){
+    
+    cout << "Calculating coherence factor ..." << endl << endl;    
+    //fas.CPConjugateSameFitParameters();
+    //fas_bar.CPConjugateSameFitParameters();
+
+    //fas.print();
+    //fas_bar.print();
+    std::complex<double> valK(0,0);
+    double val1 = 0;
+    double val2 = 0;
+    
+    const complex<double> phase_diff = polar(r, delta/360.*2*pi);
+    
+    for(unsigned int i=0; i<eventList.size(); i++){
+    
+        DalitzEvent evt(eventList[i]);
+        evt.P_conjugateYourself();
+    
+        const std::complex<double> amp = fas.getVal(evt) ;
+        const std::complex<double> amp_bar = fas_bar.getVal(evt)*phase_diff ;
+        valK += amp_bar*conj(amp)*eventList[i].getWeight()/ eventList[i].getGeneratorPdfRelativeToPhaseSpace();
+        val1 += norm(amp)*eventList[i].getWeight()/ eventList[i].getGeneratorPdfRelativeToPhaseSpace();
+        val2 += norm(amp_bar)*eventList[i].getWeight()/ eventList[i].getGeneratorPdfRelativeToPhaseSpace();
+    }
+    
+    std::vector<double> result;
+    result.push_back(sqrt(val2/val1));
+    result.push_back(std::abs(valK)/sqrt(val1)/sqrt(val2));
+    result.push_back(std::arg(valK)/(2.*pi)*360.);
+    
+    cout << "r = " << result[0] << endl;
+    cout << "k = " << result[1] << endl;
+    cout << "d = " << result[2] << " [deg]" << endl << endl;
+    
+    return result;
+}
 
 // Full time-dependent PDF
 class FullAmpsPdfFlexiFastCPV : public MINT::PdfBase<IDalitzEvent>
@@ -408,9 +446,14 @@ protected:
 public:
     void parametersChanged(){
         _ampsSum->parametersChanged();
-        _intA = _ampsSum->integralForMatchingPatterns(true,1);
-        _intAbar = _ampsSum->integralForMatchingPatterns(true,-1);        
-        _intAAbar = _ampsSum->ComplexSumForMatchingPatterns(false);
+        //_intA = _ampsSum->integralForMatchingPatterns(true,1);
+        //_intAbar = _ampsSum->integralForMatchingPatterns(true,-1);        
+        //_intAAbar = _ampsSum->ComplexSumForMatchingPatterns(false);
+        
+        _intA = (_ampsSum->ComplexIntegralForTags(1,1)).real();
+        _intAbar = (_ampsSum->ComplexIntegralForTags(-1,-1)).real();        
+        _intAAbar = _ampsSum->ComplexIntegralForTags(1,-1);
+                
     }
     void beginFit(){
         _ampsSum->beginFit();
@@ -583,13 +626,13 @@ public:
         const complex<double> int_interference_bar = phase_diff_bar * _intAAbar ;
 
         _r_C->setVal((_intA - r* r * _intAbar)/(_intA + r* r * _intAbar) );
-        _r_D->setVal((-2.* int_interference.real() )/ (_intA + r* r * _intAbar));
-        _r_D_bar->setVal((-2.* int_interference_bar.real() )/ (_intA + r* r * _intAbar));
-        _r_S->setVal((2.* int_interference.imag() )/ (_intA + r* r * _intAbar));
-        _r_S_bar->setVal((-2. * int_interference_bar.imag() )/ (_intA + r* r * _intAbar));
+        _r_D->setVal((- int_interference.real() )/ (_intA + r* r * _intAbar));
+        _r_D_bar->setVal((- int_interference_bar.real() )/ (_intA + r* r * _intAbar));
+        _r_S->setVal((int_interference.imag() )/ (_intA + r* r * _intAbar));
+        _r_S_bar->setVal((- int_interference_bar.imag() )/ (_intA + r* r * _intAbar));
         
         double norm = (_intA + r* r * _intAbar)
-	*( _cosh_coeff->analyticalIntegral(2) * _efficiency->analyticalIntegral(coshBasis,_tau,_dm,_dGamma) 
+        *( _cosh_coeff->analyticalIntegral(2) * _efficiency->analyticalIntegral(coshBasis,_tau,_dm,_dGamma) 
         +  _cos_coeff->analyticalIntegral(2)  * _efficiency->analyticalIntegral(cosBasis,_tau,_dm,_dGamma)  
         + _sinh_coeff->analyticalIntegral(2)  * _efficiency->analyticalIntegral(sinhBasis,_tau,_dm,_dGamma)
         + _sin_coeff->analyticalIntegral(2)   * _efficiency->analyticalIntegral(sinBasis,_tau,_dm,_dGamma) );
@@ -1004,18 +1047,22 @@ void ampFit(int step=0){
     fas_tmp.getVal(eventListPhsp[0]);
     fas_tmp.normalizeAmps(eventListPhsp);
     
+    //FitAmpSum fas_tmpCC(fas_tmp);
+    //fas_tmpCC.CPConjugateSameFitParameters();
+    //fas_tmpCC.CConjugateSameFitParameters();
+    //fas_tmpCC.CConjugateInitialStateSameFitParameters();
+    
     counted_ptr<FitAmpList> List_1 = fas_tmp.GetCloneOfSubsetSameFitParameters("K(1)(1270)+");
     FitAmpSum fas(*List_1);
     FitAmpSum fasCC(*List_1);
-    fasCC.CPConjugateSameFitParameters();
-    fasCC.CConjugateFinalStateSameFitParameters();
+    //fasCC.CPConjugateSameFitParameters();
+    //fasCC.CConjugateFinalStateSameFitParameters();
     FitParameter r_K1_re("r_K1_Re",2,0,0.01);
     FitParameter r_K1_im("r_K1_Im",2,0,0.01); 
     counted_ptr<IReturnComplex> r_K1_plus = new CPV_amp_polar(r_K1_re,r_K1_im,1);
     counted_ptr<IReturnComplex> r_K1_minus = new CPV_amp_polar(r_K1_re,r_K1_im,-1);
     fas.multiply(r_K1_plus); 
     fasCC.multiply(r_K1_minus);
-    
     AddScaledAmpsToList(fas_tmp, fas, fasCC, "K(1)(1400)+", r_K1_plus, r_K1_minus );
     
     FitParameter r_2_re("r_2_Re",2,0,0.01);
@@ -1040,6 +1087,12 @@ void ampFit(int step=0){
     AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResA0(->sigma10(->pi+,pi-),Ds-)", r_4_plus, r_4_minus );
     AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+", r_4_plus, r_4_minus );
     */
+
+    // define B -> f amplitude        
+    fas.setTag(1);
+    // define Bbar -> f amplitude
+    fasCC.setTag(-1);
+    
     vector<double> k_gen = coherenceFactor(fas,fasCC,(double)r, (double)delta,eventListPhsp);
     
     counted_ptr<FitAmpList> sumList = fas.GetCloneSameFitParameters();
@@ -1136,56 +1189,56 @@ void ampFit(int step=0){
     {	
         if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
         tree->GetEntry(i);
-        
+
         if(t < min_TAU || t > max_TAU )continue;
         if( dt < 0 || dt > 0.1 )continue;
 
-	double sign = 1.;
-	if(f > 0) sign = -1.;
+        double sign = 1.;
+        if(f > 0) sign = -1.;
 
         TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
         TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
-	TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
+        TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
         TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
         TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
         TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
-	TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
-	TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+        TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+        TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
         // array of vectors
-	vector<TLorentzVector> vectorOfvectors; 
+        vector<TLorentzVector> vectorOfvectors; 
 
-	if((string)channel=="norm"){
-		TLorentzVector pip1_p, pip2_p;
-		if(rndm.Rndm()<0.5) { 
-			pip1_p = K_p;
-			pip2_p = pip_p;
-		} 
-		else { 
-			pip1_p = pip_p;
-			pip2_p = K_p;
-		} 
-		K_p = pip1_p;
-		pip_p = pip2_p;
-	}
+        if((string)channel=="norm"){
+            TLorentzVector pip1_p, pip2_p;
+            if(rndm.Rndm()<0.5) { 
+                pip1_p = K_p;
+                pip2_p = pip_p;
+            } 
+            else { 
+                pip1_p = pip_p;
+                pip2_p = K_p;
+            } 
+            K_p = pip1_p;
+            pip_p = pip2_p;
+        }
 
         vectorOfvectors.push_back(B_p*MeV);      
         vectorOfvectors.push_back(D_p*MeV);
         vectorOfvectors.push_back(K_p*MeV); 
-	vectorOfvectors.push_back(pip_p*MeV);
-	vectorOfvectors.push_back(pim_p*MeV);
+        vectorOfvectors.push_back(pip_p*MeV);
+        vectorOfvectors.push_back(pim_p*MeV);
 
-	DalitzEvent evt(pat, vectorOfvectors);
+        DalitzEvent evt(pat, vectorOfvectors);
 
-	if(!(evt.phaseSpace() > 0.)){
-		 	//cout << "evt " << i << " 0 phsp " << endl << evt << endl;
-			badEvents++;
-			continue;
-	}
-	if(TMath::IsNaN(norm(fas.getVal(evt)))){
-		 	//cout << "evt " << i << " isNaN " << endl << evt << endl;
-			badEvents++;
-			continue;
-	}
+        if(!(evt.phaseSpace() > 0.)){
+            //cout << "evt " << i << " 0 phsp " << endl << evt << endl;
+            badEvents++;
+            continue;
+        }
+        if(TMath::IsNaN(norm(fas.getVal(evt)))){
+            //cout << "evt " << i << " isNaN " << endl << evt << endl;
+            badEvents++;
+            continue;
+        }
 
         evt.setWeight(sw);
         evt.setValueInVector(0, t);
@@ -1354,7 +1407,7 @@ void ampFit(int step=0){
     for(int i = 0; i < eventListMC.size(); i++){
         
         double t_MC = 0.;
-  	while(1) {
+    while(1) {
  		//double rand = ranLux.Uniform();
  		double tval = ranLux.Exp(tau); //- tau*log(rand);
   	    	if (tval< max_TAU && tval> min_TAU) {

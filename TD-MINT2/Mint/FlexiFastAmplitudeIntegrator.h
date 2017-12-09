@@ -138,6 +138,10 @@ class FlexiFastAmplitudeIntegrator : virtual public IDalitzIntegrator{
         return _integCalc->integralForMatchingPatterns(match, pattern_sign);
   }
     
+  std::complex<double> ComplexIntegralForTags(int tag1, int tag2){
+        return _integCalc->ComplexIntegralForTags(tag1,tag2);
+  }
+
   std::complex<double> ComplexSumForMatchingPatterns(bool match){
         return _integCalc->ComplexSumForMatchingPatterns(match);
   }

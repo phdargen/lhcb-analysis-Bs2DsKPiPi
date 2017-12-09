@@ -101,6 +101,7 @@ FitAmplitude::FitAmplitude(const std::string& yourOwnNameWithoutPrefix
 		 , NamedParameterBase::QUIET)
   , _preFactors(1)
   , _name(treeWithOpts.prefix() + yourOwnNameWithoutPrefix)
+  , _tag(0)
 {
   //  if(useStringAs == FitAmplitude::PREFIX){
   //    _name += treeWithOpts.uniqueName();
@@ -122,6 +123,7 @@ FitAmplitude::FitAmplitude(const std::string& yourOwnNameWithoutPrefix
 		 		 , NamedParameterBase::QUIET)
   , _preFactors(1)
   , _name(treeWithOpts.prefix() + yourOwnNameWithoutPrefix)
+  , _tag(0)
 {
   //  if(useStringAs == FitAmplitude::PREFIX){
   //   _name += treeWithOpts.uniqueName();
@@ -141,6 +143,7 @@ FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
 		 , NamedParameterBase::QUIET)
   , _preFactors(1)
   , _name(treeWithOpts.uniqueName())
+  , _tag(0)
 {
 }
 
@@ -156,6 +159,7 @@ FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
 		 , NamedParameterBase::QUIET)
   , _preFactors(1)
   , _name(treeWithOpts.uniqueName())
+  , _tag(0)
 {
 }
 
@@ -174,6 +178,7 @@ FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
 		 , NamedParameterBase::QUIET)
   , _preFactors(1)
   , _name(prefix+StandardisedDecayTreeName)
+  , _tag(0)
 {
   
 }
@@ -192,6 +197,7 @@ FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
 		 , NamedParameterBase::QUIET)
   , _preFactors(1)
   , _name(prefix+StandardisedDecayTreeName)
+  , _tag(0)
 {
   
 }
@@ -204,6 +210,7 @@ FitAmplitude::FitAmplitude(const FitAmplitude& other, IFitParRegister* newDaddy)
   , _fitFraction(other._fitFraction)
   , _preFactors(other._preFactors)
   , _name(other._name)
+  , _tag(other._tag)
 {
   /* this creates a copy of the amplitude, but 
      it will depend on the SAME fit parameter 
@@ -256,6 +263,19 @@ bool FitAmplitude::CConjugateFinalStateSameFitParameters(){
 FitAmplitude FitAmplitude::GetCConjugateFinalStateSameFitParameters() const{
     FitAmplitude cp(*this);
     cp.CConjugateFinalStateSameFitParameters();
+    return cp;
+}
+
+bool FitAmplitude::CConjugateInitialStateSameFitParameters(){
+    _name += "_CconIs";
+    MINT::NamedParameter<double> fitFrac(_name + "_Frac", (double) 0, NamedParameterBase::QUIET);
+    _fitFraction = fitFrac;
+    return amp().CConjugateInitialState();
+}
+
+FitAmplitude FitAmplitude::GetCConjugateInitialStateSameFitParameters() const{
+    FitAmplitude cp(*this);
+    cp.CConjugateInitialStateSameFitParameters();
     return cp;
 }
 

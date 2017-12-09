@@ -83,6 +83,9 @@ class FitAmpPairList
 
   virtual int numEvents() const;
   virtual double integral() const;
+  
+  std::complex<double> ComplexIntegralForTags(int tag1, int tag2) const;
+
   double integralForMatchingPatterns(bool match,int pattern_sign) const;
   std::complex<double> ComplexSumForMatchingPatterns(bool match) const;
 

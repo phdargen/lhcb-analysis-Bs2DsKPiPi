@@ -43,6 +43,8 @@ class FitAmplitude
 
   std::string _name;
   static std::string longestNameInList();
+  
+  int _tag;
 
   // methods
   FitAmplitude(const FitAmplitude& other, IFitParRegister* newDaddy=0);
@@ -104,6 +106,9 @@ class FitAmplitude
   bool CConjugateFinalStateSameFitParameters();
   FitAmplitude GetCConjugateFinalStateSameFitParameters() const;
     
+  bool CConjugateInitialStateSameFitParameters();
+  FitAmplitude GetCConjugateInitialStateSameFitParameters() const;
+    
   bool setLSameFitParameters(int L);
   FitAmplitude GetDifferentLSameFitParameters(int L) const;  
 
@@ -119,6 +124,14 @@ class FitAmplitude
   double getFraction()const{
     return (double) _fitFraction;
   }
+  
+   void setTag(int tag){
+        _tag = tag;
+   }
+
+   double getTag()const{
+        return (double) _tag;
+   }
 
   //  std::complex<double> preFactors();
   std::complex<double> preFactors() const{

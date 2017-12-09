@@ -165,6 +165,17 @@ bool FitAmpListBase::CConjugateFinalStateSameFitParameters(){
     return success;
 }
 
+bool FitAmpListBase::CConjugateInitialStateSameFitParameters(){
+    bool dbThis=false;
+    if(dbThis) cout << "FitAmpListBase::CConjugateFinalStateSameFitParameters()" << endl;
+    
+    bool success=true;
+    for(unsigned int i=0; i< this->size(); i++){
+        success &= getAmpPtr(i)->CConjugateInitialStateSameFitParameters();
+    }
+    return success;
+}
+
 bool FitAmpListBase::setLSameFitParameters(int L){
     bool dbThis=false;
     if(dbThis) cout << "FitAmpListBase::setLSameFitParameters()" << endl;
@@ -223,6 +234,15 @@ counted_ptr<FitAmpListBase> FitAmpListBase::GetCConjugateFinalStateSameFitParame
     
     counted_ptr<FitAmpListBase> newList = this->GetCloneSameFitParameters();
     newList->CConjugateFinalStateSameFitParameters();
+    return newList;
+}
+
+counted_ptr<FitAmpListBase> FitAmpListBase::GetCConjugateInitialStateSameFitParameters() const{
+    bool dbThis=false;
+    if(dbThis) cout << "FitAmpListBase::GetCConjugateFinalStateSameFitParameters()" << endl;
+    
+    counted_ptr<FitAmpListBase> newList = this->GetCloneSameFitParameters();
+    newList->CConjugateInitialStateSameFitParameters();
     return newList;
 }
 
@@ -486,6 +506,12 @@ void FitAmpListBase::randomizeStartVals(int seed){
               //getAmpPtr(i)->multiply(c);
              if(!(getAmpPtr(i)->FitAmpPhase().isConstant()))getAmpPtr(i)->FitAmpPhase().set(c);
             }
+}
+
+void FitAmpListBase::setTag(int tag){
+    for(unsigned int i=0; i< this->size(); i++){
+        this->getAmpPtr(i)->setTag(tag);
+    }
 }
 
 FitAmpListBase::~FitAmpListBase(){

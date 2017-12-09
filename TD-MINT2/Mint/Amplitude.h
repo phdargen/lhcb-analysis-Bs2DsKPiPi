@@ -116,10 +116,11 @@ class Amplitude
   bool resetTree(const DecayTree& dt);
   bool CPConjugate();
   bool CConjugateFinalState();
+  bool CConjugateInitialState();
   bool setL(int L);
  
   virtual std::complex<double> getVal(IDalitzEvent& evt){
-    //return getNewVal(evt); (for debugging)
+    //return getNewVal(evt);// (for debugging)
     return getValWithCaching(evt);
   }
 

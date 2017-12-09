@@ -1,0 +1,43 @@
+#-- GAUDI jobOptions generated on Thu Dec  7 14:36:04 2017
+#-- Contains event types : 
+#--   13266007 - 28 files - 629199 events - 185.22 GBytes
+
+
+#--  Extra information about the data processing phases:
+
+
+#--  Processing Pass Step-127969 
+
+#--  StepId : 127969 
+#--  StepName : Reco14c for MC - 2012 
+#--  ApplicationName : Brunel 
+#--  ApplicationVersion : v43r2p11 
+#--  OptionFiles : $APPCONFIGOPTS/Brunel/DataType-2012.py;$APPCONFIGOPTS/Brunel/MC-WithTruth.py;$APPCONFIGOPTS/Persistency/DST-multipleTCK-2012.py;$APPCONFIGOPTS/Persistency/Compression-ZLIB-1.py 
+#--  DDDB : fromPreviousStep 
+#--  CONDDB : sim-20141210-1-vc-mu100 
+#--  ExtraPackages : AppConfig.v3r218 
+#--  Visible : Y 
+
+
+#--  Processing Pass Step-127160 
+
+#--  StepId : 127160 
+#--  StepName : Stripping21-NoPrescalingFlagged for Sim08 - MU - Implicit merging. 
+#--  ApplicationName : DaVinci 
+#--  ApplicationVersion : v36r1p1 
+#--  OptionFiles : $APPCONFIGOPTS/DaVinci/DV-Stripping21-Stripping-MC-NoPrescaling.py;$APPCONFIGOPTS/DaVinci/DV-RedoCaloPID-Stripping21.py;$APPCONFIGOPTS/DaVinci/DataType-2012.py;$APPCONFIGOPTS/DaVinci/InputType-DST.py;$APPCONFIGOPTS/Persistency/Compression-ZLIB-1.py 
+#--  DDDB : fromPreviousStep 
+#--  CONDDB : sim-20141210-1-vc-mu100 
+#--  ExtraPackages : AppConfig.v3r205 
+#--  Visible : Y 
+
+from Gaudi.Configuration import * 
+from GaudiConf import IOHelper
+IOHelper('ROOT').inputFiles(['LFN:/lhcb/MC/2012/ALLSTREAMS.DST/00051570/0000/00051570_00000001_2.AllStreams.dst'
+#,
+#'LFN:/lhcb/MC/2012/ALLSTREAMS.DST/00051570/0000/00051570_00000002_2.AllStreams.dst',
+#'LFN:/lhcb/MC/2012/ALLSTREAMS.DST/00051570/0000/00051570_00000003_2.AllStreams.dst',
+#'LFN:/lhcb/MC/2012/ALLSTREAMS.DST/00051570/0000/00051570_00000005_2.AllStreams.dst',
+#'LFN:/lhcb/MC/2012/ALLSTREAMS.DST/00051570/0000/00051570_00000006_2.AllStreams.dst',
+#'LFN:/lhcb/MC/2012/ALLSTREAMS.DST/00051570/0000/00051570_00000007_2.AllStreams.dst'
+], clear=True)

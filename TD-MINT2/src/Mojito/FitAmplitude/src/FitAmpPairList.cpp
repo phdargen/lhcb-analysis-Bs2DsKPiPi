@@ -239,6 +239,20 @@ double FitAmpPairList::integral() const{
   return sum;
 }
 
+std::complex<double> FitAmpPairList::ComplexIntegralForTags(int tag1, int tag2) const{
+    std::complex<double> sum = 0;
+
+    for(unsigned int i=0; i< this->size(); i++){
+        if((this->at(i).fitAmp1().getTag() == tag1) && ( this->at(i).fitAmp2().getTag() == tag2)){
+            sum += conj(this->at(i).complexVal());       
+        }
+        else if((this->at(i).fitAmp1().getTag() == tag2) && ( this->at(i).fitAmp2().getTag() == tag1)){
+            sum += this->at(i).complexVal();
+        }
+    }
+    return sum;
+}
+
 double FitAmpPairList::integralForMatchingPatterns(bool match, int pattern_sign) const{
     double sum = 0;
     for(unsigned int i=0; i< this->size(); i++){

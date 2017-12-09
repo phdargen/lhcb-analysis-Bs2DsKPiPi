@@ -194,6 +194,12 @@ class DalitzPdfBaseFlexiFastInteg
         if(!_faint.initialised())getNorm();
         return _faint.ComplexSumForMatchingPatterns(match);
   }
+  
+  
+  std::complex<double> ComplexIntegralForTags(int tag1, int tag2){
+        if(!_faint.initialised())getNorm();
+        return _faint.ComplexIntegralForTags(tag1, tag2);
+  }
 
   double sumOfFitFractions() {
         if(!_faint.initialised())getNorm();
