@@ -1,0 +1,74 @@
+"RandomSeed"		0
+"Event Pattern"         531 -431 211 211 -211
+
+*"InputDir"	"../Files/"
+"OutputDir"	"norm_taggingCalib2/"
+"channel"	"norm"
+
+"updateAnaNotePlots"	 0
+"nBinst" 	40
+"min_TAU" 	0.4
+"max_TAU" 	10
+"max_TAU_ForMixingPlot" 	4
+"w_max"		 0.5
+"nBinsAsym" 	10
+
+"knot_positions"	 0.5 1. 1.5 2. 3. 6. 9.5
+
+*"c0"	0	3.7632e-01	0.001
+*"c1"	0	6.2685e-01	0.001
+*"c2"	0	8.4416e-01	0.001
+*"c3"	0	1.0270e+00	0.001
+*"c4"	0	1.1173e+00	0.001
+*"c5"	0	1.2331e+00	0.001
+*"c6"	0	1.1904e+00	0.001
+*"c7"	2	0.001
+*"c8"	2	0.001
+*"c9"	2	0.001
+
+"offset_sigma_dt"	2 	0.0103	0.001
+"scale_sigma_dt"	2	1.28	0.05
+"c0"	2	0.255478	0.001
+"c1"	2	0.449228	0.001
+"c2"	2	0.704922	0.001
+"c3"	2	0.944002	0.001
+"c4"	2	1.10001		0.001
+"c5"	2	1.24265		0.001
+"c6"	2	1.18554		0.001
+
+
+** name		Fix?	init	step	min	max
+
+* PDG values:
+"tau"		2	1.509 	0.01	0.5	2.0
+"dGamma" 	2 	0.09 	0.01	0.0	0.0
+"dm" 		2 	17.757  0.01	0.0	0.0
+
+"C"	2	1.	0.1	0.	2.
+"D"	2	0.	0.1
+"D_bar"	2	0.	0.1
+"S"	2	0.	0.1
+"S_bar" 2	0.	0.1
+"k" 	2	1.	0.1
+
+"r"	2	0.	0.01	0.	2.
+
+
+"p0_os"			0	0.374	0.005
+"p1_os"			0	1.094	0.06
+"delta_p0_os"		0	0.014	0.005
+"delta_p1_os"		0	0.126	0.05
+"avg_eta_os"		2	0.373	0.001
+"tageff_os"		0	0.3852	0.002
+"tageff_asym_os"	0	-0.0114	0.005
+
+"p0_ss"			0	0.441	0.005
+"p1_ss"			0	1.084	0.06
+"delta_p0_ss"		0	-0.018	0.005
+"delta_p1_ss"		0	0.13	0.05
+"avg_eta_ss"		2	0.4331	0.01
+"tageff_ss"		0	0.6903	0.002
+"tageff_asym_ss"	0	0.0082	0.005
+
+"production_asym"	2	0.	0.
+"detection_asym"	2	0.	0.

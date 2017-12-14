@@ -1,0 +1,496 @@
+
+[1mRooFit v3.57 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+INFO in constructor of NamedParameterBase:
+  > For parameter named: "InputDir"
+  > You did not provide a filename.
+  > I'll read from stdin. This is completely OK,
+  > but if there is no input from stdin ending in EOF,
+  > the program will stall after this message.
+  > If you find yourself in this situation, press Ctr-d.
+  > In future, run the program as ./program < inputFile.txt
+  > even if inputFile.txt is just an empty dummy file.
+  > This message is only printed once.
+[#1] INFO:DataHandling -- RooDataHist::adjustBinning(r_h_dt): fit range of variable dt expanded to nearest bin boundaries: [0,0.1] --> [0,0.1]
+[#1] INFO:DataHandling -- RooDataHist::adjustBinning(r_eta_OS): fit range of variable eta_OS expanded to nearest bin boundaries: [0,0.5] --> [0,0.5]
+[#1] INFO:DataHandling -- RooDataHist::adjustBinning(r_eta_SS): fit range of variable eta_SS expanded to nearest bin boundaries: [0,0.5] --> [0,0.5]
+INFO in ParticlePropertiesList: trying: mass_width.cvs
+INFO in ParticlePropertiesList: Using this file: mass_width.cvs
+reading 0th file
+INFO in ParticlePropertiesList: trying: MintDalitzSpecialParticles.cvs
+INFO in ParticlePropertiesList: trying: ./MintDalitzSpecialParticles.cvs
+INFO in ParticlePropertiesList: trying: UNKNOWN/MintData/MintDalitzSpecialParticles.cvs
+INFO in ParticlePropertiesList: trying: ./src/Mojito/ParticleProperties/src/MintDalitzSpecialParticles.cvs
+INFO in ParticlePropertiesList: trying: ../../../Mojito/ParticleProperties/src/MintDalitzSpecialParticles.cvs
+INFO in ParticlePropertiesList: Using this file: ../../../Mojito/ParticleProperties/src/MintDalitzSpecialParticles.cvs
+reading 0th file
+Read event 0/265689
+Read event 10000/265689
+Read event 20000/265689
+Read event 30000/265689
+Read event 40000/265689
+Read event 50000/265689
+Read event 60000/265689
+Read event 70000/265689
+Read event 80000/265689
+Read event 90000/265689
+Read event 100000/265689
+Read event 110000/265689
+Read event 120000/265689
+Read event 130000/265689
+Read event 140000/265689
+Read event 150000/265689
+Read event 160000/265689
+Read event 170000/265689
+Read event 180000/265689
+Read event 190000/265689
+Read event 200000/265689
+Read event 210000/265689
+Read event 220000/265689
+Read event 230000/265689
+Read event 240000/265689
+Read event 250000/265689
+Read event 260000/265689
+Neg2LLClass: I got initialised with an event list with 95451 events.
+Neg2LLClass: with pointer: 0x7fffee06be20
+Neg2LLClass::getVal after 1 calls.for 95451 events, I'm about to return -1.28226e+06
+Sum of weights = 32031.4
+Minimiser::init(): you called me
+ ... calling theFunction()->beginFit()
+... made space, now initialising variables
+ PARAMETER DEFINITIONS:
+    NO.   NAME         VALUE      STEP SIZE      LIMITS
+     1 C            1.00000e+00  constant
+     2 D            0.00000e+00  constant
+     3 D_bar        0.00000e+00  constant
+     4 S            0.00000e+00  constant
+     5 S_bar        0.00000e+00  constant
+     6 r            0.00000e+00  constant
+     7 k            1.00000e+00  constant
+     8 tau          1.50900e+00  constant
+     9 dGamma       9.00000e-02  constant
+    10 dm           1.77570e+01  constant
+    11 p0_os        3.74000e-01  5.00000e-03     no limits
+    12 p1_os        1.09400e+00  6.00000e-02     no limits
+    13 delta_p0_os   1.40000e-02  5.00000e-03     no limits
+    14 delta_p1_os   1.26000e-01  5.00000e-02     no limits
+    15 avg_eta_os   3.73000e-01  constant
+    16 tageff_os    3.85200e-01  2.00000e-03     no limits
+    17 tageff_asym_os  -1.14000e-02  5.00000e-03     no limits
+    18 p0_ss        4.41000e-01  5.00000e-03     no limits
+    19 p1_ss        1.08400e+00  6.00000e-02     no limits
+    20 delta_p0_ss  -1.80000e-02  5.00000e-03     no limits
+    21 delta_p1_ss   1.30000e-01  5.00000e-02     no limits
+    22 avg_eta_ss   4.33100e-01  constant
+    23 tageff_ss    6.90300e-01  2.00000e-03     no limits
+    24 tageff_asym_ss   8.20000e-03  5.00000e-03     no limits
+    25 production_asym   0.00000e+00  constant
+    26 detection_asym   0.00000e+00  constant
+    27 offset_sigma_dt   1.03000e-02  constant
+    28 scale_sigma_dt   1.28000e+00  constant
+    29 c0           2.55478e-01  constant
+    30 c1           4.49228e-01  constant
+    31 c2           7.04922e-01  constant
+    32 c3           9.44002e-01  constant
+    33 c4           1.10001e+00  constant
+    34 c5           1.24265e+00  constant
+    35 c6           1.18554e+00  constant
+ initialised variables.
+Minimiser::init(): returning true
+ **********
+ **    1 **SET PRINTOUT           3
+ **********
+ **********
+ **    2 **SET ERR           1
+ **********
+ **********
+ **    3 **SET STRATEGY           1
+ **********
+ NOW USING STRATEGY  1: TRY TO BALANCE SPEED AGAINST RELIABILITY
+ **********
+ **    4 **SET NOGRADIENT           1
+ **********
+ PARAMETER DEFINITIONS:
+    NO.   NAME         VALUE      STEP SIZE      LIMITS
+     1 C            1.00000e+00  constant
+     2 D            0.00000e+00  constant
+     3 D_bar        0.00000e+00  constant
+     4 S            0.00000e+00  constant
+     5 S_bar        0.00000e+00  constant
+     6 r            0.00000e+00  constant
+     7 k            1.00000e+00  constant
+     8 tau          1.50900e+00  constant
+     9 dGamma       9.00000e-02  constant
+    10 dm           1.77570e+01  constant
+    11 p0_os        3.74000e-01  5.00000e-03     no limits
+    12 p1_os        1.09400e+00  6.00000e-02     no limits
+    13 delta_p0_os   1.40000e-02  5.00000e-03     no limits
+    14 delta_p1_os   1.26000e-01  5.00000e-02     no limits
+    15 avg_eta_os   3.73000e-01  constant
+    16 tageff_os    3.85200e-01  2.00000e-03     no limits
+    17 tageff_asym_os  -1.14000e-02  5.00000e-03     no limits
+    18 p0_ss        4.41000e-01  5.00000e-03     no limits
+    19 p1_ss        1.08400e+00  6.00000e-02     no limits
+    20 delta_p0_ss  -1.80000e-02  5.00000e-03     no limits
+    21 delta_p1_ss   1.30000e-01  5.00000e-02     no limits
+    22 avg_eta_ss   4.33100e-01  constant
+    23 tageff_ss    6.90300e-01  2.00000e-03     no limits
+    24 tageff_asym_ss   8.20000e-03  5.00000e-03     no limits
+    25 production_asym   0.00000e+00  constant
+    26 detection_asym   0.00000e+00  constant
+    27 offset_sigma_dt   1.03000e-02  constant
+    28 scale_sigma_dt   1.28000e+00  constant
+    29 c0           2.55478e-01  constant
+    30 c1           4.49228e-01  constant
+    31 c2           7.04922e-01  constant
+    32 c3           9.44002e-01  constant
+    33 c4           1.10001e+00  constant
+    34 c5           1.24265e+00  constant
+    35 c6           1.18554e+00  constant
+calling MIGRAD
+ **********
+ **    5 **MIGRAD       1e+05        0.01
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ START MIGRAD MINIMIZATION.  STRATEGY  1.  CONVERGENCE WHEN EDM .LT. 1.00e-05
+ FCN=-1.28226e+06 FROM MIGRAD    STATUS=INITIATE       38 CALLS          39 TOTAL
+                     EDM= unknown      STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  C            1.00000e+00   constant   
+   2  D            0.00000e+00   constant   
+   3  D_bar        0.00000e+00   constant   
+   4  S            0.00000e+00   constant   
+   5  S_bar        0.00000e+00   constant   
+   6  r            0.00000e+00   constant   
+   7  k            1.00000e+00   constant   
+   8  tau          1.50900e+00   constant   
+   9  dGamma       9.00000e-02   constant   
+  10  dm           1.77570e+01   constant   
+  11  p0_os        3.74000e-01   5.00000e-03   5.00000e-03  -4.15977e+02
+  12  p1_os        1.09400e+00   6.00000e-02   6.00000e-02   3.45097e+01
+  13  delta_p0_os   1.40000e-02   5.00000e-03   5.00000e-03  -2.44092e+02
+  14  delta_p1_os   1.26000e-01   5.00000e-02   5.00000e-02   3.71299e+01
+  15  avg_eta_os   3.73000e-01   constant   
+  16  tageff_os    3.85200e-01   2.00000e-03   2.00000e-03   9.86955e+00
+  17  tageff_asym_os  -1.14000e-02   5.00000e-03   5.00000e-03  -3.93303e+02
+  18  p0_ss        4.41000e-01   5.00000e-03   5.00000e-03  -1.31889e+02
+  19  p1_ss        1.08400e+00   6.00000e-02   6.00000e-02   2.18545e+01
+  20  delta_p0_ss  -1.80000e-02   5.00000e-03   5.00000e-03   1.01750e+02
+  21  delta_p1_ss   1.30000e-01   5.00000e-02   5.00000e-02   1.32724e+01
+  22  avg_eta_ss   4.33100e-01   constant   
+  23  tageff_ss    6.90300e-01   2.00000e-03   2.00000e-03   1.36725e+01
+  24  tageff_asym_ss   8.20000e-03   5.00000e-03   5.00000e-03   2.17238e+02
+  25  production_asym   0.00000e+00   constant   
+  26  detection_asym   0.00000e+00   constant   
+  27  offset_sigma_dt   1.03000e-02   constant   
+  28  scale_sigma_dt   1.28000e+00   constant   
+  29  c0           2.55478e-01   constant   
+  30  c1           4.49228e-01   constant   
+  31  c2           7.04922e-01   constant   
+  32  c3           9.44002e-01   constant   
+  33  c4           1.10001e+00   constant   
+  34  c5           1.24265e+00   constant   
+  35  c6           1.18554e+00   constant   
+NO ERROR MATRIX       
+ FCN=-1.28227e+06 FROM MIGRAD    STATUS=PROGRESS       64 CALLS          65 TOTAL
+                     EDM=1.36224    STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  C            1.00000e+00   constant   
+   2  D            0.00000e+00   constant   
+   3  D_bar        0.00000e+00   constant   
+   4  S            0.00000e+00   constant   
+   5  S_bar        0.00000e+00   constant   
+   6  r            0.00000e+00   constant   
+   7  k            1.00000e+00   constant   
+   8  tau          1.50900e+00   constant   
+   9  dGamma       9.00000e-02   constant   
+  10  dm           1.77570e+01   constant   
+  11  p0_os        3.87603e-01   5.00000e-03   1.36028e-02  -4.73893e+01
+  12  p1_os        9.74256e-01   6.00000e-02  -1.19744e-01   3.28440e+00
+  13  delta_p0_os   2.21833e-02   5.00000e-03   8.18335e-03   6.77433e+01
+  14  delta_p1_os  -1.13251e-02   5.00000e-02  -1.37325e-01  -1.52159e+00
+  15  avg_eta_os   3.73000e-01   constant   
+  16  tageff_os    3.85169e-01   2.00000e-03  -3.14069e-05  -3.84100e-01
+  17  tageff_asym_os   5.86638e-03   5.00000e-03   1.72664e-02   2.71441e+01
+  18  p0_ss        4.43387e-01   5.00000e-03   2.38653e-03   3.10969e+01
+  19  p1_ss        1.01429e+00   6.00000e-02  -6.97105e-02  -8.26787e-01
+  20  delta_p0_ss  -1.99533e-02   5.00000e-03  -1.95327e-03   4.80784e+00
+  21  delta_p1_ss   8.10907e-02   5.00000e-02  -4.89093e-02   6.35655e+00
+  22  avg_eta_ss   4.33100e-01   constant   
+  23  tageff_ss    6.90261e-01   2.00000e-03  -3.92759e-05   3.89708e+00
+  24  tageff_asym_ss  -1.30871e-03   5.00000e-03  -9.50871e-03   3.15158e+01
+  25  production_asym   0.00000e+00   constant   
+  26  detection_asym   0.00000e+00   constant   
+  27  offset_sigma_dt   1.03000e-02   constant   
+  28  scale_sigma_dt   1.28000e+00   constant   
+  29  c0           2.55478e-01   constant   
+  30  c1           4.49228e-01   constant   
+  31  c2           7.04922e-01   constant   
+  32  c3           9.44002e-01   constant   
+  33  c4           1.10001e+00   constant   
+  34  c5           1.24265e+00   constant   
+  35  c6           1.18554e+00   constant   
+ RELATIVE CHANGE IN COV. MATRIX= 51.6 per cent
+ FCN=-1.28227e+06 FROM MIGRAD    STATUS=PROGRESS       89 CALLS          90 TOTAL
+                     EDM=0.0175344    STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  C            1.00000e+00   constant   
+   2  D            0.00000e+00   constant   
+   3  D_bar        0.00000e+00   constant   
+   4  S            0.00000e+00   constant   
+   5  S_bar        0.00000e+00   constant   
+   6  r            0.00000e+00   constant   
+   7  k            1.00000e+00   constant   
+   8  tau          1.50900e+00   constant   
+   9  dGamma       9.00000e-02   constant   
+  10  dm           1.77570e+01   constant   
+  11  p0_os        3.89907e-01   5.00000e-03   2.30434e-03   5.80989e+00
+  12  p1_os        9.56899e-01   6.00000e-02  -1.73571e-02  -2.32521e-01
+  13  delta_p0_os   1.93921e-02   5.00000e-03  -2.79124e-03  -2.22206e+00
+  14  delta_p1_os  -6.84772e-03   5.00000e-02   4.47742e-03   1.60096e-01
+  15  avg_eta_os   3.73000e-01   constant   
+  16  tageff_os    3.85170e-01   2.00000e-03   9.39530e-07   7.69447e-01
+  17  tageff_asym_os   4.67215e-03   5.00000e-03  -1.19423e-03  -5.95303e+00
+  18  p0_ss        4.42702e-01   5.00000e-03  -6.84082e-04   7.55428e+00
+  19  p1_ss        1.01628e+00   6.00000e-02   1.98663e-03  -1.08933e+00
+  20  delta_p0_ss  -2.01143e-02   5.00000e-03  -1.61061e-04  -2.47334e-01
+  21  delta_p1_ss   4.95244e-02   5.00000e-02  -3.15663e-02   3.55454e-01
+  22  avg_eta_ss   4.33100e-01   constant   
+  23  tageff_ss    6.90245e-01   2.00000e-03  -1.54174e-05   1.04697e+00
+  24  tageff_asym_ss  -3.30580e-03   5.00000e-03  -1.99709e-03   6.89540e+00
+  25  production_asym   0.00000e+00   constant   
+  26  detection_asym   0.00000e+00   constant   
+  27  offset_sigma_dt   1.03000e-02   constant   
+  28  scale_sigma_dt   1.28000e+00   constant   
+  29  c0           2.55478e-01   constant   
+  30  c1           4.49228e-01   constant   
+  31  c2           7.04922e-01   constant   
+  32  c3           9.44002e-01   constant   
+  33  c4           1.10001e+00   constant   
+  34  c5           1.24265e+00   constant   
+  35  c6           1.18554e+00   constant   
+ RELATIVE CHANGE IN COV. MATRIX= 26.9 per cent
+Neg2LLClass::getVal after 100 calls.for 95451 events, I'm about to return -1.28227e+06
+Sum of weights = 32031.4
+ FCN=-1.28227e+06 FROM MIGRAD    STATUS=PROGRESS      115 CALLS         116 TOTAL
+                     EDM=9.99893e-05    STRATEGY= 1  ERROR MATRIX UNCERTAINTY  26.9 per cent
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  C            1.00000e+00   constant   
+   2  D            0.00000e+00   constant   
+   3  D_bar        0.00000e+00   constant   
+   4  S            0.00000e+00   constant   
+   5  S_bar        0.00000e+00   constant   
+   6  r            0.00000e+00   constant   
+   7  k            1.00000e+00   constant   
+   8  tau          1.50900e+00   constant   
+   9  dGamma       9.00000e-02   constant   
+  10  dm           1.77570e+01   constant   
+  11  p0_os        3.89718e-01   9.07869e-03  -1.89136e-04   2.27345e-01
+  12  p1_os        9.57570e-01   9.46487e-02   6.71230e-04   2.60521e-02
+  13  delta_p0_os   1.94261e-02   9.03692e-03   3.39647e-05   3.97321e-03
+  14  delta_p1_os  -7.44464e-03   9.56547e-02  -5.96917e-04  -5.97332e-02
+  15  avg_eta_os   3.73000e-01   constant   
+  16  tageff_os    3.85167e-01   2.89236e-03  -2.94604e-06  -1.33109e-01
+  17  tageff_asym_os   4.96177e-03   1.01216e-02   2.89619e-04   1.85550e-01
+  18  p0_ss        4.42523e-01   6.91477e-03  -1.79868e-04  -1.61276e+00
+  19  p1_ss        1.02055e+00   9.07634e-02   4.27420e-03   3.00550e-03
+  20  delta_p0_ss  -2.01112e-02   7.10016e-03   3.11607e-06  -9.44072e-01
+  21  delta_p1_ss   4.73314e-02   1.00793e-01  -2.19299e-03   2.03421e-02
+  22  avg_eta_ss   4.33100e-01   constant   
+  23  tageff_ss    6.90241e-01   2.74815e-03  -3.94148e-06   2.99066e-01
+  24  tageff_asym_ss  -3.70871e-03   1.09405e-02  -4.02906e-04   1.63015e-03
+  25  production_asym   0.00000e+00   constant   
+  26  detection_asym   0.00000e+00   constant   
+  27  offset_sigma_dt   1.03000e-02   constant   
+  28  scale_sigma_dt   1.28000e+00   constant   
+  29  c0           2.55478e-01   constant   
+  30  c1           4.49228e-01   constant   
+  31  c2           7.04922e-01   constant   
+  32  c3           9.44002e-01   constant   
+  33  c4           1.10001e+00   constant   
+  34  c5           1.24265e+00   constant   
+  35  c6           1.18554e+00   constant   
+ RELATIVE CHANGE IN COV. MATRIX= 14.0 per cent
+ FCN=-1.28227e+06 FROM MIGRAD    STATUS=PROGRESS      140 CALLS         141 TOTAL
+                     EDM=9.73397e-07    STRATEGY= 1  ERROR MATRIX UNCERTAINTY  14.0 per cent
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  C            1.00000e+00   constant   
+   2  D            0.00000e+00   constant   
+   3  D_bar        0.00000e+00   constant   
+   4  S            0.00000e+00   constant   
+   5  S_bar        0.00000e+00   constant   
+   6  r            0.00000e+00   constant   
+   7  k            1.00000e+00   constant   
+   8  tau          1.50900e+00   constant   
+   9  dGamma       9.00000e-02   constant   
+  10  dm           1.77570e+01   constant   
+  11  p0_os        3.89706e-01   9.10101e-03  -1.17281e-05   4.46472e-02
+  12  p1_os        9.57463e-01   9.45055e-02  -1.06550e-04   7.50050e-03
+  13  delta_p0_os   1.94291e-02   9.03814e-03   3.02548e-06   2.23488e-03
+  14  delta_p1_os  -7.18476e-03   9.53373e-02   2.59882e-04  -7.31181e-03
+  15  avg_eta_os   3.73000e-01   constant   
+  16  tageff_os    3.85167e-01   2.89226e-03   5.08715e-07  -8.17488e-03
+  17  tageff_asym_os   4.95655e-03   1.00681e-02  -5.22668e-06   1.73487e-02
+  18  p0_ss        4.42559e-01   6.73554e-03   3.62484e-05  -1.42349e-01
+  19  p1_ss        1.02057e+00   9.01703e-02   1.91486e-05  -4.46401e-03
+  20  delta_p0_ss  -2.00882e-02   7.09614e-03   2.30497e-05   4.87214e-03
+  21  delta_p1_ss   4.72356e-02   1.00935e-01  -9.58464e-05  -3.21093e-03
+  22  avg_eta_ss   4.33100e-01   constant   
+  23  tageff_ss    6.90240e-01   2.74834e-03  -1.12181e-06   3.96175e-03
+  24  tageff_asym_ss  -3.71183e-03   1.09044e-02  -3.12461e-06   5.02293e-02
+  25  production_asym   0.00000e+00   constant   
+  26  detection_asym   0.00000e+00   constant   
+  27  offset_sigma_dt   1.03000e-02   constant   
+  28  scale_sigma_dt   1.28000e+00   constant   
+  29  c0           2.55478e-01   constant   
+  30  c1           4.49228e-01   constant   
+  31  c2           7.04922e-01   constant   
+  32  c3           9.44002e-01   constant   
+  33  c4           1.10001e+00   constant   
+  34  c5           1.24265e+00   constant   
+  35  c6           1.18554e+00   constant   
+ RELATIVE CHANGE IN COV. MATRIX=  7.7 per cent
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+   START COVARIANCE MATRIX CALCULATION.
+Neg2LLClass::getVal after 200 calls.for 95451 events, I'm about to return -1.28227e+06
+Sum of weights = 32031.4
+ EIGENVALUES OF SECOND-DERIVATIVE MATRIX:
+         6.6738e-01  8.5267e-01  8.7927e-01  9.2416e-01  9.3216e-01  9.3994e-01  9.9904e-01  1.0000e+00  1.0023e+00  1.1712e+00  1.2355e+00  1.3964e+00
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-1.28227e+06 FROM MIGRAD    STATUS=CONVERGED     277 CALLS         278 TOTAL
+                     EDM=9.26541e-06    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  C            1.00000e+00   constant   
+   2  D            0.00000e+00   constant   
+   3  D_bar        0.00000e+00   constant   
+   4  S            0.00000e+00   constant   
+   5  S_bar        0.00000e+00   constant   
+   6  r            0.00000e+00   constant   
+   7  k            1.00000e+00   constant   
+   8  tau          1.50900e+00   constant   
+   9  dGamma       9.00000e-02   constant   
+  10  dm           1.77570e+01   constant   
+  11  p0_os        3.89706e-01   9.52993e-03   5.22719e-03   1.36977e-01
+  12  p1_os        9.57463e-01   1.01296e-01   5.56413e-02  -2.45314e-02
+  13  delta_p0_os   1.94291e-02   9.81956e-03   5.23729e-03  -6.05606e-03
+  14  delta_p1_os  -7.18476e-03   1.03873e-01   5.60173e-02  -7.45035e-03
+  15  avg_eta_os   3.73000e-01   constant   
+  16  tageff_os    3.85167e-01   2.89277e-03   1.59934e-03   1.88981e-01
+  17  tageff_asym_os   4.95655e-03   1.16438e-02   6.04268e-03   1.51080e-02
+  18  p0_ss        4.42559e-01   7.04551e-03   3.86539e-03  -8.75045e-02
+  19  p1_ss        1.02057e+00   9.53221e-02   5.19164e-02  -3.32492e-02
+  20  delta_p0_ss  -2.00882e-02   7.16404e-03   3.93423e-03   1.39755e-02
+  21  delta_p1_ss   4.72356e-02   1.00280e-01   5.49296e-02  -5.47000e-03
+  22  avg_eta_ss   4.33100e-01   constant   
+  23  tageff_ss    6.90240e-01   2.74855e-03   1.51966e-03  -3.58330e-01
+  24  tageff_asym_ss  -3.71183e-03   1.10494e-02   6.00263e-03   5.31170e-02
+  25  production_asym   0.00000e+00   constant   
+  26  detection_asym   0.00000e+00   constant   
+  27  offset_sigma_dt   1.03000e-02   constant   
+  28  scale_sigma_dt   1.28000e+00   constant   
+  29  c0           2.55478e-01   constant   
+  30  c1           4.49228e-01   constant   
+  31  c2           7.04922e-01   constant   
+  32  c3           9.44002e-01   constant   
+  33  c4           1.10001e+00   constant   
+  34  c5           1.24265e+00   constant   
+  35  c6           1.18554e+00   constant   
+ EXTERNAL ERROR MATRIX.    NDIM=  44    NPAR= 12    ERR DEF=1
+ ELEMENTS ABOVE DIAGONAL ARE NOT PRINTED.
+  9.082e-05 
+  5.346e-05  1.026e-02 
+  6.283e-07  6.523e-06  9.642e-05 
+  9.408e-06 -2.891e-04  9.275e-06  1.079e-02 
+  1.667e-09 -1.599e-08 -6.691e-08  5.777e-07  8.368e-06 
+  6.822e-07 -7.313e-06 -2.916e-05  2.519e-04  4.195e-07  1.356e-04 
+ -3.461e-06 -3.852e-06 -5.343e-08  2.053e-06  9.292e-13  6.484e-08  4.964e-05 
+  8.002e-05 -8.296e-04  9.828e-06 -1.136e-04 -8.734e-08 -2.988e-05  7.140e-05  9.086e-03 
+ -1.811e-07 -2.901e-06  9.968e-07 -7.814e-06  3.463e-09 -1.401e-06 -8.272e-07 -4.757e-07  5.132e-05 
+  1.779e-06  8.654e-05 -1.678e-05  1.351e-04 -7.062e-08  2.064e-05  8.967e-07 -2.067e-04  3.800e-05  1.006e-02 
+  2.353e-09  4.388e-08 -1.587e-08  1.223e-07 -5.946e-11  2.217e-08  4.582e-10  1.614e-09 -1.807e-08  3.136e-07  7.555e-06 
+  1.207e-06  2.889e-05 -2.894e-06  1.593e-05  3.946e-08  1.342e-05  1.759e-07 -5.413e-07 -7.444e-06  1.290e-04  2.541e-07 
+  1.207e-06  2.889e-05 -2.894e-06  1.593e-05  3.946e-08  1.342e-05  1.759e-07 -5.413e-07 -7.444e-06  1.290e-04  2.541e-07  1.221e-04 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL     11     12     13     14     16     17     18     19     20     21     23     24
+       11  0.12603   1.000  0.055  0.007  0.010  0.000  0.006 -0.052  0.088 -0.003  0.002  0.000  0.011
+       12  0.11414   0.055  1.000  0.007 -0.027 -0.000 -0.006 -0.005 -0.086 -0.004  0.009  0.000  0.026
+       13  0.26366   0.007  0.007  1.000  0.009 -0.002 -0.255 -0.001  0.010  0.014 -0.017 -0.001 -0.027
+       14  0.22064   0.010 -0.027  0.009  1.000  0.002  0.208  0.003 -0.011 -0.011  0.013  0.000  0.014
+       16  0.01252   0.000 -0.000 -0.002  0.002  1.000  0.012  0.000 -0.000  0.000 -0.000 -0.000  0.001
+       17  0.34501   0.006 -0.006 -0.255  0.208  0.012  1.000  0.001 -0.027 -0.017  0.018  0.001  0.104
+       18  0.12419  -0.052 -0.005 -0.001  0.003  0.000  0.001  1.000  0.106 -0.016  0.001  0.000  0.002
+       19  0.17222   0.088 -0.086  0.010 -0.011 -0.000 -0.027  0.106  1.000 -0.001 -0.022  0.000 -0.001
+       20  0.11627  -0.003 -0.004  0.014 -0.011  0.000 -0.017 -0.016 -0.001  1.000  0.053 -0.001 -0.094
+       21  0.13613   0.002  0.009 -0.017  0.013 -0.000  0.018  0.001 -0.022  0.053  1.000  0.001  0.116
+       23  0.00839   0.000  0.000 -0.001  0.000 -0.000  0.001  0.000  0.000 -0.001  0.001  1.000  0.008
+       24  0.18610   0.011  0.026 -0.027  0.014  0.001  0.104  0.002 -0.001 -0.094  0.116  0.008  1.000
+did that. How did I do? ierflg=0
+
+ ======== MinuitParameterSet::(FitResult - StartValue)/error ========
+
+"C"	2	1 - 1 / 0 = 	-9999
+"D"	2	0 - 0 / 0 = 	-9999
+"D_bar"	2	0 - 0 / 0 = 	-9999
+"S"	2	0 - 0 / 0 = 	-9999
+"S_bar"	2	0 - 0 / 0 = 	-9999
+"r"	2	0 - 0 / 0 = 	-9999
+"k"	2	1 - 1 / 0 = 	-9999
+"tau"	2	1.509 - 1.509 / 0 = 	-9999
+"dGamma"	2	0.09 - 0.09 / 0 = 	-9999
+"dm"	2	17.757 - 17.757 / 0 = 	-9999
+"p0_os"	0	0.389706 - 0.374 / 0.00952993 = 	1.6481
+"p1_os"	0	0.957463 - 1.094 / 0.101296 = 	-1.34789
+"delta_p0_os"	0	0.0194291 - 0.014 / 0.00981956 = 	0.552886
+"delta_p1_os"	0	-0.00718476 - 0.126 / 0.103873 = 	-1.28219
+"avg_eta_os"	2	0.373 - 0.373 / 0 = 	-9999
+"tageff_os"	0	0.385167 - 0.3852 / 0.00289277 = 	-0.0113748
+"tageff_asym_os"	0	0.00495655 - -0.0114 / 0.0116438 = 	1.40475
+"p0_ss"	0	0.442559 - 0.441 / 0.00704551 = 	0.221251
+"p1_ss"	0	1.02057 - 1.084 / 0.0953221 = 	-0.665433
+"delta_p0_ss"	0	-0.0200882 - -0.018 / 0.00716404 = 	-0.291479
+"delta_p1_ss"	0	0.0472356 - 0.13 / 0.10028 = 	-0.825332
+"avg_eta_ss"	2	0.4331 - 0.4331 / 0 = 	-9999
+"tageff_ss"	0	0.69024 - 0.6903 / 0.00274855 = 	-0.0217411
+"tageff_asym_ss"	0	-0.00371183 - 0.0082 / 0.0110494 = 	-1.07806
+"production_asym"	2	0 - 0 / 0 = 	-9999
+"detection_asym"	2	0 - 0 / 0 = 	-9999
+"offset_sigma_dt"	2	0.0103 - 0.0103 / 0 = 	-9999
+"scale_sigma_dt"	2	1.28 - 1.28 / 0 = 	-9999
+"c0"	2	0.255478 - 0.255478 / 0 = 	-9999
+"c1"	2	0.449228 - 0.449228 / 0 = 	-9999
+"c2"	2	0.704922 - 0.704922 / 0 = 	-9999
+"c3"	2	0.944002 - 0.944002 / 0 = 	-9999
+"c4"	2	1.10001 - 1.10001 / 0 = 	-9999
+"c5"	2	1.24265 - 1.24265 / 0 = 	-9999
+"c6"	2	1.18554 - 1.18554 / 0 = 	-9999
+ ====================================================================
+Tagging perfromance 
+
+Tagger | eff_tag | <w> | e_eff 
+OS  | 0.385155 | 0.385972 | 0.0320781
+SS  | 0.69025 | 0.438882 | 0.0249481
+
+OS only  | 0.11179 | 0.37904 | 0.0100681
+SS only  | 0.416885 | 0.438417 | 0.0147426
+OS+SS    | 0.273365 | 0.367178 | 0.0295845
+Combined | 0.80204 | 0.40586 | 0.0543952
+
+
+WARNING in MinuitParameterSet::unregister parPtr you want to unregister is not part of this list!
+WARNING in MinuitParameterSet::unregister parPtr you want to unregister is not part of this list!
+WARNING in MinuitParameterSet::unregister parPtr you want to unregister is not part of this list!
+WARNING in MinuitParameterSet::unregister parPtr you want to unregister is not part of this list!
+WARNING in MinuitParameterSet::unregister parPtr you want to unregister is not part of this list!
+WARNING in MinuitParameterSet::unregister parPtr you want to unregister is not part of this list!
+==============================================
+ Done.  Total time since start 44.3333 min.
+==============================================
