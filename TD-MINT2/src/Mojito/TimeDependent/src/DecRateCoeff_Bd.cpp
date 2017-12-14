@@ -398,11 +398,13 @@ std::pair<double, double> DecRateCoeff_Bd::calibrate(double eta, double avg_eta,
         eta_cal_b    = p0 + 0.5 * delta_p0 + ( p1 + 0.5 * delta_p1 ) * ( eta - avg_eta );
         eta_cal_bbar = p0 - 0.5 * delta_p0 + ( p1 - 0.5 * delta_p1 ) * ( eta - avg_eta );
     }
+    /*
     // if calibrated average eta is larger or equal 0.5 return 0.5
     if (eta_cal >= 0.5){
         eta_cal_b    = 0.5;
         eta_cal_bbar = 0.5;
     }
+    */
     // if calibrated eta is smaller than 0 return 0
     if (eta_cal_b < 0.0)    eta_cal_b = 0;
     if (eta_cal_bbar < 0.0) eta_cal_bbar = 0;
