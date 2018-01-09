@@ -106,12 +106,12 @@ class FullTimePdf : public MINT::PdfBase<IDalitzEvent>
 {
 protected:
     // fit parameters
-    FitParameter& _C;
-    FitParameter& _D;
-    FitParameter& _D_bar;
-    FitParameter& _S;
-    FitParameter& _S_bar;
-    FitParameter& _k;
+    FitParameter _C;
+    FitParameter _D;
+    FitParameter _D_bar;
+    FitParameter _S;
+    FitParameter _S_bar;
+    FitParameter _k;
    
     // Time pdf master
     TimePdfMaster _timePdfMaster;
@@ -139,10 +139,10 @@ public:
         _timePdfMaster.setCP_coeff(
                                    _C,
                                    -_C,
-                                   _D,
-                                   _Dbar,
-                                   _S,
-                                   _Sbar
+                                   _k * _D,
+                                   _k * _D_bar,
+                                   _k * _S,
+                                   _k * _S_bar
                                    );
         
         double val =
@@ -196,8 +196,9 @@ public:
     FullTimePdf():
     _C("C",1,0.,0.1),
     _D("D",1,0.,0.1),
+    _D_bar("D_bar",1,0.,0.1),
     _S("S",1,0.,0.1),
-    _Sbar("Sbar",1,0.,0.1),
+    _S_bar("S_bar",1,0.,0.1),
     _k("k",1,1.,0.1),
     _min_TAU("min_TAU", 0.4), _max_TAU("max_TAU", 10.)
     {
