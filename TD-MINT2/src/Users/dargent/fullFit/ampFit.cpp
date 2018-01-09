@@ -61,6 +61,7 @@
 #include "Mint/RooCubicSplineKnot.h"
 #include "Mint/RooGaussEfficiencyModel.h"
 #include "Mint/DecRateCoeff_Bd.h"
+#include "Mint/TimePdfMaster.h"
 #include "TGraph.h"
 #include "TFile.h"
 #include "TCanvas.h"
@@ -98,11 +99,6 @@ using namespace std;
 using namespace RooFit ;
 //using namespace RooStats;
 using namespace MINT;
-
-enum basisType { noBasis=0  ,  expBasis= 3
-    , sinBasis=13,  cosBasis=23
-    , sinhBasis=63, coshBasis=53 };
-
 
 class AmpsPdfFlexiFast
 : public DalitzPdfBaseFlexiFastInteg
@@ -324,120 +320,8 @@ protected:
     FitParameter& _delta;
     FitParameter& _gamma;
     
-    FitParameter& _tau;
-    FitParameter& _dGamma;
-    FitParameter& _dm;
-
-    FitParameter& _p0_os;
-    FitParameter& _p1_os;
-    FitParameter& _delta_p0_os;
-    FitParameter& _delta_p1_os;
-    FitParameter& _avg_eta_os;
-    FitParameter& _tageff_os;
-    FitParameter& _tageff_asym_os;
-    
-    FitParameter& _p0_ss;
-    FitParameter& _p1_ss;
-    FitParameter& _delta_p0_ss;
-    FitParameter& _delta_p1_ss;
-    FitParameter& _avg_eta_ss;
-    FitParameter& _tageff_ss;
-    FitParameter& _tageff_asym_ss;
-    
-    FitParameter& _production_asym;
-    FitParameter& _detection_asym;
-    
-    FitParameter _scale_mean_dt;
-    FitParameter _scale_sigma_dt;
-    FitParameter _c0;
-    FitParameter _c1;
-    FitParameter _c2;
-    FitParameter _c3;
-    FitParameter _c4;
-    FitParameter _c5;
-    FitParameter _c6;
-    FitParameter _c7;
-    FitParameter _c8;
-    FitParameter _c9;    
-
-    // cast of MINT parameters to B2DX parameters
-    RooRealVar* _r_t;
-    RooRealVar* _r_dt;
-    RooCategory* _r_q_OS;    
-    RooRealVar* _r_eta_OS;
-    RooCategory* _r_q_SS;    
-    RooRealVar* _r_eta_SS;
-    RooCategory* _r_f;
-    
-    // Tagging
-    RooRealVar* _r_p0_os;
-    RooRealVar* _r_p1_os;
-    RooRealVar* _r_delta_p0_os;
-    RooRealVar* _r_delta_p1_os;
-    RooRealVar* _r_avg_eta_os;
-    RooRealVar* _r_tageff_os;
-    RooRealVar* _r_tageff_asym_os;
-    RooRealVar* _r_p0_ss;
-    RooRealVar* _r_p1_ss;
-    RooRealVar* _r_delta_p0_ss;
-    RooRealVar* _r_delta_p1_ss;
-    RooRealVar* _r_avg_eta_ss;
-    RooRealVar* _r_tageff_ss;
-    RooRealVar* _r_tageff_asym_ss; 
-    
-    // Asymmetries
-    RooRealVar* _r_production_asym;
-    RooRealVar* _r_detection_asym;
-    
-    // CP coefficients
-    RooRealVar* _r_C;
-    RooRealVar* _r_C_bar;
-    RooRealVar* _r_D;
-    RooRealVar* _r_D_bar;
-    RooRealVar* _r_S;
-    RooRealVar* _r_S_bar;
-    
-    // marginal pdfs 
-    TH1D* _h_dt;
-    RooDataHist* _r_h_dt;
-    RooAbsPdf* _pdf_sigma_t;
-    
-    RooAbsPdf* _pdf_eta_OS;
-    TH1D* _h_eta_OS;
-    RooDataHist* _r_h_eta_OS;
-    RooAbsPdf* _pdf_eta_OS_uniform;
-    
-    RooAbsPdf* _pdf_eta_SS;
-    TH1D* _h_eta_SS; 
-    RooDataHist* _r_h_eta_SS;
-    RooAbsPdf* _pdf_eta_SS_uniform;
-    
-    // time acceptance
-    RooRealVar* _r_c0;
-    RooRealVar* _r_c1;
-    RooRealVar* _r_c2;
-    RooRealVar* _r_c3;
-    RooRealVar* _r_c4;
-    RooRealVar* _r_c5;
-    RooRealVar* _r_c6;
-    RooRealVar* _r_c7;
-    RooRealVar* _r_c8;
-    RooRealVar* _r_c9;
-    
-    RooRealVar* _r_scale_mean_dt;
-    RooRealVar* _r_scale_sigma_dt;
-    RooCubicSplineFun* _spline;
-    RooGaussEfficiencyModel* _efficiency;
-    
-    RooRealVar* _r_tau;
-    RooRealVar* _r_dGamma;
-    RooRealVar* _r_dm;
-    
-    // Decay rate coefficients
-    DecRateCoeff_Bd* _cos_coeff;
-    DecRateCoeff_Bd* _cosh_coeff;
-    DecRateCoeff_Bd* _sin_coeff;
-    DecRateCoeff_Bd* _sinh_coeff;
+    // Time pdf master
+    TimePdfMaster _timePdfMaster;
     
     // limits
     NamedParameter<double> _min_TAU;
@@ -446,17 +330,13 @@ protected:
 public:
     void parametersChanged(){
         _ampsSum->parametersChanged();
-        //_intA = _ampsSum->integralForMatchingPatterns(true,1);
-        //_intAbar = _ampsSum->integralForMatchingPatterns(true,-1);        
-        //_intAAbar = _ampsSum->ComplexSumForMatchingPatterns(false);
-        
         _intA = (_ampsSum->ComplexIntegralForTags(1,1)).real();
         _intAbar = (_ampsSum->ComplexIntegralForTags(-1,-1)).real();        
         _intAAbar = _ampsSum->ComplexIntegralForTags(1,-1);
-                
     }
     void beginFit(){
         _ampsSum->beginFit();
+        _timePdfMaster.listFitParDependencies();
         printIntegralVals();
     }
     void endFit(){
@@ -515,58 +395,9 @@ public:
     inline double un_normalised_noPs(IDalitzEvent& evt){
 
         const double t = (double) evt.getValueFromVector(0);
-        const double dt = (double) evt.getValueFromVector(1);
-        const int f = (int)evt.getValueFromVector(2);
-        const int q_OS = (int)evt.getValueFromVector(3); 
-        const double eta_OS = (double) evt.getValueFromVector(4);
-        const int q_SS = (int)evt.getValueFromVector(5); 
-        const double eta_SS = (double) evt.getValueFromVector(6);
-        
         if(t < _min_TAU || t > _max_TAU )return 0.;
-        _r_t->setVal(t);
-        _r_dt->setVal(dt);
-        _r_f->setIndex(f);        
-        _r_q_OS->setIndex(q_OS);
-        _r_eta_OS->setVal(eta_OS);
-        _r_q_SS->setIndex(q_SS);
-        _r_eta_SS->setVal(eta_SS);
+        _timePdfMaster.setAllObservablesAndFitParameters(evt);
         
-        // fit parameters
-        _r_p0_os->setVal(_p0_os);
-        _r_p1_os->setVal(_p1_os);
-        _r_delta_p0_os->setVal(_delta_p0_os);
-        _r_delta_p1_os->setVal(_delta_p1_os);
-        _r_avg_eta_os->setVal(_avg_eta_os);
-        _r_tageff_os->setVal(_tageff_os);
-        _r_tageff_asym_os->setVal(_tageff_asym_os);
-        _r_p0_ss->setVal(_p0_ss);
-        _r_p1_ss->setVal(_p1_ss);
-        _r_delta_p0_ss->setVal(_delta_p0_ss);
-        _r_delta_p1_ss->setVal(_delta_p1_ss);
-        _r_avg_eta_ss->setVal(_avg_eta_ss);
-        _r_tageff_ss->setVal(_tageff_ss);
-        _r_tageff_asym_ss->setVal(_tageff_asym_ss); 
-        
-        _r_production_asym->setVal(_production_asym);
-        _r_detection_asym->setVal(_detection_asym);
-        
-        _r_tau->setVal(_tau);
-        _r_dGamma->setVal(_dGamma);
-        _r_dm->setVal(_dm);
-                
-        _r_scale_mean_dt->setVal(_scale_mean_dt);
-        _r_scale_sigma_dt->setVal(_scale_sigma_dt);
-        _r_c0->setVal(_c0);
-        _r_c1->setVal(_c1);
-        _r_c2->setVal(_c2);
-        _r_c3->setVal(_c3);
-        _r_c4->setVal(_c4);
-        _r_c5->setVal(_c5);
-        _r_c6->setVal(_c6);
-        _r_c7->setVal(_c7);
-        _r_c8->setVal(_c8);
-        _r_c9->setVal(_c9);
-                
         double r = (double)_r; // * sqrt(_intA/_intAbar);
         const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma)/360.*2*pi);
         const complex<double> phase_diff_bar = polar((double)r,((double) _delta +(double)_gamma)/360.*2*pi);
@@ -574,38 +405,25 @@ public:
         const std::complex<double> amp = _amps1->ComplexVal_un_normalised_noPs(evt) ;
         const std::complex<double> amp_bar = _amps2->ComplexVal_un_normalised_noPs(evt) ;
         
-        const double cosh_term = _efficiency->evaluate(coshBasis,_tau,_dm,_dGamma);
-        const double cos_term = _efficiency->evaluate(cosBasis,_tau,_dm,_dGamma);
-        const double sinh_term = _efficiency->evaluate(sinhBasis,_tau,_dm,_dGamma);
-        const double sin_term = _efficiency->evaluate(sinBasis,_tau,_dm,_dGamma);
-
-/*
-	if(TMath::IsNaN((norm(amp) - norm(amp_bar))/(norm(amp) + norm(amp_bar)))) {
-		cout << amp << endl;
-		cout << amp_bar << endl;
-		cout << norm(amp) - norm(amp_bar) << endl;
-		cout << norm(amp) + norm(amp_bar) << endl;
-		cout << evt << endl;
-		MinuitParameterSet::getDefaultSet()->print();
-		throw "";
-	}
-*/
-        _r_C->setVal((norm(amp) - norm(amp_bar))/(norm(amp) + norm(amp_bar)));
-        _r_D->setVal((-2.* real(amp_bar*conj(amp) * phase_diff) )/ (norm(amp) + norm(amp_bar)));
-        _r_D_bar->setVal((-2.* real(amp_bar*conj(amp) * phase_diff_bar) )/ (norm(amp) + norm(amp_bar)));
-        _r_S->setVal((2.* imag(amp_bar*conj(amp) * phase_diff) )/ (norm(amp) + norm(amp_bar)));
-        _r_S_bar->setVal((-2. * imag(amp_bar*conj(amp) * phase_diff_bar) )/ (norm(amp) + norm(amp_bar)));
+        // C,Cbar,D,Dbar,S,Sbar
+        _timePdfMaster.setCP_coeff(
+                                   (norm(amp) - norm(amp_bar))/(norm(amp) + norm(amp_bar)),
+                                   -(norm(amp) - norm(amp_bar))/(norm(amp) + norm(amp_bar)),
+                                   (-2.* real(amp_bar*conj(amp) * phase_diff) )/ (norm(amp) + norm(amp_bar)),
+                                   (-2.* real(amp_bar*conj(amp) * phase_diff_bar) )/ (norm(amp) + norm(amp_bar)),
+                                   (2.* imag(amp_bar*conj(amp) * phase_diff) )/ (norm(amp) + norm(amp_bar)),
+                                   (-2. * imag(amp_bar*conj(amp) * phase_diff_bar) )/ (norm(amp) + norm(amp_bar))
+                                   );
         
         const double val =
-	(norm(amp) + norm(amp_bar))
-        *(  cosh_term * _cosh_coeff->evaluate()
-         +  cos_term * _cos_coeff->evaluate()
-         +  sinh_term * _sinh_coeff->evaluate()
-         +  sin_term * _sin_coeff->evaluate()
-        )* _pdf_sigma_t->getVal() 
-        * ( abs(q_OS)/2. * _pdf_eta_OS->getVal() + ( 1. - abs(q_OS)) * _pdf_eta_OS_uniform->getVal() )
-        * ( abs(q_SS)/2. * _pdf_eta_SS->getVal() + ( 1. - abs(q_SS)) * _pdf_eta_SS_uniform->getVal() ) ;
-        
+            (norm(amp) + norm(amp_bar))
+            *(
+                _timePdfMaster.get_cosh_term_Val(evt)
+             +  _timePdfMaster.get_cos_term_Val(evt)
+             +  _timePdfMaster.get_sinh_term_Val(evt)
+             +  _timePdfMaster.get_sin_term_Val(evt)
+             ) * _timePdfMaster.get_marginalPdfs_Val(evt);
+            
         return val;
     }
     
@@ -625,17 +443,20 @@ public:
         const complex<double> int_interference =  phase_diff * _intAAbar ;
         const complex<double> int_interference_bar = phase_diff_bar * _intAAbar ;
 
-        _r_C->setVal((_intA - r* r * _intAbar)/(_intA + r* r * _intAbar) );
-        _r_D->setVal((- int_interference.real() )/ (_intA + r* r * _intAbar));
-        _r_D_bar->setVal((- int_interference_bar.real() )/ (_intA + r* r * _intAbar));
-        _r_S->setVal((int_interference.imag() )/ (_intA + r* r * _intAbar));
-        _r_S_bar->setVal((- int_interference_bar.imag() )/ (_intA + r* r * _intAbar));
+        _timePdfMaster.setCP_coeff(
+                                   (_intA - r* r * _intAbar)/(_intA + r* r * _intAbar),
+                                   -(_intA - r* r * _intAbar)/(_intA + r* r * _intAbar),
+                                   (- int_interference.real() )/ (_intA + r* r * _intAbar),
+                                   (- int_interference_bar.real() )/ (_intA + r* r * _intAbar),
+                                   (int_interference.imag() )/ (_intA + r* r * _intAbar),
+                                   (- int_interference_bar.imag() )/ (_intA + r* r * _intAbar)
+                                   );
         
         double norm = (_intA + r* r * _intAbar)
-        *( _cosh_coeff->analyticalIntegral(2) * _efficiency->analyticalIntegral(coshBasis,_tau,_dm,_dGamma) 
-        +  _cos_coeff->analyticalIntegral(2)  * _efficiency->analyticalIntegral(cosBasis,_tau,_dm,_dGamma)  
-        + _sinh_coeff->analyticalIntegral(2)  * _efficiency->analyticalIntegral(sinhBasis,_tau,_dm,_dGamma)
-        + _sin_coeff->analyticalIntegral(2)   * _efficiency->analyticalIntegral(sinBasis,_tau,_dm,_dGamma) );
+           *(  _timePdfMaster.get_cosh_term_Integral(evt)
+            +  _timePdfMaster.get_cos_term_Integral(evt)
+            +  _timePdfMaster.get_sinh_term_Integral(evt)
+            +  _timePdfMaster.get_sin_term_Integral(evt));
 
         return val/norm;
     }
@@ -657,11 +478,11 @@ public:
     }
 
     std::pair<double, double> getCalibratedMistag_OS(IDalitzEvent& evt){
-        return _cosh_coeff->calibrate(evt.getValueFromVector(4), _avg_eta_os, _p0_os, _p1_os, _delta_p0_os, _delta_p1_os);
+        return _timePdfMaster.getCalibratedMistag_OS(evt);
     }
     
     std::pair<double, double> getCalibratedMistag_SS(IDalitzEvent& evt){
-        return _cosh_coeff->calibrate(evt.getValueFromVector(6), _avg_eta_ss, _p0_ss, _p1_ss, _delta_p0_ss, _delta_p1_ss);
+        return _timePdfMaster.getCalibratedMistag_SS(evt);
     }
     
     virtual DalitzHistoSet histoSet(){return _ampsSum->histoSet();}
@@ -673,287 +494,16 @@ public:
         _amps2->doFinalStatsAndSave(min,((string)fname+"_CC.txt").c_str(),((string)fnameROOT+"_CC.root").c_str());        
     }
     
-    FullAmpsPdfFlexiFastCPV(
-		AmpsPdfFlexiFast* amps1, AmpsPdfFlexiFast* amps2, AmpsPdfFlexiFast* ampsSum, 
-                MINT::FitParameter& r,MINT::FitParameter& delta, MINT::FitParameter& gamma,
-                MINT::FitParameter& tau, MINT::FitParameter& dGamma, MINT::FitParameter& dm,
-                MINT::FitParameter& p0_os,
-                MINT::FitParameter& p1_os,
-                MINT::FitParameter& delta_p0_os,
-                MINT::FitParameter& delta_p1_os,
-                MINT::FitParameter& avg_eta_os,
-                MINT::FitParameter& tageff_os,
-                MINT::FitParameter& tageff_asym_os,
-                MINT::FitParameter& p0_ss,
-                MINT::FitParameter& p1_ss,
-                MINT::FitParameter& delta_p0_ss,
-                MINT::FitParameter& delta_p1_ss,
-                MINT::FitParameter& avg_eta_ss,
-                MINT::FitParameter& tageff_ss,
-                MINT::FitParameter& tageff_asym_ss,
-                MINT::FitParameter& production_asym,
-                MINT::FitParameter& detection_asym
-                ):
-    _amps1(amps1),_amps2(amps2),_ampsSum(ampsSum),
-    _intA(-1),_intAbar(-1),_intAAbar(-1),
-    _r(r),_delta(delta),_gamma(gamma),_tau(tau),_dGamma(dGamma),_dm(dm),
-    _p0_os(p0_os), _p1_os(p1_os), _delta_p0_os(delta_p0_os), _delta_p1_os(delta_p1_os), _avg_eta_os(avg_eta_os), _tageff_os(tageff_os), _tageff_asym_os(tageff_asym_os),
-    _p0_ss(p0_ss), _p1_ss(p1_ss), _delta_p0_ss(delta_p0_ss), _delta_p1_ss(delta_p1_ss), _avg_eta_ss(avg_eta_ss), _tageff_ss(tageff_ss), _tageff_asym_ss(tageff_asym_ss),
-    _production_asym(production_asym),_detection_asym(detection_asym),
-    _scale_mean_dt("scale_mean_dt",1,1,0.1),
-    _scale_sigma_dt("scale_sigma_dt",1,1.2,0.1),
-    _c0("c0",1,1,0.1),
-    _c1("c1",1,1,0.1),
-    _c2("c2",1,1,0.1),
-    _c3("c3",1,1,0.1),
-    _c4("c4",1,1,0.1),
-    _c5("c5",1,1,0.1),
-    _c6("c6",1,1,0.1),
-    _c7("c7",1,1,0.1),
-    _c8("c8",1,1,0.1),
-    _c9("c9",1,1,0.1),
-    _min_TAU("min_TAU", 0.4), _max_TAU("max_TAU", 10.)
+    FullAmpsPdfFlexiFastCPV( AmpsPdfFlexiFast* amps1, AmpsPdfFlexiFast* amps2, AmpsPdfFlexiFast* ampsSum,
+                             FitParameter& r, FitParameter& delta, FitParameter& gamma):
+    
+                                _amps1(amps1),_amps2(amps2),_ampsSum(ampsSum),
+                                _intA(-1),_intAbar(-1),_intAAbar(-1),
+                                _r(r),
+                                _delta(delta),
+                                _gamma(gamma),
+                                _min_TAU("min_TAU", 0.4), _max_TAU("max_TAU", 10.)
     {
-        
-        /// Init B2DX parameters
-        
-        // Observables
-        _r_t = new RooRealVar("t", "time", _min_TAU, _max_TAU);
-        _r_dt = new RooRealVar("dt", "per-candidate time resolution estimate",0., 0.1);
-        _r_f = new RooCategory("qf", "qf");
-        _r_f->defineType("h+", +1);
-        _r_f->defineType("h-", -1);
-        _r_f->setRange("Range_p","h+");
-        _r_f->setRange("Range_m","h-");
-        _r_q_OS = new RooCategory("q_OS", "q_OS");
-        _r_q_OS->defineType("B+", +1);
-        _r_q_OS->defineType("B-", -1) ;   
-        _r_q_OS->defineType("untagged", 0); 
-        _r_eta_OS = new RooRealVar("eta_OS", "eta_OS",0.,0.5);        
-        _r_q_SS = new RooCategory("q_SS", "q_SS");
-        _r_q_SS->defineType("B+", +1);
-        _r_q_SS->defineType("B-", -1) ;   
-        _r_q_SS->defineType("untagged", 0); 
-        _r_eta_SS = new RooRealVar("eta_SS", "eta_SS",0.,0.5);
-        
-        // Fit parameters
-        _r_tau = new RooRealVar("tau", "tau",_tau);
-        _r_dGamma = new RooRealVar("dGamma", "dGamma",_dGamma);
-        _r_dm = new RooRealVar("dm", "dm",_dm);
-        
-        _r_c0 = new RooRealVar("coeff_0", "coeff_0",_c0);
-        _r_c1 = new RooRealVar("coeff_1", "coeff_1",_c1);
-        _r_c2 = new RooRealVar("coeff_2", "coeff_2",_c2);
-        _r_c3 = new RooRealVar("coeff_3", "coeff_3",_c3);
-        _r_c4 = new RooRealVar("coeff_4", "coeff_4",_c4);
-        _r_c5 = new RooRealVar("coeff_5", "coeff_5",_c5);
-        _r_c6 = new RooRealVar("coeff_6", "coeff_6",_c6);
-        _r_c7 = new RooRealVar("coeff_7", "coeff_7",_c7);
-        _r_c8 = new RooRealVar("coeff_8", "coeff_8",_c8);
-        _r_c9 = new RooRealVar("coeff_9", "coeff_9",_c9);
-        
-        vector<RooRealVar*> v_coeff;
-        v_coeff.push_back(_r_c0);
-        v_coeff.push_back(_r_c1);
-        v_coeff.push_back(_r_c2);
-        v_coeff.push_back(_r_c3);
-        v_coeff.push_back(_r_c4);
-        v_coeff.push_back(_r_c5);
-        v_coeff.push_back(_r_c6);
-        v_coeff.push_back(_r_c7);
-        v_coeff.push_back(_r_c8);
-        v_coeff.push_back(_r_c9);
-        
-        // Tagging
-        _r_p0_os = new RooRealVar("p0_os", "p0_os",p0_os);
-        _r_p1_os = new RooRealVar("p1_os", "p1_os",p1_os);
-        _r_delta_p0_os = new RooRealVar("delta_p0_os", "delta_p0_os",delta_p0_os);
-        _r_delta_p1_os = new RooRealVar("delta_p1_os", "delta_p1_os",delta_p1_os);
-        _r_avg_eta_os = new RooRealVar("avg_eta_os", "avg_eta_os",avg_eta_os);
-        _r_tageff_os = new RooRealVar("tageff_os", "tageff_os",tageff_os);
-        _r_tageff_asym_os = new RooRealVar("tageff_asym_os", "tageff_asym_os",tageff_asym_os);
-        _r_p0_ss = new RooRealVar("p0_ss", "p0_ss",p0_ss);
-        _r_p1_ss = new RooRealVar("p1_ss", "p1_ss",p1_ss);
-        _r_delta_p0_ss = new RooRealVar("delta_p0_ss", "delta_p0_ss",delta_p0_ss);
-        _r_delta_p1_ss = new RooRealVar("delta_p1_ss", "delta_p1_ss",delta_p1_ss);
-        _r_avg_eta_ss = new RooRealVar("avg_eta_ss", "avg_eta_ss",avg_eta_ss);
-        _r_tageff_ss = new RooRealVar("tageff_ss", "tageff_ss",tageff_ss);
-        _r_tageff_asym_ss= new RooRealVar("tageff_asym_ss", "tageff_asym_ss",tageff_asym_ss); 
-        
-        // Asymmetries
-        _r_production_asym = new RooRealVar("production_asym", "production_asym",production_asym);
-        _r_detection_asym = new RooRealVar("detection_asym", "detection_asym",detection_asym);
-        
-        // CP coefficients
-        _r_C = new RooRealVar("C", "C",(1.-_r*_r)/(1.+_r*_r) );
-        _r_C_bar= (RooRealVar*) new RooFormulaVar("Cbar","-1. * @0",RooArgList(*_r_C));
-        _r_D= new RooRealVar("D", "D",(-2.*_r * cos((_delta-_gamma)/360.*2*pi))/(1.+_r*_r)  );
-        _r_D_bar= new RooRealVar("Dbar", "Dbar",(-2.*_r * cos((_delta+_gamma)/360.*2*pi))/(1.+_r*_r) );
-        _r_S= new RooRealVar("S", "S",(2.*_r * sin((_delta-_gamma)/360.*2*pi))/(1.+_r*_r));
-        _r_S_bar= new RooRealVar("Sbar", "Sbar",(-2.*_r * sin((_delta+_gamma)/360.*2*pi))/(1.+_r*_r) );
-                
-        _cosh_coeff = new DecRateCoeff_Bd("cosh_coeff",
-                                          "cosh_coeff",
-                                          DecRateCoeff_Bd::kCosh ,
-                                          *_r_f,
-                                          RooRealConstant::value(1.),
-                                          RooRealConstant::value(1.),
-                                          *_r_q_OS,
-                                          *_r_eta_OS,
-                                          *_r_p0_os,
-                                          *_r_p1_os,
-                                          *_r_delta_p0_os,
-                                          *_r_delta_p1_os,
-                                          *_r_avg_eta_os,
-                                          *_r_tageff_os,
-                                          *_r_tageff_asym_os,
-                                          *_r_q_SS,
-                                          *_r_eta_SS,
-                                          *_r_p0_ss,
-                                          *_r_p1_ss,
-                                          *_r_delta_p0_ss,
-                                          *_r_delta_p1_ss,
-                                          *_r_avg_eta_ss,
-                                          *_r_tageff_ss,
-                                          *_r_tageff_asym_ss,
-                                          *_r_production_asym,
-                                          *_r_detection_asym );
-        
-        _cos_coeff = new DecRateCoeff_Bd("cos_coeff",
-                                         "cos_coeff",
-                                         DecRateCoeff_Bd::kCos ,
-                                         *_r_f,
-                                         *_r_C,
-                                         *_r_C_bar,
-                                         *_r_q_OS,
-                                         *_r_eta_OS,
-                                         *_r_p0_os,
-                                         *_r_p1_os,
-                                         *_r_delta_p0_os,
-                                         *_r_delta_p1_os,
-                                         *_r_avg_eta_os,
-                                         *_r_tageff_os,
-                                         *_r_tageff_asym_os,
-                                         *_r_q_SS,
-                                         *_r_eta_SS,
-                                         *_r_p0_ss,
-                                         *_r_p1_ss,
-                                         *_r_delta_p0_ss,
-                                         *_r_delta_p1_ss,
-                                         *_r_avg_eta_ss,
-                                         *_r_tageff_ss,
-                                         *_r_tageff_asym_ss,
-                                         *_r_production_asym,
-                                         *_r_detection_asym );
-        
-        _sinh_coeff = new DecRateCoeff_Bd("sinh_coeff",
-                                          "sinh_coeff",
-                                          DecRateCoeff_Bd::kSinh ,
-                                          *_r_f,
-                                          *_r_D,
-                                          *_r_D_bar,
-                                          *_r_q_OS,
-                                          *_r_eta_OS,
-                                          *_r_p0_os,
-                                          *_r_p1_os,
-                                          *_r_delta_p0_os,
-                                          *_r_delta_p1_os,
-                                          *_r_avg_eta_os,
-                                          *_r_tageff_os,
-                                          *_r_tageff_asym_os,
-                                          *_r_q_SS,
-                                          *_r_eta_SS,
-                                          *_r_p0_ss,
-                                          *_r_p1_ss,
-                                          *_r_delta_p0_ss,
-                                          *_r_delta_p1_ss,
-                                          *_r_avg_eta_ss,
-                                          *_r_tageff_ss,
-                                          *_r_tageff_asym_ss,
-                                          *_r_production_asym,
-                                          *_r_detection_asym );
-        
-        _sin_coeff = new DecRateCoeff_Bd("sin_coeff",
-                                         "sin_coeff",
-                                         DecRateCoeff_Bd::kSin,
-                                         *_r_f,
-                                         *_r_S,
-                                         *_r_S_bar,
-                                         *_r_q_OS,
-                                         *_r_eta_OS,
-                                         *_r_p0_os,
-                                         *_r_p1_os,
-                                         *_r_delta_p0_os,
-                                         *_r_delta_p1_os,
-                                         *_r_avg_eta_os,
-                                         *_r_tageff_os,
-                                         *_r_tageff_asym_os,
-                                         *_r_q_SS,
-                                         *_r_eta_SS,
-                                         *_r_p0_ss,
-                                         *_r_p1_ss,
-                                         *_r_delta_p0_ss,
-                                         *_r_delta_p1_ss,
-                                         *_r_avg_eta_ss,
-                                         *_r_tageff_ss,
-                                         *_r_tageff_asym_ss,
-                                         *_r_production_asym,
-                                         *_r_detection_asym );
-        
-        /// Acceptance
-        _r_scale_mean_dt = new RooRealVar("scale_mean_dt", "scale_mean_dt", _scale_mean_dt);
-        _r_scale_sigma_dt = new RooRealVar("scale_sigma_dt", "scale_sigma_dt", _scale_sigma_dt);
-        
-        //SPLINE KNOTS
-        NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
-        vector<double> myBinning = knot_positions.getVector();
-        
-        RooArgList tacc_list;
-        for(int i= 0; i<= myBinning.size(); i++){
-            tacc_list.add(*v_coeff[i]);
-        }
-                
-        RooFormulaVar* coeff_last = new RooFormulaVar(("coeff_"+anythingToString((int)myBinning.size()+1)).c_str(),("coeff_"+anythingToString((int)myBinning.size()+1)).c_str(), "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(RooRealConstant::value(1.0), *tacc_list.find(("coeff_"+anythingToString((int)myBinning.size()-1)).c_str())  , RooRealConstant::value(myBinning[myBinning.size()-1]), RooRealConstant::value(myBinning[myBinning.size()-2]), RooRealConstant::value(_r_t->getMax()) ));
-        
-        tacc_list.add(*coeff_last);	
-        
-        //CUBIC SPLINE FUNCTION 
-        _spline = new RooCubicSplineFun("splinePdf", "splinePdf", *_r_t, myBinning, tacc_list);        
-        _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt, *_r_scale_mean_dt, *_r_scale_sigma_dt );
-        
-        // Plot acceptance
-        TH1F *h_spline = new TH1F("", "", 100, _min_TAU, _max_TAU);
-        for (int i = 1; i<=h_spline->GetNbinsX(); i++) {
-            _r_t->setVal(h_spline->GetXaxis()->GetBinCenter(i));
-            h_spline->SetBinContent(i,_spline->getVal());
-        }
-        
-        TCanvas* c = new TCanvas();
-        h_spline->SetLineColor(kRed);
-        h_spline->Draw("histc");
-        c->Print("spline_init.eps");
-        //c->Print("spline_init.pdf");
-        
-        // Marginal pdfs        
-        TFile* f_pdfs = new TFile("../timeFit/Mistag_pdfs.root","OPEN");
-        
-        _h_dt = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
-        _r_h_dt = new RooDataHist("r_h_dt","r_h_dt",*_r_dt,_h_dt);
-        _pdf_sigma_t = (RooAbsPdf*) (new RooHistPdf("pdf_sigma_t","pdf_sigma_t",*_r_dt,*_r_h_dt));
-        
-        _h_eta_OS = new TH1D( *((TH1D*) f_pdfs->Get("h_w_OS_norm")));
-        _r_h_eta_OS = new RooDataHist("r_eta_OS","r_eta_OS",*_r_eta_OS,_h_eta_OS);
-        _pdf_eta_OS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_OS","pdf_eta_OS",*_r_eta_OS,*_r_h_eta_OS));
-        
-        _h_eta_SS = new TH1D( *((TH1D*) f_pdfs->Get("h_w_SS_norm")));
-        _r_h_eta_SS = new RooDataHist("r_eta_SS","r_eta_SS",*_r_eta_SS,_h_eta_SS);
-        _pdf_eta_SS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_SS","pdf_eta_SS",*_r_eta_SS,*_r_h_eta_SS));
-        
-        _pdf_eta_OS_uniform = new RooUniform("pdf_eta_OS_uniform","pdf_eta_OS_uniform",*_r_eta_OS);        
-        _pdf_eta_SS_uniform = new RooUniform("pdf_eta_SS_uniform","pdf_eta_SS_uniform",*_r_eta_SS);
-        
-        f_pdfs->Close();
-        
     }
 };
 
@@ -1014,28 +564,6 @@ void ampFit(int step=0){
     FitParameter  r("r",1,0.,0.1);
     FitParameter  delta("delta",1,100.,1.);
     FitParameter  gamma("gamma",1,70,1.);
-    FitParameter  k("k",2,1.,0.1);
-
-    FitParameter  tau("tau");
-    FitParameter  dGamma("dGamma");
-    FitParameter  dm("dm");
-    
-    FitParameter p0_os("p0_os",2,0.,0.);
-    FitParameter p1_os("p1_os",2,0.,0.);
-    FitParameter delta_p0_os("delta_p0_os",2,0.,0.);
-    FitParameter delta_p1_os("delta_p1_os",2,0.,0.);
-    FitParameter avg_eta_os("avg_eta_os",2,0.,0.);
-    FitParameter tageff_os("tageff_os",2,0.,0.);
-    FitParameter tageff_asym_os("tageff_asym_os",2,0.,0.);
-    FitParameter p0_ss("p0_ss",2,0.,0.);
-    FitParameter p1_ss("p1_ss",2,0.,0.);
-    FitParameter delta_p0_ss("delta_p0_ss",2,0.,0.);
-    FitParameter delta_p1_ss("delta_p1_ss",2,0.,0.);
-    FitParameter avg_eta_ss("avg_eta_ss",2,0.,0.);
-    FitParameter tageff_ss("tageff_ss",2,0.,0.);
-    FitParameter tageff_asym_ss("tageff_asym_ss",2,0.,0.);
-    FitParameter production_asym("production_asym",2,0.,0.);
-    FitParameter detection_asym("detection_asym",2,0.,0.);
 
     /// Define amplitude model
     DalitzEventList eventListPhsp,eventList;
@@ -1105,10 +633,7 @@ void ampFit(int step=0){
     AmpsPdfFlexiFast ampsSum(pat, &fas_sum, 0, integPrecision,integMethod, (std::string) integratorEventFile);
     
     /// Make full time-dependent PDF
-    FullAmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSigCC,&ampsSum, r,delta,gamma,tau,dGamma,dm,
-                      p0_os,p1_os,delta_p0_os,delta_p1_os,avg_eta_os,tageff_os,tageff_asym_os,
-                      p0_ss,p1_ss,delta_p0_ss,delta_p1_ss,avg_eta_ss,tageff_ss,tageff_asym_ss,
-                      production_asym,detection_asym );
+    FullAmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSigCC,&ampsSum, r,delta,gamma);
 
     /// Load data
     double t,dt;
@@ -1274,8 +799,12 @@ void ampFit(int step=0){
     vector<double> k_fit = coherenceFactor(fas,fasCC,(double)r, (double)delta,eventListPhsp);
 
     /// Plot
-    int nBins = 50;
     TCanvas* c = new TCanvas();
+
+    int nBins = 50;
+    double tau = 1.509;
+    double dm = 17.757;
+    
     TH1D* h_t = new TH1D("h_t",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU);
     
     TH1D* h_t_mixed = new TH1D("h_t_mixed",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU_ForMixingPlot);

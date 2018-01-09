@@ -211,10 +211,10 @@ class FullTimePdf_mod : public MINT::PdfBase<IDalitzEvent>
 {
 protected:
     // Fit parameters
-    FitParameter _r;
-    FitParameter _delta;
-    FitParameter _gamma;
-    FitParameter _k;
+    FitParameter& _r;
+    FitParameter& _delta;
+    FitParameter& _gamma;
+    FitParameter& _k;
     
     // Time pdf master
     TimePdfMaster _timePdfMaster;
@@ -296,11 +296,11 @@ public:
         return getVal_noPs(*evt);
     }
     
-    FullTimePdf_mod():
-            _r("r",1,0.,0.1),
-            _delta("delta",1,100.,1.),
-            _gamma("gamma",1,70,1.),
-            _k("k",1,1.,0.1),
+    FullTimePdf_mod( FitParameter& r, FitParameter& delta, FitParameter& gamma, FitParameter& k):
+            _r(r),
+            _delta(delta),
+            _gamma(gamma),
+            _k(k),
             _min_TAU("min_TAU", 0.4), _max_TAU("max_TAU", 10.)
     {
     }    
@@ -331,9 +331,14 @@ void fullTimeFit(){
     NamedParameter<int>  nBinst("nBinst", 40);
     NamedParameter<int>  nBinsAsym("nBinsAsym", 10);
     
+    FitParameter  r("r",1,0.,0.1);
+    FitParameter  delta("delta",1,100.,1.);
+    FitParameter  gamma("gamma",1,70,1.);
+    FitParameter  k("k",1,1,1.);
+
+    FullTimePdf_mod t_pdf(r,delta,gamma,k);
     //FullTimePdf t_pdf;
-    FullTimePdf_mod t_pdf;
-    
+
     /// Load data
     double t,dt;
     int f;
@@ -916,7 +921,6 @@ void fullTimeFit(){
 
     }
     
-    /*
     if(do2DScan == 1){
         cout << "Now doing 2D scan:" << endl;
         
@@ -1003,7 +1007,6 @@ void fullTimeFit(){
         
         cout<< "done 2-D scan" << endl;
     }
-*/
     
     return;
 }
