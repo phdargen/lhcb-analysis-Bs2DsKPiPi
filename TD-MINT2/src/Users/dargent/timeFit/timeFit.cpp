@@ -2533,45 +2533,6 @@ int main(int argc, char** argv){
   TH2::SetDefaultSumw2();
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
-/*
-    TRandom3 ranLux;
-
-    NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
-    DalitzEventPattern pat(EventPattern.getVector());
-    DalitzEventPattern _pat(pat);
-    
-    DalitzEvent evt(_pat);
-    evt.generateThisToPhaseSpace();
-    DalitzEvent evt2(_pat);
-    evt2.generateThisToPhaseSpace();
-    
-    
-    TimePdfMaster timePdfMaster;
-    
-    timePdfMaster.listFitParDependencies();
-    
-    cout << "val = " << timePdfMaster.get_cosh_term_Val(evt);
-    cout << "val = " << timePdfMaster.get_sinh_term_Val(evt);
-    
-    const double t_MC = ranLux.Exp(1.5);
-    const double dt_MC = ranLux.Uniform(0., 0.1);
-    evt.setValueInVector(0,t_MC);
-    evt.setValueInVector(1,dt_MC);
-    
-    timePdfMaster.setAllParameters(evt);
-    cout << "val = " << timePdfMaster.get_cosh_term_Val(evt);
-    cout << "val = " << timePdfMaster.get_sinh_term_Val(evt);
-    
- 
-    _tau.setCurrentFitVal(2.);
-    timePdfMaster.listFitParDependencies();
-    
-    cout << "val = " << timePdfMaster.get_cosh_term_Val(evt_proto);
-    cout << "val = " << timePdfMaster.get_sinh_term_Val(evt_proto);
-    timePdfMaster.listFitParDependencies();
-    
-    throw "";
-*/
   produceMarginalPdfs();
   fullTimeFit();
   

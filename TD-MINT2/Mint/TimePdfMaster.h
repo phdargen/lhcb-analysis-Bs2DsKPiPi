@@ -423,10 +423,34 @@ class TimePdfMaster
                                          *_r_detection_asym );
         
         /// Time pdf integrators
-        _cosh_term = new TimePdfIntegrator(coshBasis,_tau,_dGamma,_dm,_efficiency);
-        _cos_term = new TimePdfIntegrator(cosBasis,_tau,_dGamma,_dm,_efficiency);
-        _sinh_term = new TimePdfIntegrator(sinhBasis,_tau,_dGamma,_dm,_efficiency);
-        _sin_term = new TimePdfIntegrator(sinBasis,_tau,_dGamma,_dm,_efficiency);
+        _cosh_term = new TimePdfIntegrator(coshBasis,_efficiency,
+                                           _tau,_dGamma,_dm,
+                                           _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt
+                                           ,_c0, _c1, _c2
+                                           ,_c3, _c4, _c5
+                                           ,_c6, _c7, _c8
+                                           ,_c9);
+        _cos_term = new TimePdfIntegrator(cosBasis,_efficiency,
+                                          _tau,_dGamma,_dm,
+                                          _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt
+                                          ,_c0, _c1, _c2
+                                          ,_c3, _c4, _c5
+                                          ,_c6, _c7, _c8
+                                          ,_c9);
+        _sinh_term = new TimePdfIntegrator(sinhBasis,_efficiency,
+                                           _tau,_dGamma,_dm,
+                                           _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt
+                                           ,_c0, _c1, _c2
+                                           ,_c3, _c4, _c5
+                                           ,_c6, _c7, _c8
+                                           ,_c9);
+        _sin_term = new TimePdfIntegrator(sinBasis,_efficiency,
+                                          _tau,_dGamma,_dm,
+                                          _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt
+                                          ,_c0, _c1, _c2
+                                          ,_c3, _c4, _c5
+                                          ,_c6, _c7, _c8
+                                          ,_c9);
         
         // Marginal pdfs
         TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
@@ -500,7 +524,7 @@ class TimePdfMaster
     }
     
    void listFitParDependencies(){
-       std::cout << "TimePDfMaster depends on these fitParameters:" << std::endl;
+       std::cout << "TimePDfIntegrator depends on these fitParameters:" << std::endl;
        _cosh_term->listFitParDependencies(std::cout);
        //std::cout << "TimePDfMaster depends on these fitParameters (sinh):" << std::endl;
        //_sinh_term->listFitParDependencies(std::cout);
