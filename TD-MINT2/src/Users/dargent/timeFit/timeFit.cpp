@@ -34,6 +34,7 @@
 #include "Mint/FitAmpIncoherentSum.h"
 #include "Mint/FitAmpList.h"
 #include "Mint/DalitzPdfBaseMCInteg.h"
+#include "Mint/TimePdfMaster.h"
 #include "RooRealConstant.h"
 #include "RooAbsReal.h"
 #include "RooRealVar.h"
@@ -99,6 +100,7 @@ using namespace RooFit ;
 //using namespace RooStats;
 using namespace MINT;
 
+/*
 enum basisType { noBasis=0  ,  expBasis= 3
     , sinBasis=13,  cosBasis=23
     , sinhBasis=63, coshBasis=53 };
@@ -1249,7 +1251,7 @@ public:
         //_efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt, *_r_scale_mean_dt, *_r_scale_sigma_dt );
         
         _r_dt_scaled = (RooRealVar*) new RooFormulaVar( "r_dt_scaled","r_dt_scaled", "@0+@1*@2",RooArgList(*_r_offset_sigma_dt,*_r_scale_sigma_dt,*_r_dt));
-       _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt_scaled, *_r_scale_mean_dt, RooRealConstant::value(1.) );
+        _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt_scaled, *_r_scale_mean_dt, RooRealConstant::value(1.) );
  
 
         // Plot acceptance
@@ -1286,11 +1288,114 @@ public:
         f_pdfs->Close();
         
         _bDecay = new RooBDecay("Bdecay","Bdecay",*_r_t,*_r_tau,*_r_dGamma,*_cosh_coeff,*_sinh_coeff,*_cos_coeff,*_sin_coeff,*_r_dm,*_efficiency,RooBDecay::SingleSided);        
-    }
-    
+   
+      }    
 };
 //
+*/
 
+
+
+// Full DsK like time PDF in terms of r,gamma,delta with additional coherence factor 
+class FullTimePdf_mod : public MINT::PdfBase<IDalitzEvent>
+{
+protected:
+    // Fit parameters
+    FitParameter _r;
+    FitParameter _delta;
+    FitParameter _gamma;
+    FitParameter _k;
+    
+    // Time pdf master
+    TimePdfMaster _timePdfMaster;
+
+    // limits
+    NamedParameter<double> _min_TAU;
+    NamedParameter<double> _max_TAU;
+        
+public:
+    void parametersChanged(){
+    }
+    void beginFit(){
+        _timePdfMaster.listFitParDependencies();
+    }
+    void endFit(){
+    }
+    
+    inline double un_normalised(IDalitzEvent& evt){
+        
+        const double t = (double) evt.getValueFromVector(0);
+        if(t < _min_TAU || t > _max_TAU )return 0.;
+        _timePdfMaster.setAllObservablesAndFitParameters(evt);
+        
+        // C,Cbar,D,Dbar,S,Sbar
+        _timePdfMaster.setCP_coeff(
+            (1.-_r*_r)/(1.+_r*_r),
+           -(1.-_r*_r)/(1.+_r*_r),
+            (-2.*_r * _k * cos( (_delta-_gamma)/360.*2*pi ))/(1.+_r*_r),
+            (-2.*_r * _k * cos((_delta+_gamma)/360.*2*pi ))/(1.+_r*_r),
+            (2.*_r * _k * sin((_delta-_gamma)/360.*2*pi))/(1.+_r*_r),
+            (-2.*_r * _k * sin((_delta+_gamma)/360.*2*pi))/(1.+_r*_r)
+        );
+        
+        double val = 
+            (
+                _timePdfMaster.get_cosh_term_Val(evt)
+             +  _timePdfMaster.get_cos_term_Val(evt)
+             +  _timePdfMaster.get_sinh_term_Val(evt)
+             +  _timePdfMaster.get_sin_term_Val(evt)
+             ) * _timePdfMaster.get_marginalPdfs_Val(evt);
+        
+        return val;
+    }
+    
+    virtual double getVal(IDalitzEvent& evt){
+        
+        double val = un_normalised(evt);
+        
+        double norm =
+               _timePdfMaster.get_cosh_term_Integral(evt)
+            +  _timePdfMaster.get_cos_term_Integral(evt)
+            +  _timePdfMaster.get_sinh_term_Integral(evt)
+            +  _timePdfMaster.get_sin_term_Integral(evt);
+        
+        return val/norm;
+    }
+    
+    std::pair<double, double> getCalibratedMistag_OS(IDalitzEvent& evt){
+        return _timePdfMaster.getCalibratedMistag_OS(evt);
+    }
+    
+    std::pair<double, double> getCalibratedMistag_SS(IDalitzEvent& evt){
+        return _timePdfMaster.getCalibratedMistag_SS(evt);
+    }
+    
+    virtual double getVal_withPs(IDalitzEvent& evt){return getVal(evt);}
+    virtual double getVal_noPs(IDalitzEvent& evt){return getVal(evt);}
+    
+    virtual double getVal(IDalitzEvent* evt){
+        if(0 == evt) return 0;
+        return getVal(*evt);
+    }
+    virtual double getVal_withPs(IDalitzEvent* evt){
+        if(0 == evt) return 0;
+        return getVal_withPs(*evt);
+    }
+    virtual double getVal_noPs(IDalitzEvent* evt){
+        if(0 == evt) return 0;
+        return getVal_noPs(*evt);
+    }
+    
+    FullTimePdf_mod():
+            _r("r",1,0.,0.1),
+            _delta("delta",1,100.,1.),
+            _gamma("gamma",1,70,1.),
+            _k("k",1,1.,0.1),
+            _min_TAU("min_TAU", 0.4), _max_TAU("max_TAU", 10.)
+    {
+    }    
+};
+//
 
 void fullTimeFit(){
 
@@ -1317,6 +1422,7 @@ void fullTimeFit(){
     NamedParameter<int>  nBinsAsym("nBinsAsym", 10);
 
     /// Define PDF
+    /*
     FitParameter  C("C",0,1,0.1);
     FitParameter  D("D",0,-1.3,0.1);
     FitParameter  D_bar("D_bar",0,-0.8,0.1);
@@ -1349,8 +1455,7 @@ void fullTimeFit(){
     FitParameter production_asym("production_asym",2,0.,0.);
     FitParameter detection_asym("detection_asym",2,0.,0.);
 
-
-    /*
+    
     FullTimePdf t_pdf(C,D,D_bar,S,S_bar,k,tau,dGamma,dm,
                       p0_os,p1_os,delta_p0_os,delta_p1_os,avg_eta_os,tageff_os,tageff_asym_os,
                       p0_ss,p1_ss,delta_p0_ss,delta_p1_ss,avg_eta_ss,tageff_ss,tageff_asym_ss,
@@ -1358,12 +1463,8 @@ void fullTimeFit(){
      */
     /// Don't use yet, needs blinding first !
                         
-    FullTimePdf_mod t_pdf(r,delta,gamma,k,tau,dGamma,dm,
-                      p0_os,p1_os,delta_p0_os,delta_p1_os,avg_eta_os,tageff_os,tageff_asym_os,
-                      p0_ss,p1_ss,delta_p0_ss,delta_p1_ss,avg_eta_ss,tageff_ss,tageff_asym_ss,
-                      production_asym,detection_asym);
+    FullTimePdf_mod t_pdf;
     
-                        
     /// Load data
     double t,dt;
     int f;
@@ -1442,6 +1543,10 @@ void fullTimeFit(){
     
     /// Plot
     TCanvas* c = new TCanvas();
+    
+    double tau = 1.509;
+    double dm = 17.757;
+    
     TH1D* h_t = new TH1D("h_t",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU);
     
     TH1D* h_t_mixed = new TH1D("h_t_mixed",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU_ForMixingPlot);
@@ -1499,7 +1604,7 @@ void fullTimeFit(){
         int q1 = eventList[i].getValueFromVector(3);
         int q2 = eventList[i].getValueFromVector(5);   
         int q_eff = 0;
-	double w_eff = 0.5;
+        double w_eff = 0.5;
  
         std::pair<double, double> calibrated_mistag_os = t_pdf.getCalibratedMistag_OS(eventList[i]);
         std::pair<double, double> calibrated_mistag_ss = t_pdf.getCalibratedMistag_SS(eventList[i]);
@@ -1942,6 +2047,7 @@ void fullTimeFit(){
 
     }
     
+    /*
     if(do2DScan == 1){
         cout << "Now doing 2D scan:" << endl;
         
@@ -2028,7 +2134,7 @@ void fullTimeFit(){
         
         cout<< "done 2-D scan" << endl;
     }
-
+*/
     
     return;
 }
@@ -2427,6 +2533,45 @@ int main(int argc, char** argv){
   TH2::SetDefaultSumw2();
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
+/*
+    TRandom3 ranLux;
+
+    NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
+    DalitzEventPattern pat(EventPattern.getVector());
+    DalitzEventPattern _pat(pat);
+    
+    DalitzEvent evt(_pat);
+    evt.generateThisToPhaseSpace();
+    DalitzEvent evt2(_pat);
+    evt2.generateThisToPhaseSpace();
+    
+    
+    TimePdfMaster timePdfMaster;
+    
+    timePdfMaster.listFitParDependencies();
+    
+    cout << "val = " << timePdfMaster.get_cosh_term_Val(evt);
+    cout << "val = " << timePdfMaster.get_sinh_term_Val(evt);
+    
+    const double t_MC = ranLux.Exp(1.5);
+    const double dt_MC = ranLux.Uniform(0., 0.1);
+    evt.setValueInVector(0,t_MC);
+    evt.setValueInVector(1,dt_MC);
+    
+    timePdfMaster.setAllParameters(evt);
+    cout << "val = " << timePdfMaster.get_cosh_term_Val(evt);
+    cout << "val = " << timePdfMaster.get_sinh_term_Val(evt);
+    
+ 
+    _tau.setCurrentFitVal(2.);
+    timePdfMaster.listFitParDependencies();
+    
+    cout << "val = " << timePdfMaster.get_cosh_term_Val(evt_proto);
+    cout << "val = " << timePdfMaster.get_sinh_term_Val(evt_proto);
+    timePdfMaster.listFitParDependencies();
+    
+    throw "";
+*/
   produceMarginalPdfs();
   fullTimeFit();
   
