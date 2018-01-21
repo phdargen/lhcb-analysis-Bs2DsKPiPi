@@ -213,7 +213,8 @@ public:
     
     complex<double> ComplexVal(){
         //std::complex<double> result= polar((double) sqrt( 1.+  _r * (double) _sign),(double) (_delta/360.*2.*pi * (double) _sign) ); 
-	    std::complex<double> result= polar((double) ( 1.+  _r * (double) _sign),(double) (_delta/360.*2.*pi * (double) _sign) ); 
+// 	    std::complex<double> result= polar((double) ( 1.+  _r * (double) _sign),(double) (_delta/360.*2.*pi * (double) _sign) ); 
+	    std::complex<double> result= polar((double) ( _r ),(double) (_delta/360.*2.*pi ) ); 
         return result;
     }
 };
@@ -223,9 +224,9 @@ void AddScaledAmpsToList(FitAmpSum& fas_tmp, FitAmpSum& fas, FitAmpSum& fasCC, s
     counted_ptr<FitAmpList> List = fas_tmp.GetCloneOfSubsetSameFitParameters(name);
     FitAmpSum fas_2(*List);
     FitAmpSum fasCC_2(*List);
-    //fasCC_2.CPConjugateSameFitParameters();
-    //fasCC_2.CConjugateFinalStateSameFitParameters();
-    fas_2.multiply(r_plus); 
+    fasCC_2.CPConjugateSameFitParameters();
+    fasCC_2.CConjugateFinalStateSameFitParameters();
+    //fas_2.multiply(r_plus); 
     fasCC_2.multiply(r_minus); 
     fas.addAsList(fas_2,1.);
     fasCC.addAsList(fasCC_2,1.);
@@ -306,8 +307,12 @@ class FullAmpsPdfFlexiFastCPV : public MINT::PdfBase<IDalitzEvent>
 , virtual public IDalitzPdf{
     
 protected:
-    AmpsPdfFlexiFast* _amps1;
-    AmpsPdfFlexiFast* _amps2;
+    AmpsPdfFlexiFast* _amps;
+    AmpsPdfFlexiFast* _amps_bar;
+
+    AmpsPdfFlexiFast* _amps_CP;
+    AmpsPdfFlexiFast* _amps_bar_CP;
+
     AmpsPdfFlexiFast* _ampsSum;
     AmpsPdfFlexiFast* _ampsSum_CP;
 
@@ -411,33 +416,134 @@ public:
     inline double un_normalised_noPs(IDalitzEvent& evt){
 
         const double t = (double) evt.getValueFromVector(0);
+        const double f = (double) evt.getValueFromVector(2);
         if(t < _min_TAU || t > _max_TAU )return 0.;
         _timePdfMaster.setAllObservablesAndFitParameters(evt);
                 
         double r = (double)_r; // * sqrt(_intA/_intAbar);
         const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma)/360.*2*pi);
-        const complex<double> phase_diff_bar = polar((double)r,((double) _delta +(double)_gamma)/360.*2*pi);
+        const complex<double> phase_diff_CP = polar((double)r,((double) _delta +(double)_gamma)/360.*2*pi);
 
-        const std::complex<double> amp = _amps1->ComplexVal_un_normalised_noPs(evt) ;
-        const std::complex<double> amp_bar = _amps2->ComplexVal_un_normalised_noPs(evt) ;
-        
+        complex<double> amp(0,0);
+        complex<double> amp_bar(0,0);
+	double norm_amp = 1.;        
+
+        complex<double> amp_CP(0,0);
+        complex<double> amp_bar_CP(0,0);
+	double norm_amp_CP = 1.;
+
+	if(f>0){
+		amp = _amps->ComplexVal_un_normalised_noPs(evt) ;
+		amp_bar = _amps_bar->ComplexVal_un_normalised_noPs(evt) ;
+		norm_amp = (norm(amp) + norm(amp_bar));
+	}
+	else {
+		amp_CP = _amps_CP->ComplexVal_un_normalised_noPs(evt) ;
+		amp_bar_CP = _amps_bar_CP->ComplexVal_un_normalised_noPs(evt) ;
+		norm_amp_CP = (norm(amp_CP) + norm(amp_bar_CP));
+	}
+
         // C,Cbar,D,Dbar,S,Sbar
         _timePdfMaster.setCP_coeff(
-        		(norm(amp) - norm(amp_bar))/(norm(amp) + norm(amp_bar)),
-        		-(norm(amp) - norm(amp_bar))/(norm(amp) + norm(amp_bar)),
-        		(-2.* real(amp_bar*conj(amp) * phase_diff) )/ (norm(amp) + norm(amp_bar)),
-        		(-2.* real(amp_bar*conj(amp) * phase_diff_bar) )/ (norm(amp) + norm(amp_bar)),
-        		(2.* imag(amp_bar*conj(amp) * phase_diff) )/ (norm(amp) + norm(amp_bar)),
-        		(-2. * imag(amp_bar*conj(amp) * phase_diff_bar) )/ (norm(amp) + norm(amp_bar)) );
+        		 ( norm(amp) - norm(amp_bar) )/norm_amp ,
+        		 -( norm(amp_CP) - norm(amp_bar_CP) )/norm_amp_CP,
+        		 -2.* real(amp_bar*conj(amp) * phase_diff)/norm_amp ,
+        		 -2.* real(amp_bar_CP*conj(amp_CP) * phase_diff_CP)/norm_amp_CP ,
+        		 -2. * imag(amp_bar*conj(amp) * phase_diff)/norm_amp ,
+        		 2. * imag(amp_bar_CP*conj(amp_CP) * phase_diff_CP)/norm_amp_CP );
         
         const double val = 
-	    (norm(amp) + norm(amp_bar)) *
+	     ( (1.+f) * norm_amp + (1.-f) * norm_amp_CP )/2. *
              ( _timePdfMaster.get_cosh_term_Val(evt)
              +  _timePdfMaster.get_cos_term_Val(evt)
              +  _timePdfMaster.get_sinh_term_Val(evt)
              +  _timePdfMaster.get_sin_term_Val(evt)
-             ) * _timePdfMaster.get_marginalPdfs_Val(evt);;
-        
+             ) * _timePdfMaster.get_marginalPdfs_Val(evt);
+
+
+	/*
+	cout << endl;
+	cout << phase_diff << endl;
+	cout << phase_diff_CP << endl;
+
+        _timePdfMaster.setCP_coeff(
+        		  1 ,
+        		 1,
+        		 1 ,
+        		 1,
+        		 1 ,
+        		 1 );
+
+	evt.setValueInVector(2, 1); 
+        evt.setValueInVector(3, 1);
+        evt.setValueInVector(4, 0.25);
+        evt.setValueInVector(5, 1);
+	evt.setValueInVector(6, 0.25);
+        _timePdfMaster.setAllObservablesAndFitParameters(evt);
+
+	cout << "Coeff for: f = " << evt.getValueFromVector(2) << " q = " << evt.getValueFromVector(3) << endl;
+	cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_sinh_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_sin_coeff_Val(evt) << endl;
+
+	evt.setValueInVector(2, -1); 
+        evt.setValueInVector(3, 1);
+        evt.setValueInVector(5, 1);
+        _timePdfMaster.setAllObservablesAndFitParameters(evt);
+
+	cout << "Coeff for: f = " << evt.getValueFromVector(2) << " q = " << evt.getValueFromVector(3) << endl;
+	cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_sinh_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_sin_coeff_Val(evt) << endl;
+
+	evt.setValueInVector(2, 1); 
+        evt.setValueInVector(3, -1);
+        evt.setValueInVector(5, -1);
+        _timePdfMaster.setAllObservablesAndFitParameters(evt);
+
+	cout << "Coeff for: f = " << evt.getValueFromVector(2) << " q = " << evt.getValueFromVector(3) << endl;
+	cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_sinh_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_sin_coeff_Val(evt) << endl;
+
+	evt.setValueInVector(2, -1); 
+        evt.setValueInVector(3, -1);
+        evt.setValueInVector(5, -1);
+        _timePdfMaster.setAllObservablesAndFitParameters(evt);
+
+	cout << "Coeff for: f = " << evt.getValueFromVector(2) << " q = " << evt.getValueFromVector(3) << endl;
+	cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_sinh_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_sin_coeff_Val(evt) << endl;
+
+	evt.setValueInVector(2, 1); 
+        evt.setValueInVector(3, 0);
+        evt.setValueInVector(5, 0);
+        _timePdfMaster.setAllObservablesAndFitParameters(evt);
+
+	cout << "Coeff for: f = " << evt.getValueFromVector(2) << " q = " << evt.getValueFromVector(3) << endl;
+	cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_sinh_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_sin_coeff_Val(evt) << endl;
+
+	evt.setValueInVector(2, -1); 
+        evt.setValueInVector(3, 0);
+        evt.setValueInVector(5, 0);
+        _timePdfMaster.setAllObservablesAndFitParameters(evt);
+
+	cout << "Coeff for: f = " << evt.getValueFromVector(2) << " q = " << evt.getValueFromVector(3) << endl;
+	cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_sinh_coeff_Val(evt) << endl;
+	cout << _timePdfMaster.get_sin_coeff_Val(evt) << endl;
+
+	throw "";
+	*/
         return val;
     }
     
@@ -454,19 +560,19 @@ public:
 	*/
 
         const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma)/360.*2*pi);
-        const complex<double> phase_diff_bar = polar((double)r,((double) _delta +(double)_gamma)/360.*2*pi);
+        const complex<double> phase_diff_CP = polar((double)r,((double) _delta +(double)_gamma)/360.*2*pi);
 
         const complex<double> int_interference =  phase_diff * _intAAbar ;
-        const complex<double> int_interference_bar = phase_diff_bar * _intAAbar_CP ;
+        const complex<double> int_interference_CP = phase_diff_CP * _intAAbar_CP ;
 
         // C,Cbar,D,Dbar,S,Sbar
         _timePdfMaster.setCP_coeff(
         		(_intA - r* r * _intAbar)/(_intA + r* r * _intAbar),
         		-(_intA_CP - r* r * _intAbar_CP)/(_intA + r* r * _intAbar) ,  /// sign ?
         		(- int_interference.real() )/ (_intA + r* r * _intAbar),
-        		(- int_interference_bar.real() )/ (_intA + r* r * _intAbar),
-        		(int_interference.imag() )/ (_intA + r* r * _intAbar),
-        		(- int_interference_bar.imag() )/ (_intA + r* r * _intAbar) ) ;
+        		(- int_interference_CP.real() )/ (_intA + r* r * _intAbar),
+        		(-int_interference.imag() )/ (_intA + r* r * _intAbar),
+        		(int_interference_CP.imag() )/ (_intA + r* r * _intAbar) ) ; /// sign ?
         
         double norm = (_intA + r* r * _intAbar)
         *(     _timePdfMaster.get_cosh_term_Integral(evt)
@@ -504,18 +610,20 @@ public:
     virtual DalitzHistoSet histoSet(){return _ampsSum->histoSet();}
     
     void doFinalStatsAndSaveForAmp12(MINT::Minimiser* min=0,const std::string& fname = "FitAmpResults", const std::string& fnameROOT="fitFractions"){
-        _amps1->redoIntegrator();
-        _amps2->redoIntegrator();
-        _amps1->doFinalStatsAndSave(min,((string)fname+".txt").c_str(),((string)fnameROOT+".root").c_str());
-        _amps2->doFinalStatsAndSave(min,((string)fname+"_CC.txt").c_str(),((string)fnameROOT+"_CC.root").c_str());        
+        _amps->redoIntegrator();
+        _amps_bar->redoIntegrator();
+        _amps->doFinalStatsAndSave(min,((string)fname+".txt").c_str(),((string)fnameROOT+".root").c_str());
+        _amps_bar->doFinalStatsAndSave(min,((string)fname+"_bar.txt").c_str(),((string)fnameROOT+"_Bar.root").c_str());        
     }
     
     FullAmpsPdfFlexiFastCPV(
-		AmpsPdfFlexiFast* amps1, AmpsPdfFlexiFast* amps2, AmpsPdfFlexiFast* ampsSum, AmpsPdfFlexiFast* ampsSum_CP, 
+		AmpsPdfFlexiFast* amps, AmpsPdfFlexiFast* amps_bar, 
+		AmpsPdfFlexiFast* amps_CP, AmpsPdfFlexiFast* amps_bar_CP,
+		AmpsPdfFlexiFast* ampsSum, AmpsPdfFlexiFast* ampsSum_CP, 
                 MINT::FitParameter& r,MINT::FitParameter& delta, MINT::FitParameter& gamma
                 ):
-    _amps1(amps1),_amps2(amps2),_ampsSum(ampsSum),_ampsSum_CP(ampsSum_CP),
-    _intA(-1),_intAbar(-1),_intAAbar(-1),_intAAbar_CP(-1),
+    _amps(amps),_amps_bar(amps_bar),_amps_CP(amps_CP),_amps_bar_CP(amps_bar_CP),_ampsSum(ampsSum),_ampsSum_CP(ampsSum_CP),
+    _intA(-1),_intAbar(-1),_intAAbar(-1),_intA_CP(-1),_intAbar_CP(-1),_intAAbar_CP(-1),
     _r(r),_delta(delta),_gamma(gamma),
     _min_TAU("min_TAU", 0.4), _max_TAU("max_TAU", 10.)
     {
@@ -539,6 +647,7 @@ void ampFit(int step=0){
     
     NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
     DalitzEventPattern pat(EventPattern.getVector());
+    DalitzEventPattern pat_CP = pat.makeCPConjugate();
 
     NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
     NamedParameter<string> channel("channel", (std::string) "norm", (char*) 0);
@@ -552,9 +661,13 @@ void ampFit(int step=0){
     NamedParameter<int>  nBins("nBins", 40);
     NamedParameter<int>  nBinst("nBinst", 20);
     NamedParameter<int>  nBinsAsym("nBinsAsym", 10);
+    NamedParameter<int>  randomizeStartVals("randomizeStartVals", 0);
 
     NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
     TString integratorEventFile = (string) IntegratorEventFile;
+    TString integratorEventFile_CP = (string) IntegratorEventFile;
+    integratorEventFile_CP.ReplaceAll(".root","_CP.root");
+
     NamedParameter<double> integPrecision("IntegPrecision", 1.e-2);
     NamedParameter<std::string> integMethod("IntegMethod", (std::string)"efficient");
 
@@ -584,15 +697,18 @@ void ampFit(int step=0){
     FitParameter  gamma("gamma",1,70,1.);
 
     /// Define amplitude model
-    DalitzEventList eventListPhsp,eventList;
+    DalitzEventList eventListPhsp,eventListPhsp_CP,eventList;
     DalitzEventList eventList_f, eventList_f_bar;
     
     eventListPhsp.generatePhaseSpaceEvents(200000,pat);
-    
+    eventListPhsp_CP.generatePhaseSpaceEvents(200000,pat_CP);    
+
     FitAmpSum fas_tmp((DalitzEventPattern)pat);
     fas_tmp.getVal(eventListPhsp[0]);
     fas_tmp.normalizeAmps(eventListPhsp);
-    
+    //if(randomizeStartVals)fas_tmp.randomizeStartVals(seed);
+    //if(randomizeStartVals)fas_tmp.randomizePhaseStartVals(seed);
+
     //FitAmpSum fas_tmpCC(fas_tmp);
     //fas_tmpCC.CPConjugateSameFitParameters();
     //fas_tmpCC.CConjugateSameFitParameters();
@@ -600,66 +716,100 @@ void ampFit(int step=0){
     
     counted_ptr<FitAmpList> List_1 = fas_tmp.GetCloneOfSubsetSameFitParameters("K(1)(1270)+");
     FitAmpSum fas(*List_1);
-    FitAmpSum fasCC(*List_1);
-    //fasCC.CPConjugateSameFitParameters();
-    //fasCC.CConjugateFinalStateSameFitParameters();
+    FitAmpSum fas_bar(*List_1);
+    fas_bar.CPConjugateSameFitParameters();
+    fas_bar.CConjugateFinalStateSameFitParameters();
     FitParameter r_K1_re("r_K1_Re",2,0,0.01);
     FitParameter r_K1_im("r_K1_Im",2,0,0.01); 
     counted_ptr<IReturnComplex> r_K1_plus = new CPV_amp_polar(r_K1_re,r_K1_im,1);
     counted_ptr<IReturnComplex> r_K1_minus = new CPV_amp_polar(r_K1_re,r_K1_im,-1);
-    fas.multiply(r_K1_plus); 
-    fasCC.multiply(r_K1_minus);
-    AddScaledAmpsToList(fas_tmp, fas, fasCC, "K(1)(1400)+", r_K1_plus, r_K1_minus );
-    
+    //fas.multiply(r_K1_plus); 
+    fas_bar.multiply(r_K1_minus);
+    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1)(1400)+", r_K1_plus, r_K1_minus );
+    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_K1_plus, r_K1_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)", r_K1_plus, r_K1_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_K1_plus, r_K1_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)", r_K1_plus, r_K1_minus );
+
     FitParameter r_2_re("r_2_Re",2,0,0.01);
     FitParameter r_2_im("r_2_Im",2,0,0.01); 
     counted_ptr<IReturnComplex> r_2_plus = new CPV_amp_polar(r_2_re,r_2_im,1);
     counted_ptr<IReturnComplex> r_2_minus = new CPV_amp_polar(r_2_re,r_2_im,-1);
-    AddScaledAmpsToList(fas_tmp, fas, fasCC, "K*(1410)+", r_2_plus, r_2_minus );
-    //AddScaledAmpsToList(fas_tmp, fas, fasCC, "K(1460)+(->K*(892)0(->K+,pi-),pi+),Ds-", r_2_plus, r_2_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_2_plus, r_2_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1460)+", r_2_plus, r_2_minus );
 
     FitParameter r_3_re("r_3_Re",2,0,0.01);
     FitParameter r_3_im("r_3_Im",2,0,0.01); 
     counted_ptr<IReturnComplex> r_3_plus = new CPV_amp_polar(r_3_re,r_3_im,1);
     counted_ptr<IReturnComplex> r_3_minus = new CPV_amp_polar(r_3_re,r_3_im,-1);
-    //AddScaledAmpsToList(fas_tmp, fas, fasCC, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)", r_3_plus, r_3_minus );
-    //AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_3_plus, r_3_minus );
-    //AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_3_plus, r_3_minus );
-    AddScaledAmpsToList(fas_tmp, fas, fasCC, "K(1460)+(->K*(892)0(->K+,pi-),pi+),Ds-", r_3_plus, r_3_minus );
-    //AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResV0(->Ds-,K+),sigma10(->pi+,pi-)", r_3_plus, r_3_minus );
-     
+    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)", r_3_plus, r_3_minus );
+    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_3_plus, r_3_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_3_plus, r_3_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1460)+(->K*(892)0(->K+,pi-),pi+),Ds-", r_3_plus, r_3_minus );
+    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)", r_3_plus, r_3_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_3_plus, r_3_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->sigma10(->pi+,pi-),Ds-)", r_3_plus, r_3_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+", r_3_plus, r_3_minus );
+   
     FitParameter r_4_re("r_4_Re",2,0,0.01);
     FitParameter r_4_im("r_4_Im",2,0,0.01); 
     counted_ptr<IReturnComplex> r_4_plus = new CPV_amp_polar(r_4_re,r_4_im,1);
     counted_ptr<IReturnComplex> r_4_minus = new CPV_amp_polar(r_4_re,r_4_im,-1);
-    //AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResA0(->sigma10(->pi+,pi-),Ds-)", r_4_plus, r_4_minus );
-    //AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+", r_4_plus, r_4_minus );
-    AddScaledAmpsToList(fas_tmp, fas, fasCC, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)", r_4_plus, r_4_minus );
-    AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResV0(->Ds-,K+),sigma10(->pi+,pi-)", r_4_plus, r_4_minus );
-    AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_4_plus, r_4_minus );
-    AddScaledAmpsToList(fas_tmp, fas, fasCC, "NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_4_plus, r_4_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1)(1400)+", r_4_plus, r_4_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->sigma10(->pi+,pi-),Ds-)", r_4_plus, r_4_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+", r_4_plus, r_4_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)", r_4_plus, r_4_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResV0(->Ds-,K+),sigma10(->pi+,pi-)", r_4_plus, r_4_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_4_plus, r_4_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_4_plus, r_4_minus );
    
 
     /// Define B -> f amplitude        
     fas.setTag(1);
     /// Define Bbar -> f amplitude
-    fasCC.setTag(-1);
+    fas_bar.setTag(-1);
     
-    vector<double> k_gen = coherenceFactor(fas,fasCC,(double)r, (double)delta,eventListPhsp);
+    vector<double> k_gen = coherenceFactor(fas,fas_bar,(double)r, (double)delta,eventListPhsp);
     
     counted_ptr<FitAmpList> sumList = fas.GetCloneSameFitParameters();
     FitAmpSum fas_sum(*sumList);
-    fas_sum.addAsList(fasCC,1.);
+    fas_sum.addAsList(fas_bar,1.);
     fas_sum.getVal(eventListPhsp[0]);
     
     AmpsPdfFlexiFast ampsSig(pat, &fas, 0, integPrecision,integMethod, (std::string) integratorEventFile);
-    AmpsPdfFlexiFast ampsSigCC(pat, &fasCC, 0, integPrecision,integMethod, (std::string) integratorEventFile);
+    AmpsPdfFlexiFast ampsSig_bar(pat, &fas_bar, 0, integPrecision,integMethod, (std::string) integratorEventFile);
     AmpsPdfFlexiFast ampsSum(pat, &fas_sum, 0, integPrecision,integMethod, (std::string) integratorEventFile);
-    AmpsPdfFlexiFast ampsSum_CP(pat, &fas_sum, 0, integPrecision,integMethod, (std::string) integratorEventFile.ReplaceAll(".root","_CP.root"));
+
+    /// CP conjugate amplitudes
+    FitAmpSum fas_CP(fas);
+    fas_CP.CPConjugateSameFitParameters();
+
+    FitAmpSum fas_bar_CP(fas_bar);
+    fas_bar_CP.CPConjugateSameFitParameters();
+
+    counted_ptr<FitAmpList> sumList_CP = fas_CP.GetCloneSameFitParameters();
+    FitAmpSum fas_sum_CP(*sumList_CP);
+    fas_sum_CP.addAsList(fas_bar_CP,1.);
+    fas_sum_CP.getVal(eventListPhsp_CP[0]);
+    
+    AmpsPdfFlexiFast ampsSig_CP(pat_CP, &fas_CP, 0, integPrecision,integMethod, (std::string) integratorEventFile_CP);
+    AmpsPdfFlexiFast ampsSig_bar_CP(pat_CP, &fas_bar_CP, 0, integPrecision,integMethod, (std::string) integratorEventFile_CP);
+    AmpsPdfFlexiFast ampsSum_CP(pat_CP, &fas_sum_CP, 0, integPrecision,integMethod, (std::string) integratorEventFile_CP);
 
     /// Make full time-dependent PDF
-    FullAmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSigCC,&ampsSum,&ampsSum_CP, r,delta,gamma);
+    FullAmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma);
 
+    /*
+    cout << fas.getVal(eventListPhsp[0]) << endl;
+    cout << fas_bar.getVal(eventListPhsp[0]) << endl;
+
+    DalitzEvent evt_test(eventListPhsp[0]);
+
+    evt_test.CP_conjugateYourself();
+    cout << fas_CP.getVal(evt_test) << endl;
+    cout << fas_bar_CP.getVal(evt_test) << endl;
+    throw "";
+    */
     /// Load data
     double t,dt;
     int f;
@@ -744,7 +894,7 @@ void ampFit(int step=0){
         if( dt < 0 || dt > 0.1 )continue;
 
         double sign = 1.;
-        if(f > 0) sign = -1.;
+        //if(f > 0) sign = -1.;
 
         TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
         TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
@@ -777,31 +927,35 @@ void ampFit(int step=0){
         vectorOfvectors.push_back(pip_p*MeV);
         vectorOfvectors.push_back(pim_p*MeV);
 
-        DalitzEvent evt(pat, vectorOfvectors);
+        DalitzEvent evt;
+
+        if(f < 0)evt = DalitzEvent(pat, vectorOfvectors);
+        else evt = DalitzEvent(pat_CP, vectorOfvectors);
 
         if(!(evt.phaseSpace() > 0.)){
             //cout << "evt " << i << " 0 phsp " << endl << evt << endl;
             badEvents++;
             continue;
         }
-        if(TMath::IsNaN(norm(fas.getVal(evt)))){
+        //if(TMath::IsNaN(norm(fas.getVal(evt)))){
             //cout << "evt " << i << " isNaN " << endl << evt << endl;
-            badEvents++;
-            continue;
-        }
+            //badEvents++;
+            //continue;
+        //}
 
         evt.setWeight(sw);
         evt.setValueInVector(0, t);
         evt.setValueInVector(1, dt);
-        if(f<0)evt.setValueInVector(2, 1);
-        else if(f > 0)evt.setValueInVector(2, -1);
+	//evt.setValueInVector(2, 1); /// ???
+        if(f<0)evt.setValueInVector(2, 1);   /// ???
+        else if(f > 0)evt.setValueInVector(2, -1);  /// ???
         else {
             cout << "ERROR:: Undefined final state";  
             throw "ERROR";
         }
-        evt.setValueInVector(3, q_OS);
+        evt.setValueInVector(3, sign*q_OS);
         evt.setValueInVector(4, eta_OS);
-        evt.setValueInVector(5, q_SS);
+        evt.setValueInVector(5, sign*q_SS);
         evt.setValueInVector(6, eta_SS);
         eventList.Add(evt);
         if(evt.getValueFromVector(2) == 1)eventList_f.Add(evt);
@@ -818,11 +972,48 @@ void ampFit(int step=0){
     mini.doFit();
     mini.printResultVsInput();
 
-     pdf.doFinalStatsAndSaveForAmp12(&mini,((string)OutputDir+"FitAmpResults_rand_"+anythingToString((int)seed)).c_str(),((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
-    //cout << "tau = " << endl << tau.mean() << endl <<  tau.blindedMean() << endl;
-    
-    vector<double> k_fit = coherenceFactor(fas,fasCC,(double)r, (double)delta,eventListPhsp);
 
+    /// Calculate pulls
+    gDirectory->cd();
+    TFile* paraFile = new TFile(((string)OutputDir+"pull_"+anythingToString((int)seed)+".root").c_str(), "RECREATE");
+    paraFile->cd();
+    TNtupleD* ntp=0;
+
+    TTree* pull_tree = new TTree("Coherence","Coherence");
+    double r_val,delta_val,gamma_val,k_val,n2ll;
+    TBranch* br_r = tree->Branch( "r", &r_val, "r_val/D" );
+    TBranch* br_delta = tree->Branch( "delta", &delta_val, "delta_val/D" );
+    TBranch* br_gamma = tree->Branch( "gamma", &gamma_val, "gamma_val/D" );
+    TBranch* br_k = tree->Branch( "k", &k_val, "k_val/D" );
+    TBranch* br_n2ll = tree->Branch( "n2ll", &n2ll, "n2ll/D" );
+    TBranch* br_seed = tree->Branch( "seed", &seed, "seed/I" );
+    
+    MinuitParameterSet::getDefaultSet()->fillNtp(paraFile, ntp);
+    ntp->AutoSave();
+    
+    n2ll = neg2LL.getVal();
+    
+    for(unsigned int i=0; i < MinuitParameterSet::getDefaultSet()->size(); i++){
+        if(0 == MinuitParameterSet::getDefaultSet()->getParPtr(i)) continue;
+        if(A_is_in_B("gamma",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))gamma_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
+    }
+    
+    vector<double> k_fit = coherenceFactor(fas,fas_bar,(double)r, (double)delta,eventListPhsp);
+    r_val = k_fit[0];
+    k_val = k_fit[1];
+    delta_val = k_fit[2];
+
+    pull_tree->Fill();
+    paraFile->cd();
+    pull_tree->SetDirectory(paraFile);
+    pull_tree->Write();
+    paraFile->Close();
+    delete paraFile;
+
+    pdf.doFinalStatsAndSaveForAmp12(&mini,((string)OutputDir+"FitAmpResults_rand_"+anythingToString((int)seed)).c_str(),((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
+
+    //return;
+   
     /// Data histograms
     double tau = 1.509;
     double dm = 17.757;
@@ -1078,6 +1269,10 @@ void ampFit(int step=0){
         else f_MC = 1;
      
 	DalitzEvent evt(eventListMC.getEvent(i));
+        if(f_MC<0){
+		evt.CP_conjugateYourself();
+		//evt.P_conjugateYourself();
+	}
  	//if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
 
         evt.setValueInVector(0, t_MC);
@@ -1173,10 +1368,10 @@ void ampFit(int step=0){
         s_Dspi_fit->Fill(evt.s(1,3)/(GeV*GeV),weight);
         s_Dspim_fit->Fill(evt.s(1,4)/(GeV*GeV),weight);
 
-	double weight_A = fas.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
+	double weight_A = 1;//fas.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
 	//weight_A /=  exp(-t_MC/tau) / ( tau * ( exp(min_TAU/tau) - exp(max_TAU/tau) ) ) * gen_dt.getVal() * gen_eta_OS.getVal()* gen_eta_SS.getVal();
 
-	double weight_Abar = fasCC.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
+	double weight_Abar = 1;//fas_bar.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
 	//weight_Abar /=  exp(-t_MC/tau) / ( tau * ( exp(min_TAU/tau) - exp(max_TAU/tau) ) ) * gen_dt.getVal() * gen_eta_OS.getVal()* gen_eta_SS.getVal();
 
 	s_Kpipi_A->Fill(evt.sij(s234)/(GeV*GeV),weight_A);
@@ -1584,8 +1779,6 @@ void ampFit(int step=0){
 
 
 	    //getChi2(eventList,eventListMC);
-
-
 
 
     if(do2DScan == 1){
@@ -2074,7 +2267,8 @@ void produceIntegratorFile_CP(){
 
     for(int i = 0; i < eventListMC.size(); i++){
 	DalitzEvent evt(eventListMC.getEvent(i));
-	evt.P_conjugateYourself();
+	evt.CP_conjugateYourself();
+	//evt.P_conjugateYourself();
 	eventList.Add(evt);
     }
 
@@ -2092,10 +2286,9 @@ int main(int argc, char** argv){
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
   //produceMarginalPdfs();
+  produceIntegratorFile_CP();
 
-  //produceIntegratorFile_CP();
-
-  ampFit();
+  ampFit(atoi(argv[1]));
   
   cout << "==============================================" << endl;
   cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;

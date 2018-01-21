@@ -331,6 +331,9 @@ void fullTimeFit(){
     NamedParameter<int>  nBinst("nBinst", 40);
     NamedParameter<int>  nBinsAsym("nBinsAsym", 10);
     
+    NamedParameter<double> min_year("min_year", 11);
+    NamedParameter<double> max_year("max_year", 16);
+
     FitParameter  r("r",1,0.,0.1);
     FitParameter  delta("delta",1,100.,1.);
     FitParameter  gamma("gamma",1,70,1.);
@@ -385,7 +388,8 @@ void fullTimeFit(){
         if(t < min_TAU || t > max_TAU )continue;
         if( dt < 0 || dt > 0.1 )continue;
 
-        if(year > 13) continue;
+        if(year < min_year || year > max_year) continue;
+        
         DalitzEvent evt(evt_proto);
         evt.setWeight(sw);
         evt.setValueInVector(0, t);
@@ -445,6 +449,11 @@ void fullTimeFit(){
     TH1D* h_N_unmixed_p = (TH1D*) h_N_mixed->Clone("h_N_unmixed_p");
     TH1D* h_N_mixed_m = (TH1D*) h_N_mixed->Clone("h_N_mixed_m");
     TH1D* h_N_unmixed_m = (TH1D*) h_N_mixed->Clone("h_N_unmixed_m");
+
+    TH1D* h_N_mixed_p_unfolded = new TH1D("h_N_mixed_p_unfolded",";t (ps);A_{CP}(t) ",nBinst,min_TAU,max_TAU_ForMixingPlot);
+    TH1D* h_N_unmixed_p_unfolded = (TH1D*) h_N_mixed_p_unfolded->Clone("h_N_unmixed_p_fit");
+    TH1D* h_N_mixed_m_unfolded = (TH1D*) h_N_mixed_p_unfolded->Clone("h_N_mixed_m_fit");
+    TH1D* h_N_unmixed_m_unfolded = (TH1D*) h_N_mixed_p_unfolded->Clone("h_N_unmixed_m_fit");
 
     double N_OS = 0;
     double N_SS = 0;
@@ -540,21 +549,34 @@ void fullTimeFit(){
 
             if(q_eff==-1 && f_evt == 1){ 
 			h_t_mp->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
-			if(w_eff<w_max)h_N_mixed_p->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
+			if(w_eff<w_max){
+				h_N_mixed_p->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
+				h_N_mixed_p_unfolded->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+			}
+
             }
 	    else if(q_eff==0 && f_evt == 1)h_t_0p->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
             else if(q_eff==1 && f_evt == 1){
 			h_t_pp->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
-			if(w_eff<w_max)h_N_unmixed_p->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
+			if(w_eff<w_max){
+				h_N_unmixed_p->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
+				h_N_unmixed_p_unfolded->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+			}
 	    }
 	    else if(q_eff==-1 && f_evt == -1){
 			h_t_mm->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
-        	    	if(w_eff<w_max)h_N_unmixed_m->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
+        	    	if(w_eff<w_max){
+				h_N_unmixed_m->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
+				h_N_unmixed_m_unfolded->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+			}
 	    }
 	    else if(q_eff==0 && f_evt == -1)h_t_0m->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
             else if(q_eff==1 && f_evt == -1){
 			h_t_pm->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
-			if(w_eff<w_max)h_N_mixed_m->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
+			if(w_eff<w_max){
+				h_N_mixed_m->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
+				h_N_mixed_m_unfolded->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+			}
 	    }
         }
       
@@ -610,6 +632,10 @@ void fullTimeFit(){
     TH1D* h_N_mixed_m_fit = (TH1D*) h_N_mixed->Clone("h_N_mixed_m_fit");
     TH1D* h_N_unmixed_m_fit = (TH1D*) h_N_mixed->Clone("h_N_unmixed_m_fit");
 
+    TH1D* h_N_mixed_p_fit_unfolded = new TH1D("h_N_mixed_p_fit_unfolded",";t/#tau;A_{CP}(t) ",nBinst,min_TAU,max_TAU_ForMixingPlot);
+    TH1D* h_N_unmixed_p_fit_unfolded = (TH1D*) h_N_mixed_p_fit_unfolded->Clone("h_N_unmixed_p_fit");
+    TH1D* h_N_mixed_m_fit_unfolded = (TH1D*) h_N_mixed_p_fit_unfolded->Clone("h_N_mixed_m_fit");
+    TH1D* h_N_unmixed_m_fit_unfolded = (TH1D*) h_N_mixed_p_fit_unfolded->Clone("h_N_unmixed_m_fit");
 
     RooRealVar* r_t = new RooRealVar("t", "t",min_TAU,max_TAU);
     RooRealVar* r_dt = new RooRealVar("dt", "per-candidate time resolution estimate",0., 0.1);
@@ -621,7 +647,7 @@ void fullTimeFit(){
     RooGaussian gen_eta_OS("gen_eta_OS","gen_eta_OS", *r_eta_OS, RooRealConstant::value(0.4),RooRealConstant::value(0.2));	
     RooGaussian gen_eta_SS("gen_eta_SS","gen_eta_SS", *r_eta_SS, RooRealConstant::value(0.5),RooRealConstant::value(0.1));
 
-    for(int i = 0; i < 500000; i++){
+    for(int i = 0; i < 50000000; i++){
         
 	/*
         const double t_MC = ranLux.Exp(tau);
@@ -742,21 +768,35 @@ void fullTimeFit(){
             
             if(q_eff==-1 && f_evt == 1){
 			h_t_fit_mp->Fill(evt.getValueFromVector(0),weight);
-			if(w_eff<w_max)h_N_mixed_p_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+			if(w_eff<w_max){
+				h_N_mixed_p_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+				h_N_mixed_p_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),tau),weight);
+			}
+		
 	    }
             else if(q_eff==0 && f_evt == 1)h_t_fit_0p->Fill(evt.getValueFromVector(0),weight);
             else if(q_eff==1 && f_evt == 1){
 			h_t_fit_pp->Fill(evt.getValueFromVector(0),weight);
-			if(w_eff<w_max)h_N_unmixed_p_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+			if(w_eff<w_max){
+				h_N_unmixed_p_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+				h_N_unmixed_p_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),tau),weight);
+			}
             }
 	    else if(q_eff==-1 && f_evt == -1){
 			h_t_fit_mm->Fill(evt.getValueFromVector(0),weight);
-			if(w_eff<w_max)h_N_unmixed_m_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+			if(w_eff<w_max){
+				h_N_unmixed_m_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+				h_N_unmixed_m_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),tau),weight);
+			}	
+
             }
 	    else if(q_eff==0 && f_evt == -1)h_t_fit_0m->Fill(evt.getValueFromVector(0),weight);
             else if(q_eff==1 && f_evt == -1){
 			h_t_fit_pm->Fill(evt.getValueFromVector(0),weight);
-			if(w_eff<w_max)h_N_mixed_m_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+			if(w_eff<w_max){
+				h_N_mixed_m_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+				h_N_mixed_m_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),tau),weight);
+			}
             }
         }
         
@@ -914,10 +954,38 @@ void fullTimeFit(){
 	h_asym_m_fit->Draw("histcsame");
         c->Print(((string)OutputDir+"h_asym_m.eps").c_str());
 
+	h_asym_p_fit->SetLineWidth(3);
+	h_asym_m_fit->SetLineWidth(3);
 	h_asym_p_fit->Draw("histc");
 	h_asym_m_fit->SetLineColor(kBlue);
  	h_asym_m_fit->Draw("histcsame");
         c->Print(((string)OutputDir+"h_asym.eps").c_str());	
+
+	TH1D* h_asym_p_fit_unfolded = (TH1D*) h_N_unmixed_p_fit_unfolded->GetAsymmetry(h_N_mixed_p_fit_unfolded);	
+	h_asym_p_fit_unfolded->SetLineWidth(3);
+	h_asym_p_fit_unfolded->SetLineColor(kRed);
+ 	h_asym_p_fit_unfolded->Draw("histc");
+
+	TH1D* h_asym_m_fit_unfolded = (TH1D*) h_N_unmixed_m_fit_unfolded->GetAsymmetry(h_N_mixed_m_fit_unfolded);
+	h_asym_m_fit_unfolded->SetLineWidth(3);
+	h_asym_m_fit_unfolded->SetLineColor(kBlue);
+ 	h_asym_m_fit_unfolded->Draw("histcsame");
+        c->Print(((string)OutputDir+"h_asym_unfolded.eps").c_str());	
+        c->Print(((string)OutputDir+"h_asym_unfolded.pdf").c_str());	
+
+	TH1D* h_asym_p_unfolded = (TH1D*) h_N_unmixed_p_unfolded->GetAsymmetry(h_N_mixed_p_unfolded);	
+	h_asym_p_unfolded->SetLineWidth(3);
+	h_asym_p_unfolded->SetLineColor(kRed);
+ 	h_asym_p_unfolded->Draw("e");
+
+	TH1D* h_asym_m_unfolded = (TH1D*) h_N_unmixed_m_unfolded->GetAsymmetry(h_N_mixed_m_unfolded);
+	h_asym_m_unfolded->SetLineWidth(3);
+	h_asym_m_unfolded->SetLineColor(kBlue);
+ 	h_asym_m_unfolded->Draw("esame");
+
+ 	h_asym_p_fit_unfolded->Draw("histcsame");
+ 	h_asym_m_fit_unfolded->Draw("histcsame");
+        c->Print(((string)OutputDir+"h_asym_unfolded_fit.eps").c_str());	
 
     }
     
@@ -1015,6 +1083,8 @@ void produceMarginalPdfs(){
 
     NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
     NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
+    NamedParameter<double> min_year("min_year", 11);
+    NamedParameter<double> max_year("max_year", 16);
 
     TString prefix = "";
     //TString prefix = "BsTaggingTool_";
@@ -1190,7 +1260,7 @@ void produceMarginalPdfs(){
     {	
         //if (0ul == (i % 1000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
         tree->GetEntry(i);        
-        //if(year > 13) continue;
+        if(year < min_year || year > max_year) continue;
         
         h_dt->Fill(dt,sw);
         h_q_OS->Fill((double)q_OS,sw);
@@ -1214,8 +1284,8 @@ void produceMarginalPdfs(){
     for(int i=0; i< tree_norm->GetEntries(); i++)
     {	
         tree_norm->GetEntry(i);
-        //if(year > 13) continue;
-        
+        if(year < min_year || year > max_year) continue;
+
         h_dt_norm->Fill(dt,sw);
         h_q_OS_norm->Fill((double)q_OS,sw);
         h_q_SS_norm->Fill((double)q_SS,sw);
