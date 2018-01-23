@@ -226,7 +226,7 @@ void AddScaledAmpsToList(FitAmpSum& fas_tmp, FitAmpSum& fas, FitAmpSum& fasCC, s
     FitAmpSum fasCC_2(*List);
     fasCC_2.CPConjugateSameFitParameters();
     fasCC_2.CConjugateFinalStateSameFitParameters();
-    //fas_2.multiply(r_plus); 
+    fas_2.multiply(r_plus); 
     fasCC_2.multiply(r_minus); 
     fas.addAsList(fas_2,1.);
     fasCC.addAsList(fasCC_2,1.);
@@ -445,15 +445,17 @@ public:
 
         // C,Cbar,D,Dbar,S,Sbar
         _timePdfMaster.setCP_coeff(
-        		 ( norm(amp) - norm(amp_bar) )/norm_amp ,
-        		 -( norm(amp_CP) - norm(amp_bar_CP) )/norm_amp_CP,
-        		 -2.* real(amp_bar*conj(amp) * phase_diff)/norm_amp ,
-        		 -2.* real(amp_bar_CP*conj(amp_CP) * phase_diff_CP)/norm_amp_CP ,
-        		 -2. * imag(amp_bar*conj(amp) * phase_diff)/norm_amp ,
-        		 2. * imag(amp_bar_CP*conj(amp_CP) * phase_diff_CP)/norm_amp_CP );
+			norm_amp,
+			norm_amp_CP,
+        		 ( norm(amp) - norm(amp_bar) ) ,
+        		 -( norm(amp_CP) - norm(amp_bar_CP) ),
+        		 -2.* real(amp_bar*conj(amp) * phase_diff) ,
+        		 2.* real(amp_bar_CP*conj(amp_CP) * phase_diff_CP) ,
+        		 2. * imag(amp_bar*conj(amp) * phase_diff) ,
+        		 2. * imag(amp_bar_CP*conj(amp_CP) * phase_diff_CP) );
         
         const double val = 
-	     ( (1.+f) * norm_amp + (1.-f) * norm_amp_CP )/2. *
+	     //( (1.+f) * norm_amp + (1.-f) * norm_amp_CP )/2. *
              ( _timePdfMaster.get_cosh_term_Val(evt)
              +  _timePdfMaster.get_cos_term_Val(evt)
              +  _timePdfMaster.get_sinh_term_Val(evt)
@@ -567,15 +569,17 @@ public:
 
         // C,Cbar,D,Dbar,S,Sbar
         _timePdfMaster.setCP_coeff(
-        		(_intA - r* r * _intAbar)/(_intA + r* r * _intAbar),
-        		-(_intA_CP - r* r * _intAbar_CP)/(_intA + r* r * _intAbar) ,  /// sign ?
-        		(- int_interference.real() )/ (_intA + r* r * _intAbar),
-        		(- int_interference_CP.real() )/ (_intA + r* r * _intAbar),
-        		(-int_interference.imag() )/ (_intA + r* r * _intAbar),
-        		(int_interference_CP.imag() )/ (_intA + r* r * _intAbar) ) ; /// sign ?
+			(_intA + r* r * _intAbar),
+			(_intA_CP + r* r * _intAbar_CP),
+        		(_intA - r* r * _intAbar),
+        		-(_intA_CP - r* r * _intAbar_CP) ,  /// sign ?
+        		(- int_interference.real() ),
+        		( int_interference_CP.real() ),
+        		(int_interference.imag() ),
+        		(int_interference_CP.imag() ) ); /// sign ?
         
-        double norm = (_intA + r* r * _intAbar)
-        *(     _timePdfMaster.get_cosh_term_Integral(evt)
+        double norm =  // (_intA + r* r * _intAbar)  *
+        (     _timePdfMaster.get_cosh_term_Integral(evt)
             +  _timePdfMaster.get_cos_term_Integral(evt)
             +  _timePdfMaster.get_sinh_term_Integral(evt)
             +  _timePdfMaster.get_sin_term_Integral(evt) );
@@ -721,40 +725,40 @@ void ampFit(int step=0){
     fas_bar.CConjugateFinalStateSameFitParameters();
     FitParameter r_K1_re("r_K1_Re",2,0,0.01);
     FitParameter r_K1_im("r_K1_Im",2,0,0.01); 
-    counted_ptr<IReturnComplex> r_K1_plus = new CPV_amp_polar(r_K1_re,r_K1_im,1);
-    counted_ptr<IReturnComplex> r_K1_minus = new CPV_amp_polar(r_K1_re,r_K1_im,-1);
-    //fas.multiply(r_K1_plus); 
+    counted_ptr<IReturnComplex> r_K1_plus = new CPV_amp(r_K1_re,r_K1_im,1);
+    counted_ptr<IReturnComplex> r_K1_minus = new CPV_amp(r_K1_re,r_K1_im,-1);
+    fas.multiply(r_K1_plus); 
     fas_bar.multiply(r_K1_minus);
     AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1)(1400)+", r_K1_plus, r_K1_minus );
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_K1_plus, r_K1_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_K1_plus, r_K1_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)", r_K1_plus, r_K1_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_K1_plus, r_K1_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)", r_K1_plus, r_K1_minus );
 
     FitParameter r_2_re("r_2_Re",2,0,0.01);
     FitParameter r_2_im("r_2_Im",2,0,0.01); 
-    counted_ptr<IReturnComplex> r_2_plus = new CPV_amp_polar(r_2_re,r_2_im,1);
-    counted_ptr<IReturnComplex> r_2_minus = new CPV_amp_polar(r_2_re,r_2_im,-1);
+    counted_ptr<IReturnComplex> r_2_plus = new CPV_amp(r_2_re,r_2_im,1);
+    counted_ptr<IReturnComplex> r_2_minus = new CPV_amp(r_2_re,r_2_im,-1);
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_2_plus, r_2_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1460)+", r_2_plus, r_2_minus );
 
     FitParameter r_3_re("r_3_Re",2,0,0.01);
     FitParameter r_3_im("r_3_Im",2,0,0.01); 
-    counted_ptr<IReturnComplex> r_3_plus = new CPV_amp_polar(r_3_re,r_3_im,1);
-    counted_ptr<IReturnComplex> r_3_minus = new CPV_amp_polar(r_3_re,r_3_im,-1);
+    counted_ptr<IReturnComplex> r_3_plus = new CPV_amp(r_3_re,r_3_im,1);
+    counted_ptr<IReturnComplex> r_3_minus = new CPV_amp(r_3_re,r_3_im,-1);
     AddScaledAmpsToList(fas_tmp, fas, fas_bar, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)", r_3_plus, r_3_minus );
     AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1460)+(->K*(892)0(->K+,pi-),pi+),Ds-", r_3_plus, r_3_minus );
     AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)", r_3_plus, r_3_minus );
-    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_3_plus, r_3_minus );
+    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->sigma10(->pi+,pi-),Ds-)", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+", r_3_plus, r_3_minus );
    
     FitParameter r_4_re("r_4_Re",2,0,0.01);
     FitParameter r_4_im("r_4_Im",2,0,0.01); 
-    counted_ptr<IReturnComplex> r_4_plus = new CPV_amp_polar(r_4_re,r_4_im,1);
-    counted_ptr<IReturnComplex> r_4_minus = new CPV_amp_polar(r_4_re,r_4_im,-1);
+    counted_ptr<IReturnComplex> r_4_plus = new CPV_amp(r_4_re,r_4_im,1);
+    counted_ptr<IReturnComplex> r_4_minus = new CPV_amp(r_4_re,r_4_im,-1);
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1)(1400)+", r_4_plus, r_4_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->sigma10(->pi+,pi-),Ds-)", r_4_plus, r_4_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+", r_4_plus, r_4_minus );
@@ -763,14 +767,31 @@ void ampFit(int step=0){
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_4_plus, r_4_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_4_plus, r_4_minus );
    
-
     /// Define B -> f amplitude        
     fas.setTag(1);
     /// Define Bbar -> f amplitude
     fas_bar.setTag(-1);
-    
-    vector<double> k_gen = coherenceFactor(fas,fas_bar,(double)r, (double)delta,eventListPhsp);
-    
+
+    /// CP conjugate amplitudes
+    FitAmpSum fas_CP(fas);
+    fas_CP.CPConjugateSameFitParameters();
+
+    FitAmpSum fas_bar_CP(fas_bar);
+    fas_bar_CP.CPConjugateSameFitParameters();
+
+    /// Multiply r e^(i gamma)
+    FitParameter x_p("xp",2,0,0.01);
+    FitParameter y_p("yp",2,0,0.01); 
+    FitParameter x_m("xm",2,0,0.01);
+    FitParameter y_m("ym",2,0,0.01); 
+
+    counted_ptr<IReturnComplex> xy_p = new AmpRatio(x_p,y_p,1);
+    counted_ptr<IReturnComplex> xy_m = new AmpRatio(x_m,y_m,1);
+
+    fas_bar.multiply(xy_m); 
+    fas_bar_CP.multiply(xy_p); 
+
+    /// Add amplitudes: A + r e^(i gamma) Abar
     counted_ptr<FitAmpList> sumList = fas.GetCloneSameFitParameters();
     FitAmpSum fas_sum(*sumList);
     fas_sum.addAsList(fas_bar,1.);
@@ -780,13 +801,6 @@ void ampFit(int step=0){
     AmpsPdfFlexiFast ampsSig_bar(pat, &fas_bar, 0, integPrecision,integMethod, (std::string) integratorEventFile);
     AmpsPdfFlexiFast ampsSum(pat, &fas_sum, 0, integPrecision,integMethod, (std::string) integratorEventFile);
 
-    /// CP conjugate amplitudes
-    FitAmpSum fas_CP(fas);
-    fas_CP.CPConjugateSameFitParameters();
-
-    FitAmpSum fas_bar_CP(fas_bar);
-    fas_bar_CP.CPConjugateSameFitParameters();
-
     counted_ptr<FitAmpList> sumList_CP = fas_CP.GetCloneSameFitParameters();
     FitAmpSum fas_sum_CP(*sumList_CP);
     fas_sum_CP.addAsList(fas_bar_CP,1.);
@@ -795,6 +809,10 @@ void ampFit(int step=0){
     AmpsPdfFlexiFast ampsSig_CP(pat_CP, &fas_CP, 0, integPrecision,integMethod, (std::string) integratorEventFile_CP);
     AmpsPdfFlexiFast ampsSig_bar_CP(pat_CP, &fas_bar_CP, 0, integPrecision,integMethod, (std::string) integratorEventFile_CP);
     AmpsPdfFlexiFast ampsSum_CP(pat_CP, &fas_sum_CP, 0, integPrecision,integMethod, (std::string) integratorEventFile_CP);
+
+    /// Calculate initial coherence factor
+    vector<double> k_gen = coherenceFactor(fas,fas_bar,(double)r, (double)delta,eventListPhsp);
+    vector<double> k_gen_CP = coherenceFactor(fas_CP,fas_bar_CP,(double)r, (double)delta,eventListPhsp_CP);
 
     /// Make full time-dependent PDF
     FullAmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma);
@@ -1002,6 +1020,9 @@ void ampFit(int step=0){
     r_val = k_fit[0];
     k_val = k_fit[1];
     delta_val = k_fit[2];
+
+    vector<double> k_fit_CP = coherenceFactor(fas_CP,fas_bar_CP,(double)r, (double)delta,eventListPhsp_CP);
+
 
     pull_tree->Fill();
     paraFile->cd();
@@ -2286,7 +2307,7 @@ int main(int argc, char** argv){
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
   //produceMarginalPdfs();
-  produceIntegratorFile_CP();
+  //produceIntegratorFile_CP();
 
   ampFit(atoi(argv[1]));
   

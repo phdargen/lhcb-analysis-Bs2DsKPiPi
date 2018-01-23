@@ -136,13 +136,14 @@ public:
         _timePdfMaster.setAllObservablesAndFitParameters(evt);
         
         // C,Cbar,D,Dbar,S,Sbar
-        _timePdfMaster.setCP_coeff(
+        _timePdfMaster.setCP_coeff(1.,
+				   1.,
                                    _C,
                                    -_C,
                                    _k * _D,
                                    _k * _D_bar,
                                    _k * _S,
-                                   _k * _S_bar
+                                   -_k * _S_bar
                                    );
         
         double val =
@@ -240,6 +241,8 @@ public:
         
         // C,Cbar,D,Dbar,S,Sbar
         _timePdfMaster.setCP_coeff(
+	    1.,
+	    1.,
             (1.-_r*_r)/(1.+_r*_r),
            -(1.-_r*_r)/(1.+_r*_r),
             (-2.*_r * _k * cos( (_delta-_gamma)/360.*2*pi ))/(1.+_r*_r),

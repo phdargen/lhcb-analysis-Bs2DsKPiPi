@@ -137,6 +137,8 @@ class TimePdfMaster
     RooGaussEfficiencyModel* _efficiency;
     
     // CP coefficients
+    RooRealVar* _r_norm;
+    RooRealVar* _r_norm_bar;
     RooRealVar* _r_C;
     RooRealVar* _r_C_bar;
     RooRealVar* _r_D;
@@ -305,21 +307,23 @@ class TimePdfMaster
         _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt_scaled, *_r_scale_mean_dt, RooRealConstant::value(1.) );
         
         // CP coefficients
-        _r_C = new RooRealVar("C", "C",0,-4,4);
-        _r_C_bar = new RooRealVar("C", "C",0,-4,4);
+        _r_norm = new RooRealVar("norm", "norm",1);
+        _r_norm_bar = new RooRealVar("norm_bar", "norm_bar",1);
+        _r_C = new RooRealVar("C", "C",1);
+        _r_C_bar = new RooRealVar("C", "C",-1);
         //_r_C_bar= (RooRealVar*) new RooFormulaVar("Cbar","-1. * @0",RooArgList(*_r_C));
-        _r_D= new RooRealVar("D", "D",0,-4,4);
-        _r_D_bar= new RooRealVar("Dbar", "Dbar",0,-4,4);
-        _r_S= new RooRealVar("S", "S",0,-4,4);
-        _r_S_bar= new RooRealVar("Sbar", "Sbar",0,-4,4);
+        _r_D= new RooRealVar("D", "D",0);
+        _r_D_bar= new RooRealVar("Dbar", "Dbar",0);
+        _r_S= new RooRealVar("S", "S",0);
+        _r_S_bar= new RooRealVar("Sbar", "Sbar",0);
         
         /// Decay rate coefficients
         _cosh_coeff = new DecRateCoeff_Bd("cosh_coeff",
                                           "cosh_coeff",
                                           DecRateCoeff_Bd::kCosh ,
                                           *_r_f,
-                                          RooRealConstant::value(1.),
-                                          RooRealConstant::value(1.),
+                                          *_r_norm,
+                                          *_r_norm_bar,
                                           *_r_q_OS,
                                           *_r_eta_OS,
                                           *_r_p0_os,
@@ -505,6 +509,22 @@ class TimePdfMaster
     double get_sin_term_Integral(IDalitzEvent& evt){
         return _sin_coeff->analyticalIntegral(2) * _sin_term->getVal(evt).imag();
     }
+
+    double get_cosh_coeff_Val(IDalitzEvent& evt){
+        return _cosh_coeff->evaluate();
+    }
+
+    double get_cos_coeff_Val(IDalitzEvent& evt){
+        return _cos_coeff->evaluate();
+    }
+
+    double get_sinh_coeff_Val(IDalitzEvent& evt){
+        return _sinh_coeff->evaluate();
+    }
+
+    double get_sin_coeff_Val(IDalitzEvent& evt){
+        return _sin_coeff->evaluate();
+    }
     
     double get_marginalPdfs_Val(IDalitzEvent& evt){
         const int q_OS = (int)evt.getValueFromVector(3);
@@ -587,7 +607,9 @@ class TimePdfMaster
        _r_eta_SS->setVal(eta_SS);
     }
     
-    void setCP_coeff(double C,double C_bar,double D,double D_bar,double S,double S_bar ){
+    void setCP_coeff(double norm, double norm_bar,double C,double C_bar,double D,double D_bar,double S,double S_bar ){
+        _r_norm->setVal(norm);
+        _r_norm_bar->setVal(norm_bar);
         _r_C->setVal(C);
         _r_C_bar->setVal(C_bar);
         _r_D->setVal(D);
