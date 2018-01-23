@@ -1,7 +1,7 @@
 * general options
 "channel"	"Norm"
 "nBins"		60
-"min_MM"	5050.
+"min_MM"	5200.
 "max_MM"	5700.
 "cut_BDT" 	0.35
 "numCPU"	 10
@@ -11,7 +11,8 @@
 * Norm fit :
 "fixExpBkgFromSidebands"	 0
 "sWeightNorm"	 0
-"altPartBkg"     1
+"altPartBkg"     0
+"useB0"     	 0	
 
 * Signal fit:
 "fixMisIDyields"	1
