@@ -83,7 +83,7 @@ public:
                      , MinuitParameterSet* mps
                      , double precision=1.e-4
                      , std::string method="efficient"
-                     , std::string fname =  "SignalIntegrationEvents.root", bool genMoreEvents = false
+                     , std::string fname =  "SignalIntegrationEvents.root", bool generateNew = false, bool genMoreEvents = false
                      )
     : DalitzPdfBaseFlexiFastInteg(pat, 0, amps, precision, mps)
     , _localRnd(0)
@@ -95,7 +95,7 @@ public:
     {
         cout << " AmpsPdfFlexiFast with integ method " << method << endl;
         bool nonFlat = "efficient" == method;
-        bool generateNew = ((string)_integratorSource == (string)"new");
+        //bool generateNew = ((string)_integratorSource == (string)"new");
         if(nonFlat){
             cout << "AmpsPdfFlexiFast uses nonFlat integration." << endl;
             if(generateNew){
@@ -285,7 +285,7 @@ int ampFit(int step=0){
         fasBkg.normalizeAmps(eventNorm2);
     }
     
-    FitParameter sigfraction("SigFraction",2,0.9,0.01);
+    FitParameter sigfraction("SigFraction",2,1.,0.01);
     
     DalitzEventList eventList;
     
@@ -306,12 +306,10 @@ int ampFit(int step=0){
         _InputFile->Close();
     }
     
-    DalitzHistoSet datH = eventList.weightedHistoSet();
-    
-            
+        DalitzHistoSet datH = eventList.weightedHistoSet();
+        
         AmpsPdfFlexiFast ampsSig(pat, &fas, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
         AmpsPdfFlexiFast ampsBkg(pat, &fasBkg, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
-
         DalitzSumPdf amps(sigfraction,ampsSig,ampsBkg);
         
         Neg2LL neg2ll(amps, eventList);
@@ -456,7 +454,7 @@ int ampFit(int step=0){
         
             cout << "Now plotting:" << endl;
             
-            DalitzHistoSet fitH = amps.histoSet();
+            DalitzHistoSet fitH = ampsSig.histoSet();
             datH.drawWithFitNorm(fitH, ((string)OutputDir+(string)"datFit_l_"+anythingToString(step)+"_").c_str(),"eps");
             std::vector<DalitzHistoSet> EachAmpsHistos = ampsSig.GetEachAmpsHistograms();
             datH.drawWithFitAndEachAmps(datH, fitH, EachAmpsHistos, ((string)OutputDir+(string)"WithAmps").c_str(), "eps");
@@ -482,7 +480,7 @@ int ampFit(int step=0){
             s124.push_back(2);
             s124.push_back(4);
             
-            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,4);
+            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,4);
             TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,2);
             TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
             TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
@@ -511,7 +509,7 @@ int ampFit(int step=0){
 
             }    
             
-            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.8,4);
+            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,4);
             TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,2);
             TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
             TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
@@ -533,7 +531,7 @@ int ampFit(int step=0){
                                 
                 //counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
                 //DalitzEvent evt(evtPtr.get());
-                double weight = amps.RealVal(eventListMC[i])*eventListMC[i].getWeight()/eventListMC[i].getGeneratorPdfRelativeToPhaseSpace();
+                double weight = ampsSig.RealVal(eventListMC[i])*eventListMC[i].getWeight()/eventListMC[i].getGeneratorPdfRelativeToPhaseSpace();
                 s_Kpipi_fit->Fill(eventListMC[i].sij(s234)/(GeV*GeV),weight);
                 s_Kpi_fit->Fill(eventListMC[i].s(2,4)/(GeV*GeV),weight);
                 s_pipi_fit->Fill(eventListMC[i].s(3,4)/(GeV*GeV),weight);
@@ -677,7 +675,6 @@ void makeIntegratorFile(){
     return;
 }
 
-
 void makeIntegratorFilePhsp(){
     
     NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
@@ -699,8 +696,10 @@ void makeIntegratorFilePhsp(){
 	DalitzEvent evt(pat);
 	evt.generateThisToPhaseSpace();
 	if(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2){ 
-		eventList.Add(evt);
-		i++;
+		if(evt.phaseSpace() > 0.){
+			eventList.Add(evt);
+			i++;
+		}
 	}
     }
 
@@ -710,6 +709,34 @@ void makeIntegratorFilePhsp(){
     return;
 }
 
+void makeIntegratorFileEvtGen(){
+    
+    NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
+    DalitzEventPattern pat(EventPattern.getVector());
+    cout << " got event pattern: " << pat << endl;
+    
+    NamedParameter<int>  IntegratorEvents("IntegratorEvents", 300000);
+    
+    DalitzEventList eventList_cut;
+    DiskResidentEventList eventList(pat,"/auto/data/dargent/BsDsKpipi/MINT/SignalIntegrationEvents_EvtGen_new.root","OPEN");
+
+    vector<int> s234;
+    s234.push_back(2);
+    s234.push_back(3);
+    s234.push_back(4);
+
+    for(int i = 0; i < IntegratorEvents; i++){
+
+        DalitzEvent evt = eventList.getEvent(i);
+
+	if(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2)eventList_cut.Add(evt);
+    }
+
+    cout << "Generated " << eventList_cut.size() << " events inside selected phasespace region" << endl;
+    
+    eventList_cut.saveAsNtuple("SignalIntegrationEvents_MINT_PhspCut.root");
+    return;
+}
 
 int main(int argc, char** argv){
     
@@ -719,6 +746,8 @@ int main(int argc, char** argv){
     TH2::SetDefaultSumw2();
     gROOT->ProcessLine(".x ../lhcbStyle.C");
     gStyle->SetPalette(1);
+
+//makeIntegratorFileEvtGen(); return 0;
 
     NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
     if(! std::ifstream(((string)IntegratorEventFile).c_str()).good()) makeIntegratorFilePhsp();
