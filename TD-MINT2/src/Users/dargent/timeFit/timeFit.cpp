@@ -786,38 +786,35 @@ void fullTimeFit(){
     
     f_pdfs->Close();
 
-    for(int i = 0; i < 50000000; i++){
+    for(int i = 0; i < 500000; i++){
         
         double t_MC = 0.;
-        double dt_MC = 0.;
         while(true) {
-            double tval = ranLux.Exp(tau);
-            
-            double gaus_f = ranLux.Uniform();
-            if(gaus_f < f_dt.getVal()) {
-                while(true){
-                    dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
-                    if(dt_MC < 0.1 && dt_MC > 0.)break;
-                }
-            }
-            else {
-                while(true){
-                    dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
-                    if(dt_MC < 0.1 && dt_MC > 0.)break;
-                }
-            }
-            
-            tval = tval + ranLux.Gaus(0,t_pdf.getCalibratedResolution(dt_MC));
-            
+            double tval = ranLux.Exp(tau);      
+            //tval = tval + ranLux.Gaus(0,t_pdf.getCalibratedResolution(dt_MC));
             if (tval< max_TAU && tval> min_TAU) {
                 t_MC = tval ;
-                r_dt->setVal(dt_MC) ;
                 break ;
             }
         }
         
+	double dt_MC = 0.;
+        double gaus_f = ranLux.Uniform();
+        if(gaus_f < f_dt.getVal()) {
+                while(true){
+                    dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
+                    if(dt_MC < 0.1 && dt_MC > 0.)break;
+                }
+        }
+        else {
+                while(true){
+                    dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
+                    if(dt_MC < 0.1 && dt_MC > 0.)break;
+                }
+        }
+        r_dt->setVal(dt_MC) ;
+      
         double q_rand = ranLux.Uniform();
-        
         int q_OS_MC = 0;
         if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
         if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
@@ -876,7 +873,8 @@ void fullTimeFit(){
         evt.setValueInVector(6, eta_SS_MC);
         
         //const double pdfVal = t_pdf.getVal(evt);
-        const double pdfVal = t_pdf.getValForGeneration(evt);
+        //const double pdfVal = t_pdf.getValForGeneration(evt);
+	const double pdfVal = t_pdf.un_normalised(evt);
         double weight = pdfVal;
 	weight /=  exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) 
 		* gen_dt->getVal() * gen_eta_OS->getVal()* gen_eta_SS->getVal()
@@ -886,6 +884,7 @@ void fullTimeFit(){
 	//cout << pdfVal << endl;
 	//cout <<  weight<< endl << endl;
 
+	weight = 1;
         h_t_fit->Fill(t_MC,weight);
         h_dt_fit->Fill(dt_MC,weight);
         if(evt.getValueFromVector(3) != 0)h_eta_OS_fit->Fill(evt.getValueFromVector(4),weight);

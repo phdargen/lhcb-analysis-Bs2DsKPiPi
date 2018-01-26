@@ -95,6 +95,9 @@
 #include "TRandom3.h"
 #include <sstream>
 #include "TProfile.h"
+#include "Mint/HyperHistogram.h"
+#include "Mint/LASSO.h"
+#include "Mint/LASSO_flexi.h"
 
 using namespace std;
 using namespace RooFit ;
@@ -333,7 +336,6 @@ std::vector<double> coherenceFactor_CP(FitAmpSum& fas, FitAmpSum& fas_bar, doubl
     
     return result;
 }
-
 
 // Full time-dependent PDF
 class FullAmpsPdfFlexiFastCPV : public MINT::PdfBase<IDalitzEvent>
@@ -607,6 +609,208 @@ public:
     }
 };
 
+double getChi2(DalitzEventList& data, DiskResidentEventList& mc){
+	
+    double minBinWidth = 0.;
+    const int dim = 5;
+    
+    NamedParameter<int> EventPattern("Event Pattern",  531, -431, 321, 211, -211);
+    DalitzEventPattern pdg(EventPattern.getVector());
+          
+    NamedParameter<int> minEventsPerBin("minEventsPerBin", 50);       
+    HyperPointSet points( dim );
+    HyperPoint min(pdg.sijMin(1,3),pdg.sijMin(2,4),pdg.sijMin(3,4),pdg.sijMin(1,2,4),pdg.sijMin(2,3,4));
+    HyperPoint max(pdg.sijMax(1,3),pdg.sijMax(2,4),pdg.sijMax(3,4),pdg.sijMax(1,2,4),pdg.sijMax(2,3,4));
+    //HyperPoint max(pdg.sijMax(1,3),pdg.sijMax(2,4),pdg.sijMax(3,4),pdg.sijMax(1,2,4),4 * GeV * GeV);
+
+    HyperCuboid limits(min, max );
+
+    vector<int> s124;
+    s124.push_back(1);
+    s124.push_back(2);
+    s124.push_back(4);
+
+    vector<int> s234;
+    s234.push_back(2);
+    s234.push_back(3);
+    s234.push_back(4);    	
+        
+    for (int i = 0; i < data.size(); i++){
+        DalitzEvent evt = data[i];
+	HyperPoint point( dim );
+      	point.at(0)= evt.s(1,3);
+      	point.at(1)= evt.s(2,4); 
+      	point.at(2)= evt.s(3,4);
+      	point.at(3)= evt.sij(s124);
+      	point.at(4)= evt.sij(s234);
+      	point.addWeight(evt.getWeight());
+      	points.push_back(point);
+    }
+
+    HyperHistogram dataHist(limits, points, 
+                         /*** Name of the binning algorithm you want to use     */
+                         HyperBinningAlgorithms::SMART,  
+                         /***  The minimum number of events allowed in each bin */
+                         /***  from the HyperPointSet provided (points1)        */
+                         AlgOption::MinBinContent      (minEventsPerBin),                    
+                         /*** This minimum bin width allowed. Can also pass a   */
+                         /*** HyperPoint if you would like different min bin    */
+                         /*** widths for each dimension                         */
+                         AlgOption::MinBinWidth        (0.),                                                 
+                         /*** If you want to use the sum of weights rather than */
+                         /*** the number of events, set this to true.           */    
+                         AlgOption::UseWeights         (true),                         
+                         /*** Some algorithms use a random number generator. Set*/
+                         /*** the seed here                                     */
+                         AlgOption::RandomSeed         (1),                         
+                         /*** What dimesnion would you like to split first? Only*/
+                         /*** applies to certain algortihms                     */
+                         AlgOption::StartDimension     (4)                        
+                         /*** What dimesnions would you like to bin in?         */
+                         //AlgOption::BinningDimensions  (binningDims),                      
+                         /*** Setting this option will make the agorithm draw   */
+                         /*** the binning scheme at each iteration              */
+                         //AlgOption::DrawAlgorithm("Algorithm")                 
+                         );
+
+//    dataHist.save("histData.root");
+//     HyperHistogram binningHist("histData.root",5);    
+//     HyperHistogram dataHist( binningHist.getBinning() );
+//     dataHist.fill(points); 
+
+    HyperPointSet pointsMC( dim);
+    for (int i = 0; i < mc.size(); i++){
+     	DalitzEvent evt = mc.getEvent(i);
+	HyperPoint point( dim);
+      	point.at(0)= evt.s(1,3);
+      	point.at(1)= evt.s(2,4); 
+      	point.at(2)= evt.s(3,4);
+      	point.at(3)= evt.sij(s124);
+      	point.at(4)= evt.sij(s234);
+      	point.addWeight(evt.getWeight());
+	//if(!(evt.phaseSpace() > 0.))continue;
+      	pointsMC.push_back(point);
+    }
+
+    HyperHistogram mcHist( dataHist.getBinning() );
+    mcHist.fill(pointsMC); 
+    //mcHist.save("histMC.root");
+    //data.normalise(1);
+    mcHist.normalise(dataHist.integral());
+
+    double chi2 = dataHist.chi2(mcHist);
+    int nBins   = dataHist.getNBins();
+
+    cout << "chi2 = " << (double)chi2/(nBins-1.) << endl;
+    //mcHist.divide(dataHist);
+    //mcHist.save("histMC_Data.root");
+
+    return (double)chi2/(nBins-1.);
+}
+
+double getChi2_6D(DalitzEventList& data, DiskResidentEventList& mc){
+	
+    double minBinWidth = 0.;
+    const int dim = 6;
+    
+    NamedParameter<int> EventPattern("Event Pattern",  531, -431, 321, 211, -211);
+    DalitzEventPattern pdg(EventPattern.getVector());
+          
+    NamedParameter<double> min_TAU("min_TAU", 0.4);
+    NamedParameter<double> max_TAU("max_TAU", 10.);
+
+    NamedParameter<int> minEventsPerBin("minEventsPerBin", 50);       
+    HyperPointSet points( dim );
+    HyperPoint min(pdg.sijMin(1,3),pdg.sijMin(2,4),pdg.sijMin(3,4),pdg.sijMin(1,2,4),pdg.sijMin(2,3,4),(double)min_TAU);
+    HyperPoint max(pdg.sijMax(1,3),pdg.sijMax(2,4),pdg.sijMax(3,4),pdg.sijMax(1,2,4),pdg.sijMax(2,3,4),(double)max_TAU);
+    //HyperPoint max(pdg.sijMax(1,3),pdg.sijMax(2,4),pdg.sijMax(3,4),pdg.sijMax(1,2,4),4 * GeV * GeV);
+
+    HyperCuboid limits(min, max );
+
+    vector<int> s124;
+    s124.push_back(1);
+    s124.push_back(2);
+    s124.push_back(4);
+
+    vector<int> s234;
+    s234.push_back(2);
+    s234.push_back(3);
+    s234.push_back(4);    	
+        
+    for (int i = 0; i < data.size(); i++){
+        DalitzEvent evt = data[i];
+	HyperPoint point( dim );
+      	point.at(0)= evt.s(1,3);
+      	point.at(1)= evt.s(2,4); 
+      	point.at(2)= evt.s(3,4);
+      	point.at(3)= evt.sij(s124);
+      	point.at(4)= evt.sij(s234);
+      	point.at(5)= evt.getValueFromVector(0);
+      	point.addWeight(evt.getWeight());
+      	points.push_back(point);
+    }
+
+    HyperHistogram dataHist(limits, points, 
+                         /*** Name of the binning algorithm you want to use     */
+                         HyperBinningAlgorithms::SMART,  
+                         /***  The minimum number of events allowed in each bin */
+                         /***  from the HyperPointSet provided (points1)        */
+                         AlgOption::MinBinContent      (minEventsPerBin),                    
+                         /*** This minimum bin width allowed. Can also pass a   */
+                         /*** HyperPoint if you would like different min bin    */
+                         /*** widths for each dimension                         */
+                         AlgOption::MinBinWidth        (0.),                                                 
+                         /*** If you want to use the sum of weights rather than */
+                         /*** the number of events, set this to true.           */    
+                         AlgOption::UseWeights         (true),                         
+                         /*** Some algorithms use a random number generator. Set*/
+                         /*** the seed here                                     */
+                         AlgOption::RandomSeed         (1),                         
+                         /*** What dimesnion would you like to split first? Only*/
+                         /*** applies to certain algortihms                     */
+                         AlgOption::StartDimension     (4)                        
+                         /*** What dimesnions would you like to bin in?         */
+                         //AlgOption::BinningDimensions  (binningDims),                      
+                         /*** Setting this option will make the agorithm draw   */
+                         /*** the binning scheme at each iteration              */
+                         //AlgOption::DrawAlgorithm("Algorithm")                 
+                         );
+
+//    dataHist.save("histData.root");
+//     HyperHistogram binningHist("histData.root",5);    
+//     HyperHistogram dataHist( binningHist.getBinning() );
+//     dataHist.fill(points); 
+
+    HyperPointSet pointsMC( dim);
+    for (int i = 0; i < mc.size(); i++){
+     	DalitzEvent evt = mc.getEvent(i);
+	HyperPoint point( dim);
+      	point.at(0)= evt.s(1,3);
+      	point.at(1)= evt.s(2,4); 
+      	point.at(2)= evt.s(3,4);
+      	point.at(3)= evt.sij(s124);
+      	point.at(4)= evt.sij(s234);
+      	point.at(5)= evt.getValueFromVector(0);
+	point.addWeight(evt.getWeight());
+	//if(!(evt.phaseSpace() > 0.))continue;
+      	pointsMC.push_back(point);
+    }
+
+    HyperHistogram mcHist( dataHist.getBinning() );
+    mcHist.fill(pointsMC); 
+    //mcHist.save("histMC.root");
+    //data.normalise(1);
+    mcHist.normalise(dataHist.integral());
+
+    double chi2 = dataHist.chi2(mcHist);
+    int nBins   = dataHist.getNBins();
+
+    cout << "chi2 = " << (double)chi2/(nBins-1.) << endl;
+    //mcHist.divide(dataHist);
+    //mcHist.save("histMC_Data.root");
+
+    return (double)chi2/(nBins-1.);
+}
 
 void ampFit(int step=0){
 
@@ -896,36 +1100,33 @@ void ampFit(int step=0){
         for(int i = 0; i < Nevents; i++){
             while(true){
                 
-                double t_MC = 0.;
-                double dt_MC = 0.;
-                while(true) {
-                    double tval = ranLux.Exp(tau);
-                    
-                    double gaus_f = ranLux.Uniform();
-                    if(gaus_f < f_dt.getVal()) {
-                        while(true){
-                            dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
-                            if(dt_MC < 0.1 && dt_MC > 0.)break;
-                        }
-                    }
-                    else {
-                        while(true){
-                            dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
-                            if(dt_MC < 0.1 && dt_MC > 0.)break;
-                        }
-                    }
-
-                    tval = tval + ranLux.Gaus(0,pdf.getCalibratedResolution(dt_MC));
-
-                    if (tval< max_TAU && tval> min_TAU) {
-                        t_MC = tval ;
-                        r_dt->setVal(dt_MC) ;
-                        break ;
-                    }
-                }
+       		double t_MC = 0.;
+        	 while(true) {
+            		double tval = ranLux.Exp(tau);      
+           		//tval = tval + ranLux.Gaus(0,t_pdf.getCalibratedResolution(dt_MC));
+            		if (tval< max_TAU && tval> min_TAU) {
+                		t_MC = tval ;
+                		break ;
+            		}
+        	}
+        
+		double dt_MC = 0.;
+        	double gaus_f = ranLux.Uniform();
+        	if(gaus_f < f_dt.getVal()) {
+                	while(true){
+                    		dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
+                    		if(dt_MC < 0.1 && dt_MC > 0.)break;
+                	}
+        	}
+        	else {
+                	while(true){
+                    		dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
+             		       	if(dt_MC < 0.1 && dt_MC > 0.)break;
+                	}
+        	}
+	        r_dt->setVal(dt_MC) ;
 
                 double q_rand = ranLux.Uniform();
-    
                 int q_OS_MC = 0;
                 if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
                 if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
@@ -988,12 +1189,11 @@ void ampFit(int step=0){
                 evt.setValueInVector(5, q_SS_MC);
                 evt.setValueInVector(6, eta_SS_MC);
                 
-                const double pdfVal = pdf.getValForGeneration(evt);
-                //const double pdfVal = pdf.un_normalised_noPs(evt);
+                //const double pdfVal = pdf.getValForGeneration(evt);
+                const double pdfVal = pdf.un_normalised_noPs(evt);
             
                 double maxVal = evt.getGeneratorPdfRelativeToPhaseSpace()*exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) )
                     * gen_dt->getVal()
-                    //* h_dt_norm->GetBinContent(h_dt_norm->FindBin(dt_MC))/h_dt_norm->Integral()
                     * gen_eta_OS->getVal()* gen_eta_SS->getVal()
                     *  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) )
                     *  (abs(q_SS_MC)/2. * eff_tag_SS + ( 1. - abs(q_SS_MC)) * (1.-eff_tag_SS) )
@@ -1190,10 +1390,18 @@ void ampFit(int step=0){
 
     TTree* pull_tree = new TTree("Coherence","Coherence");
     double r_val,delta_val,gamma_val,k_val,n2ll;
+    double xp_val,xm_val,yp_val,ym_val;
+    double chi2_val,chi2_6D_val;
     TBranch* br_r = pull_tree->Branch( "r", &r_val, "r_val/D" );
     TBranch* br_delta = pull_tree->Branch( "delta", &delta_val, "delta_val/D" );
     TBranch* br_gamma = pull_tree->Branch( "gamma", &gamma_val, "gamma_val/D" );
     TBranch* br_k = pull_tree->Branch( "k", &k_val, "k_val/D" );
+    TBranch* br_xp = pull_tree->Branch( "xp", &xp_val, "xp_val/D" );
+    TBranch* br_xm = pull_tree->Branch( "xm", &xm_val, "xm_val/D" );
+    TBranch* br_yp = pull_tree->Branch( "yp", &yp_val, "yp_val/D" );
+    TBranch* br_ym = pull_tree->Branch( "ym", &ym_val, "ym_val/D" );
+    TBranch* br_chi2 = pull_tree->Branch( "chi2", &chi2_val, "chi2_val/D" );
+    TBranch* br_chi2_6D = pull_tree->Branch( "chi2_6D", &chi2_6D_val, "chi2_6D_val/D" );
     TBranch* br_n2ll = pull_tree->Branch( "n2ll", &n2ll, "n2ll/D" );
     TBranch* br_seed = pull_tree->Branch( "seed", &seed, "seed/I" );
     
@@ -1205,6 +1413,11 @@ void ampFit(int step=0){
     for(unsigned int i=0; i < MinuitParameterSet::getDefaultSet()->size(); i++){
         if(0 == MinuitParameterSet::getDefaultSet()->getParPtr(i)) continue;
         if(A_is_in_B("gamma",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))gamma_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
+
+        if(A_is_in_B("xp",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))xp_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
+        if(A_is_in_B("xm",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))xm_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
+        if(A_is_in_B("yp",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))yp_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
+        if(A_is_in_B("ym",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))ym_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
     }
     
     DiskResidentEventList eventListMC(((string) IntegratorEventFile).c_str(),"OPEN");
@@ -1214,14 +1427,6 @@ void ampFit(int step=0){
     delta_val = k_fit[2];
 
     vector<double> k_fit_CP = coherenceFactor_CP(fas_CP,fas_bar_CP,(double)r, (double)delta,eventListMC);
-
-    // fill tree
-    pull_tree->Fill();
-    paraFile->cd();
-    pull_tree->SetDirectory(paraFile);
-    pull_tree->Write();
-    paraFile->Close();
-    delete paraFile;
 
     pdf.doFinalStatsAndSaveForAmp12(&mini,((string)OutputDir+"FitAmpResults_rand_"+anythingToString((int)seed)).c_str(),((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
    
@@ -1418,35 +1623,34 @@ void ampFit(int step=0){
     }     
 
     /// Loop over MC
+    DiskResidentEventList eventListMC_rw(pat,("dummy_"+anythingToString(step)+".root").c_str(),"RECREATE");
     for(int i = 0; i < eventListMC.size(); i++){
         
         double t_MC = 0.;
-        double dt_MC = 0.;
         while(true) {
-            double tval = ranLux.Exp(tau);
-            
-            double gaus_f = ranLux.Uniform();
-            if(gaus_f < f_dt.getVal()) {
+            double tval = ranLux.Exp(tau);      
+            //tval = tval + ranLux.Gaus(0,t_pdf.getCalibratedResolution(dt_MC));
+            if (tval< max_TAU && tval> min_TAU) {
+                t_MC = tval ;
+                break ;
+            }
+        }
+        
+	double dt_MC = 0.;
+        double gaus_f = ranLux.Uniform();
+        if(gaus_f < f_dt.getVal()) {
                 while(true){
                     dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
                     if(dt_MC < 0.1 && dt_MC > 0.)break;
                 }
-            }
-            else {
+        }
+        else {
                 while(true){
                     dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
                     if(dt_MC < 0.1 && dt_MC > 0.)break;
                 }
-            }
-            
-            tval = tval + ranLux.Gaus(0,pdf.getCalibratedResolution(dt_MC));
-            
-            if (tval< max_TAU && tval> min_TAU) {
-                t_MC = tval ;
-                r_dt->setVal(dt_MC) ;
-                break ;
-            }
         }
+        r_dt->setVal(dt_MC) ;
         
         double q_rand = ranLux.Uniform();
         
@@ -1510,8 +1714,9 @@ void ampFit(int step=0){
         evt.setValueInVector(5, q_SS_MC);
         evt.setValueInVector(6, eta_SS_MC);
         
-        //const double pdfVal = pdf.getVal(evt);
-        const double pdfVal = pdf.getValForGeneration(evt);
+        const double pdfVal = pdf.getVal(evt);
+        //const double pdfVal = pdf.getValForGeneration(evt);
+        //const double pdfVal = pdf.un_normalised_noPs(evt);
 
         //double weight = pdfVal/exp(-fabs(t_MC)/(tau))*tau*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
         double weight = pdfVal*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
@@ -1634,6 +1839,8 @@ void ampFit(int step=0){
 		}
 	}
 
+	evt.setWeight(weight);
+	eventListMC_rw.Add(evt);
     }
 
     /// Plot
@@ -2005,9 +2212,16 @@ void ampFit(int step=0){
             s_DsKpi_Abar->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_DsKpi_AAbar.eps").c_str());
 
+	    chi2_val = getChi2(eventList,eventListMC_rw);
+	    //chi2_6D_val = getChi2_6D(eventList,eventListMC_rw);
 
-	    //getChi2(eventList,eventListMC);
-
+	    // fill tree
+    	    pull_tree->Fill();
+    	    paraFile->cd();
+    	    pull_tree->SetDirectory(paraFile);
+    	    pull_tree->Write();
+    	    paraFile->Close();
+    	    delete paraFile;
 
     if(do2DScan == 1){
         cout << "Now doing 2D scan:" << endl;
