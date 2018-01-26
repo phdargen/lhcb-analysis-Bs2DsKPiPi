@@ -857,24 +857,24 @@ void ampFit(int step=0){
     gen_eta_SS->fitTo(*r_h_eta_SS,Save(kTRUE),SumW2Error(kTRUE));
     
     // plot
-    TCanvas* c1= new TCanvas("");
+    TCanvas* c= new TCanvas("");
     RooPlot* frame_dt= r_dt->frame();
     r_h_dt->plotOn(frame_dt,Name("data"),MarkerSize(1));
     gen_dt->plotOn(frame_dt,Name("pdf"),LineColor(kBlue),LineWidth(3));
     frame_dt->Draw();
-    c1->Print("samplingPdfs/dt.eps");
+    c->Print("samplingPdfs/dt.eps");
     
     RooPlot* frame_eta_OS= r_eta_OS->frame();
     r_h_eta_OS->plotOn(frame_eta_OS,MarkerSize(1));
     gen_eta_OS->plotOn(frame_eta_OS,LineColor(kBlue),LineWidth(3));
     frame_eta_OS->Draw();
-    c1->Print("samplingPdfs/eta_OS.eps");
+    c->Print("samplingPdfs/eta_OS.eps");
     
     RooPlot* frame_eta_SS= r_eta_SS->frame();
     r_h_eta_SS->plotOn(frame_eta_SS,MarkerSize(1));
     gen_eta_SS->plotOn(frame_eta_SS,LineColor(kBlue),LineWidth(3));
     frame_eta_SS->Draw();
-    c1->Print("samplingPdfs/eta_SS.eps");
+    c->Print("samplingPdfs/eta_SS.eps");
     
     f_pdfs->Close();
     
@@ -1637,8 +1637,6 @@ void ampFit(int step=0){
     }
 
     /// Plot
-    TCanvas* c = new TCanvas();
-
     h_t->SetMinimum(0.1);    
     h_t->SetLineColor(kBlack);
     h_t->DrawNormalized("e",1);
