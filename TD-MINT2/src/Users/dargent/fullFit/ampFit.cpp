@@ -711,7 +711,7 @@ void ampFit(int step=0){
     FitParameter r_2_im("r_2_Im",2,0,0.01); 
     counted_ptr<IReturnComplex> r_2_plus = new CPV_amp(r_2_re,r_2_im,1);
     counted_ptr<IReturnComplex> r_2_minus = new CPV_amp(r_2_re,r_2_im,-1);
-    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_2_plus, r_2_minus );
+    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_2_plus, r_2_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1460)+", r_2_plus, r_2_minus );
 
     FitParameter r_3_re("r_3_Re",2,0,0.01);
@@ -723,7 +723,7 @@ void ampFit(int step=0){
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1460)+(->K*(892)0(->K+,pi-),pi+),Ds-", r_3_plus, r_3_minus );
     AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)", r_3_plus, r_3_minus );
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_3_plus, r_3_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->sigma10(->pi+,pi-),Ds-)", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+", r_3_plus, r_3_minus );
    
@@ -901,10 +901,6 @@ void ampFit(int step=0){
                 while(true) {
                     double tval = ranLux.Exp(tau);
                     
-                    //RooDataSet* data_dt = gen_dt->generate(*r_dt,1) ;
-                    //r_dt->setVal(((RooRealVar*)((RooArgSet*)data_dt->get(0))->find("dt"))->getVal()) ;
-                    //dt_MC = ((RooRealVar*)((RooArgSet*)data_dt->get(0))->find("dt"))->getVal() ;
-
                     double gaus_f = ranLux.Uniform();
                     if(gaus_f < f_dt.getVal()) {
                         while(true){
@@ -923,6 +919,7 @@ void ampFit(int step=0){
 
                     if (tval< max_TAU && tval> min_TAU) {
                         t_MC = tval ;
+                        r_dt->setVal(dt_MC) ;
                         break ;
                     }
                 }
@@ -952,7 +949,8 @@ void ampFit(int step=0){
                             if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
                     }
                 }
-                
+                r_eta_OS->setVal(eta_OS_MC) ;
+
                 double eta_SS_MC = 0;
                 double gaus_eta_SS = ranLux.Uniform();
                 if(gaus_eta_SS < f_eta_SS.getVal()){
@@ -967,7 +965,8 @@ void ampFit(int step=0){
                         if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
                     }
                 }
-                
+                r_eta_SS->setVal(eta_SS_MC) ;
+
                 q_rand = ranLux.Uniform();
                 int f_MC = 0;
                 if (q_rand > .5) f_MC = -1;
@@ -1180,7 +1179,7 @@ void ampFit(int step=0){
     //cout << "tau = " << endl << tau.mean() << endl <<  tau.blindedMean() << endl;
     //neg2LL.getVal();    
     Minimiser mini(&neg2LL);
-    //mini.doFit();
+    mini.doFit();
     mini.printResultVsInput();
 
     /// Calculate pulls
@@ -1224,7 +1223,7 @@ void ampFit(int step=0){
     paraFile->Close();
     delete paraFile;
 
-    //pdf.doFinalStatsAndSaveForAmp12(&mini,((string)OutputDir+"FitAmpResults_rand_"+anythingToString((int)seed)).c_str(),((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
+    pdf.doFinalStatsAndSaveForAmp12(&mini,((string)OutputDir+"FitAmpResults_rand_"+anythingToString((int)seed)).c_str(),((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
    
     /// Data histograms
     TH1D* h_t = new TH1D("h_t",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU);    
@@ -1444,6 +1443,7 @@ void ampFit(int step=0){
             
             if (tval< max_TAU && tval> min_TAU) {
                 t_MC = tval ;
+                r_dt->setVal(dt_MC) ;
                 break ;
             }
         }
@@ -1473,7 +1473,8 @@ void ampFit(int step=0){
                 if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
             }
         }
-        
+        r_eta_OS->setVal(eta_OS_MC) ;
+
         double eta_SS_MC = 0;
         double gaus_eta_SS = ranLux.Uniform();
         if(gaus_eta_SS < f_eta_SS.getVal()){
@@ -1488,7 +1489,8 @@ void ampFit(int step=0){
                 if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
             }
         }
-        
+        r_eta_SS->setVal(eta_SS_MC) ;
+
         q_rand = ranLux.Uniform();
         int f_MC = 0;
         if (q_rand > .5) f_MC = -1;
@@ -1513,7 +1515,10 @@ void ampFit(int step=0){
 
         //double weight = pdfVal/exp(-fabs(t_MC)/(tau))*tau*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
         double weight = pdfVal*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
-	    weight /=  exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) * gen_dt->getVal() * gen_eta_OS->getVal()* gen_eta_SS->getVal();
+	weight /=  exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) 
+		* gen_dt->getVal() * gen_eta_OS->getVal()* gen_eta_SS->getVal()
+		*  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) )
+                *  (abs(q_SS_MC)/2. * eff_tag_SS + ( 1. - abs(q_SS_MC)) * (1.-eff_tag_SS) )	;
 
         h_t_fit->Fill(t_MC,weight);
         h_dt_fit->Fill(dt_MC,weight);

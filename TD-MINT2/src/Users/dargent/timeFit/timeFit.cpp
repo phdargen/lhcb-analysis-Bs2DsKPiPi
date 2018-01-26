@@ -170,12 +170,50 @@ public:
         return val/norm;
     }
     
+ inline double getValForGeneration(IDalitzEvent& evt){
+
+        const double t = (double) evt.getValueFromVector(0);
+        if(t < _min_TAU || t > _max_TAU )return 0.;
+        _timePdfMaster.setAllObservablesAndFitParameters(evt);
+        
+        // C,Cbar,D,Dbar,S,Sbar
+        _timePdfMaster.setCP_coeff(1.,
+				   1.,
+                                   _C,
+                                   -_C,
+                                   _k * _D,
+                                   _k * _D_bar,
+                                   _k * _S,
+                                   -_k * _S_bar
+        );
+        
+        const double tau = _timePdfMaster.get_tau_Val();
+        const double dGamma = _timePdfMaster.get_dGamma_Val();
+        const double dm = _timePdfMaster.get_dm_Val();
+
+        const double val =  exp(-fabs(t)/tau) *
+        ( _timePdfMaster.get_cosh_coeff_Val(evt) *cosh(dGamma/2.*t)
+         +  _timePdfMaster.get_cos_coeff_Val(evt) *cos(dm*t)
+         +  _timePdfMaster.get_sinh_coeff_Val(evt) *sinh(dGamma/2.*t)
+         +  _timePdfMaster.get_sin_coeff_Val(evt) *sin(dm*t)
+         )
+        * _timePdfMaster.get_spline_Val(evt)
+        * _timePdfMaster.get_marginalPdfs_Val(evt);
+
+        return val;
+    }
+
+
     std::pair<double, double> getCalibratedMistag_OS(IDalitzEvent& evt){
         return _timePdfMaster.getCalibratedMistag_OS(evt);
     }
     
     std::pair<double, double> getCalibratedMistag_SS(IDalitzEvent& evt){
         return _timePdfMaster.getCalibratedMistag_SS(evt);
+    }
+
+    double getCalibratedResolution(double& dt){
+        return _timePdfMaster.getCalibratedResolution(dt);
     }
     
     virtual double getVal_withPs(IDalitzEvent& evt){return getVal(evt);}
@@ -262,6 +300,40 @@ public:
         return val;
     }
     
+ inline double getValForGeneration(IDalitzEvent& evt){
+
+        const double t = (double) evt.getValueFromVector(0);
+        if(t < _min_TAU || t > _max_TAU )return 0.;
+        _timePdfMaster.setAllObservablesAndFitParameters(evt);
+        
+        // C,Cbar,D,Dbar,S,Sbar
+        _timePdfMaster.setCP_coeff(
+	    1.,
+	    1.,
+            (1.-_r*_r)/(1.+_r*_r),
+           -(1.-_r*_r)/(1.+_r*_r),
+            (-2.*_r * _k * cos( (_delta-_gamma)/360.*2*pi ))/(1.+_r*_r),
+            (-2.*_r * _k * cos((_delta+_gamma)/360.*2*pi ))/(1.+_r*_r),
+            (2.*_r * _k * sin((_delta-_gamma)/360.*2*pi))/(1.+_r*_r),
+            (-2.*_r * _k * sin((_delta+_gamma)/360.*2*pi))/(1.+_r*_r)
+        );
+        
+        const double tau = _timePdfMaster.get_tau_Val();
+        const double dGamma = _timePdfMaster.get_dGamma_Val();
+        const double dm = _timePdfMaster.get_dm_Val();
+
+        const double val =  exp(-fabs(t)/tau) *
+        ( _timePdfMaster.get_cosh_coeff_Val(evt) *cosh(dGamma/2.*t)
+         +  _timePdfMaster.get_cos_coeff_Val(evt) *cos(dm*t)
+         +  _timePdfMaster.get_sinh_coeff_Val(evt) *sinh(dGamma/2.*t)
+         +  _timePdfMaster.get_sin_coeff_Val(evt) *sin(dm*t)
+         )
+        * _timePdfMaster.get_spline_Val(evt)
+        * _timePdfMaster.get_marginalPdfs_Val(evt);
+
+        return val;
+    }
+
     virtual double getVal(IDalitzEvent& evt){
         
         double val = un_normalised(evt);
@@ -282,7 +354,11 @@ public:
     std::pair<double, double> getCalibratedMistag_SS(IDalitzEvent& evt){
         return _timePdfMaster.getCalibratedMistag_SS(evt);
     }
-    
+
+    double getCalibratedResolution(double& dt){
+        return _timePdfMaster.getCalibratedResolution(dt);
+    }
+      
     virtual double getVal_withPs(IDalitzEvent& evt){return getVal(evt);}
     virtual double getVal_noPs(IDalitzEvent& evt){return getVal(evt);}
     
@@ -341,6 +417,12 @@ void fullTimeFit(){
     FitParameter  delta("delta",1,100.,1.);
     FitParameter  gamma("gamma",1,70,1.);
     FitParameter  k("k",1,1,1.);
+
+    // values only used for importance sampling:
+    double tau = 1.509;
+    double dm = 17.757;
+    double eff_tag_OS = 0.3852;
+    double eff_tag_SS = 0.6903;
 
     //FullTimePdf_mod t_pdf(r,delta,gamma,k);
     FullTimePdf t_pdf;
@@ -424,10 +506,6 @@ void fullTimeFit(){
     
     /// Plot
     TCanvas* c = new TCanvas();
-    
-    double tau = 1.509;
-    double dm = 17.757;
-    
     TH1D* h_t = new TH1D("h_t",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU);
     
     TH1D* h_t_mixed = new TH1D("h_t_mixed",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU_ForMixingPlot);
@@ -596,7 +674,6 @@ void fullTimeFit(){
         }
     }     
 
-
     cout << "Tagging perfromance " << endl << endl;        
     cout << "Tagger | eff_tag | <w> | e_eff " <<  endl;
 
@@ -640,74 +717,148 @@ void fullTimeFit(){
     TH1D* h_N_mixed_m_fit_unfolded = (TH1D*) h_N_mixed_p_fit_unfolded->Clone("h_N_mixed_m_fit");
     TH1D* h_N_unmixed_m_fit_unfolded = (TH1D*) h_N_mixed_p_fit_unfolded->Clone("h_N_unmixed_m_fit");
 
-    RooRealVar* r_t = new RooRealVar("t", "t",min_TAU,max_TAU);
-    RooRealVar* r_dt = new RooRealVar("dt", "per-candidate time resolution estimate",0., 0.1);
-    RooRealVar* r_eta_OS = new RooRealVar("eta_OS", "eta_OS",0.,0.5); 
-    RooRealVar* r_eta_SS = new RooRealVar("eta_SS", "eta_SS",0.,0.5); 
-
-    RooExponential gen_t("gen_t","gen_t", *r_t, RooRealConstant::value(1./tau));	
-    RooGaussian gen_dt("gen_dt","gen_dt", *r_dt, RooRealConstant::value(0.03),RooRealConstant::value(0.015));	
-    RooGaussian gen_eta_OS("gen_eta_OS","gen_eta_OS", *r_eta_OS, RooRealConstant::value(0.4),RooRealConstant::value(0.2));	
-    RooGaussian gen_eta_SS("gen_eta_SS","gen_eta_SS", *r_eta_SS, RooRealConstant::value(0.5),RooRealConstant::value(0.1));
+    /// Make marginal pdfs for MC generation and plotting
+    TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
+    
+    RooRealVar* r_dt = new RooRealVar("dt", "dt",0., 0.1);
+    RooRealVar* r_eta_OS = new RooRealVar("eta_OS", "eta_OS",0.,0.5);
+    RooRealVar* r_eta_SS = new RooRealVar("eta_SS", "eta_SS",0.,0.5);
+    
+    TH1D* h_dt_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
+    RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",*r_dt,h_dt_norm);
+    RooRealVar mean1_dt("mean1_dt","mean1_dt", 0.02,0.,1.0);
+    RooRealVar mean2_dt("mean2_dt","mean2_dt", 0.03,0.,1.0);
+    RooRealVar sigma1_dt("sigma1_dt","sigma1_dt", 0.015,0.,1.0);
+    RooRealVar sigma2_dt("sigma2_dt","sigma2_dt", 0.015,0.,1.0);
+    RooRealVar f_dt("f_dt", "f_dt", 0.5, 0., 1.);
+    
+    RooGaussian* gen1_dt = new RooGaussian("gen1_dt","gen1_dt", *r_dt, mean1_dt,sigma1_dt);
+    RooGaussian* gen2_dt = new RooGaussian("gen2_dt","gen2_dt", *r_dt, mean2_dt,sigma2_dt);
+    RooAddPdf* gen_dt=new RooAddPdf("gen_dt", "gen_dt", RooArgList(*gen1_dt, *gen2_dt), RooArgList(f_dt));
+    gen_dt->fitTo(*r_h_dt,Save(kTRUE),SumW2Error(kTRUE));
+    
+    // mistag OS
+    TH1D* h_w_OS_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_w_OS_norm")));
+    RooDataHist* r_h_eta_OS = new RooDataHist("r_eta_OS","r_eta_OS",*r_eta_OS,h_w_OS_norm);
+    RooRealVar mean1_eta_OS("mean1_eta_OS","mean1_eta_OS", 0.02,0.,1.0);
+    RooRealVar mean2_eta_OS("mean2_eta_OS","mean2_eta_OS", 0.04,0.,1.0);
+    RooRealVar sigma1_eta_OS("sigma1_eta_OS","sigma1_eta_OS", 0.015,0.,1.0);
+    RooRealVar sigma2_eta_OS("sigma2_eta_OS","sigma2_eta_OS", 0.015,0.,1.0);
+    RooRealVar f_eta_OS("f_eta_OS", "f_eta_OS", 0.5, 0., 1.);
+    
+    RooGaussian* gen1_eta_OS = new RooGaussian("gen1_eta_OS","gen1_eta_OS", *r_eta_OS, mean1_eta_OS,sigma1_eta_OS);
+    RooGaussian* gen2_eta_OS = new RooGaussian("gen2_eta_OS","gen2_eta_OS", *r_eta_OS, mean2_eta_OS,sigma2_eta_OS);
+    RooAddPdf* gen_eta_OS=new RooAddPdf("gen_eta_OS", "gen_eta_OS", RooArgList(*gen1_eta_OS, *gen2_eta_OS), RooArgList(f_eta_OS));
+    gen_eta_OS->fitTo(*r_h_eta_OS,Save(kTRUE),SumW2Error(kTRUE));
+    
+    // mistag SS
+    TH1D* h_w_SS_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_w_SS_norm")));
+    RooDataHist* r_h_eta_SS = new RooDataHist("r_eta_SS","r_eta_SS",*r_eta_SS,h_w_SS_norm);
+    RooRealVar mean1_eta_SS("mean1_eta_SS","mean1_eta_SS", 0.02,0.,1.0);
+    RooRealVar mean2_eta_SS("mean2_eta_SS","mean2_eta_SS", 0.06,0.,1.0);
+    RooRealVar sigma1_eta_SS("sigma1_eta_SS","sigma1_eta_SS", 0.015,0.,1.0);
+    RooRealVar sigma2_eta_SS("sigma2_eta_SS","sigma2_eta_SS", 0.015,0.,1.0);
+    RooRealVar f_eta_SS("f_eta_SS", "f_eta_SS", 0.5, 0., 1.);
+    
+    RooGaussian* gen1_eta_SS = new RooGaussian("gen1_eta_SS","gen1_eta_SS", *r_eta_SS, mean1_eta_SS,sigma1_eta_SS);
+    RooGaussian* gen2_eta_SS = new RooGaussian("gen2_eta_SS","gen2_eta_SS", *r_eta_SS, mean2_eta_SS,sigma2_eta_SS);
+    RooAddPdf* gen_eta_SS=new RooAddPdf("gen_eta_SS", "gen_eta_SS", RooArgList(*gen1_eta_SS, *gen2_eta_SS), RooArgList(f_eta_SS));
+    gen_eta_SS->fitTo(*r_h_eta_SS,Save(kTRUE),SumW2Error(kTRUE));
+    
+    // plot
+    TCanvas* c1= new TCanvas("");
+    RooPlot* frame_dt= r_dt->frame();
+    r_h_dt->plotOn(frame_dt,Name("data"),MarkerSize(1));
+    gen_dt->plotOn(frame_dt,Name("pdf"),LineColor(kBlue),LineWidth(3));
+    frame_dt->Draw();
+    c1->Print("samplingPdfs/dt.eps");
+    
+    RooPlot* frame_eta_OS= r_eta_OS->frame();
+    r_h_eta_OS->plotOn(frame_eta_OS,MarkerSize(1));
+    gen_eta_OS->plotOn(frame_eta_OS,LineColor(kBlue),LineWidth(3));
+    frame_eta_OS->Draw();
+    c1->Print("samplingPdfs/eta_OS.eps");
+    
+    RooPlot* frame_eta_SS= r_eta_SS->frame();
+    r_h_eta_SS->plotOn(frame_eta_SS,MarkerSize(1));
+    gen_eta_SS->plotOn(frame_eta_SS,LineColor(kBlue),LineWidth(3));
+    frame_eta_SS->Draw();
+    c1->Print("samplingPdfs/eta_SS.eps");
+    
+    f_pdfs->Close();
 
     for(int i = 0; i < 50000000; i++){
         
-	/*
-        const double t_MC = ranLux.Exp(tau);
-        const double dt_MC = ranLux.Uniform(0., 0.1);
-        
-        if(t_MC < min_TAU/2. || t_MC > max_TAU*1.2 )continue;
-        if( dt_MC < 0 || dt_MC > 0.1 )continue;
-        
-        double q_rand = ranLux.Uniform();
-       
-        int q_OS_MC = 0;
-        if (q_rand < 1./3.) q_OS_MC = -1;
-        if (q_rand > 2./3.) q_OS_MC = 1;
-        
-        q_rand = ranLux.Uniform();
-        int q_SS_MC = 0;
-        if (q_rand < 1./3.) q_SS_MC = -1;
-        if (q_rand > 2./3.) q_SS_MC = 1;
-        
-        const double eta_OS_MC = ranLux.Uniform(0., 0.5);
-        const double eta_SS_MC = ranLux.Uniform(0., 0.5);
-        
-        q_rand = ranLux.Uniform();
-        int f_MC = 0;
-        if (q_rand > .5) f_MC = -1;
-        else f_MC = 1;
-        */
-
         double t_MC = 0.;
-    	while(1) {
- 		double tval = ranLux.Exp(tau); 
-  	    	if (tval< max_TAU && tval> min_TAU) {
-         		t_MC = tval ;
-			r_t->setVal(tval);
-         		break ;
-		}
-       }
-	
-	gen_dt.generateEvent(1);
-	double dt_MC = r_dt->getVal(); //ranLux.Uniform(0., 0.1);
+        double dt_MC = 0.;
+        while(true) {
+            double tval = ranLux.Exp(tau);
+            
+            double gaus_f = ranLux.Uniform();
+            if(gaus_f < f_dt.getVal()) {
+                while(true){
+                    dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
+                    if(dt_MC < 0.1 && dt_MC > 0.)break;
+                }
+            }
+            else {
+                while(true){
+                    dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
+                    if(dt_MC < 0.1 && dt_MC > 0.)break;
+                }
+            }
+            
+            tval = tval + ranLux.Gaus(0,t_pdf.getCalibratedResolution(dt_MC));
+            
+            if (tval< max_TAU && tval> min_TAU) {
+                t_MC = tval ;
+                r_dt->setVal(dt_MC) ;
+                break ;
+            }
+        }
         
         double q_rand = ranLux.Uniform();
-       
+        
         int q_OS_MC = 0;
-        if (q_rand < 1./3.) q_OS_MC = -1;
-        if (q_rand > 2./3.) q_OS_MC = 1;
+        if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
+        if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
         
         q_rand = ranLux.Uniform();
         int q_SS_MC = 0;
-        if (q_rand < 1./3.) q_SS_MC = -1;
-        if (q_rand > 2./3.) q_SS_MC = 1;
+        if (q_rand < eff_tag_SS/2.  ) q_SS_MC = -1;
+        if (q_rand > (1.-eff_tag_SS/2.) ) q_SS_MC = 1;
         
-	gen_eta_OS.generateEvent(1);
-	double eta_OS_MC = r_eta_OS->getVal();        
+        double eta_OS_MC = 0;
+        double gaus_eta_OS = ranLux.Uniform();
+        if(gaus_eta_OS < f_eta_OS.getVal()){
+            while(true){
+                eta_OS_MC = ranLux.Gaus(mean1_eta_OS.getVal(),sigma1_eta_OS.getVal());
+                if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
+            }
+        }
+        else{
+            while(true){
+                eta_OS_MC = ranLux.Gaus(mean2_eta_OS.getVal(),sigma2_eta_OS.getVal());
+                if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
+            }
+        }
+        r_eta_OS->setVal(eta_OS_MC) ;
 
-	gen_eta_SS.generateEvent(1);
-	double eta_SS_MC = r_eta_SS->getVal(); 
+        double eta_SS_MC = 0;
+        double gaus_eta_SS = ranLux.Uniform();
+        if(gaus_eta_SS < f_eta_SS.getVal()){
+            while(true){
+                eta_SS_MC = ranLux.Gaus(mean1_eta_SS.getVal(),sigma1_eta_SS.getVal());
+                if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
+            }
+        }
+        else{
+            while(true){
+                eta_SS_MC = ranLux.Gaus(mean2_eta_SS.getVal(),sigma2_eta_SS.getVal());
+                if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
+            }
+        }
+        r_eta_SS->setVal(eta_SS_MC) ;
 
         q_rand = ranLux.Uniform();
         int f_MC = 0;
@@ -725,12 +876,13 @@ void fullTimeFit(){
         evt.setValueInVector(5, q_SS_MC);
         evt.setValueInVector(6, eta_SS_MC);
         
-        const double pdfVal = t_pdf.getVal(evt);
+        //const double pdfVal = t_pdf.getVal(evt);
+        const double pdfVal = t_pdf.getValForGeneration(evt);
         double weight = pdfVal;
-	weight /=  exp(-t_MC/tau) / ( tau * ( exp(min_TAU/tau) - exp(max_TAU/tau) ) );  
-	weight /= gen_dt.getVal();
-	weight /= gen_eta_OS.getVal();
-	weight /= gen_eta_SS.getVal();
+	weight /=  exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) 
+		* gen_dt->getVal() * gen_eta_OS->getVal()* gen_eta_SS->getVal()
+		*  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) )
+                *  (abs(q_SS_MC)/2. * eff_tag_SS + ( 1. - abs(q_SS_MC)) * (1.-eff_tag_SS) )	;
         
         h_t_fit->Fill(t_MC,weight);
         h_dt_fit->Fill(dt_MC,weight);
