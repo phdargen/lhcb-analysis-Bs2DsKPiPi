@@ -172,7 +172,31 @@ class TimePdfMaster
     TH1D* _h_eta_SS;
     RooDataHist* _r_h_eta_SS;
     RooAbsPdf* _pdf_eta_SS_uniform;
+    
+    RooRealVar* _r_mean1_dt;
+    RooRealVar* _r_mean2_dt;
+    RooRealVar* _r_sigma1_dt;
+    RooRealVar* _r_sigma2_dt;
+    RooRealVar* _r_f_dt;
+    RooGaussian *_gen1_dt;
+    RooGaussian * _gen2_dt;
 
+    RooRealVar* _r_mean1_eta_OS;
+    RooRealVar* _r_mean2_eta_OS;
+    RooRealVar* _r_sigma1_eta_OS;
+    RooRealVar* _r_sigma2_eta_OS;
+    RooRealVar* _r_f_eta_OS;
+    RooGaussian *_gen1_eta_OS;
+    RooGaussian * _gen2_eta_OS;
+    
+    RooRealVar* _r_mean1_eta_SS;
+    RooRealVar* _r_mean2_eta_SS;
+    RooRealVar* _r_sigma1_eta_SS;
+    RooRealVar* _r_sigma2_eta_SS;
+    RooRealVar* _r_f_eta_SS;
+    RooGaussian *_gen1_eta_SS;
+    RooGaussian * _gen2_eta_SS;
+    
     // Limits
     NamedParameter<double> _min_TAU;
     NamedParameter<double> _max_TAU;
@@ -461,21 +485,56 @@ class TimePdfMaster
         
         _h_dt = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
         _r_h_dt = new RooDataHist("r_h_dt","r_h_dt",*_r_dt,_h_dt);
-        _pdf_sigma_t = (RooAbsPdf*) (new RooHistPdf("pdf_sigma_t","pdf_sigma_t",*_r_dt,*_r_h_dt));
+        //_pdf_sigma_t = (RooAbsPdf*) (new RooHistPdf("pdf_sigma_t","pdf_sigma_t",*_r_dt,*_r_h_dt));
         
         _h_eta_OS = new TH1D( *((TH1D*) f_pdfs->Get("h_w_OS_norm")));
         _r_h_eta_OS = new RooDataHist("r_eta_OS","r_eta_OS",*_r_eta_OS,_h_eta_OS);
-        _pdf_eta_OS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_OS","pdf_eta_OS",*_r_eta_OS,*_r_h_eta_OS));
+        //_pdf_eta_OS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_OS","pdf_eta_OS",*_r_eta_OS,*_r_h_eta_OS));
         
         _h_eta_SS = new TH1D( *((TH1D*) f_pdfs->Get("h_w_SS_norm")));
         _r_h_eta_SS = new RooDataHist("r_eta_SS","r_eta_SS",*_r_eta_SS,_h_eta_SS);
-        _pdf_eta_SS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_SS","pdf_eta_SS",*_r_eta_SS,*_r_h_eta_SS));
+        //_pdf_eta_SS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_SS","pdf_eta_SS",*_r_eta_SS,*_r_h_eta_SS));
         
-        _pdf_eta_OS_uniform = new RooUniform("pdf_eta_OS_uniform","pdf_eta_OS_uniform",*_r_eta_OS);
-        _pdf_eta_SS_uniform = new RooUniform("pdf_eta_SS_uniform","pdf_eta_SS_uniform",*_r_eta_SS);
+        //_pdf_eta_OS_uniform = new RooUniform("pdf_eta_OS_uniform","pdf_eta_OS_uniform",*_r_eta_OS);
+        //_pdf_eta_SS_uniform = new RooUniform("pdf_eta_SS_uniform","pdf_eta_SS_uniform",*_r_eta_SS);
+        
+        _r_mean1_dt = new RooRealVar("mean1_dt","mean1_dt", 0.02,0.,1.0);
+        _r_mean2_dt= new RooRealVar("mean2_dt","mean2_dt", 0.03,0.,1.0);
+        _r_sigma1_dt= new RooRealVar("sigma1_dt","sigma1_dt", 0.015,0.,1.0);
+        _r_sigma2_dt= new RooRealVar("sigma2_dt","sigma2_dt", 0.015,0.,1.0);
+        _r_f_dt= new RooRealVar("f_dt", "f_dt", 0.5, 0., 1.);
+        
+        _gen1_dt = new RooGaussian("gen1_dt","gen1_dt", *_r_dt, *_r_mean1_dt,*_r_sigma1_dt);
+        _gen2_dt = new RooGaussian("gen2_dt","gen2_dt", *_r_dt, *_r_mean2_dt,*_r_sigma2_dt);
+        _pdf_sigma_t = (RooAbsPdf*) (new RooAddPdf("gen_dt", "gen_dt", RooArgList(*_gen1_dt, *_gen2_dt), RooArgList(*_r_f_dt)));
+        _pdf_sigma_t->fitTo(*_r_h_dt,Save(kTRUE),SumW2Error(kTRUE));
+        
+        // mistag OS
+        _r_mean1_eta_OS = new RooRealVar("mean1_eta_OS","mean1_eta_OS", 0.02,0.,1.0);
+        _r_mean2_eta_OS= new RooRealVar("mean2_eta_OS","mean2_eta_OS", 0.04,0.,1.0);
+        _r_sigma1_eta_OS= new RooRealVar("sigma1_eta_OS","sigma1_eta_OS", 0.015,0.,1.0);
+        _r_sigma2_eta_OS= new RooRealVar("sigma2_eta_OS","sigma2_eta_OS", 0.015,0.,1.0);
+        _r_f_eta_OS= new RooRealVar("f_eta_OS", "f_eta_OS", 0.5, 0., 1.);
+        
+        _gen1_eta_OS = new RooGaussian("gen1_eta_OS","gen1_eta_OS", *_r_eta_OS, *_r_mean1_eta_OS,*_r_sigma1_eta_OS);
+        _gen2_eta_OS = new RooGaussian("gen2_eta_OS","gen2_eta_OS", *_r_eta_OS, *_r_mean2_eta_OS,*_r_sigma2_eta_OS);
+        _pdf_eta_OS= (RooAbsPdf*) (new RooAddPdf("gen_eta_OS", "gen_eta_OS", RooArgList(*_gen1_eta_OS, *_gen2_eta_OS), RooArgList(*_r_f_eta_OS)));
+        _pdf_eta_OS->fitTo(*_r_h_eta_OS,Save(kTRUE),SumW2Error(kTRUE));
+        
+        // mistag SS
+        _r_mean1_eta_SS = new RooRealVar("mean1_eta_SS","mean1_eta_SS", 0.02,0.,1.0);
+        _r_mean2_eta_SS= new RooRealVar("mean2_eta_SS","mean2_eta_SS", 0.06,0.,1.0);
+        _r_sigma1_eta_SS= new RooRealVar("sigma1_eta_SS","sigma1_eta_SS", 0.015,0.,1.0);
+        _r_sigma2_eta_SS= new RooRealVar("sigma2_eta_SS","sigma2_eta_SS", 0.015,0.,1.0);
+        _r_f_eta_SS= new RooRealVar("f_eta_SS", "f_eta_SS", 0.5, 0., 1.);
+        
+        _gen1_eta_SS = new RooGaussian("gen1_eta_SS","gen1_eta_SS", *_r_eta_SS, *_r_mean1_eta_SS,*_r_sigma1_eta_SS);
+        _gen2_eta_SS = new RooGaussian("gen2_eta_SS","gen2_eta_SS", *_r_eta_SS, *_r_mean2_eta_SS,*_r_sigma2_eta_SS);
+        _pdf_eta_SS= (RooAbsPdf*) (new RooAddPdf("gen_eta_SS", "gen_eta_SS", RooArgList(*_gen1_eta_SS, *_gen2_eta_SS), RooArgList(*_r_f_eta_SS)));
+        _pdf_eta_SS->fitTo(*_r_h_eta_SS,Save(kTRUE),SumW2Error(kTRUE));
         
         f_pdfs->Close();
-
+        
     }
          
     double get_cosh_term_Val(IDalitzEvent& evt){
@@ -530,9 +589,28 @@ class TimePdfMaster
         const int q_OS = (int)evt.getValueFromVector(3);
         const int q_SS = (int)evt.getValueFromVector(5);
         
+        //cout << _r_mean1_eta_SS->getVal() << endl;
+        //throw "";
+        
         return  _pdf_sigma_t->getVal()
-                * ( abs(q_OS)/2. * _pdf_eta_OS->getVal() + ( 1. - abs(q_OS)) * _pdf_eta_OS_uniform->getVal() )
-                * ( abs(q_SS)/2. * _pdf_eta_SS->getVal() + ( 1. - abs(q_SS)) * _pdf_eta_SS_uniform->getVal() );
+                * ( abs(q_OS) * _pdf_eta_OS->getVal() + ( 1. - abs(q_OS)) * 1./0.5 )
+                * ( abs(q_SS) * _pdf_eta_SS->getVal() + ( 1. - abs(q_SS)) * 1./0.5 );
+    }
+    
+    double get_spline_Val(IDalitzEvent& evt){
+        return  _spline->getVal();
+    }
+    
+    double get_tau_Val(){
+        return (double)_tau;
+    }
+    
+    double get_dm_Val(){
+        return (double)_dm;
+    }
+    
+    double get_dGamma_Val(){
+        return (double)_dGamma;
     }
     
     std::pair<double, double> getCalibratedMistag_OS(IDalitzEvent& evt){
@@ -541,6 +619,10 @@ class TimePdfMaster
     
     std::pair<double, double> getCalibratedMistag_SS(IDalitzEvent& evt){
         return _cosh_coeff->calibrate(evt.getValueFromVector(6), _avg_eta_ss, _p0_ss, _p1_ss, _delta_p0_ss, _delta_p1_ss);
+    }
+    
+    double getCalibratedResolution(double& dt){
+        return _offset_sigma_dt + _scale_sigma_dt * dt;
     }
     
    void listFitParDependencies(){

@@ -51,6 +51,7 @@
 #include "RooCategory.h"
 #include "RooDataHist.h"
 #include "RooHistPdf.h"
+#include "RooAddPdf.h"
 #include "RooUniform.h"
 #include "RooExponential.h"
 #include "RooGaussian.h"
@@ -264,14 +265,12 @@ std::vector<double> coherenceFactor(FitAmpSum& fas, FitAmpSum& fas_bar, double r
     return result;
 }
 
-std::vector<double> coherenceFactorCC(FitAmpSum& fas, FitAmpSum& fas_bar, double r, double delta, DalitzEventList& eventList){
+std::vector<double> coherenceFactor(FitAmpSum& fas, FitAmpSum& fas_bar, double r, double delta, DiskResidentEventList& eventList){
     
-    cout << "Calculating coherence factor ..." << endl << endl;    
-    //fas.CPConjugateSameFitParameters();
-    //fas_bar.CPConjugateSameFitParameters();
-
-    //fas.print();
-    //fas_bar.print();
+    cout << "Calculating coherence factor ..." << endl << endl;
+    fas.print();
+    fas_bar.print();
+    
     std::complex<double> valK(0,0);
     double val1 = 0;
     double val2 = 0;
@@ -279,15 +278,13 @@ std::vector<double> coherenceFactorCC(FitAmpSum& fas, FitAmpSum& fas_bar, double
     const complex<double> phase_diff = polar(r, delta/360.*2*pi);
     
     for(unsigned int i=0; i<eventList.size(); i++){
-    
-        DalitzEvent evt(eventList[i]);
-        evt.P_conjugateYourself();
-    
+        DalitzEvent evt = eventList.getEvent(i);
+
         const std::complex<double> amp = fas.getVal(evt) ;
         const std::complex<double> amp_bar = fas_bar.getVal(evt)*phase_diff ;
-        valK += amp_bar*conj(amp)*eventList[i].getWeight()/ eventList[i].getGeneratorPdfRelativeToPhaseSpace();
-        val1 += norm(amp)*eventList[i].getWeight()/ eventList[i].getGeneratorPdfRelativeToPhaseSpace();
-        val2 += norm(amp_bar)*eventList[i].getWeight()/ eventList[i].getGeneratorPdfRelativeToPhaseSpace();
+        valK += amp_bar*conj(amp)*evt.getWeight()/ evt.getGeneratorPdfRelativeToPhaseSpace();
+        val1 += norm(amp)*evt.getWeight()/ evt.getGeneratorPdfRelativeToPhaseSpace();
+        val2 += norm(amp_bar)*evt.getWeight()/ evt.getGeneratorPdfRelativeToPhaseSpace();
     }
     
     std::vector<double> result;
@@ -301,6 +298,42 @@ std::vector<double> coherenceFactorCC(FitAmpSum& fas, FitAmpSum& fas_bar, double
     
     return result;
 }
+
+std::vector<double> coherenceFactor_CP(FitAmpSum& fas, FitAmpSum& fas_bar, double r, double delta, DiskResidentEventList& eventList){
+    
+    cout << "Calculating coherence factor ..." << endl << endl;
+    fas.print();
+    fas_bar.print();
+    
+    std::complex<double> valK(0,0);
+    double val1 = 0;
+    double val2 = 0;
+    
+    const complex<double> phase_diff = polar(r, delta/360.*2*pi);
+    
+    for(unsigned int i=0; i<eventList.size(); i++){
+        DalitzEvent evt = eventList.getEvent(i);
+        evt.CP_conjugateYourself();
+        
+        const std::complex<double> amp = fas.getVal(evt) ;
+        const std::complex<double> amp_bar = fas_bar.getVal(evt)*phase_diff ;
+        valK += amp_bar*conj(amp)*evt.getWeight()/ evt.getGeneratorPdfRelativeToPhaseSpace();
+        val1 += norm(amp)*evt.getWeight()/ evt.getGeneratorPdfRelativeToPhaseSpace();
+        val2 += norm(amp_bar)*evt.getWeight()/ evt.getGeneratorPdfRelativeToPhaseSpace();
+    }
+    
+    std::vector<double> result;
+    result.push_back(sqrt(val2/val1));
+    result.push_back(std::abs(valK)/sqrt(val1)/sqrt(val2));
+    result.push_back(std::arg(valK)/(2.*pi)*360.);
+    
+    cout << "r = " << result[0] << endl;
+    cout << "k = " << result[1] << endl;
+    cout << "d = " << result[2] << " [deg]" << endl << endl;
+    
+    return result;
+}
+
 
 // Full time-dependent PDF
 class FullAmpsPdfFlexiFastCPV : public MINT::PdfBase<IDalitzEvent>
@@ -372,47 +405,75 @@ public:
         cout << "intAAbar_CP = " << _intAAbar_CP << endl;
     }
 
-    /*    
     inline double getValForGeneration(IDalitzEvent& evt){
+
         const double t = (double) evt.getValueFromVector(0);
-        const double dt = (double) evt.getValueFromVector(1);
-        const double q = static_cast<double>((int)evt.getValueFromVector(2)); 
-        const double w = (double) evt.getValueFromVector(3);
-        const double f = static_cast<double>((int)evt.getValueFromVector(4));
+        const double f = (double) evt.getValueFromVector(2);
+        if(t < _min_TAU || t > _max_TAU )return 0.;
+        _timePdfMaster.setAllObservablesAndFitParameters(evt);
         
-        if(t < _min_TAU || t > _max_TAU )return 0.;        
-        _r_t->setVal(t);
-        _r_dt->setVal(dt);
-        _r_q->setIndex(q);
-        _r_mistag->setVal(w);
-        _r_f->setIndex(f);
-                
         double r = (double)_r; // * sqrt(_intA/_intAbar);
-        const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma*f)/360.*2*pi);
+        const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma)/360.*2*pi);
+        const complex<double> phase_diff_CP = polar((double)r,((double) _delta +(double)_gamma)/360.*2*pi);
         
-        const std::complex<double> amp = _amps1->ComplexVal_un_normalised_noPs(evt) ;
-        const std::complex<double> amp_bar = _amps2->ComplexVal_un_normalised_noPs(evt) * phase_diff;
+        complex<double> amp(0,0);
+        complex<double> amp_bar(0,0);
+        double norm_amp = 1.;
         
-        const double val =  exp(-fabs(t)/(double)_tau) *
-         (
-           (norm(amp) + norm(amp_bar)) *cosh((double)_dGamma/2.*t) * _cosh_coeff->evaluate()
-          +(norm(amp) - norm(amp_bar)) *cos((double)_dm*t) * _cos_coeff->evaluate()
-          +real(amp_bar*conj(amp)) *sinh((double)_dGamma/2.*t) * _sinh_coeff->evaluate()
-          +imag(amp_bar*conj(amp)) *sin((double)_dm*t) * _sin_coeff->evaluate()
-         ) *_pdf_sigma_t->getVal()*_spline->getVal();
+        complex<double> amp_CP(0,0);
+        complex<double> amp_bar_CP(0,0);
+        double norm_amp_CP = 1.;
         
+        if(f>0){
+            amp = _amps->ComplexVal_un_normalised_noPs(evt) ;
+            amp_bar = _amps_bar->ComplexVal_un_normalised_noPs(evt) ;
+            norm_amp = (norm(amp) + norm(amp_bar));
+        }
+        else {
+            amp_CP = _amps_CP->ComplexVal_un_normalised_noPs(evt) ;
+            amp_bar_CP = _amps_bar_CP->ComplexVal_un_normalised_noPs(evt) ;
+            norm_amp_CP = (norm(amp_CP) + norm(amp_bar_CP));
+        }
+        
+        // C,Cbar,D,Dbar,S,Sbar
+        _timePdfMaster.setCP_coeff(
+                                   norm_amp,
+                                   norm_amp_CP,
+                                   ( norm(amp) - norm(amp_bar) ) ,
+                                   -( norm(amp_CP) - norm(amp_bar_CP) ),
+                                   -2.* real(amp_bar*conj(amp) * phase_diff) ,
+                                   2.* real(amp_bar_CP*conj(amp_CP) * phase_diff_CP) ,
+                                   2. * imag(amp_bar*conj(amp) * phase_diff) ,
+                                   2. * imag(amp_bar_CP*conj(amp_CP) * phase_diff_CP) );
+        
+        const double tau = _timePdfMaster.get_tau_Val();
+        const double dGamma = _timePdfMaster.get_dGamma_Val();
+        const double dm = _timePdfMaster.get_dm_Val();
+
+        const double val =  exp(-fabs(t)/tau) *
+        ( _timePdfMaster.get_cosh_coeff_Val(evt) *cosh(dGamma/2.*t)
+         +  _timePdfMaster.get_cos_coeff_Val(evt) *cos(dm*t)
+         +  _timePdfMaster.get_sinh_coeff_Val(evt) *sinh(dGamma/2.*t)
+         +  _timePdfMaster.get_sin_coeff_Val(evt) *sin(dm*t)
+         )
+        * _timePdfMaster.get_spline_Val(evt)
+        * _timePdfMaster.get_marginalPdfs_Val(evt);
+
+        /*
+        cout << _timePdfMaster.get_marginalPdfs_Val(evt) << endl;
+        cout << _timePdfMaster.get_spline_Val(evt) << endl << endl;
+
+        cout << norm_amp << endl;
+        cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
+        cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
+        cout << 2.* real(amp_bar*conj(amp) * phase_diff_CP) << endl;
+        cout <<  2. * imag(amp_bar*conj(amp) * phase_diff_CP) << endl;
+
+        throw "";
+        */
         return val;
     }
- 
-    inline void getSmearedTime(double& t, double& dt, TRandom3& r){
-        while(true){
-                t = r.Exp(_tau);
-                dt = r.Uniform(0.,0.25);
-                t = t + r.Gaus(0,_r_scale_sigma_dt->getVal()*dt);
-            if(_min_TAU< t && t < _max_TAU) return; 
-        }
-    }
-*/
+
     inline double un_normalised_noPs(IDalitzEvent& evt){
 
         const double t = (double) evt.getValueFromVector(0);
@@ -426,26 +487,26 @@ public:
 
         complex<double> amp(0,0);
         complex<double> amp_bar(0,0);
-	double norm_amp = 1.;        
+	    double norm_amp = 1.;
 
         complex<double> amp_CP(0,0);
         complex<double> amp_bar_CP(0,0);
-	double norm_amp_CP = 1.;
+        double norm_amp_CP = 1.;
 
-	if(f>0){
-		amp = _amps->ComplexVal_un_normalised_noPs(evt) ;
-		amp_bar = _amps_bar->ComplexVal_un_normalised_noPs(evt) ;
-		norm_amp = (norm(amp) + norm(amp_bar));
-	}
-	else {
-		amp_CP = _amps_CP->ComplexVal_un_normalised_noPs(evt) ;
-		amp_bar_CP = _amps_bar_CP->ComplexVal_un_normalised_noPs(evt) ;
-		norm_amp_CP = (norm(amp_CP) + norm(amp_bar_CP));
-	}
+        if(f>0){
+            amp = _amps->ComplexVal_un_normalised_noPs(evt) ;
+            amp_bar = _amps_bar->ComplexVal_un_normalised_noPs(evt) ;
+            norm_amp = (norm(amp) + norm(amp_bar));
+        }
+        else {
+            amp_CP = _amps_CP->ComplexVal_un_normalised_noPs(evt) ;
+            amp_bar_CP = _amps_bar_CP->ComplexVal_un_normalised_noPs(evt) ;
+            norm_amp_CP = (norm(amp_CP) + norm(amp_bar_CP));
+        }
 
         // C,Cbar,D,Dbar,S,Sbar
         _timePdfMaster.setCP_coeff(
-			norm_amp,
+            norm_amp,
 			norm_amp_CP,
         		 ( norm(amp) - norm(amp_bar) ) ,
         		 -( norm(amp_CP) - norm(amp_bar_CP) ),
@@ -455,97 +516,12 @@ public:
         		 2. * imag(amp_bar_CP*conj(amp_CP) * phase_diff_CP) );
         
         const double val = 
-	     //( (1.+f) * norm_amp + (1.-f) * norm_amp_CP )/2. *
              ( _timePdfMaster.get_cosh_term_Val(evt)
              +  _timePdfMaster.get_cos_term_Val(evt)
              +  _timePdfMaster.get_sinh_term_Val(evt)
              +  _timePdfMaster.get_sin_term_Val(evt)
              ) * _timePdfMaster.get_marginalPdfs_Val(evt);
 
-
-	/*
-	cout << endl;
-	cout << phase_diff << endl;
-	cout << phase_diff_CP << endl;
-
-        _timePdfMaster.setCP_coeff(
-        		  1 ,
-        		 1,
-        		 1 ,
-        		 1,
-        		 1 ,
-        		 1 );
-
-	evt.setValueInVector(2, 1); 
-        evt.setValueInVector(3, 1);
-        evt.setValueInVector(4, 0.25);
-        evt.setValueInVector(5, 1);
-	evt.setValueInVector(6, 0.25);
-        _timePdfMaster.setAllObservablesAndFitParameters(evt);
-
-	cout << "Coeff for: f = " << evt.getValueFromVector(2) << " q = " << evt.getValueFromVector(3) << endl;
-	cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_sinh_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_sin_coeff_Val(evt) << endl;
-
-	evt.setValueInVector(2, -1); 
-        evt.setValueInVector(3, 1);
-        evt.setValueInVector(5, 1);
-        _timePdfMaster.setAllObservablesAndFitParameters(evt);
-
-	cout << "Coeff for: f = " << evt.getValueFromVector(2) << " q = " << evt.getValueFromVector(3) << endl;
-	cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_sinh_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_sin_coeff_Val(evt) << endl;
-
-	evt.setValueInVector(2, 1); 
-        evt.setValueInVector(3, -1);
-        evt.setValueInVector(5, -1);
-        _timePdfMaster.setAllObservablesAndFitParameters(evt);
-
-	cout << "Coeff for: f = " << evt.getValueFromVector(2) << " q = " << evt.getValueFromVector(3) << endl;
-	cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_sinh_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_sin_coeff_Val(evt) << endl;
-
-	evt.setValueInVector(2, -1); 
-        evt.setValueInVector(3, -1);
-        evt.setValueInVector(5, -1);
-        _timePdfMaster.setAllObservablesAndFitParameters(evt);
-
-	cout << "Coeff for: f = " << evt.getValueFromVector(2) << " q = " << evt.getValueFromVector(3) << endl;
-	cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_sinh_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_sin_coeff_Val(evt) << endl;
-
-	evt.setValueInVector(2, 1); 
-        evt.setValueInVector(3, 0);
-        evt.setValueInVector(5, 0);
-        _timePdfMaster.setAllObservablesAndFitParameters(evt);
-
-	cout << "Coeff for: f = " << evt.getValueFromVector(2) << " q = " << evt.getValueFromVector(3) << endl;
-	cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_sinh_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_sin_coeff_Val(evt) << endl;
-
-	evt.setValueInVector(2, -1); 
-        evt.setValueInVector(3, 0);
-        evt.setValueInVector(5, 0);
-        _timePdfMaster.setAllObservablesAndFitParameters(evt);
-
-	cout << "Coeff for: f = " << evt.getValueFromVector(2) << " q = " << evt.getValueFromVector(3) << endl;
-	cout << _timePdfMaster.get_cosh_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_cos_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_sinh_coeff_Val(evt) << endl;
-	cout << _timePdfMaster.get_sin_coeff_Val(evt) << endl;
-
-	throw "";
-	*/
         return val;
     }
     
@@ -554,13 +530,6 @@ public:
         const double val = un_normalised_noPs(evt);
         double r = (double)_r; // * sqrt(_intA/_intAbar);
     
-        /*
-        if(_intA == -1 ){
-            cout << "AmpsPdfFlexiFastCPV:: _norm = -1, should not have happened." << endl;
-            throw "can't deal with that";
-        }
-	*/
-
         const complex<double> phase_diff = polar((double)r,((double) _delta -(double)_gamma)/360.*2*pi);
         const complex<double> phase_diff_CP = polar((double)r,((double) _delta +(double)_gamma)/360.*2*pi);
 
@@ -611,6 +580,10 @@ public:
         return _timePdfMaster.getCalibratedMistag_SS(evt);
     }
     
+    double getCalibratedResolution(double& dt){
+        return _timePdfMaster.getCalibratedResolution(dt);
+    }
+    
     virtual DalitzHistoSet histoSet(){return _ampsSum->histoSet();}
     
     void doFinalStatsAndSaveForAmp12(MINT::Minimiser* min=0,const std::string& fname = "FitAmpResults", const std::string& fnameROOT="fitFractions"){
@@ -655,6 +628,8 @@ void ampFit(int step=0){
 
     NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
     NamedParameter<string> channel("channel", (std::string) "norm", (char*) 0);
+    NamedParameter<int>  generateNew("generateToys", 0);
+
     NamedParameter<string> OutputDir("OutputDir", (std::string) "", (char*) 0);
     NamedParameter<double> min_TAU("min_TAU", 0.4);
     NamedParameter<double> max_TAU("max_TAU", 10.);
@@ -674,6 +649,9 @@ void ampFit(int step=0){
 
     NamedParameter<double> integPrecision("IntegPrecision", 1.e-2);
     NamedParameter<std::string> integMethod("IntegMethod", (std::string)"efficient");
+    
+    NamedParameter<int>  Nevents("Nevents", 100);
+    NamedParameter<double>  pdf_max("pdf_max", 100);
 
     vector<int> s123;
     s123.push_back(1);
@@ -701,11 +679,10 @@ void ampFit(int step=0){
     FitParameter  gamma("gamma",1,70,1.);
 
     /// Define amplitude model
-    DalitzEventList eventListPhsp,eventListPhsp_CP,eventList;
-    DalitzEventList eventList_f, eventList_f_bar;
+    DalitzEventList eventListPhsp,eventListPhsp_CP;
     
     eventListPhsp.generatePhaseSpaceEvents(200000,pat);
-    eventListPhsp_CP.generatePhaseSpaceEvents(200000,pat_CP);    
+    eventListPhsp_CP.generatePhaseSpaceEvents(200000,pat_CP);
 
     FitAmpSum fas_tmp((DalitzEventPattern)pat);
     fas_tmp.getVal(eventListPhsp[0]);
@@ -713,11 +690,6 @@ void ampFit(int step=0){
     //if(randomizeStartVals)fas_tmp.randomizeStartVals(seed);
     //if(randomizeStartVals)fas_tmp.randomizePhaseStartVals(seed);
 
-    //FitAmpSum fas_tmpCC(fas_tmp);
-    //fas_tmpCC.CPConjugateSameFitParameters();
-    //fas_tmpCC.CConjugateSameFitParameters();
-    //fas_tmpCC.CConjugateInitialStateSameFitParameters();
-    
     counted_ptr<FitAmpList> List_1 = fas_tmp.GetCloneOfSubsetSameFitParameters("K(1)(1270)+");
     FitAmpSum fas(*List_1);
     FitAmpSum fas_bar(*List_1);
@@ -812,7 +784,7 @@ void ampFit(int step=0){
 
     /// Calculate initial coherence factor
     vector<double> k_gen = coherenceFactor(fas,fas_bar,(double)r, (double)delta,eventListPhsp);
-    vector<double> k_gen_CP = coherenceFactor(fas_CP,fas_bar_CP,(double)r, (double)delta,eventListPhsp_CP);
+    //vector<double> k_gen_CP = coherenceFactor_CP(fas_CP,fas_bar_CP,(double)r, (double)delta,eventListPhsp_CP);
 
     /// Make full time-dependent PDF
     FullAmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma);
@@ -828,168 +800,388 @@ void ampFit(int step=0){
     cout << fas_bar_CP.getVal(evt_test) << endl;
     throw "";
     */
-    /// Load data
-    double t,dt;
-    int f;
-    int q_OS;
-    Short_t q_SS;
-    double eta_OS;
-    Float_t eta_SS;
-    double sw;
-    int year,Ds_finalState;
-
-    double K[4]; 
-    double pip[4]; 
-    double pim[4]; 
-    double Ds_Kp[4],Ds_Km[4],Ds_pim[4];
-    double mB;
     
-    TChain* tree=new TChain("DecayTree");
-    tree->Add(((string)InputDir+"Data/"+(string)channel+".root").c_str());
-    tree->SetBranchStatus("*",0);
-    tree->SetBranchStatus("N_Bs_sw",1);
-    tree->SetBranchStatus("year",1);
-    tree->SetBranchStatus("*DEC",1);
-    tree->SetBranchStatus("*PROB",1);
-    tree->SetBranchStatus("*OS",1);
-    tree->SetBranchStatus("*TAU*",1);
-    tree->SetBranchStatus("*ID*",1);
-    tree->SetBranchStatus("weight",1);
-    tree->SetBranchStatus("Bs_DTF_MM",1);
-    tree->SetBranchStatus("BsDTF_*P*",1);
-
-    tree->SetBranchAddress("Bs_DTF_TAU",&t);
-    tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
-    tree->SetBranchAddress("Ds_ID",&f);
-    tree->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
-    tree->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&eta_OS);
-    tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
-    tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&eta_SS);
-    tree->SetBranchAddress("N_Bs_sw",&sw);
-    tree->SetBranchAddress("year",&year);
-    tree->SetBranchAddress("Ds_finalState",&Ds_finalState);    
-    tree->SetBranchAddress("Bs_DTF_MM",&mB);
+    /// Make marginal pdfs for MC generation and plotting
     
-    tree->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
-    tree->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
-    tree->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]); 
-    tree->SetBranchAddress("BsDTF_Kplus_PE",&K[3]); 
-	
-    tree->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
-    tree->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
-    tree->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]); 
-    tree->SetBranchAddress("BsDTF_piplus_PE",&pip[3]); 
-	
-    tree->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
-    tree->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
-    tree->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]); 
-    tree->SetBranchAddress("BsDTF_piminus_PE",&pim[3]); 
-	
-    tree->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
-    tree->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
-    tree->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]); 
-    tree->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]); 
+    // values only used for importance sampling:
+    double tau = 1.509;
+    double dm = 17.757;
+    double eff_tag_OS = 0.3852;
+    double eff_tag_SS = 0.6903;
     
-    tree->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
-    tree->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
-    tree->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]); 
-    tree->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]); 
+    TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
+    
+    RooRealVar* r_dt = new RooRealVar("dt", "dt",0., 0.1);
+    RooRealVar* r_eta_OS = new RooRealVar("eta_OS", "eta_OS",0.,0.5);
+    RooRealVar* r_eta_SS = new RooRealVar("eta_SS", "eta_SS",0.,0.5);
+    
+    TH1D* h_dt_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
+    RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",*r_dt,h_dt_norm);
+    RooRealVar mean1_dt("mean1_dt","mean1_dt", 0.02,0.,1.0);
+    RooRealVar mean2_dt("mean2_dt","mean2_dt", 0.03,0.,1.0);
+    RooRealVar sigma1_dt("sigma1_dt","sigma1_dt", 0.015,0.,1.0);
+    RooRealVar sigma2_dt("sigma2_dt","sigma2_dt", 0.015,0.,1.0);
+    RooRealVar f_dt("f_dt", "f_dt", 0.5, 0., 1.);
+    
+    RooGaussian* gen1_dt = new RooGaussian("gen1_dt","gen1_dt", *r_dt, mean1_dt,sigma1_dt);
+    RooGaussian* gen2_dt = new RooGaussian("gen2_dt","gen2_dt", *r_dt, mean2_dt,sigma2_dt);
+    RooAddPdf* gen_dt=new RooAddPdf("gen_dt", "gen_dt", RooArgList(*gen1_dt, *gen2_dt), RooArgList(f_dt));
+    gen_dt->fitTo(*r_h_dt,Save(kTRUE),SumW2Error(kTRUE));
+    
+    // mistag OS
+    TH1D* h_w_OS_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_w_OS_norm")));
+    RooDataHist* r_h_eta_OS = new RooDataHist("r_eta_OS","r_eta_OS",*r_eta_OS,h_w_OS_norm);
+    RooRealVar mean1_eta_OS("mean1_eta_OS","mean1_eta_OS", 0.02,0.,1.0);
+    RooRealVar mean2_eta_OS("mean2_eta_OS","mean2_eta_OS", 0.04,0.,1.0);
+    RooRealVar sigma1_eta_OS("sigma1_eta_OS","sigma1_eta_OS", 0.015,0.,1.0);
+    RooRealVar sigma2_eta_OS("sigma2_eta_OS","sigma2_eta_OS", 0.015,0.,1.0);
+    RooRealVar f_eta_OS("f_eta_OS", "f_eta_OS", 0.5, 0., 1.);
+    
+    RooGaussian* gen1_eta_OS = new RooGaussian("gen1_eta_OS","gen1_eta_OS", *r_eta_OS, mean1_eta_OS,sigma1_eta_OS);
+    RooGaussian* gen2_eta_OS = new RooGaussian("gen2_eta_OS","gen2_eta_OS", *r_eta_OS, mean2_eta_OS,sigma2_eta_OS);
+    RooAddPdf* gen_eta_OS=new RooAddPdf("gen_eta_OS", "gen_eta_OS", RooArgList(*gen1_eta_OS, *gen2_eta_OS), RooArgList(f_eta_OS));
+    gen_eta_OS->fitTo(*r_h_eta_OS,Save(kTRUE),SumW2Error(kTRUE));
+    
+    // mistag SS
+    TH1D* h_w_SS_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_w_SS_norm")));
+    RooDataHist* r_h_eta_SS = new RooDataHist("r_eta_SS","r_eta_SS",*r_eta_SS,h_w_SS_norm);
+    RooRealVar mean1_eta_SS("mean1_eta_SS","mean1_eta_SS", 0.02,0.,1.0);
+    RooRealVar mean2_eta_SS("mean2_eta_SS","mean2_eta_SS", 0.06,0.,1.0);
+    RooRealVar sigma1_eta_SS("sigma1_eta_SS","sigma1_eta_SS", 0.015,0.,1.0);
+    RooRealVar sigma2_eta_SS("sigma2_eta_SS","sigma2_eta_SS", 0.015,0.,1.0);
+    RooRealVar f_eta_SS("f_eta_SS", "f_eta_SS", 0.5, 0., 1.);
+    
+    RooGaussian* gen1_eta_SS = new RooGaussian("gen1_eta_SS","gen1_eta_SS", *r_eta_SS, mean1_eta_SS,sigma1_eta_SS);
+    RooGaussian* gen2_eta_SS = new RooGaussian("gen2_eta_SS","gen2_eta_SS", *r_eta_SS, mean2_eta_SS,sigma2_eta_SS);
+    RooAddPdf* gen_eta_SS=new RooAddPdf("gen_eta_SS", "gen_eta_SS", RooArgList(*gen1_eta_SS, *gen2_eta_SS), RooArgList(f_eta_SS));
+    gen_eta_SS->fitTo(*r_h_eta_SS,Save(kTRUE),SumW2Error(kTRUE));
+    
+    // plot
+    TCanvas* c1= new TCanvas("");
+    RooPlot* frame_dt= r_dt->frame();
+    r_h_dt->plotOn(frame_dt,Name("data"),MarkerSize(1));
+    gen_dt->plotOn(frame_dt,Name("pdf"),LineColor(kBlue),LineWidth(3));
+    frame_dt->Draw();
+    c1->Print("samplingPdfs/dt.eps");
+    
+    RooPlot* frame_eta_OS= r_eta_OS->frame();
+    r_h_eta_OS->plotOn(frame_eta_OS,MarkerSize(1));
+    gen_eta_OS->plotOn(frame_eta_OS,LineColor(kBlue),LineWidth(3));
+    frame_eta_OS->Draw();
+    c1->Print("samplingPdfs/eta_OS.eps");
+    
+    RooPlot* frame_eta_SS= r_eta_SS->frame();
+    r_h_eta_SS->plotOn(frame_eta_SS,MarkerSize(1));
+    gen_eta_SS->plotOn(frame_eta_SS,LineColor(kBlue),LineWidth(3));
+    frame_eta_SS->Draw();
+    c1->Print("samplingPdfs/eta_SS.eps");
+    
+    f_pdfs->Close();
+    
+    /// Read data or generate toys
+    DalitzEventList eventList, eventList_f, eventList_f_bar;
+    
+    // Generate toys
+    if(generateNew){
+        time_t startTime = time(0);
+        
+        // simple amplitude model for importance sampling
+        FitAmpIncoherentSum fasGen((DalitzEventPattern)pat);
+        fasGen.getVal(eventListPhsp[0]);
+        fasGen.normalizeAmps(eventListPhsp);
+        SignalGenerator sg(pat,&fasGen);
+        fasGen.print();
+        
+        //simple hit and miss
+        for(int i = 0; i < Nevents; i++){
+            while(true){
+                
+                double t_MC = 0.;
+                double dt_MC = 0.;
+                while(true) {
+                    double tval = ranLux.Exp(tau);
+                    
+                    //RooDataSet* data_dt = gen_dt->generate(*r_dt,1) ;
+                    //r_dt->setVal(((RooRealVar*)((RooArgSet*)data_dt->get(0))->find("dt"))->getVal()) ;
+                    //dt_MC = ((RooRealVar*)((RooArgSet*)data_dt->get(0))->find("dt"))->getVal() ;
 
-    tree->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
-    tree->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
-    tree->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]); 
-    tree->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]); 
+                    double gaus_f = ranLux.Uniform();
+                    if(gaus_f < f_dt.getVal()) {
+                        while(true){
+                            dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
+                            if(dt_MC < 0.1 && dt_MC > 0.)break;
+                        }
+                    }
+                    else {
+                        while(true){
+                            dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
+                            if(dt_MC < 0.1 && dt_MC > 0.)break;
+                        }
+                    }
 
-    TRandom3 rndm;
-    int badEvents = 0;
+                    tval = tval + ranLux.Gaus(0,pdf.getCalibratedResolution(dt_MC));
 
-    for(int i=0; i< tree->GetEntries(); i++)
-    {	
-        if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
-        tree->GetEntry(i);
+                    if (tval< max_TAU && tval> min_TAU) {
+                        t_MC = tval ;
+                        break ;
+                    }
+                }
 
-        if(t < min_TAU || t > max_TAU )continue;
-        if( dt < 0 || dt > 0.1 )continue;
-
-        double sign = 1.;
-        //if(f > 0) sign = -1.;
-
-        TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
-        TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
-        TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
-        TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
-        TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
-        TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
-        TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
-        TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
-        // array of vectors
-        vector<TLorentzVector> vectorOfvectors; 
-
-        if((string)channel=="norm"){
-            TLorentzVector pip1_p, pip2_p;
-            if(rndm.Rndm()<0.5) { 
-                pip1_p = K_p;
-                pip2_p = pip_p;
-            } 
-            else { 
-                pip1_p = pip_p;
-                pip2_p = K_p;
-            } 
-            K_p = pip1_p;
-            pip_p = pip2_p;
+                double q_rand = ranLux.Uniform();
+    
+                int q_OS_MC = 0;
+                if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
+                if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
+                
+                q_rand = ranLux.Uniform();
+                int q_SS_MC = 0;
+                if (q_rand < eff_tag_SS/2.  ) q_SS_MC = -1;
+                if (q_rand > (1.-eff_tag_SS/2.) ) q_SS_MC = 1;
+                
+                double eta_OS_MC = 0;
+                double gaus_eta_OS = ranLux.Uniform();
+                if(gaus_eta_OS < f_eta_OS.getVal()){
+                    while(true){
+                            eta_OS_MC = ranLux.Gaus(mean1_eta_OS.getVal(),sigma1_eta_OS.getVal());
+                            if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
+                    }
+                }
+                else{
+                    while(true){
+                            eta_OS_MC = ranLux.Gaus(mean2_eta_OS.getVal(),sigma2_eta_OS.getVal());
+                            if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
+                    }
+                }
+                
+                double eta_SS_MC = 0;
+                double gaus_eta_SS = ranLux.Uniform();
+                if(gaus_eta_SS < f_eta_SS.getVal()){
+                    while(true){
+                        eta_SS_MC = ranLux.Gaus(mean1_eta_SS.getVal(),sigma1_eta_SS.getVal());
+                        if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
+                    }
+                }
+                else{
+                    while(true){
+                        eta_SS_MC = ranLux.Gaus(mean2_eta_SS.getVal(),sigma2_eta_SS.getVal());
+                        if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
+                    }
+                }
+                
+                q_rand = ranLux.Uniform();
+                int f_MC = 0;
+                if (q_rand > .5) f_MC = -1;
+                else f_MC = 1;
+                
+                counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
+                DalitzEvent evt(evtPtr.get());
+                if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
+                
+                if(f_MC<0){
+                    evt.CP_conjugateYourself();
+                }
+                
+                evt.setValueInVector(0, t_MC);
+                evt.setValueInVector(1, dt_MC);
+                evt.setValueInVector(2, f_MC);
+                evt.setValueInVector(3, q_OS_MC);
+                evt.setValueInVector(4, eta_OS_MC);
+                evt.setValueInVector(5, q_SS_MC);
+                evt.setValueInVector(6, eta_SS_MC);
+                
+                const double pdfVal = pdf.getValForGeneration(evt);
+                //const double pdfVal = pdf.un_normalised_noPs(evt);
+            
+                double maxVal = evt.getGeneratorPdfRelativeToPhaseSpace()*exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) )
+                    * gen_dt->getVal()
+                    //* h_dt_norm->GetBinContent(h_dt_norm->FindBin(dt_MC))/h_dt_norm->Integral()
+                    * gen_eta_OS->getVal()* gen_eta_SS->getVal()
+                    *  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) )
+                    *  (abs(q_SS_MC)/2. * eff_tag_SS + ( 1. - abs(q_SS_MC)) * (1.-eff_tag_SS) )
+                    *pdf_max;
+                
+                const double height = ranLux.Uniform(0,maxVal);
+                //Safety check on the maxmimum generated height
+                if( pdfVal > maxVal ){
+                    std::cout << "ERROR: PDF above determined maximum." << std::endl;
+                    std::cout << pdfVal << " > " << maxVal << std::endl;
+                    //exit(1);
+                    pdf_max = pdf_max * 10.;
+                }
+                
+                //Hit-and-miss
+                if( height < pdfVal ){
+                    eventList.Add(evt);
+                    if(f_MC==1)eventList_f.Add(evt);
+                    else eventList_f_bar.Add(evt);
+                    break;
+                }
+            }
         }
-
-        vectorOfvectors.push_back(B_p*MeV);      
-        vectorOfvectors.push_back(D_p*MeV);
-        vectorOfvectors.push_back(K_p*MeV); 
-        vectorOfvectors.push_back(pip_p*MeV);
-        vectorOfvectors.push_back(pim_p*MeV);
-
-        DalitzEvent evt;
-
-        if(f < 0)evt = DalitzEvent(pat, vectorOfvectors);
-        else evt = DalitzEvent(pat_CP, vectorOfvectors);
-
-        if(!(evt.phaseSpace() > 0.)){
-            //cout << "evt " << i << " 0 phsp " << endl << evt << endl;
-            badEvents++;
-            continue;
-        }
-        //if(TMath::IsNaN(norm(fas.getVal(evt)))){
-            //cout << "evt " << i << " isNaN " << endl << evt << endl;
-            //badEvents++;
-            //continue;
-        //}
-
-        evt.setWeight(sw);
-        evt.setValueInVector(0, t);
-        evt.setValueInVector(1, dt);
-	//evt.setValueInVector(2, 1); /// ???
-        if(f<0)evt.setValueInVector(2, 1);   /// ???
-        else if(f > 0)evt.setValueInVector(2, -1);  /// ???
-        else {
-            cout << "ERROR:: Undefined final state";  
-            throw "ERROR";
-        }
-        evt.setValueInVector(3, sign*q_OS);
-        evt.setValueInVector(4, eta_OS);
-        evt.setValueInVector(5, sign*q_SS);
-        evt.setValueInVector(6, eta_SS);
-        eventList.Add(evt);
-        if(evt.getValueFromVector(2) == 1)eventList_f.Add(evt);
-        else eventList_f_bar.Add(evt);
+        cout << " Generated " << Nevents << " Events. Took " << (time(0) - startTime)/60. << " mins "<< endl;
     }
+    else {
+        
+        /// Load data
+        double t,dt;
+        int f;
+        int q_OS;
+        Short_t q_SS;
+        double eta_OS;
+        Float_t eta_SS;
+        double sw;
+        int year,Ds_finalState;
 
-   cout << endl << "bad events " << badEvents << " ( " << badEvents/(double) tree->GetEntries() * 100. << " %)" << endl << endl;
+        double K[4];
+        double pip[4];
+        double pim[4];
+        double Ds_Kp[4],Ds_Km[4],Ds_pim[4];
+        double mB;
+        
+        TChain* tree=new TChain("DecayTree");
+        tree->Add(((string)InputDir+"Data/"+(string)channel+".root").c_str());
+        tree->SetBranchStatus("*",0);
+        tree->SetBranchStatus("N_Bs_sw",1);
+        tree->SetBranchStatus("year",1);
+        tree->SetBranchStatus("*DEC",1);
+        tree->SetBranchStatus("*PROB",1);
+        tree->SetBranchStatus("*OS",1);
+        tree->SetBranchStatus("*TAU*",1);
+        tree->SetBranchStatus("*ID*",1);
+        tree->SetBranchStatus("weight",1);
+        tree->SetBranchStatus("Bs_DTF_MM",1);
+        tree->SetBranchStatus("BsDTF_*P*",1);
 
+        tree->SetBranchAddress("Bs_DTF_TAU",&t);
+        tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+        tree->SetBranchAddress("Ds_ID",&f);
+        tree->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
+        tree->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&eta_OS);
+        tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
+        tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&eta_SS);
+        tree->SetBranchAddress("N_Bs_sw",&sw);
+        tree->SetBranchAddress("year",&year);
+        tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
+        tree->SetBranchAddress("Bs_DTF_MM",&mB);
+        
+        tree->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
+        tree->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
+        tree->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
+        tree->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
+        
+        tree->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
+        tree->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
+        tree->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
+        tree->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);
+        
+        tree->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
+        tree->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
+        tree->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
+        tree->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);
+        
+        tree->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
+        tree->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
+        tree->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
+        tree->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);
+        
+        tree->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
+        tree->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
+        tree->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
+        tree->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
+
+        tree->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
+        tree->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
+        tree->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
+        tree->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
+
+        TRandom3 rndm;
+        int badEvents = 0;
+        for(int i=0; i< tree->GetEntries(); i++)
+        {
+            if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
+            tree->GetEntry(i);
+
+            if(t < min_TAU || t > max_TAU )continue;
+            if( dt < 0 || dt > 0.1 )continue;
+
+            double sign = 1.;
+            //if(f > 0) sign = -1.;
+
+            TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
+            TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
+            TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
+            TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
+            TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
+            TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
+            TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+            TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+            // array of vectors
+            vector<TLorentzVector> vectorOfvectors;
+
+            if((string)channel=="norm"){
+                TLorentzVector pip1_p, pip2_p;
+                if(rndm.Rndm()<0.5) {
+                    pip1_p = K_p;
+                    pip2_p = pip_p;
+                }
+                else {
+                    pip1_p = pip_p;
+                    pip2_p = K_p;
+                }
+                K_p = pip1_p;
+                pip_p = pip2_p;
+            }
+
+            vectorOfvectors.push_back(B_p*MeV);
+            vectorOfvectors.push_back(D_p*MeV);
+            vectorOfvectors.push_back(K_p*MeV);
+            vectorOfvectors.push_back(pip_p*MeV);
+            vectorOfvectors.push_back(pim_p*MeV);
+
+            DalitzEvent evt;
+
+            if(f < 0)evt = DalitzEvent(pat, vectorOfvectors);
+            else evt = DalitzEvent(pat_CP, vectorOfvectors);
+
+            if(!(evt.phaseSpace() > 0.)){
+                //cout << "evt " << i << " 0 phsp " << endl << evt << endl;
+                badEvents++;
+                continue;
+            }
+            //if(TMath::IsNaN(norm(fas.getVal(evt)))){
+                //cout << "evt " << i << " isNaN " << endl << evt << endl;
+                //badEvents++;
+                //continue;
+            //}
+
+            evt.setWeight(sw);
+            evt.setValueInVector(0, t);
+            evt.setValueInVector(1, dt);
+            //evt.setValueInVector(2, 1); /// ???
+            if(f<0)evt.setValueInVector(2, 1);   /// ???
+            else if(f > 0)evt.setValueInVector(2, -1);  /// ???
+            else {
+                cout << "ERROR:: Undefined final state";
+                throw "ERROR";
+            }
+            evt.setValueInVector(3, sign*q_OS);
+            evt.setValueInVector(4, eta_OS);
+            evt.setValueInVector(5, sign*q_SS);
+            evt.setValueInVector(6, eta_SS);
+            eventList.Add(evt);
+            if(evt.getValueFromVector(2) == 1)eventList_f.Add(evt);
+            else eventList_f_bar.Add(evt);
+        }
+        cout << endl << "bad events " << badEvents << " ( " << badEvents/(double) tree->GetEntries() * 100. << " %)" << endl << endl;
+    }
+        
     /// Fit with MINT Pdf
     Neg2LL neg2LL(pdf, eventList);    
     //cout << "tau = " << endl << tau.mean() << endl <<  tau.blindedMean() << endl;
     //neg2LL.getVal();    
     Minimiser mini(&neg2LL);
-    mini.doFit();
+    //mini.doFit();
     mini.printResultVsInput();
-
 
     /// Calculate pulls
     gDirectory->cd();
@@ -999,12 +1191,12 @@ void ampFit(int step=0){
 
     TTree* pull_tree = new TTree("Coherence","Coherence");
     double r_val,delta_val,gamma_val,k_val,n2ll;
-    TBranch* br_r = tree->Branch( "r", &r_val, "r_val/D" );
-    TBranch* br_delta = tree->Branch( "delta", &delta_val, "delta_val/D" );
-    TBranch* br_gamma = tree->Branch( "gamma", &gamma_val, "gamma_val/D" );
-    TBranch* br_k = tree->Branch( "k", &k_val, "k_val/D" );
-    TBranch* br_n2ll = tree->Branch( "n2ll", &n2ll, "n2ll/D" );
-    TBranch* br_seed = tree->Branch( "seed", &seed, "seed/I" );
+    TBranch* br_r = pull_tree->Branch( "r", &r_val, "r_val/D" );
+    TBranch* br_delta = pull_tree->Branch( "delta", &delta_val, "delta_val/D" );
+    TBranch* br_gamma = pull_tree->Branch( "gamma", &gamma_val, "gamma_val/D" );
+    TBranch* br_k = pull_tree->Branch( "k", &k_val, "k_val/D" );
+    TBranch* br_n2ll = pull_tree->Branch( "n2ll", &n2ll, "n2ll/D" );
+    TBranch* br_seed = pull_tree->Branch( "seed", &seed, "seed/I" );
     
     MinuitParameterSet::getDefaultSet()->fillNtp(paraFile, ntp);
     ntp->AutoSave();
@@ -1016,14 +1208,15 @@ void ampFit(int step=0){
         if(A_is_in_B("gamma",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))gamma_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
     }
     
-    vector<double> k_fit = coherenceFactor(fas,fas_bar,(double)r, (double)delta,eventListPhsp);
+    DiskResidentEventList eventListMC(((string) IntegratorEventFile).c_str(),"OPEN");
+    vector<double> k_fit = coherenceFactor(fas,fas_bar,(double)r, (double)delta,eventListMC);
     r_val = k_fit[0];
     k_val = k_fit[1];
     delta_val = k_fit[2];
 
-    vector<double> k_fit_CP = coherenceFactor(fas_CP,fas_bar_CP,(double)r, (double)delta,eventListPhsp_CP);
+    vector<double> k_fit_CP = coherenceFactor_CP(fas_CP,fas_bar_CP,(double)r, (double)delta,eventListMC);
 
-
+    // fill tree
     pull_tree->Fill();
     paraFile->cd();
     pull_tree->SetDirectory(paraFile);
@@ -1031,14 +1224,9 @@ void ampFit(int step=0){
     paraFile->Close();
     delete paraFile;
 
-    pdf.doFinalStatsAndSaveForAmp12(&mini,((string)OutputDir+"FitAmpResults_rand_"+anythingToString((int)seed)).c_str(),((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
-
-    //return;
+    //pdf.doFinalStatsAndSaveForAmp12(&mini,((string)OutputDir+"FitAmpResults_rand_"+anythingToString((int)seed)).c_str(),((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
    
     /// Data histograms
-    double tau = 1.509;
-    double dm = 17.757;
-
     TH1D* h_t = new TH1D("h_t",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU);    
     TH1D* h_t_mixed = new TH1D("h_t_mixed",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU_ForMixingPlot);
     TH1D* h_t_unmixed = new TH1D("h_t_unmixed",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU_ForMixingPlot);
@@ -1230,72 +1418,88 @@ void ampFit(int step=0){
 	    }
     }     
 
-    DiskResidentEventList eventListMC(((string) IntegratorEventFile).c_str(),"OPEN");
-
-    RooRealVar* r_t = new RooRealVar("t", "t",min_TAU,max_TAU);
-    RooRealVar* r_dt = new RooRealVar("dt", "per-candidate time resolution estimate",0., 0.1);
-    RooRealVar* r_eta_OS = new RooRealVar("eta_OS", "eta_OS",0.,0.5); 
-    RooRealVar* r_eta_SS = new RooRealVar("eta_SS", "eta_SS",0.,0.5); 
-
-    RooExponential gen_t("gen_t","gen_t", *r_t, RooRealConstant::value(1./tau));	
-    RooGaussian gen_dt("gen_dt","gen_dt", *r_dt, RooRealConstant::value(0.03),RooRealConstant::value(0.015));	
-    RooGaussian gen_eta_OS("gen_eta_OS","gen_eta_OS", *r_eta_OS, RooRealConstant::value(0.4),RooRealConstant::value(0.2));	
-    RooGaussian gen_eta_SS("gen_eta_SS","gen_eta_SS", *r_eta_SS, RooRealConstant::value(0.5),RooRealConstant::value(0.1));
-
     /// Loop over MC
     for(int i = 0; i < eventListMC.size(); i++){
         
         double t_MC = 0.;
-    	while(1) {
- 		//double rand = ranLux.Uniform();
- 		double tval = ranLux.Exp(tau); //- tau*log(rand);
-  	    	if (tval< max_TAU && tval> min_TAU) {
-         		t_MC = tval ;
-			r_t->setVal(tval);
-         		break ;
-		}
-       }
-	
-	//gen_t.generateEvent(1);
-	//double t_MC = r_t->getVal();
-
-	gen_dt.generateEvent(1);
-	double dt_MC = r_dt->getVal(); //ranLux.Uniform(0., 0.1);
-        
-        //if(t_MC < min_TAU/2. || t_MC > max_TAU*1.2 )continue;
-        //if( dt_MC < 0 || dt_MC > 0.1 )continue;
+        double dt_MC = 0.;
+        while(true) {
+            double tval = ranLux.Exp(tau);
+            
+            double gaus_f = ranLux.Uniform();
+            if(gaus_f < f_dt.getVal()) {
+                while(true){
+                    dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
+                    if(dt_MC < 0.1 && dt_MC > 0.)break;
+                }
+            }
+            else {
+                while(true){
+                    dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
+                    if(dt_MC < 0.1 && dt_MC > 0.)break;
+                }
+            }
+            
+            tval = tval + ranLux.Gaus(0,pdf.getCalibratedResolution(dt_MC));
+            
+            if (tval< max_TAU && tval> min_TAU) {
+                t_MC = tval ;
+                break ;
+            }
+        }
         
         double q_rand = ranLux.Uniform();
-       
+        
         int q_OS_MC = 0;
-        if (q_rand < 1./3.) q_OS_MC = -1;
-        if (q_rand > 2./3.) q_OS_MC = 1;
+        if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
+        if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
         
         q_rand = ranLux.Uniform();
         int q_SS_MC = 0;
-        if (q_rand < 1./3.) q_SS_MC = -1;
-        if (q_rand > 2./3.) q_SS_MC = 1;
+        if (q_rand < eff_tag_SS/2.  ) q_SS_MC = -1;
+        if (q_rand > (1.-eff_tag_SS/2.) ) q_SS_MC = 1;
         
-	//const double eta_OS_MC = ranLux.Uniform(0., 0.5);
-        //const double eta_SS_MC = ranLux.Uniform(0., 0.5);
-	gen_eta_OS.generateEvent(1);
-	double eta_OS_MC = r_eta_OS->getVal();        
-
-	gen_eta_SS.generateEvent(1);
-	double eta_SS_MC = r_eta_SS->getVal(); 
-
+        double eta_OS_MC = 0;
+        double gaus_eta_OS = ranLux.Uniform();
+        if(gaus_eta_OS < f_eta_OS.getVal()){
+            while(true){
+                eta_OS_MC = ranLux.Gaus(mean1_eta_OS.getVal(),sigma1_eta_OS.getVal());
+                if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
+            }
+        }
+        else{
+            while(true){
+                eta_OS_MC = ranLux.Gaus(mean2_eta_OS.getVal(),sigma2_eta_OS.getVal());
+                if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
+            }
+        }
+        
+        double eta_SS_MC = 0;
+        double gaus_eta_SS = ranLux.Uniform();
+        if(gaus_eta_SS < f_eta_SS.getVal()){
+            while(true){
+                eta_SS_MC = ranLux.Gaus(mean1_eta_SS.getVal(),sigma1_eta_SS.getVal());
+                if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
+            }
+        }
+        else{
+            while(true){
+                eta_SS_MC = ranLux.Gaus(mean2_eta_SS.getVal(),sigma2_eta_SS.getVal());
+                if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
+            }
+        }
+        
         q_rand = ranLux.Uniform();
         int f_MC = 0;
         if (q_rand > .5) f_MC = -1;
         else f_MC = 1;
-     
-	DalitzEvent evt(eventListMC.getEvent(i));
+        
+        DalitzEvent evt(eventListMC.getEvent(i));
         if(f_MC<0){
-		evt.CP_conjugateYourself();
-		//evt.P_conjugateYourself();
-	}
- 	//if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
-
+            evt.CP_conjugateYourself();
+            //evt.P_conjugateYourself();
+        }
+        //if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
         evt.setValueInVector(0, t_MC);
         evt.setValueInVector(1, dt_MC);
         evt.setValueInVector(2, f_MC);
@@ -1305,11 +1509,11 @@ void ampFit(int step=0){
         evt.setValueInVector(6, eta_SS_MC);
         
         //const double pdfVal = pdf.getVal(evt);
-        const double pdfVal = pdf.un_normalised_noPs(evt);
+        const double pdfVal = pdf.getValForGeneration(evt);
 
         //double weight = pdfVal/exp(-fabs(t_MC)/(tau))*tau*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
         double weight = pdfVal*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
-	weight /=  exp(-t_MC/tau) / ( tau * ( exp(min_TAU/tau) - exp(max_TAU/tau) ) ) * gen_dt.getVal() * gen_eta_OS.getVal()* gen_eta_SS.getVal();
+	    weight /=  exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) * gen_dt->getVal() * gen_eta_OS->getVal()* gen_eta_SS->getVal();
 
         h_t_fit->Fill(t_MC,weight);
         h_dt_fit->Fill(dt_MC,weight);
@@ -1320,7 +1524,7 @@ void ampFit(int step=0){
         int q1 = evt.getValueFromVector(3);
         int q2 = evt.getValueFromVector(5);   
         int q_eff = 0;
-	double w_eff = 0.5;
+        double w_eff = 0.5;
         
         if(q1 != 0 && q2 != 0){
             std::pair<double, double> calibrated_mistag_os = pdf.getCalibratedMistag_OS(evt);
@@ -1330,9 +1534,9 @@ void ampFit(int step=0){
             double p_bar = ( (1.+q1)/2. - q1 * (1.- calibrated_mistag_os.second )) * ( (1.+q2)/2. - q2 * (1.- calibrated_mistag_ss.second ));
             
             if( p/(p+p_bar) > 0.5 ){ 
-		q_eff = 1;
-		w_eff = 1-p/(p+p_bar);
-	    }
+                q_eff = 1;
+                w_eff = 1-p/(p+p_bar);
+            }
             else if( p/(p+p_bar) < 0.5 ){
 		 q_eff = -1;
 		 w_eff = p/(p+p_bar);
@@ -2297,6 +2501,52 @@ void produceIntegratorFile_CP(){
     return;
 }
 
+void makeIntegratorFileForToys(){
+    
+    FitAmplitude::AutogenerateFitFile();
+    
+    NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
+    TString integratorEventFile_CP = (string) IntegratorEventFile;
+    integratorEventFile_CP.ReplaceAll(".root","_CP.root");
+    
+    NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
+    DalitzEventPattern pat(EventPattern.getVector());
+    cout << " got event pattern: " << pat << endl;
+    
+    NamedParameter<int>  IntegratorEvents("IntegratorEvents", 300000);
+    
+    DalitzEventList eventListPhsp,eventList,eventList_cut,eventList_cut_CP;
+    
+    eventListPhsp.generatePhaseSpaceEvents(100000,pat);
+    
+    FitAmpIncoherentSum fas((DalitzEventPattern)pat);
+    fas.print();
+    fas.getVal(eventListPhsp[0]);
+    fas.normalizeAmps(eventListPhsp);
+    
+    SignalGenerator sg(pat,&fas);
+    
+    sg.FillEventList(eventList, IntegratorEvents);
+    vector<int> s234;
+    s234.push_back(2);
+    s234.push_back(3);
+    s234.push_back(4);
+    
+    for(int i = 0; i < eventList.size(); i++){
+        if(sqrt(eventList[i].sij(s234)/(GeV*GeV)) < 1.95 && sqrt(eventList[i].s(2,4)/(GeV*GeV)) < 1.2 && sqrt(eventList[i].s(3,4)/(GeV*GeV)) < 1.2){
+            eventList_cut.Add(eventList[i]);
+            DalitzEvent evt(eventList[i]);
+            evt.CP_conjugateYourself();
+            eventList_cut_CP.Add(evt);
+        }
+    }
+    
+    cout << "Generated " << eventList_cut.size() << " events inside selected phasespace region" << endl;
+    
+    eventList_cut.saveAsNtuple(IntegratorEventFile);
+    eventList_cut_CP.saveAsNtuple((string)integratorEventFile_CP);
+    return;
+}
 
 int main(int argc, char** argv){
 
@@ -2308,7 +2558,8 @@ int main(int argc, char** argv){
 
   //produceMarginalPdfs();
   //produceIntegratorFile_CP();
-
+  //makeIntegratorFileForToys();
+    
   ampFit(atoi(argv[1]));
   
   cout << "==============================================" << endl;
