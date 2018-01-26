@@ -342,8 +342,8 @@ void fullTimeFit(){
     FitParameter  gamma("gamma",1,70,1.);
     FitParameter  k("k",1,1,1.);
 
-    FullTimePdf_mod t_pdf(r,delta,gamma,k);
-    //FullTimePdf t_pdf;
+    //FullTimePdf_mod t_pdf(r,delta,gamma,k);
+    FullTimePdf t_pdf;
 
     /// Load data
     double t,dt;
