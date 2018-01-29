@@ -42,6 +42,8 @@ class HyperPoint : public Weights {
   HyperPoint(double x1, double x2, double x3);
   HyperPoint(double x1, double x2, double x3, double x4);
   HyperPoint(double x1, double x2, double x3, double x4, double x5);
+  HyperPoint(double x1, double x2, double x3, double x4, double x5, double x6);
+  HyperPoint(double x1, double x2, double x3, double x4, double x5, double x6, double x7);
 
   const std::vector<double>& getVector(){return _coords;} /**< Get the std::vector<double> that contains the coordinates */
 

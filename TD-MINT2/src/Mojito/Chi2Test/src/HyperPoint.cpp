@@ -73,6 +73,31 @@ HyperPoint::HyperPoint(double x1, double x2, double x3, double x4, double x5) :
   at(4) = x5;
 }
 
+HyperPoint::HyperPoint(double x1, double x2, double x3, double x4, double x5, double x6) :
+  _coords(6, 0.0)
+{
+  at(0) = x1;
+  at(1) = x2;
+  at(2) = x3;
+  at(3) = x4;
+  at(4) = x5;
+  at(5) = x6;
+}
+
+HyperPoint::HyperPoint(double x1, double x2, double x3, double x4, double x5, double x6, double x7) :
+  _coords(7, 0.0)
+{
+  at(0) = x1;
+  at(1) = x2;
+  at(2) = x3;
+  at(3) = x4;
+  at(4) = x5;
+  at(5) = x6;
+  at(6) = x7;
+}
+
+
+
 ///Multiply all the elements together.
 ///
 double HyperPoint::multiplyElements() const{
