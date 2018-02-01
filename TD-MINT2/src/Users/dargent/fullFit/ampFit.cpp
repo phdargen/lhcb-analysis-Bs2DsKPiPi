@@ -201,9 +201,47 @@ public:
     CPV_amp(FitParameter& re, FitParameter& im, int sign)
     : _re(re), _im(im), _sign(sign) {}
     
+    CPV_amp(FitParameter& re, FitParameter& im, int sign, const IMinuitParameter* scale_re, const IMinuitParameter* scale_im)
+    : _re(re), _im(im), _sign(sign) {}
+    
     complex<double> ComplexVal(){
         std::complex<double> result((double) ( 1.+  _re * (double) _sign),(double) (_im * (double) _sign) ); 
         return result;
+    }
+};
+
+class CPV_amp_norm : virtual public IReturnComplex{
+    FitParameter& _re;
+    FitParameter& _im;
+    const IMinuitParameter* _scale_re;
+    const IMinuitParameter* _scale_im;
+    int _sign;
+public:
+    CPV_amp_norm(FitParameter& re, FitParameter& im, int sign, const IMinuitParameter* scale_re, const IMinuitParameter* scale_im)
+    : _re(re), _im(im), _sign(sign), _scale_re(scale_re), _scale_im(scale_im) {}
+    
+    complex<double> ComplexVal(){
+        double norm = sqrt(pow(_scale_re->mean(),2)+pow(_scale_im->mean(),2));
+        std::complex<double> result((double) ( 1.+  _re/norm * (double) _sign),(double) (_im/norm * (double) _sign) );
+        return result;
+    }
+};
+
+class CPV_amp_norm_scaled : virtual public IReturnComplex{
+    FitParameter& _re;
+    FitParameter& _im;
+    const IMinuitParameter* _scale_re;
+    const IMinuitParameter* _scale_im;
+    int _sign;
+public:
+    CPV_amp_norm_scaled(FitParameter& re, FitParameter& im, int sign, const IMinuitParameter* scale_re, const IMinuitParameter* scale_im)
+    : _re(re), _im(im), _sign(sign), _scale_re(scale_re), _scale_im(scale_im) {}
+    
+    complex<double> ComplexVal(){
+        double norm = sqrt(pow(_scale_re->mean(),2)+pow(_scale_im->mean(),2));
+        std::complex<double> scale(_scale_re->mean(),_scale_im->mean() );
+        std::complex<double> result((double) ( 1.+  _re/norm * (double) _sign),(double) (_im/norm * (double) _sign) );
+        return scale*result;
     }
 };
 
@@ -234,6 +272,23 @@ void AddScaledAmpsToList(FitAmpSum& fas_tmp, FitAmpSum& fas, FitAmpSum& fasCC, s
     fasCC_2.multiply(r_minus); 
     fas.addAsList(fas_2,1.);
     fasCC.addAsList(fasCC_2,1.);
+}
+
+void AddScaledAmpsToList(FitAmpSum& fas_tmp, FitAmpSum& fas, std::string name, counted_ptr<IReturnComplex>& scale){
+    counted_ptr<FitAmpList> List = fas_tmp.GetCloneOfSubsetSameFitParameters(name);
+    FitAmpSum fas_2(*List);
+    //fasCC_2.CPConjugateSameFitParameters();
+    //fasCC_2.CConjugateFinalStateSameFitParameters();
+    fas.multiply(scale);
+    fas.addAsList(fas_2,1.);
+}
+
+void AddAmpsToList(FitAmpSum& fas_tmp, FitAmpSum& fas, std::string name){
+    counted_ptr<FitAmpList> List = fas_tmp.GetCloneOfSubsetSameFitParameters(name);
+    FitAmpSum fas_2(*List);
+    //fasCC_2.CPConjugateSameFitParameters();
+    //fasCC_2.CConjugateFinalStateSameFitParameters();
+    fas.addAsList(fas_2,1.);
 }
 
 std::vector<double> coherenceFactor(FitAmpSum& fas, FitAmpSum& fas_bar, double r, double delta, DalitzEventList& eventList){
@@ -896,6 +951,10 @@ void ampFit(int step=0){
     //if(randomizeStartVals)fas_tmp.randomizeStartVals(seed);
     //if(randomizeStartVals)fas_tmp.randomizePhaseStartVals(seed);
 
+    MinuitParameterSet* mps = MinuitParameterSet::getDefaultSet();
+    //const IMinuitParameter* mp_K1_Re = mps->getParPtr("Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re");
+    //const IMinuitParameter* mp_K1_Im = mps->getParPtr("Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im");
+    
     counted_ptr<FitAmpList> List_1 = fas_tmp.GetCloneOfSubsetSameFitParameters("K(1)(1270)+");
     FitAmpSum fas(*List_1);
     FitAmpSum fas_bar(*List_1);
@@ -907,32 +966,41 @@ void ampFit(int step=0){
     counted_ptr<IReturnComplex> r_K1_minus = new CPV_amp(r_K1_re,r_K1_im,-1);
     fas.multiply(r_K1_plus); 
     fas_bar.multiply(r_K1_minus);
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1)(1400)+", r_K1_plus, r_K1_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1)(1400)+", r_K1_plus, r_K1_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_K1_plus, r_K1_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)", r_K1_plus, r_K1_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_K1_plus, r_K1_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)", r_K1_plus, r_K1_minus );
 
+    const IMinuitParameter* mp_K1410_Re = mps->getParPtr("Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re");
+    const IMinuitParameter* mp_K1410_Im = mps->getParPtr("Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im");
     FitParameter r_2_re("r_2_Re",2,0,0.01);
-    FitParameter r_2_im("r_2_Im",2,0,0.01); 
-    counted_ptr<IReturnComplex> r_2_plus = new CPV_amp(r_2_re,r_2_im,1);
-    counted_ptr<IReturnComplex> r_2_minus = new CPV_amp(r_2_re,r_2_im,-1);
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_2_plus, r_2_minus );
+    FitParameter r_2_im("r_2_Im",2,0,0.01);
+    counted_ptr<IReturnComplex> r_2_plus = new CPV_amp_norm(r_2_re,r_2_im,1,mp_K1410_Re,mp_K1410_Im);
+    counted_ptr<IReturnComplex> r_2_minus = new CPV_amp_norm(r_2_re,r_2_im,-1,mp_K1410_Re,mp_K1410_Im);
+    counted_ptr<IReturnComplex> r_2_plus_scaled = new CPV_amp_norm_scaled(r_2_re,r_2_im,1,mp_K1410_Re,mp_K1410_Im);
+    counted_ptr<IReturnComplex> r_2_minus_scaled = new CPV_amp_norm_scaled(r_2_re,r_2_im,-1,mp_K1410_Re,mp_K1410_Im);
+    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re", r_2_plus, r_2_minus );
+    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "Bs0->K*(1410)+(->rho(770)0(->pi+,pi-),K+),Ds-", r_2_plus_scaled, r_2_minus_scaled );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1460)+", r_2_plus, r_2_minus );
 
     FitParameter r_3_re("r_3_Re",2,0,0.01);
     FitParameter r_3_im("r_3_Im",2,0,0.01); 
     counted_ptr<IReturnComplex> r_3_plus = new CPV_amp(r_3_re,r_3_im,1);
     counted_ptr<IReturnComplex> r_3_minus = new CPV_amp(r_3_re,r_3_im,-1);
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)", r_3_plus, r_3_minus );
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_3_plus, r_3_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)", r_3_plus, r_3_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1460)+(->K*(892)0(->K+,pi-),pi+),Ds-", r_3_plus, r_3_minus );
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)", r_3_plus, r_3_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->sigma10(->pi+,pi-),Ds-)", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+", r_3_plus, r_3_minus );
    
+    AddAmpsToList(fas_tmp, fas, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)" );
+    AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)");
+    AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)");
+
     FitParameter r_4_re("r_4_Re",2,0,0.01);
     FitParameter r_4_im("r_4_Im",2,0,0.01); 
     counted_ptr<IReturnComplex> r_4_plus = new CPV_amp(r_4_re,r_4_im,1);

@@ -8,6 +8,7 @@
 #include "TMinuit.h"
 
 #include "Mint/IMinuitParameter.h"
+#include "Mint/Utils.h"
 
 
 class TNtupleD;
@@ -43,6 +44,20 @@ class MinuitParameterSet{
   IMinuitParameter* getParPtr(unsigned int i);
   const IMinuitParameter* getParPtr(unsigned int i) const;
 
+  IMinuitParameter* getParPtr(std::string name){
+      for(unsigned int i=0; i <this->size(); i++){
+          if(0 == this->getParPtr(i)) continue;
+          if(A_is_in_B(name,this->getParPtr(i)->name()))return this->getParPtr(i);
+      }
+      return 0;
+  }
+  const IMinuitParameter* getParPtr(std::string name) const {
+      for(unsigned int i=0; i <this->size(); i++){
+          if(0 == this->getParPtr(i)) continue;
+          if(A_is_in_B(name,this->getParPtr(i)->name()))return this->getParPtr(i);
+      }
+      return 0;
+  }
 
   // regarding the two routines below:
   // normally you don't want to use deleteListAndObjects()
