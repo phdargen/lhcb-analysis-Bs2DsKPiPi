@@ -266,8 +266,8 @@ void AddScaledAmpsToList(FitAmpSum& fas_tmp, FitAmpSum& fas, FitAmpSum& fasCC, s
     counted_ptr<FitAmpList> List = fas_tmp.GetCloneOfSubsetSameFitParameters(name);
     FitAmpSum fas_2(*List);
     FitAmpSum fasCC_2(*List);
-    fasCC_2.CPConjugateSameFitParameters();
-    fasCC_2.CConjugateFinalStateSameFitParameters();
+    //fasCC_2.CPConjugateSameFitParameters();
+    //fasCC_2.CConjugateFinalStateSameFitParameters();
     fas_2.multiply(r_plus); 
     fasCC_2.multiply(r_minus); 
     fas.addAsList(fas_2,1.);
@@ -390,6 +390,40 @@ std::vector<double> coherenceFactor_CP(FitAmpSum& fas, FitAmpSum& fas_bar, doubl
     cout << "d = " << result[2] << " [deg]" << endl << endl;
     
     return result;
+}
+
+std::vector<double> coherenceFactor_CP(FitAmpSum& fas, FitAmpSum& fas_bar, double r, double delta, DalitzEventList& eventList){
+    
+        cout << "Calculating coherence factor ..." << endl << endl;
+        fas.print();
+        fas_bar.print();
+    
+        std::complex<double> valK(0,0);
+        double val1 = 0;
+        double val2 = 0;
+    
+        const complex<double> phase_diff = polar(r, delta/360.*2*pi);
+    
+        for(unsigned int i=0; i<eventList.size(); i++){
+                DalitzEvent evt(eventList[i]);
+                evt.CP_conjugateYourself();
+                const std::complex<double> amp = fas.getVal(evt) ;
+                const std::complex<double> amp_bar = fas_bar.getVal(evt)*phase_diff ;
+                valK += amp_bar*conj(amp)*evt.getWeight()/ evt.getGeneratorPdfRelativeToPhaseSpace();
+                val1 += norm(amp)*evt.getWeight()/ evt.getGeneratorPdfRelativeToPhaseSpace();
+                val2 += norm(amp_bar)*evt.getWeight()/ evt.getGeneratorPdfRelativeToPhaseSpace();
+            }
+    
+        std::vector<double> result;
+        result.push_back(sqrt(val2/val1));
+        result.push_back(std::abs(valK)/sqrt(val1)/sqrt(val2));
+        result.push_back(std::arg(valK)/(2.*pi)*360.);
+    
+        cout << "r = " << result[0] << endl;
+        cout << "k = " << result[1] << endl;
+        cout << "d = " << result[2] << " [deg]" << endl << endl;
+    
+        return result;
 }
 
 // Full time-dependent PDF
@@ -672,7 +706,7 @@ double getChi2(DalitzEventList& data, DiskResidentEventList& mc){
     NamedParameter<int> EventPattern("Event Pattern",  531, -431, 321, 211, -211);
     DalitzEventPattern pdg(EventPattern.getVector());
           
-    NamedParameter<int> minEventsPerBin("minEventsPerBin", 50);       
+    NamedParameter<int> minEventsPerBin("minEventsPerBin", 25);
     HyperPointSet points( dim );
     HyperPoint min(pdg.sijMin(1,3),pdg.sijMin(2,4),pdg.sijMin(3,4),pdg.sijMin(1,2,4),pdg.sijMin(2,3,4));
     HyperPoint max(pdg.sijMax(1,3),pdg.sijMax(2,4),pdg.sijMax(3,4),pdg.sijMax(1,2,4),pdg.sijMax(2,3,4));
@@ -704,7 +738,7 @@ double getChi2(DalitzEventList& data, DiskResidentEventList& mc){
 
     HyperHistogram dataHist(limits, points, 
                          /*** Name of the binning algorithm you want to use     */
-                         HyperBinningAlgorithms::SMART,  
+                         HyperBinningAlgorithms::SMART_MULTI,
                          /***  The minimum number of events allowed in each bin */
                          /***  from the HyperPointSet provided (points1)        */
                          AlgOption::MinBinContent      (minEventsPerBin),                    
@@ -720,7 +754,7 @@ double getChi2(DalitzEventList& data, DiskResidentEventList& mc){
                          AlgOption::RandomSeed         (1),                         
                          /*** What dimesnion would you like to split first? Only*/
                          /*** applies to certain algortihms                     */
-                         AlgOption::StartDimension     (4)                        
+                         AlgOption::StartDimension     (0)
                          /*** What dimesnions would you like to bin in?         */
                          //AlgOption::BinningDimensions  (binningDims),                      
                          /*** Setting this option will make the agorithm draw   */
@@ -958,8 +992,8 @@ void ampFit(int step=0){
     counted_ptr<FitAmpList> List_1 = fas_tmp.GetCloneOfSubsetSameFitParameters("K(1)(1270)+");
     FitAmpSum fas(*List_1);
     FitAmpSum fas_bar(*List_1);
-    fas_bar.CPConjugateSameFitParameters();
-    fas_bar.CConjugateFinalStateSameFitParameters();
+    //fas_bar.CPConjugateSameFitParameters();
+    //fas_bar.CConjugateFinalStateSameFitParameters();
     FitParameter r_K1_re("r_K1_Re",2,0,0.01);
     FitParameter r_K1_im("r_K1_Im",2,0,0.01); 
     counted_ptr<IReturnComplex> r_K1_plus = new CPV_amp(r_K1_re,r_K1_im,1);
@@ -1059,7 +1093,8 @@ void ampFit(int step=0){
     /// Calculate initial coherence factor
     vector<double> k_gen = coherenceFactor(fas,fas_bar,(double)r, (double)delta,eventListPhsp);
     //vector<double> k_gen_CP = coherenceFactor_CP(fas_CP,fas_bar_CP,(double)r, (double)delta,eventListPhsp_CP);
-
+    vector<double> k_gen_CP = coherenceFactor_CP(fas_CP,fas_bar_CP,(double)r, (double)delta,eventListPhsp);
+    
     /// Make full time-dependent PDF
     FullAmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma);
 
@@ -1148,6 +1183,12 @@ void ampFit(int step=0){
     
     // plot
     TCanvas* c= new TCanvas("");
+    RooPlot* frame_t= r_t->frame();
+    r_h_t->plotOn(frame_t,Name("data"),MarkerSize(1));
+    gen_t->plotOn(frame_t,Name("pdf"),LineColor(kBlue),LineWidth(3));
+    frame_t->Draw();
+    c->Print("samplingPdfs/t.eps");
+    
     RooPlot* frame_dt= r_dt->frame();
     r_h_dt->plotOn(frame_dt,Name("data"),MarkerSize(1));
     gen_dt->plotOn(frame_dt,Name("pdf"),LineColor(kBlue),LineWidth(3));
@@ -1319,6 +1360,7 @@ void ampFit(int step=0){
                     break;
                 }
             }
+            if (0ul == (i % 500ul)) cout << "Generated " << i << " events" << endl;
         }
         cout << " Generated " << Nevents << " Events. Took " << (time(0) - startTime)/60. << " mins "<< endl;
     }
@@ -1446,7 +1488,18 @@ void ampFit(int step=0){
             else evt = DalitzEvent(pat_CP, vectorOfvectors);
 
             if(!(evt.phaseSpace() > 0.)){
-                //cout << "evt " << i << " 0 phsp " << endl << evt << endl;
+                /*
+                cout << "evt " << i << " 0 phsp " << endl; // << evt << endl;
+                cout << "t =" << t << endl;
+                cout << "dt =" <<dt << endl;
+                cout << "year =" <<year <<  endl;
+                cout << "sw =" <<sw <<  endl;
+                cout << "Dspi =" <<sqrt(evt.s(1,3))/GeV << endl;
+                cout << "Kpi =" <<sqrt(evt.s(2,4))/GeV << endl;
+                cout << "pipi =" <<sqrt(evt.s(3,4))/GeV << endl;
+                cout << "DsKpi =" <<sqrt(evt.sij(s124))/GeV << endl;
+                cout << "Kpipi =" <<sqrt(evt.sij(s234))/GeV << endl << endl;
+                 */
                 badEvents++;
                 continue;
             }
