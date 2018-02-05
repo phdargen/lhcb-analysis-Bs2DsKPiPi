@@ -10,6 +10,8 @@
 "fixExpBkgFromSidebands"	 0
 "sWeightNorm"	 	1
 "ignorePartRecoBkg"	1
+"altPartBkg"     0
+"useB0"     	 0
 
 "inFileNameNorm"		"/auto/data/dargent/BsDsKpipi/BDT/Data/norm.root"
 "outFileNameNorm"		"/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_sweight.root"
