@@ -1,18 +1,22 @@
 * options for acceptance 
-"Ds_finalState"			"Ds2KKpi"
-"year"				"Run1"
-"makePlots"			0
-
-* options for acceptance correction
-"CorrectFromMC"			0
-"applyCorrection" 		0
+"CompareAcceptance"	1
+"FitSplineAccRatio"	0
+"updateAnaNotePlots"	0
+"Bs_TAU_Var"		"Bs_DTF_TAU"
 
 * binning options
 "BinningName"		"test"
+"min_TAU"	 0.4
+"max_TAU" 	 10.
+"min_TAUERR"	 0.
+"max_TAUERR" 	 0.1
+
+
+"useAdaptiveBinningKnots"	 0
+"minEventsPerBin"	 2000
+
 "knot_positions" 	0.5  1. 1.5  2.  3.  6.  9.5
 "knot_values"	 	3.1692e-01  5.9223e-01  1.1015e+00  1.3984e+00  1.7174e+00  1.0   1.7757e+00
 
 * fit options
-"min_TAU"	 0.4
-"max_TAU" 	 10.
-"numCPU"         6
+"numCPU"         8

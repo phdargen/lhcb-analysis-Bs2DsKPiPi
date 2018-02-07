@@ -39,6 +39,7 @@
 #include "RooAddPdf.h"
 #include "RooExtendPdf.h"
 #include "RooDataHist.h"
+#include "RooHistPdf.h"
 #include "RooCBShape.h"
 #include "RooCategory.h"
 #include "RooFormulaVar.h"
@@ -56,6 +57,7 @@
 #include "RooNDKeysPdf.h"
 #include "RooKeysPdf.h"
 #include "RooBDecay.h"
+#include "RooProdPdf.h"
 #ifndef __CINT__
 #include "RooGlobalFunc.h"
 #endif
@@ -162,6 +164,8 @@ vector< vector<double> > fitSplineAcc(string CutString){
 	NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");
 	NamedParameter<double> min_TAU("min_TAU", 0.4);
 	NamedParameter<double> max_TAU("max_TAU", 10.);
+        NamedParameter<double> min_TAUERR("min_TAUERR", 0.);
+        NamedParameter<double> max_TAUERR("max_TAUERR", 0.1);
 	NamedParameter<int> numCPU("numCPU", 6);
 	NamedParameter<int> useAdaptiveBinningKnots("useAdaptiveBinningKnots", 0);
 
@@ -173,15 +177,19 @@ vector< vector<double> > fitSplineAcc(string CutString){
 	tree->SetBranchStatus("*sw",1);
 	tree->SetBranchStatus("year",1);
 	tree->SetBranchStatus("*finalState",1);
-	
+	tree->SetBranchStatus("TriggerCat",1);
+	tree->SetBranchStatus("run",1);
+
 	//Define RooRealVar for observables
 	RooRealVar Bs_TAU(((string)Bs_TAU_Var).c_str(), ((string)Bs_TAU_Var).c_str(), min_TAU, max_TAU, "ps");
-	RooRealVar Bs_TAUERR(((string)Bs_TAU_Var+"ERR").c_str(), ((string)Bs_TAU_Var+"ERR").c_str(), 0.00001, 1.,"ps");
+	RooRealVar Bs_TAUERR(((string)Bs_TAU_Var+"ERR").c_str(), ((string)Bs_TAU_Var+"ERR").c_str(), min_TAUERR,max_TAUERR,"ps");
 	RooRealVar N_Bs_sw("N_Bs_sw", "N_Bs_sw", 0.);
 	RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
 	RooRealVar year("year", "year", 0.);
+	RooRealVar run("run", "run", 0.);
+	RooRealVar TriggerCat("TriggerCat", "TriggerCat", 0.);
 	
-	RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, N_Bs_sw);
+	RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, N_Bs_sw, run, TriggerCat);
 	RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(N_Bs_sw.GetName()), Cut(CutString.c_str()));
 	
 	///SETUP FITTER AND FIT TO DECAYTIME DISTRIBUTION
@@ -222,28 +230,54 @@ vector< vector<double> > fitSplineAcc(string CutString){
 	//CUBIC SPLINE FUNCTION 
  	RooCubicSplineFun* spl = new RooCubicSplineFun("splinePdf", "splinePdf", Bs_TAU, myBinning, tacc_list);
 		
-	RooRealVar trm_mean( "trm_mean" , "Gaussian resolution model mean", 0.0, "ps" );
-	//RooRealVar trm_sigma( "trm_sigma" , "Gaussian resolution model sigma" , 0.040 , "ps");
-	RooRealVar trm_scale( "trm_scale", "Gaussian resolution model scale factor", 1.20);
-	RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *spl, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
+	RooRealVar trm_mean( "trm_mean" , "trm_mean", 0.0, "ps" );
+	RooRealVar trm_offset( "trm_offset", "trm_offset", 0.0103);
+	RooRealVar trm_scale( "trm_scale", "trm_scale", 1.28);
+	//RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *spl, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
+        RooFormulaVar dt_scaled( "dt_scaled","dt_scaled", "@0+@1*@2",RooArgList(trm_offset,trm_scale,Bs_TAUERR));
+        RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *spl, RooRealConstant::value(0.), dt_scaled, trm_mean, RooRealConstant::value(1.) );
 	
-	RooBDecay* timePDF = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau),
+	RooBDecay* timePdf = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau),
 			RooRealConstant::value(dgamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
 			RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMs),
 			trm, RooBDecay::SingleSided);
 	
+        // Marginal pdfs
+        TFile* f_pdfs = new TFile("../timeFit/Mistag_pdfs.root","OPEN");
+        
+        TH1D* h_dt = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
+        RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",Bs_TAUERR,h_dt);
+        RooHistPdf* pdf_sigma_t = new RooHistPdf("pdf_sigma_t","pdf_sigma_t",Bs_TAUERR,*r_h_dt);
+
+	RooProdPdf* totPdf= new RooProdPdf("totPdf","totPdf",RooArgSet(*pdf_sigma_t),Conditional(RooArgSet(*timePdf),RooArgSet(Bs_TAU)));
+        
+        f_pdfs->Close();
 	
 	///Fit and Print
-	RooFitResult *myfitresult = timePDF->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
+	RooFitResult *myfitresult = totPdf->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
 	myfitresult->Print("v");
 	
 	//put coefficients into vector
 	vector<double> myCoeffs,myCoeffsErr;
 	for(int i= 0; i< values.size()+2; i++){
 		myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal());
-        myCoeffsErr.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError());
+       		myCoeffsErr.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError());
 	}
 
+
+        // Plot acceptance
+        TH1F *h_spline = new TH1F("", "", 100, min_TAU, max_TAU);
+        for (int i = 1; i<=h_spline->GetNbinsX(); i++) {
+            Bs_TAU.setVal(h_spline->GetXaxis()->GetBinCenter(i));
+            h_spline->SetBinContent(i,spl->getVal());
+        }
+        
+        TCanvas* c = new TCanvas();
+        h_spline->SetLineColor(kRed);
+        h_spline->Draw("histc");
+        c->Print("spline.eps");
+        c->Print("spline.pdf");
+        
 	/// Plot
 	int bin = 80;
 
@@ -266,7 +300,7 @@ vector< vector<double> > fitSplineAcc(string CutString){
 	frame_m->GetYaxis()->SetTitleOffset(0.95);
 
 	dataset->plotOn(frame_m, Binning(bin), Name("data"));
-	timePDF->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf"));
+	totPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf"));
 	spl->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline"));
 	
 	leg.AddEntry(frame_m->findObject("data"),"LHCb data","ep");
@@ -360,26 +394,20 @@ vector< vector<double> > fitSplineAcc(string CutString){
 }
 
 
-void fitSplineAccRatio(string CutString){
+void fitSplineAccRatio(string CutString, string CutStringMC, string label){
     
     // Options
     NamedParameter<string> BinningName("BinningName",(string)"default");
     NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");
     NamedParameter<double> min_TAU("min_TAU", 0.4);
     NamedParameter<double> max_TAU("max_TAU", 10.);
+    NamedParameter<double> min_TAUERR("min_TAUERR", 0.);
+    NamedParameter<double> max_TAUERR("max_TAUERR", 0.1);
     NamedParameter<int> numCPU("numCPU", 6);
-    NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 1);
     NamedParameter<int> useAdaptiveBinningKnots("useAdaptiveBinningKnots", 0);
+    NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 1);
 
     // Read Datasets
-    TFile* file= new TFile("/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
-    TTree* tree = (TTree*) file->Get("DecayTree");
-    tree->SetBranchStatus("*",0);
-    tree->SetBranchStatus("*TAU*",1);
-    tree->SetBranchStatus("weight",1);
-    tree->SetBranchStatus("year",1);
-    tree->SetBranchStatus("*finalState",1);
-    
     TFile* file_norm= new TFile("/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
     TTree* tree_norm = (TTree*) file_norm->Get("DecayTree");
     tree_norm->SetBranchStatus("*",0);
@@ -387,6 +415,8 @@ void fitSplineAccRatio(string CutString){
     tree_norm->SetBranchStatus("weight",1);
     tree_norm->SetBranchStatus("year",1);
     tree_norm->SetBranchStatus("*finalState",1);
+    tree_norm->SetBranchStatus("TriggerCat",1);
+    tree_norm->SetBranchStatus("run",1);    
 
     TFile* file_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal.root");
     TTree* tree_mc = (TTree*) file_mc->Get("DecayTree");
@@ -395,6 +425,8 @@ void fitSplineAccRatio(string CutString){
     tree_mc->SetBranchStatus("weight",1);
     tree_mc->SetBranchStatus("year",1);
     tree_mc->SetBranchStatus("*finalState",1);
+    tree_mc->SetBranchStatus("TriggerCat",1);
+    tree_mc->SetBranchStatus("run",1);    
     
     TFile* file_norm_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm.root");
     TTree* tree_norm_mc = (TTree*) file_norm_mc->Get("DecayTree");
@@ -403,14 +435,18 @@ void fitSplineAccRatio(string CutString){
     tree_norm_mc->SetBranchStatus("weight",1);
     tree_norm_mc->SetBranchStatus("year",1);
     tree_norm_mc->SetBranchStatus("*finalState",1);
+    tree_norm_mc->SetBranchStatus("TriggerCat",1);
+    tree_norm_mc->SetBranchStatus("run",1);    
     
     // Define observables
     RooRealVar Bs_TAU(((string)Bs_TAU_Var).c_str(), ((string)Bs_TAU_Var).c_str(), min_TAU, max_TAU, "ps");
-    RooRealVar Bs_TAUERR(((string)Bs_TAU_Var+"ERR").c_str(), ((string)Bs_TAU_Var+"ERR").c_str(), 0.00001, 1.,"ps");
+    RooRealVar Bs_TAUERR(((string)Bs_TAU_Var+"ERR").c_str(), ((string)Bs_TAU_Var+"ERR").c_str(), min_TAUERR,max_TAUERR,"ps");
     RooRealVar weight("weight" , "weight", 0.);
     RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
     RooRealVar year("year", "year", 0.);
-    RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, weight);
+    RooRealVar run("run", "run", 0.);
+    RooRealVar TriggerCat("TriggerCat", "TriggerCat", 0.);
+    RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, run, weight, TriggerCat);
     
     // Define category to distinguish between singal and norm data
     RooCategory decay("decay","decay") ;
@@ -418,10 +454,9 @@ void fitSplineAccRatio(string CutString){
     decay.defineType("signal_mc");
     decay.defineType("norm_mc");
     
-    RooDataSet* data_signal = new RooDataSet("data_signal","data_signal", observables,Import(*tree), WeightVar(weight.GetName()), Cut(CutString.c_str()));
     RooDataSet* data_norm = new RooDataSet("data_norm","data_norm", observables,Import(*tree_norm), WeightVar(weight.GetName()), Cut(CutString.c_str()));
-    RooDataSet* data_signal_mc = new RooDataSet("data_signal_mc","data_signal_mc", observables,Import(*tree_mc), WeightVar(weight.GetName()), Cut(""));
-    RooDataSet* data_norm_mc = new RooDataSet("data_norm_mc","data_norm_mc", observables,Import(*tree_norm_mc), WeightVar(weight.GetName()), Cut(""));
+    RooDataSet* data_signal_mc = new RooDataSet("data_signal_mc","data_signal_mc", observables,Import(*tree_mc), WeightVar(weight.GetName()), Cut(CutStringMC.c_str()));
+    RooDataSet* data_norm_mc = new RooDataSet("data_norm_mc","data_norm_mc", observables,Import(*tree_norm_mc), WeightVar(weight.GetName()), Cut(CutStringMC.c_str()));
     
     RooDataSet* dataset = new RooDataSet("dataset","dataset",observables,Index(decay),Import("signal_mc",*data_signal_mc),Import("norm_mc",*data_norm_mc),Import("norm",*data_norm), WeightVar(weight.GetName()));
     
@@ -503,34 +538,46 @@ void fitSplineAccRatio(string CutString){
     
     /// Build simultaneous pdf
     RooRealVar trm_mean( "trm_mean" , "trm_mean", 0.0, "ps" );
-    RooRealVar trm_scale( "trm_scale", "trm_scale", 1.20);
-    RooRealVar trm_mean_mc( "trm_mean_mc" , "trm_mean_mc", 0.0, "ps" );
-    RooRealVar trm_scale_mc( "trm_scale_mc", "trm_scale_mc", 1.20);
-    
-    RooGaussEfficiencyModel trm_signal("trm_signal", "trm_signal", Bs_TAU, *spline_signal, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
-    RooGaussEfficiencyModel trm_norm("trm_norm", "trm_norm", Bs_TAU, *spline_norm, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
-    RooGaussEfficiencyModel trm_signal_mc("trm_signal_mc", "trm_signal_mc", Bs_TAU, *spline_signal_mc, trm_mean, Bs_TAUERR, trm_mean_mc, trm_scale_mc );
-    RooGaussEfficiencyModel trm_norm_mc("trm_norm_mc", "trm_norm_mc", Bs_TAU, *spline_norm_mc, trm_mean, Bs_TAUERR, trm_mean_mc, trm_scale_mc );
+    RooRealVar trm_offset( "trm_offset", "trm_offset", 0.0103);
+    RooRealVar trm_scale( "trm_scale", "trm_scale", 1.28);
+    RooFormulaVar dt_scaled( "dt_scaled","dt_scaled", "@0+@1*@2",RooArgList(trm_offset,trm_scale,Bs_TAUERR));
 
-    RooBDecay* pdf_signal = new RooBDecay("pdf_signal", "pdf_signal", Bs_TAU, RooRealConstant::value(tau),
-                                          RooRealConstant::value(dgamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
-                                          RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMs),
-                                          trm_signal, RooBDecay::SingleSided);
+    RooRealVar trm_mean_mc( "trm_mean_mc" , "trm_mean_mc", 0.0, "ps" );
+    RooRealVar trm_offset_mc( "trm_offset_mc", "trm_offset_mc", 0.0);
+    RooRealVar trm_scale_mc( "trm_scale_mc", "trm_scale_mc", 1.20);
+    RooFormulaVar dt_scaled_mc( "dt_scaled_mc","dt_scaled_mc", "@0+@1*@2",RooArgList(trm_offset_mc,trm_scale_mc,Bs_TAUERR));
     
-    RooBDecay* pdf_norm = new RooBDecay("pdf_norm", "pdf_norm", Bs_TAU, RooRealConstant::value(tau),
+    RooGaussEfficiencyModel trm_norm("trm_norm", "trm_norm", Bs_TAU, *spline_norm, RooRealConstant::value(0.), dt_scaled, trm_mean, RooRealConstant::value(1.) );
+    RooGaussEfficiencyModel trm_signal_mc("trm_signal_mc", "trm_signal_mc", Bs_TAU, *spline_signal_mc, RooRealConstant::value(0.), dt_scaled_mc, trm_mean_mc, RooRealConstant::value(1.) );
+    RooGaussEfficiencyModel trm_norm_mc("trm_norm_mc", "trm_norm_mc", Bs_TAU, *spline_norm_mc, RooRealConstant::value(0.), dt_scaled_mc, trm_mean_mc, RooRealConstant::value(1.) );
+
+    // time pdfs
+    RooBDecay* time_pdf_norm = new RooBDecay("time_pdf_norm", "time_pdf_norm", Bs_TAU, RooRealConstant::value(tau),
                                         RooRealConstant::value(dgamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
                                         RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMs),
                                         trm_norm, RooBDecay::SingleSided);
                                         
-    RooBDecay* pdf_signal_mc = new RooBDecay("pdf_signal_mc", "pdf_signal_mc", Bs_TAU, RooRealConstant::value(tau_MC),
+    RooBDecay* time_pdf_signal_mc = new RooBDecay("time_pdf_signal_mc", "time_pdf_signal_mc", Bs_TAU, RooRealConstant::value(tau_MC),
                                           RooRealConstant::value(dgamma_MC), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
                                           RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMs_MC),
                                           trm_signal_mc, RooBDecay::SingleSided);
     
-    RooBDecay* pdf_norm_mc = new RooBDecay("pdf_norm_mc", "pdf_norm_mc", Bs_TAU, RooRealConstant::value(tau_MC),
+    RooBDecay* time_pdf_norm_mc = new RooBDecay("time_pdf_norm_mc", "time_pdf_norm_mc", Bs_TAU, RooRealConstant::value(tau_MC),
                                         RooRealConstant::value(dgamma_MC), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
                                         RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMs_MC),
                                         trm_norm_mc, RooBDecay::SingleSided);
+
+    // Marginal pdfs
+    TFile* f_pdfs = new TFile("../timeFit/Mistag_pdfs.root","OPEN");
+    TH1D* h_dt = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
+    RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",Bs_TAUERR,h_dt);
+    RooHistPdf* pdf_sigma_t = new RooHistPdf("pdf_sigma_t","pdf_sigma_t",Bs_TAUERR,*r_h_dt);
+    f_pdfs->Close();
+
+    // total pdfs
+    RooProdPdf* pdf_norm= new RooProdPdf("pdf_norm","pdf_norm",RooArgSet(*pdf_sigma_t),Conditional(RooArgSet(*time_pdf_norm),RooArgSet(Bs_TAU)));
+    RooProdPdf* pdf_signal_mc= new RooProdPdf("pdf_signal_mc","pdf_signal_mc",RooArgSet(*pdf_sigma_t),Conditional(RooArgSet(*time_pdf_signal_mc),RooArgSet(Bs_TAU)));
+    RooProdPdf* pdf_norm_mc= new RooProdPdf("pdf_norm_mc","pdf_norm_mc",RooArgSet(*pdf_sigma_t),Conditional(RooArgSet(*time_pdf_norm_mc),RooArgSet(Bs_TAU)));
     
     RooSimultaneous* simPdf = new RooSimultaneous("simPdf","simultaneous pdf",decay);
     simPdf->addPdf(*pdf_signal_mc,"signal_mc");
@@ -538,7 +585,6 @@ void fitSplineAccRatio(string CutString){
     simPdf->addPdf(*pdf_norm,"norm");
 
     /// Fit
-    
     // Fit only signal MC to set reasonable start parameters
     pdf_signal_mc->fitTo(*data_signal_mc, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
     
@@ -552,7 +598,6 @@ void fitSplineAccRatio(string CutString){
     vector<TString> decays;
     decays.push_back("signal_mc");
     decays.push_back("norm_mc");
-    decays.push_back("signal");
     decays.push_back("norm");
         
     for(int i = 0 ; i < decays.size(); i++){
@@ -598,15 +643,8 @@ void fitSplineAccRatio(string CutString){
         frame_m->GetXaxis()->SetLabelColor( kWhite);
         frame_m->GetYaxis()->SetTitleOffset(0.95);
         
-        if(decays[i]=="signal"){
-            data_signal->plotOn(frame_m, Binning(bin), Name("data_"+decays[i]));
-            pdf_signal->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]));
-            spline_signal->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
-        }
-        else {
-            dataset->plotOn(frame_m, Binning(bin), Name("data_"+decays[i]),Cut("decay==decay::"+decays[i]));
-            simPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]),Slice(decay,decays[i]),ProjWData(decay,*dataset));
-        }
+        dataset->plotOn(frame_m, Binning(bin), Name("data_"+decays[i]),Cut("decay==decay::"+decays[i]));
+        simPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]),Slice(decay,decays[i]),ProjWData(decay,*dataset));
         
         if(decays[i]=="signal_mc")spline_signal_mc->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
         
@@ -622,13 +660,11 @@ void fitSplineAccRatio(string CutString){
             spline_signal->plotOn(frame_m, LineColor(kGreen+3), LineWidth(3), LineStyle(kDashed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_signal_"+decays[i]));
         }
         
-        if(decays[i]=="signal")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{s}#rightarrow D_{s}K#pi#pi Data","ep");
-        else if(decays[i]=="signal_mc")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{s}#rightarrow D_{s}K#pi#pi MC","ep");
+        if(decays[i]=="signal_mc")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{s}#rightarrow D_{s}K#pi#pi MC","ep");
         else if(decays[i]=="norm")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{s}#rightarrow D_{s}#pi#pi#pi Data","ep");
         else if(decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{s}#rightarrow D_{s}#pi#pi#pi MC","ep");
 
-        if(decays[i]=="signal")leg.AddEntry(frame_m->findObject("pdf_"+decays[i]),"Prediction","l");
-        else leg.AddEntry(frame_m->findObject("pdf_"+decays[i]),"Fit","l");
+        leg.AddEntry(frame_m->findObject("pdf_"+decays[i]),"Fit","l");
         
         leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"Acceptance","l");
         if(decays[i]=="norm")leg.AddEntry(frame_m->findObject("spline_signal_"+decays[i]),"Acc(t)_{D_{s}K#pi#pi}^{Data}","l");
@@ -674,13 +710,13 @@ void fitSplineAccRatio(string CutString){
         
         pad2->Update();
         canvas->Update();
-        canvas->SaveAs("Plot/timeAccRatioFit_"+decays[i]+"_"+(string)BinningName+ ".eps");
-        if(updateAnaNotePlots)canvas->Print("../../../../../TD-AnaNote/latex/figs/Acceptance/timeAccRatioFit_"+decays[i]+"_"+(string)BinningName+ ".pdf");
+        canvas->SaveAs("Plot/timeAccRatioFit_"+decays[i]+"_"+ label + "_" + (string)BinningName+ ".eps");
+        if(updateAnaNotePlots)canvas->Print("../../../../../TD-AnaNote/latex/figs/Acceptance/timeAccRatioFit_"+decays[i]+"_"+label + "_" +(string)BinningName+ ".pdf");
         
         pad1->SetLogy(1);
         pad1->Update();
         canvas->Update();
-        canvas->SaveAs("Plot/timeAccRatioFit_"+decays[i]+"_"+(string)BinningName+ "_log.eps");
+        canvas->SaveAs("Plot/timeAccRatioFit_"+decays[i]+"_"+label + "_" +(string)BinningName+ "_log.eps");
         //if(updateAnaNotePlots)canvas->Print("../../../../../TD-AnaNote/latex/figs/Acceptance/timeAccRatioFit_"+decays[i]+"_"+(string)BinningName+ "_log.pdf");
         pad1->SetLogy(0);
         
@@ -708,6 +744,19 @@ void fitSplineAccRatio(string CutString){
     datafile << "\\caption{Summary of the obtained parameters from the acceptance fit to " <<CutString.c_str()<<  ".} " << "\n";
     datafile << "\\label{table: Splines}" << "\n";
     datafile << "\\end{table}" << "\n";
+
+    ofstream resultsFile;
+    resultsFile.open(("results_" + label + "_" + (string)BinningName+ ".txt").c_str(),std::ofstream::trunc);
+    resultsFile << "knot_positions " ;
+    for(int i= 0; i< myBinning.size(); i++){
+	resultsFile << myBinning[i] << " " ;
+    }
+    resultsFile << endl;
+    for(int i= 0; i< myBinning.size(); i++){
+	resultsFile << "c" + anythingToString(i) + "_" + label << "  " << 2 << "  " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() 
+	<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
+    }
+
 }
 
 
@@ -755,7 +804,33 @@ void compareAcceptance(){
     legend_Ds.push_back("D_{s}^{-} #rightarrow #pi^{+} #pi^{-} #pi^{-}"); 
     
     vector<TString> legend_Ds_2 = legend_year_2;
-    
+
+    // Compare different Ds final states (low/high stat channels)
+    vector<TString> cuts_Ds_mod;
+    cuts_Ds_mod.push_back("(Ds_finalState == 0) && Ds_finalState != 2 && Ds_finalState != 3");
+    cuts_Ds_mod.push_back("(Ds_finalState == 2) && Ds_finalState != 0 && Ds_finalState != 1");
+
+    vector<TString> legend_Ds_mod;
+    legend_Ds_mod.push_back("D_{s}^{-} #rightarrow #phi^{0}(1020) #pi^{-}"); 
+    legend_Ds_mod.push_back("D_{s}^{-} #rightarrow (K^{+} K^{-} #pi^{-})_{NR}"); 
+     
+    vector<TString> legend_Ds_mod_2;
+    legend_Ds_mod_2.push_back("D_{s}^{-} #rightarrow K^{*0}(892) K^{-}"); 
+    legend_Ds_mod_2.push_back("D_{s}^{-} #rightarrow #pi^{+} #pi^{-} #pi^{-}"); 
+   
+    //
+    vector<TString> cuts_Ds_mod2;
+    cuts_Ds_mod2.push_back("(Ds_finalState == 0) && Ds_finalState != 2 && Ds_finalState != 1");
+    cuts_Ds_mod2.push_back("(Ds_finalState == 1) && Ds_finalState != 0 && Ds_finalState != 3");
+
+    vector<TString> legend_Ds_mod2;
+    legend_Ds_mod2.push_back("D_{s}^{-} #rightarrow #phi^{0}(1020) #pi^{-}"); 
+    legend_Ds_mod2.push_back("D_{s}^{-} #rightarrow K^{*0}(892) K^{-}"); 
+     
+    vector<TString> legend_Ds_mod2_2;
+    legend_Ds_mod2_2.push_back("D_{s}^{-} #rightarrow #pi^{+} #pi^{-} #pi^{-}"); 
+    legend_Ds_mod2_2.push_back("D_{s}^{-} #rightarrow (K^{+} K^{-} #pi^{-})_{NR}"); 
+
     // Compare different runs
     vector<TString> cuts_run;
     cuts_run.push_back("(year == 11 || year == 12) ");
@@ -779,31 +854,54 @@ void compareAcceptance(){
     legend_run_year_2.push_back("Year 12");
     legend_run_year_2.push_back("Year 16");
     
-    // Combine cuts into vector to iterate over
+    // Compare different triggers
+    vector<TString> cuts_trigger;
+    cuts_trigger.push_back("(TriggerCat == 0)");
+    
+    vector<TString> legend_trigger;
+    legend_trigger.push_back("LO_Global_TIS");
+
+    vector<TString> legend_trigger_2;
+    legend_trigger_2.push_back("LO_Hadron_TOS");
+
+
+    /// Combine cuts into vector to iterate over
     vector< vector<TString> > cut_set;    
     cut_set.push_back(cuts_year);    
     cut_set.push_back(cuts_Ds);
+    cut_set.push_back(cuts_Ds_mod);
+    cut_set.push_back(cuts_Ds_mod2);
     cut_set.push_back(cuts_run);    
     cut_set.push_back(cuts_run_year);    
+    cut_set.push_back(cuts_trigger);    
     
     vector< vector<TString> > legend_title_set;
     legend_title_set.push_back(legend_year);
     legend_title_set.push_back(legend_Ds);
+    legend_title_set.push_back(legend_Ds_mod);
+    legend_title_set.push_back(legend_Ds_mod2);
     legend_title_set.push_back(legend_run);
     legend_title_set.push_back(legend_run_year);
-    
+    legend_title_set.push_back(legend_trigger);
+        
     vector< vector<TString> > legend_title_set_2;
     legend_title_set_2.push_back(legend_year_2);
     legend_title_set_2.push_back(legend_Ds_2);
+    legend_title_set_2.push_back(legend_Ds_mod_2);
+    legend_title_set_2.push_back(legend_Ds_mod2_2);
     legend_title_set_2.push_back(legend_run_2);
     legend_title_set_2.push_back(legend_run_year_2);
-    
+    legend_title_set_2.push_back(legend_trigger_2);
+
     vector<TString> plot_titles;
     plot_titles.push_back("year");
     plot_titles.push_back("DsFinalState");
+    plot_titles.push_back("DsFinalState_mod");
+    plot_titles.push_back("DsFinalState_mod2");
     plot_titles.push_back("run");
     plot_titles.push_back("run_year");
-    
+    plot_titles.push_back("trigger");    
+
     for (int a = 0; a < cut_set.size(); a++) {
         
         TCanvas* c = new TCanvas();
@@ -917,6 +1015,395 @@ void compareAcceptance(){
 
 }
 
+void produceMarginalPdfs(){
+
+    NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
+    NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
+
+    TString prefix = "";
+    //TString prefix = "BsTaggingTool_";
+
+    /// Load files
+    
+    // Data
+    int q_OS;
+    Short_t q_SS;
+    double w_OS;
+    Float_t w_SS;
+    double sw;
+    int year,Ds_finalState;
+    double t,dt;
+    double Bs_pt,Bs_eta,nTracks;
+    
+    TChain* tree=new TChain("DecayTree");
+    tree->Add( ((string)InputDir + "Data/signal.root").c_str());
+    tree->SetBranchStatus("*",0);
+    tree->SetBranchStatus("N_Bs_sw",1);
+    tree->SetBranchStatus("year",1);
+    tree->SetBranchStatus("*DEC",1);
+    tree->SetBranchStatus("*PROB",1);
+    tree->SetBranchStatus("*OS",1);
+    tree->SetBranchStatus("*TAU*",1);
+    tree->SetBranchStatus("*ETA",1);
+    tree->SetBranchStatus("*PT",1);
+    tree->SetBranchStatus("NTracks",1);
+
+    tree->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
+    tree->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS);
+    tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
+    tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS);
+    tree->SetBranchAddress("N_Bs_sw",&sw);
+    tree->SetBranchAddress("year",&year);
+    tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
+    tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+    tree->SetBranchAddress("Bs_PT",&Bs_pt);
+    tree->SetBranchAddress("Bs_ETA",&Bs_eta);
+    tree->SetBranchAddress("NTracks",&nTracks);
+
+    TChain* tree_norm=new TChain("DecayTree");
+    tree_norm->Add( ((string)InputDir + "Data/norm.root").c_str());
+    tree_norm->SetBranchStatus("*",0);
+    tree_norm->SetBranchStatus("N_Bs_sw",1);
+    tree_norm->SetBranchStatus("year",1);
+    tree_norm->SetBranchStatus("*DEC",1);
+    tree_norm->SetBranchStatus("*PROB",1);
+    tree_norm->SetBranchStatus("*OS",1);
+    tree_norm->SetBranchStatus("*TAU*",1);
+    tree_norm->SetBranchStatus("*ETA",1);
+    tree_norm->SetBranchStatus("*PT",1);
+    tree_norm->SetBranchStatus("NTracks",1);
+    
+    tree_norm->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
+    tree_norm->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS);
+    tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
+    tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS);
+    tree_norm->SetBranchAddress("N_Bs_sw",&sw);
+    tree_norm->SetBranchAddress("year",&year);
+    tree_norm->SetBranchAddress("Ds_finalState",&Ds_finalState);
+    tree_norm->SetBranchAddress("Bs_DTF_TAU",&t);
+    tree_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+    tree_norm->SetBranchAddress("Bs_PT",&Bs_pt);
+    tree_norm->SetBranchAddress("Bs_ETA",&Bs_eta);
+    tree_norm->SetBranchAddress("NTracks",&nTracks);
+
+    // MC
+    int q_OS_MC;
+    Short_t q_SS_MC;
+    double w_OS_MC;
+    Float_t w_SS_MC;
+    double w;
+    int cat,yearMC,Ds_finalStateMC;
+    double dt_MC;
+    double Bs_pt_MC,Bs_eta_MC,nTracks_MC;
+
+    TChain* treeMC =new TChain("DecayTree");
+    treeMC->Add( ((string)InputDir + "MC/signal.root").c_str());
+    treeMC->SetBranchStatus("*",0);
+    treeMC->SetBranchStatus("Ds_finalState",1);
+    treeMC->SetBranchStatus("Bs_BKGCAT",1);
+    treeMC->SetBranchStatus("weight",1);
+    treeMC->SetBranchStatus("*DEC",1);
+    treeMC->SetBranchStatus("*PROB",1);
+    treeMC->SetBranchStatus("*OS",1);
+    treeMC->SetBranchStatus("*TAU*",1);
+    treeMC->SetBranchStatus("*ETA",1);
+    treeMC->SetBranchStatus("*PT",1);
+    treeMC->SetBranchStatus("NTracks",1);
+
+    treeMC->SetBranchAddress("Bs_BKGCAT",&cat);
+    treeMC->SetBranchAddress("year",&yearMC);
+    treeMC->SetBranchAddress("Ds_finalState",&Ds_finalStateMC);           
+    treeMC->SetBranchAddress("weight",&w);
+    treeMC->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS_MC);
+    treeMC->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS_MC);
+    treeMC->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS_MC);
+    treeMC->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS_MC);
+    treeMC->SetBranchAddress("Bs_DTF_TAUERR",&dt_MC);
+    treeMC->SetBranchAddress("Bs_PT",&Bs_pt_MC);
+    treeMC->SetBranchAddress("Bs_ETA",&Bs_eta_MC);
+    treeMC->SetBranchAddress("NTracks",&nTracks_MC);
+    
+    TChain* treeMC_norm =new TChain("DecayTree");
+    treeMC_norm->Add( ((string)InputDir + "MC/norm.root").c_str());
+    treeMC_norm->SetBranchStatus("*",0);
+    treeMC_norm->SetBranchStatus("Ds_finalState",1);
+    treeMC_norm->SetBranchStatus("Bs_BKGCAT",1);
+    treeMC_norm->SetBranchStatus("weight",1);
+    treeMC_norm->SetBranchStatus("*DEC",1);
+    treeMC_norm->SetBranchStatus("*PROB",1);
+    treeMC_norm->SetBranchStatus("*OS",1);
+    treeMC_norm->SetBranchStatus("*TAU*",1);
+    treeMC_norm->SetBranchStatus("*ETA",1);
+    treeMC_norm->SetBranchStatus("*PT",1);
+    treeMC_norm->SetBranchStatus("NTracks",1);
+
+    treeMC_norm->SetBranchAddress("Bs_BKGCAT",&cat);
+    treeMC_norm->SetBranchAddress("year",&yearMC);
+    treeMC_norm->SetBranchAddress("Ds_finalState",&Ds_finalStateMC);           
+    treeMC_norm->SetBranchAddress("weight",&w);
+    treeMC_norm->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS_MC);
+    treeMC_norm->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS_MC);
+    treeMC_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS_MC);
+    treeMC_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS_MC);
+    treeMC_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt_MC);
+    treeMC_norm->SetBranchAddress("Bs_PT",&Bs_pt_MC);
+    treeMC_norm->SetBranchAddress("Bs_ETA",&Bs_eta_MC);
+    treeMC_norm->SetBranchAddress("NTracks",&nTracks_MC);
+    
+    ///Make histograms
+    int bins = 60;
+    TH1D* h_w_OS = new TH1D("h_w_OS","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_MC = new TH1D("h_w_OS_MC","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_SS = new TH1D("h_w_SS","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_MC = new TH1D("h_w_SS_MC","; #eta_{SS}",bins,0,0.5);
+    
+    TH1D* h_q_OS = new TH1D("h_q_OS","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_MC = new TH1D("h_q_OS_MC","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_SS = new TH1D("h_q_SS","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_MC = new TH1D("h_q_SS_MC","; q_{SS}",3,-1.5,1.5);
+    
+    TH1D* h_dt = new TH1D("h_dt",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
+    TH1D* h_dt_MC = new TH1D("h_dt_MC",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
+
+    TH1D* h_w_OS_norm = new TH1D("h_w_OS_norm","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_MC_norm = new TH1D("h_w_OS_MC_norm","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_SS_norm = new TH1D("h_w_SS_norm","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_MC_norm = new TH1D("h_w_SS_MC_norm","; #eta_{SS}",bins,0,0.5);
+    
+    TH1D* h_q_OS_norm = new TH1D("h_q_OS_norm","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_MC_norm = new TH1D("h_q_OS_MC_norm","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm = new TH1D("h_q_SS_norm","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_MC_norm = new TH1D("h_q_SS_MC_norm","; q_{SS}",3,-1.5,1.5);
+    
+    TH1D* h_t_norm = new TH1D("h_t_norm",";t (ps);Events (norm.) ",bins,0,15);
+    TH1D* h_dt_norm = new TH1D("h_dt_norm",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
+    TH1D* h_dt_MC_norm = new TH1D("h_dt_MC_norm",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
+
+    double eff_OS = 0; 
+    double eff_SS = 0;
+    double eff_OS_MC = 0; 
+    double eff_SS_MC = 0;
+    
+    double eff_OS_norm = 0; 
+    double eff_SS_norm = 0;
+    double eff_OS_MC_norm = 0; 
+    double eff_SS_MC_norm = 0;
+    
+    double sumw = 0;
+
+    ///loop over data events
+    for(int i=0; i< tree->GetEntries(); i++)
+    {	
+        //if (0ul == (i % 1000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
+        tree->GetEntry(i);        
+        //if(year > 13) continue;
+        
+        h_dt->Fill(dt,sw);
+        h_q_OS->Fill((double)q_OS,sw);
+        h_q_SS->Fill((double)q_SS,sw);
+
+        if(q_OS != 0) {
+            h_w_OS->Fill(w_OS,sw);
+            eff_OS += sw;
+        }
+        if(q_SS != 0){
+            h_w_SS->Fill(w_SS,sw);
+            eff_SS += sw;
+        }
+        sumw += sw;
+    }
+    
+    eff_OS /= sumw;
+    eff_SS /= sumw;
+    
+    sumw = 0;
+    for(int i=0; i< tree_norm->GetEntries(); i++)
+    {	
+        tree_norm->GetEntry(i);
+        //if(year > 13) continue;
+        
+        h_t_norm->Fill(t,sw);
+        h_dt_norm->Fill(dt,sw);
+        h_q_OS_norm->Fill((double)q_OS,sw);
+        h_q_SS_norm->Fill((double)q_SS,sw);
+        
+        if(q_OS != 0){
+            h_w_OS_norm->Fill(w_OS,sw);
+            eff_OS_norm += sw;
+        }
+        if(q_SS != 0){
+            h_w_SS_norm->Fill(w_SS,sw);
+            eff_SS_norm += sw;
+            }
+        sumw += sw;
+    }
+    
+    eff_OS_norm /= sumw;    
+    eff_SS_norm /= sumw;
+
+    ///loop over MC events
+    for(int i=0; i< treeMC->GetEntries(); i++)
+    {	
+        treeMC->GetEntry(i);
+        
+        h_dt_MC->Fill(dt_MC,sw);
+        h_q_OS_MC->Fill((double)q_OS_MC,sw);
+        h_q_SS_MC->Fill((double)q_SS_MC,sw);
+        
+        if(q_OS_MC != 0)h_w_OS_MC->Fill(w_OS_MC,w);
+        if(q_SS_MC != 0)h_w_SS_MC->Fill(w_SS_MC,w);
+    }
+    
+    for(int i=0; i< treeMC_norm->GetEntries(); i++)
+    {	
+        treeMC_norm->GetEntry(i);
+        
+        h_dt_MC_norm->Fill(dt_MC,sw);
+        h_q_OS_MC_norm->Fill((double)q_OS_MC,sw);
+        h_q_SS_MC_norm->Fill((double)q_SS_MC,sw);
+        
+        if(q_OS_MC != 0)h_w_OS_MC_norm->Fill(w_OS_MC,w);
+        if(q_SS_MC != 0)h_w_SS_MC_norm->Fill(w_SS_MC,w);
+    }
+    
+    ///Plot it
+    TCanvas* c= new TCanvas();
+
+    h_w_OS->SetMinimum(0);    
+    h_w_OS->SetLineColor(kBlack);
+    h_w_OS->DrawNormalized("e",1);
+    h_w_OS_norm->SetMarkerColor(kRed);
+    h_w_OS_norm->SetLineColor(kRed);
+    h_w_OS_norm->DrawNormalized("esame",1);
+    
+    double KolmoTest = h_w_OS->KolmogorovTest(h_w_OS_norm);
+    
+    TLegend *leg = new TLegend(0.2,0.6,0.4,0.9,"");
+    leg->SetLineStyle(0);
+    leg->SetLineColor(0);
+    leg->SetFillColor(0);
+    leg->SetTextFont(22);
+    leg->SetTextColor(1);
+    leg->SetTextSize(0.04);
+    leg->SetTextAlign(12);
+    
+    leg->AddEntry(h_w_OS,"B_{s} #rightarrow D_{s}K#pi#pi  Data","LEP");
+    
+    stringstream ss1 ;
+    TString leg_average = "<#omega_{OS}> = ";
+    ss1 << std::fixed << std::setprecision(3) << h_w_OS->GetMean() ;
+    leg_average += ss1.str();    
+    leg->AddEntry((TObject*)0, leg_average, "");
+
+    stringstream ss2 ;
+    TString leg_eff = "#epsilon_{OS} = ";
+    ss2 << std::fixed << std::setprecision(3) << eff_OS ;
+    leg_eff += ss2.str();    
+    leg->AddEntry((TObject*)0, leg_eff, "");
+
+    leg->AddEntry(h_w_OS_norm,"B_{s} #rightarrow D_{s}#pi#pi#pi  Data","LEP");
+    
+    stringstream ss ;
+    TString leg_kol = "Kolm.-Test : ";
+    ss << std::fixed << std::setprecision(2) << KolmoTest ;
+    leg_kol += ss.str();    
+    //TLegendEntry* le = leg->AddEntry((TObject*)0, leg_kol, "");
+    //le->SetTextColor(kRed);    
+    
+    //leg->Draw(); 
+    c->Print(prefix+"w_OS.eps");
+    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_OS.pdf");
+
+    h_w_SS->SetMinimum(0);    
+    h_w_SS->SetLineColor(kBlack);
+    h_w_SS->DrawNormalized("e",1);
+    h_w_SS_norm->SetMarkerColor(kRed);
+    h_w_SS_norm->SetLineColor(kRed);
+    h_w_SS_norm->DrawNormalized("esame",1);
+    c->Print(prefix+"w_SS.eps");
+    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_SS.pdf");
+
+    h_w_OS_MC->SetMinimum(0);    
+    h_w_OS_MC->SetLineColor(kBlack);
+    h_w_OS_MC->DrawNormalized("e",1);
+    h_w_OS_MC_norm->SetMarkerColor(kRed);
+    h_w_OS_MC_norm->SetLineColor(kRed);
+    h_w_OS_MC_norm->DrawNormalized("esame",1);
+    c->Print(prefix+"w_OS_MC.eps");
+    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_OS_MC.pdf");
+
+    h_w_SS_MC->SetMinimum(0);    
+    h_w_SS_MC->SetLineColor(kBlack);
+    h_w_SS_MC->DrawNormalized("e",1);
+    h_w_SS_MC_norm->SetMarkerColor(kRed);
+    h_w_SS_MC_norm->SetLineColor(kRed);
+    h_w_SS_MC_norm->DrawNormalized("esame",1);
+    c->Print(prefix+"w_SS_MC.eps");
+    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_SS_MC.pdf");
+
+    h_q_OS->SetMinimum(0);    
+    h_q_OS->SetLineColor(kBlack);
+    h_q_OS->DrawNormalized("e",1);
+    h_q_OS_norm->SetMarkerColor(kRed);
+    h_q_OS_norm->SetLineColor(kRed);
+    h_q_OS_norm->DrawNormalized("esame",1);
+    c->Print(prefix+"q_OS.eps");
+    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/qOS.pdf");
+
+    h_q_SS->SetMinimum(0);    
+    h_q_SS->SetLineColor(kBlack);
+    h_q_SS->DrawNormalized("e",1);
+    h_q_SS_norm->SetMarkerColor(kRed);
+    h_q_SS_norm->SetLineColor(kRed);
+    h_q_SS_norm->DrawNormalized("esame",1);
+    c->Print(prefix+"q_SS.eps");
+    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/q_SS.pdf");
+    
+    h_q_OS_MC->SetMinimum(0);    
+    h_q_OS_MC->SetLineColor(kBlack);
+    h_q_OS_MC->DrawNormalized("e",1);
+    h_q_OS_MC_norm->SetMarkerColor(kRed);
+    h_q_OS_MC_norm->SetLineColor(kRed);
+    h_q_OS_MC_norm->DrawNormalized("esame",1);
+    c->Print(prefix+"q_OS_MC.eps");
+    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/q_OS_MC.pdf");
+
+    h_q_SS_MC->SetMinimum(0);    
+    h_q_SS_MC->SetLineColor(kBlack);
+    h_q_SS_MC->DrawNormalized("e",1);
+    h_q_SS_MC_norm->SetMarkerColor(kRed);
+    h_q_SS_MC_norm->SetLineColor(kRed);
+    h_q_SS_MC_norm->DrawNormalized("esame",1);
+    c->Print(prefix+"q_SS_MC.eps");
+    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/q_SS_MC.pdf");
+
+    h_dt->SetMinimum(0);    
+    h_dt->SetLineColor(kBlack);
+    h_dt->DrawNormalized("e",1);
+    h_dt_norm->SetMarkerColor(kRed);
+    h_dt_norm->SetLineColor(kRed);
+    h_dt_norm->DrawNormalized("esame",1);
+    c->Print("dt.eps");
+    
+    h_dt_MC->SetMinimum(0);    
+    h_dt_MC->SetLineColor(kBlack);
+    h_dt_MC->DrawNormalized("e",1);
+    h_dt_MC_norm->SetMarkerColor(kRed);
+    h_dt_MC_norm->SetLineColor(kRed);
+    h_dt_MC_norm->DrawNormalized("esame",1);
+    c->Print("dt_MC.eps");
+    
+    TFile* out = new TFile("Mistag_pdfs.root","RECREATE");
+    h_t_norm->Write();
+    h_dt_norm->Write();
+    h_q_OS_norm->Write();
+    h_w_OS_norm->Write();
+    h_q_SS_norm->Write();
+    h_w_SS_norm->Write();
+    out->Write();
+
+}
+
 
 int main(int argc, char** argv){
     
@@ -930,9 +1417,13 @@ int main(int argc, char** argv){
     
     if(CompareAcceptance)compareAcceptance();
 
-    if(FitSplineAccRatio)fitSplineAccRatio(" year == 11 || year == 12");
+    if(FitSplineAccRatio)fitSplineAccRatio(" run == 1 && TriggerCat == 0 " , "", "Run1_t0");
+    if(FitSplineAccRatio)fitSplineAccRatio(" run == 1 && TriggerCat == 1 " , "", "Run1_t1");
+    if(FitSplineAccRatio)fitSplineAccRatio(" run == 2 && TriggerCat == 0 " , "", "Run2_t0");
+    if(FitSplineAccRatio)fitSplineAccRatio(" run == 2 && TriggerCat == 1 " , "", "Run2_t1");
 
-        
+    //fitSplineAcc(" year == 11 || year == 12");
+                
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
     cout << "==============================================" << endl;
