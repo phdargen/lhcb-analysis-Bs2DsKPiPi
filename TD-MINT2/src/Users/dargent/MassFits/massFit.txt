@@ -1,21 +1,24 @@
 * general options
-"channel"	"Norm"
+"channel"	"Signal"
 "nBins"		100
 "min_MM"	5200.
 "max_MM"	5700.
-"cut_BDT" 	0.35
+"cut_BDT" 	0.3
 "numCPU"	 10
 "newTable"	0
 "updateAnaNotePlots"  0
-"outFileNameNorm"	"/auto/data/dargent/BsDsKpipi/Final/Data/norm_test.root"
+"useTriggerCat"		0
 
 * Norm fit :
 "fixExpBkgFromSidebands"	 0
 "sWeightNorm"	 0
 "altPartBkg"     0
 "useB0"     	 1	
+"fixSignalShapeFromMC"	 0
+*"outFileNameNorm"	"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
 
 * Signal fit:
 "fixMisIDyields"	1
 "useNormScaleFactors"	1
+"useNormSignalShape"	1
 "sWeightSignal"	 0
