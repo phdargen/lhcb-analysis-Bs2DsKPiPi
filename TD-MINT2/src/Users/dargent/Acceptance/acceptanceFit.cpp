@@ -1016,22 +1016,22 @@ void compareAcceptance(){
 }
 
 void produceMarginalPdfs(){
-
+    
     NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
     NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
-
     TString prefix = "";
     //TString prefix = "BsTaggingTool_";
-
-    /// Load files
+    NamedParameter<double> min_year("min_year", 11);
+    NamedParameter<double> max_year("max_year", 16);
     
+    /// Load files
     // Data
     int q_OS;
     Short_t q_SS;
     double w_OS;
     Float_t w_SS;
     double sw;
-    int year,Ds_finalState;
+    int run,year,Ds_finalState,trigger;
     double t,dt;
     double Bs_pt,Bs_eta,nTracks;
     
@@ -1047,7 +1047,7 @@ void produceMarginalPdfs(){
     tree->SetBranchStatus("*ETA",1);
     tree->SetBranchStatus("*PT",1);
     tree->SetBranchStatus("NTracks",1);
-
+    
     tree->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
     tree->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS);
     tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
@@ -1059,7 +1059,7 @@ void produceMarginalPdfs(){
     tree->SetBranchAddress("Bs_PT",&Bs_pt);
     tree->SetBranchAddress("Bs_ETA",&Bs_eta);
     tree->SetBranchAddress("NTracks",&nTracks);
-
+    
     TChain* tree_norm=new TChain("DecayTree");
     tree_norm->Add( ((string)InputDir + "Data/norm.root").c_str());
     tree_norm->SetBranchStatus("*",0);
@@ -1072,6 +1072,8 @@ void produceMarginalPdfs(){
     tree_norm->SetBranchStatus("*ETA",1);
     tree_norm->SetBranchStatus("*PT",1);
     tree_norm->SetBranchStatus("NTracks",1);
+    tree_norm->SetBranchStatus("run",1);
+    tree_norm->SetBranchStatus("TriggerCat",1);
     
     tree_norm->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
     tree_norm->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS);
@@ -1079,13 +1081,15 @@ void produceMarginalPdfs(){
     tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS);
     tree_norm->SetBranchAddress("N_Bs_sw",&sw);
     tree_norm->SetBranchAddress("year",&year);
+    tree_norm->SetBranchAddress("run",&run);
     tree_norm->SetBranchAddress("Ds_finalState",&Ds_finalState);
     tree_norm->SetBranchAddress("Bs_DTF_TAU",&t);
     tree_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt);
     tree_norm->SetBranchAddress("Bs_PT",&Bs_pt);
     tree_norm->SetBranchAddress("Bs_ETA",&Bs_eta);
     tree_norm->SetBranchAddress("NTracks",&nTracks);
-
+    tree_norm->SetBranchAddress("TriggerCat",&trigger);
+    
     // MC
     int q_OS_MC;
     Short_t q_SS_MC;
@@ -1095,7 +1099,7 @@ void produceMarginalPdfs(){
     int cat,yearMC,Ds_finalStateMC;
     double dt_MC;
     double Bs_pt_MC,Bs_eta_MC,nTracks_MC;
-
+    
     TChain* treeMC =new TChain("DecayTree");
     treeMC->Add( ((string)InputDir + "MC/signal.root").c_str());
     treeMC->SetBranchStatus("*",0);
@@ -1109,7 +1113,7 @@ void produceMarginalPdfs(){
     treeMC->SetBranchStatus("*ETA",1);
     treeMC->SetBranchStatus("*PT",1);
     treeMC->SetBranchStatus("NTracks",1);
-
+    
     treeMC->SetBranchAddress("Bs_BKGCAT",&cat);
     treeMC->SetBranchAddress("year",&yearMC);
     treeMC->SetBranchAddress("Ds_finalState",&Ds_finalStateMC);           
@@ -1136,7 +1140,7 @@ void produceMarginalPdfs(){
     treeMC_norm->SetBranchStatus("*ETA",1);
     treeMC_norm->SetBranchStatus("*PT",1);
     treeMC_norm->SetBranchStatus("NTracks",1);
-
+    
     treeMC_norm->SetBranchAddress("Bs_BKGCAT",&cat);
     treeMC_norm->SetBranchAddress("year",&yearMC);
     treeMC_norm->SetBranchAddress("Ds_finalState",&Ds_finalStateMC);           
@@ -1164,21 +1168,33 @@ void produceMarginalPdfs(){
     
     TH1D* h_dt = new TH1D("h_dt",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
     TH1D* h_dt_MC = new TH1D("h_dt_MC",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-
+    
     TH1D* h_w_OS_norm = new TH1D("h_w_OS_norm","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm_Run1 = new TH1D("h_w_OS_norm_Run1","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm_Run2 = new TH1D("h_w_OS_norm_Run2","; #eta_{OS}",bins,0,0.5);
     TH1D* h_w_OS_MC_norm = new TH1D("h_w_OS_MC_norm","; #eta_{OS}",bins,0,0.5);
     TH1D* h_w_SS_norm = new TH1D("h_w_SS_norm","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm_Run1 = new TH1D("h_w_SS_norm_Run1","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm_Run2 = new TH1D("h_w_SS_norm_Run2","; #eta_{SS}",bins,0,0.5);
     TH1D* h_w_SS_MC_norm = new TH1D("h_w_SS_MC_norm","; #eta_{SS}",bins,0,0.5);
     
     TH1D* h_q_OS_norm = new TH1D("h_q_OS_norm","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm_Run1 = new TH1D("h_q_OS_norm_Run1","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm_Run2 = new TH1D("h_q_OS_norm_Run2","; q_{OS}",3,-1.5,1.5);
     TH1D* h_q_OS_MC_norm = new TH1D("h_q_OS_MC_norm","; q_{OS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm = new TH1D("h_q_SS_norm","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm_Run1 = new TH1D("h_q_SS_norm_Run1","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm_Run2 = new TH1D("h_q_SS_norm_Run2","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_MC_norm = new TH1D("h_q_SS_MC_norm","; q_{SS}",3,-1.5,1.5);
     
     TH1D* h_t_norm = new TH1D("h_t_norm",";t (ps);Events (norm.) ",bins,0,15);
+    TH1D* h_t_norm_Run1 = new TH1D("h_t_norm_Run1",";t (ps);Events (norm.) ",bins,0,15);
+    TH1D* h_t_norm_Run2 = new TH1D("h_t_norm_Run2",";t (ps);Events (norm.) ",bins,0,15);
     TH1D* h_dt_norm = new TH1D("h_dt_norm",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
+    TH1D* h_dt_norm_Run1 = new TH1D("h_dt_norm_Run1",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
+    TH1D* h_dt_norm_Run2 = new TH1D("h_dt_norm_Run2",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
     TH1D* h_dt_MC_norm = new TH1D("h_dt_MC_norm",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-
+    
     double eff_OS = 0; 
     double eff_SS = 0;
     double eff_OS_MC = 0; 
@@ -1190,18 +1206,17 @@ void produceMarginalPdfs(){
     double eff_SS_MC_norm = 0;
     
     double sumw = 0;
-
+    
     ///loop over data events
     for(int i=0; i< tree->GetEntries(); i++)
-    {	
+    {    
         //if (0ul == (i % 1000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
         tree->GetEntry(i);        
-        //if(year > 13) continue;
         
         h_dt->Fill(dt,sw);
         h_q_OS->Fill((double)q_OS,sw);
         h_q_SS->Fill((double)q_SS,sw);
-
+        
         if(q_OS != 0) {
             h_w_OS->Fill(w_OS,sw);
             eff_OS += sw;
@@ -1218,32 +1233,49 @@ void produceMarginalPdfs(){
     
     sumw = 0;
     for(int i=0; i< tree_norm->GetEntries(); i++)
-    {	
+    {    
         tree_norm->GetEntry(i);
-        //if(year > 13) continue;
+        if(year < min_year || year > max_year) continue;
         
         h_t_norm->Fill(t,sw);
         h_dt_norm->Fill(dt,sw);
         h_q_OS_norm->Fill((double)q_OS,sw);
         h_q_SS_norm->Fill((double)q_SS,sw);
         
+        if(run==1){
+            h_t_norm_Run1->Fill(t,sw);
+            h_dt_norm_Run1->Fill(dt,sw);
+            h_q_OS_norm_Run1->Fill((double)q_OS,sw);
+            h_q_SS_norm_Run1->Fill((double)q_SS,sw);
+        }
+        else if(run==2){
+            h_t_norm_Run2->Fill(t,sw);
+            h_dt_norm_Run2->Fill(dt,sw);
+            h_q_OS_norm_Run2->Fill((double)q_OS,sw);
+            h_q_SS_norm_Run2->Fill((double)q_SS,sw);
+        }
+        
         if(q_OS != 0){
             h_w_OS_norm->Fill(w_OS,sw);
+            if(run==1)h_w_OS_norm_Run1->Fill(w_OS,sw);
+            if(run==2)h_w_OS_norm_Run2->Fill(w_OS,sw);
             eff_OS_norm += sw;
         }
         if(q_SS != 0){
             h_w_SS_norm->Fill(w_SS,sw);
+            if(run==1)h_w_SS_norm->Fill(w_SS,sw);
+            if(run==2)h_w_SS_norm->Fill(w_SS,sw);
             eff_SS_norm += sw;
-            }
+        }
         sumw += sw;
     }
     
     eff_OS_norm /= sumw;    
     eff_SS_norm /= sumw;
-
+    
     ///loop over MC events
     for(int i=0; i< treeMC->GetEntries(); i++)
-    {	
+    {    
         treeMC->GetEntry(i);
         
         h_dt_MC->Fill(dt_MC,sw);
@@ -1255,7 +1287,7 @@ void produceMarginalPdfs(){
     }
     
     for(int i=0; i< treeMC_norm->GetEntries(); i++)
-    {	
+    {    
         treeMC_norm->GetEntry(i);
         
         h_dt_MC_norm->Fill(dt_MC,sw);
@@ -1268,7 +1300,7 @@ void produceMarginalPdfs(){
     
     ///Plot it
     TCanvas* c= new TCanvas();
-
+    
     h_w_OS->SetMinimum(0);    
     h_w_OS->SetLineColor(kBlack);
     h_w_OS->DrawNormalized("e",1);
@@ -1294,13 +1326,13 @@ void produceMarginalPdfs(){
     ss1 << std::fixed << std::setprecision(3) << h_w_OS->GetMean() ;
     leg_average += ss1.str();    
     leg->AddEntry((TObject*)0, leg_average, "");
-
+    
     stringstream ss2 ;
     TString leg_eff = "#epsilon_{OS} = ";
     ss2 << std::fixed << std::setprecision(3) << eff_OS ;
     leg_eff += ss2.str();    
     leg->AddEntry((TObject*)0, leg_eff, "");
-
+    
     leg->AddEntry(h_w_OS_norm,"B_{s} #rightarrow D_{s}#pi#pi#pi  Data","LEP");
     
     stringstream ss ;
@@ -1313,7 +1345,7 @@ void produceMarginalPdfs(){
     //leg->Draw(); 
     c->Print(prefix+"w_OS.eps");
     if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_OS.pdf");
-
+    
     h_w_SS->SetMinimum(0);    
     h_w_SS->SetLineColor(kBlack);
     h_w_SS->DrawNormalized("e",1);
@@ -1322,7 +1354,7 @@ void produceMarginalPdfs(){
     h_w_SS_norm->DrawNormalized("esame",1);
     c->Print(prefix+"w_SS.eps");
     if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_SS.pdf");
-
+    
     h_w_OS_MC->SetMinimum(0);    
     h_w_OS_MC->SetLineColor(kBlack);
     h_w_OS_MC->DrawNormalized("e",1);
@@ -1331,7 +1363,7 @@ void produceMarginalPdfs(){
     h_w_OS_MC_norm->DrawNormalized("esame",1);
     c->Print(prefix+"w_OS_MC.eps");
     if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_OS_MC.pdf");
-
+    
     h_w_SS_MC->SetMinimum(0);    
     h_w_SS_MC->SetLineColor(kBlack);
     h_w_SS_MC->DrawNormalized("e",1);
@@ -1340,7 +1372,7 @@ void produceMarginalPdfs(){
     h_w_SS_MC_norm->DrawNormalized("esame",1);
     c->Print(prefix+"w_SS_MC.eps");
     if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_SS_MC.pdf");
-
+    
     h_q_OS->SetMinimum(0);    
     h_q_OS->SetLineColor(kBlack);
     h_q_OS->DrawNormalized("e",1);
@@ -1349,7 +1381,7 @@ void produceMarginalPdfs(){
     h_q_OS_norm->DrawNormalized("esame",1);
     c->Print(prefix+"q_OS.eps");
     if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/qOS.pdf");
-
+    
     h_q_SS->SetMinimum(0);    
     h_q_SS->SetLineColor(kBlack);
     h_q_SS->DrawNormalized("e",1);
@@ -1367,7 +1399,7 @@ void produceMarginalPdfs(){
     h_q_OS_MC_norm->DrawNormalized("esame",1);
     c->Print(prefix+"q_OS_MC.eps");
     if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/q_OS_MC.pdf");
-
+    
     h_q_SS_MC->SetMinimum(0);    
     h_q_SS_MC->SetLineColor(kBlack);
     h_q_SS_MC->DrawNormalized("e",1);
@@ -1376,7 +1408,7 @@ void produceMarginalPdfs(){
     h_q_SS_MC_norm->DrawNormalized("esame",1);
     c->Print(prefix+"q_SS_MC.eps");
     if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/q_SS_MC.pdf");
-
+    
     h_dt->SetMinimum(0);    
     h_dt->SetLineColor(kBlack);
     h_dt->DrawNormalized("e",1);
@@ -1400,9 +1432,24 @@ void produceMarginalPdfs(){
     h_w_OS_norm->Write();
     h_q_SS_norm->Write();
     h_w_SS_norm->Write();
+    
+    h_t_norm_Run1->Write();
+    h_dt_norm_Run1->Write();
+    h_q_OS_norm_Run1->Write();
+    h_w_OS_norm_Run1->Write();
+    h_q_SS_norm_Run1->Write();
+    h_w_SS_norm_Run1->Write();
+    
+    h_t_norm_Run2->Write();
+    h_dt_norm_Run2->Write();
+    h_q_OS_norm_Run2->Write();
+    h_w_OS_norm_Run2->Write();
+    h_q_SS_norm_Run2->Write();
+    h_w_SS_norm_Run2->Write();
+    
     out->Write();
-
 }
+
 
 
 int main(int argc, char** argv){

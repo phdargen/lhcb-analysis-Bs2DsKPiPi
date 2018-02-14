@@ -46,43 +46,43 @@ class TimePdfMaster
  protected:
     
     // Fit parameters
-    MINT::FitParameter _tau;
-    MINT::FitParameter _dGamma;
-    MINT::FitParameter _dm;
+    const MINT::FitParameter& _tau;
+    const MINT::FitParameter& _dGamma;
+    const MINT::FitParameter& _dm;
     
-    MINT::FitParameter _offset_sigma_dt;    
-    MINT::FitParameter _scale_mean_dt;
-    MINT::FitParameter _scale_sigma_dt;
+    const MINT::FitParameter& _offset_sigma_dt;    
+    const MINT::FitParameter& _scale_mean_dt;
+    const MINT::FitParameter& _scale_sigma_dt;
     
-    MINT::FitParameter _c0;
-    MINT::FitParameter _c1;
-    MINT::FitParameter _c2;
-    MINT::FitParameter _c3;
-    MINT::FitParameter _c4;
-    MINT::FitParameter _c5;
-    MINT::FitParameter _c6;
-    MINT::FitParameter _c7;
-    MINT::FitParameter _c8;
-    MINT::FitParameter _c9;
+    const MINT::FitParameter& _c0;
+    const MINT::FitParameter& _c1;
+    const MINT::FitParameter& _c2;
+    const MINT::FitParameter& _c3;
+    const MINT::FitParameter& _c4;
+    const MINT::FitParameter& _c5;
+    const MINT::FitParameter& _c6;
+    const MINT::FitParameter& _c7;
+    const MINT::FitParameter& _c8;
+    const MINT::FitParameter& _c9;
     
-    MINT::FitParameter _p0_os;
-    MINT::FitParameter _p1_os;
-    MINT::FitParameter _delta_p0_os;
-    MINT::FitParameter _delta_p1_os;
-    MINT::FitParameter _avg_eta_os;
-    MINT::FitParameter _tageff_os;
-    MINT::FitParameter _tageff_asym_os;
+    const MINT::FitParameter& _p0_os;
+    const MINT::FitParameter& _p1_os;
+    const MINT::FitParameter& _delta_p0_os;
+    const MINT::FitParameter& _delta_p1_os;
+    const MINT::FitParameter& _avg_eta_os;
+    const MINT::FitParameter& _tageff_os;
+    const MINT::FitParameter& _tageff_asym_os;
     
-    MINT::FitParameter _p0_ss;
-    MINT::FitParameter _p1_ss;
-    MINT::FitParameter _delta_p0_ss;
-    MINT::FitParameter _delta_p1_ss;
-    MINT::FitParameter _avg_eta_ss;
-    MINT::FitParameter _tageff_ss;
-    MINT::FitParameter _tageff_asym_ss;
+    const MINT::FitParameter& _p0_ss;
+    const MINT::FitParameter& _p1_ss;
+    const MINT::FitParameter& _delta_p0_ss;
+    const MINT::FitParameter& _delta_p1_ss;
+    const MINT::FitParameter& _avg_eta_ss;
+    const MINT::FitParameter& _tageff_ss;
+    const MINT::FitParameter& _tageff_asym_ss;
     
-    MINT::FitParameter _production_asym;
-    MINT::FitParameter _detection_asym;
+    const MINT::FitParameter& _production_asym;
+    const MINT::FitParameter& _detection_asym;
 
     /// Cast of MINT parameters to B2DX parameters
     RooRealVar* _r_t;
@@ -159,6 +159,8 @@ class TimePdfMaster
     TimePdfIntegrator* _sin_term;
     
     // Marginal pdfs
+    string _marginalPdfsPrefix;
+    
     TH1D* _h_dt;
     RooDataHist* _r_h_dt;
     RooAbsPdf* _pdf_sigma_t;
@@ -174,49 +176,64 @@ class TimePdfMaster
     // Limits
     NamedParameter<double> _min_TAU;
     NamedParameter<double> _max_TAU;
+    NamedParameter<double> _min_TAUERR;
+    NamedParameter<double> _max_TAUERR;
 
  public:
-  TimePdfMaster(): 
-        _tau("tau",2,1.509,0.1),
-        _dGamma("dGamma",2,0.09,0.1),
-        _dm("dm",2,17.757,0.1),
-        _scale_mean_dt("scale_mean_dt",1,1,0.1),
-        _offset_sigma_dt("offset_sigma_dt",1,0.,0.1),
-        _scale_sigma_dt("scale_sigma_dt",1,1.2,0.1),
-        _c0("c0",1,1,0.1),
-        _c1("c1",1,1,0.1),
-        _c2("c2",1,1,0.1),
-        _c3("c3",1,1,0.1),
-        _c4("c4",1,1,0.1),
-        _c5("c5",1,1,0.1),
-        _c6("c6",1,1,0.1),
-        _c7("c7",1,1,0.1),
-        _c8("c8",1,1,0.1),
-        _c9("c9",1,1,0.1),
-        _p0_os("p0_os",2,0.,0.),
-        _p1_os("p1_os",2,0.,0.),
-        _delta_p0_os("delta_p0_os",1,0.,0.),
-        _delta_p1_os("delta_p1_os",1,0.,0.),
-        _avg_eta_os("avg_eta_os",2,0.,0.),
-        _tageff_os("tageff_os",2,0.,0.),
-        _tageff_asym_os("tageff_asym_os",1,0.,0.),
-        _p0_ss("p0_ss",2,0.,0.),
-        _p1_ss("p1_ss",2,0.,0.),
-        _delta_p0_ss("delta_p0_ss",1,0.,0.),
-        _delta_p1_ss("delta_p1_ss",1,0.,0.),
-        _avg_eta_ss("avg_eta_ss",2,0.,0.),
-        _tageff_ss("tageff_ss",2,0.,0.),
-        _tageff_asym_ss("tageff_asym_ss",1,0.,0.),
-        _production_asym("production_asym",1,0.,0.),
-        _detection_asym("detection_asym",1,0.,0.),
+    TimePdfMaster(const MINT::FitParameter& tau, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
+                  ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt
+                  ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
+                  ,const MINT::FitParameter& c3, const MINT::FitParameter& c4, const MINT::FitParameter& c5
+                  ,const MINT::FitParameter& c6, const MINT::FitParameter& c7, const MINT::FitParameter& c8
+                  ,const MINT::FitParameter& c9,
+                  const MINT::FitParameter& p0_os, const MINT::FitParameter& p1_os, const MINT::FitParameter& delta_p0_os, const MINT::FitParameter& delta_p1_os, 
+                  const MINT::FitParameter& avg_eta_os, const MINT::FitParameter& tageff_os, const MINT::FitParameter& tageff_asym_os, 
+                  const MINT::FitParameter& p0_ss, const MINT::FitParameter& p1_ss, const MINT::FitParameter& delta_p0_ss, const MINT::FitParameter& delta_p1_ss, 
+                  const MINT::FitParameter& avg_eta_ss, const MINT::FitParameter& tageff_ss, const MINT::FitParameter& tageff_asym_ss, 
+                  const MINT::FitParameter& production_asym, const MINT::FitParameter& detection_asym, string marginalPdfsPrefix ): 
+        _tau(tau),
+        _dGamma(dGamma),
+        _dm(dm),
+        _offset_sigma_dt(offset_sigma_dt),    
+        _scale_mean_dt(scale_mean_dt),
+        _scale_sigma_dt(scale_sigma_dt),
+        _c0(c0),
+        _c1(c1),
+        _c2(c2),
+        _c3(c3),
+        _c4(c4),
+        _c5(c5),
+        _c6(c6),
+        _c7(c7),
+        _c8(c8),
+        _c9(c9),
+        _p0_os(p0_os),
+        _p1_os(p1_os),
+        _delta_p0_os(delta_p0_os),
+        _delta_p1_os(delta_p1_os),
+        _avg_eta_os(avg_eta_os),
+        _tageff_os(tageff_os),
+        _tageff_asym_os(tageff_asym_os),
+        _p0_ss(p0_ss),
+        _p1_ss(p1_ss),
+        _delta_p0_ss(delta_p0_ss),
+        _delta_p1_ss(delta_p1_ss),
+        _avg_eta_ss(avg_eta_ss),
+        _tageff_ss(tageff_ss),
+        _tageff_asym_ss(tageff_asym_ss),
+        _production_asym(production_asym),
+        _detection_asym(detection_asym),
+        _marginalPdfsPrefix(marginalPdfsPrefix),
         _min_TAU("min_TAU", 0.4),
-        _max_TAU("max_TAU", 10.)
+        _max_TAU("max_TAU", 10.),
+        _min_TAUERR("min_TAUERR", 0.),
+        _max_TAUERR("max_TAUERR", 0.1)
     {
         /// Init B2DX parameters
         
         // Observables
-        _r_t = new RooRealVar("t", "time", _min_TAU, _max_TAU);
-        _r_dt = new RooRealVar("dt", "per-candidate time resolution estimate",0., 0.1);
+        _r_t = new RooRealVar("t", "t", _min_TAU, _max_TAU);
+        _r_dt = new RooRealVar("dt", "dt",_min_TAUERR,_max_TAUERR);
         _r_f = new RooCategory("qf", "qf");
         _r_f->defineType("h+", +1);
         _r_f->defineType("h-", -1);
@@ -457,15 +474,15 @@ class TimePdfMaster
         // Marginal pdfs
         TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
         
-        _h_dt = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
+        _h_dt = new TH1D( *((TH1D*) f_pdfs->Get(("h_dt_norm"+(string)_marginalPdfsPrefix).c_str())));
         _r_h_dt = new RooDataHist("r_h_dt","r_h_dt",*_r_dt,_h_dt);
         _pdf_sigma_t = (RooAbsPdf*) (new RooHistPdf("pdf_sigma_t","pdf_sigma_t",*_r_dt,*_r_h_dt));
         
-        _h_eta_OS = new TH1D( *((TH1D*) f_pdfs->Get("h_w_OS_norm")));
+        _h_eta_OS = new TH1D( *((TH1D*) f_pdfs->Get(("h_w_OS_norm"+(string)_marginalPdfsPrefix).c_str())));
         _r_h_eta_OS = new RooDataHist("r_eta_OS","r_eta_OS",*_r_eta_OS,_h_eta_OS);
         _pdf_eta_OS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_OS","pdf_eta_OS",*_r_eta_OS,*_r_h_eta_OS));
         
-        _h_eta_SS = new TH1D( *((TH1D*) f_pdfs->Get("h_w_SS_norm")));
+        _h_eta_SS = new TH1D( *((TH1D*) f_pdfs->Get(("h_w_SS_norm"+(string)_marginalPdfsPrefix).c_str())));
         _r_h_eta_SS = new RooDataHist("r_eta_SS","r_eta_SS",*_r_eta_SS,_h_eta_SS);
         _pdf_eta_SS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_SS","pdf_eta_SS",*_r_eta_SS,*_r_h_eta_SS));
         
