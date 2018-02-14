@@ -1263,8 +1263,8 @@ void produceMarginalPdfs(){
         }
         if(q_SS != 0){
             h_w_SS_norm->Fill(w_SS,sw);
-            if(run==1)h_w_SS_norm->Fill(w_SS,sw);
-            if(run==2)h_w_SS_norm->Fill(w_SS,sw);
+            if(run==1)h_w_SS_norm_Run1->Fill(w_SS,sw);
+            if(run==2)h_w_SS_norm_Run2->Fill(w_SS,sw);
             eff_SS_norm += sw;
         }
         sumw += sw;

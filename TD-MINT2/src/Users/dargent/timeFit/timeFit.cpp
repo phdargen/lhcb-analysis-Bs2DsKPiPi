@@ -597,8 +597,8 @@ void fullTimeFit(){
     NamedParameter<int>  nBinsAsym("nBinsAsym", 10);
 
     NamedParameter<int>  doSimFit("doSimFit", 0);
-    NamedParameter<double> min_year("min_year", 11);
-    NamedParameter<double> max_year("max_year", 16);
+    NamedParameter<double> min_year("min_year", 10);
+    NamedParameter<double> max_year("max_year", 20);
 
     /// Common fit parameters
     FitParameter  r("r",1,0.,0.1);
@@ -880,8 +880,12 @@ void fullTimeFit(){
     Neg2LL neg2LL_Run2_t0(t_pdf_Run2_t0, eventList_Run2_t0);    
     Neg2LL neg2LL_Run2_t1(t_pdf_Run2_t1, eventList_Run2_t1);    
 
-    Neg2LLSum neg2LL_sim(&neg2LL_Run1_t0,&neg2LL_Run1_t1,&neg2LL_Run2_t0,&neg2LL_Run2_t1);
-    
+    Neg2LLSum neg2LL_sim;
+    if(eventList_Run1_t0.size()>0)neg2LL_sim.add(&neg2LL_Run1_t0);
+    if(eventList_Run1_t1.size()>0)neg2LL_sim.add(&neg2LL_Run1_t1);
+    if(eventList_Run2_t0.size()>0)neg2LL_sim.add(&neg2LL_Run2_t0);
+    if(eventList_Run2_t1.size()>0)neg2LL_sim.add(&neg2LL_Run2_t1);
+
     neg2LL.getVal();    
     Minimiser mini;
     if(doSimFit)mini.attachFunction(&neg2LL_sim);
@@ -965,9 +969,9 @@ void fullTimeFit(){
         //int trigger_evt = eventList[i].getValueFromVector(8);   
         
         if(run_evt==1 && trigger == 0)N_Run1_t0 += eventList[i].getWeight();
-        else if(run_evt==1 && trigger == 1)N_Run1_t0 += eventList[i].getWeight();
-        else if(run_evt==2 && trigger == 0)N_Run1_t0 += eventList[i].getWeight();
-        else if(run_evt==2 && trigger == 1)N_Run1_t0 += eventList[i].getWeight();
+        else if(run_evt==1 && trigger == 1)N_Run1_t1 += eventList[i].getWeight();
+        else if(run_evt==2 && trigger == 0)N_Run2_t0 += eventList[i].getWeight();
+        else if(run_evt==2 && trigger == 1)N_Run2_t1 += eventList[i].getWeight();
 
         std::pair<double, double> calibrated_mistag_os;
         std::pair<double, double> calibrated_mistag_ss;
@@ -1176,6 +1180,7 @@ void fullTimeFit(){
     gen_dt->fitTo(*r_h_dt,Save(kTRUE),SumW2Error(kTRUE));
     
     // mistag OS
+    double eff_tag_OS = 0.3852;
     TH1D* h_w_OS_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_w_OS_norm")));
     RooDataHist* r_h_eta_OS = new RooDataHist("r_eta_OS","r_eta_OS",*r_eta_OS,h_w_OS_norm);
     RooRealVar mean1_eta_OS("mean1_eta_OS","mean1_eta_OS", 0.02,0.,1.0);
@@ -1190,6 +1195,7 @@ void fullTimeFit(){
     gen_eta_OS->fitTo(*r_h_eta_OS,Save(kTRUE),SumW2Error(kTRUE));
     
     // mistag SS
+    double eff_tag_SS = 0.6903;
     TH1D* h_w_SS_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_w_SS_norm")));
     RooDataHist* r_h_eta_SS = new RooDataHist("r_eta_SS","r_eta_SS",*r_eta_SS,h_w_SS_norm);
     RooRealVar mean1_eta_SS("mean1_eta_SS","mean1_eta_SS", 0.02,0.,.6);
@@ -1266,8 +1272,8 @@ void fullTimeFit(){
         
         double q_rand = ranLux.Uniform();
         int q_OS_MC = 0;
-        if (q_rand < tageff_os/2.  ) q_OS_MC = -1;
-        if (q_rand > (1.-tageff_os/2.) ) q_OS_MC = 1;
+        if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
+        if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
         
         double eta_OS_MC = 0;
         if(q_OS_MC == 0)eta_OS_MC = 0.5;
@@ -1290,8 +1296,8 @@ void fullTimeFit(){
 
         q_rand = ranLux.Uniform();
         int q_SS_MC = 0;
-        if (q_rand < tageff_ss/2.  ) q_SS_MC = -1;
-        if (q_rand > (1.-tageff_ss/2.) ) q_SS_MC = 1;
+        if (q_rand < eff_tag_SS/2.  ) q_SS_MC = -1;
+        if (q_rand > (1.-eff_tag_SS/2.) ) q_SS_MC = 1;
         
         double eta_SS_MC = 0;
         if(q_SS_MC == 0)eta_SS_MC = 0.5;
@@ -1350,12 +1356,13 @@ void fullTimeFit(){
         else pdfVal = t_pdf.getVal(evt);
         //const double pdfVal = t_pdf.getValForGeneration(evt);
         //const double pdfVal = t_pdf.un_normalised(evt);
+
         double weight = pdfVal;
         weight /=  //exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) 
             gen_t->getVal(RooArgSet(*r_t))
             * gen_dt->getVal(RooArgSet(*r_dt)) 
-            *  (abs(q_OS_MC)/2. * tageff_os + ( 1. - abs(q_OS_MC)) * (1.-tageff_os) )
-            *  (abs(q_SS_MC)/2. * tageff_ss + ( 1. - abs(q_SS_MC)) * (1.-tageff_ss) )	;
+            *  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) )
+            *  (abs(q_SS_MC)/2. * eff_tag_SS + ( 1. - abs(q_SS_MC)) * (1.-eff_tag_SS) )	;
         if(q_OS_MC != 0) weight /= gen_eta_OS->getVal(RooArgSet(*r_eta_OS));
         if(q_SS_MC != 0) weight /= gen_eta_SS->getVal(RooArgSet(*r_eta_SS));
 
@@ -1384,8 +1391,8 @@ void fullTimeFit(){
                 }
             }
             else{
-                calibrated_mistag_os = t_pdf.getCalibratedMistag_OS(eventList[i]);
-                calibrated_mistag_ss = t_pdf.getCalibratedMistag_SS(eventList[i]);        
+                calibrated_mistag_os = t_pdf.getCalibratedMistag_OS(evt);
+                calibrated_mistag_ss = t_pdf.getCalibratedMistag_SS(evt);        
             }
             
             double p = ( (1.-q1)/2. + q1 * (1.- calibrated_mistag_os.first )) * ( (1.-q2)/2. + q2 * (1.- calibrated_mistag_ss.first ));
@@ -1966,8 +1973,8 @@ void produceMarginalPdfs(){
         }
         if(q_SS != 0){
             h_w_SS_norm->Fill(w_SS,sw);
-            if(run==1)h_w_SS_norm->Fill(w_SS,sw);
-            if(run==2)h_w_SS_norm->Fill(w_SS,sw);
+            if(run==1)h_w_SS_norm_Run1->Fill(w_SS,sw);
+            if(run==2)h_w_SS_norm_Run2->Fill(w_SS,sw);
             eff_SS_norm += sw;
             }
         sumw += sw;
