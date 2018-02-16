@@ -249,7 +249,7 @@ public:
         return _timePdfMaster->getCalibratedMistag_SS(evt);
     }
 
-    double getCalibratedResolution(double& dt){
+    double getCalibratedResolution(double dt){
         return _timePdfMaster->getCalibratedResolution(dt);
     }
     
@@ -484,7 +484,7 @@ public:
         return _timePdfMaster->getCalibratedMistag_SS(evt);
     }
 
-    double getCalibratedResolution(double& dt){
+    double getCalibratedResolution(double dt){
         return _timePdfMaster->getCalibratedResolution(dt);
     }
       
@@ -581,6 +581,7 @@ void fullTimeFit(){
     
     NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
     DalitzEventPattern pat(EventPattern.getVector());
+    DalitzEventPattern pat_CP = pat.makeCPConjugate();
 
     NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
     NamedParameter<string> channel("channel", (std::string) "norm", (char*) 0);
@@ -597,6 +598,8 @@ void fullTimeFit(){
     NamedParameter<int>  nBinsAsym("nBinsAsym", 10);
 
     NamedParameter<int>  doSimFit("doSimFit", 0);
+    NamedParameter<int>  doSimFitInBins("doSimFitInBins", 0);
+
     NamedParameter<double> min_year("min_year", 10);
     NamedParameter<double> max_year("max_year", 20);
 
@@ -611,6 +614,24 @@ void fullTimeFit(){
     FitParameter  D_bar("D_bar",1,0.,0.1);
     FitParameter  S("S",1,0.,0.1);
     FitParameter  S_bar("S_bar",1,0.,0.1);
+    
+    FitParameter  C_1("C_1",1,0.,0.1);
+    FitParameter  D_1("D_1",1,0.,0.1);
+    FitParameter  D_bar_1("D_bar_1",1,0.,0.1);
+    FitParameter  S_1("S_1",1,0.,0.1);
+    FitParameter  S_bar_1("S_bar_1",1,0.,0.1);
+    
+    FitParameter  C_2("C_2",1,0.,0.1);
+    FitParameter  D_2("D_2",1,0.,0.1);
+    FitParameter  D_bar_2("D_bar_2",1,0.,0.1);
+    FitParameter  S_2("S_2",1,0.,0.1);
+    FitParameter  S_bar_2("S_bar_2",1,0.,0.1);
+    
+    FitParameter  C_3("C_3",1,0.,0.1);
+    FitParameter  D_3("D_3",1,0.,0.1);
+    FitParameter  D_bar_3("D_bar_3",1,0.,0.1);
+    FitParameter  S_3("S_3",1,0.,0.1);
+    FitParameter  S_bar_3("S_bar_3",1,0.,0.1);
     
     FitParameter  tau("tau",2,1.509,0.1);
     FitParameter  dGamma("dGamma",2,0.09,0.1);
@@ -745,7 +766,7 @@ void fullTimeFit(){
                       avg_eta_ss, tageff_ss, tageff_asym_ss, 
                       production_asym, detection_asym, "" );
 
-    // Simultaneous pdfs
+    /// Simultaneous pdfs
     FullTimePdf t_pdf_Run1_t0(C, D, D_bar, S, S_bar, k,
                       tau, dGamma, dm
                       ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
@@ -790,6 +811,138 @@ void fullTimeFit(){
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
                               production_asym_Run2, detection_asym_Run2, "_Run2" );
     
+    //phasespace bins
+    FullTimePdf t_pdf_Run1_t0_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
+                      tau, dGamma, dm
+                      ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                      ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
+                      ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
+                      p0_os, delta_p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
+                      avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
+                      delta_p0_ss_Run1, delta_p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
+                      avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
+                      production_asym_Run1, detection_asym_Run1, "_Run1" );
+    
+    FullTimePdf t_pdf_Run1_t1_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
+                              tau, dGamma, dm
+                              ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                              ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
+                              ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
+                              p0_os, delta_p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
+                              avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
+                              delta_p0_ss_Run1, delta_p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
+                              avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
+                              production_asym_Run1, detection_asym_Run1, "_Run1" );
+    
+    FullTimePdf t_pdf_Run2_t0_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
+                              tau, dGamma, dm
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
+                              ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
+                              p0_os, delta_p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              delta_p0_ss_Run2, delta_p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "_Run2" );
+    
+    FullTimePdf t_pdf_Run2_t1_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
+                              tau, dGamma, dm
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
+                              ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
+                              p0_os, delta_p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              delta_p0_ss_Run2, delta_p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "_Run2" );
+    
+    FullTimePdf t_pdf_Run1_t0_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
+                      tau, dGamma, dm
+                      ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                      ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
+                      ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
+                      p0_os, delta_p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
+                      avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
+                      delta_p0_ss_Run1, delta_p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
+                      avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
+                      production_asym_Run1, detection_asym_Run1, "_Run1" );
+    
+    FullTimePdf t_pdf_Run1_t1_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
+                              tau, dGamma, dm
+                              ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                              ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
+                              ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
+                              p0_os, delta_p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
+                              avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
+                              delta_p0_ss_Run1, delta_p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
+                              avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
+                              production_asym_Run1, detection_asym_Run1, "_Run1" );
+    
+    FullTimePdf t_pdf_Run2_t0_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
+                              tau, dGamma, dm
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
+                              ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
+                              p0_os, delta_p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              delta_p0_ss_Run2, delta_p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "_Run2" );
+    
+    FullTimePdf t_pdf_Run2_t1_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
+                              tau, dGamma, dm
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
+                              ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
+                              p0_os, delta_p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              delta_p0_ss_Run2, delta_p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "_Run2" );
+    
+    FullTimePdf t_pdf_Run1_t0_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
+                      tau, dGamma, dm
+                      ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                      ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
+                      ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
+                      p0_os, delta_p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
+                      avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
+                      delta_p0_ss_Run1, delta_p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
+                      avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
+                      production_asym_Run1, detection_asym_Run1, "_Run1" );
+    
+    FullTimePdf t_pdf_Run1_t1_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
+                              tau, dGamma, dm
+                              ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                              ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
+                              ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
+                              p0_os, delta_p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
+                              avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
+                              delta_p0_ss_Run1, delta_p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
+                              avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
+                              production_asym_Run1, detection_asym_Run1, "_Run1" );
+    
+    FullTimePdf t_pdf_Run2_t0_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
+                              tau, dGamma, dm
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
+                              ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
+                              p0_os, delta_p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              delta_p0_ss_Run2, delta_p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "_Run2" );
+    
+    FullTimePdf t_pdf_Run2_t1_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
+                              tau, dGamma, dm
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
+                              ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
+                              p0_os, delta_p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              delta_p0_ss_Run2, delta_p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "_Run2" );
     
     /// Load data
     double t,dt;
@@ -800,6 +953,10 @@ void fullTimeFit(){
     Float_t eta_SS;
     double sw;
     int year,run,Ds_finalState,trigger;
+    double K[4];
+    double pip[4];
+    double pim[4];
+    double Ds_Kp[4],Ds_Km[4],Ds_pim[4];
     
     TChain* tree_norm=new TChain("DecayTree");
     tree_norm->Add(((string)InputDir+"Data/"+(string)channel+".root").c_str());
@@ -814,6 +971,7 @@ void fullTimeFit(){
     tree_norm->SetBranchStatus("weight",1);
     tree_norm->SetBranchStatus("TriggerCat",1);
     tree_norm->SetBranchStatus("run",1);
+    tree_norm->SetBranchStatus("BsDTF_*P*",1);
 
     tree_norm->SetBranchAddress("Bs_DTF_TAU",&t);
     tree_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt);
@@ -827,13 +985,46 @@ void fullTimeFit(){
     tree_norm->SetBranchAddress("run",&run);
     tree_norm->SetBranchAddress("Ds_finalState",&Ds_finalState);
     tree_norm->SetBranchAddress("TriggerCat",&trigger);
+    tree_norm->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
+    tree_norm->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
+    tree_norm->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
+    tree_norm->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
+    tree_norm->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
+    tree_norm->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
+    tree_norm->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
+    tree_norm->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);    
+    tree_norm->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
+    tree_norm->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
+    tree_norm->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
+    tree_norm->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);    
+    tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
+    tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
+    tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
+    tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);    
+    tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
+    tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
+    tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
+    tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
+    tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
+    tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
+    tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
+    tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
 
     DalitzEventList eventList,eventList_f,eventList_f_bar;
     DalitzEventList eventList_Run1_t0,eventList_Run1_t1,eventList_Run2_t0,eventList_Run2_t1;
-    DalitzEventPattern _pat(pat);
-    DalitzEvent evt_proto(_pat);
-    evt_proto.generateThisToPhaseSpace();
 
+    DalitzEventList eventList_Run1_t0_bin1,eventList_Run1_t1_bin1,eventList_Run2_t0_bin1,eventList_Run2_t1_bin1;
+    DalitzEventList eventList_Run1_t0_bin2,eventList_Run1_t1_bin2,eventList_Run2_t0_bin2,eventList_Run2_t1_bin2;
+    DalitzEventList eventList_Run1_t0_bin3,eventList_Run1_t1_bin3,eventList_Run2_t0_bin3,eventList_Run2_t1_bin3;
+    TH2D* h_Kpi_pipi_bin1 = new TH2D("h_Kpi_pipi_bin1",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});#left[m(#pi^{+} #pi^{+})#right] (GeV/c^{2}); Events (norm.)",40,0.6,1.2,40,0.2,1.2);
+    TH2D* h_Kpi_pipi_bin2 = new TH2D("h_Kpi_pipi_bin2",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});#left[m(#pi^{+} #pi^{+})#right] (GeV/c^{2}); Events (norm.)",40,0.6,1.2,40,0.2,1.2);
+    TH2D* h_Kpi_pipi_bin3 = new TH2D("h_Kpi_pipi_bin3",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});#left[m(#pi^{+} #pi^{+})#right] (GeV/c^{2}); Events (norm.)",40,0.6,1.2,40,0.2,1.2);
+    vector<int> s234;
+    s234.push_back(2);
+    s234.push_back(3);
+    s234.push_back(4);
+
+    TRandom3 rndm;
     for(int i=0; i< tree_norm->GetEntries(); i++)
     {	
         if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << tree_norm->GetEntries() << endl;
@@ -841,10 +1032,47 @@ void fullTimeFit(){
         
         if(t < min_TAU || t > max_TAU )continue;
         if( dt < min_TAUERR || dt > max_TAUERR )continue;
-
         if(year < min_year || year > max_year) continue;
         
-        DalitzEvent evt(evt_proto);
+	double sign = 1.;
+	//if(f > 0) sign = -1.;
+	TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
+	TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
+	TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
+	TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
+	TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
+	TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
+	TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+	TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+	// array of vectors
+	vector<TLorentzVector> vectorOfvectors;
+
+	if((string)channel=="norm"){
+		TLorentzVector pip1_p, pip2_p;
+		if(rndm.Rndm()<0.5) {
+			pip1_p = K_p;
+			pip2_p = pip_p;
+		}
+		else {
+			pip1_p = pip_p;
+			pip2_p = K_p;
+		}
+		K_p = pip1_p;
+		pip_p = pip2_p;
+	}
+
+	vectorOfvectors.push_back(B_p*MeV);
+	vectorOfvectors.push_back(D_p*MeV);
+	vectorOfvectors.push_back(K_p*MeV);
+	vectorOfvectors.push_back(pip_p*MeV);
+	vectorOfvectors.push_back(pim_p*MeV);
+	DalitzEvent evt;
+
+	if(f < 0)evt = DalitzEvent(pat, vectorOfvectors);
+	else evt = DalitzEvent(pat_CP, vectorOfvectors);
+
+	//if(!(evt.phaseSpace() > 0.))continue;
+
         evt.setWeight(sw);
         evt.setValueInVector(0, t);
         evt.setValueInVector(1, dt);
@@ -870,6 +1098,30 @@ void fullTimeFit(){
         else if(run == 1 && trigger == 1) eventList_Run1_t1.Add(evt);
         else if(run == 2 && trigger == 0) eventList_Run2_t0.Add(evt);
         else if(run == 2 && trigger == 1) eventList_Run2_t1.Add(evt);
+
+	if( sqrt(evt.sij(s234)) < 1350.) {
+	//if( abs( sqrt(evt.s(2,4)) - 891.76) < 50.3) {
+		if(run == 1 && trigger == 0) eventList_Run1_t0_bin1.Add(evt);
+		else if(run == 1 && trigger == 1) eventList_Run1_t1_bin1.Add(evt);
+		else if(run == 2 && trigger == 0) eventList_Run2_t0_bin1.Add(evt);
+		else if(run == 2 && trigger == 1) eventList_Run2_t1_bin1.Add(evt);
+		h_Kpi_pipi_bin1->Fill(sqrt(evt.s(2,4))/GeV,sqrt(evt.s(3,4))/GeV);
+	}
+	/*else if ( abs( sqrt(evt.s(3,4)) - 775.26) < 147.8 ){
+		if(run == 1 && trigger == 0) eventList_Run1_t0_bin2.Add(evt);
+		else if(run == 1 && trigger == 1) eventList_Run1_t1_bin2.Add(evt);
+		else if(run == 2 && trigger == 0) eventList_Run2_t0_bin2.Add(evt);
+		else if(run == 2 && trigger == 1) eventList_Run2_t1_bin2.Add(evt);
+		h_Kpi_pipi_bin2->Fill(sqrt(evt.s(2,4))/GeV,sqrt(evt.s(3,4))/GeV);
+	}*/ 
+	else {
+		if(run == 1 && trigger == 0) eventList_Run1_t0_bin3.Add(evt);
+		else if(run == 1 && trigger == 1) eventList_Run1_t1_bin3.Add(evt);
+		else if(run == 2 && trigger == 0) eventList_Run2_t0_bin3.Add(evt);
+		else if(run == 2 && trigger == 1) eventList_Run2_t1_bin3.Add(evt);
+		h_Kpi_pipi_bin3->Fill(sqrt(evt.s(2,4))/GeV,sqrt(evt.s(3,4))/GeV);
+	}
+
     }
 
     /// Fit with MINT Pdf
@@ -880,23 +1132,65 @@ void fullTimeFit(){
     Neg2LL neg2LL_Run2_t0(t_pdf_Run2_t0, eventList_Run2_t0);    
     Neg2LL neg2LL_Run2_t1(t_pdf_Run2_t1, eventList_Run2_t1);    
 
+    Neg2LL neg2LL_Run1_t0_bin1(t_pdf_Run1_t0_bin1, eventList_Run1_t0_bin1);    
+    Neg2LL neg2LL_Run1_t1_bin1(t_pdf_Run1_t1_bin1, eventList_Run1_t1_bin1);    
+    Neg2LL neg2LL_Run2_t0_bin1(t_pdf_Run2_t0_bin1, eventList_Run2_t0_bin1);    
+    Neg2LL neg2LL_Run2_t1_bin1(t_pdf_Run2_t1_bin1, eventList_Run2_t1_bin1);    
+    //
+    Neg2LL neg2LL_Run1_t0_bin2(t_pdf_Run1_t0_bin2, eventList_Run1_t0_bin2);    
+    Neg2LL neg2LL_Run1_t1_bin2(t_pdf_Run1_t1_bin2, eventList_Run1_t1_bin2);    
+    Neg2LL neg2LL_Run2_t0_bin2(t_pdf_Run2_t0_bin2, eventList_Run2_t0_bin2);    
+    Neg2LL neg2LL_Run2_t1_bin2(t_pdf_Run2_t1_bin2, eventList_Run2_t1_bin2);    
+    //
+    Neg2LL neg2LL_Run1_t0_bin3(t_pdf_Run1_t0_bin3, eventList_Run1_t0_bin3);    
+    Neg2LL neg2LL_Run1_t1_bin3(t_pdf_Run1_t1_bin3, eventList_Run1_t1_bin3);    
+    Neg2LL neg2LL_Run2_t0_bin3(t_pdf_Run2_t0_bin3, eventList_Run2_t0_bin3);    
+    Neg2LL neg2LL_Run2_t1_bin3(t_pdf_Run2_t1_bin3, eventList_Run2_t1_bin3);    
+
     Neg2LLSum neg2LL_sim;
     if(eventList_Run1_t0.size()>0)neg2LL_sim.add(&neg2LL_Run1_t0);
     if(eventList_Run1_t1.size()>0)neg2LL_sim.add(&neg2LL_Run1_t1);
     if(eventList_Run2_t0.size()>0)neg2LL_sim.add(&neg2LL_Run2_t0);
     if(eventList_Run2_t1.size()>0)neg2LL_sim.add(&neg2LL_Run2_t1);
 
+    Neg2LLSum neg2LL_sim_bins;
+    if(eventList_Run1_t0_bin1.size()>0)neg2LL_sim_bins.add(&neg2LL_Run1_t0_bin1);
+    if(eventList_Run1_t1_bin1.size()>0)neg2LL_sim_bins.add(&neg2LL_Run1_t1_bin1);
+    if(eventList_Run2_t0_bin1.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t0_bin1);
+    if(eventList_Run2_t1_bin1.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t1_bin1);
+
+    if(eventList_Run1_t0_bin2.size()>0)neg2LL_sim_bins.add(&neg2LL_Run1_t0_bin2);
+    if(eventList_Run1_t1_bin2.size()>0)neg2LL_sim_bins.add(&neg2LL_Run1_t1_bin2);
+    if(eventList_Run2_t0_bin2.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t0_bin2);
+    if(eventList_Run2_t1_bin2.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t1_bin2);
+
+    if(eventList_Run1_t0_bin3.size()>0)neg2LL_sim_bins.add(&neg2LL_Run1_t0_bin3);
+    if(eventList_Run1_t1_bin3.size()>0)neg2LL_sim_bins.add(&neg2LL_Run1_t1_bin3);
+    if(eventList_Run2_t0_bin3.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t0_bin3);
+    if(eventList_Run2_t1_bin3.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t1_bin3);
+
     neg2LL.getVal();    
     Minimiser mini;
     if(doSimFit)mini.attachFunction(&neg2LL_sim);
+    else if(doSimFitInBins)mini.attachFunction(&neg2LL_sim_bins);
     else mini.attachFunction(&neg2LL);
     mini.doFit();
     mini.printResultVsInput();
     
     /// Plot
     TCanvas* c = new TCanvas();
-    TH1D* h_t = new TH1D("h_t",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU);
-    
+    h_Kpi_pipi_bin1->SetMarkerSize(0.1);
+    h_Kpi_pipi_bin1->SetMarkerColor(kRed);
+    h_Kpi_pipi_bin1->Draw();
+    h_Kpi_pipi_bin2->SetMarkerSize(0.1);
+    h_Kpi_pipi_bin2->SetMarkerColor(kBlue);
+    h_Kpi_pipi_bin2->Draw("same");
+    h_Kpi_pipi_bin3->SetMarkerSize(0.1);
+    h_Kpi_pipi_bin3->SetMarkerColor(kBlack);
+    h_Kpi_pipi_bin3->Draw("same");
+    c->Print(((string)OutputDir+"h_Kpi_pipi.eps").c_str());
+        
+    TH1D* h_t = new TH1D("h_t",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU);    
     TH1D* h_t_mixed = new TH1D("h_t_mixed",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU_ForMixingPlot);
     TH1D* h_t_unmixed = new TH1D("h_t_unmixed",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU_ForMixingPlot);
     TH1D* h_t_untagegged = new TH1D("h_t_untagegged",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU_ForMixingPlot);
@@ -951,10 +1245,13 @@ void fullTimeFit(){
     double N_Run2_t0 = 0;
     double N_Run2_t1 = 0;
 
+    double sigma_t_eff = 0;
+
     for (unsigned int i=0; i<eventList.size(); i++) {
  
         N += eventList[i].getWeight();
-   
+	if(!doSimFit)sigma_t_eff += t_pdf.getCalibratedResolution(eventList[i].getValueFromVector(1)) * eventList[i].getWeight();
+
         h_t->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
         h_dt->Fill(eventList[i].getValueFromVector(1),eventList[i].getWeight());
         if(eventList[i].getValueFromVector(3) != 0)h_eta_OS->Fill(eventList[i].getValueFromVector(4),eventList[i].getWeight());
@@ -966,12 +1263,12 @@ void fullTimeFit(){
         int q_eff = 0;
         double w_eff = 0.5;
         int run_evt = eventList[i].getValueFromVector(7);   
-        //int trigger_evt = eventList[i].getValueFromVector(8);   
+        int trigger_evt = eventList[i].getValueFromVector(8);   
         
-        if(run_evt==1 && trigger == 0)N_Run1_t0 += eventList[i].getWeight();
-        else if(run_evt==1 && trigger == 1)N_Run1_t1 += eventList[i].getWeight();
-        else if(run_evt==2 && trigger == 0)N_Run2_t0 += eventList[i].getWeight();
-        else if(run_evt==2 && trigger == 1)N_Run2_t1 += eventList[i].getWeight();
+        if(run_evt==1 && trigger_evt == 0)N_Run1_t0 += eventList[i].getWeight();
+        else if(run_evt==1 && trigger_evt == 1)N_Run1_t1 += eventList[i].getWeight();
+        else if(run_evt==2 && trigger_evt == 0)N_Run2_t0 += eventList[i].getWeight();
+        else if(run_evt==2 && trigger_evt == 1)N_Run2_t1 += eventList[i].getWeight();
 
         std::pair<double, double> calibrated_mistag_os;
         std::pair<double, double> calibrated_mistag_ss;
@@ -1097,6 +1394,7 @@ void fullTimeFit(){
 
     cout << "tree size = " << eventList.size() << endl;
     cout << "sumw = " << N << endl << endl;
+    cout << "sigma_t_eff = " << sigma_t_eff/N << endl << endl;
 
     cout << "N_OS = " << N_OS_all << endl;
     cout << "N_SS = " << N_SS_all << endl << endl;
@@ -1236,7 +1534,11 @@ void fullTimeFit(){
     
     f_pdfs->Close();
     
-    for(int i = 0; i < 1000000; i++){
+    DalitzEventPattern _pat(pat);
+    DalitzEvent evt_proto(_pat);
+    evt_proto.generateThisToPhaseSpace();
+
+    for(int i = 0; i < 5000000; i++){
         
         double t_MC = 0.;
         double gaus_t = ranLux.Uniform();
@@ -1348,10 +1650,10 @@ void fullTimeFit(){
         
         double pdfVal = 0;
         if(doSimFit) {
-            if(run_MC==1 && trigger == 0) pdfVal = t_pdf_Run1_t0.getVal(evt) * N_Run1_t0/N;
-            else if(run_MC==1 && trigger == 1) pdfVal = t_pdf_Run1_t1.getVal(evt) * N_Run1_t1/N;
-            else if(run_MC==2 && trigger == 0) pdfVal = t_pdf_Run2_t0.getVal(evt) * N_Run2_t0/N;
-            else if(run_MC==2 && trigger == 1) pdfVal = t_pdf_Run2_t1.getVal(evt) * N_Run2_t1/N;
+            if(run_MC==1 && trigger_MC == 0) pdfVal = t_pdf_Run1_t0.getVal(evt) * N_Run1_t0/N;
+            else if(run_MC==1 && trigger_MC == 1) pdfVal = t_pdf_Run1_t1.getVal(evt) * N_Run1_t1/N;
+            else if(run_MC==2 && trigger_MC == 0) pdfVal = t_pdf_Run2_t0.getVal(evt) * N_Run2_t0/N;
+            else if(run_MC==2 && trigger_MC == 1) pdfVal = t_pdf_Run2_t1.getVal(evt) * N_Run2_t1/N;
         }
         else pdfVal = t_pdf.getVal(evt);
         //const double pdfVal = t_pdf.getValForGeneration(evt);

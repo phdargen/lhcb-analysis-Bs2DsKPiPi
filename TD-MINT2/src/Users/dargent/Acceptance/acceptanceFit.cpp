@@ -156,7 +156,7 @@ TH1D* createBinning(){
 }
 
 
-vector< vector<double> > fitSplineAcc(string CutString){
+vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefix = "", string label = ""){
 
 	// Options
 	NamedParameter<string> BinningName("BinningName",(string)"default");
@@ -243,9 +243,9 @@ vector< vector<double> > fitSplineAcc(string CutString){
 			trm, RooBDecay::SingleSided);
 	
         // Marginal pdfs
-        TFile* f_pdfs = new TFile("../timeFit/Mistag_pdfs.root","OPEN");
+        TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
         
-        TH1D* h_dt = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
+        TH1D* h_dt = new TH1D( *((TH1D*) f_pdfs->Get(("h_dt_norm"+(string)marginalPdfsPrefix).c_str())));
         RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",Bs_TAUERR,h_dt);
         RooHistPdf* pdf_sigma_t = new RooHistPdf("pdf_sigma_t","pdf_sigma_t",Bs_TAUERR,*r_h_dt);
 
@@ -389,7 +389,19 @@ vector< vector<double> > fitSplineAcc(string CutString){
    	vector< vector<double> > myCoeffsAndErr;
     	myCoeffsAndErr.push_back(myCoeffs);
     	myCoeffsAndErr.push_back(myCoeffsErr);    
-    
+
+	ofstream resultsFile;
+	resultsFile.open(("results_" + label + "_" + (string)BinningName+ ".txt").c_str(),std::ofstream::trunc);
+	resultsFile << "knot_positions " ;
+	for(int i= 0; i< myBinning.size(); i++){
+		resultsFile << myBinning[i] << " " ;
+	}
+	resultsFile << endl;
+	for(int i= 0; i< myBinning.size(); i++){
+		resultsFile << "c" + anythingToString(i) + "_" + label << "  " << 2 << "  " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() 
+		<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
+	}
+	
 	return myCoeffsAndErr;
 }
 
@@ -758,7 +770,6 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string label){
     }
 
 }
-
 
 void compareAcceptance(){
 
@@ -1462,6 +1473,8 @@ int main(int argc, char** argv){
     NamedParameter<int> CompareAcceptance("CompareAcceptance", 1);
     NamedParameter<int> FitSplineAccRatio("FitSplineAccRatio", 1);
     
+    produceMarginalPdfs();
+
     if(CompareAcceptance)compareAcceptance();
 
     if(FitSplineAccRatio)fitSplineAccRatio(" run == 1 && TriggerCat == 0 " , "", "Run1_t0");
@@ -1469,8 +1482,11 @@ int main(int argc, char** argv){
     if(FitSplineAccRatio)fitSplineAccRatio(" run == 2 && TriggerCat == 0 " , "", "Run2_t0");
     if(FitSplineAccRatio)fitSplineAccRatio(" run == 2 && TriggerCat == 1 " , "", "Run2_t1");
 
-    //fitSplineAcc(" year == 11 || year == 12");
-                
+    fitSplineAcc(" run == 1 && TriggerCat == 0 " , "_Run1", "Run1_t0_norm");
+    fitSplineAcc(" run == 1 && TriggerCat == 1 " , "_Run1", "Run1_t1_norm");
+    fitSplineAcc(" run == 2 && TriggerCat == 0 " , "_Run2", "Run2_t0_norm");
+    fitSplineAcc(" run == 2 && TriggerCat == 1 " , "_Run2", "Run2_t1_norm");
+    
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
     cout << "==============================================" << endl;
