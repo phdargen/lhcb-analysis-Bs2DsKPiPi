@@ -780,7 +780,7 @@ public:
                                           ,_c3, _c4, _c5
                                           ,_c6, _c7, _c8
                                           ,_c9,
-                                          _p0_os, p1_os, _delta_p0_os, _delta_p1_os, 
+                                          _p0_os, _p1_os, _delta_p0_os, _delta_p1_os, 
                                           _avg_eta_os, _tageff_os, _tageff_asym_os, 
                                           _p0_ss, p1_ss, _delta_p0_ss, _delta_p1_ss, 
                                           _avg_eta_ss, _tageff_ss, _tageff_asym_ss, 
@@ -1129,8 +1129,6 @@ void ampFit(int step=0){
 
     AddAmpsToList(fas_tmp, fas_bar, "K(1460)");
     AddAmpsToList(fas_tmp, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)");
-
-
 
     FitParameter r_4_re("r_4_Re",2,0,0.01);
     FitParameter r_4_im("r_4_Im",2,0,0.01); 
@@ -1828,7 +1826,7 @@ void ampFit(int step=0){
     Minimiser mini;
     if(doSimFit)mini.attachFunction(&neg2LL_sim);
     else mini.attachFunction(&neg2LL);
-    mini.doFit();
+    //mini.doFit();
     mini.printResultVsInput();
 
     /// Calculate pulls
@@ -1982,7 +1980,22 @@ void ampFit(int step=0){
     double N_Run1_t1 = 0;
     double N_Run2_t0 = 0;
     double N_Run2_t1 = 0;
-
+    double N_OS = 0;
+    double N_SS = 0;
+    double N_OS_SS = 0;
+    double w_OS = 0;
+    double w_SS = 0;
+    double w_OS_SS = 0;
+    double D_OS = 0;
+    double D_SS = 0;
+    double D_OS_SS = 0;
+    double D_comb = 0;
+    double N_OS_all = 0;
+    double N_SS_all = 0;
+    double w_OS_all = 0;
+    double w_SS_all = 0;
+    double D_OS_all = 0;
+    double D_SS_all = 0;
     /// Loop over data
     for (int i=0; i<eventList.size(); i++) {
 
@@ -2023,26 +2036,61 @@ void ampFit(int step=0){
             calibrated_mistag_ss = pdf.getCalibratedMistag_SS(eventList[i]);        
         }
 
-        if(q1 != 0 && q2 != 0){
-            double p = ( (1.-q1)/2. + q1 * (1.- calibrated_mistag_os.first )) * ( (1.-q2)/2. + q2 * (1.- calibrated_mistag_ss.first ));
-            double p_bar = ( (1.+q1)/2. - q1 * (1.- calibrated_mistag_os.second )) * ( (1.+q2)/2. - q2 * (1.- calibrated_mistag_ss.second ));
+        double p = ( (1.-q1)/2. + q1 * (1.- calibrated_mistag_os.first )) * ( (1.-q2)/2. + q2 * (1.- calibrated_mistag_ss.first ));
+        double p_bar = ( (1.+q1)/2. - q1 * (1.- calibrated_mistag_os.second )) * ( (1.+q2)/2. - q2 * (1.- calibrated_mistag_ss.second ));
             
-            if( p/(p+p_bar) > 0.5 ){ 
-		q_eff = 1;
-		w_eff = 1-p/(p+p_bar);
-	    }
-            else if( p/(p+p_bar) < 0.5 ){
-		 q_eff = -1;
-		 w_eff = p/(p+p_bar);
+        if( p/(p+p_bar) > 0.5 ){ 
+            q_eff = 1;
+            w_eff = 1-p/(p+p_bar);
+        }
+        else if( p/(p+p_bar) < 0.5 ){
+            q_eff = -1;
+            w_eff = p/(p+p_bar);
+        }
+
+        if(q1 != 0 && q2 != 0){
+            if(q_eff != 0){
+                N_OS_SS += eventList[i].getWeight();
+                w_OS_SS += w_eff * eventList[i].getWeight();
+                D_OS_SS += pow(1.-2.*w_eff,2)* eventList[i].getWeight();
             }
         }
         else if( q1 != 0){
-            q_eff = q1;
+                //q_eff = q1;
+                N_OS += eventList[i].getWeight();
+                w_OS += w_eff * eventList[i].getWeight(); 
+                D_OS += pow(1.-2.*w_eff,2)* eventList[i].getWeight();
         }
         else if( q2 != 0){
-            q_eff = q2;
+                //q_eff = q2;
+                N_SS += eventList[i].getWeight();
+	    		w_SS += w_eff * eventList[i].getWeight(); 
+                D_SS += pow(1.-2.*w_eff,2)* eventList[i].getWeight(); 
         } 
+
+        D_comb += pow(1.-2.*w_eff,2)* eventList[i].getWeight();
         
+        if(q1 != 0) N_OS_all += eventList[i].getWeight();
+        if(q2 != 0)N_SS_all += eventList[i].getWeight();
+            
+        if(q1>0){
+			w_OS_all +=  calibrated_mistag_os.first * eventList[i].getWeight();
+			D_OS_all +=  pow(1.-2.*calibrated_mistag_os.first,2)* eventList[i].getWeight();
+        } 
+        else if(q1<0){
+			w_OS_all +=  calibrated_mistag_os.second * eventList[i].getWeight();	
+			D_OS_all +=  pow(1.-2.*calibrated_mistag_os.second,2)* eventList[i].getWeight();
+        }
+
+        if(q2>0){
+			w_SS_all +=  calibrated_mistag_ss.first * eventList[i].getWeight();
+			D_SS_all +=  pow(1.-2.*calibrated_mistag_ss.first,2)* eventList[i].getWeight();
+        } 
+        else if(q2<0){
+			w_SS_all +=  calibrated_mistag_ss.second * eventList[i].getWeight();	
+			D_SS_all +=  pow(1.-2.*calibrated_mistag_ss.second,2)* eventList[i].getWeight();
+        }
+
         if((string)channel=="signal"){
 
             if(q_eff==-1 && f_evt == 1){ 
@@ -2099,6 +2147,17 @@ void ampFit(int step=0){
 		}
 	    }
     }     
+
+    cout << "Tagging perfromance " << endl << endl;        
+    cout << "Tagger | eff_tag | <w> | e_eff " <<  endl;
+
+    cout << "OS  | " << (N_OS+N_OS_SS)/N << " | " <<  (w_OS_all)/(N_OS+N_OS_SS) << " | " << D_OS_all/N << endl;
+    cout << "SS  | " << (N_SS+N_OS_SS)/N << " | " <<  (w_SS_all)/(N_SS+N_OS_SS) << " | " << D_SS_all/N << endl << endl;
+
+    cout << "OS only  | " << N_OS/N << " | " <<  w_OS/N_OS << " | " << N_OS/N * D_OS/N_OS << endl;
+    cout << "SS only  | " << N_SS/N << " | " <<  w_SS/N_SS << " | " << N_SS/N * D_SS/N_SS << endl;
+    cout << "OS+SS    | " << N_OS_SS/N << " | " <<  w_OS_SS/N_OS_SS << " | " << N_OS_SS/N * D_OS_SS/N_OS_SS << endl;
+    cout << "Combined | " << (N_OS+N_SS+N_OS_SS)/N << " | "<<  (w_OS+w_SS+w_OS_SS)/(N_OS+N_SS+N_OS_SS) << " | " << (N_OS+N_SS+N_OS_SS)/N * D_comb/(N_OS+N_SS+N_OS_SS) << endl << endl ;
 
     /// Loop over MC
     DiskResidentEventList eventListMC_rw(pat,("dummy_"+anythingToString(step)+".root").c_str(),"RECREATE");
@@ -2248,43 +2307,34 @@ void ampFit(int step=0){
         int q_eff = 0;
         double w_eff = 0.5;
         
-        if(q1 != 0 && q2 != 0){
-            std::pair<double, double> calibrated_mistag_os;
-            std::pair<double, double> calibrated_mistag_ss;
-            if(doSimFit){
-                if(run_MC==1){
-                    calibrated_mistag_os = pdf_Run1_t0.getCalibratedMistag_OS(evt);
-                    calibrated_mistag_ss = pdf_Run1_t0.getCalibratedMistag_SS(evt);
-                }
-                else{
-                    calibrated_mistag_os = pdf_Run2_t0.getCalibratedMistag_OS(evt);
-                    calibrated_mistag_ss = pdf_Run2_t0.getCalibratedMistag_SS(evt);                
-                }
-            }
-            else{
-                calibrated_mistag_os = pdf.getCalibratedMistag_OS(evt);
-                calibrated_mistag_ss = pdf.getCalibratedMistag_SS(evt);        
-            }
-            
-            double p = ( (1.-q1)/2. + q1 * (1.- calibrated_mistag_os.first )) * ( (1.-q2)/2. + q2 * (1.- calibrated_mistag_ss.first ));
-            double p_bar = ( (1.+q1)/2. - q1 * (1.- calibrated_mistag_os.second )) * ( (1.+q2)/2. - q2 * (1.- calibrated_mistag_ss.second ));
-            
-            if( p/(p+p_bar) > 0.5 ){ 
-                q_eff = 1;
-                w_eff = 1-p/(p+p_bar);
-            }
-            else if( p/(p+p_bar) < 0.5 ){
-		 q_eff = -1;
-		 w_eff = p/(p+p_bar);
-            }
-            
-        }
-        else if( q1 != 0){
-            q_eff = q1;
-        }
-        else if( q2 != 0){
-            q_eff = q2;
-        } 
+	std::pair<double, double> calibrated_mistag_os;
+	std::pair<double, double> calibrated_mistag_ss;
+	if(doSimFit){
+		if(run_MC==1){
+			calibrated_mistag_os = pdf_Run1_t0.getCalibratedMistag_OS(evt);
+			calibrated_mistag_ss = pdf_Run1_t0.getCalibratedMistag_SS(evt);
+		}
+		else{
+			calibrated_mistag_os = pdf_Run2_t0.getCalibratedMistag_OS(evt);
+			calibrated_mistag_ss = pdf_Run2_t0.getCalibratedMistag_SS(evt);                
+		}
+	}
+	else{
+		calibrated_mistag_os = pdf.getCalibratedMistag_OS(evt);
+		calibrated_mistag_ss = pdf.getCalibratedMistag_SS(evt);        
+	}
+	
+	double p = ( (1.-q1)/2. + q1 * (1.- calibrated_mistag_os.first )) * ( (1.-q2)/2. + q2 * (1.- calibrated_mistag_ss.first ));
+	double p_bar = ( (1.+q1)/2. - q1 * (1.- calibrated_mistag_os.second )) * ( (1.+q2)/2. - q2 * (1.- calibrated_mistag_ss.second ));
+	
+	if( p/(p+p_bar) > 0.5 ){ 
+		q_eff = 1;
+		w_eff = 1-p/(p+p_bar);
+	}
+	else if( p/(p+p_bar) < 0.5 ){
+		q_eff = -1;
+		w_eff = p/(p+p_bar);
+	}
         
         if((string)channel=="signal"){
             
@@ -2491,6 +2541,9 @@ void ampFit(int step=0){
         h_t_fit_mm->DrawNormalized("histcsame",1);
         
         c->Print(((string)OutputDir+"h_t_mixed_m.eps").c_str());
+
+	cout << h_N_unmixed_p->GetEntries() << endl;
+	cout << h_N_mixed_p->GetEntries() << endl;
 
 	TH1D* h_asym_p = (TH1D*) h_N_unmixed_p->GetAsymmetry(h_N_mixed_p);	
         //h_asym_p->SetMinimum(-20);
