@@ -10,19 +10,28 @@ which are employed to suppress the residual background that is still left in the
 \label{subsec: signalmodel}
 
 \begin{figure}[h]
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Bs2Dspipipi_MC_SignalShape.pdf}
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Bs2DsKpipi_MC_SignalShape.pdf}
-\caption{Invariant mass distributions of simulated (left) $\Bs\to\Ds\pion\pion\pion$ and (right) $\Bs\to\Ds\kaon\pion\pion$ events. A fit of the sum of two Crystal Ball functions to each distribution is overlaid. The dotted lines represent the individual Crystal Ball functions.}
+\includegraphics[height=7.cm,width=0.49\textwidth]{figs/MassFit/normMC_pull.pdf}
+\includegraphics[height=7.cm,width=0.49\textwidth]{figs/MassFit/signalMC_pull.pdf}
+\caption{Invariant mass distributions of simulated (left) $\Bs\to\Ds\pion\pion\pion$ and (right) $\Bs\to\Ds\kaon\pion\pion$ events. A fit of a RooJohnsonSU function to each distribution is overlaid.}
 \label{fig: BsMassShapes}
 \end{figure}
 
+The mass distribution of $\Bs\to\Ds\kaon\pion\pion$ signals is modeled using a Johnson SU function \cite{10.2307/2332539}, which is a gaussian function with a Landau-like tail on one side,
 
-The mass distribution of $\Bs\to\Ds\kaon\pion\pion$ signals is modeled using two Crystal Ball functions, which share the same mean $\mu$, but are allowed to have different widths $\sigma_{1}$ and $\sigma_{2}$. 
-Another double Crystal Ball function is used to account for the contribution of the $\B^{0}\to\Ds\kaon\pion\pion$ decay, which is also present in the $m(\Ds\kaon\pion\pion)$ spectrum.
-The core width, as well as the tail parameters and the ratio of the two individual Crsystal Ball functions are fixed to values obtained by a fit to the invariant mass distribution of simulated events shown in Fig \ref{fig: BsMassShapes}. The second width $\sigma_{2}$ and the shared mean $\mu$ are floated in the fit to account for possible differences between the simulation and real data. \newline
+\begin{equation}
+J(m_{\Bs};\mu,\sigma,\gamma,\delta) = \frac{\delta}{\sigma 2\pi \sqrt{1+(\frac{m_{\Bs}-\mu}{\sigma})^{2}}} exp \left(-\frac{1}{2}[\gamma + \delta Argsh (\frac{m_{\Bs} - \mu}{\sigma})^{2}]\right).
+\label{eq:RooJohnsonSU}
+\end{equation}
+
+ 
+The sign of $\gamma$ in Eq. \ref{eq:RooJohnsonSU} determines whether the tail is located at lower ($\gamma > 0$) or higher ($\gamma < 0$) invariant mass values than the mean $\mu$ of the gaussian function 
+and $\delta$ describes the (a)symmetry of the fitted distribution. Higher values of $\delta$ result in a more symmetric, gaussian-like function.    
+Another Johnson SU function function is used to account for the contribution of the $\B^{0}\to\Ds\kaon\pion\pion$ decay, which is also present in the $m(\Ds\kaon\pion\pion)$ spectrum.
+The width, as well as the tail parameters are fixed to values obtained by a fit to the invariant mass distribution of simulated events shown in Fig \ref{fig: BsMassShapes}. 
+A linear scaling factor for the mean $\mu$ and width $\sigma$ is floated in the fit to account for possible differences between the simulation and real data. \newline
 The same approach is used to describe the invariant mass distribution of $\Bs\to\Ds\pion\pion\pion$ candidates. 
-A double Crystal Ball function is used to model the signal, the parameters are determined by a fit to the invariant mass of simulated $\Bs\to\Ds\pion\pion\pion$ decays, shown in Fig \ref{fig: BsMassShapes}.
-The second width and the shared mean are floated to account for differences between data and MC.
+A  Johnson SU function is used to model the signal, the parameters are determined by a fit to the invariant mass of simulated $\Bs\to\Ds\pion\pion\pion$ decays, shown in Fig \ref{fig: BsMassShapes}.
+A scale factor for the width and the mean is floated to account for differences between data and MC.
 
 \subsection{Background models for $\m(\Ds\pion\pion\pion)$} 
 \label{subsec: BkginNorm}
@@ -32,7 +41,7 @@ The following backgrounds have to be accounted for:
 
 \item Combinatorial background: This contribution arises from either a real $\Ds$, which is paired with random tracks to form the $\Bs$ candidates, or via real $X_{d}$'s, which are combined with three tracks that fake a $\Ds$ candidate to form a fake $\Bs$.   
 
-\item Partially reconstructed $\Bs\to\Ds^{*}\pion\pion\pion$ decays, with $\Ds^{*}\to\Ds\gamma$ or $\Ds^{*}\to\Ds\piz$, where the $\gamma$/$\piz$ is not reconstructed in the decay chain. 
+\item Partially reconstructed $\Bz/\Bs\to\Ds^{*}\pion\pion\pion$ decays, with $\Ds^{*}\to\Ds\gamma$ or $\Ds^{*}\to\Ds\piz$, where the $\gamma$/$\piz$ is not reconstructed in the decay chain. 
 
 \end{itemize}
 
@@ -110,7 +119,7 @@ The yield of this contribution is determined from the yield of $\Bs\to\Ds^{*}\pi
 \label{subsec: NormFit}
 
 An unbinned maximum likelihood fit is performed simultaneously to the invariant mass distribution of $\Bs\to\Ds\pion\pion\pion$ candidates. 
-As discussed in Sec. \ref{subsec: signalmodel}, the fit is given as the sum of the double Gaussian signal model, the sum of three bifurcated Gaussian functions to model the partially reconstructed $\Bs\to\Ds^{*}\pion\pion\pion$ background and an Exponential function to account for combinatorial background. The invariant mass distribution and the fit is shown in Fig. \ref{fig: BsDsKpipiFit}. 
+As discussed in Sec. \ref{subsec: signalmodel}, the fit is given as a Johnson SU signal model for the $\Bs$ and $\Bz$ signal, the sum of three bifurcated Gaussian functions to model the partially reconstructed $\Bs\to\Ds^{*}\pion\pion\pion$ background and an Exponential function to account for combinatorial background. The invariant mass distribution and the fit is shown in Fig. \ref{fig: BsDsKpipiFit}. 
 All simultaneously performed fits to the $m(\Ds\pion\pion\pion)$ distribution, ordered by the respective $\Ds$ final state, can be found in the Appendix \ref{subsec:DetailedMassfits}.   
 The obtained yields are summarized in Table \ref{table:YieldsFromMassfit}. 
 
@@ -118,7 +127,7 @@ The obtained yields are summarized in Table \ref{table:YieldsFromMassfit}.
 \subsection{Fit to $\Bs\to\Ds\kaon\pion\pion$ candidates}
 \label{subsec: SigFit}
 
-The shape of the invariant mass distribution of$\Bs\to\Ds\kaon\pion\pion$ candidates is described by the sum of two double Gaussian functions for the $\Bz$ and $\Bs$ signal, 
+The shape of the invariant mass distribution of$\Bs\to\Ds\kaon\pion\pion$ candidates is described by Johnson SU functions for the $\Bz$ and $\Bs$ signal, 
 two sums of three bifurcated Gaussians for the $\Bs$/$\Bz\to\Ds^{*}\kaon\pion\pion$ partially reconstructed background contributions and 
 two sums of double Crystal Ball functions for the single misID $\Bs\to\Ds\pion\pion\pion$ and the partially reconstructed, misidentified $\Bs\to\Ds^{*}\pion\pion\pion$ decays. 
 A simultaneous unbinned maximum likelihood fit is performed and the result is shown in Fig. \ref{fig: BsDsKpipiFit}.
@@ -136,14 +145,13 @@ Figure \ref{fig: sWeights} shows the distribution of weights across the invarian
 
 
 \begin{figure}[h]
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/norm.pdf}
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/signal.pdf}\\
-\includegraphics[width=0.49\textwidth,height=1.5cm]{figs/norm_pull.pdf}
-\includegraphics[width=0.49\textwidth,height=1.5cm]{figs/signal_pull.pdf}
+\includegraphics[height=7.cm,width=0.49\textwidth]{figs/MassFit/norm_pull.pdf}
+\includegraphics[height=7.cm,width=0.49\textwidth]{figs/MassFit/signal_pull.pdf}
 \caption{Invariant mass distribution of (left) $\Bs\to\Ds\pion\pion\pion$ and (right) $\Bs\to\Ds\kaon\pion\pion$ candidates for Run1 and Run2 data.
 The respective fit described in the text is overlaid.}
 \label{fig: BsDsKpipiFit}
 \end{figure}
+
 
 \begin{table}[h]
 \centering
@@ -152,16 +160,18 @@ fit component & yield 2011 & yield 2012 & yield 2015 & yield 2016\ \\
 \hline\hline
 $m(\Ds\kaon\pion\pion)$ &  &  &  &  \\
 \hline
-$\Bs\to\Ds\kaon\pion\pion$ & 426 $\pm$ 57 & 909 $\pm$ 71 & 319 $\pm$ 38 & 2049 $\pm$ 104 \\
-$\Bz\to\Ds\kaon\pion\pion$ & 345 $\pm$ 58 & 846 $\pm$ 81 & 292 $\pm$ 42 & 1640 $\pm$ 113 \\
-$\Bz/\Bs\to\Ds^{*}\kaon\pion\pion$ & 291 $\pm$ 3215 & 911 $\pm$ 265 & 622 $\pm$ 114 & 3617 $\pm$ 416 \\
-$\Bs\to\Ds^{(*)}\pion\pion\pion$ & 118 $\pm$ 0 & 286 $\pm$ 0 & 97 $\pm$ 0 & 580 $\pm$ 0 \\
-combinatorial & 2240 $\pm$ 427 & 4372 $\pm$ 330 & 922 $\pm$ 144 & 6723 $\pm$ 499 \\
+$\Bs\to\Ds\kaon\pion\pion$ & 392 $\pm$ 25 & 860 $\pm$ 38 & 309 $\pm$ 21 & 1984 $\pm$ 55 \\
+$\Bz\to\Ds\kaon\pion\pion$ & 276 $\pm$ 26 & 692 $\pm$ 41 & 261 $\pm$ 23 & 1385 $\pm$ 58 \\
+$\Bz/\Bs\to\Ds^{*}\kaon\pion\pion$ & 7 $\pm$ 25 & 171 $\pm$ 75 & 114 $\pm$ 25 & 893 $\pm$ 84 \\
+$\Bs\to\Ds^{(*)}\pion\pion\pion$ & 63 $\pm$ 0 & 158 $\pm$ 0 & 53 $\pm$ 0 & 314 $\pm$ 0 \\
+combinatorial & 1482 $\pm$ 53 & 2884 $\pm$ 100 & 605 $\pm$ 43 & 4261 $\pm$ 133 \\
 \hline\hline
 $m(\Ds\pion\pion\pion)$ &  &  &  &  \\
-$\Bs\to\Ds\pion\pion\pion$ & 9554 $\pm$ 204 & 22940 $\pm$ 316 & 7839 $\pm$ 185 & 45186 $\pm$ 452 \\
-$\Bs\to\Ds^{*}\pion\pion\pion$ & 11481 $\pm$ 411 & 27788 $\pm$ 714 & 9670 $\pm$ 380 & 56903 $\pm$ 1372 \\
-combinatorial & 7748 $\pm$ 430 & 17558 $\pm$ 747 & 6494 $\pm$ 397 & 42523 $\pm$ 1455 \\
+\hline
+$\Bs\to\Ds\pion\pion\pion$ & 9183 $\pm$ 105 & 22083 $\pm$ 166 & 7574 $\pm$ 95 & 43773 $\pm$ 245 \\
+$\Bz\to\Ds\pion\pion\pion$ & 289 $\pm$ 58 & 716 $\pm$ 95 & 229 $\pm$ 54 & 968 $\pm$ 147 \\
+$\Bs\to\Ds^{*}\pion\pion\pion$ & 3640 $\pm$ 130 & 9086 $\pm$ 232 & 3047 $\pm$ 110 & 17827 $\pm$ 421 \\
+combinatorial & 4991 $\pm$ 154 & 11127 $\pm$ 271 & 3728 $\pm$ 126 & 24589 $\pm$ 500 \\
 \hline
 \end{tabular}
 \caption{Summary of yields obtained from the fits to Run1 and Run2 data.}

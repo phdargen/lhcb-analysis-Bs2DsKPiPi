@@ -5,7 +5,7 @@
 "max_MM"	5700.
 "cut_BDT" 	0.3
 "numCPU"	 10
-"newTable"	0
+"newTable"	1
 "updateAnaNotePlots"  0
 "useTriggerCat"		0
 
