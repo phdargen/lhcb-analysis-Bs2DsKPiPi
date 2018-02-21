@@ -22,7 +22,8 @@ as well as the measured decay time $\tau_{measured}$, which is determined after 
 In this analysis, the difference $\Delta t = \tau_{true} - \tau_{measured}$ is obtained for each simulated $\Bs\to\Ds\kaon\pion\pion$ candidate. 
 The width of the distribution of $\Delta t$ is a direct measure of the decay time resolution. \newline 
 To analyse the relation between the per-event decay time eror $\sigma_{t}$ and the actual resolution, the simulated sample is split into 8 bins of $\sigma_{t}$. 
-A fit is then performed to the distribution of $\Delta t$ in each bin to determine the decay time resolution in that bin. 
+Each bin width is chosen using an adaptive binnning scheme which ensures that approximately equal numbers of events are found in every bin.  
+A fit is then performed to the distribution of $\Delta t$ in each of the bins to determine the decay time resolution in the respective bin. 
 After that, the correlation between the binned per-event decay time error and the measured decay time resolution is analyzed to determine the scaling function.     
 
 
@@ -32,11 +33,12 @@ The sum of two Gaussian functions is used to fit the distributions of the decay 
 One Gaussian function is relatively narrow and describes the decay time of the majority of candidates in each bin, 
 while the other, broader Gaussian function describes candidates where the measure decay time differs considerably from $\tau_{true}$. 
 Those contributions are shifted to the tails of the distribution. From the two Gaussian functions, the combined, effective width $\sigma_{eff}$ is quoted as decay time resolution in each bin. 
-Figure \ref{fig:ResoFit_24to29} shows the double Gaussian fit to the distirbution of the decay time difference for events where $24\ps$ $<$ $\sigma_{t}$ $<$ $29\ps$. All fits are shown in the Appendix xxY. \newline
+Figure \ref{fig:ResoFit_24to29} shows the double Gaussian fit to the distirbution of the decay time difference for events where $20.7\ps$ $<$ $\sigma_{t}$ $<$ $24.3\ps$. 
+All fits are shown in the Appendix \ref{subsec:DecResFits}. \newline
 
 \begin{figure}[h]
-\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/SignalMC_24to29.pdf}
-\caption{Difference of the true and measured decay time of $\Bs\to\Ds\kaon\pion\pion$ candidates from MC in the bin $24\ps$ $<$ $\sigma_{t}$ $<$ $29\ps$. A fit of the sum of two Gaussian functions is overlaid.}
+\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/Resolution/SignalMC_bin_2.pdf}
+\caption{Difference of the true and measured decay time of $\Bs\to\Ds\kaon\pion\pion$ candidates from MC in the bin $20.7\ps$ $<$ $\sigma_{t}$ $<$ $24.3\ps$. A fit of the sum of two Gaussian functions is overlaid.}
 \label{fig:ResoFit_24to29}
 \end{figure}
 
@@ -44,7 +46,7 @@ Figure \ref{fig:ResoFit_24to29} shows the double Gaussian fit to the distirbutio
 For the combination of the two separate widths $\sigma_{1}$ and $\sigma_{2}$, a method which takes the damping effect of the finite time resolution on the CP observables into account, is used.
 The effective damping of the CP amplitudes is described by the dilution $\mathcal{D}$, which can take values between 1 and 0. 
 In the case of infinite precision, there would be no damping and therefore  $\mathcal{D} = 1$ would hold, while for a resolution that is much larger than the $\Bs$ oscillation frequency, $\mathcal{D}$ would approach 0.
-For two Gaussians describing the resolution, the dilution can be defined as [REF TO $\Bs\to\Ds\kaon$ HERE]
+For two Gaussians describing the resolution, the dilution can be defined as \cite{Aaij:2017lff}
 
 \begin{equation}
 \mathcal{D} = f_{1}e^{-\sigma_{1}^{2}\dms^{2}/2} + (1 - f_{1}) e^{-\sigma_{2}^{2}\dms^{2}/2},
@@ -76,13 +78,14 @@ Figure \ref{fig:ResoFit_compared} shows the obtained values for $\sigma_{eff}$ a
 is used to parametrise this distribution. The obtained values are 
 
 \begin{equation}
-\sigma(\sigma_{t})_{mc} = (xx.xxx\pm yy.yyy) + (z.zzz \pm a.aaa) \sigma_{t}. 
+\sigma(\sigma_{t})_{mc} = 0 + (1.26 \pm a.aaa) \sigma_{t},
 \label{eq:resfitres}
 \end{equation}
 
-For comparison, the linear scaling functions found for $\sigma(\sigma_{t})$ in the $\Bs\to\Ds\kaon$ analysis [REF HERE] for data and MC are also shown in Figure \ref{fig:ResoFit_compared}.  
-We introduce a correction factor to account for possible differences between the decay time resolution found in simulation and data. 
-Motivated by the similarity between the $\Bs\to\Ds\kaon\pion\pion$ and $\Bs\to\Ds\kaon$ decay, we assume
+where $s_{0}$ is compatible with 0 in the fit and therefore is set to $s_{0} = \sigma(\sigma_{t} = 0) = 0$. 
+For comparison, the linear scaling functions found for $\sigma(\sigma_{t})$ in the $\Bs\to\Ds\kaon$ analysis \cite{Aaij:2017lff} for MC is also shown in Figure \ref{fig:ResoFit_compared}.  
+%We introduce a correction factor to account for possible differences between the decay time resolution found in simulation and data. 
+Motivated by the similarity between the $\Bs\to\Ds\kaon\pion\pion$ and $\Bs\to\Ds\kaon$ decay, we assume a comparable scaling relation for data, 
 
 \begin{equation}
 \frac{\sigma(t)_{\Ds\kaon\pion\pion,data}}{\sigma(t)_{\Ds\kaon\pion\pion,mc}} \approx  \frac{\sigma(t)_{\Ds\kaon,data}}{\sigma(t)_{\Ds\kaon,mc}}.
@@ -126,9 +129,9 @@ $\sigma_{t}$ Bin [fs] & $\sigma_{1}$ [fs] & $\sigma_{2}$ [fs] & $f_{1}$ & D & $\
 
 
 \begin{figure}[h]
-\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/ProperTimeReso_MC.pdf}
+\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/Resolution/ProperTimeReso_MC.pdf}
 \caption{Decay-time resolution of $\Bs\to\Ds\kaon\pion\pion$ candidates from MC. 
-The scaling functions found in for $\Bs\to\Ds\kaon$ (red) data and (blue) MC is also shown for comparison. The fit described in the text is overlaid.}
+The scaling functions found in $\Bs\to\Ds\kaon$ (dotted red line) MC is also shown for comparison. The fit described in the text is overlaid.}
 \label{fig:ResoFit_compared}
 \end{figure}
 
