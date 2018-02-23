@@ -27,6 +27,23 @@ A fit is then performed to the distribution of $\Delta t$ in each of the bins to
 After that, the correlation between the binned per-event decay time error and the measured decay time resolution is analyzed to determine the scaling function.     
 
 
+\subsection{Decay-time Error in Run I \& Run II}
+
+Due to the increase in center of mass energy from Run I to Run II, as well as (among others) new tuning in the patern and vertex reconstruction, 
+the distributions of the raw decay time error might no necessarily match each other between the two different runs. 
+Significant deviations can be observed in the shape and mean of those two distributions for $\Bs\to\Ds\kaon\pion\pion$ signal candidates shown in Figure \ref{fig:Bs_DTFERR_Comp}.
+
+\begin{figure}[h]
+\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/Resolution/Bs_DTFERR_runComp.pdf}
+\caption{Distribution of the decay time error for $\Bs\to\Ds\kaon\pion\pion$ signal candidates on data for (blue) Run I and (green) Run II. The signal distributions are obtained using the sWeight technique.}
+\label{fig:Bs_DTFERR_Comp}
+\end{figure}
+
+It can be observed that the decay time error distribution for signal cadidates from Run II is significantly broader and shifted to slightly hihger values.
+Due to the discrepancies between the distributions of the decay time error $\sigma_{r}$ for Run I and Run II data, the time resolution studies have to be performed seperately for both runs, 
+which leads to two different scaling functions to map $\sigma_{t} \to \sigma_{eff}$. 
+
+
 \subsection{Fits to the decay time distributions}
 
 The sum of two Gaussian functions is used to fit the distributions of the decay time difference $\Delta t$ in each $\sigma_{t}$ bin.
@@ -78,7 +95,7 @@ Figure \ref{fig:ResoFit_compared} shows the obtained values for $\sigma_{eff}$ a
 is used to parametrise this distribution. The obtained values are 
 
 \begin{equation}
-\sigma(\sigma_{t})_{mc} = 0 + (1.26 \pm a.aaa) \sigma_{t},
+\sigma(\sigma_{t})_{mc} = 0 + (1.257 \pm 0.017) \sigma_{t},
 \label{eq:resfitres}
 \end{equation}
 
@@ -103,7 +120,7 @@ where all elements of the right side of the equation are known. \newline
 
 Taking the scaling function found in our simulation, as well as input from the $\Bs\to\Ds\kaon$ analysis for $\sigma(t)_{\Ds\kaon,mc/data}$, we find
 
-\[\sigma(t)_{\Ds\kaon\pion\pion,data} = xXx \pm yYy\],
+\[\sigma(t)_{\Ds\kaon\pion\pion,data} = 10.3 fs + 1.28 \cdot t\],
 
 which is the scaling factor used for the per-event decay time error in the nominal time- and amplitude-dependent fit. 
 
