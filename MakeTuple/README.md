@@ -57,8 +57,9 @@ j.parallel_submit = True
 
 # Get ddb tags used for MC production 
 
+lhcb-proxy-init
 lb-run LHCBDIRAC gaudirun.py get_bookkeeping_info.py 
-
+lb-run LHCBDIRAC python get_bookkeeping_info.py
 
 # Get generated lifetimes for given ddb tag
 
