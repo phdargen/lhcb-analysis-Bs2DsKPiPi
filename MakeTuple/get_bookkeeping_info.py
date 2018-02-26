@@ -4,7 +4,7 @@ get productions information for eventtype
 
 
 """
-eventType = 1366007
+eventType = 13266007
 
 
 import DIRAC
