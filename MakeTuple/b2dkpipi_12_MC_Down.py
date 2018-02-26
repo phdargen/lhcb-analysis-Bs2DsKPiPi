@@ -509,13 +509,13 @@ else:
     if(year == "2012"):
 	    DaVinci().DDDBtag = "dddb-20130929-1"
     	    if (down):
-            	DaVinci().CondDBtag = "sim-20141210-1-vc-md100"
+            	DaVinci().CondDBtag = "sim-20130522-1-vc-md100"
     	    else:
-        	DaVinci().CondDBtag = "sim-20141210-1-vc-mu100" 
+        	DaVinci().CondDBtag = "sim-20130522-1-vc-mu100" 
 
     if(year == "2011"):
 	    DaVinci().DDDBtag = "dddb-20130929"
     	    if (down):
-            	DaVinci().CondDBtag = "sim-20141210-vc-md100"
+            	DaVinci().CondDBtag = "sim-20130522-vc-md100"
     	    else:
-        	DaVinci().CondDBtag = "sim-20141210-vc-mu100" 
+        	DaVinci().CondDBtag = "sim-20130522-vc-mu100" 

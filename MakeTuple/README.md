@@ -53,3 +53,13 @@ j_new.submit()
 paralles submit:
 
 j.parallel_submit = True
+
+
+# Get ddb tags used for MC production 
+
+lb-run LHCBDIRAC gaudirun.py get_bookkeeping_info.py 
+
+
+# Get generated lifetimes for given ddb tag
+
+lb-run bender/latest python getGeneratedLifetimes.py
