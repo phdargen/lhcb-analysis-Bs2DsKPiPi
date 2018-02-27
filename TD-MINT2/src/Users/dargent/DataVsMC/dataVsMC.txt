@@ -1,5 +1,5 @@
 * reweighting
-"reweight"	1
+"reweight"	0
 "nIterations"   1
 "minEventsPerBin"  60
 "maxBinsPerDim"    200

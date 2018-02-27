@@ -56,6 +56,7 @@
 #include "RooUniform.h"
 #include "RooExponential.h"
 #include "RooGaussian.h"
+#include "RooTruthModel.h"
 #ifndef __CINT__
 #include "RooGlobalFunc.h"
 #endif
@@ -121,7 +122,8 @@ protected:
     const MINT::FitParameter& _offset_sigma_dt;    
     const MINT::FitParameter& _scale_mean_dt;
     const MINT::FitParameter& _scale_sigma_dt;
-    
+    const MINT::FitParameter& _scale_sigma_2_dt;
+
     const MINT::FitParameter& _c0;
     const MINT::FitParameter& _c1;
     const MINT::FitParameter& _c2;
@@ -189,7 +191,7 @@ public:
          +  _timePdfMaster->get_cos_term_Val(evt)
          +  _timePdfMaster->get_sinh_term_Val(evt)
          +  _timePdfMaster->get_sin_term_Val(evt)
-         ) * _timePdfMaster->get_marginalPdfs_Val(evt);
+         );// * _timePdfMaster->get_marginalPdfs_Val(evt);
         
         return val;
     }
@@ -272,7 +274,7 @@ public:
     FullTimePdf(const MINT::FitParameter& C, const MINT::FitParameter& D, const MINT::FitParameter& D_bar,
                 const MINT::FitParameter& S, const MINT::FitParameter& S_bar, const MINT::FitParameter& k,
                 const MINT::FitParameter& tau, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
-                ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt
+                ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
                 ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
                 ,const MINT::FitParameter& c3, const MINT::FitParameter& c4, const MINT::FitParameter& c5
                 ,const MINT::FitParameter& c6, const MINT::FitParameter& c7, const MINT::FitParameter& c8
@@ -295,6 +297,7 @@ public:
     _offset_sigma_dt(offset_sigma_dt),    
     _scale_mean_dt(scale_mean_dt),
     _scale_sigma_dt(scale_sigma_dt),
+    _scale_sigma_2_dt(scale_sigma_2_dt),
     _c0(c0),
     _c1(c1),
     _c2(c2),
@@ -324,7 +327,7 @@ public:
     _marginalPdfsPrefix(marginalPdfsPrefix)
     {
         _timePdfMaster = new TimePdfMaster(_tau, _dGamma, _dm
-                                          ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt
+                                          ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                           ,_c0, _c1, _c2
                                           ,_c3, _c4, _c5
                                           ,_c6, _c7, _c8
@@ -355,7 +358,8 @@ protected:
     const MINT::FitParameter& _offset_sigma_dt;    
     const MINT::FitParameter& _scale_mean_dt;
     const MINT::FitParameter& _scale_sigma_dt;
-    
+    const MINT::FitParameter& _scale_sigma_2_dt;
+
     const MINT::FitParameter& _c0;
     const MINT::FitParameter& _c1;
     const MINT::FitParameter& _c2;
@@ -506,7 +510,7 @@ public:
     
     FullTimePdf_mod( const MINT::FitParameter& r, const MINT::FitParameter& delta, const MINT::FitParameter& gamma, const MINT::FitParameter& k,
                     const MINT::FitParameter& tau, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
-                    ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt
+                    ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
                     ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
                     ,const MINT::FitParameter& c3, const MINT::FitParameter& c4, const MINT::FitParameter& c5
                     ,const MINT::FitParameter& c6, const MINT::FitParameter& c7, const MINT::FitParameter& c8
@@ -527,6 +531,7 @@ public:
             _offset_sigma_dt(offset_sigma_dt),    
             _scale_mean_dt(scale_mean_dt),
             _scale_sigma_dt(scale_sigma_dt),
+            _scale_sigma_2_dt(scale_sigma_2_dt),
             _c0(c0),
             _c1(c1),
             _c2(c2),
@@ -556,7 +561,7 @@ public:
             _marginalPdfsPrefix(marginalPdfsPrefix)
     {
             _timePdfMaster = new TimePdfMaster(_tau, _dGamma, _dm
-                                                   ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt
+                                                   ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                                    ,_c0, _c1, _c2
                                                    ,_c3, _c4, _c5
                                                    ,_c6, _c7, _c8
@@ -570,13 +575,14 @@ public:
 };
 //
 
-void fullTimeFit(){
+void fullTimeFit(int step=0){
 
     /// Options
     TString prefix = "";
     TRandom3 ranLux;
     NamedParameter<int> RandomSeed("RandomSeed", 0);
-    ranLux.SetSeed((int)RandomSeed);
+    int seed = RandomSeed + step;
+    ranLux.SetSeed((int)seed);
     gRandom = &ranLux;
     
     NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
@@ -584,6 +590,7 @@ void fullTimeFit(){
     DalitzEventPattern pat_CP = pat.makeCPConjugate();
 
     NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
+    NamedParameter<string> InputGenMCFile("InputGenMCFile", (std::string) "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/GenLevMC/Gen_DsK.root", (char*) 0);
     NamedParameter<string> channel("channel", (std::string) "norm", (char*) 0);
     NamedParameter<string> OutputDir("OutputDir", (std::string) "", (char*) 0);
     NamedParameter<double> min_TAU("min_TAU", 0.4);
@@ -599,6 +606,10 @@ void fullTimeFit(){
 
     NamedParameter<int>  doSimFit("doSimFit", 0);
     NamedParameter<int>  doSimFitInBins("doSimFitInBins", 0);
+
+    NamedParameter<int>  fitGenMC("fitGenMC", 0);
+    NamedParameter<int>  doBootstrap("doBootstrap", 0);
+    NamedParameter<int>  N_bootstrap("N_bootstrap", 10000);
 
     NamedParameter<double> min_year("min_year", 10);
     NamedParameter<double> max_year("max_year", 20);
@@ -640,6 +651,7 @@ void fullTimeFit(){
     FitParameter  scale_mean_dt("scale_mean_dt",1,1,0.1);
     FitParameter  offset_sigma_dt("offset_sigma_dt",1,0.,0.1);
     FitParameter  scale_sigma_dt("scale_sigma_dt",1,1.2,0.1);
+    FitParameter  scale_sigma_2_dt("scale_sigma_2_dt",1,0.,0.1);
     FitParameter  p0_os("p0_os",1,0.,0.);
     FitParameter  p1_os("p1_os",1,0.,0.);
     FitParameter  delta_p0_os("delta_p0_os",1,0.,0.);
@@ -672,6 +684,7 @@ void fullTimeFit(){
     FitParameter  scale_mean_dt_Run1("scale_mean_dt_Run1",1,1,0.1);
     FitParameter  offset_sigma_dt_Run1("offset_sigma_dt_Run1",1,0.,0.1);
     FitParameter  scale_sigma_dt_Run1("scale_sigma_dt_Run1",1,1.2,0.1);
+    FitParameter  scale_sigma_2_dt_Run1("scale_sigma_2_dt_Run1",1,0.,0.1);
     FitParameter  p0_os_Run1("p0_os_Run1",1,0.,0.);
     FitParameter  p1_os_Run1("p1_os_Run1",1,0.,0.);
     FitParameter  delta_p0_os_Run1("delta_p0_os_Run1",1,0.,0.);
@@ -692,6 +705,7 @@ void fullTimeFit(){
     FitParameter  scale_mean_dt_Run2("scale_mean_dt_Run2",1,1,0.1);
     FitParameter  offset_sigma_dt_Run2("offset_sigma_dt_Run2",1,0.,0.1);
     FitParameter  scale_sigma_dt_Run2("scale_sigma_dt_Run2",1,1.2,0.1);
+    FitParameter  scale_sigma_2_dt_Run2("scale_sigma_2_dt_Run2",1,0.,0.1);
     FitParameter  p0_os_Run2("p0_os_Run2",1,0.,0.);
     FitParameter  p1_os_Run2("p1_os_Run2",1,0.,0.);
     FitParameter  delta_p0_os_Run2("delta_p0_os_Run2",1,0.,0.);
@@ -757,7 +771,7 @@ void fullTimeFit(){
     //FullTimePdf_mod t_pdf(r,delta,gamma,k);
     FullTimePdf t_pdf(C, D, D_bar, S, S_bar, k,
                       tau, dGamma, dm
-                      ,offset_sigma_dt, scale_mean_dt, scale_sigma_dt
+                      ,offset_sigma_dt, scale_mean_dt, scale_sigma_dt, scale_sigma_2_dt
                       ,c0, c1, c2 ,c3, c4, c5
                       ,c6, c7, c8, c9,
                       p0_os, p1_os, delta_p0_os, delta_p1_os, 
@@ -769,7 +783,7 @@ void fullTimeFit(){
     /// Simultaneous pdfs
     FullTimePdf t_pdf_Run1_t0(C, D, D_bar, S, S_bar, k,
                       tau, dGamma, dm
-                      ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                      ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
                       ,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
                       p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -780,7 +794,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run1_t1(C, D, D_bar, S, S_bar, k,
                               tau, dGamma, dm
-                              ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                              ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                               ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
                               ,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
                               p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -791,7 +805,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run2_t0(C, D, D_bar, S, S_bar, k,
                               tau, dGamma, dm
-                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
                               ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
                               p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -802,7 +816,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run2_t1(C, D, D_bar, S, S_bar, k,
                               tau, dGamma, dm
-                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
                               ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
                               p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -814,7 +828,7 @@ void fullTimeFit(){
     //phasespace bins
     FullTimePdf t_pdf_Run1_t0_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
                       tau, dGamma, dm
-                      ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                      ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
                       ,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
                       p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -825,7 +839,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run1_t1_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
                               tau, dGamma, dm
-                              ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                              ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                               ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
                               ,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
                               p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -836,7 +850,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run2_t0_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
                               tau, dGamma, dm
-                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
                               ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
                               p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -847,7 +861,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run2_t1_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
                               tau, dGamma, dm
-                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
                               ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
                               p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -858,7 +872,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run1_t0_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
                       tau, dGamma, dm
-                      ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                      ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
                       ,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
                       p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -869,7 +883,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run1_t1_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
                               tau, dGamma, dm
-                              ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                              ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                               ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
                               ,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
                               p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -880,7 +894,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run2_t0_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
                               tau, dGamma, dm
-                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
                               ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
                               p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -891,7 +905,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run2_t1_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
                               tau, dGamma, dm
-                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
                               ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
                               p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -902,7 +916,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run1_t0_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
                       tau, dGamma, dm
-                      ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                      ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
                       ,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
                       p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -913,7 +927,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run1_t1_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
                               tau, dGamma, dm
-                              ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+                              ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                               ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
                               ,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
                               p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -924,7 +938,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run2_t0_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
                               tau, dGamma, dm
-                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
                               ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
                               p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -935,7 +949,7 @@ void fullTimeFit(){
     
     FullTimePdf t_pdf_Run2_t1_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
                               tau, dGamma, dm
-                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+                              ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
                               ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
                               p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -948,6 +962,7 @@ void fullTimeFit(){
     double t,dt;
     int f;
     int q_OS;
+    double Bs_ID,Ds_ID;
     Short_t q_SS;
     double eta_OS;
     Float_t eta_SS;
@@ -958,58 +973,97 @@ void fullTimeFit(){
     double pim[4];
     double Ds_Kp[4],Ds_Km[4],Ds_pim[4];
     
-    TChain* tree_norm=new TChain("DecayTree");
-    tree_norm->Add(((string)InputDir+"Data/"+(string)channel+".root").c_str());
-    tree_norm->SetBranchStatus("*",0);
-    tree_norm->SetBranchStatus("N_Bs_sw",1);
-    tree_norm->SetBranchStatus("year",1);
-    tree_norm->SetBranchStatus("*DEC",1);
-    tree_norm->SetBranchStatus("*PROB",1);
-    tree_norm->SetBranchStatus("*OS",1);
-    tree_norm->SetBranchStatus("*TAU*",1);
-    tree_norm->SetBranchStatus("*ID*",1);
-    tree_norm->SetBranchStatus("weight",1);
-    tree_norm->SetBranchStatus("TriggerCat",1);
-    tree_norm->SetBranchStatus("run",1);
-    tree_norm->SetBranchStatus("BsDTF_*P*",1);
+    TChain* tree_norm;
 
-    tree_norm->SetBranchAddress("Bs_DTF_TAU",&t);
-    tree_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt);
-    tree_norm->SetBranchAddress("Ds_ID",&f);
-    tree_norm->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
-    tree_norm->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&eta_OS);
-    tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
-    tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&eta_SS);
-    tree_norm->SetBranchAddress("N_Bs_sw",&sw);
-    tree_norm->SetBranchAddress("year",&year);
-    tree_norm->SetBranchAddress("run",&run);
-    tree_norm->SetBranchAddress("Ds_finalState",&Ds_finalState);
-    tree_norm->SetBranchAddress("TriggerCat",&trigger);
-    tree_norm->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
-    tree_norm->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
-    tree_norm->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
-    tree_norm->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
-    tree_norm->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
-    tree_norm->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
-    tree_norm->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
-    tree_norm->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);    
-    tree_norm->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
-    tree_norm->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
-    tree_norm->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
-    tree_norm->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);    
-    tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
-    tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
-    tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
-    tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);    
-    tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
-    tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
-    tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
-    tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
-    tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
-    tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
-    tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
-    tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
-
+    if(fitGenMC){
+	tree_norm=new TChain("MCDecayTreeTuple/MCDecayTree");
+	tree_norm->Add(((string)InputGenMCFile).c_str());
+	tree_norm->SetBranchStatus("*",0);
+	tree_norm->SetBranchStatus("*TAU*",1);
+	tree_norm->SetBranchStatus("*ID*",1);
+	tree_norm->SetBranchStatus("*P*",1);
+	
+	tree_norm->SetBranchAddress("B_s0_TRUETAU",&t);
+	tree_norm->SetBranchAddress("D_sminus_TRUEID",&Ds_ID);
+	tree_norm->SetBranchAddress("B_s0_TRUEID",&Bs_ID);
+// 	tree_norm->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
+// 	tree_norm->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
+// 	tree_norm->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
+// 	tree_norm->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
+// 	tree_norm->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
+// 	tree_norm->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
+// 	tree_norm->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
+// 	tree_norm->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);    
+// 	tree_norm->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
+// 	tree_norm->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
+// 	tree_norm->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
+// 	tree_norm->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);    
+// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
+// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
+// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
+// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);    
+// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
+// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
+// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
+// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
+// 	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
+// 	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
+// 	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
+// 	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
+    }
+    else {
+	tree_norm=new TChain("DecayTree");
+	tree_norm->Add(((string)InputDir+"Data/"+(string)channel+".root").c_str());
+	tree_norm->SetBranchStatus("*",0);
+	tree_norm->SetBranchStatus("N_Bs_sw",1);
+	tree_norm->SetBranchStatus("year",1);
+	tree_norm->SetBranchStatus("*DEC",1);
+	tree_norm->SetBranchStatus("*PROB",1);
+	tree_norm->SetBranchStatus("*OS",1);
+	tree_norm->SetBranchStatus("*TAU*",1);
+	tree_norm->SetBranchStatus("*ID*",1);
+	tree_norm->SetBranchStatus("weight",1);
+	tree_norm->SetBranchStatus("TriggerCat",1);
+	tree_norm->SetBranchStatus("run",1);
+	tree_norm->SetBranchStatus("BsDTF_*P*",1);
+	
+	tree_norm->SetBranchAddress("Bs_DTF_TAU",&t);
+	tree_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+	tree_norm->SetBranchAddress("Ds_ID",&f);
+	tree_norm->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
+	tree_norm->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&eta_OS);
+	tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
+	tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&eta_SS);
+	tree_norm->SetBranchAddress("N_Bs_sw",&sw);
+	tree_norm->SetBranchAddress("year",&year);
+	tree_norm->SetBranchAddress("run",&run);
+	tree_norm->SetBranchAddress("Ds_finalState",&Ds_finalState);
+	tree_norm->SetBranchAddress("TriggerCat",&trigger);
+	tree_norm->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
+	tree_norm->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
+	tree_norm->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
+	tree_norm->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
+	tree_norm->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
+	tree_norm->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
+	tree_norm->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
+	tree_norm->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);    
+	tree_norm->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
+	tree_norm->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
+	tree_norm->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
+	tree_norm->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);    
+	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
+	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
+	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
+	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);    
+	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
+	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
+	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
+	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
+	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
+	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
+	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
+	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
+    }
     DalitzEventList eventList,eventList_f,eventList_f_bar;
     DalitzEventList eventList_Run1_t0,eventList_Run1_t1,eventList_Run2_t0,eventList_Run2_t1;
 
@@ -1024,12 +1078,68 @@ void fullTimeFit(){
     s234.push_back(3);
     s234.push_back(4);
 
+    RooRealVar* r_t = new RooRealVar("t", "t", min_TAU, max_TAU);
+    RooRealVar* r_dt = new RooRealVar("dt", "dt",0., 0.1);
+    RooRealVar* r_mistag = new RooRealVar("mistag", "mistag",0., 0.5);
+
+    RooCategory* r_f = new RooCategory("qf", "qf");
+    r_f->defineType("h+", +1);
+    r_f->defineType("h-", -1);
+
+    RooCategory* r_q = new RooCategory("qt", "qt");
+    r_q->defineType("B+", +1);
+    r_q->defineType("B-", -1) ;   
+    r_q->defineType("untagged", 0);    
+
+    RooDataSet* data = new RooDataSet("data","data",RooArgSet(*r_t,*r_dt,*r_q,*r_mistag,*r_f));
+
+    int N_sample = tree_norm->GetEntries();
+
+    vector<int> b_indices;
+    while( b_indices.size() < N_bootstrap )b_indices.push_back(TMath::Nint(ranLux.Uniform(0,N_sample)));
+    sort(b_indices.begin(), b_indices.end());
+    if(doBootstrap)N_sample = b_indices.size();
+
     TRandom3 rndm;
-    for(int i=0; i< tree_norm->GetEntries(); i++)
+    for(int i=0; i< N_sample; i++)
     {	
-        if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << tree_norm->GetEntries() << endl;
-        tree_norm->GetEntry(i);
+        if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << N_sample << endl;
+	if(doBootstrap) tree_norm->GetEntry(b_indices[i]);
+	else tree_norm->GetEntry(i);
         
+	if(fitGenMC){
+		//if(i>20000)break;
+		DalitzEvent evt;
+		if(f < 0)evt = DalitzEvent(pat);
+		else evt = DalitzEvent(pat_CP);
+		
+		t = t*1000.+ranLux.Gaus(0.,0.04);
+                if(t < min_TAU || t > max_TAU )continue;
+   		evt.setValueInVector(0, t);
+        	evt.setValueInVector(1, 0.04);
+        	if(Ds_ID<0)evt.setValueInVector(2, 1);
+        	else if(Ds_ID > 0)evt.setValueInVector(2, -1);
+		int q = 0;
+		if(Bs_ID>0)q=1;
+		else q = -1;
+	        evt.setValueInVector(3, q);
+        	evt.setValueInVector(4, 0.);
+        	evt.setValueInVector(5, q);
+        	evt.setValueInVector(6, 0.);
+        	evt.setValueInVector(7, 1);
+        	evt.setValueInVector(8, 0);
+                eventList.Add(evt);
+
+                r_t->setVal(t);
+                r_dt->setVal(0.04);
+                r_q->setIndex(q);
+                r_mistag->setVal(0.);
+                r_f->setIndex(evt.getValueFromVector(2));
+                data->add(RooArgSet(*r_t,*r_dt,*r_q,*r_mistag,*r_f));
+
+		continue;
+	}
+
         if(t < min_TAU || t > max_TAU )continue;
         if( dt < min_TAUERR || dt > max_TAUERR )continue;
         if(year < min_year || year > max_year) continue;
@@ -1071,23 +1181,7 @@ void fullTimeFit(){
 	if(f < 0)evt = DalitzEvent(pat, vectorOfvectors);
 	else evt = DalitzEvent(pat_CP, vectorOfvectors);
 
-	//if(!(evt.phaseSpace() > 0.))continue;
-            if(!(evt.phaseSpace() > 0.)){
-                /*
-                cout << "evt " << i << " 0 phsp " << endl; // << evt << endl;
-                cout << "t =" << t << endl;
-                cout << "dt =" <<dt << endl;
-                cout << "year =" <<year <<  endl;
-                cout << "sw =" <<sw <<  endl;
-                cout << "Dspi =" <<sqrt(evt.s(1,3))/GeV << endl;
-                cout << "Kpi =" <<sqrt(evt.s(2,4))/GeV << endl;
-                cout << "pipi =" <<sqrt(evt.s(3,4))/GeV << endl;
-                //cout << "DsKpi =" <<sqrt(evt.sij(s124))/GeV << endl;
-                cout << "Kpipi =" <<sqrt(evt.sij(s234))/GeV << endl << endl;
-                 */
-//                badEvents++;
-                continue;
-            }
+	if(!(evt.phaseSpace() > 0.))continue;
 
         evt.setWeight(sw);
         evt.setValueInVector(0, t);
@@ -1115,8 +1209,8 @@ void fullTimeFit(){
         else if(run == 2 && trigger == 0) eventList_Run2_t0.Add(evt);
         else if(run == 2 && trigger == 1) eventList_Run2_t1.Add(evt);
 
-	if( sqrt(evt.sij(s234)) < 1350.) {
-	//if( abs( sqrt(evt.s(2,4)) - 891.76) < 50.3) {
+	//if( sqrt(evt.sij(s234)) < 1350.) {
+	if( abs( sqrt(evt.s(2,4)) - 891.76) < 50.3) {
 		if(run == 1 && trigger == 0) eventList_Run1_t0_bin1.Add(evt);
 		else if(run == 1 && trigger == 1) eventList_Run1_t1_bin1.Add(evt);
 		else if(run == 2 && trigger == 0) eventList_Run2_t0_bin1.Add(evt);
@@ -1190,9 +1284,19 @@ void fullTimeFit(){
     if(doSimFit)mini.attachFunction(&neg2LL_sim);
     else if(doSimFitInBins)mini.attachFunction(&neg2LL_sim_bins);
     else mini.attachFunction(&neg2LL);
-    mini.doFit();
+    //mini.doFit();
     mini.printResultVsInput();
-    
+
+    /// Save pulls
+    gDirectory->cd();
+    TFile* paraFile = new TFile(((string)OutputDir+"pull_"+anythingToString((int)seed)+".root").c_str(), "RECREATE");
+    paraFile->cd();
+    TNtupleD* ntp=0;
+    MinuitParameterSet::getDefaultSet()->fillNtp(paraFile, ntp);
+    ntp->AutoSave();
+    paraFile->Close();
+    delete paraFile;
+
     /// Plot
     TCanvas* c = new TCanvas();
     h_Kpi_pipi_bin1->SetMarkerSize(0.1);
@@ -1463,8 +1567,8 @@ void fullTimeFit(){
     /// Make marginal pdfs for MC generation and plotting
     TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
 
-    RooRealVar* r_t = new RooRealVar("t", "t",min_TAU, max_TAU);
-    RooRealVar* r_dt = new RooRealVar("dt", "dt",min_TAUERR, max_TAUERR);
+    //RooRealVar* r_t = new RooRealVar("t", "t",min_TAU, max_TAU);
+    //RooRealVar* r_dt = new RooRealVar("dt", "dt",min_TAUERR, max_TAUERR);
     RooRealVar* r_eta_OS = new RooRealVar("eta_OS", "eta_OS",0.,0.5);
     RooRealVar* r_eta_SS = new RooRealVar("eta_SS", "eta_SS",0.,0.5);
     
@@ -1479,7 +1583,7 @@ void fullTimeFit(){
     RooGaussian* gen1_t = new RooGaussian("gen1_t","gen1_t", *r_t, mean1_t,sigma1_t);
     RooGaussian* gen2_t = new RooGaussian("gen2_t","gen2_t", *r_t, mean2_t,sigma2_t);
     RooAddPdf* gen_t=new RooAddPdf("gen_dt", "gen_dt", RooArgList(*gen1_t, *gen2_t), RooArgList(f_t));
-    gen_t->fitTo(*r_h_t,Save(kTRUE),SumW2Error(kTRUE));
+    gen_t->fitTo(*r_h_t,Save(kTRUE),SumW2Error(kTRUE),Verbose(kFALSE),PrintLevel(-1),Warnings(kFALSE));
     
     TH1D* h_dt_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
     RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",*r_dt,h_dt_norm);
@@ -1492,7 +1596,7 @@ void fullTimeFit(){
     RooGaussian* gen1_dt = new RooGaussian("gen1_dt","gen1_dt", *r_dt, mean1_dt,sigma1_dt);
     RooGaussian* gen2_dt = new RooGaussian("gen2_dt","gen2_dt", *r_dt, mean2_dt,sigma2_dt);
     RooAddPdf* gen_dt=new RooAddPdf("gen_dt", "gen_dt", RooArgList(*gen1_dt, *gen2_dt), RooArgList(f_dt));
-    gen_dt->fitTo(*r_h_dt,Save(kTRUE),SumW2Error(kTRUE));
+    gen_dt->fitTo(*r_h_dt,Save(kTRUE),SumW2Error(kTRUE),Verbose(kFALSE),PrintLevel(-1),Warnings(kFALSE));
     
     // mistag OS
     double eff_tag_OS = 0.3852;
@@ -1507,7 +1611,7 @@ void fullTimeFit(){
     RooGaussian* gen1_eta_OS = new RooGaussian("gen1_eta_OS","gen1_eta_OS", *r_eta_OS, mean1_eta_OS,sigma1_eta_OS);
     RooGaussian* gen2_eta_OS = new RooGaussian("gen2_eta_OS","gen2_eta_OS", *r_eta_OS, mean2_eta_OS,sigma2_eta_OS);
     RooAddPdf* gen_eta_OS=new RooAddPdf("gen_eta_OS", "gen_eta_OS", RooArgList(*gen1_eta_OS, *gen2_eta_OS), RooArgList(f_eta_OS));
-    gen_eta_OS->fitTo(*r_h_eta_OS,Save(kTRUE),SumW2Error(kTRUE));
+    gen_eta_OS->fitTo(*r_h_eta_OS,Save(kTRUE),SumW2Error(kTRUE),Verbose(kFALSE),PrintLevel(-1),Warnings(kFALSE));
     
     // mistag SS
     double eff_tag_SS = 0.6903;
@@ -1522,7 +1626,7 @@ void fullTimeFit(){
     RooGaussian* gen1_eta_SS = new RooGaussian("gen1_eta_SS","gen1_eta_SS", *r_eta_SS, mean1_eta_SS,sigma1_eta_SS);
     RooGaussian* gen2_eta_SS = new RooGaussian("gen2_eta_SS","gen2_eta_SS", *r_eta_SS, mean2_eta_SS,sigma2_eta_SS);
     RooAddPdf* gen_eta_SS=new RooAddPdf("gen_eta_SS", "gen_eta_SS", RooArgList(*gen1_eta_SS, *gen2_eta_SS), RooArgList(f_eta_SS));
-    gen_eta_SS->fitTo(*r_h_eta_SS,Save(kTRUE),SumW2Error(kTRUE));
+    gen_eta_SS->fitTo(*r_h_eta_SS,Save(kTRUE),SumW2Error(kTRUE),Verbose(kFALSE),PrintLevel(-1),Warnings(kFALSE));
     
     // plot
     RooPlot* frame_t= r_t->frame();
@@ -1555,7 +1659,258 @@ void fullTimeFit(){
     DalitzEvent evt_proto(_pat);
     evt_proto.generateThisToPhaseSpace();
 
-    for(int i = 0; i < 5000000; i++){
+   if(fitGenMC){
+
+	/// Fit with B2DX Pdf
+        RooRealVar* r_scale_mean_dt = new RooRealVar("scale_mean_dt", "scale_mean_dt", 0);
+        RooRealVar* r_scale_sigma_dt = new RooRealVar("scale_sigma_dt", "scale_sigma_dt", 1.);
+        
+        NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
+        vector<double> myBinning = knot_positions.getVector();
+        
+        NamedParameter<double> knot_values("knot_values", 0.38,0.63,0.86,1.05,1.14,1.24,1.22);
+        vector<double> values = knot_values.getVector() ;
+        
+        RooArgList tacc_list;
+        for(int i= 0; i< values.size(); i++){
+            tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString(i)).c_str(), ("coeff_"+anythingToString(i)).c_str(), values[i])));
+        }
+        tacc_list.add(*(new RooRealVar(("coeff_"+anythingToString((int)values.size())).c_str(), ("coeff_"+anythingToString((int)values.size())).c_str(), 1.)));
+        
+        RooFormulaVar* coeff_last = new RooFormulaVar(("coeff_"+anythingToString((int)values.size()+1)).c_str(),("coeff_"+anythingToString((int)values.size()+1)).c_str(), "@0 + ((@0-@1)/(@2-@3)) * (@4 - @2)", RooArgList(RooRealConstant::value(1.0), *tacc_list.find(("coeff_"+anythingToString((int)values.size()-1)).c_str())  , RooRealConstant::value(myBinning[myBinning.size()-1]), RooRealConstant::value(myBinning[myBinning.size()-2]), RooRealConstant::value(r_t->getMax()) ));
+        
+        tacc_list.add(*coeff_last);	
+        
+        RooCubicSplineFun* spline = new RooCubicSplineFun("splinePdf", "splinePdf", *r_t, myBinning, tacc_list);        
+        RooGaussEfficiencyModel* efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *r_t, *spline, RooRealConstant::value(0.), RooRealConstant::value(0.04), *r_scale_mean_dt, *r_scale_sigma_dt );
+          
+        RooTruthModel tm("tm","truth model",*r_t) ;
+
+        RooRealVar r_tau("tau", "decay time", tau);    
+        RooRealVar r_dgamma("dgamma", "dgamma", dGamma,-1,1);
+        RooRealVar r_dm("dm", "dm", dm);
+
+        RooRealVar r_C("C", "C",C);
+        RooFormulaVar r_Cbar("Cbar","-1. * @0",RooArgList(r_C));
+        RooRealVar r_D("D", "D",D);
+        RooRealVar r_Dbar("Dbar", "Dbar",D_bar);
+        RooRealVar r_S("S", "S",S);
+        RooRealVar r_Sbar("Sbar", "Sbar",-S_bar);
+        
+        DecRateCoeff_Bd cosh_coeff("cosh_coeff",
+                        "cosh_coeff",
+                        DecRateCoeff_Bd::kCosh ,
+                        *r_f,
+                        RooRealConstant::value(1.),
+                        RooRealConstant::value(1.),
+                        *r_q,
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(1.),
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(1.),
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(0.),
+                        RooRealConstant::value(0.)); 
+                        
+        DecRateCoeff_Bd cos_coeff("cos_coeff",
+                                   "cos_coeff",
+                                   DecRateCoeff_Bd::kCos ,
+                                   *r_f,
+                                   r_C,
+                                   r_Cbar,
+                                   *r_q,
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(1.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(1.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.),
+                                  RooRealConstant::value(0.));  
+                                            
+        DecRateCoeff_Bd sinh_coeff("sinh_coeff",
+                                   "sinh_coeff",
+                                   DecRateCoeff_Bd::kSinh ,
+                                   *r_f,
+                                   r_D,
+                                   r_Dbar,
+                                   *r_q,
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(1.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(1.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.));  
+                                   
+        DecRateCoeff_Bd sin_coeff("sin_coeff",
+                                   "sin_coeff",
+                                   DecRateCoeff_Bd::kSin,
+                                   *r_f,
+                                   r_S,
+                                   r_Sbar,
+                                   *r_q,
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(1.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(1.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.),
+                                   RooRealConstant::value(0.));       
+
+        RooBDecay fitpdf_t("fitpdf_t", "decay time PDF for fitting",
+                           *r_t,r_tau, r_dgamma, 
+                           //RooRealConstant::value(1.),RooRealConstant::value(0.),RooRealConstant::value(0.),RooRealConstant::value(0.),
+                           cosh_coeff,sinh_coeff,cos_coeff,sin_coeff,
+                           r_dm, *efficiency, RooBDecay::SingleSided); 
+        
+        fitpdf_t.fitTo(*data,NumCPU(4));
+        
+	RooPlot* tframefit = r_t->frame();
+        data->plotOn(tframefit,Binning(nBinst));
+        fitpdf_t.plotOn(tframefit);
+        tframefit->Draw();
+        c->Print("B2DX_fit.eps");      
+        cout << " C = " << r_C.getVal() << " ; Pull = " << (r_C.getVal()-C)/r_C.getError() << endl;
+        cout << " D = " << r_D.getVal() << " ; Pull = " << (r_D.getVal()-D)/r_D.getError() << endl;
+        cout << " Dbar = " << r_Dbar.getVal() << " ; Pull = " << (r_Dbar.getVal()-D_bar)/r_Dbar.getError() << endl;
+        cout << " S = " << r_S.getVal() << " ; Pull = " << (r_S.getVal()-S)/r_S.getError() << endl;
+        cout << " Sbar = " << r_Sbar.getVal() << " ; Pull = " << (r_Sbar.getVal()+S_bar)/r_Sbar.getError() << endl;  
+
+	eff_tag_SS = 1.;
+	eff_tag_OS = 1.;
+	
+	for(int i = 0; i < 1000; i++){
+		
+		double t_MC = ranLux.Exp(tau);
+		if(t_MC > max_TAU && t_MC < min_TAU)continue;
+	
+		double dt_MC = 0.04;
+		
+		double q_rand = ranLux.Uniform();
+		int q_OS_MC = 0;
+		if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
+		if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
+		
+		q_rand = ranLux.Uniform();
+		int q_SS_MC = 0;
+		if (q_rand < eff_tag_SS/2.  ) q_SS_MC = -1;
+		if (q_rand > (1.-eff_tag_SS/2.) ) q_SS_MC = 1;
+		
+		double eta_OS_MC = 0;
+		double eta_SS_MC = 0;
+	
+		q_rand = ranLux.Uniform();
+		int f_MC = 0;
+		if (q_rand > .5) f_MC = -1;
+		else f_MC = 1;
+			
+		DalitzEvent evt(evt_proto);
+	
+		evt.setWeight(1.);
+		evt.setValueInVector(0, t_MC);
+		evt.setValueInVector(1, dt_MC);
+		evt.setValueInVector(2, f_MC);
+		evt.setValueInVector(3, q_OS_MC);
+		evt.setValueInVector(4, eta_OS_MC);
+		evt.setValueInVector(5, q_SS_MC);
+		evt.setValueInVector(6, eta_SS_MC);
+		
+		double pdfVal = t_pdf.getVal(evt);
+	
+		double weight = pdfVal;
+		weight /=  exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) 
+		*  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) )
+		*  (abs(q_SS_MC)/2. * eff_tag_SS + ( 1. - abs(q_SS_MC)) * (1.-eff_tag_SS) )	;
+	
+		h_t_fit->Fill(t_MC,weight);
+		h_dt_fit->Fill(dt_MC,weight);
+		if(evt.getValueFromVector(3) != 0)h_eta_OS_fit->Fill(evt.getValueFromVector(4),weight);
+		if(evt.getValueFromVector(5) != 0)h_eta_SS_fit->Fill(evt.getValueFromVector(6),weight);
+		
+		int f_evt = evt.getValueFromVector(2);
+		int q1 = evt.getValueFromVector(3);
+		int q2 = evt.getValueFromVector(5);   
+		int q_eff = 0;
+		double w_eff = 0.5;
+		
+		std::pair<double, double> calibrated_mistag_os;
+		std::pair<double, double> calibrated_mistag_ss;
+		calibrated_mistag_os = t_pdf.getCalibratedMistag_OS(evt);
+		calibrated_mistag_ss = t_pdf.getCalibratedMistag_SS(evt);        
+		
+		double p = ( (1.-q1)/2. + q1 * (1.- calibrated_mistag_os.first )) * ( (1.-q2)/2. + q2 * (1.- calibrated_mistag_ss.first ));
+		double p_bar = ( (1.+q1)/2. - q1 * (1.- calibrated_mistag_os.second )) * ( (1.+q2)/2. - q2 * (1.- calibrated_mistag_ss.second ));
+		
+		if( p/(p+p_bar) > 0.5 ){ 
+			q_eff = 1;
+			w_eff = 1-p/(p+p_bar);
+		}
+		else if( p/(p+p_bar) < 0.5 ){
+			q_eff = -1;
+			w_eff = p/(p+p_bar);
+		}
+		
+		if((string)channel=="signal"){
+		
+		if(q_eff==-1 && f_evt == 1){
+			h_t_fit_mp->Fill(evt.getValueFromVector(0),weight);
+			if(w_eff<w_max){
+			h_N_mixed_p_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+			h_N_mixed_p_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),tau),weight);
+			}
+		}
+		else if(q_eff==0 && f_evt == 1)h_t_fit_0p->Fill(evt.getValueFromVector(0),weight);
+		else if(q_eff==1 && f_evt == 1){
+			h_t_fit_pp->Fill(evt.getValueFromVector(0),weight);
+			if(w_eff<w_max){
+				h_N_unmixed_p_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+				h_N_unmixed_p_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),tau),weight);
+			}
+		}
+		else if(q_eff==-1 && f_evt == -1){
+			h_t_fit_mm->Fill(evt.getValueFromVector(0),weight);
+			if(w_eff<w_max){
+			h_N_unmixed_m_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+			h_N_unmixed_m_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),tau),weight);
+			}	
+		}
+		else if(q_eff==0 && f_evt == -1)h_t_fit_0m->Fill(evt.getValueFromVector(0),weight);
+		else if(q_eff==1 && f_evt == -1){
+			h_t_fit_pm->Fill(evt.getValueFromVector(0),weight);
+			if(w_eff<w_max){
+			h_N_mixed_m_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+			h_N_mixed_m_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),tau),weight);
+			}
+		}
+		}
+		else {
+		if(q_eff == 0)h_t_untagegged_fit->Fill(evt.getValueFromVector(0),weight);
+		else if(q_eff*f_evt > 0  ){
+			h_t_mixed_fit->Fill(evt.getValueFromVector(0),weight);
+			if(w_eff<w_max)h_N_mixed_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+		}
+		else{ 
+			h_t_unmixed_fit->Fill(evt.getValueFromVector(0),weight);
+			if(w_eff<w_max)h_N_unmixed_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
+		}
+		}
+	}
+
+
+    }
+    else for(int i = 0; i < 5000000; i++){
         
         double t_MC = 0.;
         double gaus_t = ranLux.Uniform();
@@ -2050,7 +2405,8 @@ void produceMarginalPdfs(){
     //TString prefix = "BsTaggingTool_";
     NamedParameter<double> min_year("min_year", 11);
     NamedParameter<double> max_year("max_year", 16);
-    
+    NamedParameter<double> min_TAU("min_TAU", 0.4);
+    NamedParameter<double> max_TAU("max_TAU", 10.);
     /// Load files
     // Data
     int q_OS;
@@ -2216,9 +2572,9 @@ void produceMarginalPdfs(){
     TH1D* h_q_SS_norm_Run2 = new TH1D("h_q_SS_norm_Run2","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_MC_norm = new TH1D("h_q_SS_MC_norm","; q_{SS}",3,-1.5,1.5);
     
-    TH1D* h_t_norm = new TH1D("h_t_norm",";t (ps);Events (norm.) ",bins,0,15);
-    TH1D* h_t_norm_Run1 = new TH1D("h_t_norm_Run1",";t (ps);Events (norm.) ",bins,0,15);
-    TH1D* h_t_norm_Run2 = new TH1D("h_t_norm_Run2",";t (ps);Events (norm.) ",bins,0,15);
+    TH1D* h_t_norm = new TH1D("h_t_norm",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
+    TH1D* h_t_norm_Run1 = new TH1D("h_t_norm_Run1",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
+    TH1D* h_t_norm_Run2 = new TH1D("h_t_norm_Run2",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
     TH1D* h_dt_norm = new TH1D("h_dt_norm",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.15);
     TH1D* h_dt_norm_Run1 = new TH1D("h_dt_norm_Run1",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.15);
     TH1D* h_dt_norm_Run2 = new TH1D("h_dt_norm_Run2",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.15);
@@ -2521,9 +2877,11 @@ int main(int argc, char** argv){
   TH2::SetDefaultSumw2();
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
-  produceMarginalPdfs();
-  fullTimeFit();
+  //produceMarginalPdfs();
+  //for(int i = 0; i < 200; i++) fullTimeFit(atoi(argv[1])+i);
+  fullTimeFit(atoi(argv[1]));
   
+
   cout << "==============================================" << endl;
   cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
   cout << "==============================================" << endl;

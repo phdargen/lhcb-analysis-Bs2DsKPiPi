@@ -1,0 +1,85 @@
+"RandomSeed"		0
+"Event Pattern"         531 -431 321 211 -211
+
+*"InputDir"	"../Files/"
+
+"InputGenMCFile"    "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/GenLevMC/Gen_DsK_test2.root"
+*"InputGenMCFile"    "/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_13266007.root"
+
+"OutputDir"	"signal_DsK_MC/"
+"channel"	"signal"
+
+"nBinst" 	100
+"min_TAU" 	0
+"max_TAU" 	15
+"max_TAU_ForMixingPlot" 	4
+
+*"min_year" 	11
+*"max_year" 	12
+
+"doSimFit"	0
+
+"fitGenMC"	1
+"doBootstrap"	1
+"N_bootstrap"	4000
+
+** name		Fix?	init	step	min	max
+
+"knot_positions"	 0.5 1. 1.5 2. 3. 6. 9.5
+"knot_values"	 	1 1 1 1 1 1 1
+
+"c0"	2	1	0.001
+"c1"	2	1	0.001
+"c2"	2	1	0.001
+"c3"	2	1	0.001
+"c4"	2	1.		0.001
+"c5"	2	1.		0.001
+"c6"	2	1.		0.001
+
+"offset_sigma_dt"	2 	0.	0.001
+"scale_sigma_dt"	2	1.	0.1
+
+* PDG values:
+*"tau"		2	1.51199922586 	0.01	0.5	2.0
+*"dGamma" 	2 	-0.08068783069 	0.01	0.0	0.0
+
+"tau"		2	1.504 	0.01	0.5	2.0
+"dGamma" 	2 	6.64893617021276584e-02	0.01	0.0	0.0
+"dm" 		2 	17.757  0.01	0.0	0.0
+
+*"C"	0	0.		0.05	
+*"D"	0	0.	0.05	
+*"D_bar"	0	0.	0.05	
+*"S"	0	0.	0.05	
+*"S_bar" 0	0.	0.05	
+
+"C"	0	0.759170	0.05	
+"D"	0	-0.314335	0.05	
+"D_bar"	0	-0.100483	0.05	
+"S"	0	-0.569961	0.05	
+"S_bar" 0	0.643090	0.05	
+*"C_Blind"	1	-1   1
+*"D_Blind"	1	-1   1
+*"D_bar_Blind"	1	-1   1
+*"S_Blind"	1	-1   1
+*"S_bar_Blind"	1	-1   1
+"k" 	2	1.	0.05	0.	1.
+
+"p0_os"			2	0.	0.005
+"p1_os"			2	1.	0.06
+"delta_p0_os"		2	0.	0.
+"delta_p1_os"		2	0.	0.
+"avg_eta_os"		2	0.	0.001
+"tageff_os"		2	1.	0.001
+"tageff_asym_os"	2	0.	0.
+
+"p0_ss"			2	0.	0.005
+"p1_ss"			2	1.	0.06
+"delta_p0_ss"		2	0.	0.
+"delta_p1_ss"		2	0.	0.
+"avg_eta_ss"		2	0.	0.001
+"tageff_ss"		2	1.	0.001
+"tageff_asym_ss"	2	0.	0.
+
+"production_asym"	2	0.	0.
+"detection_asym"	2	0.	0.

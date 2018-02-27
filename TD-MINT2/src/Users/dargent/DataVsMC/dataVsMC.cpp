@@ -28,131 +28,138 @@
 using namespace std;
 using namespace MINT;
 
-void plot(string Branch,string TitleX, int bins, double min, double max, int Year = 11, TString finalState = "KKpi", bool useWeights=false, TString Decay = "norm", TString selection = "Preselected"){
+TString plot(TString Branch,TString TitleX, int bins, double min, double max, int Year = 11, TString finalState = "KKpi", bool useWeights=false, TString Decay = "norm", TString selection = "Preselected"){
     
+    cout << "Plotting " << Branch << endl;
+
     ///Load files
-    TChain* tree=new TChain("DecayTree");
+    TChain tree("DecayTree");
     TString decay = Decay;
     if(Decay == "signal") selection = "Final" ;
     if(selection == "Preselected") decay.ReplaceAll(Decay,Decay+"_sweight");
-    tree->Add("/auto/data/dargent/BsDsKpipi/" + selection + "/Data/" + decay + ".root");
-    tree->SetBranchStatus("*",0);
-    tree->SetBranchStatus(Branch.c_str(),1);
-    tree->SetBranchStatus("N_Bs_sw",1);
-    tree->SetBranchStatus("year",1);
-    tree->SetBranchStatus("Ds_finalState",1);
+    tree.Add("/auto/data/dargent/BsDsKpipi/" + selection + "/Data/" + decay + ".root");
+    tree.SetBranchStatus("*",0);
+    tree.SetBranchStatus(Branch,1);
+    tree.SetBranchStatus("N_Bs_sw",1);
+    tree.SetBranchStatus("year",1);
+    tree.SetBranchStatus("Ds_finalState",1);
     double var;
+    float varF;
     double sw;
     int year,Ds_finalState;
-    tree->SetBranchAddress(Branch.c_str(),&var);
-    tree->SetBranchAddress("N_Bs_sw",&sw);
-    tree->SetBranchAddress("year",&year);
-    tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
+    if(Branch == "BDTG_response")tree.SetBranchAddress(Branch,&varF);
+    else tree.SetBranchAddress(Branch,&var);
+    tree.SetBranchAddress("N_Bs_sw",&sw);
+    tree.SetBranchAddress("year",&year);
+    tree.SetBranchAddress("Ds_finalState",&Ds_finalState);
     
-    TChain* treeMC =new TChain("DecayTree");
+    TChain treeMC("DecayTree");
     TString fileNameMC = "/auto/data/dargent/BsDsKpipi/" + selection + "/MC/" + Decay + "_Ds2" + finalState + "_" + anythingToString(Year) + ".root";
     if(selection == "Final") fileNameMC = "/auto/data/dargent/BsDsKpipi/" + selection + "/MC/" + Decay + ".root";
-    treeMC->Add(fileNameMC);
-    treeMC->SetBranchStatus("*",0);
-    treeMC->SetBranchStatus(Branch.c_str(),1);
-    treeMC->SetBranchStatus("Ds_finalState",1);
-    treeMC->SetBranchStatus("Bs_BKGCAT",1);
-    if(useWeights)treeMC->SetBranchStatus("weight",1);
+    treeMC.Add(fileNameMC);
+    treeMC.SetBranchStatus("*",0);
+    treeMC.SetBranchStatus(Branch,1);
+    treeMC.SetBranchStatus("Ds_finalState",1);
+    treeMC.SetBranchStatus("Bs_BKGCAT",1);
+    if(useWeights)treeMC.SetBranchStatus("weight",1);
    
     double varMC;
+    float varMCF;
     double w;
     int cat,yearMC,Ds_finalStateMC;
-    treeMC->SetBranchAddress(Branch.c_str(),&varMC);
-    treeMC->SetBranchAddress("Bs_BKGCAT",&cat);
-    treeMC->SetBranchAddress("year",&yearMC);
-    treeMC->SetBranchAddress("Ds_finalState",&Ds_finalStateMC);           
-    if(useWeights)treeMC->SetBranchAddress("weight",&w);
+    if(Branch == "BDTG_response"){treeMC.SetBranchAddress(Branch,&varMCF); cout << "true" << endl;}
+    else treeMC.SetBranchAddress(Branch,&varMC);
+    treeMC.SetBranchAddress("Bs_BKGCAT",&cat);
+    treeMC.SetBranchAddress("year",&yearMC);
+    treeMC.SetBranchAddress("Ds_finalState",&Ds_finalStateMC);           
+    if(useWeights)treeMC.SetBranchAddress("weight",&w);
     else w=1.;
     
     ///Make histograms
     TString title= ";"+TitleX+";Yield [norm.]";
-    TH1D* h= new TH1D(Branch.c_str(),title,bins,min,max);
-    TH1D* h_MC= new TH1D((Branch+"_MC").c_str(),title,bins,min,max);
-    TH1D* h_MC_rw= new TH1D((Branch+"_MC_rw").c_str(),title,bins,min,max);
+    TH1D h(Branch,title,bins,min,max);
+    TH1D h_MC(Branch+"_MC",title,bins,min,max);
+    TH1D h_MC_rw(Branch+"_MC_rw",title,bins,min,max);
     
     ///loop over data events
-    int numEvents = tree->GetEntries();
+    int numEvents = tree.GetEntries();
     for(int i=0; i< numEvents; i++)
     {	
         if (0ul == (i % 100000ul)) cout << "Read event " << i << "/" << numEvents << endl;
-        tree->GetEntry(i);
+        tree.GetEntry(i);
 	if(year != Year) continue;
 	if(finalState == "KKpi" && Ds_finalState == 3) continue;
-        h->Fill(var,sw);
+	if(Branch == "BDTG_response")var = (double)varF;
+        h.Fill(var,sw);
     }
     
     ///loop over MC events
-    int numEventsMC = treeMC->GetEntries();
+    int numEventsMC = treeMC.GetEntries();
     for(int i=0; i< numEventsMC; i++)
     {	
         if (0ul == (i % 100000ul)) cout << "Read event " << i << "/" << numEventsMC << endl;
-        treeMC->GetEntry(i);
+        treeMC.GetEntry(i);
 	if(yearMC != Year) continue;
 	if(finalState == "KKpi" && Ds_finalStateMC == 3) continue;
-        h_MC->Fill(varMC);
-        h_MC_rw->Fill(varMC,w);
+	if(Branch == "BDTG_response")varMC = (double)varMCF;
+        h_MC.Fill(varMC);
+        h_MC_rw.Fill(varMC,w);
     }
     
     ///Plot it
-    TCanvas* c= new TCanvas();
+    TCanvas c;
     
-    h->Scale(1./h->Integral());
-    h_MC->Scale(1./h_MC->Integral());
-    h_MC_rw->Scale(1./h_MC_rw->Integral());
-    double maxY= h->GetMaximum();
-    if(h_MC->GetMaximum()>maxY)maxY=h_MC->GetMaximum();
-    h->SetMinimum(0.);
-    h->SetMaximum(maxY*1.4);
-    h->SetLineColor(kBlack);
-    h->Draw("");
-    h_MC->SetMarkerColor(kRed);
-    h_MC->SetLineColor(kRed);
-    h_MC->Draw("esame");
-    h_MC_rw->SetLineColor(kBlue);
-    h_MC_rw->SetMarkerColor(kBlue);
-    if(useWeights)h_MC_rw->Draw("esame");
+    h.Scale(1./h.Integral());
+    h_MC.Scale(1./h_MC.Integral());
+    h_MC_rw.Scale(1./h_MC_rw.Integral());
+    double maxY= h.GetMaximum();
+    if(h_MC.GetMaximum()>maxY)maxY=h_MC.GetMaximum();
+    h.SetMinimum(0.);
+    h.SetMaximum(maxY*1.4);
+    h.SetLineColor(kBlack);
+    h.Draw("");
+    h_MC.SetMarkerColor(kRed);
+    h_MC.SetLineColor(kRed);
+    h_MC.Draw("esame");
+    h_MC_rw.SetLineColor(kBlue);
+    h_MC_rw.SetMarkerColor(kBlue);
+    if(useWeights)h_MC_rw.Draw("esame");
     
-    double KolmoTest = h->KolmogorovTest(h_MC);
-    double KolmoTest_rw = h->KolmogorovTest(h_MC_rw);
+    double KolmoTest = h.KolmogorovTest(&h_MC);
+    double KolmoTest_rw = h.KolmogorovTest(&h_MC_rw);
 
-    TLegend *leg = new TLegend(0.6,0.6,0.9,0.9,"");
-    leg->SetLineStyle(0);
-    leg->SetLineColor(0);
-    leg->SetFillColor(0);
-    leg->SetTextFont(22);
-    leg->SetTextColor(1);
-    leg->SetTextSize(0.04);
-    leg->SetTextAlign(12);
+    TLegend leg(0.6,0.6,0.9,0.9,"");
+    leg.SetLineStyle(0);
+    leg.SetLineColor(0);
+    leg.SetFillColor(0);
+    leg.SetTextFont(22);
+    leg.SetTextColor(1);
+    leg.SetTextSize(0.04);
+    leg.SetTextAlign(12);
 
-    leg->AddEntry(h,"Data","LEP");
-    leg->AddEntry(h_MC,"MC","LEP");
+    leg.AddEntry(&h,"Data","LEP");
+    leg.AddEntry(&h_MC,"MC","LEP");
 
     stringstream ss ;
     TString leg_kol = "Kolm.-Test : ";
     ss << std::fixed << std::setprecision(4) << KolmoTest ;
     leg_kol += ss.str();    
-    TLegendEntry* le = leg->AddEntry((TObject*)0, leg_kol, "");
+    TLegendEntry* le = leg.AddEntry((TObject*)0, leg_kol, "");
     le->SetTextColor(kRed);    
 
-    if(useWeights)leg->AddEntry(h_MC_rw,"MC (reweighted)","LEP");
+    if(useWeights)leg.AddEntry(&h_MC_rw,"MC (reweighted)","LEP");
     ss.str("");
     leg_kol = "Kolm.-Test : ";
     ss << std::fixed << std::setprecision(4) << KolmoTest_rw ;
     leg_kol += ss.str();    
     if(useWeights){
-	TLegendEntry* le = leg->AddEntry((TObject*)0, leg_kol, "");
+	TLegendEntry* le = leg.AddEntry((TObject*)0, leg_kol, "");
 	le->SetTextColor(kBlue);    
     }
-    leg->Draw(); 
+    leg.Draw(); 
     
-    if(useWeights)c->Print("DataVsReweightedMC/"+ Decay + "/" + finalState + "/" + selection + "/" + Branch+ "_" + anythingToString(Year) + ".eps");
-    else c->Print(("DataVsMC/"+Branch+".eps").c_str());
-    
+    if(useWeights)c.Print("DataVsReweightedMC/"+ Decay + "/" + finalState + "/" + selection + "/" + Branch+ "_" + anythingToString(Year) + ".eps");
+    else c.Print("DataVsMC/"+Branch+".eps");
 }
 
 void dataVsMC(int Year = 11, TString finalState = "KKpi", bool useWeights=false, TString Decay = "norm", TString selection = "Preselected"){
@@ -192,7 +199,7 @@ void dataVsMC(int Year = 11, TString finalState = "KKpi", bool useWeights=false,
     plot("Ds_PT","p_{T}(D_{s}) [MeV]",nBins,0,40000,Year, finalState,useWeights, Decay, selection);
     plot("Ds_ETA","#eta(D_{s})",nBins,1,6,Year, finalState,useWeights, Decay, selection);
     
-    if(Decay, selection == "signal"){
+    if(Decay == "signal"){
 	plot("K_plus_PT","p_{T}(K^{+}) [MeV]",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
 	plot("K_plus_ETA","#eta(K^{+})",nBins,1,6,Year, finalState,useWeights, Decay, selection);
 	plot("K_plus_IPCHI2_OWNPV","#chi^{2}_{IP}(K^{+})",nBins,0,10000,Year, finalState,useWeights, Decay, selection);
@@ -253,7 +260,7 @@ void dataVsMC(int Year = 11, TString finalState = "KKpi", bool useWeights=false,
     }    
 
     plot("NTracks","# of tracks",nBins,0,450,Year, finalState,useWeights, Decay, selection);
-    if(selection == "Final") plot("BDTG_response","BDTG",nBins,0,1,Year, finalState,useWeights, Decay, selection);
+    if(selection == "Final") plot("BDTG_response","BDTG",nBins,0,1.2,Year, finalState,useWeights, Decay, selection);
 }
 
 /*
@@ -650,24 +657,25 @@ int main(int argc, char** argv){
 
     /// Reset weights to 1
     if(reweight)for(int i= 0; i < years.size(); i++) for(int j= 0; j < Ds_finalStates.size(); j++){ 
-		resetWeights(years[i],Ds_finalStates[j],"norm");
-		resetWeights(years[i],Ds_finalStates[j],"signal");
+			resetWeights(years[i],Ds_finalStates[j],"norm");
+			resetWeights(years[i],Ds_finalStates[j],"signal");
     }
     /// Produce MC correction histos and apply weights
     /// Weights are applied on top of each other with the previous weighting applied
     if(reweight)for(int n= 0; n < nIterations; n++)
-	for(int i= 0; i < years.size(); i++) 
-		for(int j= 0; j < Ds_finalStates.size(); j++)		
-			for(int k =0; k < vars_set.size(); k++)	{	
-				produceCorrectionHisto(vars_set[k],min_set[k],max_set[k],years[i],Ds_finalStates[j]);
-				applyCorrectionHisto(vars_set[k],min_set[k],max_set[k],years[i],Ds_finalStates[j],"norm");    
-				applyCorrectionHisto(vars_set[k],min_set[k],max_set[k],years[i],Ds_finalStates[j],"signal");    
-			}
-	
+			for(int i= 0; i < years.size(); i++) 
+				for(int j= 0; j < Ds_finalStates.size(); j++)		
+					for(int k =0; k < vars_set.size(); k++)	{	
+						produceCorrectionHisto(vars_set[k],min_set[k],max_set[k],years[i],Ds_finalStates[j]);
+						applyCorrectionHisto(vars_set[k],min_set[k],max_set[k],years[i],Ds_finalStates[j],"norm");    
+						applyCorrectionHisto(vars_set[k],min_set[k],max_set[k],years[i],Ds_finalStates[j],"signal");    
+					}
+			
     /// Draw comparison plots 
     for(int i= 0; i < years.size(); i++) for(int j= 0; j < Ds_finalStates.size(); j++){ 
-		dataVsMC(years[i],Ds_finalStates[j], true,"norm","Final");
-		dataVsMC(years[i],Ds_finalStates[j], true,"signal","Final");
+		dataVsMC(years[i],Ds_finalStates[j], true,"norm","Preselected");
+		//dataVsMC(years[i],Ds_finalStates[j], true,"norm","Final");
+		//dataVsMC(years[i],Ds_finalStates[j], true,"signal","Final");
     }
 
     cout << "==============================================" << endl;

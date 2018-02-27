@@ -508,6 +508,17 @@ void FitAmpListBase::randomizeStartVals(int seed){
             }
 }
 
+
+void FitAmpListBase::randomizePhaseStartVals(int seed){
+        TRandom3* r = new TRandom3(seed);    
+    
+        for(unsigned int i=0; i< this->size(); i++){
+              //if(0 == getAmpPtr(i))continue;
+              double phase = r->Uniform(-pi,pi);
+              if(!(getAmpPtr(i)->FitAmpPhase().isConstant()))getAmpPtr(i)->FitAmpPhase().set( polar(getAmpPtr(i)->FitAmpPhase().getAmp(),phase)  );
+            }
+}
+
 void FitAmpListBase::setTag(int tag){
     for(unsigned int i=0; i< this->size(); i++){
         this->getAmpPtr(i)->setTag(tag);

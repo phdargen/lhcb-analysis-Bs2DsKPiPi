@@ -138,7 +138,8 @@ class FitAmpListBase
   void normalizeAmps(DalitzEventList& evtList);  
   std::vector<double> normFactors(DalitzEventList& evtList);       
   void randomizeStartVals(int seed = 0);  
-  
+  void randomizePhaseStartVals(int seed = 0);  
+
   void setTag(int tag); 
 
   friend class FitAmplitude;

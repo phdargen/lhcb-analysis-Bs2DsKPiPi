@@ -53,7 +53,8 @@ class TimePdfMaster
     const MINT::FitParameter& _offset_sigma_dt;    
     const MINT::FitParameter& _scale_mean_dt;
     const MINT::FitParameter& _scale_sigma_dt;
-    
+    const MINT::FitParameter& _scale_sigma_2_dt;    
+
     const MINT::FitParameter& _c0;
     const MINT::FitParameter& _c1;
     const MINT::FitParameter& _c2;
@@ -101,7 +102,8 @@ class TimePdfMaster
     RooRealVar* _r_scale_mean_dt;
     RooRealVar* _r_offset_sigma_dt;
     RooRealVar* _r_scale_sigma_dt;
-    
+    RooRealVar* _r_scale_sigma_2_dt;  
+ 
     RooRealVar* _r_c0;
     RooRealVar* _r_c1;
     RooRealVar* _r_c2;
@@ -181,7 +183,7 @@ class TimePdfMaster
 
  public:
     TimePdfMaster(const MINT::FitParameter& tau, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
-                  ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt
+                  ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
                   ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
                   ,const MINT::FitParameter& c3, const MINT::FitParameter& c4, const MINT::FitParameter& c5
                   ,const MINT::FitParameter& c6, const MINT::FitParameter& c7, const MINT::FitParameter& c8
@@ -197,6 +199,7 @@ class TimePdfMaster
         _offset_sigma_dt(offset_sigma_dt),    
         _scale_mean_dt(scale_mean_dt),
         _scale_sigma_dt(scale_sigma_dt),
+        _scale_sigma_2_dt(scale_sigma_2_dt),
         _c0(c0),
         _c1(c1),
         _c2(c2),
@@ -258,7 +261,8 @@ class TimePdfMaster
         _r_scale_mean_dt = new RooRealVar("scale_mean_dt", "scale_mean_dt", _scale_mean_dt);
         _r_offset_sigma_dt = new RooRealVar("offset_sigma_dt", "offset_sigma_dt", _offset_sigma_dt);
         _r_scale_sigma_dt = new RooRealVar("scale_sigma_dt", "scale_sigma_dt", _scale_sigma_dt);
-        
+	_r_scale_sigma_2_dt = new RooRealVar("scale_sigma_2_dt", "scale_sigma_2_dt", _scale_sigma_2_dt);      
+
         _r_c0 = new RooRealVar("coeff_0", "coeff_0",_c0);
         _r_c1 = new RooRealVar("coeff_1", "coeff_1",_c1);
         _r_c2 = new RooRealVar("coeff_2", "coeff_2",_c2);
@@ -318,14 +322,14 @@ class TimePdfMaster
         _spline = new RooCubicSplineFun("splinePdf", "splinePdf", *_r_t, myBinning, tacc_list);        
         //_efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt, *_r_scale_mean_dt, *_r_scale_sigma_dt );
         
-        _r_dt_scaled = (RooRealVar*) new RooFormulaVar( "r_dt_scaled","r_dt_scaled", "@0+@1*@2",RooArgList(*_r_offset_sigma_dt,*_r_scale_sigma_dt,*_r_dt));
+        _r_dt_scaled = (RooRealVar*) new RooFormulaVar( "r_dt_scaled","r_dt_scaled", "@0+@1*@2+@3*@2*@2",RooArgList(*_r_offset_sigma_dt,*_r_scale_sigma_dt,*_r_dt,*_r_scale_sigma_2_dt));
         _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt_scaled, *_r_scale_mean_dt, RooRealConstant::value(1.) );
         
         // CP coefficients
         _r_norm = new RooRealVar("norm", "norm",1);
         _r_norm_bar = new RooRealVar("norm_bar", "norm_bar",1);
         _r_C = new RooRealVar("C", "C",1);
-        _r_C_bar = new RooRealVar("C", "C",-1);
+        _r_C_bar = new RooRealVar("Cbar", "Cbar",-1);
         //_r_C_bar= (RooRealVar*) new RooFormulaVar("Cbar","-1. * @0",RooArgList(*_r_C));
         _r_D= new RooRealVar("D", "D",0);
         _r_D_bar= new RooRealVar("Dbar", "Dbar",0);
@@ -444,28 +448,28 @@ class TimePdfMaster
         /// Time pdf integrators
         _cosh_term = new TimePdfIntegrator(coshBasis,_efficiency,
                                            _tau,_dGamma,_dm,
-                                           _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt
+                                           _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                            ,_c0, _c1, _c2
                                            ,_c3, _c4, _c5
                                            ,_c6, _c7, _c8
                                            ,_c9);
         _cos_term = new TimePdfIntegrator(cosBasis,_efficiency,
                                           _tau,_dGamma,_dm,
-                                          _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt
+                                          _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                           ,_c0, _c1, _c2
                                           ,_c3, _c4, _c5
                                           ,_c6, _c7, _c8
                                           ,_c9);
         _sinh_term = new TimePdfIntegrator(sinhBasis,_efficiency,
                                            _tau,_dGamma,_dm,
-                                           _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt
+                                           _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                            ,_c0, _c1, _c2
                                            ,_c3, _c4, _c5
                                            ,_c6, _c7, _c8
                                            ,_c9);
         _sin_term = new TimePdfIntegrator(sinBasis,_efficiency,
                                           _tau,_dGamma,_dm,
-                                          _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt
+                                          _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                           ,_c0, _c1, _c2
                                           ,_c3, _c4, _c5
                                           ,_c6, _c7, _c8
@@ -487,6 +491,17 @@ class TimePdfMaster
         _pdf_eta_SS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_SS","pdf_eta_SS",*_r_eta_SS,*_r_h_eta_SS));
         
         f_pdfs->Close();
+
+       TH1F *h_spline = new TH1F("", "", 100, _min_TAU, _max_TAU);
+       for (int i = 1; i<=h_spline->GetNbinsX(); i++) {
+           _r_t->setVal(h_spline->GetXaxis()->GetBinCenter(i));
+           h_spline->SetBinContent(i,_spline->getVal());
+       }
+       
+       TCanvas* c = new TCanvas();
+       h_spline->SetLineColor(kRed);
+       h_spline->Draw("histc");
+       c->Print("spline.eps");
     }
          
     double get_cosh_term_Val(IDalitzEvent& evt){
@@ -592,7 +607,7 @@ class TimePdfMaster
     }
     
     double getCalibratedResolution(double& dt){
-        return _offset_sigma_dt + _scale_sigma_dt * dt;
+        return _offset_sigma_dt + _scale_sigma_dt * dt + _scale_sigma_2_dt * dt *dt;
     }
     
    void listFitParDependencies(){
@@ -611,6 +626,7 @@ class TimePdfMaster
        _r_scale_mean_dt->setVal(_scale_mean_dt);
        _r_offset_sigma_dt->setVal(_offset_sigma_dt);
        _r_scale_sigma_dt->setVal(_scale_sigma_dt);
+       _r_scale_sigma_2_dt->setVal(_scale_sigma_2_dt);
        _r_c0->setVal(_c0);
        _r_c1->setVal(_c1);
        _r_c2->setVal(_c2);

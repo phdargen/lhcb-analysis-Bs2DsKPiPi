@@ -318,8 +318,12 @@ std::vector<double> coherenceFactor(FitAmpSum& fas, FitAmpSum& fas_bar, double r
     
     cout << "r = " << result[0] << endl;
     cout << "k = " << result[1] << endl;
-    cout << "d = " << result[2] << " [deg]" << endl << endl;
-    
+    cout << "phase = " << result[2] << " [deg]" << endl << endl;
+
+    cout << "C = " << (1.-pow(result[0],2))/(1.+pow(result[0],2)) << endl;
+    cout << "D = " << -2. * valK.real()/val1 /(1.+pow(result[0],2)) << endl;
+    cout << "S = " << -2. * valK.imag()/val1 /(1.+pow(result[0],2)) << endl;
+
     return result;
 }
 
@@ -353,6 +357,10 @@ std::vector<double> coherenceFactor(FitAmpSum& fas, FitAmpSum& fas_bar, double r
     cout << "r = " << result[0] << endl;
     cout << "k = " << result[1] << endl;
     cout << "d = " << result[2] << " [deg]" << endl << endl;
+
+    cout << "C = " << (1.-pow(result[0],2))/(1.+pow(result[0],2)) << endl;
+    cout << "D = " << -2. * valK.real()/val1 /(1.+pow(result[0],2)) << endl;
+    cout << "S = " << -2. * valK.imag()/val1 /(1.+pow(result[0],2)) << endl;
     
     return result;
 }
@@ -388,6 +396,10 @@ std::vector<double> coherenceFactor_CP(FitAmpSum& fas, FitAmpSum& fas_bar, doubl
     cout << "r = " << result[0] << endl;
     cout << "k = " << result[1] << endl;
     cout << "d = " << result[2] << " [deg]" << endl << endl;
+
+    cout << "C = " << (1.-pow(result[0],2))/(1.+pow(result[0],2)) << endl;
+    cout << "D = " << -2. * valK.real()/val1 /(1.+pow(result[0],2)) << endl;
+    cout << "S = " << -2. * valK.imag()/val1 /(1.+pow(result[0],2)) << endl;
     
     return result;
 }
@@ -422,6 +434,10 @@ std::vector<double> coherenceFactor_CP(FitAmpSum& fas, FitAmpSum& fas_bar, doubl
         cout << "r = " << result[0] << endl;
         cout << "k = " << result[1] << endl;
         cout << "d = " << result[2] << " [deg]" << endl << endl;
+
+        cout << "C = " << (1.-pow(result[0],2))/(1.+pow(result[0],2)) << endl;
+        cout << "D = " << -2. * valK.real()/val1 /(1.+pow(result[0],2)) << endl;
+        cout << "S = " << -2. * valK.imag()/val1 /(1.+pow(result[0],2)) << endl;
     
         return result;
 }
@@ -459,7 +475,8 @@ protected:
     const MINT::FitParameter& _offset_sigma_dt;    
     const MINT::FitParameter& _scale_mean_dt;
     const MINT::FitParameter& _scale_sigma_dt;
-    
+    const MINT::FitParameter& _scale_sigma_2_dt;
+
     const MINT::FitParameter& _c0;
     const MINT::FitParameter& _c1;
     const MINT::FitParameter& _c2;
@@ -746,6 +763,7 @@ public:
     _offset_sigma_dt(offset_sigma_dt),    
     _scale_mean_dt(scale_mean_dt),
     _scale_sigma_dt(scale_sigma_dt),
+    _scale_sigma_2_dt(scale_sigma_2_dt),
     _c0(c0),
     _c1(c1),
     _c2(c2),
@@ -775,7 +793,7 @@ public:
     _marginalPdfsPrefix(marginalPdfsPrefix)
     {
 		        _timePdfMaster = new TimePdfMaster(_tau, _dGamma, _dm
-                                          ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt
+                                          ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                           ,_c0, _c1, _c2
                                           ,_c3, _c4, _c5
                                           ,_c6, _c7, _c8
@@ -1102,8 +1120,8 @@ void ampFit(int step=0){
     counted_ptr<IReturnComplex> r_2_minus = new CPV_amp_norm(r_2_re,r_2_im,-1,mp_K1410_Re,mp_K1410_Im);
     counted_ptr<IReturnComplex> r_2_plus_scaled = new CPV_amp_norm_scaled(r_2_re,r_2_im,1,mp_K1410_Re,mp_K1410_Im);
     counted_ptr<IReturnComplex> r_2_minus_scaled = new CPV_amp_norm_scaled(r_2_re,r_2_im,-1,mp_K1410_Re,mp_K1410_Im);
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-", r_2_plus, r_2_minus );
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "Bs0->K*(1410)+(->rho(770)0(->pi+,pi-),K+),Ds-", r_2_plus_scaled, r_2_minus_scaled );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-", r_2_plus, r_2_minus );
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "Bs0->K*(1410)+(->rho(770)0(->pi+,pi-),K+),Ds-", r_2_plus_scaled, r_2_minus_scaled );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1460)+", r_2_plus, r_2_minus );
 
     const IMinuitParameter* mp_3_Re = mps->getParPtr("NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)_Re");
@@ -1123,10 +1141,12 @@ void ampFit(int step=0){
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->sigma10(->pi+,pi-),Ds-)", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+", r_3_plus, r_3_minus );   
    
-    AddAmpsToList(fas_tmp, fas, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)" );
-    //AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)");
+    //AddAmpsToList(fas_tmp, fas, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)" );
+    //AddAmpsToList(fas_tmp, fas, "K(1)(1400)+");
+    AddAmpsToList(fas_tmp, fas, "K*(1410)+");
     AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)");
 
+    //AddAmpsToList(fas_tmp, fas_bar, "K(1)(1400)+");
     AddAmpsToList(fas_tmp, fas_bar, "K(1460)");
     AddAmpsToList(fas_tmp, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)");
 
@@ -1198,6 +1218,7 @@ void ampFit(int step=0){
     FitParameter  scale_mean_dt("scale_mean_dt",1,1,0.1);
     FitParameter  offset_sigma_dt("offset_sigma_dt",1,0.,0.1);
     FitParameter  scale_sigma_dt("scale_sigma_dt",1,1.2,0.1);
+    FitParameter  scale_sigma_2_dt("scale_sigma_2_dt",1,0.,0.1);
     FitParameter  p0_os("p0_os",1,0.,0.);
     FitParameter  p1_os("p1_os",1,0.,0.);
     FitParameter  delta_p0_os("delta_p0_os",1,0.,0.);
@@ -1230,6 +1251,7 @@ void ampFit(int step=0){
     FitParameter  scale_mean_dt_Run1("scale_mean_dt_Run1",1,1,0.1);
     FitParameter  offset_sigma_dt_Run1("offset_sigma_dt_Run1",1,0.,0.1);
     FitParameter  scale_sigma_dt_Run1("scale_sigma_dt_Run1",1,1.2,0.1);
+    FitParameter  scale_sigma_dt_2_Run1("scale_sigma_dt_2_Run1",1,0.,0.1);
     FitParameter  p0_os_Run1("p0_os_Run1",1,0.,0.);
     FitParameter  p1_os_Run1("p1_os_Run1",1,0.,0.);
     FitParameter  delta_p0_os_Run1("delta_p0_os_Run1",1,0.,0.);
@@ -1250,6 +1272,7 @@ void ampFit(int step=0){
     FitParameter  scale_mean_dt_Run2("scale_mean_dt_Run2",1,1,0.1);
     FitParameter  offset_sigma_dt_Run2("offset_sigma_dt_Run2",1,0.,0.1);
     FitParameter  scale_sigma_dt_Run2("scale_sigma_dt_Run2",1,1.2,0.1);
+    FitParameter  scale_sigma_dt_2_Run2("scale_sigma_dt_2_Run2",1,1.2,0.1);
     FitParameter  p0_os_Run2("p0_os_Run2",1,0.,0.);
     FitParameter  p1_os_Run2("p1_os_Run2",1,0.,0.);
     FitParameter  delta_p0_os_Run2("delta_p0_os_Run2",1,0.,0.);
@@ -1319,7 +1342,7 @@ void ampFit(int step=0){
     
     /// Make full time-dependent PDF
     FullAmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma,tau, dGamma, dm
-                      ,offset_sigma_dt, scale_mean_dt, scale_sigma_dt
+                      ,offset_sigma_dt, scale_mean_dt, scale_sigma_dt, scale_sigma_2_dt
                       ,c0, c1, c2 ,c3, c4, c5
                       ,c6, c7, c8, c9,
                       p0_os, p1_os, delta_p0_os, delta_p1_os, 
@@ -1330,7 +1353,7 @@ void ampFit(int step=0){
 
     // Simultaneous pdfs
     FullAmpsPdfFlexiFastCPV pdf_Run1_t0(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma,
-		      tau, dGamma, dm,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+		      tau, dGamma, dm,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
                       ,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
                       p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -1340,7 +1363,7 @@ void ampFit(int step=0){
                       production_asym_Run1, detection_asym_Run1, "_Run1" );
 
     FullAmpsPdfFlexiFastCPV pdf_Run1_t1(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma,
-		      tau, dGamma, dm,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1
+		      tau, dGamma, dm,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
                       ,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
                       p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -1350,7 +1373,7 @@ void ampFit(int step=0){
                       production_asym_Run1, detection_asym_Run1, "_Run1" );
 
     FullAmpsPdfFlexiFastCPV pdf_Run2_t0(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma,
-		      tau, dGamma, dm,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+		      tau, dGamma, dm,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                       ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
                       ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
                       p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -1360,7 +1383,7 @@ void ampFit(int step=0){
                       production_asym_Run2, detection_asym_Run2, "_Run2" );
 
     FullAmpsPdfFlexiFastCPV pdf_Run2_t1(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma,
-		      tau, dGamma, dm,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2
+		      tau, dGamma, dm,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                       ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
                       ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
                       p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -1826,7 +1849,7 @@ void ampFit(int step=0){
     Minimiser mini;
     if(doSimFit)mini.attachFunction(&neg2LL_sim);
     else mini.attachFunction(&neg2LL);
-    //mini.doFit();
+    mini.doFit();
     mini.printResultVsInput();
 
     /// Calculate pulls
@@ -1872,7 +1895,6 @@ void ampFit(int step=0){
     r_val = k_fit[0];
     k_val = k_fit[1];
     delta_val = k_fit[2];
-
     vector<double> k_fit_CP = coherenceFactor_CP(fas_CP,fas_bar_CP,(double)r, (double)delta,eventListMC);
 
     pdf.doFinalStatsAndSaveForAmp12(&mini,((string)OutputDir+"FitAmpResults_rand_"+anythingToString((int)seed)).c_str(),((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
