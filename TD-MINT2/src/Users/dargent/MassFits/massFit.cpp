@@ -1138,6 +1138,7 @@ vector< vector<double> > fitNorm(){
 	if(sWeight){
 		output = new TFile(((string)outFileName).c_str(),"RECREATE");
 		tree->SetBranchStatus("*",1);
+		tree->SetBranchStatus("weight",0);
 
 		out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
     		b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
@@ -1827,17 +1828,18 @@ void fitSignal(){
 	/// Output file
 	TFile *output;
 	TTree* out_tree;
-	double sw;
+	double sw,sw_B0;
 	Int_t t_year, t_Ds_finalState;
 	TBranch *b_sw,*b_w, *b_year,*b_Ds_finalState;
 
 	if(sWeight){
 		output = new TFile(((string)outFileName).c_str(),"RECREATE");
 		tree->SetBranchStatus("*",1);
+		tree->SetBranchStatus("weight",0);
 
 		out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
     		b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
-    		b_w = out_tree->Branch("weight", &sw, "weight/D");
+    		b_w = out_tree->Branch("weight", &sw_B0, "weight/D");
 
         	out_tree->SetBranchAddress("year", &t_year, &b_year);
         	out_tree->SetBranchAddress("Ds_finalState", &t_Ds_finalState, &b_Ds_finalState);
@@ -1849,6 +1851,7 @@ void fitSignal(){
 		} 
 	}
 	double weights[(int)data->numEntries()];
+	double weights_B0[(int)data->numEntries()];
 
 	/// Calculate total signal yield
 	double signal_yield = 0.;
@@ -1955,6 +1958,7 @@ void fitSignal(){
 					b_Ds_finalState->GetEntry(n);
 					if(A_is_in_B(anythingToString(t_year), (string) str_year[i]) && t_Ds_finalState == j){
 						weights[n] = sPlot.GetSWeight(n_ij,"n_sig_{" +str_year[i] + ";" + str_Ds[j] + "}" + "_sw");
+						weights_B0[n] = sPlot.GetSWeight(n_ij,"n_sig_B0_{" +str_year[i] + ";" + str_Ds[j] + "}" + "_sw");
 						n_ij++;
 					}
 				}
@@ -1965,6 +1969,7 @@ void fitSignal(){
 	if(sWeight){
 		for(int n = 0; n < out_tree->GetEntries(); n++){
 			sw = weights[n];
+			sw_B0 = weights_B0[n];
 			b_sw->Fill();
 			b_w->Fill();
 		}
