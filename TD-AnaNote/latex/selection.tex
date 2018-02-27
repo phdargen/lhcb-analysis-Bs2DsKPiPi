@@ -135,13 +135,16 @@ Various classifiers were investigated in order to select the best performing dis
 We use truth-matched MC as signal input. 
 Simulated signal candidates are required to pass the same trigger, stripping and preselection requirements, that were used to select the data samples.  
 For the background we use events from the high mass sideband ($m_{\Bs candidate}$ $>$ 5600 $\mevcc$) of our data samples. 
-As shown in Fig. \ref{fig:massforBDT}, this mass region is sufficiently far away from signal structures and is expected to be dominantly composed of combinatorial background. \newline
+As shown in Fig. \ref{fig:massforBDT}, this mass region is sufficiently far away from signal structures and is expected to be dominantly composed of combinatorial background.
+For completeness, the mass distribution of preselected $\Ds\to\hadron\hadron\hadron$ candidates (where $\hadron = \pion$ or $\hadron = \kaon$) is also shown in Fig. \ref{fig:massforBDT}.    \newline
 
 \begin{figure}[h]
 %\vspace*{-0.4cm}
-\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/mass_Bs_forBDT_12_AnA.png}
+\includegraphics[height=7.0cm,width=0.49\textwidth]{figs/Ds_MM_afterpresel.pdf}
+\includegraphics[height=7.0cm,width=0.49\textwidth]{figs/Bs_MM_afterpresel.pdf}
 %\vspace*{-0.2cm}
-\caption{Invariant mass distribution of preselected $\Bs\to\Ds\kaon\pion\pion$ candidates. The red coloured region with $m_{\Bs candidate}$ $>$ 5600 $\mevcc$ is used as background input for the boosted decision tree.}
+\caption{Invariant mass distribution of preselected (left) $\Ds\to\hadron\hadron\hadron$ and (right) $\Bs\to\Ds\kaon\pion\pion$ candidates. 
+For the  $\Bs\to\Ds\kaon\pion\pion$ candidates, the region right from the red coloured line with $m_{\Bs candidate}$ $>$ 5600 $\mevcc$ is used as background input for the boosted decision tree.}
 \label{fig:massforBDT}
 \end{figure}
 
