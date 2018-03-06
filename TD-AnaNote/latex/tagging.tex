@@ -1,4 +1,5 @@
 % !TEX root = main.tex
+\clearpage
 \section{Flavour Tagging}
 \label{sec:Tagging}
 To successfully perform a time- and amplitude-dependent measurement of $\gamma$, the identification of the initial state flavour of the $\Bs$ meson is crucial.
@@ -57,13 +58,6 @@ The responses of the OS electron, muon, neural net kaon and the secondary vertex
 Figure \ref{fig:OSdistribution} shows the distribution of the predicted OS mistag for signal candidates from $\Bs\to\Ds\pion\pion\pion$. 
 The extracted calibration parameters and tagging asymmetries are summarized in Table \ref{table: OScalibration} and the measured tagging power for the OS combination is $\epsilon_{eff,OS} = 4.81 \%$.
 
-\begin{figure}[h]
-\centering
-\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/Tagging/OS_combination_etaDis.pdf}
-\caption{Distribution of the predicted OS combination mistag probablity for $\Bs\to\Ds\pion\pion\pion$ signal candidates.}
-\label{fig:OSdistribution}
-\end{figure}
-
 
 \begin{table}[h]
 \centering
@@ -86,15 +80,6 @@ $p_{0}$ & $p_{1}$ & $<\eta>$ & $\epsilon_{tag}$ & $\Delta p_{o}$ & $\Delta p_{1}
 The SS neural net kaon tagger can be calibrated using the flavour-specific $\Bs\to\Ds\pion\pion\pion$ decay. It's development, performance and calibration is described in detail in \cite{Aaij:2016psi}. 
 Figure \ref{fig:SSdistribution} shows the distribution of the predicted mistag of the neural net kaon tagger. 
 The extracted calibration parameters and tagging asymmetries are summarized in Table \ref{table: SScalibration} and the measured tagging power for this algorithm is $\epsilon_{eff,SS} = 3.22  \%$.
-
-
-\begin{figure}[h]
-\centering
-\includegraphics[height=7.4cm,width=0.7\textwidth]{figs/Tagging/SS_nnetKaon_etaDis.pdf}
-\caption{Distribution of the predicted SS neural net kaon tagger mistag probablity for $\Bs\to\Ds\pion\pion\pion$ signal candidates.}
-\label{fig:SSdistribution}
-\end{figure}
-
 
 \begin{table}[h]
 \centering
@@ -121,73 +106,66 @@ to compare the similarity of the mistag probabilities, tagging decisions and kin
 The distributions of the predicted mistag probability $\eta$ for the OS combination and the SS kaon tagger are shown in Fig. \ref{fig:w_MC_comparison} (simulation) and Fig. \ref{fig:w_data_comparison} (data).
  
 
+%\begin{figure}[h]
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/w_OS_MC.pdf}
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/w_SS_MC.pdf}
+%\caption{Distributions of the predicted mistag $\eta$ for the OS combination (left) and the SS kaon tagger (right) in simulated $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\pion\pion\pion$ (red) signal.}
+%\label{fig:w_MC_comparison}
+%\end{figure}
 
 \begin{figure}[h]
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/w_OS_MC.pdf}
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/w_SS_MC.pdf}
-\caption{Distributions of the predicted mistag $\eta$ for the OS combination (left) and the SS kaon tagger (right) in simulated $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\pion\pion\pion$ (red) signal.}
-\label{fig:w_MC_comparison}
-\end{figure}
-
-
-\begin{figure}[h]
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/w_OS.pdf}
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/w_SS.pdf}
+\includegraphics[height=!,width=0.5\textwidth]{figs/dataVsMC/norm2signal/Ds2all_Bs_TAGOMEGA_OS.pdf}
+\includegraphics[height=!,width=0.5\textwidth]{figs/dataVsMC/norm2signal/Ds2all_Bs_SS_nnetKaon_PROB.pdf}
 \caption{Distributions of the predicted mistag $\eta$ for the OS combination (left) and the SS kaon tagger (right) 
-for signal candidates in the $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\pion\pion\pion$ (red) data samples. 
-The signal distributions are obtained using sWeights, the procedure is described in Sec. \ref{subsec: sWegihts}.}
+for signal candidates in the $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\pion\pion\pion$ (red) data samples.}
 \label{fig:w_data_comparison}
 \end{figure}
-
 
 Both, data and simulated samples, show good agreement between the signal and normalization channel. 
 Compatibility is also seen in Fig. \ref{fig:tagDec_data_comparison}, which shows the comparison of the tagging decision distributions of the OS and SS tagger for sweighted data. 
 
-
-\begin{figure}[h]
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/qOS.pdf}
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/q_SS.pdf}
-\caption{Distributions of the tagging decision from the OS combination (left) and the SS kaon tagger (right) for signal candidates in the $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\pion\pion\pion$ (red) data samples. 
-The signal distributions are obtained using sWeights, the procedure is described in Sec. \ref{subsec: sWegihts}.}
-\label{fig:tagDec_data_comparison}
-\end{figure}
-
+%\begin{figure}[h]
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/qOS.pdf}
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/q_SS.pdf}
+%\caption{Distributions of the tagging decision from the OS combination (left) and the SS kaon tagger (right) for signal candidates in the $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\pion\pion\pion$ (red) data samples. 
+%The signal distributions are obtained using sWeights, the procedure is described in Sec. \ref{subsec: sWegihts}.}
+%\label{fig:tagDec_data_comparison}
+%\end{figure}
 
 
-\begin{figure}[h]
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/OS_Combination_DEC_norm_RunsComparison.pdf}
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/SS_nnetKaon_DEC_norm_RunsComparison.pdf}\\
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/OS_Combination_PROB_norm_RunsComparison.pdf}
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/SS_nnetKaon_PROB_norm_RunsComparison.pdf}
-\caption{Distributions of the tagging decision from the OS combination (upper left) and the SS kaon tagger (upper right), 
-as well as the predicted mistag $\eta$ for OS (bottm left) and the SS  (bottom right), for $\Bs\to\Ds\pion\pion\pion$ candidates in the Run 1 (blue) and Run 2 (green) data samples. 
-The signal distributions are obtained using sWeights, the procedure is described in Sec. \ref{subsec: sWegihts}.}
-\label{fig:kinematics_data_comparison}
-\end{figure}
+%\begin{figure}[h]
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/OS_Combination_DEC_norm_RunsComparison.pdf}
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/SS_nnetKaon_DEC_norm_RunsComparison.pdf}\\
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/OS_Combination_PROB_norm_RunsComparison.pdf}
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/SS_nnetKaon_PROB_norm_RunsComparison.pdf}
+%\caption{Distributions of the tagging decision from the OS combination (upper left) and the SS kaon tagger (upper right), 
+%as well as the predicted mistag $\eta$ for OS (bottm left) and the SS  (bottom right), for $\Bs\to\Ds\pion\pion\pion$ candidates in the Run 1 (blue) and Run 2 (green) data samples. 
+%The signal distributions are obtained using sWeights, the procedure is described in Sec. \ref{subsec: sWegihts}.}
+%\label{fig:kinematics_data_comparison}
+%\end{figure}
 
 Fig. \ref{fig:kinematics_data_comparison} shows the signal data distributions of the transverse $\Bs$ momentum $\pt$, the pseudorapidity $\eta$ of the signal candidate and the number of reconstructed tracks per event.
 Sufficient agreement is observed.
 
+%\begin{figure}[h]
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/Bs_Pt_comparison.pdf}
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/Bs_eta_comparison.pdf}\\
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/nTracks_comparison.pdf}
+%\caption{Distributions of the transverse momentum $\pt$ (top left), 
+%the pseudorapidity $\eta$ (top right) and the reconstructed number of tracks in the event (bottom left) for signal candidates in the $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\pion\pion\pion$ (red) data samples. 
+%The signal distributions are obtained using sWeights, the procedure is described in Sec. \ref{subsec: sWegihts}.}
+%\label{fig:kinematics_data_comparison}
+%\end{figure}
 
-\begin{figure}[h]
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/Bs_Pt_comparison.pdf}
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/Bs_eta_comparison.pdf}\\
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/nTracks_comparison.pdf}
-\caption{Distributions of the transverse momentum $\pt$ (top left), 
-the pseudorapidity $\eta$ (top right) and the reconstructed number of tracks in the event (bottom left) for signal candidates in the $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\pion\pion\pion$ (red) data samples. 
-The signal distributions are obtained using sWeights, the procedure is described in Sec. \ref{subsec: sWegihts}.}
-\label{fig:kinematics_data_comparison}
-\end{figure}
-
-\begin{figure}[h]
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/Bs_Pt_norm_RunsComparison.pdf}
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/Bs_eta_norm_RunsComparison.pdf}\\
-\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/nTracks_norm_RunsComparison.pdf}
-\caption{Distributions of the transverse momentum $\pt$ (top left), 
-the pseudorapidity $\eta$ (top right) and the reconstructed number of tracks in the event (bottom left) for  $\Bs\to\Ds\pion\pion\pion$ candidates in the Run 1 (blue) and Run 2 (green) data samples. 
-The signal distributions are obtained using sWeights, the procedure is described in Sec. \ref{subsec: sWegihts}.}
-\label{fig:kinematics_data_comparison}
-\end{figure}
+%\begin{figure}[h]
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/Bs_Pt_norm_RunsComparison.pdf}
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/Bs_eta_norm_RunsComparison.pdf}\\
+%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/nTracks_norm_RunsComparison.pdf}
+%\caption{Distributions of the transverse momentum $\pt$ (top left), 
+%the pseudorapidity $\eta$ (top right) and the reconstructed number of tracks in the event (bottom left) for  $\Bs\to\Ds\pion\pion\pion$ candidates in the Run 1 (blue) and Run 2 (green) data samples. 
+%The signal distributions are obtained using sWeights, the procedure is described in Sec. \ref{subsec: sWegihts}.}
+%\label{fig:kinematics_data_comparison}
+%\end{figure}
 
 To justify the portability of the flavour tagging calibration obtained from $\Bs\to\Ds\pion\pion\pion$ to the $\Bs\to\Ds\kaon\pion\pion$ channel, 
 besides the good agreement of the distributions shown above, the dependence of the measured mistag $\omega$ on the predicted mistag $\eta$ has to be compatible in both channel.

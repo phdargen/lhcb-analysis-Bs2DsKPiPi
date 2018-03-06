@@ -181,6 +181,7 @@ void plot(TTree* tree, TTree* treeMC, TString Branch,TString TitleX, int bins, d
     leg->Draw(); 
     
     cout << endl;
+    if(A_is_in_B("_1.00",(string)Branch))Branch.ReplaceAll("_1.00","");
     c.Print((string)OutputDir + label + "_"+Branch+".eps");
     if(updateAnaNotePlots)c.Print("../../../../../TD-AnaNote/latex/figs/dataVsMC/" + (string)OutputDir + label + "_"+Branch+".pdf" );
 
@@ -240,7 +241,7 @@ void compare(TString fileA, TString fileB, TString weightA, TString weightB, TSt
     plot(new_treeA,new_treeB,"Bs_DTF_TAU","t(B) [ns]",nBins,0.,10.,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_DTF_TAUERR","#sigma_{t}(B) [ns]",nBins,0,0.15,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_ptasy_1.00","B_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
-    plot(new_treeA,new_treeB,"Bs_DTF_MERR","#sigma_{m}",nBins,4.,25.,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Bs_DTF_MERR","#sigma_{m} [MeV]",nBins,4.,25.,weightA, weightB, newWeightB, label);
 
     /// BDT
     plot(new_treeA,new_treeB,"DTF_CHI2NDOF","DTF #chi^{2}",nBins,0.,7,weightA, weightB, newWeightB, label);    
