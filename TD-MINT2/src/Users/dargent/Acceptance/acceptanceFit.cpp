@@ -168,21 +168,22 @@ TH1D* createBinning(){
 vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefix = "", string label = ""){
 
 	// Options
+    NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
 	NamedParameter<string> BinningName("BinningName",(string)"default");
-        NamedParameter<int> makePlots("makePlots", 0);
+    NamedParameter<int> makePlots("makePlots", 0);
 	NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");
 	NamedParameter<double> min_TAU("min_TAU", 0.4);
 	NamedParameter<double> max_TAU("max_TAU", 10.);
-        NamedParameter<double> min_TAUERR("min_TAUERR", 0.);
-        NamedParameter<double> max_TAUERR("max_TAUERR", 0.1);
+    NamedParameter<double> min_TAUERR("min_TAUERR", 0.);
+    NamedParameter<double> max_TAUERR("max_TAUERR", 0.1);
 	NamedParameter<int> nBins("nBins", 100);
 	NamedParameter<int> numCPU("numCPU", 6);
 	NamedParameter<int> useAdaptiveBinningKnots("useAdaptiveBinningKnots", 0);
 	NamedParameter<int> fixFirstKnot("fixFirstKnot", 0);
 
 	// Read Dataset
-	TFile* file= new TFile("/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
-	TTree* tree = (TTree*) file->Get("DecayTree");
+    TChain* tree=new TChain("DecayTree");
+    tree->Add( ((string)InputDir + "Data/norm.root").c_str());
 	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("*TAU*",1);
 	tree->SetBranchStatus("*sw",1);
@@ -190,6 +191,10 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	tree->SetBranchStatus("*finalState",1);
 	tree->SetBranchStatus("TriggerCat",1);
 	tree->SetBranchStatus("run",1);
+    tree->SetBranchStatus("Bs_L0Global_TIS",1);
+    tree->SetBranchStatus("Bs_*_TOS",1);
+    tree->SetBranchStatus("*PT",1);
+    tree->SetBranchStatus("m_*",1);
 
 	//Define RooRealVar for observables
 	RooRealVar Bs_TAU(((string)Bs_TAU_Var).c_str(), ((string)Bs_TAU_Var).c_str(), min_TAU, max_TAU, "ps");
@@ -197,10 +202,39 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	RooRealVar N_Bs_sw("N_Bs_sw", "N_Bs_sw", 0.);
 	RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
 	RooRealVar year("year", "year", 0.);
-	RooRealVar run("run", "run", 0.);
 	RooRealVar TriggerCat("TriggerCat", "TriggerCat", 0.);
-	
-	RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, N_Bs_sw, run, TriggerCat);
+    
+    RooRealVar m_Kpipi("m_Kpipi", "m_Kpipi", 0.);
+    RooRealVar DsDaughters_min_PT("DsDaughters_min_PT", "DsDaughters_min_PT", 0.);
+    RooRealVar XsDaughters_min_PT("XsDaughters_min_PT", "XsDaughters_min_PT", 0.);
+
+    RooRealVar run("run", "run", 0.);
+	RooRealVar Bs_L0Global_TIS("Bs_L0Global_TIS", "Bs_L0Global_TIS", 0.);
+    RooRealVar Bs_L0HadronDecision_TOS("Bs_L0HadronDecision_TOS", "Bs_L0HadronDecision_TOS", 0.);
+
+    RooRealVar Bs_Hlt1TrackMVADecision_TOS("Bs_Hlt1TrackMVADecision_TOS", "Bs_Hlt1TrackMVADecision_TOS", 0.);
+    RooRealVar Bs_Hlt1TwoTrackMVADecision_TOS("Bs_Hlt1TwoTrackMVADecision_TOS", "Bs_Hlt1TwoTrackMVADecision_TOS", 0.);
+    RooRealVar Bs_Hlt1TrackAllL0Decision_TOS("Bs_Hlt1TrackAllL0Decision_TOS", "Bs_Hlt1TrackAllL0Decision_TOS", 0.);
+    
+    RooRealVar Bs_Hlt2Topo2BodyDecision_TOS("Bs_Hlt2Topo2BodyDecision_TOS", "Bs_Hlt2Topo2BodyDecision_TOS", 0.);
+    RooRealVar Bs_Hlt2Topo3BodyDecision_TOS("Bs_Hlt2Topo3BodyDecision_TOS", "Bs_Hlt2Topo3BodyDecision_TOS", 0.);
+    RooRealVar Bs_Hlt2Topo4BodyDecision_TOS("Bs_Hlt2Topo4BodyDecision_TOS", "Bs_Hlt2Topo4BodyDecision_TOS", 0.);
+    RooRealVar Bs_Hlt2PhiIncPhiDecision_TOS("Bs_Hlt2PhiIncPhiDecision_TOS", "Bs_Hlt2PhiIncPhiDecision_TOS", 0.);
+
+    RooRealVar Bs_Hlt2Topo2BodyBBDTDecision_TOS("Bs_Hlt2Topo2BodyBBDTDecision_TOS", "Bs_Hlt2Topo2BodyBBDTDecision_TOS", 0.);
+    RooRealVar Bs_Hlt2Topo3BodyBBDTDecision_TOS("Bs_Hlt2Topo3BodyBBDTDecision_TOS", "Bs_Hlt2Topo3BodyBBDTDecision_TOS", 0.);
+    RooRealVar Bs_Hlt2Topo4BodyBBDTDecision_TOS("Bs_Hlt2Topo4BodyBBDTDecision_TOS", "Bs_Hlt2Topo4BodyBBDTDecision_TOS", 0.);
+    RooRealVar Bs_Hlt2IncPhiDecision_TOS("Bs_Hlt2IncPhiDecision_TOS", "Bs_Hlt2IncPhiDecision_TOS", 0.);
+
+	RooArgList observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, N_Bs_sw, run, TriggerCat);
+    RooArgList observables2(Bs_L0Global_TIS, Bs_L0HadronDecision_TOS, Bs_Hlt1TrackMVADecision_TOS, Bs_Hlt1TwoTrackMVADecision_TOS, Bs_Hlt1TrackAllL0Decision_TOS);
+    RooArgList observables3(Bs_Hlt2Topo2BodyDecision_TOS, Bs_Hlt2Topo3BodyDecision_TOS, Bs_Hlt2Topo4BodyDecision_TOS, Bs_Hlt2Topo2BodyBBDTDecision_TOS, Bs_Hlt2Topo3BodyBBDTDecision_TOS, Bs_Hlt2Topo4BodyBBDTDecision_TOS,Bs_Hlt2IncPhiDecision_TOS,Bs_Hlt2PhiIncPhiDecision_TOS);
+    RooArgList observables4(m_Kpipi,DsDaughters_min_PT,XsDaughters_min_PT);
+
+    observables.add(observables2);
+    observables.add(observables3);
+    observables.add(observables4);
+
 	RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(N_Bs_sw.GetName()), Cut(CutString.c_str()));
 	
 	///SETUP FITTER AND FIT TO DECAYTIME DISTRIBUTION
@@ -398,9 +432,7 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	double chi2 = frame_m->chiSquare("pdf","data",values.size());
 	cout << "chi2 = " << chi2 << endl;
 	cout << "used datasets:     "<< CutString.c_str() << endl;
-	
-	file->Close();
-    
+	    
    	vector< vector<double> > myCoeffsAndErr;
     	myCoeffsAndErr.push_back(myCoeffs);
     	myCoeffsAndErr.push_back(myCoeffsErr);    
@@ -915,6 +947,25 @@ void compareAcceptance(){
     vector<TString> legend_Ds_mod2_2;
     legend_Ds_mod2_2.push_back("D_{s}^{-} #rightarrow #pi^{+} #pi^{-} #pi^{-}"); 
     legend_Ds_mod2_2.push_back("D_{s}^{-} #rightarrow (K^{+} K^{-} #pi^{-})_{NR}"); 
+    
+    //
+    vector<TString> cuts_Ds_mod3;
+    cuts_Ds_mod3.push_back("(Ds_finalState == 3)");   
+    //cuts_Ds_mod3.push_back("(Ds_finalState == 0) && Ds_finalState != 1 && Ds_finalState != 3");
+    //cuts_Ds_mod3.push_back("(Ds_finalState == 0) && Ds_finalState != 2 && Ds_finalState != 3");
+    //cuts_Ds_mod3.push_back("(Ds_finalState == 1) && Ds_finalState != 0 && Ds_finalState != 3");
+
+    vector<TString> legend_Ds_mod3;
+    legend_Ds_mod3.push_back("D_{s}^{-} #rightarrow #pi^{+} #pi^{-} #pi^{-}"); 
+    //legend_Ds_mod3.push_back("D_{s}^{-} #rightarrow #phi^{0}(1020) #pi^{-}"); 
+    //legend_Ds_mod3.push_back("D_{s}^{-} #rightarrow #phi^{0}(1020) #pi^{-}"); 
+    //legend_Ds_mod3.push_back("D_{s}^{-} #rightarrow K^{*0}(892) K^{-}"); 
+    
+    vector<TString> legend_Ds_mod3_2;
+    legend_Ds_mod3_2.push_back("D_{s}^{-} #rightarrow K^{+} K^{-} #pi^{-}"); 
+    //legend_Ds_mod3_2.push_back("D_{s}^{-} #rightarrow K^{*0}(892) K^{-}"); 
+    //legend_Ds_mod3_2.push_back("D_{s}^{-} #rightarrow (K^{+} K^{-} #pi^{-})_{NR}"); 
+    //legend_Ds_mod3_2.push_back("D_{s}^{-} #rightarrow (K^{+} K^{-} #pi^{-})_{NR}"); 
 
     // Compare different runs
     vector<TString> cuts_run;
@@ -942,49 +993,90 @@ void compareAcceptance(){
     // Compare different triggers
     vector<TString> cuts_trigger;
     cuts_trigger.push_back("(TriggerCat == 0)");
+    //cuts_trigger.push_back("(Bs_L0Global_TIS == 1) && run ==1 ");
+    //cuts_trigger.push_back("(Bs_L0HadronDecision_TOS == 1) && run ==1");
+    //cuts_trigger.push_back("Bs_L0Global_TIS == 1 && (Bs_L0Global_TIS == 1 && Bs_L0HadronDecision_TOS == 1)");
+    //cuts_trigger.push_back("Bs_L0HadronDecision_TOS == 1 && (Bs_L0Global_TIS == 1 && Bs_L0HadronDecision_TOS == 1)");
+    //cuts_trigger.push_back("(Bs_Hlt1TrackMVADecision_TOS == 1) && run == 2");
+    
+    //cuts_trigger.push_back("(Bs_Hlt2Topo2BodyDecision_TOS == 1) && run == 2");
+    //cuts_trigger.push_back("(Bs_Hlt2Topo3BodyDecision_TOS == 1) && run == 2");
+    //cuts_trigger.push_back("(Bs_Hlt2Topo4BodyDecision_TOS == 1) && run == 2");
+    //cuts_trigger.push_back("(Bs_Hlt2PhiIncPhiDecision_TOS == 1) && run == 2");
+
+    //cuts_trigger.push_back("(Bs_Hlt2Topo2BodyBBDTDecision_TOS == 1) && run == 1");
+    //cuts_trigger.push_back("(Bs_Hlt2Topo3BodyBBDTDecision_TOS == 1) && run == 1");
+    //cuts_trigger.push_back("(Bs_Hlt2Topo4BodyBBDTDecision_TOS == 1) && run == 1");
+    //cuts_trigger.push_back("(Bs_Hlt2IncPhiDecision_TOS == 1) && run == 1");
     
     vector<TString> legend_trigger;
     legend_trigger.push_back("LO_Global_TIS");
+    //legend_trigger.push_back("LO_Global_TIS");
+    legend_trigger.push_back("LO_Hadron_TOS");
+    legend_trigger.push_back("Bs_Hlt1TrackMVADecision_TOS");
+    legend_trigger.push_back("Bs_Hlt2Topo2BodyDecision_TOS");
+    legend_trigger.push_back("Bs_Hlt2Topo3BodyDecision_TOS");
+    legend_trigger.push_back("Bs_Hlt2Topo4BodyDecision_TOS");
+    legend_trigger.push_back("Bs_Hlt2PhiIncPhiDecision_TOS");
+    legend_trigger.push_back("Bs_Hlt2Topo2BodyBBDTDecision_TOS");
+    legend_trigger.push_back("Bs_Hlt2Topo3BodyBBDTDecision_TOS");
+    legend_trigger.push_back("Bs_Hlt2Topo4BodyBBDTDecision_TOS");
+    legend_trigger.push_back("Bs_Hlt2IncPhiDecision_TOS");
 
     vector<TString> legend_trigger_2;
     legend_trigger_2.push_back("LO_Hadron_TOS");
+    //legend_trigger_2.push_back("LO_Hadron_TOS");
+    legend_trigger_2.push_back("LO_Global_TIS");
+    legend_trigger_2.push_back("Others");
+    legend_trigger_2.push_back("Others");
+    legend_trigger_2.push_back("Others");
+    legend_trigger_2.push_back("Others");
+    legend_trigger_2.push_back("Others");
+    legend_trigger_2.push_back("Others");
+    legend_trigger_2.push_back("Others");
+    legend_trigger_2.push_back("Others");
+    legend_trigger_2.push_back("Others");
 
 
     /// Combine cuts into vector to iterate over
     vector< vector<TString> > cut_set;    
-    cut_set.push_back(cuts_year);    
-    cut_set.push_back(cuts_Ds);
-    cut_set.push_back(cuts_Ds_mod);
-    cut_set.push_back(cuts_Ds_mod2);
-    cut_set.push_back(cuts_run);    
-    cut_set.push_back(cuts_run_year);    
+    //cut_set.push_back(cuts_year);    
+    //cut_set.push_back(cuts_Ds);
+    //cut_set.push_back(cuts_Ds_mod);
+    //cut_set.push_back(cuts_Ds_mod2);
+    //cut_set.push_back(cuts_Ds_mod3);
+    //cut_set.push_back(cuts_run);    
+    //cut_set.push_back(cuts_run_year);    
     cut_set.push_back(cuts_trigger);    
     
     vector< vector<TString> > legend_title_set;
-    legend_title_set.push_back(legend_year);
-    legend_title_set.push_back(legend_Ds);
-    legend_title_set.push_back(legend_Ds_mod);
-    legend_title_set.push_back(legend_Ds_mod2);
-    legend_title_set.push_back(legend_run);
-    legend_title_set.push_back(legend_run_year);
+    //legend_title_set.push_back(legend_year);
+    //legend_title_set.push_back(legend_Ds);
+    //legend_title_set.push_back(legend_Ds_mod);
+    //legend_title_set.push_back(legend_Ds_mod2);
+    //legend_title_set.push_back(legend_Ds_mod3);
+    //legend_title_set.push_back(legend_run);
+    //legend_title_set.push_back(legend_run_year);
     legend_title_set.push_back(legend_trigger);
         
     vector< vector<TString> > legend_title_set_2;
-    legend_title_set_2.push_back(legend_year_2);
-    legend_title_set_2.push_back(legend_Ds_2);
-    legend_title_set_2.push_back(legend_Ds_mod_2);
-    legend_title_set_2.push_back(legend_Ds_mod2_2);
-    legend_title_set_2.push_back(legend_run_2);
-    legend_title_set_2.push_back(legend_run_year_2);
+    //legend_title_set_2.push_back(legend_year_2);
+    //legend_title_set_2.push_back(legend_Ds_2);
+    //legend_title_set_2.push_back(legend_Ds_mod_2);
+    //legend_title_set_2.push_back(legend_Ds_mod2_2);
+    //legend_title_set_2.push_back(legend_Ds_mod3_2);
+    //legend_title_set_2.push_back(legend_run_2);
+    //legend_title_set_2.push_back(legend_run_year_2);
     legend_title_set_2.push_back(legend_trigger_2);
 
     vector<TString> plot_titles;
-    plot_titles.push_back("year");
-    plot_titles.push_back("DsFinalState");
-    plot_titles.push_back("DsFinalState_mod");
-    plot_titles.push_back("DsFinalState_mod2");
-    plot_titles.push_back("run");
-    plot_titles.push_back("run_year");
+    //plot_titles.push_back("year");
+    //plot_titles.push_back("DsFinalState");
+    //plot_titles.push_back("DsFinalState_mod");
+    //plot_titles.push_back("DsFinalState_mod2");
+    //plot_titles.push_back("DsFinalState_mod3");
+    //plot_titles.push_back("run");
+    //plot_titles.push_back("run_year");
     plot_titles.push_back("trigger");    
 
     for (int a = 0; a < cut_set.size(); a++) {
@@ -1031,7 +1123,8 @@ void compareAcceptance(){
             chi2 = chi2/((double)nBins-2.);
             
             TGraphErrors *KnotsVsCoeffs = new TGraphErrors(nBins, x,y,xerr,yerr);
-            KnotsVsCoeffs->SetMaximum(2.5);
+            KnotsVsCoeffs->SetMinimum(0.3 );
+            KnotsVsCoeffs->SetMaximum(1.5 );
             KnotsVsCoeffs->SetTitle("; t(B_{s}) [ps]; v_{i}");
             
             TGraphErrors *KnotsVsCoeffs_reversed = new TGraphErrors(nBins, x,y_reversed,xerr,yerr_reversed);
@@ -1040,13 +1133,13 @@ void compareAcceptance(){
             KnotsVsCoeffs_reversed->SetFillColor(kRed+1);
             KnotsVsCoeffs_reversed->SetFillStyle(3001);
             
-            TLegend* leg = new TLegend(0.5,0.65,0.9,0.9,"");
+            TLegend* leg = new TLegend(0.6,0.7,0.9,0.9,"");
             leg->SetLineStyle(0);
             leg->SetLineColor(0);
             leg->SetFillColor(0);
             leg->SetTextFont(22);
             leg->SetTextColor(1);
-            leg->SetTextSize(0.06);
+            leg->SetTextSize(0.05);
             leg->SetTextAlign(12);
             
             if(cuts.size()>1)combinedCanvas->cd(n+1);
@@ -1537,6 +1630,137 @@ void produceMarginalPdfs(){
 
 
 
+void checkPV(){
+
+    NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
+    NamedParameter<int> nBins("nBins", 10);
+
+    int run,year,Ds_finalState,trigger,Bs_DTF_nPV;
+    double t;
+    double w;
+    int cat,yearMC,Ds_finalStateMC;
+    float Bs_DTF_chi2[100];
+    double Bs_TRUEORIGINVERTEX_Z,Bs_OWNPV_Z,Bs_OWNPV_ZERR;
+    double Bs_TRUEORIGINVERTEX_Y,Bs_OWNPV_Y,Bs_OWNPV_YERR;
+    double Bs_TRUEORIGINVERTEX_X,Bs_OWNPV_X,Bs_OWNPV_XERR;
+
+    TChain* treeMC =new TChain("DecayTree");
+    treeMC->Add( ((string)InputDir + "MC/signal.root").c_str());
+    treeMC->Add( ((string)InputDir + "MC/norm.root").c_str());
+    treeMC->SetBranchStatus("*",0);
+    treeMC->SetBranchStatus("Ds_finalState",1);
+    treeMC->SetBranchStatus("Bs_BKGCAT",1);
+    treeMC->SetBranchStatus("weight",1);
+    treeMC->SetBranchStatus("*TAU*",1);
+    treeMC->SetBranchStatus("*Bs_TRUEORIGINVERTEX_Z",1);
+    treeMC->SetBranchStatus("*PV*",1);
+    
+    treeMC->SetBranchAddress("Bs_DTF_TAU",&t);
+    treeMC->SetBranchAddress("Bs_BKGCAT",&cat);
+    treeMC->SetBranchAddress("year",&yearMC);
+    treeMC->SetBranchAddress("Ds_finalState",&Ds_finalStateMC);           
+    treeMC->SetBranchAddress("weight",&w);
+    treeMC->SetBranchAddress("Bs_TRUEORIGINVERTEX_X",&Bs_TRUEORIGINVERTEX_X);
+    treeMC->SetBranchAddress("Bs_OWNPV_X",&Bs_OWNPV_X);
+    treeMC->SetBranchAddress("Bs_OWNPV_XERR",&Bs_OWNPV_XERR);
+    treeMC->SetBranchAddress("Bs_TRUEORIGINVERTEX_Y",&Bs_TRUEORIGINVERTEX_Y);
+    treeMC->SetBranchAddress("Bs_OWNPV_Y",&Bs_OWNPV_Y);
+    treeMC->SetBranchAddress("Bs_OWNPV_YERR",&Bs_OWNPV_YERR);
+    treeMC->SetBranchAddress("Bs_TRUEORIGINVERTEX_Z",&Bs_TRUEORIGINVERTEX_Z);
+    treeMC->SetBranchAddress("Bs_OWNPV_Z",&Bs_OWNPV_Z);
+    treeMC->SetBranchAddress("Bs_OWNPV_ZERR",&Bs_OWNPV_ZERR);
+    treeMC->SetBranchAddress("Bs_DTF_chi2",&Bs_DTF_chi2);
+    treeMC->SetBranchAddress("Bs_DTF_nPV",&Bs_DTF_nPV);
+
+
+    TH1D* h_t = new TH1D("h_t",";t [ps];Events (norm.) ",50,0,15);
+    TH1D* h_t_cut = new TH1D("h_t_cut",";t [ps];Events (norm.) ",50,0,15);
+
+    TH1D* h_t_nPV1 = new TH1D("h_t_nPV1",";t [ps];Events (norm.) ",nBins,0,15);
+    TH1D* h_t_nPV2 = new TH1D("h_t_nPV2",";t [ps];Events (norm.) ",nBins,0,15);
+
+    TH1D* h_t_wrongPV = new TH1D("h_t_wrongPV",";t [ps];Events (norm.) ",nBins,0,15);
+    TH1D* h_t_rightPV = new TH1D("h_t_rightPV",";t [ps];Events (norm.) ",nBins,0,15);
+
+    TH1D* h_t_wrongPV_cut = new TH1D("h_t_wrongPV",";t [ps];Events (norm.) ",nBins,0,15);
+    TH1D* h_t_rightPV_cut = new TH1D("h_t_rightPV",";t [ps];Events (norm.) ",nBins,0,15);
+    
+    TH1D* h_chi2_right = new TH1D("h_chi2_right",";#Delta #chi^{2}_{DTF};Events (norm.) ",50,0,500);
+    TH1D* h_chi2_wrong = new TH1D("h_chi2_wrong",";#Delta #chi^{2}_{DTF};Events (norm.) ",50,0,500);
+
+    ///loop over data events
+    for(int i=0; i< treeMC->GetEntries(); i++)
+    {    
+        //if (0ul == (i % 1000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
+        treeMC->GetEntry(i);        
+        
+        if(Bs_DTF_nPV == 1) h_t_nPV1->Fill(t,w);
+        else{ 
+            h_t->Fill(t,w/(exp(-t/tau_MC)*cosh(dgamma_MC/2.*t)));
+            if(Bs_DTF_chi2[1]-Bs_DTF_chi2[0]>1000)h_t_cut->Fill(t,w/(exp(-t/tau_MC)*cosh(dgamma_MC/2.*t)));
+
+            h_t_nPV2->Fill(t,w);
+            if( abs(Bs_TRUEORIGINVERTEX_Z-Bs_OWNPV_Z)/Bs_OWNPV_ZERR > 5){ // && abs(Bs_TRUEORIGINVERTEX_X-Bs_OWNPV_X)/Bs_OWNPV_XERR > 5 && abs(Bs_TRUEORIGINVERTEX_Y-Bs_OWNPV_Y)/Bs_OWNPV_YERR > 5) {
+                h_t_wrongPV->Fill(t,w);
+                h_chi2_wrong->Fill(Bs_DTF_chi2[1]-Bs_DTF_chi2[0],w);
+                if(Bs_DTF_chi2[1]-Bs_DTF_chi2[0]>15)h_t_wrongPV_cut->Fill(t,w);
+            }
+            else {
+                h_t_rightPV->Fill(t,w);
+                h_chi2_right->Fill(Bs_DTF_chi2[1]-Bs_DTF_chi2[0],w);
+                if(Bs_DTF_chi2[1]-Bs_DTF_chi2[0]>15)h_t_rightPV_cut->Fill(t,w);
+                }
+        }
+    }
+    
+    double N_right =  h_t_rightPV->Integral();
+    double N_right_cut =  h_t_rightPV_cut->Integral();
+    double N_wrong =  h_t_wrongPV->Integral();
+    double N_wrong_cut =  h_t_wrongPV_cut->Integral();
+
+    cout << "N_right = " << N_right << endl;
+    cout << "N_wrong = " << N_wrong << endl;
+
+    cout << "eff signal = " << N_right_cut/N_right << endl;
+    cout << "bkg rejection = " << 1.-N_wrong_cut/N_wrong << endl;
+
+    TCanvas*c = new TCanvas();
+    
+    h_chi2_right->Draw();
+    h_chi2_wrong->SetLineColor(kBlue);
+    h_chi2_wrong->Draw("e1same");
+    c->Print("h_chi2.eps");
+    
+    h_t_wrongPV->Divide(h_t_wrongPV,h_t_rightPV);
+    h_t_wrongPV->SetMinimum(0);
+    h_t_wrongPV->Draw("e1");
+    c->Print("h_t_PV.eps");
+    
+    h_t_wrongPV_cut->SetLineColor(kBlue);
+    h_t_wrongPV_cut->Divide(h_t_wrongPV_cut,h_t_rightPV_cut);
+    h_t_wrongPV_cut->SetMinimum(0);
+    h_t_wrongPV_cut->Draw("e1");
+    c->Print("h_t_PV_cut.eps");
+    
+    h_t_nPV2->Divide(h_t_nPV2,h_t_nPV1);
+    h_t_nPV2->SetMinimum(0);
+    h_t_nPV2->Draw("e1");
+    c->Print("h_t_nPV2.eps");
+    
+    h_t->Draw("e1");
+    c->Print("h_t.eps");
+    h_t_cut->Draw("e1");
+    c->Print("h_t_cut.eps");
+    
+    h_t_cut->Divide(h_t_cut,h_t);
+    h_t_cut->SetMinimum(0);
+    h_t_cut->Draw("e1");
+    c->Print("h_t_ratio.eps");
+    
+    throw "";
+    
+}
+
 int main(int argc, char** argv){
     
     time_t startTime = time(0);
@@ -1547,6 +1771,8 @@ int main(int argc, char** argv){
     NamedParameter<int> CompareAcceptance("CompareAcceptance", 1);
     NamedParameter<int> FitSplineAccRatio("FitSplineAccRatio", 1);
     
+    //checkPV(); 
+
     produceMarginalPdfs();
 
     if(CompareAcceptance)compareAcceptance();
@@ -1557,11 +1783,11 @@ int main(int argc, char** argv){
     if(FitSplineAccRatio)fitSplineAccRatio(" run == 2 && TriggerCat == 0 " , "", "_Run2", "Run2_t0");
     if(FitSplineAccRatio)fitSplineAccRatio(" run == 2 && TriggerCat == 1 " , "", "_Run2", "Run2_t1");
 
-    fitSplineAcc("" , "", "norm");
-    fitSplineAcc(" run == 1 && TriggerCat == 0 " , "_Run1", "Run1_t0_norm");
-    fitSplineAcc(" run == 1 && TriggerCat == 1 " , "_Run1", "Run1_t1_norm");
-    fitSplineAcc(" run == 2 && TriggerCat == 0 " , "_Run2", "Run2_t0_norm");
-    fitSplineAcc(" run == 2 && TriggerCat == 1 " , "_Run2", "Run2_t1_norm");
+    //fitSplineAcc("" , "", "norm");
+    //fitSplineAcc(" run == 1 && TriggerCat == 0 " , "_Run1", "Run1_t0_norm");
+    //fitSplineAcc(" run == 1 && TriggerCat == 1 " , "_Run1", "Run1_t1_norm");
+    //fitSplineAcc(" run == 2 && TriggerCat == 0 " , "_Run2", "Run2_t0_norm");
+    //fitSplineAcc(" run == 2 && TriggerCat == 1 " , "_Run2", "Run2_t1_norm");
     
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;

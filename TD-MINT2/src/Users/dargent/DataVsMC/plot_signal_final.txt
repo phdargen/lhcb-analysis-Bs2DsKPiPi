@@ -1,0 +1,40 @@
+* reweighting
+
+"ReweightFromA"		"../Files/Final/MC/signal.root"
+"ReweightToB"		"../Files/Final/Data/signal.root"
+"ApplyWeightToC"	""
+
+"OutputDir"		"signal_final/combined/"
+
+"legTitle"	"B_{s}#rightarrowD_{s}K#pi#pi"
+
+"nameA"		"MC"
+"weightVarA"	"noweight"
+"newWeightVarA"	"weight2"
+
+"nameB"		"Data"
+"weightVarB"	"N_Bs_sw"
+
+"weightVarC"	""
+"newWeightVarC"	""
+
+"reweight"	0
+"reweightInBinsOfRun"    	 1
+"reweightInBinsOfFinalState"	 1
+"reweightInBinsOfTrigger"	 0
+"maxWeight"	10
+"nIterations"   1
+"minEventsPerBin"  250
+"maxBinsPerDim"    200
+
+"reweightVarSet1"	 1
+"reweightVarSet2"	 1
+"reweightVarSet3"	 0
+"reweightVarSet4"	 1
+"reweightVarSet5"	 1
+
+
+* plotting MC vs Data
+"nBins"		 40
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		1

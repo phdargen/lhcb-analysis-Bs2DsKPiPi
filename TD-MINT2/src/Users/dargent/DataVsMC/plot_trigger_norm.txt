@@ -1,0 +1,43 @@
+* reweighting
+
+"ReweightFromA"		"../Files/Final/Data/norm.root"
+"ReweightToB"		"../Files/Final/Data/norm.root"
+"ApplyWeightToC"	""
+
+"OutputDir"		"trigger_norm/"
+
+"legTitle"	"B_{s}#rightarrowD_{s}#pi#pi#pi Data"
+"nameA"		"L0_Hadron_TOS"
+"weightVarA"	"N_Bs_sw"
+"newWeightVarA"	"noweight"
+"cutA"		"Bs_L0HadronDecision_TOS"
+
+"nameB"		"!L0_Hadron_TOS"
+"weightVarB"	"N_Bs_sw"
+"cutB"		"!Bs_L0HadronDecision_TOS"
+
+"weightVarC"	"noweight"
+"newWeightVarC"	"noweight"
+
+"reweight"	0
+"reweightInBinsOfRun"    	 -1
+"reweightInBinsOfFinalState"	 0
+"reweightInBinsOfTrigger"	0
+
+"maxWeight"	10
+"nIterations"   1
+"minEventsPerBin"  250
+"maxBinsPerDim"    200
+
+"reweightVarSet1"	 0
+"reweightVarSet2"	 0
+"reweightVarSet3"	 1
+"reweightVarSet4"	 0
+"reweightVarSet5"	 0
+
+
+
+* plotting MC vs Data
+"nBins"		 40
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		1

@@ -1,8 +1,0 @@
-* reweighting
-"reweight"	0
-"nIterations"   1
-"minEventsPerBin"  60
-"maxBinsPerDim"    200
-
-* plotting MC vs Data
-"nBins"		 40

@@ -1,0 +1,38 @@
+* reweighting
+
+"ReweightFromA"		"../Files/Final/Data/norm.root"
+"ReweightToB"		"../Files/Final/Data/signal.root"
+"ApplyWeightToC"	""
+
+"OutputDir"		"norm2signal/"
+
+"legTitle"	"LHCb Data"
+"nameA"		"B_{s}#rightarrowD_{s}#pi#pi#pi"
+"weightVarA"	"N_Bs_sw"
+"newWeightVarA"	"weight2"
+
+"nameB"		"B_{s}#rightarrowD_{s}K#pi#pi"
+"weightVarB"	"N_Bs_sw"
+
+"weightVarC"	"noweight"
+"newWeightVarC"	"noweight"
+
+"reweight"	1
+"reweightInBinsOfRun"    	 -1
+"reweightInBinsOfFinalState"	 0
+"reweightInBinsOfTrigger"	 0
+"maxWeight"	10
+"nIterations"   1
+"minEventsPerBin"  100
+"maxBinsPerDim"    200
+
+"reweightVarSet1"	 1
+"reweightVarSet2"	 0
+"reweightVarSet3"	 0
+"reweightVarSet4"	 0
+"reweightVarSet5"	 0
+
+* plotting MC vs Data
+"nBins"		 40
+"updateAnaNoteHistos"		1
+"updateAnaNotePlots"		1
