@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  16 AUG 2017 16:37
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  7 MAR 2018 14:04
 entering extended mode
  %&-line parsing enabled.
 **main
@@ -308,7 +308,67 @@ Package: longtable 2004/02/01 v4.11 Multi-page Table package (DPC)
 \LT@p@ftn=\toks28
 ) (./main.aux
 
-LaTeX Warning: Label `table:InputVars' multiply defined.
+LaTeX Warning: Label `table:splines' multiply defined.
+
+
+LaTeX Warning: Label `table:splines' multiply defined.
+
+
+LaTeX Warning: Label `table:splines' multiply defined.
+
+
+LaTeX Warning: Label `table:splines' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:massfits_signal_Run2' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
 
 )
 \openout1 = `main.aux'.
@@ -443,104 +503,106 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 (/usr/share/texmf/tex/latex/microtype/mt-eur.cfg
 File: mt-eur.cfg 2006/07/31 v1.1 microtype config. file: AMS Euler Roman (RS)
 )
-<lhcb-logo.pdf, id=63, 86.3225pt x 59.22125pt>
+<lhcb-logo.pdf, id=171, 86.3225pt x 59.22125pt>
 File: lhcb-logo.pdf Graphic file (type pdf)
  <use lhcb-logo.pdf> [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} </usr/share/texmf/tex/latex
-/cern/lhcb-logo.pdf>] [2]) (./main.toc)
+/cern/lhcb-logo.pdf>] [2]) (./main.toc [1
+
+])
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
- [1
-
-] (./todo.texpdfTeX warning (ext4): destination with the same identifier (name{
-page.1}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{page.}) has b
+een already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.36 \clearpage
-                [1
-
-
-]) (./introduction.tex
-<figs/FeynmannGraphs.png, id=124, 565.51276pt x 148.75575pt>
+l.83 \cleardoublepage
+                      [2] (./introduction.tex
+<figs/FeynmannGraphs.png, id=252, 565.51276pt x 148.75575pt>
 File: figs/FeynmannGraphs.png Graphic file (type png)
 
 <use figs/FeynmannGraphs.png>)pdfTeX warning (ext4): destination with the same 
-identifier (name{page.2}) has been already used, duplicate ignored
+identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.103 \clearpage
-                 [2
+                 [1
 
 
  <./figs/FeynmannGraphs.png>] (./sensitivity.tex
-Underfull \hbox (badness 10000) in paragraph at lines 32--35
+Underfull \hbox (badness 10000) in paragraph at lines 35--38
 
  []
 
 
-Overfull \hbox (56.44153pt too wide) in paragraph at lines 48--48
+Overfull \hbox (56.44153pt too wide) in paragraph at lines 54--54
 [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 54--58
+Underfull \hbox (badness 10000) in paragraph at lines 61--65
 
  []
 
-[3
+pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.65 
+      [2
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 62--63
+Underfull \hbox (badness 10000) in paragraph at lines 69--70
 
  []
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 66.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 73.
 (/usr/share/texmf/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 66.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 73.
 
 
 pdfTeX warning: pdflatex (file ./figs/plots/k-eps-converted-to.pdf): PDF inclus
 ion: found PDF version <1.5>, but at most version <1.4> allowed
-<figs/plots/k-eps-converted-to.pdf, id=150, 569.12625pt x 385.44pt>
+<figs/plots/k-eps-converted-to.pdf, id=280, 569.12625pt x 385.44pt>
 File: figs/plots/k-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/plots/k-eps-converted-to.pdf>
 
 pdfTeX warning: pdflatex (file ./figs/plots/k_Ks-eps-converted-to.pdf): PDF inc
 lusion: found PDF version <1.5>, but at most version <1.4> allowed
-<figs/plots/k_Ks-eps-converted-to.pdf, id=151, 569.12625pt x 385.44pt>
+<figs/plots/k_Ks-eps-converted-to.pdf, id=281, 569.12625pt x 385.44pt>
 File: figs/plots/k_Ks-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/plots/k_Ks-eps-converted-to.pdf>
 
 pdfTeX warning: pdflatex (file ./figs/plots/k_rho-eps-converted-to.pdf): PDF in
 clusion: found PDF version <1.5>, but at most version <1.4> allowed
-<figs/plots/k_rho-eps-converted-to.pdf, id=152, 569.12625pt x 385.44pt>
+<figs/plots/k_rho-eps-converted-to.pdf, id=282, 569.12625pt x 385.44pt>
 File: figs/plots/k_rho-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/plots/k_rho-eps-converted-to.pdf>
 
 pdfTeX warning: pdflatex (file ./figs/plots/k_K1-eps-converted-to.pdf): PDF inc
 lusion: found PDF version <1.5>, but at most version <1.4> allowed
-<figs/plots/k_K1-eps-converted-to.pdf, id=153, 569.12625pt x 385.44pt>
+<figs/plots/k_K1-eps-converted-to.pdf, id=283, 569.12625pt x 385.44pt>
 File: figs/plots/k_K1-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/plots/k_K1-eps-converted-to.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[4 <./figs/plots/k-eps-converted-to.pdf> <./figs/plots/k_Ks-eps-converted-to.pd
+[3 <./figs/plots/k-eps-converted-to.pdf> <./figs/plots/k_Ks-eps-converted-to.pd
 f> <./figs/plots/k_rho-eps-converted-to.pdf> <./figs/plots/k_K1-eps-converted-t
-o.pdf>] [5]
+o.pdf>] [4]
 
 pdfTeX warning: pdflatex (file ./figs/plots_toy/h_t-eps-converted-to.pdf): PDF 
 inclusion: found PDF version <1.5>, but at most version <1.4> allowed
-<figs/plots_toy/h_t-eps-converted-to.pdf, id=206, 569.12625pt x 385.44pt>
+<figs/plots_toy/h_t-eps-converted-to.pdf, id=336, 569.12625pt x 385.44pt>
 File: figs/plots_toy/h_t-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/plots_toy/h_t-eps-converted-to.pdf>
@@ -548,35 +610,35 @@ File: figs/plots_toy/h_t-eps-converted-to.pdf Graphic file (type pdf)
 pdfTeX warning: pdflatex (file ./figs/plots_toy/s_Dspipi-eps-converted-to.pdf):
  PDF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
 
-<figs/plots_toy/s_Dspipi-eps-converted-to.pdf, id=207, 569.12625pt x 385.44pt>
+<figs/plots_toy/s_Dspipi-eps-converted-to.pdf, id=337, 569.12625pt x 385.44pt>
 File: figs/plots_toy/s_Dspipi-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/plots_toy/s_Dspipi-eps-converted-to.pdf>
 
 pdfTeX warning: pdflatex (file ./figs/plots_toy/s_DsK-eps-converted-to.pdf): PD
 F inclusion: found PDF version <1.5>, but at most version <1.4> allowed
-<figs/plots_toy/s_DsK-eps-converted-to.pdf, id=208, 569.12625pt x 385.44pt>
+<figs/plots_toy/s_DsK-eps-converted-to.pdf, id=338, 569.12625pt x 385.44pt>
 File: figs/plots_toy/s_DsK-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/plots_toy/s_DsK-eps-converted-to.pdf>
 
 pdfTeX warning: pdflatex (file ./figs/plots_toy/s_Kpipi-eps-converted-to.pdf): 
 PDF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
-<figs/plots_toy/s_Kpipi-eps-converted-to.pdf, id=209, 569.12625pt x 385.44pt>
+<figs/plots_toy/s_Kpipi-eps-converted-to.pdf, id=339, 569.12625pt x 385.44pt>
 File: figs/plots_toy/s_Kpipi-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/plots_toy/s_Kpipi-eps-converted-to.pdf>
 
 pdfTeX warning: pdflatex (file ./figs/plots_toy/s_Kpi-eps-converted-to.pdf): PD
 F inclusion: found PDF version <1.5>, but at most version <1.4> allowed
-<figs/plots_toy/s_Kpi-eps-converted-to.pdf, id=210, 569.12625pt x 385.44pt>
+<figs/plots_toy/s_Kpi-eps-converted-to.pdf, id=340, 569.12625pt x 385.44pt>
 File: figs/plots_toy/s_Kpi-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/plots_toy/s_Kpi-eps-converted-to.pdf>
 
 pdfTeX warning: pdflatex (file ./figs/plots_toy/s_pipi-eps-converted-to.pdf): P
 DF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
-<figs/plots_toy/s_pipi-eps-converted-to.pdf, id=211, 569.12625pt x 385.44pt>
+<figs/plots_toy/s_pipi-eps-converted-to.pdf, id=341, 569.12625pt x 385.44pt>
 File: figs/plots_toy/s_pipi-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/plots_toy/s_pipi-eps-converted-to.pdf>
@@ -584,21 +646,21 @@ File: figs/plots_toy/s_pipi-eps-converted-to.pdf Graphic file (type pdf)
 pdfTeX warning: pdflatex (file ./figs/plots/LL_scan-eps-converted-to.pdf): PDF 
 inclusion: found PDF version <1.5>, but at most version <1.4> allowed
 
-<./figs/plots/LL_scan-eps-converted-to.pdf, id=212, 569.12625pt x 298.11375pt>
+<./figs/plots/LL_scan-eps-converted-to.pdf, id=342, 569.12625pt x 298.11375pt>
 File: ./figs/plots/LL_scan-eps-converted-to.pdf Graphic file (type pdf)
 
 <use ./figs/plots/LL_scan-eps-converted-to.pdf>
 
 pdfTeX warning: pdflatex (file ./figs/plots_toy/r_pull-eps-converted-to.pdf): P
 DF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
-<figs/plots_toy/r_pull-eps-converted-to.pdf, id=213, 569.12625pt x 385.44pt>
+<figs/plots_toy/r_pull-eps-converted-to.pdf, id=343, 569.12625pt x 385.44pt>
 File: figs/plots_toy/r_pull-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/plots_toy/r_pull-eps-converted-to.pdf>
 
 pdfTeX warning: pdflatex (file ./figs/plots_toy/k_pull-eps-converted-to.pdf): P
 DF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
-<figs/plots_toy/k_pull-eps-converted-to.pdf, id=214, 569.12625pt x 385.44pt>
+<figs/plots_toy/k_pull-eps-converted-to.pdf, id=344, 569.12625pt x 385.44pt>
 File: figs/plots_toy/k_pull-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/plots_toy/k_pull-eps-converted-to.pdf>
@@ -606,7 +668,7 @@ File: figs/plots_toy/k_pull-eps-converted-to.pdf Graphic file (type pdf)
 pdfTeX warning: pdflatex (file ./figs/plots_toy/gamma_pull-eps-converted-to.pdf
 ): PDF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
 
-<figs/plots_toy/gamma_pull-eps-converted-to.pdf, id=215, 569.12625pt x 385.44pt
+<figs/plots_toy/gamma_pull-eps-converted-to.pdf, id=345, 569.12625pt x 385.44pt
 >
 File: figs/plots_toy/gamma_pull-eps-converted-to.pdf Graphic file (type pdf)
  <use figs/plots_toy/gamma_pull-eps-converted-to.pdf>
@@ -614,51 +676,52 @@ File: figs/plots_toy/gamma_pull-eps-converted-to.pdf Graphic file (type pdf)
 pdfTeX warning: pdflatex (file ./figs/plots_toy/delta_pull-eps-converted-to.pdf
 ): PDF inclusion: found PDF version <1.5>, but at most version <1.4> allowed
 
-<figs/plots_toy/delta_pull-eps-converted-to.pdf, id=216, 569.12625pt x 385.44pt
+<figs/plots_toy/delta_pull-eps-converted-to.pdf, id=346, 569.12625pt x 385.44pt
 >
 File: figs/plots_toy/delta_pull-eps-converted-to.pdf Graphic file (type pdf)
- <use figs/plots_toy/delta_pull-eps-converted-to.pdf> [6
+ <use figs/plots_toy/delta_pull-eps-converted-to.pdf> [5
 
  <./figs/plots_toy/h_t-eps-converted-to.pdf> <./figs/plots_toy/s_Dspipi-eps-con
 verted-to.pdf> <./figs/plots_toy/s_DsK-eps-converted-to.pdf> <./figs/plots_toy/
 s_Kpipi-eps-converted-to.pdf> <./figs/plots_toy/s_Kpi-eps-converted-to.pdf> <./
-figs/plots_toy/s_pipi-eps-converted-to.pdf>] [7 <./figs/plots/LL_scan-eps-conve
+figs/plots_toy/s_pipi-eps-converted-to.pdf>] [6 <./figs/plots/LL_scan-eps-conve
 rted-to.pdf> <./figs/plots_toy/r_pull-eps-converted-to.pdf> <./figs/plots_toy/k
 _pull-eps-converted-to.pdf> <./figs/plots_toy/gamma_pull-eps-converted-to.pdf> 
-<./figs/plots_toy/delta_pull-eps-converted-to.pdf>]) [8
+<./figs/plots_toy/delta_pull-eps-converted-to.pdf>]) [7
 
-] (./selection.tex [9
+] (./selection.tex [8
 
-] [10]
-Underfull \hbox (badness 10000) in paragraph at lines 165--170
+] [9]
+Underfull \hbox (badness 10000) in paragraph at lines 134--140
 
  []
 
-<figs/mass_Bs_forBDT_12_AnA.png, id=356, 419.166pt x 284.262pt>
-File: figs/mass_Bs_forBDT_12_AnA.png Graphic file (type png)
+<figs/Ds_MM_afterpresel.pdf, id=485, 569.12625pt x 371.3875pt>
+File: figs/Ds_MM_afterpresel.pdf Graphic file (type pdf)
 
-<use figs/mass_Bs_forBDT_12_AnA.png>
+<use figs/Ds_MM_afterpresel.pdf>
+<figs/Bs_MM_afterpresel.pdf, id=486, 569.12625pt x 346.29375pt>
+File: figs/Bs_MM_afterpresel.pdf Graphic file (type pdf)
 
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<figs/BDT_Input_1.pdf, id=358, 569.12625pt x 296.10625pt>
+<use figs/Bs_MM_afterpresel.pdf>
+<figs/BDT_Input_1.pdf, id=488, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_1.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_1.pdf>
-<figs/BDT_Input_2.pdf, id=359, 569.12625pt x 296.10625pt>
+<figs/BDT_Input_2.pdf, id=489, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_2.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_2.pdf>
-<figs/BDT_Input_3.pdf, id=360, 569.12625pt x 296.10625pt>
+<figs/BDT_Input_3.pdf, id=490, 569.12625pt x 296.10625pt>
 File: figs/BDT_Input_3.pdf Graphic file (type pdf)
 
 <use figs/BDT_Input_3.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 183--187
+Underfull \hbox (badness 10000) in paragraph at lines 155--159
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 183--187
+Underfull \hbox (badness 10000) in paragraph at lines 155--159
 []
  []
 
@@ -668,7 +731,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figs/BDT_Response_new.pdf, id=363, 569.12625pt x 421.575pt>
+<figs/BDT_Response_new.pdf, id=493, 569.12625pt x 421.575pt>
 File: figs/BDT_Response_new.pdf Graphic file (type pdf)
 
 <use figs/BDT_Response_new.pdf>
@@ -676,76 +739,2508 @@ File: figs/BDT_Response_new.pdf Graphic file (type pdf)
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Reference `sec: fitting' on page 11 undefined on input line 237.
+LaTeX Warning: Reference `sec: fitting' on page 10 undefined on input line 209.
 
 
 
-LaTeX Warning: Reference `sec: efficiency' on page 11 undefined on input line 2
-40.
+LaTeX Warning: Reference `sec: efficiency' on page 10 undefined on input line 2
+12.
 
-[11] [12 <./figs/mass_Bs_forBDT_12_AnA.png>]
-<figs/BDT_CutEfficiency.pdf, id=380, 569.12625pt x 421.575pt>
+[10 <./figs/Ds_MM_afterpresel.pdf, page is rotated 90 degrees> <./figs/Bs_MM_af
+terpresel.pdf, page is rotated 90 degrees>] [11 <./figs/BDT_Input_1.pdf, page i
+s rotated 90 degrees> <./figs/BDT_Input_2.pdf, page is rotated 90 degrees> <./f
+igs/BDT_Input_3.pdf, page is rotated 90 degrees>] [12 <./figs/BDT_Response_new.
+pdf, page is rotated 90 degrees>]
+<figs/BDT_CutEfficiency.pdf, id=776, 569.12625pt x 421.575pt>
 File: figs/BDT_CutEfficiency.pdf Graphic file (type pdf)
 
-<use figs/BDT_CutEfficiency.pdf>
+<use figs/BDT_CutEfficiency.pdf>) [13 <./figs/BDT_CutEfficiency.pdf, page is ro
+tated 90 degrees>] (./massfits.tex
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string:
+(hyperref)                \kern 1.95872pt
+(hyperref)                removed on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 9.
+
+<figs/MassFit/normMC_pull.pdf, id=827, 569.12625pt x 385.44pt>
+File: figs/MassFit/normMC_pull.pdf Graphic file (type pdf)
+
+<use figs/MassFit/normMC_pull.pdf>
+<figs/MassFit/signalMC_pull.pdf, id=828, 569.12625pt x 385.44pt>
+File: figs/MassFit/signalMC_pull.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signalMC_pull.pdf> [14
+
+ <./figs/MassFit/normMC_pull.pdf> <./figs/MassFit/signalMC_pull.pdf>]
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string:
+(hyperref)                \kern 1.95872pt
+(hyperref)                removed on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 36.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 64.
+
+[15]
+
+LaTeX Warning: Citation `Agashe:2014kda' on page 16 undefined on input line 95.
+
+
+<figs/Bs2Dspipipi_as_DsKpipi.pdf, id=862, 569.12625pt x 385.44pt>
+File: figs/Bs2Dspipipi_as_DsKpipi.pdf Graphic file (type pdf)
+
+<use figs/Bs2Dspipipi_as_DsKpipi.pdf>
+<figs/Bs2Dsstarpipipi_as_DsKpipi.pdf, id=863, 569.12625pt x 385.44pt>
+File: figs/Bs2Dsstarpipipi_as_DsKpipi.pdf Graphic file (type pdf)
+
+<use figs/Bs2Dsstarpipipi_as_DsKpipi.pdf> [16 <./figs/Bs2Dspipipi_as_DsKpipi.pd
+f> <./figs/Bs2Dsstarpipipi_as_DsKpipi.pdf>]
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `superscript' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\rightarrow' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 118.
+
+
+LaTeX Warning: Reference `subsec:DetailedMassfits' on page 17 undefined on inpu
+t line 123.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `superscript' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\rightarrow' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 127.
+
+
+LaTeX Warning: Reference `subsec:DetailedMassfits' on page 17 undefined on inpu
+t line 134.
+
+<figs/MassFit/norm_pull.pdf, id=891, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_pull.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_pull.pdf>
+<figs/MassFit/signal_pull.pdf, id=892, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_pull.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_pull.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) [13 <./figs/BDT_Input_1.pdf, page is rotated 90 degrees> <./figs/BDT_Input_2.
-pdf, page is rotated 90 degrees> <./figs/BDT_Input_3.pdf, page is rotated 90 de
-grees>] [14 <./figs/BDT_Response_new.pdf, page is rotated 90 degrees> <./figs/B
-DT_CutEfficiency.pdf, page is rotated 90 degrees>] (./acceptance.tex
-Underfull \hbox (badness 6461) in paragraph at lines 20--31
+<figs/norm_sweight_y11_phipi.pdf, id=893, 569.12625pt x 385.44pt>
+File: figs/norm_sweight_y11_phipi.pdf Graphic file (type pdf)
+
+<use figs/norm_sweight_y11_phipi.pdf>
+<figs/signal_sweight_y11_phipi.pdf, id=894, 569.12625pt x 385.44pt>
+File: figs/signal_sweight_y11_phipi.pdf Graphic file (type pdf)
+
+<use figs/signal_sweight_y11_phipi.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) [17] [18 <./figs/MassFit/norm_pull.pdf, page is rotated 90 degrees> <./figs/M
+assFit/signal_pull.pdf, page is rotated 90 degrees> <./figs/norm_sweight_y11_ph
+ipi.pdf> <./figs/signal_sweight_y11_phipi.pdf>] (./tagging.tex [19
+
+
+]
+
+LaTeX Warning: Reference `fig:OSdistribution' on page 20 undefined on input lin
+e 58.
+
+
+Overfull \hbox (19.88164pt too wide) in paragraph at lines 65--72
+ [][] 
+ []
+
+
+LaTeX Warning: Reference `fig:SSdistribution' on page 20 undefined on input lin
+e 81.
+
+
+Overfull \hbox (25.54839pt too wide) in paragraph at lines 87--94
+ [][] 
+ []
+
+
+LaTeX Warning: Reference `fig:w_MC_comparison' on page 20 undefined on input li
+ne 106.
+
+[20]
+<figs/dataVsMC/norm2signal/Ds2all_Bs_TAGOMEGA_OS.pdf, id=1033, 569.12625pt x 38
+5.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_Bs_TAGOMEGA_OS.pdf Graphic file (type pd
+f)
+ <use figs/dataVsMC/norm2signal/Ds2all_Bs_TAGOMEGA_OS.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_Bs_SS_nnetKaon_PROB.pdf, id=1034, 569.12625pt
+ x 385.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_Bs_SS_nnetKaon_PROB.pdf Graphic file (ty
+pe pdf)
+ <use figs/dataVsMC/norm2signal/Ds2all_Bs_SS_nnetKaon_PROB.pdf>
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 117--120
+[][] [] 
+ []
+
+
+LaTeX Warning: Reference `fig:tagDec_data_comparison' on page 21 undefined on i
+nput line 125.
+
+
+LaTeX Warning: Reference `fig:kinematics_data_comparison' on page 21 undefined 
+on input line 147.
+
+
+<figs/Tagging/OS_combination_MCcomparison.pdf, id=1036, 569.12625pt x 385.44pt>
+File: figs/Tagging/OS_combination_MCcomparison.pdf Graphic file (type pdf)
+<use figs/Tagging/OS_combination_MCcomparison.pdf>
+<figs/Tagging/SS_nnetKaon_MCcomparison.pdf, id=1037, 569.12625pt x 296.10625pt>
+File: figs/Tagging/SS_nnetKaon_MCcomparison.pdf Graphic file (type pdf)
+<use figs/Tagging/SS_nnetKaon_MCcomparison.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[21 <./figs/dataVsMC/norm2signal/Ds2all_Bs_TAGOMEGA_OS.pdf, page is rotated 90 
+degrees> <./figs/dataVsMC/norm2signal/Ds2all_Bs_SS_nnetKaon_PROB.pdf, page is r
+otated 90 degrees>]
+<figs/Tagging/TaggingCombinationCalibration.pdf, id=1137, 569.12625pt x 551.058
+75pt>
+File: figs/Tagging/TaggingCombinationCalibration.pdf Graphic file (type pdf)
+ <use figs/Tagging/TaggingCombinationCalibration.pdf>) [22 <./figs/Tagging/OS_c
+ombination_MCcomparison.pdf, page is rotated 90 degrees> <./figs/Tagging/SS_nne
+tKaon_MCcomparison.pdf, page is rotated 90 degrees> <./figs/Tagging/TaggingComb
+inationCalibration.pdf, page is rotated 90 degrees>] [23]
+(./acceptance.tex
+Underfull \hbox (badness 6461) in paragraph at lines 21--32
 \OT1/cmr/m/n/12 (+20) For fits shown in the fol-low-ing, the knots have been pl
 aced at $\OML/cmm/m/it/12 t \OT1/cmr/m/n/12 (+20) =
  []
 
-<figs/SplineAcc_data_Fit.pdf, id=616, 569.12625pt x 367.3725pt>
-File: figs/SplineAcc_data_Fit.pdf Graphic file (type pdf)
-
-<use figs/SplineAcc_data_Fit.pdf>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-<figs/SplineAcc_MCFit_combined_trueCT_Norm.pdf, id=618, 569.12625pt x 367.3725p
-t>
-File: figs/SplineAcc_MCFit_combined_trueCT_Norm.pdf Graphic file (type pdf)
- <use figs/SplineAcc_MCFit_combined_trueCT_Norm.pdf>
-<figs/SplineAcc_MCFit_combined_trueCT_Sig.pdf, id=619, 569.12625pt x 367.3725pt
->
-File: figs/SplineAcc_MCFit_combined_trueCT_Sig.pdf Graphic file (type pdf)
- <use figs/SplineAcc_MCFit_combined_trueCT_Sig.pdf>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[15
+[24
 
 ]
-Overfull \hbox (31.86165pt too wide) in paragraph at lines 65--76
- [][] 
+<figs/Acceptance/adaptive_N4/timeAcc_combined_by_DsFinalState.pdf, id=1295, 569
+.12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAcc_combined_by_DsFinalState.pdf Graphic 
+file (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAcc_combined_by_DsFinalState.pdf>
+<figs/Acceptance/adaptive_N4/timeAcc_combined_by_run.pdf, id=1296, 569.12625pt 
+x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAcc_combined_by_run.pdf Graphic file (typ
+e pdf)
+ <use figs/Acceptance/adaptive_N4/timeAcc_combined_by_run.pdf>
+<figs/Acceptance/adaptive_N4/timeAcc_combined_by_trigger.pdf, id=1297, 569.1262
+5pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAcc_combined_by_trigger.pdf Graphic file 
+(type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAcc_combined_by_trigger.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[25
+
+ <./figs/Acceptance/adaptive_N4/timeAcc_combined_by_DsFinalState.pdf, page is r
+otated 90 degrees>] [26 <./figs/Acceptance/adaptive_N4/timeAcc_combined_by_run.
+pdf, page is rotated 90 degrees> <./figs/Acceptance/adaptive_N4/timeAcc_combine
+d_by_trigger.pdf, page is rotated 90 degrees>]
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_combined.pdf, id=1443, 569.12
+625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_combined.pdf Graphic fil
+e (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_combined.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_combined.pdf, id=1444, 569
+.12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_combined.pdf Graphic 
+file (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_combined.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_combined.pdf, id=1445, 5
+69.12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_combined.pdf Graphi
+c file (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_combined.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_combined.pdf, id=1446, 5
+69.12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_combined.pdf Graphi
+c file (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_combined.pdf>
+Underfull \hbox (badness 1803) in paragraph at lines 81--85
+[][] []
+ []
+
+(./tables/Acceptance/adaptive_N4/splineCoeffs_combined.tex) [27
+
+ <./figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_combined.pdf, page is rota
+ted 90 degrees> <./figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_combined
+.pdf, page is rotated 90 degrees> <./figs/Acceptance/adaptive_N4/timeAccRatioFi
+t_signal_B0_combined.pdf, page is rotated 90 degrees> <./figs/Acceptance/adapti
+ve_N4/timeAccRatioFit_signal_mc_combined.pdf, page is rotated 90 degrees>]
+(./tables/Acceptance/adaptive_N4/splineCoeffs_Run1_t0.tex)
+(./tables/Acceptance/adaptive_N4/splineCoeffs_Run1_t1.tex)
+(./tables/Acceptance/adaptive_N4/splineCoeffs_Run2_t0.tex)
+(./tables/Acceptance/adaptive_N4/splineCoeffs_Run2_t1.tex
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) [28
+
+] [29]
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t0.pdf, id=1642, 569.126
+25pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t0.pdf Graphic file
+ (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t0.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t0.pdf, id=1643, 569.
+12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t0.pdf Graphic f
+ile (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t0.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run1_t0.pdf, id=1644, 56
+9.12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run1_t0.pdf Graphic
+ file (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run1_t0.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run1_t0.pdf, id=1645, 56
+9.12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run1_t0.pdf Graphic
+ file (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run1_t0.pdf>
+Underfull \hbox (badness 1803) in paragraph at lines 101--105
+[][] []
+ []
+
+
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t1.pdf, id=1646, 569.126
+25pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t1.pdf Graphic file
+ (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t1.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t1.pdf, id=1647, 569.
+12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t1.pdf Graphic f
+ile (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t1.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run1_t1.pdf, id=1648, 56
+9.12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run1_t1.pdf Graphic
+ file (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run1_t1.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run1_t1.pdf, id=1649, 56
+9.12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run1_t1.pdf Graphic
+ file (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run1_t1.pdf>
+Underfull \hbox (badness 1803) in paragraph at lines 107--111
+[][] []
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) [16 <./figs/SplineAcc_data_Fit.pdf, page is rotated 90 degrees> <./figs/Splin
-eAcc_MCFit_combined_trueCT_Norm.pdf, page is rotated 90 degrees> <./figs/Spline
-Acc_MCFit_combined_trueCT_Sig.pdf, page is rotated 90 degrees>] [17]
-(./resolution.tex <figs/ProperTimeReso_MC.pdf, id=774, 569.12625pt x 385.44pt>
-File: figs/ProperTimeReso_MC.pdf Graphic file (type pdf)
+[30 <./figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t0.pdf, page is ro
+tated 90 degrees> <./figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t
+0.pdf, page is rotated 90 degrees> <./figs/Acceptance/adaptive_N4/timeAccRatioF
+it_signal_B0_Run1_t0.pdf, page is rotated 90 degrees> <./figs/Acceptance/adapti
+ve_N4/timeAccRatioFit_signal_mc_Run1_t0.pdf, page is rotated 90 degrees> <./fig
+s/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t1.pdf, page is rotated 90 d
+egrees> <./figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t1.pdf, pag
+e is rotated 90 degrees> <./figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_
+B0_Run1_t1.pdf, page is rotated 90 degrees> <./figs/Acceptance/adaptive_N4/time
+AccRatioFit_signal_mc_Run1_t1.pdf, page is rotated 90 degrees>]
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf, id=2008, 569.126
+25pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf Graphic file
+ (type pdf)
 
-<use figs/ProperTimeReso_MC.pdf>
-Overfull \hbox (20.7724pt too wide) in paragraph at lines 35--48
- [][] 
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2_t0.pdf, id=2009, 569.
+12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2_t0.pdf Graphic f
+ile (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2_t0.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run2_t0.pdf, id=2010, 56
+9.12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run2_t0.pdf Graphic
+ file (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run2_t0.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run2_t0.pdf, id=2011, 56
+9.12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run2_t0.pdf Graphic
+ file (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run2_t0.pdf>
+Underfull \hbox (badness 1803) in paragraph at lines 118--122
+[][] []
+ []
+
+
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t1.pdf, id=2012, 569.126
+25pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t1.pdf Graphic file
+ (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t1.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2_t1.pdf, id=2013, 569.
+12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2_t1.pdf Graphic f
+ile (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2_t1.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run2_t1.pdf, id=2014, 56
+9.12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run2_t1.pdf Graphic
+ file (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run2_t1.pdf>
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run2_t1.pdf, id=2015, 56
+9.12625pt x 385.44pt>
+File: figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run2_t1.pdf Graphic
+ file (type pdf)
+
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run2_t1.pdf>
+Underfull \hbox (badness 1803) in paragraph at lines 124--128
+[][] []
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) [18
+) [31 <./figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf, page is 
+rotated 90 degrees> <./figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2
+_t0.pdf, page is rotated 90 degrees> <./figs/Acceptance/adaptive_N4/timeAccRati
+oFit_signal_B0_Run2_t0.pdf, page is rotated 90 degrees> <./figs/Acceptance/adap
+tive_N4/timeAccRatioFit_signal_mc_Run2_t0.pdf, page is rotated 90 degrees> <./f
+igs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t1.pdf, page is rotated 90
+ degrees> <./figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2_t1.pdf, p
+age is rotated 90 degrees> <./figs/Acceptance/adaptive_N4/timeAccRatioFit_signa
+l_B0_Run2_t1.pdf, page is rotated 90 degrees> <./figs/Acceptance/adaptive_N4/ti
+meAccRatioFit_signal_mc_Run2_t1.pdf, page is rotated 90 degrees>]
+(./resolution.tex
+Underfull \hbox (badness 10000) in paragraph at lines 7--14
 
- <./figs/ProperTimeReso_MC.pdf>] [19] (./main.bbl) [20
+ []
+
+
+<figs/dataVsMC/run1vs2_signal/Ds2all_Bs_DTF_TAUERR.pdf, id=2377, 569.12625pt x 
+385.44pt>
+File: figs/dataVsMC/run1vs2_signal/Ds2all_Bs_DTF_TAUERR.pdf Graphic file (type 
+pdf)
+ <use figs/dataVsMC/run1vs2_signal/Ds2all_Bs_DTF_TAUERR.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[32
+
+
+
+
+]
+
+LaTeX Warning: Reference `subsec:DecResFits' on page 33 undefined on input line
+ 56.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--57
+
+ []
+
+<figs/Resolution/SignalMC_bin_2.pdf, id=2385, 569.12625pt x 385.44pt>
+File: figs/Resolution/SignalMC_bin_2.pdf Graphic file (type pdf)
+
+<use figs/Resolution/SignalMC_bin_2.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[33 <./figs/dataVsMC/run1vs2_signal/Ds2all_Bs_DTF_TAUERR.pdf, page is rotated 9
+0 degrees>]
+Underfull \hbox (badness 10000) in paragraph at lines 122--123
+
+ []
+
+[34 <./figs/Resolution/SignalMC_bin_2.pdf>]
+Overfull \hbox (20.7724pt too wide) in paragraph at lines 133--146
+ [][] 
+ []
+
+<figs/Resolution/ProperTimeReso_MC.pdf, id=2462, 569.12625pt x 385.44pt>
+File: figs/Resolution/ProperTimeReso_MC.pdf Graphic file (type pdf)
+
+<use figs/Resolution/ProperTimeReso_MC.pdf>) [35 <./figs/Resolution/ProperTimeR
+eso_MC.pdf>] (./timeFit.tex
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `superscript' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\rightarrow' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 22.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `superscript' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\rightarrow' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\pi' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 41.
+
+) [36
+
+] (./appendix.tex
+<figs/MassFit/norm_y11_phipi.pdf, id=2490, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y11_phipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y11_phipi.pdf>
+<figs/MassFit/norm_y11_KsK.pdf, id=2491, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y11_KsK.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y11_KsK.pdf>
+<figs/MassFit/norm_y11_KKpi_NR.pdf, id=2492, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y11_KKpi_NR.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y11_KKpi_NR.pdf>
+<figs/MassFit/norm_y11_pipipi.pdf, id=2493, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y11_pipipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y11_pipipi.pdf>
+<figs/MassFit/norm_y12_phipi.pdf, id=2494, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y12_phipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y12_phipi.pdf>
+<figs/MassFit/norm_y12_KsK.pdf, id=2495, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y12_KsK.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y12_KsK.pdf>
+<figs/MassFit/norm_y12_KKpi_NR.pdf, id=2496, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y12_KKpi_NR.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y12_KKpi_NR.pdf>
+<figs/MassFit/norm_y12_pipipi.pdf, id=2497, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y12_pipipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y12_pipipi.pdf> [37
+
+ <./figs/MassFit/norm_y11_phipi.pdf> <./figs/MassFit/norm_y11_KsK.pdf> <./figs/
+MassFit/norm_y11_KKpi_NR.pdf> <./figs/MassFit/norm_y11_pipipi.pdf> <./figs/Mass
+Fit/norm_y12_phipi.pdf> <./figs/MassFit/norm_y12_KsK.pdf> <./figs/MassFit/norm_
+y12_KKpi_NR.pdf> <./figs/MassFit/norm_y12_pipipi.pdf>]
+<figs/MassFit/norm_y15_phipi.pdf, id=2569, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y15_phipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y15_phipi.pdf>
+<figs/MassFit/norm_y15_KsK.pdf, id=2570, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y15_KsK.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y15_KsK.pdf>
+<figs/MassFit/norm_y15_KKpi_NR.pdf, id=2571, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y15_KKpi_NR.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y15_KKpi_NR.pdf>
+<figs/MassFit/norm_y15_pipipi.pdf, id=2572, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y15_pipipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y15_pipipi.pdf>
+<figs/MassFit/norm_y16_phipi.pdf, id=2573, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y16_phipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y16_phipi.pdf>
+<figs/MassFit/norm_y16_KsK.pdf, id=2574, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y16_KsK.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y16_KsK.pdf>
+<figs/MassFit/norm_y16_KKpi_NR.pdf, id=2575, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y16_KKpi_NR.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y16_KKpi_NR.pdf>
+<figs/MassFit/norm_y16_pipipi.pdf, id=2576, 569.12625pt x 385.44pt>
+File: figs/MassFit/norm_y16_pipipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/norm_y16_pipipi.pdf> [38
+
+ <./figs/MassFit/norm_y15_phipi.pdf> <./figs/MassFit/norm_y15_KsK.pdf> <./figs/
+MassFit/norm_y15_KKpi_NR.pdf> <./figs/MassFit/norm_y15_pipipi.pdf> <./figs/Mass
+Fit/norm_y16_phipi.pdf> <./figs/MassFit/norm_y16_KsK.pdf> <./figs/MassFit/norm_
+y16_KKpi_NR.pdf> <./figs/MassFit/norm_y16_pipipi.pdf>]
+<figs/MassFit/signal_y11_phipi.pdf, id=2648, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y11_phipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y11_phipi.pdf>
+<figs/MassFit/signal_y11_KsK.pdf, id=2649, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y11_KsK.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y11_KsK.pdf>
+<figs/MassFit/signal_y11_KKpi_NR.pdf, id=2650, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y11_KKpi_NR.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y11_KKpi_NR.pdf>
+<figs/MassFit/signal_y11_pipipi.pdf, id=2651, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y11_pipipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y11_pipipi.pdf>
+<figs/MassFit/signal_y12_phipi.pdf, id=2652, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y12_phipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y12_phipi.pdf>
+<figs/MassFit/signal_y12_KsK.pdf, id=2653, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y12_KsK.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y12_KsK.pdf>
+<figs/MassFit/signal_y12_KKpi_NR.pdf, id=2654, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y12_KKpi_NR.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y12_KKpi_NR.pdf>
+<figs/MassFit/signal_y12_pipipi.pdf, id=2655, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y12_pipipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y12_pipipi.pdf> [39
+
+ <./figs/MassFit/signal_y11_phipi.pdf, page is rotated 90 degrees> <./figs/Mass
+Fit/signal_y11_KsK.pdf, page is rotated 90 degrees> <./figs/MassFit/signal_y11_
+KKpi_NR.pdf, page is rotated 90 degrees> <./figs/MassFit/signal_y11_pipipi.pdf,
+ page is rotated 90 degrees> <./figs/MassFit/signal_y12_phipi.pdf, page is rota
+ted 90 degrees> <./figs/MassFit/signal_y12_KsK.pdf, page is rotated 90 degrees>
+ <./figs/MassFit/signal_y12_KKpi_NR.pdf, page is rotated 90 degrees> <./figs/Ma
+ssFit/signal_y12_pipipi.pdf, page is rotated 90 degrees>]
+<figs/MassFit/signal_y15_phipi.pdf, id=3016, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y15_phipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y15_phipi.pdf>
+<figs/MassFit/signal_y15_KsK.pdf, id=3017, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y15_KsK.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y15_KsK.pdf>
+<figs/MassFit/signal_y15_KKpi_NR.pdf, id=3018, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y15_KKpi_NR.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y15_KKpi_NR.pdf>
+<figs/MassFit/signal_y15_pipipi.pdf, id=3019, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y15_pipipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y15_pipipi.pdf>
+<figs/MassFit/signal_y16_phipi.pdf, id=3020, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y16_phipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y16_phipi.pdf>
+<figs/MassFit/signal_y16_KsK.pdf, id=3021, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y16_KsK.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y16_KsK.pdf>
+<figs/MassFit/signal_y16_KKpi_NR.pdf, id=3022, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y16_KKpi_NR.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y16_KKpi_NR.pdf>
+<figs/MassFit/signal_y16_pipipi.pdf, id=3023, 569.12625pt x 385.44pt>
+File: figs/MassFit/signal_y16_pipipi.pdf Graphic file (type pdf)
+
+<use figs/MassFit/signal_y16_pipipi.pdf> [40
+
+ <./figs/MassFit/signal_y15_phipi.pdf, page is rotated 90 degrees> <./figs/Mass
+Fit/signal_y15_KsK.pdf, page is rotated 90 degrees> <./figs/MassFit/signal_y15_
+KKpi_NR.pdf, page is rotated 90 degrees> <./figs/MassFit/signal_y15_pipipi.pdf,
+ page is rotated 90 degrees> <./figs/MassFit/signal_y16_phipi.pdf, page is rota
+ted 90 degrees> <./figs/MassFit/signal_y16_KsK.pdf, page is rotated 90 degrees>
+ <./figs/MassFit/signal_y16_KKpi_NR.pdf, page is rotated 90 degrees> <./figs/Ma
+ssFit/signal_y16_pipipi.pdf, page is rotated 90 degrees>]
+<figs/Resolution/SignalMC_bin_1.pdf, id=3383, 569.12625pt x 385.44pt>
+File: figs/Resolution/SignalMC_bin_1.pdf Graphic file (type pdf)
+
+<use figs/Resolution/SignalMC_bin_1.pdf>
+File: figs/Resolution/SignalMC_bin_2.pdf Graphic file (type pdf)
+
+<use figs/Resolution/SignalMC_bin_2.pdf>
+<figs/Resolution/SignalMC_bin_3.pdf, id=3384, 569.12625pt x 385.44pt>
+File: figs/Resolution/SignalMC_bin_3.pdf Graphic file (type pdf)
+
+<use figs/Resolution/SignalMC_bin_3.pdf>
+<figs/Resolution/SignalMC_bin_4.pdf, id=3385, 569.12625pt x 385.44pt>
+File: figs/Resolution/SignalMC_bin_4.pdf Graphic file (type pdf)
+
+<use figs/Resolution/SignalMC_bin_4.pdf>
+<figs/Resolution/SignalMC_bin_5.pdf, id=3386, 569.12625pt x 385.44pt>
+File: figs/Resolution/SignalMC_bin_5.pdf Graphic file (type pdf)
+
+<use figs/Resolution/SignalMC_bin_5.pdf>
+<figs/Resolution/SignalMC_bin_6.pdf, id=3387, 569.12625pt x 385.44pt>
+File: figs/Resolution/SignalMC_bin_6.pdf Graphic file (type pdf)
+
+<use figs/Resolution/SignalMC_bin_6.pdf>
+<figs/Resolution/SignalMC_bin_7.pdf, id=3388, 569.12625pt x 385.44pt>
+File: figs/Resolution/SignalMC_bin_7.pdf Graphic file (type pdf)
+
+<use figs/Resolution/SignalMC_bin_7.pdf>
+<figs/Resolution/SignalMC_bin_8.pdf, id=3389, 569.12625pt x 385.44pt>
+File: figs/Resolution/SignalMC_bin_8.pdf Graphic file (type pdf)
+
+<use figs/Resolution/SignalMC_bin_8.pdf>) [41
+
+ <./figs/Resolution/SignalMC_bin_1.pdf> <./figs/Resolution/SignalMC_bin_3.pdf> 
+<./figs/Resolution/SignalMC_bin_4.pdf> <./figs/Resolution/SignalMC_bin_5.pdf> <
+./figs/Resolution/SignalMC_bin_6.pdf> <./figs/Resolution/SignalMC_bin_7.pdf> <.
+/figs/Resolution/SignalMC_bin_8.pdf>] (./MC.tex
+<figs/dataVsMC/norm_final/weights/weights_Bs_PT_Bs_ETA_Ds2KKpi_1_t0.pdf, id=345
+3, 569.12625pt x 447.6725pt>
+File: figs/dataVsMC/norm_final/weights/weights_Bs_PT_Bs_ETA_Ds2KKpi_1_t0.pdf Gr
+aphic file (type pdf)
+
+<use figs/dataVsMC/norm_final/weights/weights_Bs_PT_Bs_ETA_Ds2KKpi_1_t0.pdf>
+<figs/dataVsMC/norm_final/weights/weights_NTracks_max_ghostProb_Ds2KKpi_1_t0.pd
+f, id=3454, 569.12625pt x 447.6725pt>
+File: figs/dataVsMC/norm_final/weights/weights_NTracks_max_ghostProb_Ds2KKpi_1_
+t0.pdf Graphic file (type pdf)
+
+<use figs/dataVsMC/norm_final/weights/weights_NTracks_max_ghostProb_Ds2KKpi_1_t
+0.pdf>
+<figs/dataVsMC/norm_final/weights/weights_DTF_CHI2NDOF_Ds2KKpi_1_t0.pdf, id=345
+5, 569.12625pt x 390.45876pt>
+File: figs/dataVsMC/norm_final/weights/weights_DTF_CHI2NDOF_Ds2KKpi_1_t0.pdf Gr
+aphic file (type pdf)
+
+<use figs/dataVsMC/norm_final/weights/weights_DTF_CHI2NDOF_Ds2KKpi_1_t0.pdf>
+<figs/dataVsMC/norm_final/weights/weights_Bs_IPCHI2_OWNPV_Ds2KKpi_1_t0.pdf, id=
+3456, 569.12625pt x 390.45876pt>
+File: figs/dataVsMC/norm_final/weights/weights_Bs_IPCHI2_OWNPV_Ds2KKpi_1_t0.pdf
+ Graphic file (type pdf)
+
+<use figs/dataVsMC/norm_final/weights/weights_Bs_IPCHI2_OWNPV_Ds2KKpi_1_t0.pdf>
+
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_PT.pdf, id=3457, 569.12625pt x 
+385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_PT.pdf Graphic file (type 
+pdf)
+ <use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_PT.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_ETA.pdf, id=3458, 569.12625pt x
+ 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_ETA.pdf Graphic file (type
+ pdf)
+ <use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_ETA.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_FDCHI2_OWNPV.pdf, id=3459, 569.
+12625pt x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_FDCHI2_OWNPV.pdf Graphic f
+ile (type pdf)
+
+<use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_FDCHI2_OWNPV.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_NTracks.pdf, id=3460, 569.12625pt 
+x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_NTracks.pdf Graphic file (typ
+e pdf)
+ <use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_NTracks.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_TAGOMEGA_OS.pdf, id=3461, 569.1
+2625pt x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_TAGOMEGA_OS.pdf Graphic fi
+le (type pdf)
+
+<use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_TAGOMEGA_OS.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_SS_nnetKaon_PROB.pdf, id=3462, 
+569.12625pt x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_SS_nnetKaon_PROB.pdf Graph
+ic file (type pdf)
+
+<use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_SS_nnetKaon_PROB.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Ds_m12.pdf, id=3463, 569.12625pt x
+ 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Ds_m12.pdf Graphic file (type
+ pdf)
+ <use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Ds_m12.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Ds_m13.pdf, id=3464, 569.12625pt x
+ 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Ds_m13.pdf Graphic file (type
+ pdf)
+ <use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Ds_m13.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_DTF_CHI2NDOF.pdf, id=3465, 569.126
+25pt x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_DTF_CHI2NDOF.pdf Graphic file
+ (type pdf)
+
+<use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_DTF_CHI2NDOF.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_IPCHI2_OWNPV.pdf, id=3466, 569.
+12625pt x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_IPCHI2_OWNPV.pdf Graphic f
+ile (type pdf)
+
+<use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_IPCHI2_OWNPV.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_DIRA_OWNPV.pdf, id=3467, 569.12
+625pt x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_DIRA_OWNPV.pdf Graphic fil
+e (type pdf)
+
+<use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_DIRA_OWNPV.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_XsDaughters_min_IPCHI2.pdf, id=346
+8, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_XsDaughters_min_IPCHI2.pdf Gr
+aphic file (type pdf)
+
+<use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_XsDaughters_min_IPCHI2.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Xs_max_DOCA.pdf, id=3469, 569.1262
+5pt x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Xs_max_DOCA.pdf Graphic file 
+(type pdf)
+
+<use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Xs_max_DOCA.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_DsDaughters_min_IPCHI2.pdf, id=347
+0, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_DsDaughters_min_IPCHI2.pdf Gr
+aphic file (type pdf)
+
+<use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_DsDaughters_min_IPCHI2.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Ds_FDCHI2_ORIVX.pdf, id=3471, 569.
+12625pt x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Ds_FDCHI2_ORIVX.pdf Graphic f
+ile (type pdf)
+
+<use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Ds_FDCHI2_ORIVX.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_maxCos.pdf, id=3472, 569.12625pt x
+ 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_maxCos.pdf Graphic file (type
+ pdf)
+ <use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_maxCos.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_max_ghostProb.pdf, id=3473, 569.12
+625pt x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_max_ghostProb.pdf Graphic fil
+e (type pdf)
+
+<use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_max_ghostProb.pdf>
+<figs/dataVsMC/norm_final/combined/Ds2KKpi_1_BDTG_response.pdf, id=3474, 569.12
+625pt x 385.44pt>
+File: figs/dataVsMC/norm_final/combined/Ds2KKpi_1_BDTG_response.pdf Graphic fil
+e (type pdf)
+
+<use figs/dataVsMC/norm_final/combined/Ds2KKpi_1_BDTG_response.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_PT.pdf, id=3475, 569.12625pt 
+x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_PT.pdf Graphic file (typ
+e pdf)
+ <use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_PT.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_ETA.pdf, id=3476, 569.12625pt
+ x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_ETA.pdf Graphic file (ty
+pe pdf)
+ <use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_ETA.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_FDCHI2_OWNPV.pdf, id=3477, 56
+9.12625pt x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_FDCHI2_OWNPV.pdf Graphic
+ file (type pdf)
+
+<use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_FDCHI2_OWNPV.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_NTracks.pdf, id=3478, 569.12625p
+t x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_NTracks.pdf Graphic file (t
+ype pdf)
+ <use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_NTracks.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_TAGOMEGA_OS.pdf, id=3479, 569
+.12625pt x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_TAGOMEGA_OS.pdf Graphic 
+file (type pdf)
+
+<use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_TAGOMEGA_OS.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_SS_nnetKaon_PROB.pdf, id=3480
+, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_SS_nnetKaon_PROB.pdf Gra
+phic file (type pdf)
+
+<use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_SS_nnetKaon_PROB.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Ds_m12.pdf, id=3481, 569.12625pt
+ x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Ds_m12.pdf Graphic file (ty
+pe pdf)
+ <use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Ds_m12.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Ds_m13.pdf, id=3482, 569.12625pt
+ x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Ds_m13.pdf Graphic file (ty
+pe pdf)
+ <use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Ds_m13.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_DTF_CHI2NDOF.pdf, id=3483, 569.1
+2625pt x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_DTF_CHI2NDOF.pdf Graphic fi
+le (type pdf)
+
+<use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_DTF_CHI2NDOF.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_IPCHI2_OWNPV.pdf, id=3484, 56
+9.12625pt x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_IPCHI2_OWNPV.pdf Graphic
+ file (type pdf)
+
+<use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_IPCHI2_OWNPV.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_DIRA_OWNPV.pdf, id=3485, 569.
+12625pt x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_DIRA_OWNPV.pdf Graphic f
+ile (type pdf)
+
+<use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_DIRA_OWNPV.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_XsDaughters_min_IPCHI2.pdf, id=3
+486, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_XsDaughters_min_IPCHI2.pdf 
+Graphic file (type pdf)
+
+<use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_XsDaughters_min_IPCHI2.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Xs_max_DOCA.pdf, id=3487, 569.12
+625pt x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Xs_max_DOCA.pdf Graphic fil
+e (type pdf)
+
+<use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Xs_max_DOCA.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_DsDaughters_min_IPCHI2.pdf, id=3
+488, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_DsDaughters_min_IPCHI2.pdf 
+Graphic file (type pdf)
+
+<use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_DsDaughters_min_IPCHI2.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Ds_FDCHI2_ORIVX.pdf, id=3489, 56
+9.12625pt x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Ds_FDCHI2_ORIVX.pdf Graphic
+ file (type pdf)
+
+<use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Ds_FDCHI2_ORIVX.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_maxCos.pdf, id=3490, 569.12625pt
+ x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_maxCos.pdf Graphic file (ty
+pe pdf)
+ <use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_maxCos.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_max_ghostProb.pdf, id=3491, 569.
+12625pt x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_max_ghostProb.pdf Graphic f
+ile (type pdf)
+
+<use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_max_ghostProb.pdf>
+<figs/dataVsMC/signal_final/combined/Ds2KKpi_1_BDTG_response.pdf, id=3492, 569.
+12625pt x 385.44pt>
+File: figs/dataVsMC/signal_final/combined/Ds2KKpi_1_BDTG_response.pdf Graphic f
+ile (type pdf)
+
+<use figs/dataVsMC/signal_final/combined/Ds2KKpi_1_BDTG_response.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) [42
+
+ <./figs/dataVsMC/norm_final/weights/weights_Bs_PT_Bs_ETA_Ds2KKpi_1_t0.pdf> <./
+figs/dataVsMC/norm_final/weights/weights_NTracks_max_ghostProb_Ds2KKpi_1_t0.pdf
+> <./figs/dataVsMC/norm_final/weights/weights_DTF_CHI2NDOF_Ds2KKpi_1_t0.pdf> <.
+/figs/dataVsMC/norm_final/weights/weights_Bs_IPCHI2_OWNPV_Ds2KKpi_1_t0.pdf>] [4
+3 <./figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_PT.pdf, page is rotated 90 
+degrees> <./figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_ETA.pdf, page is rot
+ated 90 degrees> <./figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Bs_FDCHI2_OWNPV
+.pdf, page is rotated 90 degrees> <./figs/dataVsMC/norm_final/combined/Ds2KKpi_
+1_NTracks.pdf, page is rotated 90 degrees> <./figs/dataVsMC/norm_final/combined
+/Ds2KKpi_1_Bs_TAGOMEGA_OS.pdf, page is rotated 90 degrees> <./figs/dataVsMC/nor
+m_final/combined/Ds2KKpi_1_Bs_SS_nnetKaon_PROB.pdf, page is rotated 90 degrees>
+ <./figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Ds_m12.pdf, page is rotated 90 
+degrees> <./figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Ds_m13.pdf, page is rot
+ated 90 degrees>] [44 <./figs/dataVsMC/norm_final/combined/Ds2KKpi_1_DTF_CHI2ND
+OF.pdf, page is rotated 90 degrees> <./figs/dataVsMC/norm_final/combined/Ds2KKp
+i_1_Bs_IPCHI2_OWNPV.pdf, page is rotated 90 degrees> <./figs/dataVsMC/norm_fina
+l/combined/Ds2KKpi_1_Bs_DIRA_OWNPV.pdf, page is rotated 90 degrees> <./figs/dat
+aVsMC/norm_final/combined/Ds2KKpi_1_XsDaughters_min_IPCHI2.pdf, page is rotated
+ 90 degrees> <./figs/dataVsMC/norm_final/combined/Ds2KKpi_1_Xs_max_DOCA.pdf, pa
+ge is rotated 90 degrees> <./figs/dataVsMC/norm_final/combined/Ds2KKpi_1_DsDaug
+hters_min_IPCHI2.pdf, page is rotated 90 degrees> <./figs/dataVsMC/norm_final/c
+ombined/Ds2KKpi_1_Ds_FDCHI2_ORIVX.pdf, page is rotated 90 degrees> <./figs/data
+VsMC/norm_final/combined/Ds2KKpi_1_maxCos.pdf, page is rotated 90 degrees> <./f
+igs/dataVsMC/norm_final/combined/Ds2KKpi_1_max_ghostProb.pdf, page is rotated 9
+0 degrees> <./figs/dataVsMC/norm_final/combined/Ds2KKpi_1_BDTG_response.pdf, pa
+ge is rotated 90 degrees>] [45 <./figs/dataVsMC/signal_final/combined/Ds2KKpi_1
+_Bs_PT.pdf, page is rotated 90 degrees> <./figs/dataVsMC/signal_final/combined/
+Ds2KKpi_1_Bs_ETA.pdf, page is rotated 90 degrees> <./figs/dataVsMC/signal_final
+/combined/Ds2KKpi_1_Bs_FDCHI2_OWNPV.pdf, page is rotated 90 degrees> <./figs/da
+taVsMC/signal_final/combined/Ds2KKpi_1_NTracks.pdf, page is rotated 90 degrees>
+ <./figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_TAGOMEGA_OS.pdf, page is r
+otated 90 degrees> <./figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_SS_nnetK
+aon_PROB.pdf, page is rotated 90 degrees> <./figs/dataVsMC/signal_final/combine
+d/Ds2KKpi_1_Ds_m12.pdf, page is rotated 90 degrees> <./figs/dataVsMC/signal_fin
+al/combined/Ds2KKpi_1_Ds_m13.pdf, page is rotated 90 degrees>] [46 <./figs/data
+VsMC/signal_final/combined/Ds2KKpi_1_DTF_CHI2NDOF.pdf, page is rotated 90 degre
+es> <./figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_IPCHI2_OWNPV.pdf, page 
+is rotated 90 degrees> <./figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Bs_DIRA
+_OWNPV.pdf, page is rotated 90 degrees> <./figs/dataVsMC/signal_final/combined/
+Ds2KKpi_1_XsDaughters_min_IPCHI2.pdf, page is rotated 90 degrees> <./figs/dataV
+sMC/signal_final/combined/Ds2KKpi_1_Xs_max_DOCA.pdf, page is rotated 90 degrees
+> <./figs/dataVsMC/signal_final/combined/Ds2KKpi_1_DsDaughters_min_IPCHI2.pdf, 
+page is rotated 90 degrees> <./figs/dataVsMC/signal_final/combined/Ds2KKpi_1_Ds
+_FDCHI2_ORIVX.pdf, page is rotated 90 degrees> <./figs/dataVsMC/signal_final/co
+mbined/Ds2KKpi_1_maxCos.pdf, page is rotated 90 degrees> <./figs/dataVsMC/signa
+l_final/combined/Ds2KKpi_1_max_ghostProb.pdf, page is rotated 90 degrees> <./fi
+gs/dataVsMC/signal_final/combined/Ds2KKpi_1_BDTG_response.pdf, page is rotated 
+90 degrees>] (./comparison.tex
+<figs/dataVsMC/norm2signal/Ds2all_Bs_PT.pdf, id=5121, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_Bs_PT.pdf Graphic file (type pdf)
+
+<use figs/dataVsMC/norm2signal/Ds2all_Bs_PT.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_Bs_ETA.pdf, id=5122, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_Bs_ETA.pdf Graphic file (type pdf)
+
+<use figs/dataVsMC/norm2signal/Ds2all_Bs_ETA.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_Bs_FDCHI2_OWNPV.pdf, id=5123, 569.12625pt x 3
+85.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_Bs_FDCHI2_OWNPV.pdf Graphic file (type p
+df)
+ <use figs/dataVsMC/norm2signal/Ds2all_Bs_FDCHI2_OWNPV.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_NTracks.pdf, id=5124, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_NTracks.pdf Graphic file (type pdf)
+<use figs/dataVsMC/norm2signal/Ds2all_NTracks.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_Bs_DTF_TAUERR.pdf, id=5125, 569.12625pt x 385
+.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_Bs_DTF_TAUERR.pdf Graphic file (type pdf
+)
+ <use figs/dataVsMC/norm2signal/Ds2all_Bs_DTF_TAUERR.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_Bs_DTF_MERR.pdf, id=5126, 569.12625pt x 385.4
+4pt>
+File: figs/dataVsMC/norm2signal/Ds2all_Bs_DTF_MERR.pdf Graphic file (type pdf)
+ <use figs/dataVsMC/norm2signal/Ds2all_Bs_DTF_MERR.pdf>
+File: figs/dataVsMC/norm2signal/Ds2all_Bs_TAGOMEGA_OS.pdf Graphic file (type pd
+f)
+
+<use figs/dataVsMC/norm2signal/Ds2all_Bs_TAGOMEGA_OS.pdf>
+File: figs/dataVsMC/norm2signal/Ds2all_Bs_SS_nnetKaon_PROB.pdf Graphic file (ty
+pe pdf)
+
+<use figs/dataVsMC/norm2signal/Ds2all_Bs_SS_nnetKaon_PROB.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_DTF_CHI2NDOF.pdf, id=5127, 569.12625pt x 385.
+44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_DTF_CHI2NDOF.pdf Graphic file (type pdf)
+
+ <use figs/dataVsMC/norm2signal/Ds2all_DTF_CHI2NDOF.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_Bs_IPCHI2_OWNPV.pdf, id=5128, 569.12625pt x 3
+85.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_Bs_IPCHI2_OWNPV.pdf Graphic file (type p
+df)
+ <use figs/dataVsMC/norm2signal/Ds2all_Bs_IPCHI2_OWNPV.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_Bs_DIRA_OWNPV.pdf, id=5129, 569.12625pt x 385
+.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_Bs_DIRA_OWNPV.pdf Graphic file (type pdf
+)
+ <use figs/dataVsMC/norm2signal/Ds2all_Bs_DIRA_OWNPV.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_XsDaughters_min_IPCHI2.pdf, id=5130, 569.1262
+5pt x 385.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_XsDaughters_min_IPCHI2.pdf Graphic file 
+(type pdf)
+
+<use figs/dataVsMC/norm2signal/Ds2all_XsDaughters_min_IPCHI2.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_Xs_max_DOCA.pdf, id=5131, 569.12625pt x 385.4
+4pt>
+File: figs/dataVsMC/norm2signal/Ds2all_Xs_max_DOCA.pdf Graphic file (type pdf)
+ <use figs/dataVsMC/norm2signal/Ds2all_Xs_max_DOCA.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_DsDaughters_min_IPCHI2.pdf, id=5132, 569.1262
+5pt x 385.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_DsDaughters_min_IPCHI2.pdf Graphic file 
+(type pdf)
+
+<use figs/dataVsMC/norm2signal/Ds2all_DsDaughters_min_IPCHI2.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_Ds_FDCHI2_ORIVX.pdf, id=5133, 569.12625pt x 3
+85.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_Ds_FDCHI2_ORIVX.pdf Graphic file (type p
+df)
+ <use figs/dataVsMC/norm2signal/Ds2all_Ds_FDCHI2_ORIVX.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_maxCos.pdf, id=5134, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_maxCos.pdf Graphic file (type pdf)
+
+<use figs/dataVsMC/norm2signal/Ds2all_maxCos.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_max_ghostProb.pdf, id=5135, 569.12625pt x 385
+.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_max_ghostProb.pdf Graphic file (type pdf
+)
+ <use figs/dataVsMC/norm2signal/Ds2all_max_ghostProb.pdf>
+<figs/dataVsMC/norm2signal/Ds2all_BDTG_response.pdf, id=5136, 569.12625pt x 385
+.44pt>
+File: figs/dataVsMC/norm2signal/Ds2all_BDTG_response.pdf Graphic file (type pdf
+)
+ <use figs/dataVsMC/norm2signal/Ds2all_BDTG_response.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[47
+
+ <./figs/dataVsMC/norm2signal/Ds2all_Bs_PT.pdf, page is rotated 90 degrees> <./
+figs/dataVsMC/norm2signal/Ds2all_Bs_ETA.pdf, page is rotated 90 degrees> <./fig
+s/dataVsMC/norm2signal/Ds2all_Bs_FDCHI2_OWNPV.pdf, page is rotated 90 degrees> 
+<./figs/dataVsMC/norm2signal/Ds2all_NTracks.pdf, page is rotated 90 degrees> <.
+/figs/dataVsMC/norm2signal/Ds2all_Bs_DTF_TAUERR.pdf, page is rotated 90 degrees
+> <./figs/dataVsMC/norm2signal/Ds2all_Bs_DTF_MERR.pdf, page is rotated 90 degre
+es>] [48 <./figs/dataVsMC/norm2signal/Ds2all_DTF_CHI2NDOF.pdf, page is rotated 
+90 degrees> <./figs/dataVsMC/norm2signal/Ds2all_Bs_IPCHI2_OWNPV.pdf, page is ro
+tated 90 degrees> <./figs/dataVsMC/norm2signal/Ds2all_Bs_DIRA_OWNPV.pdf, page i
+s rotated 90 degrees> <./figs/dataVsMC/norm2signal/Ds2all_XsDaughters_min_IPCHI
+2.pdf, page is rotated 90 degrees> <./figs/dataVsMC/norm2signal/Ds2all_Xs_max_D
+OCA.pdf, page is rotated 90 degrees> <./figs/dataVsMC/norm2signal/Ds2all_DsDaug
+hters_min_IPCHI2.pdf, page is rotated 90 degrees> <./figs/dataVsMC/norm2signal/
+Ds2all_Ds_FDCHI2_ORIVX.pdf, page is rotated 90 degrees> <./figs/dataVsMC/norm2s
+ignal/Ds2all_maxCos.pdf, page is rotated 90 degrees> <./figs/dataVsMC/norm2sign
+al/Ds2all_max_ghostProb.pdf, page is rotated 90 degrees> <./figs/dataVsMC/norm2
+signal/Ds2all_BDTG_response.pdf, page is rotated 90 degrees>]
+<figs/dataVsMC/run1vs2_norm/Ds2all_Bs_PT.pdf, id=5851, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_Bs_PT.pdf Graphic file (type pdf)
+
+<use figs/dataVsMC/run1vs2_norm/Ds2all_Bs_PT.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_Bs_ETA.pdf, id=5852, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_Bs_ETA.pdf Graphic file (type pdf)
+<use figs/dataVsMC/run1vs2_norm/Ds2all_Bs_ETA.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_Bs_FDCHI2_OWNPV.pdf, id=5853, 569.12625pt x 
+385.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_Bs_FDCHI2_OWNPV.pdf Graphic file (type 
+pdf)
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_Bs_FDCHI2_OWNPV.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_NTracks.pdf, id=5854, 569.12625pt x 385.44pt
+>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_NTracks.pdf Graphic file (type pdf)
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_NTracks.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DTF_TAUERR.pdf, id=5855, 569.12625pt x 38
+5.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DTF_TAUERR.pdf Graphic file (type pd
+f)
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DTF_TAUERR.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DTF_MERR.pdf, id=5856, 569.12625pt x 385.
+44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DTF_MERR.pdf Graphic file (type pdf)
+
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DTF_MERR.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_Bs_TAGOMEGA_OS.pdf, id=5857, 569.12625pt x 3
+85.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_Bs_TAGOMEGA_OS.pdf Graphic file (type p
+df)
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_Bs_TAGOMEGA_OS.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_Bs_SS_nnetKaon_PROB.pdf, id=5858, 569.12625p
+t x 385.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_Bs_SS_nnetKaon_PROB.pdf Graphic file (t
+ype pdf)
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_Bs_SS_nnetKaon_PROB.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_DTF_CHI2NDOF.pdf, id=5859, 569.12625pt x 385
+.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_DTF_CHI2NDOF.pdf Graphic file (type pdf
+)
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_DTF_CHI2NDOF.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_Bs_IPCHI2_OWNPV.pdf, id=5860, 569.12625pt x 
+385.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_Bs_IPCHI2_OWNPV.pdf Graphic file (type 
+pdf)
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_Bs_IPCHI2_OWNPV.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DIRA_OWNPV.pdf, id=5861, 569.12625pt x 38
+5.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DIRA_OWNPV.pdf Graphic file (type pd
+f)
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DIRA_OWNPV.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_XsDaughters_min_IPCHI2.pdf, id=5862, 569.126
+25pt x 385.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_XsDaughters_min_IPCHI2.pdf Graphic file
+ (type pdf)
+
+<use figs/dataVsMC/run1vs2_norm/Ds2all_XsDaughters_min_IPCHI2.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_Xs_max_DOCA.pdf, id=5863, 569.12625pt x 385.
+44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_Xs_max_DOCA.pdf Graphic file (type pdf)
+
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_Xs_max_DOCA.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_DsDaughters_min_IPCHI2.pdf, id=5864, 569.126
+25pt x 385.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_DsDaughters_min_IPCHI2.pdf Graphic file
+ (type pdf)
+
+<use figs/dataVsMC/run1vs2_norm/Ds2all_DsDaughters_min_IPCHI2.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_Ds_FDCHI2_ORIVX.pdf, id=5865, 569.12625pt x 
+385.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_Ds_FDCHI2_ORIVX.pdf Graphic file (type 
+pdf)
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_Ds_FDCHI2_ORIVX.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_maxCos.pdf, id=5866, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_maxCos.pdf Graphic file (type pdf)
+<use figs/dataVsMC/run1vs2_norm/Ds2all_maxCos.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_max_ghostProb.pdf, id=5867, 569.12625pt x 38
+5.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_max_ghostProb.pdf Graphic file (type pd
+f)
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_max_ghostProb.pdf>
+<figs/dataVsMC/run1vs2_norm/Ds2all_BDTG_response.pdf, id=5868, 569.12625pt x 38
+5.44pt>
+File: figs/dataVsMC/run1vs2_norm/Ds2all_BDTG_response.pdf Graphic file (type pd
+f)
+ <use figs/dataVsMC/run1vs2_norm/Ds2all_BDTG_response.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[49
+
+ <./figs/dataVsMC/run1vs2_norm/Ds2all_Bs_PT.pdf, page is rotated 90 degrees> <.
+/figs/dataVsMC/run1vs2_norm/Ds2all_Bs_ETA.pdf, page is rotated 90 degrees> <./f
+igs/dataVsMC/run1vs2_norm/Ds2all_Bs_FDCHI2_OWNPV.pdf, page is rotated 90 degree
+s> <./figs/dataVsMC/run1vs2_norm/Ds2all_NTracks.pdf, page is rotated 90 degrees
+> <./figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DTF_TAUERR.pdf, page is rotated 90 de
+grees> <./figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DTF_MERR.pdf, page is rotated 90
+ degrees> <./figs/dataVsMC/run1vs2_norm/Ds2all_Bs_TAGOMEGA_OS.pdf, page is rota
+ted 90 degrees> <./figs/dataVsMC/run1vs2_norm/Ds2all_Bs_SS_nnetKaon_PROB.pdf, p
+age is rotated 90 degrees>] [50 <./figs/dataVsMC/run1vs2_norm/Ds2all_DTF_CHI2ND
+OF.pdf, page is rotated 90 degrees> <./figs/dataVsMC/run1vs2_norm/Ds2all_Bs_IPC
+HI2_OWNPV.pdf, page is rotated 90 degrees> <./figs/dataVsMC/run1vs2_norm/Ds2all
+_Bs_DIRA_OWNPV.pdf, page is rotated 90 degrees> <./figs/dataVsMC/run1vs2_norm/D
+s2all_XsDaughters_min_IPCHI2.pdf, page is rotated 90 degrees> <./figs/dataVsMC/
+run1vs2_norm/Ds2all_Xs_max_DOCA.pdf, page is rotated 90 degrees> <./figs/dataVs
+MC/run1vs2_norm/Ds2all_DsDaughters_min_IPCHI2.pdf, page is rotated 90 degrees> 
+<./figs/dataVsMC/run1vs2_norm/Ds2all_Ds_FDCHI2_ORIVX.pdf, page is rotated 90 de
+grees> <./figs/dataVsMC/run1vs2_norm/Ds2all_maxCos.pdf, page is rotated 90 degr
+ees> <./figs/dataVsMC/run1vs2_norm/Ds2all_max_ghostProb.pdf, page is rotated 90
+ degrees> <./figs/dataVsMC/run1vs2_norm/Ds2all_BDTG_response.pdf, page is rotat
+ed 90 degrees>]
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 99.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `subscript' on input line 99.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `math shift' on input line 99.
+
+
+<figs/dataVsMC/finalState_norm/Ds2all_Bs_PT.pdf, id=6671, 569.12625pt x 385.44p
+t>
+File: figs/dataVsMC/finalState_norm/Ds2all_Bs_PT.pdf Graphic file (type pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_Bs_PT.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_Bs_ETA.pdf, id=6672, 569.12625pt x 385.44
+pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_Bs_ETA.pdf Graphic file (type pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_Bs_ETA.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_Bs_FDCHI2_OWNPV.pdf, id=6673, 569.12625pt
+ x 385.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_Bs_FDCHI2_OWNPV.pdf Graphic file (ty
+pe pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_Bs_FDCHI2_OWNPV.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_NTracks.pdf, id=6674, 569.12625pt x 385.4
+4pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_NTracks.pdf Graphic file (type pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_NTracks.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_Bs_DTF_TAUERR.pdf, id=6675, 569.12625pt x
+ 385.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_Bs_DTF_TAUERR.pdf Graphic file (type
+ pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_Bs_DTF_TAUERR.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_Bs_DTF_MERR.pdf, id=6676, 569.12625pt x 3
+85.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_Bs_DTF_MERR.pdf Graphic file (type p
+df)
+ <use figs/dataVsMC/finalState_norm/Ds2all_Bs_DTF_MERR.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_Bs_TAGOMEGA_OS.pdf, id=6677, 569.12625pt 
+x 385.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_Bs_TAGOMEGA_OS.pdf Graphic file (typ
+e pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_Bs_TAGOMEGA_OS.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_Bs_SS_nnetKaon_PROB.pdf, id=6678, 569.126
+25pt x 385.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_Bs_SS_nnetKaon_PROB.pdf Graphic file
+ (type pdf)
+
+<use figs/dataVsMC/finalState_norm/Ds2all_Bs_SS_nnetKaon_PROB.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_DTF_CHI2NDOF.pdf, id=6679, 569.12625pt x 
+385.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_DTF_CHI2NDOF.pdf Graphic file (type 
+pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_DTF_CHI2NDOF.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_Bs_IPCHI2_OWNPV.pdf, id=6680, 569.12625pt
+ x 385.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_Bs_IPCHI2_OWNPV.pdf Graphic file (ty
+pe pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_Bs_IPCHI2_OWNPV.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_Bs_DIRA_OWNPV.pdf, id=6681, 569.12625pt x
+ 385.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_Bs_DIRA_OWNPV.pdf Graphic file (type
+ pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_Bs_DIRA_OWNPV.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_XsDaughters_min_IPCHI2.pdf, id=6682, 569.
+12625pt x 385.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_XsDaughters_min_IPCHI2.pdf Graphic f
+ile (type pdf)
+
+<use figs/dataVsMC/finalState_norm/Ds2all_XsDaughters_min_IPCHI2.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_Xs_max_DOCA.pdf, id=6683, 569.12625pt x 3
+85.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_Xs_max_DOCA.pdf Graphic file (type p
+df)
+ <use figs/dataVsMC/finalState_norm/Ds2all_Xs_max_DOCA.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_DsDaughters_min_IPCHI2.pdf, id=6684, 569.
+12625pt x 385.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_DsDaughters_min_IPCHI2.pdf Graphic f
+ile (type pdf)
+
+<use figs/dataVsMC/finalState_norm/Ds2all_DsDaughters_min_IPCHI2.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_Ds_FDCHI2_ORIVX.pdf, id=6685, 569.12625pt
+ x 385.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_Ds_FDCHI2_ORIVX.pdf Graphic file (ty
+pe pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_Ds_FDCHI2_ORIVX.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_maxCos.pdf, id=6686, 569.12625pt x 385.44
+pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_maxCos.pdf Graphic file (type pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_maxCos.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_max_ghostProb.pdf, id=6687, 569.12625pt x
+ 385.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_max_ghostProb.pdf Graphic file (type
+ pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_max_ghostProb.pdf>
+<figs/dataVsMC/finalState_norm/Ds2all_BDTG_response.pdf, id=6688, 569.12625pt x
+ 385.44pt>
+File: figs/dataVsMC/finalState_norm/Ds2all_BDTG_response.pdf Graphic file (type
+ pdf)
+ <use figs/dataVsMC/finalState_norm/Ds2all_BDTG_response.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[51
+
+ <./figs/dataVsMC/finalState_norm/Ds2all_Bs_PT.pdf, page is rotated 90 degrees>
+ <./figs/dataVsMC/finalState_norm/Ds2all_Bs_ETA.pdf, page is rotated 90 degrees
+> <./figs/dataVsMC/finalState_norm/Ds2all_Bs_FDCHI2_OWNPV.pdf, page is rotated 
+90 degrees> <./figs/dataVsMC/finalState_norm/Ds2all_NTracks.pdf, page is rotate
+d 90 degrees> <./figs/dataVsMC/finalState_norm/Ds2all_Bs_DTF_TAUERR.pdf, page i
+s rotated 90 degrees> <./figs/dataVsMC/finalState_norm/Ds2all_Bs_DTF_MERR.pdf, 
+page is rotated 90 degrees> <./figs/dataVsMC/finalState_norm/Ds2all_Bs_TAGOMEGA
+_OS.pdf, page is rotated 90 degrees> <./figs/dataVsMC/finalState_norm/Ds2all_Bs
+_SS_nnetKaon_PROB.pdf, page is rotated 90 degrees>] [52 <./figs/dataVsMC/finalS
+tate_norm/Ds2all_DTF_CHI2NDOF.pdf, page is rotated 90 degrees> <./figs/dataVsMC
+/finalState_norm/Ds2all_Bs_IPCHI2_OWNPV.pdf, page is rotated 90 degrees> <./fig
+s/dataVsMC/finalState_norm/Ds2all_Bs_DIRA_OWNPV.pdf, page is rotated 90 degrees
+> <./figs/dataVsMC/finalState_norm/Ds2all_XsDaughters_min_IPCHI2.pdf, page is r
+otated 90 degrees> <./figs/dataVsMC/finalState_norm/Ds2all_Xs_max_DOCA.pdf, pag
+e is rotated 90 degrees> <./figs/dataVsMC/finalState_norm/Ds2all_DsDaughters_mi
+n_IPCHI2.pdf, page is rotated 90 degrees> <./figs/dataVsMC/finalState_norm/Ds2a
+ll_Ds_FDCHI2_ORIVX.pdf, page is rotated 90 degrees> <./figs/dataVsMC/finalState
+_norm/Ds2all_maxCos.pdf, page is rotated 90 degrees> <./figs/dataVsMC/finalStat
+e_norm/Ds2all_max_ghostProb.pdf, page is rotated 90 degrees> <./figs/dataVsMC/f
+inalState_norm/Ds2all_BDTG_response.pdf, page is rotated 90 degrees>]
+<figs/dataVsMC/trigger_norm/Ds2all_Bs_PT.pdf, id=7492, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_Bs_PT.pdf Graphic file (type pdf)
+
+<use figs/dataVsMC/trigger_norm/Ds2all_Bs_PT.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_Bs_ETA.pdf, id=7493, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_Bs_ETA.pdf Graphic file (type pdf)
+<use figs/dataVsMC/trigger_norm/Ds2all_Bs_ETA.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_Bs_FDCHI2_OWNPV.pdf, id=7494, 569.12625pt x 
+385.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_Bs_FDCHI2_OWNPV.pdf Graphic file (type 
+pdf)
+ <use figs/dataVsMC/trigger_norm/Ds2all_Bs_FDCHI2_OWNPV.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_NTracks.pdf, id=7495, 569.12625pt x 385.44pt
+>
+File: figs/dataVsMC/trigger_norm/Ds2all_NTracks.pdf Graphic file (type pdf)
+ <use figs/dataVsMC/trigger_norm/Ds2all_NTracks.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_Bs_DTF_TAUERR.pdf, id=7496, 569.12625pt x 38
+5.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_Bs_DTF_TAUERR.pdf Graphic file (type pd
+f)
+ <use figs/dataVsMC/trigger_norm/Ds2all_Bs_DTF_TAUERR.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_Bs_DTF_MERR.pdf, id=7497, 569.12625pt x 385.
+44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_Bs_DTF_MERR.pdf Graphic file (type pdf)
+
+ <use figs/dataVsMC/trigger_norm/Ds2all_Bs_DTF_MERR.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_Bs_TAGOMEGA_OS.pdf, id=7498, 569.12625pt x 3
+85.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_Bs_TAGOMEGA_OS.pdf Graphic file (type p
+df)
+ <use figs/dataVsMC/trigger_norm/Ds2all_Bs_TAGOMEGA_OS.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_Bs_SS_nnetKaon_PROB.pdf, id=7499, 569.12625p
+t x 385.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_Bs_SS_nnetKaon_PROB.pdf Graphic file (t
+ype pdf)
+ <use figs/dataVsMC/trigger_norm/Ds2all_Bs_SS_nnetKaon_PROB.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_DTF_CHI2NDOF.pdf, id=7500, 569.12625pt x 385
+.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_DTF_CHI2NDOF.pdf Graphic file (type pdf
+)
+ <use figs/dataVsMC/trigger_norm/Ds2all_DTF_CHI2NDOF.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_Bs_IPCHI2_OWNPV.pdf, id=7501, 569.12625pt x 
+385.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_Bs_IPCHI2_OWNPV.pdf Graphic file (type 
+pdf)
+ <use figs/dataVsMC/trigger_norm/Ds2all_Bs_IPCHI2_OWNPV.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_Bs_DIRA_OWNPV.pdf, id=7502, 569.12625pt x 38
+5.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_Bs_DIRA_OWNPV.pdf Graphic file (type pd
+f)
+ <use figs/dataVsMC/trigger_norm/Ds2all_Bs_DIRA_OWNPV.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_XsDaughters_min_IPCHI2.pdf, id=7503, 569.126
+25pt x 385.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_XsDaughters_min_IPCHI2.pdf Graphic file
+ (type pdf)
+
+<use figs/dataVsMC/trigger_norm/Ds2all_XsDaughters_min_IPCHI2.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_Xs_max_DOCA.pdf, id=7504, 569.12625pt x 385.
+44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_Xs_max_DOCA.pdf Graphic file (type pdf)
+
+ <use figs/dataVsMC/trigger_norm/Ds2all_Xs_max_DOCA.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_DsDaughters_min_IPCHI2.pdf, id=7505, 569.126
+25pt x 385.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_DsDaughters_min_IPCHI2.pdf Graphic file
+ (type pdf)
+
+<use figs/dataVsMC/trigger_norm/Ds2all_DsDaughters_min_IPCHI2.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_Ds_FDCHI2_ORIVX.pdf, id=7506, 569.12625pt x 
+385.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_Ds_FDCHI2_ORIVX.pdf Graphic file (type 
+pdf)
+ <use figs/dataVsMC/trigger_norm/Ds2all_Ds_FDCHI2_ORIVX.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_maxCos.pdf, id=7507, 569.12625pt x 385.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_maxCos.pdf Graphic file (type pdf)
+<use figs/dataVsMC/trigger_norm/Ds2all_maxCos.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_max_ghostProb.pdf, id=7508, 569.12625pt x 38
+5.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_max_ghostProb.pdf Graphic file (type pd
+f)
+ <use figs/dataVsMC/trigger_norm/Ds2all_max_ghostProb.pdf>
+<figs/dataVsMC/trigger_norm/Ds2all_BDTG_response.pdf, id=7509, 569.12625pt x 38
+5.44pt>
+File: figs/dataVsMC/trigger_norm/Ds2all_BDTG_response.pdf Graphic file (type pd
+f)
+ <use figs/dataVsMC/trigger_norm/Ds2all_BDTG_response.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) [53
+
+ <./figs/dataVsMC/trigger_norm/Ds2all_Bs_PT.pdf, page is rotated 90 degrees> <.
+/figs/dataVsMC/trigger_norm/Ds2all_Bs_ETA.pdf, page is rotated 90 degrees> <./f
+igs/dataVsMC/trigger_norm/Ds2all_Bs_FDCHI2_OWNPV.pdf, page is rotated 90 degree
+s> <./figs/dataVsMC/trigger_norm/Ds2all_NTracks.pdf, page is rotated 90 degrees
+> <./figs/dataVsMC/trigger_norm/Ds2all_Bs_DTF_TAUERR.pdf, page is rotated 90 de
+grees> <./figs/dataVsMC/trigger_norm/Ds2all_Bs_DTF_MERR.pdf, page is rotated 90
+ degrees> <./figs/dataVsMC/trigger_norm/Ds2all_Bs_TAGOMEGA_OS.pdf, page is rota
+ted 90 degrees> <./figs/dataVsMC/trigger_norm/Ds2all_Bs_SS_nnetKaon_PROB.pdf, p
+age is rotated 90 degrees>] [54 <./figs/dataVsMC/trigger_norm/Ds2all_DTF_CHI2ND
+OF.pdf, page is rotated 90 degrees> <./figs/dataVsMC/trigger_norm/Ds2all_Bs_IPC
+HI2_OWNPV.pdf, page is rotated 90 degrees> <./figs/dataVsMC/trigger_norm/Ds2all
+_Bs_DIRA_OWNPV.pdf, page is rotated 90 degrees> <./figs/dataVsMC/trigger_norm/D
+s2all_XsDaughters_min_IPCHI2.pdf, page is rotated 90 degrees> <./figs/dataVsMC/
+trigger_norm/Ds2all_Xs_max_DOCA.pdf, page is rotated 90 degrees> <./figs/dataVs
+MC/trigger_norm/Ds2all_DsDaughters_min_IPCHI2.pdf, page is rotated 90 degrees> 
+<./figs/dataVsMC/trigger_norm/Ds2all_Ds_FDCHI2_ORIVX.pdf, page is rotated 90 de
+grees> <./figs/dataVsMC/trigger_norm/Ds2all_maxCos.pdf, page is rotated 90 degr
+ees> <./figs/dataVsMC/trigger_norm/Ds2all_max_ghostProb.pdf, page is rotated 90
+ degrees> <./figs/dataVsMC/trigger_norm/Ds2all_BDTG_response.pdf, page is rotat
+ed 90 degrees>] (./main.bbl) [55
 
 ] (./main.aux)
 
@@ -756,13 +3251,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 7500 strings out of 256216
- 106185 string characters out of 1917072
- 206046 words of memory out of 1500000
- 10445 multiletter control sequences out of 10000+200000
- 24358 words of font info for 114 fonts, out of 1200000 for 2000
+ 8612 strings out of 256216
+ 154245 string characters out of 1917072
+ 205046 words of memory out of 1500000
+ 11288 multiletter control sequences out of 10000+200000
+ 25881 words of font info for 121 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 37i,12n,38p,1283b,479s stack positions out of 5000i,500n,6000p,200000b,15000s
+ 37i,19n,40p,1836b,479s stack positions out of 5000i,500n,6000p,200000b,15000s
 </usr/share/texmf/fonts/type1/bluesky/cm/cmbsy10.pfb></usr/share/texmf/fonts/
 type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx12.pfb
 ></usr/share/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/ty
@@ -778,9 +3273,9 @@ y6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy7.pfb></usr/share/texmf/fon
 ts/type1/bluesky/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti10.p
 fb></usr/share/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/
 type1/bluesky/cm/cmtt12.pfb>
-Output written on main.pdf (23 pages, 658683 bytes).
+Output written on main.pdf (59 pages, 4863920 bytes).
 PDF statistics:
- 908 PDF objects out of 1000 (max. 8388607)
- 92 named destinations out of 1000 (max. 131072)
- 19208 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 8456 PDF objects out of 8907 (max. 8388607)
+ 204 named destinations out of 1000 (max. 131072)
+ 20349 words of extra memory for PDF output out of 20736 (max. 10000000)
 

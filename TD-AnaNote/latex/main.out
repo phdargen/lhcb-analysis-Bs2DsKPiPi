@@ -1,4 +1,3 @@
-\BOOKMARK [1][-]{section.0}{To Do List with Assignment of Tasks}{}
 \BOOKMARK [1][-]{section.1}{Introduction}{}
 \BOOKMARK [1][-]{section.2}{Sensitivity studies}{}
 \BOOKMARK [2][-]{subsection.2.1}{PDF}{section.2}
@@ -7,8 +6,36 @@
 \BOOKMARK [1][-]{section.3}{Selection}{}
 \BOOKMARK [2][-]{subsection.3.1}{Cut-based selection}{section.3}
 \BOOKMARK [2][-]{subsection.3.2}{Multivariate stage}{section.3}
-\BOOKMARK [1][-]{section.4}{Decay-time Acceptance}{}
-\BOOKMARK [1][-]{section.5}{Decay-time Resoution}{}
-\BOOKMARK [2][-]{subsection.5.1}{Formalism}{section.5}
-\BOOKMARK [2][-]{subsection.5.2}{Results}{section.5}
-\BOOKMARK [1][-]{table.18}{References}{}
+\BOOKMARK [1][-]{section.4}{Fits to invariant mass distributions of signal and normalization channel}{}
+\BOOKMARK [2][-]{subsection.4.1}{Signal models for \040m \(Ds\) and m\(DsK\)}{section.4}
+\BOOKMARK [2][-]{subsection.4.2}{Background models for \040m \(Ds\)}{section.4}
+\BOOKMARK [2][-]{subsection.4.3}{Background models for m\(DsK\)}{section.4}
+\BOOKMARK [2][-]{subsection.4.4}{Fit to B 0s Ds candidates}{section.4}
+\BOOKMARK [2][-]{subsection.4.5}{Fit to B 0s DsK candidates}{section.4}
+\BOOKMARK [2][-]{subsection.4.6}{Extraction of signal weights}{section.4}
+\BOOKMARK [1][-]{section.5}{Flavour Tagging}{}
+\BOOKMARK [2][-]{subsection.5.1}{OS tagging calibration}{section.5}
+\BOOKMARK [2][-]{subsection.5.2}{SS tagging calibration}{section.5}
+\BOOKMARK [2][-]{subsection.5.3}{Tagging performance comparison between the signal and normalization channel}{section.5}
+\BOOKMARK [2][-]{subsection.5.4}{Combination of OS and SS taggers}{section.5}
+\BOOKMARK [1][-]{section.6}{Decay-time acceptance}{}
+\BOOKMARK [2][-]{subsection.6.1}{Comparison of acceptance in subsamples}{section.6}
+\BOOKMARK [2][-]{subsection.6.2}{Results}{section.6}
+\BOOKMARK [1][-]{section.7}{Decay-time Resoution}{}
+\BOOKMARK [2][-]{subsection.7.1}{Formalism}{section.7}
+\BOOKMARK [2][-]{subsection.7.2}{Decay-time Error in Run I \046 Run II}{section.7}
+\BOOKMARK [2][-]{subsection.7.3}{Fits to the decay time distributions}{section.7}
+\BOOKMARK [2][-]{subsection.7.4}{Results}{section.7}
+\BOOKMARK [1][-]{section.8}{Time dependent fit}{}
+\BOOKMARK [2][-]{subsection.8.1}{sFit to B 0s Ds data}{section.8}
+\BOOKMARK [2][-]{subsection.8.2}{sFit to B 0s DsK data}{section.8}
+\BOOKMARK [2][-]{subsection.8.3}{Results}{section.8}
+\BOOKMARK [1][-]{appendix.A}{Detailed mass fits}{}
+\BOOKMARK [1][-]{appendix.B}{Decay-time Resolution fits}{}
+\BOOKMARK [1][-]{appendix.C}{MC corrections}{}
+\BOOKMARK [1][-]{appendix.D}{Data distributions}{}
+\BOOKMARK [2][-]{subsection.D.1}{Comparison of signal and calibration channel}{appendix.D}
+\BOOKMARK [2][-]{subsection.D.2}{Comparison of Run-I and Run-II data}{appendix.D}
+\BOOKMARK [2][-]{subsection.D.3}{Comparison of Ds final states}{appendix.D}
+\BOOKMARK [2][-]{subsection.D.4}{Comparison of trigger categories}{appendix.D}
+\BOOKMARK [1][-]{figure.56}{References}{}
