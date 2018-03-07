@@ -88,6 +88,7 @@ void TMVAClassification( TString myMethodList = "BDTG", TString run = "Run1" )
    signal->SetBranchStatus("*max*",1);
    signal->SetBranchStatus("*ptasy*",1);
    signal->SetBranchStatus("*MM*",1);
+   signal->SetBranchStatus("*TAU*",1);
 
    background->SetBranchStatus("*",0);  // disable all branches
    background->SetBranchStatus("*CHI2*",1); 
@@ -143,11 +144,10 @@ void TMVAClassification( TString myMethodList = "BDTG", TString run = "Run1" )
    // You can add an arbitrary number of signal or background trees
    factory->AddSignalTree    ( signal,     signalWeight     );
    factory->AddBackgroundTree( background, backgroundWeight );
-   //factory->SetSignalWeightExpression("weight");
+   factory->SetSignalWeightExpression("weight");
 
    // Apply additional cuts on the signal and background samples (can be different)
-   TCut mycuts = "Bs_MM > 5300 && Bs_MM < 5420  "  ; 
-  
+   TCut mycuts = "Bs_MM > 5300 && Bs_MM < 5420"  ; 
    TCut mycutb = "Bs_MM > 5650";
    
    // Tell the factory how to use the training and testing events

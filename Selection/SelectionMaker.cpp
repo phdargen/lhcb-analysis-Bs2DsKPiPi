@@ -47,9 +47,13 @@ int main(int argc, char** argv){
 	    if((string)argv[5] == "Down") polarity = "Down" ;
     }
 
-    MiniDecayTree d(decay, year, finalState, dataType, polarity);
+    MiniDecayTree d(decay, year, finalState, dataType, polarity, "/auto/data/dargent/BsDsKpipi/", "/auto/data/dargent/BsDsKpipi/", false, "Corr");
     //d.set_inFileName(d.get_outFileName());
-    //d.set_outFileName("test.root");    
+    //TString out = d.get_outFileName();
+    //d.set_outFileName(out.ReplaceAll(".root","_PIDCorr.root"));    
+    //d.set_outFileName((d.get_outFileName()).ReplaceAll(".root","_PIDGen.root"));    
+    //d.set_outFileName((d.get_outFileName()).ReplaceAll(".root","_PIDMC.root"));    
+    //d.set_outFileName((d.get_outFileName()).ReplaceAll(".root","_noPIDCuts.root"));    
     d.Loop();
 
     return 0;

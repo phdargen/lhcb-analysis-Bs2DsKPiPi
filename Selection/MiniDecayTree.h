@@ -412,7 +412,7 @@ public :
     Double_t        pi_plus2_TRACK_GhostProb;
     Double_t        pi_plus2_ptasy_1_00;
 
-    Int_t	   Bs_TRUEID;
+    Int_t	   Bs_TRUEID,Ds_TRUEID;
     Int_t	   Bs_BKGCAT;
     Int_t	   K_plus_TRUEID;
     Int_t	   pi_plus_TRUEID;
@@ -424,6 +424,18 @@ public :
     Int_t	   pi_minus_fromDs_TRUEID;
     Int_t	   pi_plus_fromDs_TRUEID;
     Int_t	   pi_minus2_fromDs_TRUEID;
+
+    Int_t	   Ds_MC_MOTHER_ID;
+    Int_t	   K_plus_MC_MOTHER_ID;
+    Int_t	   pi_plus_MC_MOTHER_ID;
+    Int_t	   pi_minus_MC_MOTHER_ID;
+    Int_t	   pi_plus1_MC_MOTHER_ID;
+    Int_t	   pi_plus2_MC_MOTHER_ID;
+    Int_t	   K_plus_fromDs_MC_MOTHER_ID;
+    Int_t	   K_minus_fromDs_MC_MOTHER_ID;
+    Int_t	   pi_minus_fromDs_MC_MOTHER_ID;
+    Int_t	   pi_plus_fromDs_MC_MOTHER_ID;
+    Int_t	   pi_minus2_fromDs_MC_MOTHER_ID;
 
     Double_t K_plus_PIDK_gen_MagDown,pi_plus_PIDK_gen_MagDown,pi_minus_PIDK_gen_MagDown,K_plus_fromDs_PIDK_gen_MagDown,K_minus_fromDs_PIDK_gen_MagDown,
 pi_minus_fromDs_PIDK_gen_MagDown;
@@ -1116,15 +1128,23 @@ void MiniDecayTree::Init()
 
     if(!_data){
 	    fChain->SetBranchAddress("Bs_TRUEID", &Bs_TRUEID);
+	    fChain->SetBranchAddress("Ds_TRUEID", &Ds_TRUEID);
     	    fChain->SetBranchAddress("Bs_BKGCAT", &Bs_BKGCAT);
 
 	    fChain->SetBranchAddress("K_plus_TRUEID", &K_plus_TRUEID);
     	    fChain->SetBranchAddress("pi_plus_TRUEID", &pi_plus_TRUEID);
     	    fChain->SetBranchAddress("pi_minus_TRUEID", &pi_minus_TRUEID);
-
     	    fChain->SetBranchAddress("K_plus_fromDs_TRUEID", &K_plus_fromDs_TRUEID);
     	    fChain->SetBranchAddress("K_minus_fromDs_TRUEID", &K_minus_fromDs_TRUEID);
     	    fChain->SetBranchAddress("pi_minus_fromDs_TRUEID", &pi_minus_fromDs_TRUEID);
+
+	    fChain->SetBranchAddress("Ds_MC_MOTHER_ID", &Ds_MC_MOTHER_ID);
+	    fChain->SetBranchAddress("K_plus_MC_MOTHER_ID", &K_plus_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("pi_plus_MC_MOTHER_ID", &pi_plus_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("pi_minus_MC_MOTHER_ID", &pi_minus_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("K_plus_fromDs_MC_MOTHER_ID", &K_plus_fromDs_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("K_minus_fromDs_MC_MOTHER_ID", &K_minus_fromDs_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_MC_MOTHER_ID", &pi_minus_fromDs_MC_MOTHER_ID);
 
 	    fChain->SetBranchAddress("K_plus_PIDK_gen_MagDown", &K_plus_PIDK_gen_MagDown);
     	    fChain->SetBranchAddress("pi_plus_PIDK_gen_MagDown", &pi_plus_PIDK_gen_MagDown);
@@ -1880,15 +1900,23 @@ void MiniDecayTree::Init()
 
 	 if(!_data){
 	    fChain->SetBranchAddress("Bs_TRUEID", &Bs_TRUEID);
+	    fChain->SetBranchAddress("Ds_TRUEID", &Ds_TRUEID);
     	    fChain->SetBranchAddress("Bs_BKGCAT", &Bs_BKGCAT);
 
 	    fChain->SetBranchAddress("K_plus_TRUEID", &K_plus_TRUEID);
     	    fChain->SetBranchAddress("pi_plus_TRUEID", &pi_plus_TRUEID);
     	    fChain->SetBranchAddress("pi_minus_TRUEID", &pi_minus_TRUEID);
-
     	    fChain->SetBranchAddress("pi_minus_fromDs_TRUEID", &pi_minus_fromDs_TRUEID);
 	    fChain->SetBranchAddress("pi_plus_fromDs_TRUEID", &pi_plus_fromDs_TRUEID);
    	    fChain->SetBranchAddress("pi_minus2_fromDs_TRUEID", &pi_minus2_fromDs_TRUEID);
+
+	    fChain->SetBranchAddress("Ds_MC_MOTHER_ID", &Ds_MC_MOTHER_ID);
+	    fChain->SetBranchAddress("K_plus_MC_MOTHER_ID", &K_plus_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("pi_plus_MC_MOTHER_ID", &pi_plus_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("pi_minus_MC_MOTHER_ID", &pi_minus_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_MC_MOTHER_ID", &pi_minus_fromDs_MC_MOTHER_ID);
+	    fChain->SetBranchAddress("pi_plus_fromDs_MC_MOTHER_ID", &pi_plus_fromDs_MC_MOTHER_ID);
+   	    fChain->SetBranchAddress("pi_minus2_fromDs_MC_MOTHER_ID", &pi_minus2_fromDs_MC_MOTHER_ID);
 	}
 
         fChain->SetBranchAddress("Bs_ETA", &Bs_ETA, &b_Bs_ETA);
@@ -2627,15 +2655,23 @@ void MiniDecayTree::Init()
 
 	 if(!_data){
 	    fChain->SetBranchAddress("Bs_TRUEID", &Bs_TRUEID);
+	    fChain->SetBranchAddress("Ds_TRUEID", &Ds_TRUEID);
     	    fChain->SetBranchAddress("Bs_BKGCAT", &Bs_BKGCAT);
 	  
             fChain->SetBranchAddress("pi_minus_TRUEID", &pi_minus_TRUEID);
     	    fChain->SetBranchAddress("pi_plus1_TRUEID", &pi_plus1_TRUEID);
     	    fChain->SetBranchAddress("pi_plus2_TRUEID", &pi_plus2_TRUEID);
-
     	    fChain->SetBranchAddress("K_plus_fromDs_TRUEID", &K_plus_fromDs_TRUEID);
     	    fChain->SetBranchAddress("K_minus_fromDs_TRUEID", &K_minus_fromDs_TRUEID);
     	    fChain->SetBranchAddress("pi_minus_fromDs_TRUEID", &pi_minus_fromDs_TRUEID);
+
+            fChain->SetBranchAddress("Ds_MC_MOTHER_ID", &Ds_MC_MOTHER_ID);
+            fChain->SetBranchAddress("pi_minus_MC_MOTHER_ID", &pi_minus_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("pi_plus1_MC_MOTHER_ID", &pi_plus1_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("pi_plus2_MC_MOTHER_ID", &pi_plus2_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("K_plus_fromDs_MC_MOTHER_ID", &K_plus_fromDs_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("K_minus_fromDs_MC_MOTHER_ID", &K_minus_fromDs_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_MC_MOTHER_ID", &pi_minus_fromDs_MC_MOTHER_ID);
 
 	    fChain->SetBranchAddress("pi_plus1_PIDK_gen_MagDown", &pi_plus1_PIDK_gen_MagDown);
     	    fChain->SetBranchAddress("pi_plus2_PIDK_gen_MagDown", &pi_plus2_PIDK_gen_MagDown);
@@ -3371,15 +3407,23 @@ void MiniDecayTree::Init()
 	
  	if(!_data){
 	    fChain->SetBranchAddress("Bs_TRUEID", &Bs_TRUEID);
+	    fChain->SetBranchAddress("Ds_TRUEID", &Ds_TRUEID);
     	    fChain->SetBranchAddress("Bs_BKGCAT", &Bs_BKGCAT);
 	
 	    fChain->SetBranchAddress("pi_minus_TRUEID", &pi_minus_TRUEID);
     	    fChain->SetBranchAddress("pi_plus1_TRUEID", &pi_plus1_TRUEID);
     	    fChain->SetBranchAddress("pi_plus2_TRUEID", &pi_plus2_TRUEID);
-
     	    fChain->SetBranchAddress("pi_minus_fromDs_TRUEID", &pi_minus_fromDs_TRUEID);
 	    fChain->SetBranchAddress("pi_plus_fromDs_TRUEID", &pi_plus_fromDs_TRUEID);
    	    fChain->SetBranchAddress("pi_minus2_fromDs_TRUEID", &pi_minus2_fromDs_TRUEID);
+
+	    fChain->SetBranchAddress("Ds_MC_MOTHER_ID", &Ds_MC_MOTHER_ID);
+	    fChain->SetBranchAddress("pi_minus_MC_MOTHER_ID", &pi_minus_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("pi_plus1_MC_MOTHER_ID", &pi_plus1_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("pi_plus2_MC_MOTHER_ID", &pi_plus2_MC_MOTHER_ID);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_MC_MOTHER_ID", &pi_minus_fromDs_MC_MOTHER_ID);
+	    fChain->SetBranchAddress("pi_plus_fromDs_MC_MOTHER_ID", &pi_plus_fromDs_MC_MOTHER_ID);
+   	    fChain->SetBranchAddress("pi_minus2_fromDs_MC_MOTHER_ID", &pi_minus2_fromDs_MC_MOTHER_ID);
 	}
 
         fChain->SetBranchAddress("Bs_ETA", &Bs_ETA, &b_Bs_ETA);

@@ -196,6 +196,7 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    Double_t Ds_RFD;
    Double_t maxCos;
    Double_t max_ghostProb;
+   int year;
 
    theTree->SetBranchAddress( "DTF_CHI2NDOF", &DTF_CHI2NDOF );
    theTree->SetBranchAddress( "Bs_IPCHI2_OWNPV", &Bs_IPCHI2_OWNPV );
@@ -210,10 +211,13 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    theTree->SetBranchAddress( "Ds_RFD", &Ds_RFD );
    theTree->SetBranchAddress( "maxCos", &maxCos );
    theTree->SetBranchAddress( "max_ghostProb", &max_ghostProb );
+   theTree->SetBranchAddress( "year", &year );
 
    //output file---------------------------------------------------------------------------------------------------------------------------------------
    Float_t BDTG_response;
    tree->Branch("BDTG_response",&BDTG_response, "BDTG_response/F");
+   int run;
+   tree->Branch("run",&run,"run/I");
 
    std::cout << "--- Processing: " << theTree->GetEntries() << " events" << std::endl;
 
@@ -239,6 +243,8 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
         r_max_ghostProb = float(max_ghostProb);
 
         BDTG_response=reader->EvaluateMVA("BDTG method");
+	if(year == 11 || year == 12) run = 1;
+	else run = 2;
         tree->Fill();    
    }
 
