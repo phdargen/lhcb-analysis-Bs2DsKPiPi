@@ -1,0 +1,10 @@
+* general options
+"Channel"       	"signal"
+"cutBDT"       		0.3
+"makeNewList"    	1
+"matchList"      	1
+
+"outFileLocation"   	"/auto/data/kecke/BsDsKpipi/BDT/Data/"
+
+
+
