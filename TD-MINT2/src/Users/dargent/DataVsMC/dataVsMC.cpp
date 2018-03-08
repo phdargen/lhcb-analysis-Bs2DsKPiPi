@@ -28,6 +28,11 @@
 using namespace std;
 using namespace MINT;
 
+static const double massKaon = 493.68;
+static const double massPion = 139.57;
+static const double massBs = 5366.89;
+static const double massDs = 1968.30;
+
 void plot(TTree* tree, TTree* treeMC, TString Branch,TString TitleX, int bins, double min, double max, TString weightA, TString weightB, TString newWeightB, TString label, bool log = false, bool legendLeft = false){
         
     /// options
@@ -338,44 +343,59 @@ void compare(TString fileA, TString fileB, TString weightA, TString weightB, TSt
     if(selection == "Final") plot(new_treeA,new_treeB,"BDTG_response","BDTG",nBins,0,1.,weightA, weightB, newWeightB, label,false,true);
 }
 
-/*
-void plotPID(string Branch,string TitleX, int bins, double min, double max, bool useWeights=true) {
-    
-    ///Load files
-    TFile* file= new TFile("/auto/data/dargent/Bu2JpsiKpipi/data/data_bdt_PIDK.root");
-    TTree* tree = (TTree*) file->Get("DecayTree");	
+void plotPID(TTree* tree, TTree* treeMC, TTree* treeMC_PIDGen, TTree* treeMC_PIDCorr, TTree* treeMC_noPID, 
+ TString Branch,TString TitleX, int bins, double min, double max, TString weightData, TString weightMC, TString label, bool log = false, bool legendLeft = false, bool eff = false){
+        
+    /// options
+    NamedParameter<string> legTitle("legTitle", (std::string) "");
+    NamedParameter<string> OutputDir("OutputDir", (std::string) "final/", (char*) 0);
+    NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
+
+    cout << "Plotting " << Branch << endl;
+
     tree->SetBranchStatus("*",0);
-    tree->SetBranchStatus(Branch.c_str(),1);
-    tree->SetBranchStatus("n_sig_sw",1);
-    double pid_data,sw;
-    tree->SetBranchAddress(Branch.c_str(),&pid_data);
-    tree->SetBranchAddress("n_sig_sw",&sw);
+    tree->SetBranchStatus(Branch,1);
+    tree->SetBranchStatus(weightData,1);
+    double var;
+    double sw;
+    tree->SetBranchAddress(Branch,&var);
+    tree->SetBranchAddress(weightData,&sw);
     
-    TString fileNameMCcorr="/auto/data/dargent/Bu2JpsiKpipi/MC/MC_reweighted_forBDT_PIDcorr_cat10.root";
-    TFile* fileMCcorr= new TFile(fileNameMCcorr);
-    TTree* treeMCcorr = (TTree*) fileMCcorr->Get("DecayTree");	
-    treeMCcorr->SetBranchStatus("*",0);
-    treeMCcorr->SetBranchStatus(Branch.c_str(),1);
-    treeMCcorr->SetBranchStatus((Branch+"_corr").c_str(),1);
-    treeMCcorr->SetBranchStatus("weight",1);
-    double pid_MC_corr, w;
-    treeMCcorr->SetBranchAddress((Branch+"_corr").c_str(),&pid_MC_corr);
-    treeMCcorr->SetBranchAddress("weight",&w);
-    
-    TString fileNameMC="/auto/data/dargent/Bu2JpsiKpipi/MC/MC_reweighted_forBDT.root";
-    TFile* fileMC= new TFile(fileNameMC);
-    TTree* treeMC = (TTree*) fileMC->Get("DecayTree");	
     treeMC->SetBranchStatus("*",0);
-    treeMC->SetBranchStatus(Branch.c_str(),1);
-    treeMC->SetBranchStatus("weight",1);
-    double pid_MC;
-    treeMC->SetBranchAddress(Branch.c_str(),&pid_MC);
-    
+    treeMC->SetBranchStatus(Branch,1);
+    treeMC->SetBranchStatus(weightMC,1);
+    double varMC;
+    double w = 1;
+    treeMC->SetBranchAddress(Branch,&varMC);         
+    treeMC->SetBranchAddress(weightMC,&w);
+
+    treeMC_PIDGen->SetBranchStatus("*",0);
+    treeMC_PIDGen->SetBranchStatus(Branch,1);
+    treeMC_PIDGen->SetBranchStatus(weightMC,1);
+    treeMC_PIDGen->SetBranchAddress(Branch,&varMC);         
+    treeMC_PIDGen->SetBranchAddress(weightMC,&w);
+
+    treeMC_PIDCorr->SetBranchStatus("*",0);
+    treeMC_PIDCorr->SetBranchStatus(Branch,1);
+    treeMC_PIDCorr->SetBranchStatus(weightMC,1);
+    treeMC_PIDCorr->SetBranchAddress(Branch,&varMC);         
+    treeMC_PIDCorr->SetBranchAddress(weightMC,&w);
+
+    treeMC_noPID->SetBranchStatus("*",0);
+    treeMC_noPID->SetBranchStatus(Branch,1);
+    treeMC_noPID->SetBranchStatus(weightMC,1);
+    treeMC_noPID->SetBranchAddress(Branch,&varMC);         
+    treeMC_noPID->SetBranchAddress(weightMC,&w);
+
     ///Make histograms
-    TString title= ";"+TitleX+";Yield [norm.]";
-    TH1D* h= new TH1D(Branch.c_str(),title,bins,min,max);
-    TH1D* h_MC= new TH1D((Branch+"_MC").c_str(),title,bins,min,max);
-    TH1D* h_MC_rw= new TH1D((Branch+"_MC_rw").c_str(),title,bins,min,max);
+    TString title;
+    if(eff)title = ";"+TitleX+";#epsilon_{PID} [norm.]";
+    else title = ";"+TitleX+";Yield [norm.]";
+    TH1D h(Branch,title,bins,min,max);
+    TH1D h_MC(Branch+"_MC",title,bins,min,max);
+    TH1D h_MC_PIDGen(Branch+"_MC_PIDGen",title,bins,min,max);
+    TH1D h_MC_PIDCorr(Branch+"_MC_PIDCorr",title,bins,min,max);
+    TH1D h_MC_noPID(Branch+"_MC_noPID",title,bins,min,max);
     
     ///loop over data events
     int numEvents = tree->GetEntries();
@@ -383,7 +403,7 @@ void plotPID(string Branch,string TitleX, int bins, double min, double max, bool
     {	
         if (0ul == (i % 100000ul)) cout << "Read event " << i << "/" << numEvents << endl;
         tree->GetEntry(i);
-        h->Fill(pid_data,sw);
+        h.Fill(var,sw);
     }
     
     ///loop over MC events
@@ -392,37 +412,252 @@ void plotPID(string Branch,string TitleX, int bins, double min, double max, bool
     {	
         if (0ul == (i % 100000ul)) cout << "Read event " << i << "/" << numEventsMC << endl;
         treeMC->GetEntry(i);
-        h_MC->Fill(pid_MC);
+        h_MC.Fill(varMC,w);
     }
-    int numEventsMCcorr = treeMCcorr->GetEntries();
-    
-    for(int i=0; i< numEventsMCcorr; i++)
+
+    int numEventsMC_PIDGen = treeMC_PIDGen->GetEntries();
+    for(int i=0; i< numEventsMC_PIDGen; i++)
     {	
-        if (0ul == (i % 100000ul)) cout << "Read event " << i << "/" << numEventsMCcorr << endl;
-        treeMCcorr->GetEntry(i);
-        h_MC_rw->Fill(pid_MC_corr,w);
+        if (0ul == (i % 100000ul)) cout << "Read event " << i << "/" << numEventsMC_PIDGen << endl;
+        treeMC_PIDGen->GetEntry(i);
+        h_MC_PIDGen.Fill(varMC,w);
     }
-    
+
+    int numEventsMC_PIDCorr = treeMC_PIDCorr->GetEntries();
+    for(int i=0; i< numEventsMC_PIDCorr; i++)
+    {	
+        if (0ul == (i % 100000ul)) cout << "Read event " << i << "/" << numEventsMC_PIDCorr << endl;
+        treeMC_PIDCorr->GetEntry(i);
+        h_MC_PIDCorr.Fill(varMC,w);
+    }
+
+    int numEventsMC_noPID = treeMC_noPID->GetEntries();
+    for(int i=0; i< numEventsMC_noPID; i++)
+    {	
+        if (0ul == (i % 100000ul)) cout << "Read event " << i << "/" << numEventsMC_noPID << endl;
+        treeMC_noPID->GetEntry(i);
+        h_MC_noPID.Fill(varMC,w);
+    }
+        
+    /// Print efficiencies
+    cout << endl << "PID efficiencies: " << endl;
+    cout << " MC = " << h_MC.Integral()/h_MC_noPID.Integral() * 100. << " ( % ) " <<  endl;
+    cout << " MC (PIDGen) = " << h_MC_PIDGen.Integral()/h_MC_noPID.Integral() * 100. << " ( % ) " <<  endl;
+    cout << " MC (PIDCorr) = " << h_MC_PIDCorr.Integral()/h_MC_noPID.Integral() * 100. << " ( % ) " <<  endl << endl;
+
     ///Plot it
-    TCanvas* c= new TCanvas();
+    TCanvas c;
     
-    h->Scale(1./h->Integral());
-    h_MC->Scale(1./h_MC->Integral());
-    h_MC_rw->Scale(1./h_MC_rw->Integral());
-    double maxY= h->GetMaximum();
-    if(h_MC->GetMaximum()>maxY)maxY=h_MC->GetMaximum();
-    h->SetMinimum(0.);
-    h->SetMaximum(maxY*1.2);
-    h->SetLineColor(kBlack);
-    h->Draw("");
-    h_MC->SetLineColor(kRed);
-    h_MC->Draw("histsame");
-    h_MC_rw->SetLineColor(kBlue);
-    h_MC_rw->Draw("histsame");
-    c->Print(("DataVsReweightedMC/"+Branch+".eps").c_str());
+    h.Scale(1./h.Integral());
+    h_MC.Scale(1./h_MC.Integral());
+    h_MC_PIDGen.Scale(1./h_MC_PIDGen.Integral());
+    h_MC_PIDCorr.Scale(1./h_MC_PIDCorr.Integral());
+    h_MC_noPID.Scale(1./h_MC_noPID.Integral());
+
+    h_MC.SetMarkerColor(kRed);
+    h_MC.SetLineColor(kRed);
+    h_MC_PIDGen.SetMarkerColor(kBlue);
+    h_MC_PIDGen.SetLineColor(kBlue);
+    h_MC_PIDCorr.SetMarkerColor(kMagenta+3);
+    h_MC_PIDCorr.SetLineColor(kMagenta+3);
+	
+    if(eff){
+
+	h_MC.Divide(&h_MC,&h_MC_noPID);
+	h_MC.SetMinimum(0.);
+	h_MC.SetMaximum(2.5);
+	h_MC.Draw("e");
+	
+	h_MC_PIDGen.Divide(&h_MC_PIDGen,&h_MC_noPID);	
+	h_MC_PIDGen.SetMinimum(0.);
+	h_MC_PIDGen.SetMaximum(2.5);
+	h_MC_PIDGen.Draw("esame");
+	
+	h_MC_PIDCorr.Divide(&h_MC_PIDCorr,&h_MC_noPID);	
+	h_MC_PIDCorr.SetMinimum(0.);
+	h_MC_PIDCorr.SetMaximum(2.5);
+	h_MC_PIDCorr.Draw("esame");
+    }
+    else {
+	
+	double maxY= h.GetMaximum();
+	if(h_MC.GetMaximum()>maxY)maxY=h_MC.GetMaximum();
+	h.SetMinimum(0.);
+	if(log){
+		h.SetMinimum(0.0001);
+		gPad->SetLogy(1);
+	}
+	else gPad->SetLogy(0);
+	
+	h.SetMaximum(maxY*1.4);
+	h.SetLineColor(kBlack);
+	h.Draw("");
+	h_MC.Draw("esame");
+	h_MC_PIDGen.Draw("esame");
+	h_MC_PIDCorr.Draw("esame");
+    }
+    TLegend* leg;
+    if(legendLeft)leg = new TLegend(0.15,0.6,0.45,0.9,"");
+    else leg = new TLegend(0.55,0.6,0.85,0.9,"");
+    leg->SetLineStyle(0);
+    leg->SetLineColor(0);
+    leg->SetFillColor(0);
+    leg->SetTextFont(22);
+    leg->SetTextColor(1);
+    leg->SetTextSize(0.04);
+    leg->SetTextAlign(12);
+
+    if((string)legTitle != "")leg->AddEntry((TObject*)0,((string)legTitle).c_str(), "");
+    if(!eff)leg->AddEntry(&h,"Data","LEP");
+	
+    TLegendEntry* le = leg->AddEntry(&h_MC,"MC","LEP");
+    le->SetTextColor(kRed);    
+	
+    le = leg->AddEntry(&h_MC_PIDGen,"MC (PIDGen)","LEP");
+    le->SetTextColor(kBlue);    
+	
+    le = leg->AddEntry(&h_MC_PIDCorr,"MC (PIDCorr)","LEP");
+    le->SetTextColor(kMagenta+3);    
+	
+    leg->Draw(); 
+	
+    if(eff)label = "eff_" + label;
+    if(updateAnaNotePlots)c.Print("../../../../../TD-AnaNote/latex/figs/dataVsMC/" + (string)OutputDir + label + "_"+Branch+".pdf" );
+    c.Print((string)OutputDir + label + "_"+Branch+".eps"); 
+  
 }
-*/
+
+void comparePID(TString fileA, TString fileB, TString weightA, TString weightB, TString CutA = "", TString CutB = "", int Year = -1, TString finalState = "all", int Trigger = -1, TString label = ""){
+    
+    // Cuts
+    TString Cut;
+    if(Year>10)Cut += " year == " + anythingToString(Year);
+    else if(Year == -1)Cut += " year > " + anythingToString(Year);
+    else Cut += " run == " + anythingToString(Year);
+    if(finalState == "KKpi")Cut += " && Ds_finalState < 3 ";
+    else if(finalState == "pipipi")Cut += " && Ds_finalState == 3 ";
+    else if(finalState == "Kpipi")Cut += " && Ds_finalState == 4 ";
+    if(Trigger != -1) Cut += " && TriggerCat == " + anythingToString(Trigger);
+    
+    if(CutA != "")CutA += " && ";
+    CutA += Cut;
+    if(CutB != "")CutB += " && ";
+    CutB += Cut;
    
+    TString fileC = fileB;
+    fileC.ReplaceAll("PIDMC","PIDGen"); 
+    TString fileD = fileB;
+    fileD.ReplaceAll("PIDMC","PIDCorr"); 
+    TString fileE = fileB;
+    fileE.ReplaceAll("PIDMC","noPID"); 
+
+    cout << endl << "Comparing file " << endl << fileA << " ( " << CutA << " ) " << endl; 
+    cout << " to " << endl << fileB << " ( " << CutB << " ) " << endl ;
+    cout << " to " << endl << fileC << " ( " << CutB << " ) " << endl ;
+    cout << " to " << endl << fileD << " ( " << CutB << " ) " << endl << endl;
+    cout << " normalize to " << endl << fileE << " ( " << CutB << " ) " << endl << endl;
+
+    ///Load files
+    TChain* treeA = new TChain("DecayTree");
+    treeA->Add(fileA);
+    
+    TChain* treeB= new TChain("DecayTree");
+    treeB->Add(fileB);
+
+    TChain* treeC= new TChain("DecayTree");
+    treeC->Add(fileC);
+
+    TChain* treeD= new TChain("DecayTree");
+    treeD->Add(fileD);
+
+    TChain* treeE= new TChain("DecayTree");
+    treeE->Add(fileE);
+    
+    TFile* output = new TFile("dummy.root","RECREATE");
+    TTree* new_treeA = treeA->CopyTree(CutA);
+    TTree* new_treeB = treeB->CopyTree(CutB);
+    TTree* new_treeC = treeC->CopyTree(CutB);
+    TTree* new_treeD = treeD->CopyTree(CutB);
+    TTree* new_treeE = treeE->CopyTree(CutB);
+
+    /// Options
+    NamedParameter<int> nBins("nBins", 40); 
+    
+    label += "PID_Ds2";
+    if(finalState != "")label +=  finalState;
+    else label += "all";
+    if(Year>-1) label += "_" + anythingToString(Year);
+    if(Trigger>-1) label += "_t" + anythingToString(Trigger);
+    
+    TString Decay, selection;
+    if(A_is_in_B("signal",(string)fileA) && A_is_in_B("signal",(string)fileB)) Decay = "signal";
+    if(A_is_in_B("norm",(string)fileA) && A_is_in_B("norm",(string)fileB)) Decay = "norm";
+    if(A_is_in_B("Final",(string)fileA) && A_is_in_B("Final",(string)fileB)) selection = "Final";
+
+    /*
+
+    plot(new_treeA,new_treeB,"Bs_FDCHI2_OWNPV","#chi^{2}_{FD}(B)",nBins,0,100000,weightA, weightB, newWeightB, label,true);
+    plot(new_treeA,new_treeB,"Bs_ENDVERTEX_CHI2","#chi^{2}_{vtx}(B)",nBins,0,35,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Bs_DTF_TAU","t(B) [ns]",nBins,0.,10.,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Bs_DTF_TAUERR","#sigma_{t}(B) [ns]",nBins,0,0.15,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Bs_ptasy_1.00","B_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
+    plot(new_treeA,new_treeB,"Bs_DTF_MERR","#sigma_{m} [MeV]",nBins,4.,25.,weightA, weightB, newWeightB, label);
+
+    /// BDT
+    plot(new_treeA,new_treeB,"DTF_CHI2NDOF","DTF #chi^{2}",nBins,0.,7,weightA, weightB, newWeightB, label);    
+    plot(new_treeA,new_treeB,"Bs_IPCHI2_OWNPV","#chi^{2}_{IP}(B)",nBins,0,20,weightA, weightB, newWeightB, label,true);
+    plot(new_treeA,new_treeB,"Bs_DIRA_OWNPV","DIRA(B)",nBins,0.99997,1,weightA, weightB, newWeightB, label,true,true);
+
+    plot(new_treeA,new_treeB,"XsDaughters_min_IPCHI2","X_{s} min(#chi^{2}_{IP})",nBins, 0, 10000 ,weightA, weightB, newWeightB, label,true);
+    if(Decay == "norm")plot(new_treeA,new_treeB,"a_1_1260_plus_ptasy_1.00","Xs_ptasy_1.00",nBins, -1, 1. ,weightA, weightB, newWeightB, label,false,true);
+    else plot(new_treeA,new_treeB,"K_1_1270_plus_ptasy_1.00","Xs_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
+    plot(new_treeA,new_treeB,"Xs_max_DOCA","X_{s} max DOCA [mm]",nBins, 0, 0.4 ,weightA, weightB, newWeightB, label);
+
+    plot(new_treeA,new_treeB,"track_min_IPCHI2","min(#chi^{2}_{IP})",nBins, 0, 10000 ,weightA, weightB, newWeightB, label,true);
+    plot(new_treeA,new_treeB,"DsDaughters_min_IPCHI2","D_{s} min(#chi^{2}_{IP})",nBins, 0, 10000 ,weightA, weightB, newWeightB, label,true);
+    plot(new_treeA,new_treeB,"Ds_ptasy_1.00","Ds_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
+    plot(new_treeA,new_treeB,"Ds_FDCHI2_ORIVX","#chi^{2}_{FD}(D_{s})",nBins,0,40000,weightA, weightB, newWeightB, label,true);
+    plot(new_treeA,new_treeB,"Ds_RFD","Ds RFD",nBins,0,10,weightA, weightB, newWeightB, label);
+
+    plot(new_treeA,new_treeB,"maxCos","maxCos",nBins,-1,1,weightA, weightB, newWeightB, label);    
+    plot(new_treeA,new_treeB,"max_ghostProb","max(Track_ghostProb)",nBins,0,0.4,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"max_ProbNNghost","max(Track_ghostProb)",nBins,0,0.4,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"track_min_PT","min(p_{T})  [MeV]",nBins,0,10000,weightA, weightB, newWeightB, label);
+    */
+
+    /// Bs
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"Bs_PT","p_{T}(B) [MeV]",nBins,0,40000,weightA, weightB, label);
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"Bs_ETA","#eta(B)",nBins,1,6,weightA, weightB, label);
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"Bs_DTF_TAU","t(B) [ns]",nBins,0.,10.,weightA, weightB, label,false,false,true);
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"Bs_DTF_TAUERR","#sigma_{t}(B) [ns]",nBins,0,0.15,weightA, weightB, label);
+    /// Dalitz
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"m_Kpipi","m(K^{+}#pi^{+}#pi^{-})[MeV]",nBins,1000,1950,weightA, weightB, label,false,true,true);
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"m_Kpi","m(K^{+}#pi^{-})[MeV]",nBins,massKaon+massPion,1200,weightA, weightB, label,false,true,true);
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"m_pipi","m(#pi^{+}#pi^{-})[MeV]",nBins,2.*massPion,1200,weightA, weightB, label,false,true,true);
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"m_Dspipi","m(D_{s}^{-}#pi^{+}#pi^{-})[MeV]",nBins,2400,massBs-massKaon,weightA, weightB, label,false,true,true);
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"m_Dspi","m(D_{s}^{-}#pi^{+})[MeV]",nBins,massDs+massPion,massBs-massKaon-massPion,weightA, weightB, label,false,true,true);
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"m_DsK","m(D_{s}^{-}K^{+})[MeV]",nBins,0,5500,weightA, weightB, label,false,true,true);
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"m_DsKpi","m(D_{s}^{-}K^{+}#pi^{-})[MeV]",nBins,1900,5500,weightA, weightB, label,false,true,true);
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"m_DsKpip","m(D_{s}^{-}K^{+}#pi^{+})[MeV]",nBins,1900,5500,weightA, weightB, label,false,true,true);
+    
+    if(Decay == "signal"){
+        plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"K_plus_PIDK","DLL_{K#pi}(K^{+}) ",nBins,0,100,weightA, weightB, label,false);
+        plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"pi_plus_PIDK","DLL_{K#pi}(#pi^{+}) ",nBins,-100,20,weightA, weightB, label,false,true);
+        plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"pi_minus_PIDK","DLL_{K#pi}(#pi^{-}) ",nBins,-100,20,weightA, weightB, label,false,true);
+    }   
+    else if(Decay == "norm") {
+        plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"pi_plus1_PIDK","DLL_{K#pi}(#pi^{+}) ",nBins,-100,20,weightA, weightB, label,false,true);
+        plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"pi_plus2_PIDK","DLL_{K#pi}(#pi^{+}) ",nBins,-100,20,weightA, weightB, label,false,true);
+        plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"pi_minus_PIDK","DLL_{K#pi}(#pi^{-}) ",nBins,-100,20,weightA, weightB, label,false,true);
+    }
+    if(finalState == "KKpi") {
+        plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"K_plus_fromDs_PIDK","DLL_{K#pi}(K^{+}) ",nBins,0,100,weightA, weightB, label,false);
+        plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"pi_minus_fromDs_PIDK","DLL_{K#pi}(#pi^{-} from D_{s}) ",nBins,-100,20,weightA, weightB, label,false,true);
+	plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"K_minus_fromDs_PIDK","DLL_{K#pi}(K^{-} from D_{s}) ",nBins,0,100,weightA, weightB, label,false);
+    }    
+}
+
+
 void applyCorrectionHisto(vector<TString> vars, int Year, TString FinalState, int Trigger, TString ApplyTo, TString& weightVar, TString NewWeightVar){
 
     NamedParameter<double> maxWeight("maxWeight",100.);
@@ -732,6 +967,8 @@ int main(int argc, char** argv){
     //createSubset("../Files/Final/Data/norm.root","../Files/Final/Data/norm_r2.root","run == 2");
 
     /// Options
+    NamedParameter<int> checkPID("checkPID", 0); 
+
     NamedParameter<string> ReweightFromA("ReweightFromA", (std::string) "/auto/data/dargent/BsDsKpipi/Preselected/MC/norm.root");
     NamedParameter<string> ReweightToB("ReweightToB", (std::string) "/auto/data/dargent/BsDsKpipi/Preselected/Data/norm.root");
     NamedParameter<string> ApplyWeightToC("ApplyWeightToC", (std::string) "");
@@ -849,6 +1086,14 @@ int main(int argc, char** argv){
     if(reweightVarSet4)max_set.push_back(max_4);
     if(reweightVarSet5)max_set.push_back(max_5);
 
+
+    /// Compare PID
+    if(checkPID){  
+	for(int i= 0; i < years.size(); i++) for(int j= 0; j < Ds_finalStates.size(); j++)for(int k= 0; k < trigger.size(); k++){ 
+		comparePID((string) ReweightToB, (string) ReweightFromA, (string) weightVarB, (string) weightVarA, (string) cutB, (string) cutA, years[i], Ds_finalStates[j],trigger[k]);
+	}
+	return 0;
+    }
     /// Produce MC correction histos and apply weights
     /// Weights are applied on top of each other with the previous weighting applied
     TString weightA = (string) weightVarA;
