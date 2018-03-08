@@ -253,6 +253,7 @@ void compare(TString fileA, TString fileB, TString weightA, TString weightB, TSt
     else plot(new_treeA,new_treeB,"K_1_1270_plus_ptasy_1.00","Xs_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
     plot(new_treeA,new_treeB,"Xs_max_DOCA","X_{s} max DOCA [mm]",nBins, 0, 0.4 ,weightA, weightB, newWeightB, label);
 
+    plot(new_treeA,new_treeB,"track_min_IPCHI2","min(#chi^{2}_{IP})",nBins, 0, 10000 ,weightA, weightB, newWeightB, label,true);
     plot(new_treeA,new_treeB,"DsDaughters_min_IPCHI2","D_{s} min(#chi^{2}_{IP})",nBins, 0, 10000 ,weightA, weightB, newWeightB, label,true);
     plot(new_treeA,new_treeB,"Ds_ptasy_1.00","Ds_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
     plot(new_treeA,new_treeB,"Ds_FDCHI2_ORIVX","#chi^{2}_{FD}(D_{s})",nBins,0,40000,weightA, weightB, newWeightB, label,true);
@@ -260,7 +261,9 @@ void compare(TString fileA, TString fileB, TString weightA, TString weightB, TSt
 
     plot(new_treeA,new_treeB,"maxCos","maxCos",nBins,-1,1,weightA, weightB, newWeightB, label);    
     plot(new_treeA,new_treeB,"max_ghostProb","max(Track_ghostProb)",nBins,0,0.4,weightA, weightB, newWeightB, label);
-    
+    plot(new_treeA,new_treeB,"max_ProbNNghost","max(Track_ghostProb)",nBins,0,0.4,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"track_min_PT","min(p_{T})  [MeV]",nBins,0,10000,weightA, weightB, newWeightB, label);
+
     /// Tagging
     plot(new_treeA,new_treeB,"Bs_TAGDECISION_OS","q_{OS}",8,-1.5,6.5,weightA, weightB, newWeightB, label);    
     plot(new_treeA,new_treeB,"Bs_TAGOMEGA_OS","#eta_{OS}",nBins,0.,0.499999,weightA, weightB, newWeightB, label, false, true);    
@@ -292,7 +295,8 @@ void compare(TString fileA, TString fileB, TString weightA, TString weightB, TSt
         plot(new_treeA,new_treeB,"K_plus_ETA","#eta(K^{+})",nBins,1,6,weightA, weightB, newWeightB, label);
         plot(new_treeA,new_treeB,"K_plus_IPCHI2_OWNPV","#chi^{2}_{IP}(K^{+})",nBins,0,10000,weightA, weightB, newWeightB, label,true);
         plot(new_treeA,new_treeB,"K_plus_PIDK","DLL_{K#pi}(K^{+}) ",nBins,-20,100,weightA, weightB, newWeightB, label);
-        //plot(new_treeA,new_treeB,"K_plus_TRACK_GhostProb","ghost prob (K^{+})",nBins,0,0.4,weightA, weightB, newWeightB, label);
+        plot(new_treeA,new_treeB,"K_plus_TRACK_GhostProb","ghost prob (K^{+})",nBins,0,0.4,weightA, weightB, newWeightB, label);
+        //plot(new_treeA,new_treeB,"K_plus_ProbNNghost","ghost prob (K^{+})",nBins,0,0.4,weightA, weightB, newWeightB, label);
 
         plot(new_treeA,new_treeB,"pi_plus_PT","p_{T}(#pi^{+}) [MeV]",nBins,0,10000,weightA, weightB, newWeightB, label);
         plot(new_treeA,new_treeB,"pi_plus_ETA","#eta(#pi^{+})",nBins,1,6,weightA, weightB, newWeightB, label);
@@ -505,7 +509,7 @@ void applyCorrectionHisto(vector<TString> vars, int Year, TString FinalState, in
         if(hist_weights.checkBinNumber(bin)!= bin){
             w = 1; //? should't happen
             cout << "ERROR:: Event outside limits" << endl;
-        }else w = std::fmin(maxWeight,hist_weights.getBinContent(bin));
+        }else w = std::min((double)maxWeight,hist_weights.getBinContent(bin));
 	
         if(w < 0) {
             w = 0.;
