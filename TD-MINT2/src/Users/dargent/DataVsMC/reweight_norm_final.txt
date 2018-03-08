@@ -1,8 +1,8 @@
 * reweighting
 
-"ReweightFromA"		"../Files/Final/MC/norm.root"
-"ReweightToB"		"../Files/Final/Data/norm.root"
-"ApplyWeightToC"	"../Files/Final/MC/signal.root"
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/MC/norm.root"
+"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"ApplyWeightToC"	"/auto/data/dargent/BsDsKpipi/Final/MC/signal.root"
 
 "OutputDir"		"norm_final/"
 
@@ -35,5 +35,5 @@
 
 * plotting MC vs Data
 "nBins"		 40
-"updateAnaNoteHistos"		1
+"updateAnaNoteHistos"		0
 "updateAnaNotePlots"		0

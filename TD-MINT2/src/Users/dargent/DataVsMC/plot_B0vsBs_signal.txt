@@ -1,20 +1,20 @@
 * reweighting
 
-"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
-"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root"
+"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root"
 "ApplyWeightToC"	""
 
-"OutputDir"		"run1vs2_norm/"
+"OutputDir"		"B0vsBs_signal/"
 
-"legTitle"	"B_{s}#rightarrowD_{s}#pi#pi#pi"
-"nameA"		"Run-II Data"
-"weightVarA"	"N_Bs_sw"
+"legTitle"	"LHCb data"
+"nameA"		"B_{d}#rightarrowD_{s}K#pi#pi"
+"weightVarA"	"weight"
 "newWeightVarA"	"noweight"
-"cutA"		"run == 2"
+"cutA"		""
 
-"nameB"		"Run-I Data"
+"nameB"		"B_{s}#rightarrowD_{s}K#pi#pi"
 "weightVarB"	"N_Bs_sw"
-"cutB"		"run == 1"
+"cutB"		""
 
 "weightVarC"	"noweight"
 "newWeightVarC"	"noweight"
@@ -34,7 +34,6 @@
 "reweightVarSet3"	 0
 "reweightVarSet4"	 0
 "reweightVarSet5"	 0
-
 
 * plotting MC vs Data
 "nBins"		 40

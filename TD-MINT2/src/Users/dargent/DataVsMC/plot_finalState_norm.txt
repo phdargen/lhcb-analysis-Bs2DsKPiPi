@@ -1,7 +1,7 @@
 * reweighting
 
-"ReweightFromA"		"../Files/Final/Data/norm.root"
-"ReweightToB"		"../Files/Final/Data/norm.root"
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
 "ApplyWeightToC"	""
 
 "OutputDir"		"finalState_norm/"

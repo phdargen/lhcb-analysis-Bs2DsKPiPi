@@ -28,29 +28,15 @@
 using namespace std;
 using namespace MINT;
 
-NamedParameter<string> ReweightFromA("ReweightFromA", (std::string) "/auto/data/dargent/BsDsKpipi/Preselected/MC/norm.root");
-NamedParameter<string> ReweightToB("ReweightToB", (std::string) "/auto/data/dargent/BsDsKpipi/Preselected/Data/norm.root");
-NamedParameter<string> ApplyWeightToC("ApplyWeightToC", (std::string) "");
-
-NamedParameter<string> weightVarA("weightVarA", (std::string) "weight");
-NamedParameter<string> newWeightVarA("newWeightVarA", (std::string) "weight");
-NamedParameter<string> weightVarB("weightVarB", (std::string) "N_Bs_sw");
-NamedParameter<string> weightVarC("weightVarC", (std::string) "noweight");
-NamedParameter<string> newWeightVarC("newWeightVarC", (std::string) "noweight");
-
-NamedParameter<string> legTitle("legTitle", (std::string) "");
-NamedParameter<string> nameA("nameA", (std::string) "MC");
-NamedParameter<string> nameB("nameB", (std::string) "Data");
-
-NamedParameter<string> cutA("cutA", (std::string) "");
-NamedParameter<string> cutB("cutB", (std::string) "");
-
-NamedParameter<string> OutputDir("OutputDir", (std::string) "final/", (char*) 0);
-NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
-NamedParameter<int> updateAnaNoteHistos("updateAnaNoteHistos", 0);
-
 void plot(TTree* tree, TTree* treeMC, TString Branch,TString TitleX, int bins, double min, double max, TString weightA, TString weightB, TString newWeightB, TString label, bool log = false, bool legendLeft = false){
         
+    /// options
+    NamedParameter<string> legTitle("legTitle", (std::string) "");
+    NamedParameter<string> nameA("nameA", (std::string) "MC");
+    NamedParameter<string> nameB("nameB", (std::string) "Data");
+    NamedParameter<string> OutputDir("OutputDir", (std::string) "final/", (char*) 0);
+    NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
+
     cout << "Plotting " << Branch << endl;
 
     tree->SetBranchStatus("*",0);
@@ -440,6 +426,7 @@ void plotPID(string Branch,string TitleX, int bins, double min, double max, bool
 void applyCorrectionHisto(vector<TString> vars, int Year, TString FinalState, int Trigger, TString ApplyTo, TString& weightVar, TString NewWeightVar){
 
     NamedParameter<double> maxWeight("maxWeight",100.);
+    NamedParameter<string> OutputDir("OutputDir", (std::string) "final/", (char*) 0);
     const int dim = vars.size();
 
     double sumw = 0;
@@ -531,11 +518,13 @@ void applyCorrectionHisto(vector<TString> vars, int Year, TString FinalState, in
    return;
 }
 
-void produceCorrectionHisto(vector<TString> vars, vector<double> min, vector<double> max, int Year, TString FinalState, int Trigger, TString weightA){
+void produceCorrectionHisto(vector<TString> vars, vector<double> min, vector<double> max, int Year, TString FinalState, int Trigger, TString ReweightFromA, TString weightVarA, TString ReweightToB, TString weightVarB){
 
     /// Options
+    NamedParameter<string> OutputDir("OutputDir", (std::string) "final/", (char*) 0);
     NamedParameter<int> minEventsPerBin("minEventsPerBin", 60); 
     NamedParameter<int> maxBinsPerDim("maxBinsPerDim", 200); 
+    NamedParameter<int> updateAnaNoteHistos("updateAnaNoteHistos", 0);
 
     /// Check vector sizes
     if(vars.size() * min.size() * max.size() != pow(vars.size(),3) ){
@@ -551,15 +540,15 @@ void produceCorrectionHisto(vector<TString> vars, vector<double> min, vector<dou
 
     HyperPoint Min(min);
     HyperPoint Max(max);
-    HyperCuboid limits(Min, Max );
+    HyperCuboid limits(Min, Max);
 
     /// Get data           
     TChain* tree = new TChain("DecayTree");
-    tree->Add(((string)ReweightToB).c_str());
+    tree->Add(ReweightToB);
     
     tree->SetBranchStatus("*",0);
     for(int i = 0; i < dim; i++)tree->SetBranchStatus(vars[i],1);
-    if((string)weightVarB != "noweight")tree->SetBranchStatus(((string)weightVarB).c_str(),1);
+    if((string)weightVarB != "noweight")tree->SetBranchStatus(weightVarB,1);
     tree->SetBranchStatus("Ds_finalState",1);
     tree->SetBranchStatus("year",1);
     tree->SetBranchStatus("run",1);
@@ -569,7 +558,7 @@ void produceCorrectionHisto(vector<TString> vars, vector<double> min, vector<dou
     double sw = 1;
     int Ds_finalState, year, trigger;
     for(int i = 0; i < dim; i++)tree->SetBranchAddress(vars[i],&var_data[i]);
-    if((string)weightVarB != "noweight")tree->SetBranchAddress(((string)weightVarB).c_str(),&sw);
+    if((string)weightVarB != "noweight")tree->SetBranchAddress(weightVarB,&sw);
     tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
     if(Year>10)tree->SetBranchAddress("year",&year);
     else tree->SetBranchAddress("run",&year);
@@ -594,11 +583,11 @@ void produceCorrectionHisto(vector<TString> vars, vector<double> min, vector<dou
     
     /// Get MC
     TChain* treeMC =new TChain("DecayTree");
-    treeMC->Add(((string)ReweightFromA).c_str());
+    treeMC->Add(ReweightFromA);
     
     treeMC->SetBranchStatus("*",0);
     for(int j = 0; j < dim; j++)treeMC->SetBranchStatus(vars[j],1);
-    if(weightA != "noweight")treeMC->SetBranchStatus(weightA,1);
+    if(weightVarA != "noweight")treeMC->SetBranchStatus(weightVarA,1);
     treeMC->SetBranchStatus("Ds_finalState",1);
     treeMC->SetBranchStatus("year",1);
     treeMC->SetBranchStatus("run",1);
@@ -608,7 +597,7 @@ void produceCorrectionHisto(vector<TString> vars, vector<double> min, vector<dou
     double weight = 1;
     int Ds_finalState_MC, year_MC, trigger_MC;
     for(int j = 0; j < dim; j++)treeMC->SetBranchAddress(vars[j],&var_MC[j]);
-    if(weightA != "noweight")treeMC->SetBranchAddress(weightA,&weight);
+    if(weightVarA != "noweight")treeMC->SetBranchAddress(weightVarA,&weight);
     treeMC->SetBranchAddress("Ds_finalState",&Ds_finalState_MC);
     if(Year>10)treeMC->SetBranchAddress("year",&year_MC);
     else treeMC->SetBranchAddress("run",&year_MC);
@@ -743,6 +732,19 @@ int main(int argc, char** argv){
     //createSubset("../Files/Final/Data/norm.root","../Files/Final/Data/norm_r2.root","run == 2");
 
     /// Options
+    NamedParameter<string> ReweightFromA("ReweightFromA", (std::string) "/auto/data/dargent/BsDsKpipi/Preselected/MC/norm.root");
+    NamedParameter<string> ReweightToB("ReweightToB", (std::string) "/auto/data/dargent/BsDsKpipi/Preselected/Data/norm.root");
+    NamedParameter<string> ApplyWeightToC("ApplyWeightToC", (std::string) "");
+
+    NamedParameter<string> weightVarA("weightVarA", (std::string) "weight");
+    NamedParameter<string> newWeightVarA("newWeightVarA", (std::string) "weight");
+    NamedParameter<string> weightVarB("weightVarB", (std::string) "N_Bs_sw");
+    NamedParameter<string> weightVarC("weightVarC", (std::string) "noweight");
+    NamedParameter<string> newWeightVarC("newWeightVarC", (std::string) "noweight");
+
+    NamedParameter<string> cutA("cutA", (std::string) "");
+    NamedParameter<string> cutB("cutB", (std::string) "");
+
     NamedParameter<int> nIterations("nIterations", 1); 
     NamedParameter<int> reweight("reweight", 1); 
     NamedParameter<int> reweightInBinsOfRun("reweightInBinsOfRun", 1); 
@@ -857,7 +859,7 @@ int main(int argc, char** argv){
 				for(int j= 0; j < Ds_finalStates.size(); j++)	
                     for(int k= 0; k < trigger.size(); k++)    
                         for(int l =0; l < vars_set.size(); l++)	{	
-                            produceCorrectionHisto(vars_set[l],min_set[l],max_set[l],years[i],Ds_finalStates[j],trigger[k], weightA);
+                            produceCorrectionHisto(vars_set[l],min_set[l],max_set[l],years[i],Ds_finalStates[j],trigger[k], (string)ReweightFromA, weightA, (string) ReweightToB, (string) weightVarB);
                             applyCorrectionHisto(vars_set[l],years[i],Ds_finalStates[j],trigger[k],(string)ReweightFromA, weightA, (string)newWeightVarA);    
                             if((string)ApplyWeightToC != "")applyCorrectionHisto(vars_set[l],years[i],Ds_finalStates[j],trigger[k],(string)ApplyWeightToC, weightC, (string)newWeightVarC);
 					}

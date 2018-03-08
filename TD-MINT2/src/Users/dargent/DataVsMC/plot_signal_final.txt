@@ -1,7 +1,7 @@
 * reweighting
 
-"ReweightFromA"		"../Files/Final/MC/signal.root"
-"ReweightToB"		"../Files/Final/Data/signal.root"
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal_PIDGen.root"
+"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root"
 "ApplyWeightToC"	""
 
 "OutputDir"		"signal_final/combined/"
@@ -10,7 +10,8 @@
 
 "nameA"		"MC"
 "weightVarA"	"noweight"
-"newWeightVarA"	"weight2"
+"newWeightVarA"	"noweight"
+"cutA"		"BDTG_response > 0.3"
 
 "nameB"		"Data"
 "weightVarB"	"N_Bs_sw"
@@ -37,4 +38,4 @@
 * plotting MC vs Data
 "nBins"		 40
 "updateAnaNoteHistos"		0
-"updateAnaNotePlots"		1
+"updateAnaNotePlots"		0
