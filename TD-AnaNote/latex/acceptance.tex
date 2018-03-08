@@ -1,6 +1,37 @@
 % !TEX root = main.tex
-\section{Decay-time acceptance}
+\section{Acceptance}
 \label{sec:Acceptance}
+
+\subsection{PID efficiencies}
+
+\begin{figure}[h]
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_K_plus_PIDK.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_pi_plus_PIDK.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_pi_minus_PIDK.pdf}
+
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_K_plus_fromDs_PIDK.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_K_minus_fromDs_PIDK.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_pi_minus_fromDs_PIDK.pdf}
+\caption{}
+\label{fig:}
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_Bs_DTF_TAU.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_Kpipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_Dspipi.pdf}
+
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_Kpi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_pipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_Dspi.pdf}
+\caption{}
+\label{fig:}
+\end{figure}
+
+\clearpage
+
+\subsection{Decay-time acceptance}
+\label{sec:timeAcceptance}
 The decay-time distribution of the $\Bs$ mesons is sculpted due to the geometry of the LHCb detector and the applied selection cuts, which are described in Section \ref{sec:Selection}.
 In particular, any requirement on the flight distance (FD), the impact parameter (IP) or the direction angle (DIRA) of the $\Bs$ mesons, as well as the direct cut on the lifetime, will lead to a decay-time dependent efficiency $a(t)$. This efficiency will distort the theoretically expected, time-dependent decay rate
 
@@ -39,7 +70,7 @@ Here, $N=8$ and $t_{N-1}$ corresponds to the knot position associated with $v_{N
 
 \clearpage
 
-\subsection{Comparison of acceptance in subsamples}
+\subsubsection{Comparison of acceptance in subsamples}
 \label{subsec: AccComparison}
 
 It is possible that the decay-time dependent efficiency deviates in different subsamples of our data. 
@@ -71,7 +102,7 @@ Therefore, the time-dependent efficiency has to be treated separately for the ru
 This is achieved by implementing a simultaneous fit, where the acceptance description is allowed to vary in the subsamples.   
 
 \clearpage
-\subsection{Results}
+\subsubsection{Results}
 
 The nominal fit to $\Bs\to\Ds\pion\pion\pion$ data using this configuration is shown in Figure \ref{fig:accFit}. 
 Note that the normalization of the splines in the following figures is not in scale.
@@ -128,3 +159,7 @@ The fit parameters obtained from the described fits to data and simulation are s
 \caption{}
 \label{fig:}
 \end{figure}
+
+
+\subsection{Phasespace acceptance}
+\label{sec:phasespaceAcceptance}
