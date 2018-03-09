@@ -186,13 +186,13 @@ indir = "/auto/data/dargent/BsDsKpipi/Mini/MC/"
 files = [
   (indir+"norm_Ds2KKpi_11.root",          indir+"/norm_Ds2KKpi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[3],"Gen"), 
   (indir+"norm_Ds2KKpi_11_PID_tmp.root",  indir+"/norm_Ds2KKpi_11_PID_tmp2.root", "MagUp_2011",   "gen_MagUp",  trackList[3],"Gen"), 
-  (indir+"norm_Ds2KKpi_11_PID_tmp2.root", indir+"/norm_Ds2KKpi_11_PID_tmp3.root", "MagDown_2011", "gen_MagDown",trackList[3],"Corr"), 
-  (indir+"norm_Ds2KKpi_11_PID_tmp3.root", indir+"/norm_Ds2KKpi_11_PID.root",      "MagUp_2011",   "gen_MagUp",  trackList[3],"Corr"),
+  (indir+"norm_Ds2KKpi_11_PID_tmp2.root", indir+"/norm_Ds2KKpi_11_PID_tmp3.root", "MagDown_2011", "corr_MagDown",trackList[3],"Corr"), 
+  (indir+"norm_Ds2KKpi_11_PID_tmp3.root", indir+"/norm_Ds2KKpi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[3],"Corr"),
    
   (indir+"norm_Ds2KKpi_12.root",          indir+"/norm_Ds2KKpi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[3],"Gen"), 
   (indir+"norm_Ds2KKpi_12_PID_tmp.root",  indir+"/norm_Ds2KKpi_12_PID_tmp2.root", "MagUp_2012",   "gen_MagUp",  trackList[3],"Gen"), 
-  (indir+"norm_Ds2KKpi_12_PID_tmp2.root", indir+"/norm_Ds2KKpi_12_PID_tmp3.root", "MagDown_2012", "gen_MagDown",trackList[3],"Corr"), 
-  (indir+"norm_Ds2KKpi_12_PID_tmp3.root", indir+"/norm_Ds2KKpi_12_PID.root",      "MagUp_2012",   "gen_MagUp",  trackList[3],"Corr"),
+  (indir+"norm_Ds2KKpi_12_PID_tmp2.root", indir+"/norm_Ds2KKpi_12_PID_tmp3.root", "MagDown_2012", "corr_MagDown",trackList[3],"Corr"), 
+  (indir+"norm_Ds2KKpi_12_PID_tmp3.root", indir+"/norm_Ds2KKpi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[3],"Corr"),
 ]
 
 # Name of the input tree
