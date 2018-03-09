@@ -31,6 +31,8 @@ parser.add_argument('-n', '--ntrvar',  type=str, default = "nTracks",
                     help='Ntracks variable')
 parser.add_argument('-l', '--lowerpid', type=str, default = None, 
                     help='Lower PID value to generate')
+parser.add_argument('-z', '--higherpid', type=str, default = None, 
+                    help='Higher PID value to generate')
 parser.add_argument('-c', '--config',  type=str, default = "p_V3ProbNNp", 
                     help='PID response to sample')
 parser.add_argument('-d', '--dataset', type=str, default = "MagDown_2011", 
@@ -54,6 +56,7 @@ pvar  = args.pvar
 etavar = args.etavar
 ntrvar = args.ntrvar
 minpid = args.lowerpid
+maxpid = args.higherpid
 config = args.config
 dataset = args.dataset
 variant = args.var
@@ -118,6 +121,12 @@ if minpid == None :
 else :
   minpid = float(minpid)
   if minpid<pidmin : minpid = pidmin
+if maxpid == None : 
+  maxpid = pidmax
+else :
+  maxpid = float(maxpid)
+  if maxpid>pidmax : maxpid = pidmax
+
 
 # Calculate the minimum PID variable to generate (after transformation)
 x = pidmin
@@ -127,7 +136,7 @@ pidmax = eval(transform_forward)
 x = minpid
 minpid = eval(transform_forward)
 
-pid_phsp = OneDimPhaseSpace("PIDPhsp", pidmin , pidmax )
+pid_phsp = OneDimPhaseSpace("PIDPhsp", minpid , maxpid )
 mom_phsp = OneDimPhaseSpace("MomPhsp", 4.6, 10.5)
 eta_phsp = OneDimPhaseSpace("EtaPhsp", 1.5, 5.5)
 ntr_phsp = OneDimPhaseSpace("NtrPhsp", 3.0, 7.0)
