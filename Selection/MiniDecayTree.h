@@ -1174,7 +1174,7 @@ void MiniDecayTree::Init()
     	    fChain->SetBranchAddress("K_minus_fromDs_PIDK_corr_MagUp", &K_minus_fromDs_PIDK_corr_MagUp);
     	    fChain->SetBranchAddress("pi_minus_fromDs_PIDK_corr_MagUp", &pi_minus_fromDs_PIDK_corr_MagUp);
 
-
+            /*
 	    fChain->SetBranchAddress("K_plus_PIDp_gen_MagDown", &K_plus_PIDp_gen_MagDown);
     	    fChain->SetBranchAddress("pi_plus_PIDp_gen_MagDown", &pi_plus_PIDp_gen_MagDown);
     	    fChain->SetBranchAddress("pi_minus_PIDp_gen_MagDown", &pi_minus_PIDp_gen_MagDown);
@@ -1202,6 +1202,7 @@ void MiniDecayTree::Init()
     	    fChain->SetBranchAddress("K_plus_fromDs_PIDp_corr_MagUp", &K_plus_fromDs_PIDp_corr_MagUp);
     	    fChain->SetBranchAddress("K_minus_fromDs_PIDp_corr_MagUp", &K_minus_fromDs_PIDp_corr_MagUp);
     	    fChain->SetBranchAddress("pi_minus_fromDs_PIDp_corr_MagUp", &pi_minus_fromDs_PIDp_corr_MagUp);
+	    */
     }
 
     fChain->SetBranchAddress("Bs_ETA", &Bs_ETA, &b_Bs_ETA);
@@ -2701,7 +2702,7 @@ void MiniDecayTree::Init()
     	    fChain->SetBranchAddress("K_minus_fromDs_PIDK_corr_MagUp", &K_minus_fromDs_PIDK_corr_MagUp);
     	    fChain->SetBranchAddress("pi_minus_fromDs_PIDK_corr_MagUp", &pi_minus_fromDs_PIDK_corr_MagUp);
 
-
+            /*
     	    fChain->SetBranchAddress("pi_plus1_PIDp_gen_MagDown", &pi_plus1_PIDp_gen_MagDown);
     	    fChain->SetBranchAddress("pi_plus2_PIDp_gen_MagDown", &pi_plus2_PIDp_gen_MagDown);
     	    fChain->SetBranchAddress("pi_minus_PIDp_gen_MagDown", &pi_minus_PIDp_gen_MagDown);
@@ -2729,6 +2730,7 @@ void MiniDecayTree::Init()
     	    fChain->SetBranchAddress("K_plus_fromDs_PIDp_corr_MagUp", &K_plus_fromDs_PIDp_corr_MagUp);
     	    fChain->SetBranchAddress("K_minus_fromDs_PIDp_corr_MagUp", &K_minus_fromDs_PIDp_corr_MagUp);
     	    fChain->SetBranchAddress("pi_minus_fromDs_PIDp_corr_MagUp", &pi_minus_fromDs_PIDp_corr_MagUp);
+	    */
 	}
 
         fChain->SetBranchAddress("Bs_ETA", &Bs_ETA, &b_Bs_ETA);

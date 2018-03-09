@@ -481,61 +481,134 @@ return params;
 
 vector<double> fitSignalShape(TString channel = "signal"){
 
-        NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
-	
         /// Options
 	NamedParameter<double> cut_BDT("cut_BDT",0.);
+        NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
+	NamedParameter<int> sWeight("sWeightMC", 0);
+	double min_MM = 5320. ;
+	double max_MM = 5420. ;
 
 	/// Load file
 	TString inFileName = "/auto/data/dargent/BsDsKpipi/BDT/MC/"+channel+".root";
 	TFile* file = new TFile(inFileName);	
 	TTree* tree = (TTree*) file->Get("DecayTree");	
 
-	TFile* output = new TFile(inFileName.ReplaceAll("/BDT/","/Final/"),"RECREATE");
-	TTree* out_tree = tree->CopyTree(("Bs_DTF_MM >= 5320. && Bs_DTF_MM <= 5420 && Bs_BKGCAT <= 20 && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
+	if(!sWeight){
+		tree->SetBranchStatus("*",0);
+		tree->SetBranchStatus("Bs_BKGCAT",1);
+		tree->SetBranchStatus("Bs_TRUEID",1);
+		tree->SetBranchStatus("Bs_DTF_MM",1);
+		tree->SetBranchStatus("BDTG_response",1);
+		tree->SetBranchStatus("Ds_finalState",1);
+	}
+	tree->SetBranchStatus("weight",0);
+
+	TFile* output;
+	if(!sWeight) output = new TFile((inFileName.ReplaceAll("/BDT/","/Final/")).ReplaceAll(".root","_dummy.root"),"RECREATE");
+	else output = new TFile(inFileName.ReplaceAll("/BDT/","/Final/"),"RECREATE");
+	TTree* out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
+
+	int bkgCAT,BKGCAT,Bs_TRUEID;
+	double sw;
+        TBranch* b_bkgCAT = out_tree->Branch("bkgCAT",&bkgCAT,"bkgCAT/I");
+	out_tree->SetBranchAddress("Bs_BKGCAT",&BKGCAT);
+	out_tree->SetBranchAddress("Bs_TRUEID",&Bs_TRUEID);
+    	TBranch* b_w = out_tree->Branch("weight", &sw, "weight/D");
+
+	for(int i= 0; i< out_tree->GetEntries();i++){
+		out_tree->GetEntry(i);
+		if(BKGCAT == 20 )bkgCAT= 0;
+		//else if(BKGCAT == 60 || ( BKGCAT == 50 && abs(Bs_TRUEID) == 531) )bkgCAT= 1;
+		else bkgCAT= 1;
+		b_bkgCAT->Fill();
+	}
 
 	TString channelString;
-        if(channel == "norm") channelString = "m(D_{s} #pi #pi #pi)" ;
-        if(channel == "signal") channelString = "m(D_{s} K #pi #pi)" ;
+        if(channel == "norm") channelString = "m(D_{s}#pi#pi#pi)" ;
+        if(channel == "signal") channelString = "m(D_{s}K#pi#pi)" ;
 
-	RooRealVar DTF_Bs_M("Bs_DTF_MM", channelString, 5320., 5420.,"MeV");
-        RooRealVar BDTG_response("BDTG_response", "BDTG_response", 0.);
-        RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
-        RooRealVar Bs_BKGCAT("Bs_BKGCAT", "Bs_BKGCAT", 0.);
-	RooRealVar EventWeight("weight","weight", 0.);
+	RooRealVar DTF_Bs_M("Bs_DTF_MM", channelString, min_MM, max_MM,"MeV/c^{2}");
+	RooCategory Bs_BKGCAT("bkgCAT","bkgCAT");
+	Bs_BKGCAT.defineType("signal",0);
+	Bs_BKGCAT.defineType("ghost",1);
 
-	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState,Bs_BKGCAT,EventWeight);
-        RooDataSet* data = new RooDataSet("data","data",list,Import(*out_tree),WeightVar(EventWeight));
+	RooArgList list =  RooArgList(DTF_Bs_M,Bs_BKGCAT);
+        RooDataSet* data = new RooDataSet("data","data",list,Import(*out_tree));
 	
 	/// Signal pdf
-	RooRealVar mean("mean", "#mu", 5366.89,5350.,5390.); 
-	RooRealVar sigma("sigma", "#sigma", 20.,0.,80.); 
-	RooRealVar gamma("gamma", "#gamma", -0.5,-5,5.); 
-	RooRealVar delta("delta", "#delta", 0.5,-5,5.); 
+	RooRealVar mean("mean", "mean", 5366.89,5350.,5390.); 
+	RooRealVar sigma("sigma", "sigma", 20.,0.,80.); 
+	RooRealVar gamma("gamma", "gamma", -0.5,-5,5.); 
+	RooRealVar delta("delta", "delta", 0.5,-5,5.); 
 	RooJohnsonSU* signal= new RooJohnsonSU("signal","signal",DTF_Bs_M, mean,sigma,gamma,delta);
 
+	RooRealVar mean_ghost("mean_ghost", "mean_ghost", 5366.89,5350.,5390.); 
+	RooRealVar sigma_ghost("sigma_ghost", "sigma_ghost", 20.,0.,80.); 
+	RooRealVar gamma_ghost("gamma_ghost", "gamma_ghost", -0.5,-5,5.); 
+	RooRealVar delta_ghost("delta_ghost", "delta_ghost", 0.5,-5,5.); 
+	RooJohnsonSU* signal_ghost= new RooJohnsonSU("signal","signal_ghost",DTF_Bs_M, mean,sigma_ghost,gamma,delta);
+
+	/// Bkg pdf
+	RooRealVar c0_ghost("c0_ghost", "c0_ghost", .0,-10,10); 
+	RooRealVar c1_ghost("c1_ghost", "c1_ghost", .0,-10,10); 
+	RooRealVar c2_ghost("c2_ghost", "c2_ghost", .0,-10,10); 
+	RooChebychev* bkg_ghost= new RooChebychev("bkg_ghost","bkg_ghost",DTF_Bs_M, RooArgList(c0_ghost,c1_ghost));
+
+	/// Total pdf
+	RooRealVar n_sig("n_sig", "n_sig", data->numEntries()*0.9, 0., data->numEntries());
+	RooRealVar n_sig_ghost("n_sig_ghost", "n_sig_ghost", data->numEntries()*0.5, 0., data->numEntries());
+	RooRealVar n_bkg_ghost("n_bkg_ghost", "n_bkg_ghost", data->numEntries()/10., 0., data->numEntries());
+
+	RooAddPdf* pdf_signal = new RooAddPdf("pdf_signal", "pdf_signal", RooArgList(*signal), RooArgList(n_sig));
+	RooAddPdf* pdf_ghost = new RooAddPdf("pdf_ghost", "pdf_ghost", RooArgList(*signal_ghost, *bkg_ghost), RooArgList(n_sig_ghost, n_bkg_ghost));
+
+	RooSimultaneous* simPdf = new RooSimultaneous("simPdf","simPdf",Bs_BKGCAT);
+	simPdf->addPdf(*pdf_signal,"signal");
+	simPdf->addPdf(*pdf_ghost,"ghost");
+
 	/// Fit
-	RooFitResult* result = signal->fitTo(*data,Save(kTRUE),NumCPU(3),SumW2Error(kTRUE));
+	RooFitResult* result = simPdf->fitTo(*data,Save(kTRUE),NumCPU(3),Extended(kTRUE));
 	result->Print();
 
+	if(sWeight){
+		/// Calculate ghost weights
+		RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"bkgCAT==bkgCAT::ghost");
+		SPlot sPlot("sPlot","sPlot",*data_slice,pdf_ghost,RooArgList(n_sig_ghost,n_bkg_ghost)); 
+	
+		int n_ij = 0;  /// labels entry number of data slice
+		for(int n = 0; n < out_tree->GetEntries(); n++){
+			b_bkgCAT->GetEntry(n);
+			if(bkgCAT == 1){
+				sw = sPlot.GetSWeight(n_ij,"n_sig_ghost_sw");
+				n_ij++;
+			}
+			else sw = 1.;
+			b_w->Fill();
+		}
+	}
 	/// Plotting
 	TCanvas* c = new TCanvas();
+
 	RooPlot* frame= DTF_Bs_M.frame();
 	frame->SetTitle("");
-	data->plotOn(frame,Name("data"),Binning(50));
-	signal->plotOn(frame,Name("signal"));
+ 	data->plotOn(frame,Name("data"),Binning(50),Cut("bkgCAT==bkgCAT::signal"));
+	simPdf->plotOn(frame,Name("signal"),ProjWData(Bs_BKGCAT,*data),Slice(Bs_BKGCAT,"signal"));
 	frame->Draw();
 	c->Print("eps/SignalShape/"+channel+"MC.eps");
-	if(updateAnaNotePlots) c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/"+channel+"MC.pdf");
 
-TCanvas* canvas = new TCanvas();
+        RooPlot* frame2= DTF_Bs_M.frame();
+ 	data->plotOn(frame2,Name("data"),Binning(50),Cut("bkgCAT==bkgCAT::ghost"));
+ 	simPdf->plotOn(frame2,Name("signal"),Slice(Bs_BKGCAT,"ghost"),ProjWData(Bs_BKGCAT,*data));
+	simPdf->plotOn(frame2,Name("bkg"),ProjWData(Bs_BKGCAT,*data),Slice(Bs_BKGCAT,"ghost"),LineColor(kRed),LineStyle(kDashed),Components("bkg_ghost"));
+	frame2->Draw();
+	c->Print("eps/SignalShape/"+channel+"MC_ghost.eps");
+
+	TCanvas* canvas = new TCanvas();
         canvas->SetTopMargin(0.05);
         canvas->SetBottomMargin(0.05);
         
         double max = 5.0 ;
         double min = -5.0 ;
-	double min_MM = 5320. ;
-	double max_MM = 5420. ;
         double rangeX = max-min;
         double zero = max/rangeX;
         
@@ -602,12 +675,61 @@ TCanvas* canvas = new TCanvas();
         canvas->SaveAs("eps/SignalShape/"+channel+"MC_pull.eps");
 	if(updateAnaNotePlots) c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/"+channel+"MC_pull.pdf");
 
+	TCanvas* canvas_ghost = new TCanvas();
+        canvas_ghost->SetTopMargin(0.05);
+        canvas_ghost->SetBottomMargin(0.05);
+
+        TPad* pad1_ghost = new TPad("upperPad", "upperPad", .0, .3, 1.0, 1.0);
+        pad1_ghost->SetBorderMode(0);
+        pad1_ghost->SetBorderSize(-1);
+        pad1_ghost->SetBottomMargin(0.);
+        pad1_ghost->Draw();
+        pad1_ghost->cd();
+        frame2->GetYaxis()->SetRangeUser(0.01,frame2->GetMaximum()*1.);
+        frame2->Draw();
+        
+        canvas_ghost->cd();
+        TPad* pad2_ghost = new TPad("lowerPad", "lowerPad", .0, .005, 1.0, .3);
+        pad2_ghost->SetBorderMode(0);
+        pad2_ghost->SetBorderSize(-1);
+        pad2_ghost->SetFillStyle(0);
+        pad2_ghost->SetTopMargin(0.);
+        pad2_ghost->SetBottomMargin(0.35);
+        pad2_ghost->Draw();
+        pad2_ghost->cd();
+        
+        RooPlot* frame_p_ghost = DTF_Bs_M.frame();
+	frame_p_ghost->SetTitle("");
+        frame_p_ghost->GetYaxis()->SetNdivisions(5);
+        frame_p_ghost->GetYaxis()->SetLabelSize(0.12);
+        frame_p_ghost->GetXaxis()->SetLabelSize(0.12);
+        frame_p_ghost->GetXaxis()->SetTitleOffset(0.75);
+        frame_p_ghost->GetXaxis()->SetTitleSize(0.2);
+        frame_p_ghost->GetXaxis()->SetTitle( channelString + "[MeV/c^{2}]");
+        
+        RooHist* hpull_ghost  = frame2->pullHist("data","signal");
+	hpull_ghost->SetTitle("");
+        frame_p_ghost->addPlotable(hpull_ghost,"BX");
+        frame_p_ghost->GetYaxis()->SetRangeUser(min,max);
+        
+        frame_p_ghost->Draw();
+        graph->Draw("same");
+        graph2->Draw("same");
+        graph3->Draw("same");
+        
+        pad2_ghost->Update();
+        canvas_ghost->Update();
+        canvas_ghost->SaveAs("eps/SignalShape/"+channel+"MC_ghost_pull.eps");
+	if(updateAnaNotePlots) canvas_ghost->Print("../../../../../TD-AnaNote/latex/figs/MassFit/"+channel+"MC_ghost_pull.pdf");
+
 	/// Return fit params
 	vector<double> params;
 	params.push_back(mean.getVal());
 	params.push_back(sigma.getVal());
 	params.push_back(gamma.getVal());
 	params.push_back(delta.getVal());
+
+	cout << endl << "Fraction of signal classified as ghosts = " << n_sig_ghost.getVal()/(n_sig.getVal()+n_sig_ghost.getVal()) << endl;
 
 	out_tree->Write();
 	file->Close();
@@ -1471,11 +1593,13 @@ void fitSignal(){
 	tree->SetBranchStatus("Ds_finalState",1);
 	tree->SetBranchStatus("year",1);
 	tree->SetBranchStatus("*_PIDK",1);
+	tree->SetBranchStatus("pi_plus_isMuon",1);
 
         RooRealVar DTF_Bs_M("Bs_DTF_MM", "m(D_{s}^{-} K^{+}#pi^{+}#pi^{-})", min_MM, max_MM,"MeV/c^{2}");
         RooRealVar BDTG_response("BDTG_response", "BDTG_response", 0.);        
+        RooRealVar pi_plus_isMuon("pi_plus_isMuon", "pi_plus_isMuon", 0.);        
 
-	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState,year);
+	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState,year,pi_plus_isMuon);
 	RooDataSet*  data = new RooDataSet("data","data",tree,list,("BDTG_response > " + anythingToString((double)cut_BDT)).c_str() );	
 
 	/// Fit normalization mode first

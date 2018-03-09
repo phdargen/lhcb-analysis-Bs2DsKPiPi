@@ -22,3 +22,6 @@
 "useNormScaleFactors"	1
 "useNormSignalShape"	1
 "sWeightSignal"	 0
+
+* MC fit:
+"sWeightMC"	1
