@@ -216,7 +216,7 @@ simversion = "sim08"
 
 for input_file, output_file, dataset, pidname, tracks, method in files : 
   tmpinfile = input_file
-  tmpoutfile = "tmp3.root"
+  tmpoutfile = "tmp5.root"
   for track, subst in tracks.iteritems() : 
     for var, config in subst.iteritems() : 
 	if method == "Gen" :
@@ -257,10 +257,10 @@ for input_file, output_file, dataset, pidname, tracks, method in files :
 
       	treename = output_tree
       	tmpinfile = tmpoutfile
-      	if tmpoutfile == "tmp3.root" : 
-      	  tmpoutfile = "tmp4.root"
+      	if tmpoutfile == "tmp5.root" : 
+      	  tmpoutfile = "tmp6.root"
       	else : 
-       	 tmpoutfile = "tmp3.root"
+       	 tmpoutfile = "tmp5.root"
 
      	 print command
       	os.system(command)
