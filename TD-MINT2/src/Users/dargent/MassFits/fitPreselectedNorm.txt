@@ -1,10 +1,11 @@
 * general options
 "channel"	"Norm"
-"nBins"		60
+"nBins"		100
 "min_MM"	5350.
 "max_MM"	5700.
 "cut_BDT" 	-100
 "numCPU"	 10
+"useTriggerCat"		1
 
 * Norm fit :
 "fixExpBkgFromSidebands"	 0
@@ -12,6 +13,11 @@
 "ignorePartRecoBkg"	1
 "altPartBkg"     0
 "useB0"     	 0
-
-"inFileNameNorm"		"/auto/data/dargent/BsDsKpipi/BDT/Data/norm.root"
+"fixSignalShapeFromMC"		0
+"fitPreselected"	1
+*"inFileNameNorm"		"/auto/data/dargent/BsDsKpipi/BDT/Data/norm.root"
 "outFileNameNorm"		"/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_sweight.root"
+"updateAnaNotePlots"  	1
+
+* MC fit:
+"sWeightMC"	0
