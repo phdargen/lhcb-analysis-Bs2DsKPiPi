@@ -1,0 +1,36 @@
+"OutputDir"		"signal_bdt/"
+
+"legTitle"	"B_{s}#rightarrowD_{s}K#pi#pi"
+"effSubscript"	"BDT"
+
+"file1"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file2"		"/auto/data/dargent/BsDsKpipi/Final/MC/signal.root"
+"file3"		"/auto/data/dargent/BsDsKpipi/Final/MC/signal.root"
+
+"weight1"	"noweight"
+"weight2"	"noweight"
+"weight3"	"weight3"
+
+"cut1"		""
+*"cut2"		"BDTG_response > 0.3 && (eventNumber % 2 == 0)"
+*"cut3"		"BDTG_response > 0.3  && (eventNumber % 2 == 1)"
+"cut2"		"BDTG_response > 0.3  "
+"cut3"		"BDTG_response > 0.3 "
+"title1"		"MC (no BDT cut)"
+"title2"		"MC"
+"title3"		"MC (reweighted)"
+
+
+"checkEff"	1
+"checkPID"	0
+
+"reweight"	0
+"reweightInBinsOfRun"    	 1
+"reweightInBinsOfFinalState"	 1
+"reweightInBinsOfTrigger"	 0
+
+
+* plotting MC vs Data
+"nBins"		 20
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		1

@@ -1,0 +1,42 @@
+"OutputDir"		"signal_factorization/"
+
+"legTitle"	"B_{s}#rightarrowD_{s}K#pi#pi"
+"effSubscript"	""
+
+"file1"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file2"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file3"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file4"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file5"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+
+"weight1"	"weight2"
+"weight2"	"weight2"
+"weight3"	"weight2"
+"weight4"	"weight2"
+"weight5"	"weight2"
+
+"cut1"		"BDTG_response > 0.3 && Bs_BKGCAT == 20 "
+"cut2"		"BDTG_response > 0.3 && Bs_BKGCAT == 20 && Bs_DTF_TAU > 0.4 && Bs_DTF_TAU < 1.0"
+"cut3"		"BDTG_response > 0.3 && Bs_BKGCAT == 20 && Bs_DTF_TAU > 1.0 && Bs_DTF_TAU < 2.0"
+"cut4"		"BDTG_response > 0.3 && Bs_BKGCAT == 20 && Bs_DTF_TAU > 2.0 && Bs_DTF_TAU < 4.0"
+"cut5"		"BDTG_response > 0.3 && Bs_BKGCAT == 20 && Bs_DTF_TAU > 4.0 && Bs_DTF_TAU < 10"
+
+"title1"		""
+"title2"		" 0.4 < t <=  1.0"
+"title3"		" 1.0 < t <=  2.0"
+"title4"		" 2.0 < t <=  4.0"
+"title5"		" 4.0 < t <= 10.0"
+
+
+"checkPID"	1
+
+"reweight"	0
+"reweightInBinsOfRun"    	 1
+"reweightInBinsOfFinalState"	 1
+"reweightInBinsOfTrigger"	 0
+
+
+* plotting MC vs Data
+"nBins"		 15
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		0

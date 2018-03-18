@@ -8,19 +8,19 @@
 
 "legTitle"	"B_{s}#rightarrowD_{s}#pi#pi#pi"
 "nameA"		"MC"
-"weightVarA"	"noweight"
-"newWeightVarA"	"weight2"
+"weightVarA"	"weight"
+"newWeightVarA"	"weight3"
 
 "nameB"		"Data"
 "weightVarB"	"N_Bs_sw"
 
-"weightVarC"	"noweight"
-"newWeightVarC"	"weight2"
+"weightVarC"	"weight"
+"newWeightVarC"	"weight3"
 
 "reweight"	1
 "reweightInBinsOfRun"    	 1
 "reweightInBinsOfFinalState"	 1
-"reweightInBinsOfTrigger"	 1
+"reweightInBinsOfTrigger"	 0
 "maxWeight"	10
 "nIterations"   1
 "minEventsPerBin"  150
@@ -29,8 +29,8 @@
 "reweightVarSet1"	 1
 "reweightVarSet2"	 1
 "reweightVarSet3"	 0
-"reweightVarSet4"	 1
-"reweightVarSet5"	 1
+"reweightVarSet4"	 0
+"reweightVarSet5"	 0
 
 
 * plotting MC vs Data

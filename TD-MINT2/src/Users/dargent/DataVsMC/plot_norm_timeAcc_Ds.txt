@@ -1,0 +1,43 @@
+"OutputDir"		"norm_timeAcc_Ds/"
+
+"legTitle"	"B_{s}#rightarrowD_{s}#pi#pi#pi Data"
+"effSubscript"	"sel"
+"useLTweight"		1
+"plotOnlyTau"		1
+
+"file1"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"file2"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"file3"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"file4"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+*"file5"	"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+
+"weight1"	"N_Bs_sw"
+"weight2"	"N_Bs_sw"
+"weight3"	"N_Bs_sw"
+"weight4"	"N_Bs_sw"
+"weight5"	"N_Bs_sw"
+
+"cut1"		"Ds_finalState == 0"
+"cut2"		"Ds_finalState == 1"
+"cut3"		"Ds_finalState == 2"
+"cut4"		"Ds_finalState == 3"
+"cut5"		"Ds_finalState == 4"
+
+"title1"		"D_{s}#rightarrow #phi^{0}(1020)#pi"
+"title2"		"D_{s}#rightarrow K^{*0}(892)K"
+"title3"		"D_{s}#rightarrow (KK#pi)_{NR}"
+"title4"		"D_{s}#rightarrow #pi#pi#pi"
+"title5"		"D_{s}#rightarrow K#pi#pi"
+
+"checkPID"	1
+
+"reweight"	0
+"reweightInBinsOfRun"    	 -1
+"reweightInBinsOfFinalState"	 0
+"reweightInBinsOfTrigger"	 0
+
+
+* plotting MC vs Data
+"nBins"		 15
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		1

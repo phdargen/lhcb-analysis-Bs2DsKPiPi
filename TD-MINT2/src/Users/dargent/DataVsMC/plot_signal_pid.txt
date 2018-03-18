@@ -9,9 +9,9 @@
 "legTitle"	"B_{s}#rightarrowD_{s}K#pi#pi"
 
 "nameA"		"MC"
-"weightVarA"	"weight"
+"weightVarA"	"weight2"
 "newWeightVarA"	"noweight"
-"cutA"		"BDTG_response > 0.3"
+"cutA"		"BDTG_response > 0.3 && Bs_BKGCAT == 20"
 
 "nameB"		"Data"
 "weightVarB"	"N_Bs_sw"

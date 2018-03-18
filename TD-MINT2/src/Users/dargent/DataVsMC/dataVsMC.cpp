@@ -24,9 +24,15 @@
 #include "Mint/NamedParameter.h"
 #include "Mint/HyperHistogram.h"
 #include "Mint/Utils.h"
+#include <fstream>
 
 using namespace std;
 using namespace MINT;
+
+/// HFLAV summer 17 values
+static const double tau = 1.509;
+static const double dgamma = 0.09; 
+static const double deltaMs = 17.757;
 
 static const double massKaon = 493.68;
 static const double massPion = 139.57;
@@ -229,13 +235,13 @@ void compare(TString fileA, TString fileB, TString weightA, TString weightB, TSt
     plot(new_treeA,new_treeB,"Bs_ETA","#eta(B)",nBins,1,6,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_FDCHI2_OWNPV","#chi^{2}_{FD}(B)",nBins,0,100000,weightA, weightB, newWeightB, label,true);
     plot(new_treeA,new_treeB,"Bs_ENDVERTEX_CHI2","#chi^{2}_{vtx}(B)",nBins,0,35,weightA, weightB, newWeightB, label);
-    plot(new_treeA,new_treeB,"Bs_DTF_TAU","t(B) [ns]",nBins,0.,10.,weightA, weightB, newWeightB, label);
-    plot(new_treeA,new_treeB,"Bs_DTF_TAUERR","#sigma_{t}(B) [ns]",nBins,0,0.15,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Bs_DTF_TAU","t(B) [ps]",nBins,0.,10.,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Bs_DTF_TAUERR","#sigma_{t}(B) [ps]",nBins,0,0.15,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_ptasy_1.00","B_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
     plot(new_treeA,new_treeB,"Bs_DTF_MERR","#sigma_{m} [MeV]",nBins,4.,25.,weightA, weightB, newWeightB, label);
 
     /// BDT
-    plot(new_treeA,new_treeB,"DTF_CHI2NDOF","DTF #chi^{2}",nBins,0.,7,weightA, weightB, newWeightB, label);    
+    plot(new_treeA,new_treeB,"PV_CHI2NDOF","DTF #chi^{2}",nBins,0.,7,weightA, weightB, newWeightB, label);    
     plot(new_treeA,new_treeB,"Bs_IPCHI2_OWNPV","#chi^{2}_{IP}(B)",nBins,0,20,weightA, weightB, newWeightB, label,true);
     plot(new_treeA,new_treeB,"Bs_DIRA_OWNPV","DIRA(B)",nBins,0.99997,1,weightA, weightB, newWeightB, label,true,true);
 
@@ -363,29 +369,29 @@ void plotPID(TTree* tree, TTree* treeMC, TTree* treeMC_PIDGen, TTree* treeMC_PID
     
     treeMC->SetBranchStatus("*",0);
     treeMC->SetBranchStatus(Branch,1);
-    treeMC->SetBranchStatus(weightMC,1);
+    if(weightMC != "noweight")treeMC->SetBranchStatus(weightMC,1);
     double varMC;
     double w = 1;
     treeMC->SetBranchAddress(Branch,&varMC);         
-    treeMC->SetBranchAddress(weightMC,&w);
+    if(weightMC != "noweight")treeMC->SetBranchAddress(weightMC,&w);
 
     treeMC_PIDGen->SetBranchStatus("*",0);
     treeMC_PIDGen->SetBranchStatus(Branch,1);
-    treeMC_PIDGen->SetBranchStatus(weightMC,1);
+    if(weightMC != "noweight")treeMC_PIDGen->SetBranchStatus(weightMC,1);
     treeMC_PIDGen->SetBranchAddress(Branch,&varMC);         
-    treeMC_PIDGen->SetBranchAddress(weightMC,&w);
+    if(weightMC != "noweight")treeMC_PIDGen->SetBranchAddress(weightMC,&w);
 
     treeMC_PIDCorr->SetBranchStatus("*",0);
     treeMC_PIDCorr->SetBranchStatus(Branch,1);
-    treeMC_PIDCorr->SetBranchStatus(weightMC,1);
+    if(weightMC != "noweight")treeMC_PIDCorr->SetBranchStatus(weightMC,1);
     treeMC_PIDCorr->SetBranchAddress(Branch,&varMC);         
-    treeMC_PIDCorr->SetBranchAddress(weightMC,&w);
+    if(weightMC != "noweight")treeMC_PIDCorr->SetBranchAddress(weightMC,&w);
 
     treeMC_noPID->SetBranchStatus("*",0);
     treeMC_noPID->SetBranchStatus(Branch,1);
-    treeMC_noPID->SetBranchStatus(weightMC,1);
+    if(weightMC != "noweight")treeMC_noPID->SetBranchStatus(weightMC,1);
     treeMC_noPID->SetBranchAddress(Branch,&varMC);         
-    treeMC_noPID->SetBranchAddress(weightMC,&w);
+    if(weightMC != "noweight")treeMC_noPID->SetBranchAddress(weightMC,&w);
 
     ///Make histograms
     TString title;
@@ -547,7 +553,7 @@ void comparePID(TString fileA, TString fileB, TString weightA, TString weightB, 
     TString fileC = fileB;
     fileC.ReplaceAll("PIDMC","PIDGen"); 
     TString fileD = fileB;
-    fileD.ReplaceAll("PIDMC","PIDCorr"); 
+    fileD.ReplaceAll("_PIDMC",""); 
     TString fileE = fileB;
     fileE.ReplaceAll("PIDMC","noPID"); 
 
@@ -594,42 +600,12 @@ void comparePID(TString fileA, TString fileB, TString weightA, TString weightB, 
     if(A_is_in_B("norm",(string)fileA) && A_is_in_B("norm",(string)fileB)) Decay = "norm";
     if(A_is_in_B("Final",(string)fileA) && A_is_in_B("Final",(string)fileB)) selection = "Final";
 
-    /*
-
-    plot(new_treeA,new_treeB,"Bs_FDCHI2_OWNPV","#chi^{2}_{FD}(B)",nBins,0,100000,weightA, weightB, newWeightB, label,true);
-    plot(new_treeA,new_treeB,"Bs_ENDVERTEX_CHI2","#chi^{2}_{vtx}(B)",nBins,0,35,weightA, weightB, newWeightB, label);
-    plot(new_treeA,new_treeB,"Bs_DTF_TAU","t(B) [ns]",nBins,0.,10.,weightA, weightB, newWeightB, label);
-    plot(new_treeA,new_treeB,"Bs_DTF_TAUERR","#sigma_{t}(B) [ns]",nBins,0,0.15,weightA, weightB, newWeightB, label);
-    plot(new_treeA,new_treeB,"Bs_ptasy_1.00","B_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
-    plot(new_treeA,new_treeB,"Bs_DTF_MERR","#sigma_{m} [MeV]",nBins,4.,25.,weightA, weightB, newWeightB, label);
-
-    /// BDT
-    plot(new_treeA,new_treeB,"DTF_CHI2NDOF","DTF #chi^{2}",nBins,0.,7,weightA, weightB, newWeightB, label);    
-    plot(new_treeA,new_treeB,"Bs_IPCHI2_OWNPV","#chi^{2}_{IP}(B)",nBins,0,20,weightA, weightB, newWeightB, label,true);
-    plot(new_treeA,new_treeB,"Bs_DIRA_OWNPV","DIRA(B)",nBins,0.99997,1,weightA, weightB, newWeightB, label,true,true);
-
-    plot(new_treeA,new_treeB,"XsDaughters_min_IPCHI2","X_{s} min(#chi^{2}_{IP})",nBins, 0, 10000 ,weightA, weightB, newWeightB, label,true);
-    if(Decay == "norm")plot(new_treeA,new_treeB,"a_1_1260_plus_ptasy_1.00","Xs_ptasy_1.00",nBins, -1, 1. ,weightA, weightB, newWeightB, label,false,true);
-    else plot(new_treeA,new_treeB,"K_1_1270_plus_ptasy_1.00","Xs_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
-    plot(new_treeA,new_treeB,"Xs_max_DOCA","X_{s} max DOCA [mm]",nBins, 0, 0.4 ,weightA, weightB, newWeightB, label);
-
-    plot(new_treeA,new_treeB,"track_min_IPCHI2","min(#chi^{2}_{IP})",nBins, 0, 10000 ,weightA, weightB, newWeightB, label,true);
-    plot(new_treeA,new_treeB,"DsDaughters_min_IPCHI2","D_{s} min(#chi^{2}_{IP})",nBins, 0, 10000 ,weightA, weightB, newWeightB, label,true);
-    plot(new_treeA,new_treeB,"Ds_ptasy_1.00","Ds_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
-    plot(new_treeA,new_treeB,"Ds_FDCHI2_ORIVX","#chi^{2}_{FD}(D_{s})",nBins,0,40000,weightA, weightB, newWeightB, label,true);
-    plot(new_treeA,new_treeB,"Ds_RFD","Ds RFD",nBins,0,10,weightA, weightB, newWeightB, label);
-
-    plot(new_treeA,new_treeB,"maxCos","maxCos",nBins,-1,1,weightA, weightB, newWeightB, label);    
-    plot(new_treeA,new_treeB,"max_ghostProb","max(Track_ghostProb)",nBins,0,0.4,weightA, weightB, newWeightB, label);
-    plot(new_treeA,new_treeB,"max_ProbNNghost","max(Track_ghostProb)",nBins,0,0.4,weightA, weightB, newWeightB, label);
-    plot(new_treeA,new_treeB,"track_min_PT","min(p_{T})  [MeV]",nBins,0,10000,weightA, weightB, newWeightB, label);
-    */
-
     /// Bs
     plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"Bs_PT","p_{T}(B) [MeV]",nBins,0,40000,weightA, weightB, label);
     plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"Bs_ETA","#eta(B)",nBins,1,6,weightA, weightB, label);
-    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"Bs_DTF_TAU","t(B) [ns]",nBins,0.,10.,weightA, weightB, label,false,false,true);
-    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"Bs_DTF_TAUERR","#sigma_{t}(B) [ns]",nBins,0,0.15,weightA, weightB, label);
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"Bs_DTF_TAU","t(B) [ps]",nBins,0.,10.,weightA, weightB, label,false,true,true);
+    plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"Bs_DTF_TAUERR","#sigma_{t}(B) [ps]",nBins,0,0.15,weightA, weightB, label);
+
     /// Dalitz
     plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"m_Kpipi","m(K^{+}#pi^{+}#pi^{-})[MeV]",nBins,1000,1950,weightA, weightB, label,false,true,true);
     plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"m_Kpi","m(K^{+}#pi^{-})[MeV]",nBins,massKaon+massPion,1200,weightA, weightB, label,false,true,true);
@@ -641,7 +617,7 @@ void comparePID(TString fileA, TString fileB, TString weightA, TString weightB, 
     plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"m_DsKpip","m(D_{s}^{-}K^{+}#pi^{+})[MeV]",nBins,1900,5500,weightA, weightB, label,false,true,true);
     
     if(Decay == "signal"){
-        plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"K_plus_PIDK","DLL_{K#pi}(K^{+}) ",nBins,0,100,weightA, weightB, label,false);
+        plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"K_plus_PIDK","DLL_{K#pi}(K^{+}) ",nBins,10,100,weightA, weightB, label,false);
         plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"pi_plus_PIDK","DLL_{K#pi}(#pi^{+}) ",nBins,-100,20,weightA, weightB, label,false,true);
         plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"pi_minus_PIDK","DLL_{K#pi}(#pi^{-}) ",nBins,-100,20,weightA, weightB, label,false,true);
     }   
@@ -651,9 +627,9 @@ void comparePID(TString fileA, TString fileB, TString weightA, TString weightB, 
         plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"pi_minus_PIDK","DLL_{K#pi}(#pi^{-}) ",nBins,-100,20,weightA, weightB, label,false,true);
     }
     if(finalState == "KKpi") {
-        plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"K_plus_fromDs_PIDK","DLL_{K#pi}(K^{+}) ",nBins,0,100,weightA, weightB, label,false);
+        plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"K_plus_fromDs_PIDK","DLL_{K#pi}(K^{+}) ",nBins,-10,100,weightA, weightB, label,false);
         plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"pi_minus_fromDs_PIDK","DLL_{K#pi}(#pi^{-} from D_{s}) ",nBins,-100,20,weightA, weightB, label,false,true);
-	plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"K_minus_fromDs_PIDK","DLL_{K#pi}(K^{-} from D_{s}) ",nBins,0,100,weightA, weightB, label,false);
+	plotPID(new_treeA,new_treeB,new_treeC,new_treeD,new_treeE,"K_minus_fromDs_PIDK","DLL_{K#pi}(K^{-} from D_{s}) ",nBins,-10,100,weightA, weightB, label,false);
     }    
 }
 
@@ -957,6 +933,226 @@ void createSubset(TString file, TString newfile, TString Cut){
 }
 
 
+
+void plotEff(TString Branch,TString TitleX, int bins, double min, double max, vector<TTree*> trees, vector<TString> weights, vector<TString> titles, vector<int> colors, TString label, bool log = false, bool legendLeft = false, bool eff = false){
+        
+    /// options
+    NamedParameter<string> effSubscript("effSubscript", (std::string) "");
+    NamedParameter<string> legTitle("legTitle", (std::string) "");
+    NamedParameter<string> OutputDir("OutputDir", (std::string) "final/", (char*) 0);
+    NamedParameter<int> useLTweight("useLTweight", 0);
+    NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
+
+    cout << "Plotting " << Branch << endl;
+
+    double var;
+    double w=1;
+    for(int n = 0; n < trees.size(); n++){
+	trees[n]->SetBranchStatus("*",0);
+	trees[n]->SetBranchStatus(Branch,1);
+	if(weights[n]!="noweight")trees[n]->SetBranchStatus(weights[n],1);
+	trees[n]->SetBranchAddress(Branch,&var);
+	if(weights[n]!="noweight")trees[n]->SetBranchAddress(weights[n],&w);
+    }
+	
+    ///Make histograms
+    TString title;
+    if(eff)title = ";"+TitleX+";#varepsilon [a.u.]";
+    else title = ";"+TitleX+";Yield [norm.]";
+    if(eff & ((string)effSubscript != ""))title.ReplaceAll("epsilon",("epsilon_{"+(string)effSubscript+"}").c_str());
+    if(useLTweight)eff = false;
+
+    vector<TH1D*> histos;
+    for(int n = 0; n < trees.size(); n++){
+	histos.push_back( new TH1D(Branch+anythingToString(n),title,bins,min,max));
+	
+	int numEvents = trees[n]->GetEntries();
+	for(int i=0; i< numEvents; i++)
+	{	
+		if (0ul == (i % 100000ul)) cout << "Read event " << i << "/" << numEvents << endl;
+		trees[n]->GetEntry(i);
+		double lt_w = 1.;
+		if(useLTweight && Branch == "Bs_DTF_TAU")lt_w = exp(-var/tau)*cosh(dgamma/2.*var);
+		if(weights[n]!="noweight")histos[n]->Fill(var,w/lt_w);
+		else histos[n]->Fill(var,1./lt_w);
+	}
+
+    }    
+
+/*        
+    /// Print efficiencies
+    cout << endl << "PID efficiencies: " << endl;
+    cout << " MC = " << h_MC.Integral()/h_MC_noPID.Integral() * 100. << " ( % ) " <<  endl;
+    cout << " MC (PIDGen) = " << h_MC_PIDGen.Integral()/h_MC_noPID.Integral() * 100. << " ( % ) " <<  endl;
+    cout << " MC (PIDCorr) = " << h_MC_PIDCorr.Integral()/h_MC_noPID.Integral() * 100. << " ( % ) " <<  endl << endl;
+*/
+    ///Plot it
+    TCanvas c;
+    TLegend* leg;
+    if(legendLeft)leg = new TLegend(0.15,0.7,0.45,0.9,"");
+    else leg = new TLegend(0.7,0.7,0.85,0.9,"");
+    leg->SetLineStyle(0);
+    leg->SetLineColor(0);
+    leg->SetFillColor(0);
+    leg->SetTextFont(22);
+    leg->SetTextColor(1);
+    leg->SetTextSize(0.04);
+    leg->SetTextAlign(12);
+    if((string)legTitle != "")leg->AddEntry((TObject*)0,((string)legTitle).c_str(), "");
+
+    if(eff){
+	gPad->SetLogy(0);
+	for(int n = 0; n < trees.size(); n++){
+		histos[n]->Scale(1./histos[n]->Integral());
+		if(n==0)continue;
+		histos[n]->Divide(histos[n],histos[0]);
+		histos[n]->SetMinimum(0.);
+		histos[n]->SetMaximum(2.5);
+
+		histos[n]->SetMarkerColor(colors[n]);
+		histos[n]->SetLineColor(colors[n]);
+		if(n==1)histos[n]->Draw("e");
+		else histos[n]->Draw("esame");
+		TLegendEntry* le = leg->AddEntry(histos[n],titles[n],"LEP");
+		le->SetTextColor(colors[n]); 
+	}
+    }
+    else{
+	for(int n = 0; n < trees.size(); n++){
+	
+		histos[n]->Scale(1./histos[n]->Integral());    
+		histos[n]->SetMinimum(0.);
+		if(log){
+			histos[n]->SetMinimum(0.001);
+			gPad->SetLogy(1);
+		}
+		else gPad->SetLogy(0);
+		histos[n]->SetMaximum(histos[n]->GetMaximum()*2.0);
+		histos[n]->SetMarkerColor(colors[n]);
+		histos[n]->SetLineColor(colors[n]);
+		if(n==0)histos[n]->Draw("e");
+		else histos[n]->Draw("esame");
+		TLegendEntry* le = leg->AddEntry(histos[n],titles[n],"LEP");
+		le->SetTextColor(colors[n]); 
+	}
+    }
+    leg->Draw(); 
+	
+    if(eff)label = "eff_" + label;
+    if(updateAnaNotePlots)c.Print("../../../../../TD-AnaNote/latex/figs/dataVsMC/" + (string)OutputDir + label + "_"+Branch+".pdf" );
+    c.Print((string)OutputDir + label + "_"+Branch+".eps"); 
+
+    if(useLTweight){
+	ofstream datafile;
+// 	if(updateAnaNote) datafile.open(("../../../../../TD-AnaNote/latex/tables/Acceptance/"+(string)BinningName+"/splineCoeffs_"+ label + ".tex").c_str(),std::ofstream::trunc);
+	//else 
+	datafile.open("table.tex",std::ofstream::trunc);
+	datafile << "\\begin{table}[h]" << "\n";
+	datafile << "\\centering" << "\n";
+	datafile << "\\caption{} " << "\n";
+	datafile << "\\begin{tabular}{ l" ;
+	for(int i = 0; i<histos.size(); i++)datafile << " l ";
+	datafile << "}" << "\n";
+	datafile << "\\hline" << "\n";
+	datafile << "\\hline" << "\n";
+	datafile << "KS-Test &" ;
+	titles[0].ReplaceAll("#","\\") ;
+	for(int i = 1; i<histos.size(); i++){
+		datafile << "$" << titles[i].ReplaceAll("#","\\")  << "$" ;
+		if(i< histos.size()-1 ) datafile << " & " ;
+	}
+	datafile << "\\\\ \\hline" << "\n";
+
+	for(int i = 0; i<histos.size()-1; i++){
+		datafile << "$" << titles[i] << "$ & " ;
+		for(int j=1; j < histos.size(); j++){
+			//if(j>i)datafile << std::fixed << std::setprecision(3) << histos[i]->Chi2Test(histos[j],"WWP")/(bins-1.);
+			if(j>i)datafile << std::fixed << std::setprecision(3) << histos[i]->KolmogorovTest(histos[j]);
+			if(j< histos.size()-1)datafile << " & " ;
+			else datafile << "\\\\" << "\n";
+		}
+	}
+	datafile << "\\hline" << "\n";
+	datafile << "\\hline" << "\n";
+	datafile << "\\end{tabular}" << "\n";
+	datafile << "\\label{table:}" << "\n";
+	datafile << "\\end{table}" << "\n";
+    }
+  
+}
+
+void compareEff(vector<TString> files, vector<TString> weights, vector<TString> Cuts, vector<TString> titles, vector<int> colors, int Year = -1, TString finalState = "all", int Trigger = -1, TString label = ""){
+    
+    // Cuts
+    TString Cut;
+    if(Year>10)Cut += " year == " + anythingToString(Year);
+    else if(Year == -1)Cut += " year > " + anythingToString(Year);
+    else Cut += " run == " + anythingToString(Year);
+    if(finalState == "KKpi")Cut += " && Ds_finalState < 3 ";
+    else if(finalState == "pipipi")Cut += " && Ds_finalState == 3 ";
+    else if(finalState == "Kpipi")Cut += " && Ds_finalState == 4 ";
+    if(Trigger != -1) Cut += " && TriggerCat == " + anythingToString(Trigger);
+
+    TFile* output = new TFile("dummy.root","RECREATE");
+    vector<TTree*> new_trees;
+
+    cout << endl << "Comparing files " << endl;
+    for(int i=0; i < files.size(); i++){
+    
+	TString cut = Cuts[i];
+	if(cut != "")cut += " && ";
+	cut += Cut;	
+
+	///Load files
+	TFile *file = new TFile(files[i]);
+	TTree* tree = (TTree*) file->Get("DecayTree");
+
+	output->cd();
+	TTree* new_tree = tree->CopyTree(cut);
+	new_trees.push_back(new_tree);
+
+	cout << files[i] << " ( " << cut << " ) " << endl; 
+    }
+
+    /// Options
+    NamedParameter<int> nBins("nBins", 40); 
+    NamedParameter<int> plotOnlyTau("plotOnlyTau", 0); 
+
+    label += "Ds2";
+    if(finalState != "")label +=  finalState;
+    else label += "all";
+    if(Year>-1) label += "_" + anythingToString(Year);
+    if(Trigger>-1) label += "_t" + anythingToString(Trigger);
+    
+    TString Decay, selection;
+    if(A_is_in_B("signal",(string)files[0]) && A_is_in_B("signal",(string)files[1])) Decay = "signal";
+    if(A_is_in_B("norm",(string)files[0])&& A_is_in_B("norm",(string)files[1])) Decay = "norm";
+    if(A_is_in_B("Final",(string)files[0]) && A_is_in_B("Final",(string)files[1])) selection = "Final";
+
+    /// TAU
+    plotEff("Bs_DTF_TAU","t(B) [ps]",nBins,0.,10.,new_trees, weights, titles, colors, label,false,true,true);
+    if(plotOnlyTau)return;
+
+    //if(selection == "Final")plotEff("BDTG_response","BDTG",nBins,0,1.,new_trees, weights, titles, colors, label,false,true);
+
+    /// Bs
+    plotEff("Bs_PT","p_{T}(B) [MeV]",nBins,0,40000,new_trees, weights, titles, colors,  label);
+    plotEff("Bs_ETA","#eta(B)",nBins,1,6,new_trees, weights, titles, colors, label);
+    plotEff("Bs_DTF_TAUERR","#sigma_{t}(B) [ps]",nBins,0,0.15,new_trees, weights, titles, colors, label);
+
+    /// Dalitz
+    plotEff("m_Kpipi","m(K^{+}#pi^{+}#pi^{-})[MeV]",nBins,1000,1950,new_trees, weights, titles, colors, label,false,false,true);
+    plotEff("m_Kpi","m(K^{+}#pi^{-})[MeV]",nBins,massKaon+massPion,1200,new_trees, weights, titles, colors, label,false,false,true);
+    plotEff("m_pipi","m(#pi^{+}#pi^{-})[MeV]",nBins,2.*massPion,1200,new_trees, weights, titles, colors, label,false,true,true);
+    plotEff("m_Dspipi","m(D_{s}^{-}#pi^{+}#pi^{-})[MeV]",nBins,2400,massBs-massKaon,new_trees, weights, titles, colors, label,false,false,true);
+    plotEff("m_Dspi","m(D_{s}^{-}#pi^{+})[MeV]",nBins,massDs+massPion,massBs-massKaon-massPion,new_trees, weights, titles, colors, label,false,true,true);
+    plotEff("m_DsK","m(D_{s}^{-}K^{+})[MeV]",nBins,0,5500,new_trees, weights, titles, colors, label,false,true,true);
+    plotEff("m_DsKpi","m(D_{s}^{-}K^{+}#pi^{-})[MeV]",nBins,1900,5500,new_trees, weights, titles, colors, label,false,true,true);
+    plotEff("m_DsKpip","m(D_{s}^{-}K^{+}#pi^{+})[MeV]",nBins,1900,5500,new_trees, weights, titles, colors, label,false,true,true);
+}
+
+
+
 int main(int argc, char** argv){
     
     time_t startTime = time(0);
@@ -966,8 +1162,9 @@ int main(int argc, char** argv){
     //createSubset("../Files/Final/Data/norm.root","../Files/Final/Data/norm_r1.root","run == 1");
     //createSubset("../Files/Final/Data/norm.root","../Files/Final/Data/norm_r2.root","run == 2");
 
-    /// Options
+    /// Options for reweighting
     NamedParameter<int> checkPID("checkPID", 0); 
+    NamedParameter<int> checkEff("checkEff", 0); 
 
     NamedParameter<string> ReweightFromA("ReweightFromA", (std::string) "/auto/data/dargent/BsDsKpipi/Preselected/MC/norm.root");
     NamedParameter<string> ReweightToB("ReweightToB", (std::string) "/auto/data/dargent/BsDsKpipi/Preselected/Data/norm.root");
@@ -993,6 +1190,32 @@ int main(int argc, char** argv){
     NamedParameter<int> reweightVarSet3("reweightVarSet3", 1); 
     NamedParameter<int> reweightVarSet4("reweightVarSet4", 1); 
     NamedParameter<int> reweightVarSet5("reweightVarSet5", 1); 
+
+    /// Options for efficiency comparisons
+    NamedParameter<string> file1("file1", (std::string) "");
+    NamedParameter<string> file2("file2", (std::string) "");
+    NamedParameter<string> file3("file3", (std::string) "");
+    NamedParameter<string> file4("file4", (std::string) "");
+    NamedParameter<string> file5("file5", (std::string) "");
+
+    NamedParameter<string> weight1("weight1", (std::string) "noweight");
+    NamedParameter<string> weight2("weight2", (std::string) "noweight");
+    NamedParameter<string> weight3("weight3", (std::string) "noweight");
+    NamedParameter<string> weight4("weight4", (std::string) "noweight");
+    NamedParameter<string> weight5("weight5", (std::string) "noweight");
+
+    NamedParameter<string> cut1("cut1", (std::string) "");
+    NamedParameter<string> cut2("cut2", (std::string) "");
+    NamedParameter<string> cut3("cut3", (std::string) "");
+    NamedParameter<string> cut4("cut4", (std::string) "");
+    NamedParameter<string> cut5("cut5", (std::string) "");
+
+    NamedParameter<string> title1("title1", (std::string) "");
+    NamedParameter<string> title2("title2", (std::string) "");
+    NamedParameter<string> title3("title3", (std::string) "");
+    NamedParameter<string> title4("title4", (std::string) "");
+    NamedParameter<string> title5("title5", (std::string) "");
+
 
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
@@ -1056,7 +1279,7 @@ int main(int argc, char** argv){
     //min_3.push_back(0.);
     //max_3.push_back(200000.);
 
-    vars_4.push_back("DTF_CHI2NDOF");
+    vars_4.push_back("PV_CHI2NDOF");
     min_4.push_back(0.);
     max_4.push_back(10.);
     
@@ -1086,14 +1309,58 @@ int main(int argc, char** argv){
     if(reweightVarSet4)max_set.push_back(max_4);
     if(reweightVarSet5)max_set.push_back(max_5);
 
+    /// Compare PID/ Eff
 
-    /// Compare PID
+    if(checkEff){ 
+	vector<TString> files;
+	files.push_back((string) file1);
+	files.push_back((string) file2);
+	if((string)file3 != "")files.push_back((string) file3);
+	if((string)file4 != "")files.push_back((string) file4);
+	if((string)file5 != "")files.push_back((string) file5);
+	
+	vector<TString> weights;
+	weights.push_back((string) weight1);
+	weights.push_back((string) weight2);
+	if((string)file3 != "")weights.push_back((string) weight3);
+	if((string)file4 != "")weights.push_back((string) weight4);
+	if((string)file5 != "")weights.push_back((string) weight5);
+	
+	vector<TString> cuts;
+	cuts.push_back((string) cut1);
+	cuts.push_back((string) cut2);
+	if((string)file3 != "")cuts.push_back((string) cut3);
+	if((string)file4 != "")cuts.push_back((string) cut4);
+	if((string)file5 != "")cuts.push_back((string) cut5);
+	
+	vector<TString> titles;
+	titles.push_back((string)title1);
+	titles.push_back((string)title2);
+	if((string)file3 != "")titles.push_back((string)title3);
+	if((string)file4 != "")titles.push_back((string)title4);
+	if((string)file5 != "")titles.push_back((string)title5);
+	
+	vector<int> colors;
+	colors.push_back(kBlack);
+	colors.push_back(kRed);
+	colors.push_back(kBlue);
+	colors.push_back(kMagenta+1);
+	colors.push_back(kGreen+3);
+		
+	for(int i= 0; i < years.size(); i++) for(int j= 0; j < Ds_finalStates.size(); j++)for(int k= 0; k < trigger.size(); k++){ 
+			compareEff(files,weights,cuts, titles, colors, years[i], Ds_finalStates[j],trigger[k]);
+	}
+	return 0;
+
+    }
+
     if(checkPID){  
 	for(int i= 0; i < years.size(); i++) for(int j= 0; j < Ds_finalStates.size(); j++)for(int k= 0; k < trigger.size(); k++){ 
 		comparePID((string) ReweightToB, (string) ReweightFromA, (string) weightVarB, (string) weightVarA, (string) cutB, (string) cutA, years[i], Ds_finalStates[j],trigger[k]);
 	}
 	return 0;
     }
+
     /// Produce MC correction histos and apply weights
     /// Weights are applied on top of each other with the previous weighting applied
     TString weightA = (string) weightVarA;

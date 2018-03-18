@@ -1,0 +1,43 @@
+"OutputDir"		"signal_bdt_scan/"
+
+"legTitle"	"B_{s}#rightarrowD_{s}K#pi#pi"
+"effSubscript"	"BDT"
+
+"file1"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file2"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file3"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file4"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file5"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+
+"weight1"	"noweight"
+"weight2"	"weight2"
+"weight3"	"weight2"
+"weight4"	"weight2"
+"weight5"	"weight2"
+
+"cut1"		"Bs_BKGCAT == 20"
+*"cut2"		"BDTG_response > 0.3 && Bs_BKGCAT == 20 && (eventNumber % 2 == 0)"
+*"cut3"		"BDTG_response > 0.3 && Bs_BKGCAT == 20 && (eventNumber % 2 == 1)"
+"cut2"		"BDTG_response > -0.5 && Bs_BKGCAT == 20 "
+"cut3"		"BDTG_response > 0. && Bs_BKGCAT == 20 "
+"cut4"		"BDTG_response > 0.5 && Bs_BKGCAT == 20 "
+"cut5"		"BDTG_response > 0.8 && Bs_BKGCAT == 20 "
+
+"title1"		"MC (no BDT cut)"
+"title2"		"MC (BDT > -0.5)"
+"title3"		"MC (BDT >  0.0)"
+"title4"		"MC (BDT >  0.5)"
+"title5"		"MC (BDT >  0.8)"
+
+"checkPID"	1
+
+"reweight"	0
+"reweightInBinsOfRun"    	 1
+"reweightInBinsOfFinalState"	 1
+"reweightInBinsOfTrigger"	 0
+
+
+* plotting MC vs Data
+"nBins"		 20
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		1

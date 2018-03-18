@@ -1,0 +1,68 @@
+
+[1mRooFit v3.57 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+INFO in constructor of NamedParameterBase:
+  > For parameter named: "checkPID"
+  > You did not provide a filename.
+  > I'll read from stdin. This is completely OK,
+  > but if there is no input from stdin ending in EOF,
+  > the program will stall after this message.
+  > If you find yourself in this situation, press Ctr-d.
+  > In future, run the program as ./program < inputFile.txt
+  > even if inputFile.txt is just an empty dummy file.
+  > This message is only printed once.
+
+Comparing files 
+/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root ( Bs_BKGCAT == 20 &&  run == 1 && Ds_finalState < 3  ) 
+/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root ( BDTG_response > 0.3 && Bs_BKGCAT == 20  &&  run == 1 && Ds_finalState < 3  ) 
+/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root ( BDTG_response > 0.3 && Bs_BKGCAT == 20  &&  run == 1 && Ds_finalState < 3  ) 
+Plotting Bs_DTF_TAU
+Read event 0/13915
+Read event 0/12354
+Read event 0/12354
+Plotting Bs_PT
+Read event 0/13915
+Read event 0/12354
+Read event 0/12354
+Plotting Bs_ETA
+Read event 0/13915
+Read event 0/12354
+Read event 0/12354
+Plotting Bs_DTF_TAUERR
+Read event 0/13915
+Read event 0/12354
+Read event 0/12354
+Plotting m_Kpipi
+Read event 0/13915
+Read event 0/12354
+Read event 0/12354
+Plotting m_Kpi
+Read event 0/13915
+Read event 0/12354
+Read event 0/12354
+Plotting m_pipi
+Read event 0/13915
+Read event 0/12354
+Read event 0/12354
+Plotting m_Dspipi
+Read event 0/13915
+Read event 0/12354
+Read event 0/12354
+Plotting m_Dspi
+Read event 0/13915
+Read event 0/12354
+Read event 0/12354
+Plotting m_DsK
+Read event 0/13915
+Read event 0/12354
+Read event 0/12354
+Plotting m_DsKpi
+Read event 0/13915
+Read event 0/12354
+Read event 0/12354
+Plotting m_DsKpip
+Read event 0/13915
+Read event 0/12354
+Read event 0/12354

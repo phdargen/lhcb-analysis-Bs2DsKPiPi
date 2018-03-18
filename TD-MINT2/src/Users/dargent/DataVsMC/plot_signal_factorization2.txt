@@ -1,0 +1,43 @@
+"OutputDir"		"signal_factorization2/"
+
+"legTitle"	"B_{s}#rightarrowD_{s}K#pi#pi"
+"effSubscript"	"sel"
+"useLTweight"		1
+
+"file1"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file2"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file3"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file4"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+"file5"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+
+"weight1"	"weight2"
+"weight2"	"weight2"
+"weight3"	"weight2"
+"weight4"	"weight2"
+"weight5"	"weight2"
+
+"cut1"		"BDTG_response > 0.3 && Bs_BKGCAT == 20 "
+"cut2"		"BDTG_response > 0.3 && Bs_BKGCAT == 20 && m_Kpipi > 1000 && m_Kpipi < 1400"
+"cut3"		"BDTG_response > 0.3 && Bs_BKGCAT == 20 && m_Kpipi > 1400 && m_Kpipi < 2000"
+"cut4"		"BDTG_response > 0.3 && Bs_BKGCAT == 20 && m_Kpi > 840 && m_Kpi < 940"
+"cut5"		"BDTG_response > 0.3 && Bs_BKGCAT == 20 && m_pipi > 620 && m_pipi < 890"
+
+"title1"		"Full phasespace"
+"title2"		" 1000 MeV < m(K#pi#pi) <=  1400 MeV"
+"title3"		" 1400 MeV < m(K#pi#pi) <=  2000 MeV"
+"title4"		"  840 MeV <  m(K#pi)   <=   940 MeV"
+"title5"		"  620 MeV <  m(#pi#pi)  <=   890 MeV"
+
+
+"checkPID"	1
+
+"reweight"	0
+"reweightInBinsOfRun"    	 1
+"reweightInBinsOfFinalState"	 1
+"reweightInBinsOfTrigger"	 0
+
+
+* plotting MC vs Data
+"nBins"		 15
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		0

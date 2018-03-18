@@ -1,0 +1,44 @@
+"OutputDir"		"norm_timeAcc_year/"
+
+"legTitle"	"B_{s}#rightarrowD_{s}#pi#pi#pi Data"
+"effSubscript"	"sel"
+"useLTweight"		1
+"plotOnlyTau"		1
+
+"file1"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"file2"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"file3"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"file4"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+*"file5"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+
+"weight1"	"N_Bs_sw"
+"weight2"	"N_Bs_sw"
+"weight3"	"N_Bs_sw"
+"weight4"	"N_Bs_sw"
+"weight5"	"N_Bs_sw"
+
+"cut1"		"year == 11 "
+"cut2"		"year == 12"
+"cut3"		"year == 15"
+"cut4"		"year == 16"
+"cut5"		""
+
+"title1"		"11"
+"title2"		"12"
+"title3"		"15"
+"title4"		"16"
+"title5"		""
+
+
+"checkPID"	1
+
+"reweight"	0
+"reweightInBinsOfRun"    	 -1
+"reweightInBinsOfFinalState"	 0
+"reweightInBinsOfTrigger"	 0
+
+
+* plotting MC vs Data
+"nBins"		 20
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		0

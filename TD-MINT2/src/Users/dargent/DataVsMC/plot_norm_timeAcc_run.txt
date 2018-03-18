@@ -1,0 +1,44 @@
+"OutputDir"		"norm_timeAcc_run/"
+
+"legTitle"	"B_{s}#rightarrowD_{s}#pi#pi#pi Data"
+"effSubscript"	"sel"
+"useLTweight"		1
+"plotOnlyTau"		1
+
+"file1"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"file2"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+*"file3"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+*"file4"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+*"file5"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+
+"weight1"	"N_Bs_sw"
+"weight2"	"N_Bs_sw"
+"weight3"	"N_Bs_sw"
+"weight4"	"N_Bs_sw"
+"weight5"	"N_Bs_sw"
+
+"cut1"		"run == 1 "
+"cut2"		"run == 2"
+"cut3"		""
+"cut4"		""
+"cut5"		""
+
+"title1"		"Run-I"
+"title2"		"Run-II"
+"title3"		""
+"title4"		""
+"title5"		""
+
+
+"checkPID"	1
+
+"reweight"	0
+"reweightInBinsOfRun"    	 -1
+"reweightInBinsOfFinalState"	 0
+"reweightInBinsOfTrigger"	 0
+
+
+* plotting MC vs Data
+"nBins"		 20
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		1
