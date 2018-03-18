@@ -666,8 +666,9 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
                                         trm_norm_mc, RooBDecay::SingleSided);
 
     // Marginal pdfs
-    TFile* f_pdfs = new TFile("../timeFit/Mistag_pdfs.root","OPEN");
+    TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
     TH1D* h_dt = new TH1D( *((TH1D*) f_pdfs->Get(("h_dt_norm"+(string)marginalPdfsPrefix).c_str())));
+    //TH1D* h_dt = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
     RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",Bs_TAUERR,h_dt);
     RooHistPdf* pdf_sigma_t = new RooHistPdf("pdf_sigma_t","pdf_sigma_t",Bs_TAUERR,*r_h_dt);
     f_pdfs->Close();
@@ -689,9 +690,11 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
     pdf_signal_mc->fitTo(*data_signal_mc, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
     pdf_signal_B0->fitTo(*data, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
     
+	//return ;
+
     // Perform simulataneous fit
-    //RooFitResult *myfitresult = simPdf->fitTo(*dataset, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
-    //myfitresult->Print("v");
+    RooFitResult *myfitresult = simPdf->fitTo(*dataset, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
+    myfitresult->Print("v");
     
     /// Plot    
     vector<TString> decays;
@@ -752,20 +755,20 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
 		//simPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]),Slice(decay,decays[i]),ProjWData(decay,*dataset),ProjWData(Bs_TAUERR,*dataset));
         	simPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]),Slice(decay,decays[i]),ProjWData(decay,*dataset));
 	}
-        if(decays[i]=="signal_mc")spline_signal_mc->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
+        if(decays[i]=="signal_mc")spline_signal_mc->plotOn(frame_m, LineColor(kGreen+1), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
 
         else if(decays[i]=="signal_B0")spline_signal->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
      
         else if(decays[i]=="norm_mc"){ 
-            spline_norm_mc->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
+            spline_norm_mc->plotOn(frame_m, LineColor(kBlack), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
             spline_ratio->plotOn(frame_m, LineColor(kMagenta+3), LineWidth(3), LineStyle(kDashed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_ratio_"+decays[i]));
-            spline_signal_mc->plotOn(frame_m, LineColor(kGreen+3), LineStyle(kDashed), LineWidth(3), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_signal_"+decays[i]));
+            spline_signal_mc->plotOn(frame_m, LineColor(kGreen+1), LineStyle(kDashed), LineWidth(3), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_signal_"+decays[i]));
         }
         
         else if(decays[i]=="norm"){ 
-            spline_norm->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
+            spline_norm->plotOn(frame_m, LineColor(kOrange+7), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
             spline_ratio->plotOn(frame_m, LineColor(kMagenta+3), LineWidth(3), LineStyle(kDashed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_ratio_"+decays[i]));
-            spline_signal->plotOn(frame_m, LineColor(kGreen+3), LineWidth(3), LineStyle(kDashed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_signal_"+decays[i]));
+            spline_signal->plotOn(frame_m, LineColor(kRed), LineWidth(3), LineStyle(kDashed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_signal_"+decays[i]));
         }
         
         if(decays[i]=="signal_mc")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{s}#rightarrow D_{s}K#pi#pi MC","ep");
@@ -775,7 +778,11 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
 
         leg.AddEntry(frame_m->findObject("pdf_"+decays[i]),"Fit","l");
         
-        leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"Acceptance","l");
+        if(decays[i]=="signal_mc")leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"Acc(t)_{D_{s}K#pi#pi}^{MC}","l");
+        else if(decays[i]=="signal_B0")leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"Acc(t)_{D_{s}K#pi#pi}^{Data}","l");
+	else if(decays[i]=="norm")leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"Acc(t)_{D_{s}#pi#pi#pi}^{Data}","l");
+        else if(decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"Acc(t)_{D_{s}#pi#pi#pi}^{MC}","l");
+
         if(decays[i]=="norm")leg.AddEntry(frame_m->findObject("spline_signal_"+decays[i]),"Acc(t)_{D_{s}K#pi#pi}^{Data}","l");
         else if(decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("spline_signal_"+decays[i]),"Acc(t)_{D_{s}K#pi#pi}^{MC}","l");
         if(decays[i]=="norm" || decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("spline_ratio_"+decays[i]),"Ratio","l");
@@ -1632,7 +1639,7 @@ void produceMarginalPdfs(){
 
 void checkPV(){
 
-    NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
+    NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/BDT/", (char*) 0);
     NamedParameter<int> nBins("nBins", 10);
 
     int run,year,Ds_finalState,trigger,Bs_DTF_nPV;
@@ -1645,8 +1652,8 @@ void checkPV(){
     double Bs_TRUEORIGINVERTEX_X,Bs_OWNPV_X,Bs_OWNPV_XERR;
 
     TChain* treeMC =new TChain("DecayTree");
-    treeMC->Add( ((string)InputDir + "MC/signal.root").c_str());
-    treeMC->Add( ((string)InputDir + "MC/norm.root").c_str());
+    treeMC->Add( ((string)InputDir + "MC/signal_PIDMC.root").c_str());
+    //treeMC->Add( ((string)InputDir + "MC/norm.root").c_str());
     treeMC->SetBranchStatus("*",0);
     treeMC->SetBranchStatus("Ds_finalState",1);
     treeMC->SetBranchStatus("Bs_BKGCAT",1);
@@ -1700,7 +1707,7 @@ void checkPV(){
             if(Bs_DTF_chi2[1]-Bs_DTF_chi2[0]>1000)h_t_cut->Fill(t,w/(exp(-t/tau_MC)*cosh(dgamma_MC/2.*t)));
 
             h_t_nPV2->Fill(t,w);
-            if( abs(Bs_TRUEORIGINVERTEX_Z-Bs_OWNPV_Z)/Bs_OWNPV_ZERR > 5){ // && abs(Bs_TRUEORIGINVERTEX_X-Bs_OWNPV_X)/Bs_OWNPV_XERR > 5 && abs(Bs_TRUEORIGINVERTEX_Y-Bs_OWNPV_Y)/Bs_OWNPV_YERR > 5) {
+            if( abs(Bs_TRUEORIGINVERTEX_Z-Bs_OWNPV_Z)/Bs_OWNPV_ZERR > 5 && abs(Bs_TRUEORIGINVERTEX_X-Bs_OWNPV_X)/Bs_OWNPV_XERR > 5 && abs(Bs_TRUEORIGINVERTEX_Y-Bs_OWNPV_Y)/Bs_OWNPV_YERR > 5) {
                 h_t_wrongPV->Fill(t,w);
                 h_chi2_wrong->Fill(Bs_DTF_chi2[1]-Bs_DTF_chi2[0],w);
                 if(Bs_DTF_chi2[1]-Bs_DTF_chi2[0]>15)h_t_wrongPV_cut->Fill(t,w);
@@ -1777,11 +1784,11 @@ int main(int argc, char** argv){
 
     if(CompareAcceptance)compareAcceptance();
 
-    if(FitSplineAccRatio)fitSplineAccRatio("" , "", "", "combined");
-    if(FitSplineAccRatio)fitSplineAccRatio(" run == 1 && TriggerCat == 0 " , "run == 1 && TriggerCat == 0", "_Run1", "Run1_t0");
-    if(FitSplineAccRatio)fitSplineAccRatio(" run == 1 && TriggerCat == 1 " , "run == 1 && TriggerCat == 1", "_Run1", "Run1_t1");
-    if(FitSplineAccRatio)fitSplineAccRatio(" run == 2 && TriggerCat == 0 " , "", "_Run2", "Run2_t0");
-    if(FitSplineAccRatio)fitSplineAccRatio(" run == 2 && TriggerCat == 1 " , "", "_Run2", "Run2_t1");
+    if(FitSplineAccRatio)fitSplineAccRatio("run == 1", "run == 1", "_Run1", "combined");
+    //if(FitSplineAccRatio)fitSplineAccRatio(" run == 1 && TriggerCat == 0 " , "run == 1 && TriggerCat == 0", "_Run1", "Run1_t0");
+    //if(FitSplineAccRatio)fitSplineAccRatio(" run == 1 && TriggerCat == 1 " , "run == 1 && TriggerCat == 1", "_Run1", "Run1_t1");
+    //if(FitSplineAccRatio)fitSplineAccRatio(" run == 2 && TriggerCat == 0 " , "", "_Run2", "Run2_t0");
+    //if(FitSplineAccRatio)fitSplineAccRatio(" run == 2 && TriggerCat == 1 " , "", "_Run2", "Run2_t1");
 
     //fitSplineAcc("" , "", "norm");
     //fitSplineAcc(" run == 1 && TriggerCat == 0 " , "_Run1", "Run1_t0_norm");
