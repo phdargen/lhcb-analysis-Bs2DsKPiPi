@@ -1,27 +1,49 @@
 % !TEX root = main.tex
+
+\section{Details of multivariate classifier}
+\label{sec:appendix_BDT}
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.8\textwidth]{figs/TMVA/BDTG_Data_run1_t0_even/variables_id_c1.pdf}
+\includegraphics[height=!,width=0.8\textwidth]{figs/TMVA/BDTG_Data_run1_t0_even/variables_id_c2.pdf}
+\caption{Variables used to train the BDTG.}
+\label{fig:}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run1_t0_even/overtrain_BDTG.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run1_t0_odd/overtrain_BDTG.pdf}
+\caption{Response of the classifier trained on the even (left) and odd (right) sample.}
+\label{fig:}
+\end{figure}
+
+
+\clearpage
 \section{Detailed mass fits}
 \label{sec:DetailedMassfits}
 
 In this section, all fits to the mass distribution of $\Bs\to\Ds\pion\pion\pion$ and $\Bs\to\Ds\kaon\pion\pion$ candidates are shown. 
-The fits are performed simultaneously for every year of datataking (2011, 2012, 2015 and 2016) 
-and the $\Ds$ decay ($\Ds\to\kaon\kaon\pion$ non-resonant, $\Ds\to\phi\pi$, $\Ds\to\Kstar\kaon$, or $\Ds\to\pion\pion\pion$) through which the final state is reached.    
-
+The fits are performed simultaneously 
+in run period (Run-I, Run-II), 
+$\Ds$ final state  ($\Ds\to\kaon\kaon\pion$ non-resonant, $\Ds\to\phi\pi$, $\Ds\to\Kstar\kaon$, or $\Ds\to\pion\pion\pion$) 
+and \textsf{L0} trigger category. 
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y11_phipi.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y11_KsK.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run1_phipi_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run1_phipi_t1.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y11_KKpi_NR.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y11_pipipi.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run1_KsK_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run1_KsK_t1.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y12_phipi.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y12_KsK.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run1_KKpi_NR_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run1_KKpi_NR_t1.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y12_KKpi_NR.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y12_pipipi.pdf}
-\caption{Invariant mass distributions of $\Bs\to\Ds\pion\pion\pion$ candidates, ordered by $\Ds$ final state, for Run1 data.
-The fit described in \ref{subsec: NormFit} is overlaid.}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run1_pipipi_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run1_pipipi_t1.pdf}
+\caption{Invariant mass distributions of $\Bs\to\Ds\pion\pion\pion$ candidates for Run-I data.}
 \label{fig:massfits_norm_Run1}
 \end{figure}
 
@@ -29,19 +51,18 @@ The fit described in \ref{subsec: NormFit} is overlaid.}
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y15_phipi.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y15_KsK.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run2_phipi_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run2_phipi_t1.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y15_KKpi_NR.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y15_pipipi.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run2_KsK_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run2_KsK_t1.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y16_phipi.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y16_KsK.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run2_KKpi_NR_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run2_KKpi_NR_t1.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y16_KKpi_NR.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_y16_pipipi.pdf}
-\caption{Invariant mass distributions of $\Bs\to\Ds\pion\pion\pion$ candidates, ordered by $\Ds$ final state, for Run2 data.
-The fit described in \ref{subsec: NormFit} is overlaid.}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run2_pipipi_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run2_pipipi_t1.pdf}
+\caption{Invariant mass distributions of $\Bs\to\Ds\pion\pion\pion$ candidates for Run-II data.}
 \label{fig:massfits_norm_Run2}
 \end{figure}
 
@@ -49,19 +70,18 @@ The fit described in \ref{subsec: NormFit} is overlaid.}
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y11_phipi.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y11_KsK.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run1_phipi_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run1_phipi_t1.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y11_KKpi_NR.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y11_pipipi.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run1_KsK_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run1_KsK_t1.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y12_phipi.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y12_KsK.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run1_KKpi_NR_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run1_KKpi_NR_t1.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y12_KKpi_NR.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y12_pipipi.pdf}
-\caption{Invariant mass distributions of $\Bs\to\Ds\kaon\pion\pion$ candidates, ordered by $\Ds$ final state, for Run1 data.
-The fit described in \ref{subsec: SigFit} is overlaid.}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run1_pipipi_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run1_pipipi_t1.pdf}
+\caption{Invariant mass distributions of $\Bs\to\Ds K\pion\pion$ candidates for Run-I data.}
 \label{fig:massfits_signal_Run1}
 \end{figure}
 
@@ -69,19 +89,19 @@ The fit described in \ref{subsec: SigFit} is overlaid.}
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y15_phipi.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y15_KsK.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run2_phipi_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run2_phipi_t1.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y15_KKpi_NR.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y15_pipipi.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run2_KsK_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run2_KsK_t1.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y16_phipi.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y16_KsK.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run2_KKpi_NR_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run2_KKpi_NR_t1.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y16_KKpi_NR.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_y16_pipipi.pdf}
-\caption{Invariant mass distributions of $\Bs\to\Ds\kaon\pion\pion$ candidates, ordered by $\Ds$ final state, for Ru2 data.
-The fit described in \ref{subsec: SigFit} is overlaid.}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run2_pipipi_t0.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signal_Run2_pipipi_t1.pdf}
+
+\caption{Invariant mass distributions of $\Bs\to\Ds K\pion\pion$ candidates for Run-II data.}
 \label{fig:massfits_signal_Run2}
 \end{figure}
 

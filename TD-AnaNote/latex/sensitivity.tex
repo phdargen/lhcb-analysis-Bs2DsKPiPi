@@ -5,7 +5,7 @@
 
 \subsection{PDF}
 
-First, I define the purely hadronic amplitudes for a given phasespace point $x$.
+First, Iwedefine the purely hadronic amplitudes for a given phasespace point $x$.
 The weak phase dependence is written latter explicitly in the pdf.
 
 %\begin{align}
@@ -64,47 +64,47 @@ This means one additional fit parameter for the lifetime fit.
 In the limit of only one contributing resonance $\kappa \to 1$. \\
 
 
-\subsection{Estimation of coherence factor}
-
-To estimate the coherence factor we could generate many toys with random $a_i$ and $\bar a_i$ values (see https://twiki.cern.ch/twiki/pub/LHCbPhysics/Bu2DKstar/LHCb-ANA-2017-005\_v1.pdf) using the set of amplitudes show in our last talk. However with so many interfering amplitudes, I would be surprised if you couldn't generate every possible value for $\kappa$. In any case, this would give us a  range where to expect possible values for $\kappa$. Worst case would be $0 \leq \kappa \leq 1$. \\
-
-Assumptions:
-	\begin{itemize}
-		\item   $A(x) = \sum_i a_i \, A_i(x)$   \\
-		 $\bar A(x) = \sum_i \bar a_i \, \bar A_i(x)$
-		\item Use amplitudes from flavor-averaged, time-integrated fit
-		 \item Draw random $a_i$ and $\bar a_i $ values
-		 \item Constraints: \\
-		 $\int ( \vert a_i  A_i(x) \vert^2 + \vert \bar a_i  \bar A_i(x) \vert^2 ) \, \text{d}x / N = F^{eff}_i $ \\
-		 $r \approx 0.4 $ (ration of CKM elements)
-	\end{itemize}
-	
-\begin{figure}[hp]
-	\centering
-		\includegraphics[width=0.35\textwidth, height = 3.cm]{figs/plots/k-eps-converted-to.pdf} 
-		\includegraphics[width=0.35\textwidth, height = 3.cm]{figs/plots/k_Ks-eps-converted-to.pdf} 
-		
-		\includegraphics[width=0.35\textwidth, height = 3.cm]{figs/plots/k_rho-eps-converted-to.pdf} 
-		\includegraphics[width=0.35\textwidth, height = 3.cm]{figs/plots/k_K1-eps-converted-to.pdf} 	
-		\caption{}	
-\end{figure}		
-
-	\begin{table}[h]
-			\caption{}	
-  \footnotesize
-  \centering
-  \begin{tabular}
-    {l c c }
-    \hline \hline
-    Region &  $<\kappa> (\%)$   &  Cut eff. $(\%)$ \\   \hline
-    Full & 43 &  100 \\
-    $K^*(892)$ & 51    &  43  \\
-    $\rho^0(770)$ & 46  & 47   \\
-    $K_1(1270)$ & 61   & 23  \\
-    \hline \hline
-  \end{tabular}
-  \label{tab:sideband}
-\end{table}
+%\subsection{Estimation of coherence factor}
+%
+%To estimate the coherence factor we could generate many toys with random $a_i$ and $\bar a_i$ values (see https://twiki.cern.ch/twiki/pub/LHCbPhysics/Bu2DKstar/LHCb-ANA-2017-005\_v1.pdf) using the set of amplitudes show in our last talk. However with so many interfering amplitudes, I would be surprised if you couldn't generate every possible value for $\kappa$. In any case, this would give us a  range where to expect possible values for $\kappa$. Worst case would be $0 \leq \kappa \leq 1$. \\
+%
+%Assumptions:
+%	\begin{itemize}
+%		\item   $A(x) = \sum_i a_i \, A_i(x)$   \\
+%		 $\bar A(x) = \sum_i \bar a_i \, \bar A_i(x)$
+%		\item Use amplitudes from flavor-averaged, time-integrated fit
+%		 \item Draw random $a_i$ and $\bar a_i $ values
+%		 \item Constraints: \\
+%		 $\int ( \vert a_i  A_i(x) \vert^2 + \vert \bar a_i  \bar A_i(x) \vert^2 ) \, \text{d}x / N = F^{eff}_i $ \\
+%		 $r \approx 0.4 $ (ration of CKM elements)
+%	\end{itemize}
+%	
+%\begin{figure}[hp]
+%	\centering
+%		\includegraphics[width=0.35\textwidth, height = 3.cm]{figs/plots/k-eps-converted-to.pdf} 
+%		\includegraphics[width=0.35\textwidth, height = 3.cm]{figs/plots/k_Ks-eps-converted-to.pdf} 
+%		
+%		\includegraphics[width=0.35\textwidth, height = 3.cm]{figs/plots/k_rho-eps-converted-to.pdf} 
+%		\includegraphics[width=0.35\textwidth, height = 3.cm]{figs/plots/k_K1-eps-converted-to.pdf} 	
+%		\caption{}	
+%\end{figure}		
+%
+%	\begin{table}[h]
+%			\caption{}	
+%  \footnotesize
+%  \centering
+%  \begin{tabular}
+%    {l c c }
+%    \hline \hline
+%    Region &  $<\kappa> (\%)$   &  Cut eff. $(\%)$ \\   \hline
+%    Full & 43 &  100 \\
+%    $K^*(892)$ & 51    &  43  \\
+%    $\rho^0(770)$ & 46  & 47   \\
+%    $K_1(1270)$ & 61   & 23  \\
+%    \hline \hline
+%  \end{tabular}
+%  \label{tab:sideband}
+%\end{table}
 
 
 %The next option would be to fit the flavor tagged Dalitz plot which would allow us to really predict $\kappa$ (together with $r$ and $\delta$ actually). 
