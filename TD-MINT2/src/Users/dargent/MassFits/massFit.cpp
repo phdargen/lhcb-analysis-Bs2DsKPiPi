@@ -681,7 +681,7 @@ vector<double> fitSignalShape(TString channel = "signal"){
         pad2->Update();
         canvas->Update();
         canvas->SaveAs("eps/SignalShape/"+channel+"MC_pull.eps");
-	if(updateAnaNotePlots && !fitPreselected) canvas->Print("../../../../../TD-AnaNote/latex/figs/MassFit/"+channel+"MC_pull.pdf");
+	if(updateAnaNotePlots && !fitPreselected) c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/"+channel+"MC_pull.pdf");
 
 	TCanvas* canvas_ghost = new TCanvas();
         canvas_ghost->SetTopMargin(0.05);
@@ -1361,13 +1361,13 @@ vector< vector<double> > fitNorm(){
 				if(str_trigger[k]=="t0")lhcbtext->DrawLatex(0.6,0.65,"L0Hadron TOS");
 				else lhcbtext->DrawLatex(0.6,0.65,"L0Global TIS");
 				c1->Print("eps/norm_" + str_run[i] + "_" + str_Ds[j]+ "_" + str_trigger[k]  + ".eps");
-				if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/norm_" + str_run[i] + "_" + str_Ds[j] + "_" + str_trigger[k]  + ".pdf");
+				if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/norm_" + str_run[i] + "_" + str_Ds[j] + "_" + str_trigger[k]  + ".pdf");
 				hpull = frame->pullHist("data_slice2","pdf_slice2") ;
 				frame= DTF_Bs_M.frame();
 				frame->addPlotable(hpull,"P") ;
 				frame->Draw();
 				c1->Print("eps/norm_pull_" + str_run[i] + "_" + str_Ds[j]+ "_" + str_trigger[k]  + ".eps");
-				//if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/norm_pull_" + str_run[i] + "_" + str_Ds[j]+ "_" + str_trigger[k]  + ".pdf");
+				if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/norm_pull_" + str_run[i] + "_" + str_Ds[j]+ "_" + str_trigger[k]  + ".pdf");
 	
 				/// Get signal yield
 				yield += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
@@ -1472,7 +1472,7 @@ vector< vector<double> > fitNorm(){
 				lhcbtext->SetTextFont(132);
 				lhcbtext->DrawLatex(0.6,0.78,label);
 				c1->Print("eps/norm_" + str_year[i] + "_" + str_Ds[j] + ".eps");
-				if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/norm_" + str_year[i] + "_" + str_Ds[j] + ".pdf");
+				if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/norm_" + str_year[i] + "_" + str_Ds[j] + ".pdf");
 				hpull = frame->pullHist("data_slice2","pdf_slice2") ;
 				frame= DTF_Bs_M.frame();
 				frame->addPlotable(hpull,"P") ;
@@ -2224,6 +2224,7 @@ void fitSignal(){
 						b_TriggerCat->GetEntry(n);
 						if(t_run == i+1 && t_Ds_finalState == j && t_TriggerCat == k){
 							weights[n] = sPlot.GetSWeight(n_ij,"n_sig_{" + str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}" + "_sw");
+							weights_B0[n] = sPlot.GetSWeight(n_ij,"n_sig_B0_{" + str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}" + "_sw");
 							n_ij++;
 						}
 					}	

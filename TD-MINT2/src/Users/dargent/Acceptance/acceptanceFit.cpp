@@ -51,6 +51,7 @@
 #include "RooBifurGauss.h"
 #include "RooRealVar.h"
 #include "RooFormulaVar.h"
+#include "RooNumIntConfig.h"
 #include "RooDataSet.h"
 #include "RooConstVar.h"
 #include "RooWorkspace.h"
@@ -452,8 +453,7 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	return myCoeffsAndErr;
 }
 
-
-void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfsPrefix = "", string label = ""){
+void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfsPrefix, double offset_dt, double scale_dt , double offset_dt_MC, double scale_dt_MC ){
     
     // Options
     NamedParameter<string> BinningName("BinningName",(string)"default");
@@ -629,16 +629,15 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
     
     /// Build simultaneous pdf
     RooRealVar trm_mean( "trm_mean" , "trm_mean", 0.0, "ps" );
-    RooRealVar trm_offset( "trm_offset", "trm_offset", 0.0103);
-    RooRealVar trm_scale( "trm_scale", "trm_scale", 1.28);
+    RooRealVar trm_offset( "trm_offset", "trm_offset", offset_dt);
+    RooRealVar trm_scale( "trm_scale", "trm_scale", scale_dt);
     RooFormulaVar dt_scaled( "dt_scaled","dt_scaled", "@0+@1*@2",RooArgList(trm_offset,trm_scale,Bs_TAUERR));
 
     RooRealVar trm_mean_mc( "trm_mean_mc" , "trm_mean_mc", 0.0, "ps" );
-    RooRealVar trm_offset_mc( "trm_offset_mc", "trm_offset_mc", 0.0);
-    RooRealVar trm_scale_mc( "trm_scale_mc", "trm_scale_mc", 1.20);
+    RooRealVar trm_offset_mc( "trm_offset_mc", "trm_offset_mc", offset_dt_MC);
+    RooRealVar trm_scale_mc( "trm_scale_mc", "trm_scale_mc", scale_dt_MC);
     RooFormulaVar dt_scaled_mc( "dt_scaled_mc","dt_scaled_mc", "@0+@1*@2",RooArgList(trm_offset_mc,trm_scale_mc,Bs_TAUERR));
     
-
     RooGaussEfficiencyModel trm_signal_B0("trm_signal_B0", "trm_signal_B0", Bs_TAU, *spline_signal, RooRealConstant::value(0.), dt_scaled, trm_mean, RooRealConstant::value(1.) );
     RooGaussEfficiencyModel trm_norm("trm_norm", "trm_norm", Bs_TAU, *spline_norm, RooRealConstant::value(0.), dt_scaled, trm_mean, RooRealConstant::value(1.) );
     RooGaussEfficiencyModel trm_signal_mc("trm_signal_mc", "trm_signal_mc", Bs_TAU, *spline_signal_mc, RooRealConstant::value(0.), dt_scaled_mc, trm_mean_mc, RooRealConstant::value(1.) );
@@ -665,10 +664,16 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
                                         RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMs_MC),
                                         trm_norm_mc, RooBDecay::SingleSided);
 
-    // Marginal pdfs
+    /// Marginal pdfs
     TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
-    TH1D* h_dt = new TH1D( *((TH1D*) f_pdfs->Get(("h_dt_norm"+(string)marginalPdfsPrefix).c_str())));
-    //TH1D* h_dt = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
+    TH1D* h_dt;
+    if((string)marginalPdfsPrefix != "")h_dt = new TH1D( *((TH1D*) f_pdfs->Get(("h_dt_norm_"+(string)marginalPdfsPrefix).c_str())));
+    else h_dt = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
+    // RooHistPdf doesn't like negative or 0 bins, set them to a small positive number
+    h_dt->Smooth();
+    for(int i= 1 ; i<=h_dt->GetNbinsX(); i++){
+	if(h_dt->GetBinContent(i) <= 0.)h_dt->SetBinContent(i,0.000000001*h_dt->GetMaximum());
+    }
     RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",Bs_TAUERR,h_dt);
     RooHistPdf* pdf_sigma_t = new RooHistPdf("pdf_sigma_t","pdf_sigma_t",Bs_TAUERR,*r_h_dt);
     f_pdfs->Close();
@@ -686,12 +691,18 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
     if(fitB0)simPdf->addPdf(*pdf_signal_B0,"signal_B0");
 
     /// Fit
+    RooAbsReal::defaultIntegratorConfig()->setEpsAbs(1e-7);
+    RooAbsReal::defaultIntegratorConfig()->setEpsRel(1e-7);
+    RooAbsReal::defaultIntegratorConfig()->getConfigSection("RooIntegrator1D").setCatLabel("extrapolation","WynnEpsilon");
+    RooAbsReal::defaultIntegratorConfig()->getConfigSection("RooIntegrator1D").setCatLabel("maxSteps","1000");
+    RooAbsReal::defaultIntegratorConfig()->getConfigSection("RooIntegrator1D").setCatLabel("minSteps","0");
+    RooAbsReal::defaultIntegratorConfig()->getConfigSection("RooAdaptiveGaussKronrodIntegrator1D").setCatLabel("method","21Points");
+    RooAbsReal::defaultIntegratorConfig()->getConfigSection("RooAdaptiveGaussKronrodIntegrator1D").setRealValue("maxSeg", 1000);
+
     // Fit only signal MC to set reasonable start parameters
     pdf_signal_mc->fitTo(*data_signal_mc, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
     pdf_signal_B0->fitTo(*data, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
     
-	//return ;
-
     // Perform simulataneous fit
     RooFitResult *myfitresult = simPdf->fitTo(*dataset, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
     myfitresult->Print("v");
@@ -747,7 +758,7 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
         frame_m->GetYaxis()->SetTitleOffset(0.95);
                 
 	if(decays[i]=="signal_B0" && !fitB0){
-        	data->plotOn(frame_m, Binning(nBins), Name("data_"+decays[i]));
+        	data->plotOn(frame_m, Binning(nBins/2), Name("data_"+decays[i]));
 		pdf_signal_B0->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]));
 	}
 	else{
@@ -829,25 +840,34 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
         
         pad2->Update();
         canvas->Update();
-        canvas->SaveAs("Plot/timeAccRatioFit_"+decays[i]+"_"+ label + "_" + (string)BinningName+ ".eps");
-        if(updateAnaNote)canvas->Print("../../../../../TD-AnaNote/latex/figs/Acceptance/"+(string)BinningName+"/timeAccRatioFit_"+decays[i]+"_"+label + ".pdf");
+        canvas->SaveAs("Plot/timeAccRatioFit_"+decays[i]+"_"+ marginalPdfsPrefix + "_" + (string)BinningName+ ".eps");
+        if(updateAnaNote)canvas->Print("../../../../../TD-AnaNote/latex/figs/Acceptance/"+(string)BinningName+"/timeAccRatioFit_"+decays[i]+"_"+ marginalPdfsPrefix + ".pdf");
         
         pad1->SetLogy(1);
         pad1->Update();
         canvas->Update();
-        canvas->SaveAs("Plot/timeAccRatioFit_"+decays[i]+"_"+label + "_" +(string)BinningName+ "_log.eps");
+        canvas->SaveAs("Plot/timeAccRatioFit_"+decays[i]+"_"+marginalPdfsPrefix + "_" +(string)BinningName+ "_log.eps");
         //if(updateAnaNote)canvas->Print("../../../../../TD-AnaNote/latex/figs/Acceptance/timeAccRatioFit_"+decays[i]+"_"+(string)BinningName+ "_log.pdf");
         pad1->SetLogy(0);
     }
     
     //put coefficients into table    
     ofstream datafile;
-    if(updateAnaNote) datafile.open(("../../../../../TD-AnaNote/latex/tables/Acceptance/"+(string)BinningName+"/splineCoeffs_"+ label + ".tex").c_str(),std::ofstream::trunc);
-    else datafile.open(("splineCoeffs_"+ label + "_" + (string)BinningName+ ".tex").c_str(),std::ofstream::trunc);
+    if(updateAnaNote) datafile.open(("../../../../../TD-AnaNote/latex/tables/Acceptance/"+(string)BinningName+"/splineCoeffs_"+ marginalPdfsPrefix + ".tex").c_str(),std::ofstream::trunc);
+    else datafile.open(("splineCoeffs_"+ marginalPdfsPrefix + "_" + (string)BinningName+ ".tex").c_str(),std::ofstream::trunc);
     datafile << "\\begin{table}[h]" << "\n";
     datafile << "\\centering" << "\n";
-    datafile << "\\caption{Summary of the obtained parameters from the acceptance fit (" <<CutString.c_str()<<  ").} " << "\n";
-    datafile << "\\begin{tabular}{l l l l l}" << "\n";
+    datafile << "\\small" << "\n";
+    datafile << "\\caption{Time acceptance parameters for ";
+    if(CutString == "") datafile << " all events. " << "\n";
+    else datafile << "events in category [";
+    if(A_is_in_B("run == 1", CutString)) datafile << "\\textsf{Run-I}"; 
+    else if(A_is_in_B("run == 2", CutString)) datafile << "\\textsf{Run-II}"; 
+    if(A_is_in_B("&&", CutString)) datafile << ","; 
+    if(A_is_in_B("TriggerCat == 0", CutString)) datafile << "\\textsf{L0-TOS}"; 
+    else if(A_is_in_B("TriggerCat == 1", CutString)) datafile << "\\textsf{L0-TIS}"; 
+    if(CutString != "") datafile << "]." << "\n";
+    datafile << "\\begin{tabular}{c c c c c}" << "\n";
     datafile << "\\hline" << "\n";
     datafile << "\\hline" << "\n";
     datafile << "Knot position & Coefficient & $\\Bs\\to\\Ds\\kaon\\pion\\pion$ data & $\\Bs\\to\\Ds\\kaon\\pion\\pion$ MC & Ratio \\\\" << "\n";
@@ -858,12 +878,22 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
 	else if(i==values.size()+1)knot_pos= Bs_TAU.getMax();
 	else knot_pos = myBinning[i-1];
         datafile << std::setprecision(1) << knot_pos << " & ";
-	datafile << std::fixed << std::setprecision(3) << ("$v_{"+anythingToString(i)).c_str()<<"}$ & " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() << " $\\pm$ "  << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError()  <<  " & " <<
-	((RooRealVar*)mc_tacc_list.find(("mc_coeff_"+anythingToString(i)).c_str()))->getVal() << " $\\pm$ "  << ((RooRealVar*)mc_tacc_list.find(("mc_coeff_"+anythingToString(i)).c_str()))->getError()  <<  " & " <<
-	((RooRealVar*)ratio_tacc_list.find(("ratio_"+anythingToString(i)).c_str()))->getVal() << " $\\pm$ "  << 			((RooRealVar*)ratio_tacc_list.find(("ratio_"+anythingToString(i)).c_str()))->getError() 	
-	<< "\\\\" << "\n"; 
+	datafile << std::fixed << std::setprecision(3) << ("$v_{"+anythingToString(i)).c_str()<<"}$ & ";
+	if(i < values.size()){
+		datafile << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() << " $\\pm$ "  << 	((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError()  <<  " & " <<
+		((RooRealVar*)mc_tacc_list.find(("mc_coeff_"+anythingToString(i)).c_str()))->getVal() << " $\\pm$ "  << ((RooRealVar*)mc_tacc_list.find(("mc_coeff_"+anythingToString(i)).c_str()))->getError()  <<  " & " <<
+		((RooRealVar*)ratio_tacc_list.find(("ratio_"+anythingToString(i)).c_str()))->getVal() << " $\\pm$ "  << 			((RooRealVar*)ratio_tacc_list.find(("ratio_"+anythingToString(i)).c_str()))->getError() 	
+		<< "\\\\" << "\n";
+	} 
+	else if (i==values.size()){
+		datafile << " 1.0 (fixed) & 1.0 (fixed) & 1.0 (fixed)" << "\\\\" << "\n";
+	}
+	else {
+		datafile << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() << " (interpolated) & "  << 
+		((RooRealVar*)mc_tacc_list.find(("mc_coeff_"+anythingToString(i)).c_str()))->getVal() << " (interpolated) & "  << 
+		((RooRealVar*)ratio_tacc_list.find(("ratio_"+anythingToString(i)).c_str()))->getVal() << " (interpolated) "  <<  "\\\\" << "\n";	
+		}
     }
-
     datafile << "\\hline" << "\n";
     datafile << "\\hline" << "\n";
     datafile << "\\end{tabular}" << "\n";
@@ -871,14 +901,14 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
     datafile << "\\end{table}" << "\n";
 
     ofstream resultsFile;
-    resultsFile.open(("results_" + label + "_" + (string)BinningName+ ".txt").c_str(),std::ofstream::trunc);
+    resultsFile.open(("results_" + marginalPdfsPrefix + "_" + (string)BinningName+ ".txt").c_str(),std::ofstream::trunc);
     resultsFile << "knot_positions " ;
     for(int i= 0; i< myBinning.size(); i++){
 	resultsFile << myBinning[i] << " " ;
     }
     resultsFile << endl;
     for(int i= 0; i< myBinning.size(); i++){
-	resultsFile << "c" + anythingToString(i) + "_" + label << "  " << 2 << "  " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() 
+	resultsFile << "c" + anythingToString(i) + "_" + marginalPdfsPrefix << "  " << 2 << "  " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() 
 	<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
     }
 
@@ -1203,12 +1233,15 @@ void compareAcceptance(){
 void produceMarginalPdfs(){
     
     NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
-    NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
     TString prefix = "";
     //TString prefix = "BsTaggingTool_";
     NamedParameter<double> min_year("min_year", 11);
     NamedParameter<double> max_year("max_year", 16);
-    
+    NamedParameter<double> min_TAU("min_TAU", 0.4);
+    NamedParameter<double> max_TAU("max_TAU", 10.);
+    NamedParameter<double> min_TAUERR("min_TAUERR", 0.);
+    NamedParameter<double> max_TAUERR("max_TAUERR", 0.1);    
+
     /// Load files
     // Data
     int q_OS;
@@ -1218,32 +1251,6 @@ void produceMarginalPdfs(){
     double sw;
     int run,year,Ds_finalState,trigger;
     double t,dt;
-    double Bs_pt,Bs_eta,nTracks;
-    
-    TChain* tree=new TChain("DecayTree");
-    tree->Add( ((string)InputDir + "Data/signal.root").c_str());
-    tree->SetBranchStatus("*",0);
-    tree->SetBranchStatus("N_Bs_sw",1);
-    tree->SetBranchStatus("year",1);
-    tree->SetBranchStatus("*DEC",1);
-    tree->SetBranchStatus("*PROB",1);
-    tree->SetBranchStatus("*OS",1);
-    tree->SetBranchStatus("*TAU*",1);
-    tree->SetBranchStatus("*ETA",1);
-    tree->SetBranchStatus("*PT",1);
-    tree->SetBranchStatus("NTracks",1);
-    
-    tree->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
-    tree->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS);
-    tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
-    tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS);
-    tree->SetBranchAddress("N_Bs_sw",&sw);
-    tree->SetBranchAddress("year",&year);
-    tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
-    tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
-    tree->SetBranchAddress("Bs_PT",&Bs_pt);
-    tree->SetBranchAddress("Bs_ETA",&Bs_eta);
-    tree->SetBranchAddress("NTracks",&nTracks);
     
     TChain* tree_norm=new TChain("DecayTree");
     tree_norm->Add( ((string)InputDir + "Data/norm.root").c_str());
@@ -1254,9 +1261,6 @@ void produceMarginalPdfs(){
     tree_norm->SetBranchStatus("*PROB",1);
     tree_norm->SetBranchStatus("*OS",1);
     tree_norm->SetBranchStatus("*TAU*",1);
-    tree_norm->SetBranchStatus("*ETA",1);
-    tree_norm->SetBranchStatus("*PT",1);
-    tree_norm->SetBranchStatus("NTracks",1);
     tree_norm->SetBranchStatus("run",1);
     tree_norm->SetBranchStatus("TriggerCat",1);
     
@@ -1270,153 +1274,55 @@ void produceMarginalPdfs(){
     tree_norm->SetBranchAddress("Ds_finalState",&Ds_finalState);
     tree_norm->SetBranchAddress("Bs_DTF_TAU",&t);
     tree_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt);
-    tree_norm->SetBranchAddress("Bs_PT",&Bs_pt);
-    tree_norm->SetBranchAddress("Bs_ETA",&Bs_eta);
-    tree_norm->SetBranchAddress("NTracks",&nTracks);
     tree_norm->SetBranchAddress("TriggerCat",&trigger);
-    
-    // MC
-    int q_OS_MC;
-    Short_t q_SS_MC;
-    double w_OS_MC;
-    Float_t w_SS_MC;
-    double w;
-    int cat,yearMC,Ds_finalStateMC;
-    double dt_MC;
-    double Bs_pt_MC,Bs_eta_MC,nTracks_MC;
-    
-    TChain* treeMC =new TChain("DecayTree");
-    treeMC->Add( ((string)InputDir + "MC/signal.root").c_str());
-    treeMC->SetBranchStatus("*",0);
-    treeMC->SetBranchStatus("Ds_finalState",1);
-    treeMC->SetBranchStatus("Bs_BKGCAT",1);
-    treeMC->SetBranchStatus("weight",1);
-    treeMC->SetBranchStatus("*DEC",1);
-    treeMC->SetBranchStatus("*PROB",1);
-    treeMC->SetBranchStatus("*OS",1);
-    treeMC->SetBranchStatus("*TAU*",1);
-    treeMC->SetBranchStatus("*ETA",1);
-    treeMC->SetBranchStatus("*PT",1);
-    treeMC->SetBranchStatus("NTracks",1);
-    
-    treeMC->SetBranchAddress("Bs_BKGCAT",&cat);
-    treeMC->SetBranchAddress("year",&yearMC);
-    treeMC->SetBranchAddress("Ds_finalState",&Ds_finalStateMC);           
-    treeMC->SetBranchAddress("weight",&w);
-    treeMC->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS_MC);
-    treeMC->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS_MC);
-    treeMC->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS_MC);
-    treeMC->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS_MC);
-    treeMC->SetBranchAddress("Bs_DTF_TAUERR",&dt_MC);
-    treeMC->SetBranchAddress("Bs_PT",&Bs_pt_MC);
-    treeMC->SetBranchAddress("Bs_ETA",&Bs_eta_MC);
-    treeMC->SetBranchAddress("NTracks",&nTracks_MC);
-    
-    TChain* treeMC_norm =new TChain("DecayTree");
-    treeMC_norm->Add( ((string)InputDir + "MC/norm.root").c_str());
-    treeMC_norm->SetBranchStatus("*",0);
-    treeMC_norm->SetBranchStatus("Ds_finalState",1);
-    treeMC_norm->SetBranchStatus("Bs_BKGCAT",1);
-    treeMC_norm->SetBranchStatus("weight",1);
-    treeMC_norm->SetBranchStatus("*DEC",1);
-    treeMC_norm->SetBranchStatus("*PROB",1);
-    treeMC_norm->SetBranchStatus("*OS",1);
-    treeMC_norm->SetBranchStatus("*TAU*",1);
-    treeMC_norm->SetBranchStatus("*ETA",1);
-    treeMC_norm->SetBranchStatus("*PT",1);
-    treeMC_norm->SetBranchStatus("NTracks",1);
-    
-    treeMC_norm->SetBranchAddress("Bs_BKGCAT",&cat);
-    treeMC_norm->SetBranchAddress("year",&yearMC);
-    treeMC_norm->SetBranchAddress("Ds_finalState",&Ds_finalStateMC);           
-    treeMC_norm->SetBranchAddress("weight",&w);
-    treeMC_norm->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS_MC);
-    treeMC_norm->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS_MC);
-    treeMC_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS_MC);
-    treeMC_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS_MC);
-    treeMC_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt_MC);
-    treeMC_norm->SetBranchAddress("Bs_PT",&Bs_pt_MC);
-    treeMC_norm->SetBranchAddress("Bs_ETA",&Bs_eta_MC);
-    treeMC_norm->SetBranchAddress("NTracks",&nTracks_MC);
     
     ///Make histograms
     int bins = 60;
-    TH1D* h_w_OS = new TH1D("h_w_OS","; #eta_{OS}",bins,0,0.5);
-    TH1D* h_w_OS_MC = new TH1D("h_w_OS_MC","; #eta_{OS}",bins,0,0.5);
-    TH1D* h_w_SS = new TH1D("h_w_SS","; #eta_{SS}",bins,0,0.5);
-    TH1D* h_w_SS_MC = new TH1D("h_w_SS_MC","; #eta_{SS}",bins,0,0.5);
-    
-    TH1D* h_q_OS = new TH1D("h_q_OS","; q_{OS}",3,-1.5,1.5);
-    TH1D* h_q_OS_MC = new TH1D("h_q_OS_MC","; q_{OS}",3,-1.5,1.5);
-    TH1D* h_q_SS = new TH1D("h_q_SS","; q_{SS}",3,-1.5,1.5);
-    TH1D* h_q_SS_MC = new TH1D("h_q_SS_MC","; q_{SS}",3,-1.5,1.5);
-    
-    TH1D* h_dt = new TH1D("h_dt",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-    TH1D* h_dt_MC = new TH1D("h_dt_MC",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-    
     TH1D* h_w_OS_norm = new TH1D("h_w_OS_norm","; #eta_{OS}",bins,0,0.5);
     TH1D* h_w_OS_norm_Run1 = new TH1D("h_w_OS_norm_Run1","; #eta_{OS}",bins,0,0.5);
     TH1D* h_w_OS_norm_Run2 = new TH1D("h_w_OS_norm_Run2","; #eta_{OS}",bins,0,0.5);
-    TH1D* h_w_OS_MC_norm = new TH1D("h_w_OS_MC_norm","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm_Run1_t0 = new TH1D("h_w_OS_norm_Run1_t0","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm_Run2_t0 = new TH1D("h_w_OS_norm_Run2_t0","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm_Run1_t1 = new TH1D("h_w_OS_norm_Run1_t1","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm_Run2_t1 = new TH1D("h_w_OS_norm_Run2_t1","; #eta_{OS}",bins,0,0.5);
+    
     TH1D* h_w_SS_norm = new TH1D("h_w_SS_norm","; #eta_{SS}",bins,0,0.5);
     TH1D* h_w_SS_norm_Run1 = new TH1D("h_w_SS_norm_Run1","; #eta_{SS}",bins,0,0.5);
     TH1D* h_w_SS_norm_Run2 = new TH1D("h_w_SS_norm_Run2","; #eta_{SS}",bins,0,0.5);
-    TH1D* h_w_SS_MC_norm = new TH1D("h_w_SS_MC_norm","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm_Run1_t0 = new TH1D("h_w_SS_norm_Run1_t0","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm_Run2_t0 = new TH1D("h_w_SS_norm_Run2_t0","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm_Run1_t1 = new TH1D("h_w_SS_norm_Run1_t1","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm_Run2_t1 = new TH1D("h_w_SS_norm_Run2_t1","; #eta_{SS}",bins,0,0.5);
     
     TH1D* h_q_OS_norm = new TH1D("h_q_OS_norm","; q_{OS}",3,-1.5,1.5);
     TH1D* h_q_OS_norm_Run1 = new TH1D("h_q_OS_norm_Run1","; q_{OS}",3,-1.5,1.5);
     TH1D* h_q_OS_norm_Run2 = new TH1D("h_q_OS_norm_Run2","; q_{OS}",3,-1.5,1.5);
-    TH1D* h_q_OS_MC_norm = new TH1D("h_q_OS_MC_norm","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm_Run1_t0 = new TH1D("h_q_OS_norm_Run1_t0","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm_Run2_t0 = new TH1D("h_q_OS_norm_Run2_t0","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm_Run1_t1 = new TH1D("h_q_OS_norm_Run1_t1","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm_Run2_t1 = new TH1D("h_q_OS_norm_Run2_t1","; q_{OS}",3,-1.5,1.5);
+    
     TH1D* h_q_SS_norm = new TH1D("h_q_SS_norm","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm_Run1 = new TH1D("h_q_SS_norm_Run1","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm_Run2 = new TH1D("h_q_SS_norm_Run2","; q_{SS}",3,-1.5,1.5);
-    TH1D* h_q_SS_MC_norm = new TH1D("h_q_SS_MC_norm","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm_Run1_t0 = new TH1D("h_q_SS_norm_Run1_t0","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm_Run2_t0 = new TH1D("h_q_SS_norm_Run2_t0","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm_Run1_t1 = new TH1D("h_q_SS_norm_Run1_t1","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm_Run2_t1 = new TH1D("h_q_SS_norm_Run2_t1","; q_{SS}",3,-1.5,1.5);
     
-    TH1D* h_t_norm = new TH1D("h_t_norm",";t (ps);Events (norm.) ",bins,0,15);
-    TH1D* h_t_norm_Run1 = new TH1D("h_t_norm_Run1",";t (ps);Events (norm.) ",bins,0,15);
-    TH1D* h_t_norm_Run2 = new TH1D("h_t_norm_Run2",";t (ps);Events (norm.) ",bins,0,15);
-    TH1D* h_dt_norm = new TH1D("h_dt_norm",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-    TH1D* h_dt_norm_Run1 = new TH1D("h_dt_norm_Run1",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-    TH1D* h_dt_norm_Run2 = new TH1D("h_dt_norm_Run2",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-    TH1D* h_dt_MC_norm = new TH1D("h_dt_MC_norm",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-    
-    double eff_OS = 0; 
-    double eff_SS = 0;
-    double eff_OS_MC = 0; 
-    double eff_SS_MC = 0;
-    
-    double eff_OS_norm = 0; 
-    double eff_SS_norm = 0;
-    double eff_OS_MC_norm = 0; 
-    double eff_SS_MC_norm = 0;
-    
-    double sumw = 0;
+    TH1D* h_t_norm = new TH1D("h_t_norm",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
+    TH1D* h_t_norm_Run1 = new TH1D("h_t_norm_Run1",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
+    TH1D* h_t_norm_Run2 = new TH1D("h_t_norm_Run2",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
+
+    TH1D* h_dt_norm = new TH1D("h_dt_norm",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run1 = new TH1D("h_dt_norm_Run1",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run2 = new TH1D("h_dt_norm_Run2",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run1_t0 = new TH1D("h_dt_norm_Run1_t0",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run2_t0 = new TH1D("h_dt_norm_Run2_t0",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run1_t1 = new TH1D("h_dt_norm_Run1_t1",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run2_t1 = new TH1D("h_dt_norm_Run2_t1",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
     
     ///loop over data events
-    for(int i=0; i< tree->GetEntries(); i++)
-    {    
-        //if (0ul == (i % 1000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
-        tree->GetEntry(i);        
-        
-        h_dt->Fill(dt,sw);
-        h_q_OS->Fill((double)q_OS,sw);
-        h_q_SS->Fill((double)q_SS,sw);
-        
-        if(q_OS != 0) {
-            h_w_OS->Fill(w_OS,sw);
-            eff_OS += sw;
-        }
-        if(q_SS != 0){
-            h_w_SS->Fill(w_SS,sw);
-            eff_SS += sw;
-        }
-        sumw += sw;
-    }
-    
-    eff_OS /= sumw;
-    eff_SS /= sumw;
-    
-    sumw = 0;
     for(int i=0; i< tree_norm->GetEntries(); i++)
     {    
         tree_norm->GetEntry(i);
@@ -1426,189 +1332,55 @@ void produceMarginalPdfs(){
         h_dt_norm->Fill(dt,sw);
         h_q_OS_norm->Fill((double)q_OS,sw);
         h_q_SS_norm->Fill((double)q_SS,sw);
-        
+        if(q_OS != 0)h_w_OS_norm->Fill(w_OS,sw);
+        if(q_SS != 0)h_w_SS_norm->Fill(w_SS,sw);
+            
         if(run==1){
             h_t_norm_Run1->Fill(t,sw);
             h_dt_norm_Run1->Fill(dt,sw);
             h_q_OS_norm_Run1->Fill((double)q_OS,sw);
             h_q_SS_norm_Run1->Fill((double)q_SS,sw);
+            if(q_OS != 0)h_w_OS_norm_Run1->Fill(w_OS,sw);
+            if(q_SS != 0)h_w_SS_norm_Run1->Fill(w_SS,sw);
+	    if(trigger == 0){
+		h_dt_norm_Run1_t0->Fill(dt,sw);
+            	h_q_OS_norm_Run1_t0->Fill((double)q_OS,sw);
+            	h_q_SS_norm_Run1_t0->Fill((double)q_SS,sw);
+	        if(q_OS != 0)h_w_OS_norm_Run1_t0->Fill(w_OS,sw);
+                if(q_SS != 0)h_w_SS_norm_Run1_t0->Fill(w_SS,sw);
+	    }
+	    else if(trigger == 1){
+		h_dt_norm_Run1_t1->Fill(dt,sw);
+            	h_q_OS_norm_Run1_t1->Fill((double)q_OS,sw);
+            	h_q_SS_norm_Run1_t1->Fill((double)q_SS,sw);
+	        if(q_OS != 0)h_w_OS_norm_Run1_t1->Fill(w_OS,sw);
+                if(q_SS != 0)h_w_SS_norm_Run1_t1->Fill(w_SS,sw);
+	    }
         }
         else if(run==2){
             h_t_norm_Run2->Fill(t,sw);
             h_dt_norm_Run2->Fill(dt,sw);
             h_q_OS_norm_Run2->Fill((double)q_OS,sw);
             h_q_SS_norm_Run2->Fill((double)q_SS,sw);
+            if(q_OS != 0)h_w_OS_norm_Run2->Fill(w_OS,sw);
+            if(q_SS != 0)h_w_SS_norm_Run2->Fill(w_SS,sw);
+	    if(trigger == 0){
+		h_dt_norm_Run2_t0->Fill(dt,sw);
+            	h_q_OS_norm_Run2_t0->Fill((double)q_OS,sw);
+            	h_q_SS_norm_Run2_t0->Fill((double)q_SS,sw);
+	        if(q_OS != 0)h_w_OS_norm_Run2_t0->Fill(w_OS,sw);
+                if(q_SS != 0)h_w_SS_norm_Run2_t0->Fill(w_SS,sw);
+	    }
+	    else if(trigger == 1){
+		h_dt_norm_Run2_t1->Fill(dt,sw);
+            	h_q_OS_norm_Run2_t1->Fill((double)q_OS,sw);
+            	h_q_SS_norm_Run2_t1->Fill((double)q_SS,sw);
+	        if(q_OS != 0)h_w_OS_norm_Run2_t1->Fill(w_OS,sw);
+                if(q_SS != 0)h_w_SS_norm_Run2_t1->Fill(w_SS,sw);
+	    }
         }
-        
-        if(q_OS != 0){
-            h_w_OS_norm->Fill(w_OS,sw);
-            if(run==1)h_w_OS_norm_Run1->Fill(w_OS,sw);
-            if(run==2)h_w_OS_norm_Run2->Fill(w_OS,sw);
-            eff_OS_norm += sw;
-        }
-        if(q_SS != 0){
-            h_w_SS_norm->Fill(w_SS,sw);
-            if(run==1)h_w_SS_norm_Run1->Fill(w_SS,sw);
-            if(run==2)h_w_SS_norm_Run2->Fill(w_SS,sw);
-            eff_SS_norm += sw;
-        }
-        sumw += sw;
+       
     }
-    
-    eff_OS_norm /= sumw;    
-    eff_SS_norm /= sumw;
-    
-    ///loop over MC events
-    for(int i=0; i< treeMC->GetEntries(); i++)
-    {    
-        treeMC->GetEntry(i);
-        
-        h_dt_MC->Fill(dt_MC,sw);
-        h_q_OS_MC->Fill((double)q_OS_MC,sw);
-        h_q_SS_MC->Fill((double)q_SS_MC,sw);
-        
-        if(q_OS_MC != 0)h_w_OS_MC->Fill(w_OS_MC,w);
-        if(q_SS_MC != 0)h_w_SS_MC->Fill(w_SS_MC,w);
-    }
-    
-    for(int i=0; i< treeMC_norm->GetEntries(); i++)
-    {    
-        treeMC_norm->GetEntry(i);
-        
-        h_dt_MC_norm->Fill(dt_MC,sw);
-        h_q_OS_MC_norm->Fill((double)q_OS_MC,sw);
-        h_q_SS_MC_norm->Fill((double)q_SS_MC,sw);
-        
-        if(q_OS_MC != 0)h_w_OS_MC_norm->Fill(w_OS_MC,w);
-        if(q_SS_MC != 0)h_w_SS_MC_norm->Fill(w_SS_MC,w);
-    }
-    
-    ///Plot it
-    TCanvas* c= new TCanvas();
-    
-    h_w_OS->SetMinimum(0);    
-    h_w_OS->SetLineColor(kBlack);
-    h_w_OS->DrawNormalized("e",1);
-    h_w_OS_norm->SetMarkerColor(kRed);
-    h_w_OS_norm->SetLineColor(kRed);
-    h_w_OS_norm->DrawNormalized("esame",1);
-    
-    double KolmoTest = h_w_OS->KolmogorovTest(h_w_OS_norm);
-    
-    TLegend *leg = new TLegend(0.2,0.6,0.4,0.9,"");
-    leg->SetLineStyle(0);
-    leg->SetLineColor(0);
-    leg->SetFillColor(0);
-    leg->SetTextFont(22);
-    leg->SetTextColor(1);
-    leg->SetTextSize(0.04);
-    leg->SetTextAlign(12);
-    
-    leg->AddEntry(h_w_OS,"B_{s} #rightarrow D_{s}K#pi#pi  Data","LEP");
-    
-    stringstream ss1 ;
-    TString leg_average = "<#omega_{OS}> = ";
-    ss1 << std::fixed << std::setprecision(3) << h_w_OS->GetMean() ;
-    leg_average += ss1.str();    
-    leg->AddEntry((TObject*)0, leg_average, "");
-    
-    stringstream ss2 ;
-    TString leg_eff = "#epsilon_{OS} = ";
-    ss2 << std::fixed << std::setprecision(3) << eff_OS ;
-    leg_eff += ss2.str();    
-    leg->AddEntry((TObject*)0, leg_eff, "");
-    
-    leg->AddEntry(h_w_OS_norm,"B_{s} #rightarrow D_{s}#pi#pi#pi  Data","LEP");
-    
-    stringstream ss ;
-    TString leg_kol = "Kolm.-Test : ";
-    ss << std::fixed << std::setprecision(2) << KolmoTest ;
-    leg_kol += ss.str();    
-    //TLegendEntry* le = leg->AddEntry((TObject*)0, leg_kol, "");
-    //le->SetTextColor(kRed);    
-    
-    //leg->Draw(); 
-    c->Print(prefix+"w_OS.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_OS.pdf");
-    
-    h_w_SS->SetMinimum(0);    
-    h_w_SS->SetLineColor(kBlack);
-    h_w_SS->DrawNormalized("e",1);
-    h_w_SS_norm->SetMarkerColor(kRed);
-    h_w_SS_norm->SetLineColor(kRed);
-    h_w_SS_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"w_SS.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_SS.pdf");
-    
-    h_w_OS_MC->SetMinimum(0);    
-    h_w_OS_MC->SetLineColor(kBlack);
-    h_w_OS_MC->DrawNormalized("e",1);
-    h_w_OS_MC_norm->SetMarkerColor(kRed);
-    h_w_OS_MC_norm->SetLineColor(kRed);
-    h_w_OS_MC_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"w_OS_MC.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_OS_MC.pdf");
-    
-    h_w_SS_MC->SetMinimum(0);    
-    h_w_SS_MC->SetLineColor(kBlack);
-    h_w_SS_MC->DrawNormalized("e",1);
-    h_w_SS_MC_norm->SetMarkerColor(kRed);
-    h_w_SS_MC_norm->SetLineColor(kRed);
-    h_w_SS_MC_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"w_SS_MC.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_SS_MC.pdf");
-    
-    h_q_OS->SetMinimum(0);    
-    h_q_OS->SetLineColor(kBlack);
-    h_q_OS->DrawNormalized("e",1);
-    h_q_OS_norm->SetMarkerColor(kRed);
-    h_q_OS_norm->SetLineColor(kRed);
-    h_q_OS_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"q_OS.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/qOS.pdf");
-    
-    h_q_SS->SetMinimum(0);    
-    h_q_SS->SetLineColor(kBlack);
-    h_q_SS->DrawNormalized("e",1);
-    h_q_SS_norm->SetMarkerColor(kRed);
-    h_q_SS_norm->SetLineColor(kRed);
-    h_q_SS_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"q_SS.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/q_SS.pdf");
-    
-    h_q_OS_MC->SetMinimum(0);    
-    h_q_OS_MC->SetLineColor(kBlack);
-    h_q_OS_MC->DrawNormalized("e",1);
-    h_q_OS_MC_norm->SetMarkerColor(kRed);
-    h_q_OS_MC_norm->SetLineColor(kRed);
-    h_q_OS_MC_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"q_OS_MC.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/q_OS_MC.pdf");
-    
-    h_q_SS_MC->SetMinimum(0);    
-    h_q_SS_MC->SetLineColor(kBlack);
-    h_q_SS_MC->DrawNormalized("e",1);
-    h_q_SS_MC_norm->SetMarkerColor(kRed);
-    h_q_SS_MC_norm->SetLineColor(kRed);
-    h_q_SS_MC_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"q_SS_MC.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/q_SS_MC.pdf");
-    
-    h_dt->SetMinimum(0);    
-    h_dt->SetLineColor(kBlack);
-    h_dt->DrawNormalized("e",1);
-    h_dt_norm->SetMarkerColor(kRed);
-    h_dt_norm->SetLineColor(kRed);
-    h_dt_norm->DrawNormalized("esame",1);
-    c->Print("dt.eps");
-    
-    h_dt_MC->SetMinimum(0);    
-    h_dt_MC->SetLineColor(kBlack);
-    h_dt_MC->DrawNormalized("e",1);
-    h_dt_MC_norm->SetMarkerColor(kRed);
-    h_dt_MC_norm->SetLineColor(kRed);
-    h_dt_MC_norm->DrawNormalized("esame",1);
-    c->Print("dt_MC.eps");
     
     TFile* out = new TFile("Mistag_pdfs.root","RECREATE");
     h_t_norm->Write();
@@ -1624,18 +1396,40 @@ void produceMarginalPdfs(){
     h_w_OS_norm_Run1->Write();
     h_q_SS_norm_Run1->Write();
     h_w_SS_norm_Run1->Write();
-    
+
+    h_dt_norm_Run1_t0->Write();
+    h_q_OS_norm_Run1_t0->Write();
+    h_w_OS_norm_Run1_t0->Write();
+    h_q_SS_norm_Run1_t0->Write();
+    h_w_SS_norm_Run1_t0->Write();
+   
+    h_dt_norm_Run1_t1->Write();
+    h_q_OS_norm_Run1_t1->Write();
+    h_w_OS_norm_Run1_t1->Write();
+    h_q_SS_norm_Run1_t1->Write();
+    h_w_SS_norm_Run1_t1->Write();
+       
     h_t_norm_Run2->Write();
     h_dt_norm_Run2->Write();
     h_q_OS_norm_Run2->Write();
     h_w_OS_norm_Run2->Write();
     h_q_SS_norm_Run2->Write();
     h_w_SS_norm_Run2->Write();
-    
+
+    h_dt_norm_Run2_t0->Write();
+    h_q_OS_norm_Run2_t0->Write();
+    h_w_OS_norm_Run2_t0->Write();
+    h_q_SS_norm_Run2_t0->Write();
+    h_w_SS_norm_Run2_t0->Write();
+
+    h_dt_norm_Run2_t1->Write();
+    h_q_OS_norm_Run2_t1->Write();
+    h_w_OS_norm_Run2_t1->Write();
+    h_q_SS_norm_Run2_t1->Write();
+    h_w_SS_norm_Run2_t1->Write();
+
     out->Write();
 }
-
-
 
 void checkPV(){
 
@@ -1778,17 +1572,32 @@ int main(int argc, char** argv){
     NamedParameter<int> CompareAcceptance("CompareAcceptance", 1);
     NamedParameter<int> FitSplineAccRatio("FitSplineAccRatio", 1);
     
+    NamedParameter<double> offset_sigma_dt("offset_sigma_dt", 0.0);
+    NamedParameter<double> scale_sigma_dt("scale_sigma_dt", 1.2);
+    NamedParameter<double> offset_sigma_dt_MC("offset_sigma_dt_MC", 0.0);
+    NamedParameter<double> scale_sigma_dt_MC("scale_sigma_dt_MC", 1.2);
+
+    NamedParameter<double> offset_sigma_dt_Run1("offset_sigma_dt_Run1", 0.0);
+    NamedParameter<double> scale_sigma_dt_Run1("scale_sigma_dt_Run1", 1.2);
+    NamedParameter<double> offset_sigma_dt_Run1_MC("offset_sigma_dt_Run1_MC", 0.0);
+    NamedParameter<double> scale_sigma_dt_Run1_MC("scale_sigma_dt_Run1_MC", 1.2);
+
+    NamedParameter<double> offset_sigma_dt_Run2("offset_sigma_dt_Run2", 0.0);
+    NamedParameter<double> scale_sigma_dt_Run2("scale_sigma_dt_Run2", 1.);
+    NamedParameter<double> offset_sigma_dt_Run2_MC("offset_sigma_dt_Run2_MC", 0.0);
+    NamedParameter<double> scale_sigma_dt_Run2_MC("scale_sigma_dt_Run2_MC", 1.);
+
     //checkPV(); 
-
     produceMarginalPdfs();
-
     if(CompareAcceptance)compareAcceptance();
 
-    if(FitSplineAccRatio)fitSplineAccRatio("run == 1", "run == 1", "_Run1", "combined");
-    //if(FitSplineAccRatio)fitSplineAccRatio(" run == 1 && TriggerCat == 0 " , "run == 1 && TriggerCat == 0", "_Run1", "Run1_t0");
-    //if(FitSplineAccRatio)fitSplineAccRatio(" run == 1 && TriggerCat == 1 " , "run == 1 && TriggerCat == 1", "_Run1", "Run1_t1");
-    //if(FitSplineAccRatio)fitSplineAccRatio(" run == 2 && TriggerCat == 0 " , "", "_Run2", "Run2_t0");
-    //if(FitSplineAccRatio)fitSplineAccRatio(" run == 2 && TriggerCat == 1 " , "", "_Run2", "Run2_t1");
+    if(FitSplineAccRatio){
+	//if(FitSplineAccRatio)fitSplineAccRatio("run == 1", "run == 1", "_Run1", "combined");
+	//fitSplineAccRatio(" run == 1 && TriggerCat == 0 " , "run == 1 && TriggerCat == 0", "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, (double) offset_sigma_dt_Run1_MC, (double) scale_sigma_dt_Run1_MC);
+	//fitSplineAccRatio(" run == 1 && TriggerCat == 1 " , "run == 1 && TriggerCat == 1", "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, (double) offset_sigma_dt_Run1_MC, (double) scale_sigma_dt_Run1_MC);
+	fitSplineAccRatio(" run == 2 && TriggerCat == 0 ","", "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC);
+	fitSplineAccRatio(" run == 2 && TriggerCat == 1 ","","Run2_t1",(double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC);
+    }
 
     //fitSplineAcc("" , "", "norm");
     //fitSplineAcc(" run == 1 && TriggerCat == 0 " , "_Run1", "Run1_t0_norm");

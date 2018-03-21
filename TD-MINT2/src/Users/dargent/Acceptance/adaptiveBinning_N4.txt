@@ -1,7 +1,7 @@
 * options for acceptance 
 "Bs_TAU_Var"		"Bs_DTF_TAU"
 
-"CompareAcceptance"	1
+"CompareAcceptance"	0
 "FitSplineAccRatio"	1
 "updateAnaNote"		1
 
@@ -11,12 +11,19 @@
 "max_TAU" 	 10.
 "min_TAUERR"	 0.
 "max_TAUERR" 	 0.1
+"nBins"		 80
 
-"fitB0"	 	0
-"fixRatio"	 	0
+"fitB0"	 	1
+"fixRatio"	1
+"fixFirstKnot"	0
 
 "useAdaptiveBinningKnots"	 0
 "minEventsPerBin"	 3000
+
+"offset_sigma_dt_Run1"		0.0103
+"scale_sigma_dt_Run1"		1.28	
+"offset_sigma_dt_Run2"		0.01206
+"scale_sigma_dt_Run2"		0.8793	
 
 * N = 3
 *"knot_positions"	0.9 1.9 6.2
