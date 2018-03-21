@@ -165,26 +165,25 @@ TH1D* createBinning(){
 	return h;
 }
 
-
-vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefix = "", string label = ""){
+vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefix = "", double offset_dt = 0. , double scale_dt = 1.2){
 
 	// Options
-    NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
+    	NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
 	NamedParameter<string> BinningName("BinningName",(string)"default");
-    NamedParameter<int> makePlots("makePlots", 0);
+   	NamedParameter<int> makePlots("makePlots", 0);
 	NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");
 	NamedParameter<double> min_TAU("min_TAU", 0.4);
 	NamedParameter<double> max_TAU("max_TAU", 10.);
-    NamedParameter<double> min_TAUERR("min_TAUERR", 0.);
-    NamedParameter<double> max_TAUERR("max_TAUERR", 0.1);
+    	NamedParameter<double> min_TAUERR("min_TAUERR", 0.);
+    	NamedParameter<double> max_TAUERR("max_TAUERR", 0.1);
 	NamedParameter<int> nBins("nBins", 100);
 	NamedParameter<int> numCPU("numCPU", 6);
 	NamedParameter<int> useAdaptiveBinningKnots("useAdaptiveBinningKnots", 0);
 	NamedParameter<int> fixFirstKnot("fixFirstKnot", 0);
 
 	// Read Dataset
-    TChain* tree=new TChain("DecayTree");
-    tree->Add( ((string)InputDir + "Data/norm.root").c_str());
+    	TChain* tree=new TChain("DecayTree");
+    	tree->Add( ((string)InputDir + "Data/norm.root").c_str());
 	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("*TAU*",1);
 	tree->SetBranchStatus("*sw",1);
@@ -192,10 +191,10 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	tree->SetBranchStatus("*finalState",1);
 	tree->SetBranchStatus("TriggerCat",1);
 	tree->SetBranchStatus("run",1);
-    tree->SetBranchStatus("Bs_L0Global_TIS",1);
-    tree->SetBranchStatus("Bs_*_TOS",1);
-    tree->SetBranchStatus("*PT",1);
-    tree->SetBranchStatus("m_*",1);
+    	tree->SetBranchStatus("Bs_L0Global_TIS",1);
+   	tree->SetBranchStatus("Bs_*_TOS",1);
+   	tree->SetBranchStatus("*PT",1);
+    	tree->SetBranchStatus("m_*",1);
 
 	//Define RooRealVar for observables
 	RooRealVar Bs_TAU(((string)Bs_TAU_Var).c_str(), ((string)Bs_TAU_Var).c_str(), min_TAU, max_TAU, "ps");
@@ -205,36 +204,36 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	RooRealVar year("year", "year", 0.);
 	RooRealVar TriggerCat("TriggerCat", "TriggerCat", 0.);
     
-    RooRealVar m_Kpipi("m_Kpipi", "m_Kpipi", 0.);
-    RooRealVar DsDaughters_min_PT("DsDaughters_min_PT", "DsDaughters_min_PT", 0.);
-    RooRealVar XsDaughters_min_PT("XsDaughters_min_PT", "XsDaughters_min_PT", 0.);
-
-    RooRealVar run("run", "run", 0.);
+	RooRealVar m_Kpipi("m_Kpipi", "m_Kpipi", 0.);
+	RooRealVar DsDaughters_min_PT("DsDaughters_min_PT", "DsDaughters_min_PT", 0.);
+	RooRealVar XsDaughters_min_PT("XsDaughters_min_PT", "XsDaughters_min_PT", 0.);
+	
+	RooRealVar run("run", "run", 0.);
 	RooRealVar Bs_L0Global_TIS("Bs_L0Global_TIS", "Bs_L0Global_TIS", 0.);
-    RooRealVar Bs_L0HadronDecision_TOS("Bs_L0HadronDecision_TOS", "Bs_L0HadronDecision_TOS", 0.);
-
-    RooRealVar Bs_Hlt1TrackMVADecision_TOS("Bs_Hlt1TrackMVADecision_TOS", "Bs_Hlt1TrackMVADecision_TOS", 0.);
-    RooRealVar Bs_Hlt1TwoTrackMVADecision_TOS("Bs_Hlt1TwoTrackMVADecision_TOS", "Bs_Hlt1TwoTrackMVADecision_TOS", 0.);
-    RooRealVar Bs_Hlt1TrackAllL0Decision_TOS("Bs_Hlt1TrackAllL0Decision_TOS", "Bs_Hlt1TrackAllL0Decision_TOS", 0.);
-    
-    RooRealVar Bs_Hlt2Topo2BodyDecision_TOS("Bs_Hlt2Topo2BodyDecision_TOS", "Bs_Hlt2Topo2BodyDecision_TOS", 0.);
-    RooRealVar Bs_Hlt2Topo3BodyDecision_TOS("Bs_Hlt2Topo3BodyDecision_TOS", "Bs_Hlt2Topo3BodyDecision_TOS", 0.);
-    RooRealVar Bs_Hlt2Topo4BodyDecision_TOS("Bs_Hlt2Topo4BodyDecision_TOS", "Bs_Hlt2Topo4BodyDecision_TOS", 0.);
-    RooRealVar Bs_Hlt2PhiIncPhiDecision_TOS("Bs_Hlt2PhiIncPhiDecision_TOS", "Bs_Hlt2PhiIncPhiDecision_TOS", 0.);
-
-    RooRealVar Bs_Hlt2Topo2BodyBBDTDecision_TOS("Bs_Hlt2Topo2BodyBBDTDecision_TOS", "Bs_Hlt2Topo2BodyBBDTDecision_TOS", 0.);
-    RooRealVar Bs_Hlt2Topo3BodyBBDTDecision_TOS("Bs_Hlt2Topo3BodyBBDTDecision_TOS", "Bs_Hlt2Topo3BodyBBDTDecision_TOS", 0.);
-    RooRealVar Bs_Hlt2Topo4BodyBBDTDecision_TOS("Bs_Hlt2Topo4BodyBBDTDecision_TOS", "Bs_Hlt2Topo4BodyBBDTDecision_TOS", 0.);
-    RooRealVar Bs_Hlt2IncPhiDecision_TOS("Bs_Hlt2IncPhiDecision_TOS", "Bs_Hlt2IncPhiDecision_TOS", 0.);
-
+	RooRealVar Bs_L0HadronDecision_TOS("Bs_L0HadronDecision_TOS", "Bs_L0HadronDecision_TOS", 0.);
+	
+	RooRealVar Bs_Hlt1TrackMVADecision_TOS("Bs_Hlt1TrackMVADecision_TOS", "Bs_Hlt1TrackMVADecision_TOS", 0.);
+	RooRealVar Bs_Hlt1TwoTrackMVADecision_TOS("Bs_Hlt1TwoTrackMVADecision_TOS", "Bs_Hlt1TwoTrackMVADecision_TOS", 0.);
+	RooRealVar Bs_Hlt1TrackAllL0Decision_TOS("Bs_Hlt1TrackAllL0Decision_TOS", "Bs_Hlt1TrackAllL0Decision_TOS", 0.);
+	
+	RooRealVar Bs_Hlt2Topo2BodyDecision_TOS("Bs_Hlt2Topo2BodyDecision_TOS", "Bs_Hlt2Topo2BodyDecision_TOS", 0.);
+	RooRealVar Bs_Hlt2Topo3BodyDecision_TOS("Bs_Hlt2Topo3BodyDecision_TOS", "Bs_Hlt2Topo3BodyDecision_TOS", 0.);
+	RooRealVar Bs_Hlt2Topo4BodyDecision_TOS("Bs_Hlt2Topo4BodyDecision_TOS", "Bs_Hlt2Topo4BodyDecision_TOS", 0.);
+	RooRealVar Bs_Hlt2PhiIncPhiDecision_TOS("Bs_Hlt2PhiIncPhiDecision_TOS", "Bs_Hlt2PhiIncPhiDecision_TOS", 0.);
+	
+	RooRealVar Bs_Hlt2Topo2BodyBBDTDecision_TOS("Bs_Hlt2Topo2BodyBBDTDecision_TOS", "Bs_Hlt2Topo2BodyBBDTDecision_TOS", 0.);
+	RooRealVar Bs_Hlt2Topo3BodyBBDTDecision_TOS("Bs_Hlt2Topo3BodyBBDTDecision_TOS", "Bs_Hlt2Topo3BodyBBDTDecision_TOS", 0.);
+	RooRealVar Bs_Hlt2Topo4BodyBBDTDecision_TOS("Bs_Hlt2Topo4BodyBBDTDecision_TOS", "Bs_Hlt2Topo4BodyBBDTDecision_TOS", 0.);
+	RooRealVar Bs_Hlt2IncPhiDecision_TOS("Bs_Hlt2IncPhiDecision_TOS", "Bs_Hlt2IncPhiDecision_TOS", 0.);
+	
 	RooArgList observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, N_Bs_sw, run, TriggerCat);
-    RooArgList observables2(Bs_L0Global_TIS, Bs_L0HadronDecision_TOS, Bs_Hlt1TrackMVADecision_TOS, Bs_Hlt1TwoTrackMVADecision_TOS, Bs_Hlt1TrackAllL0Decision_TOS);
-    RooArgList observables3(Bs_Hlt2Topo2BodyDecision_TOS, Bs_Hlt2Topo3BodyDecision_TOS, Bs_Hlt2Topo4BodyDecision_TOS, Bs_Hlt2Topo2BodyBBDTDecision_TOS, Bs_Hlt2Topo3BodyBBDTDecision_TOS, Bs_Hlt2Topo4BodyBBDTDecision_TOS,Bs_Hlt2IncPhiDecision_TOS,Bs_Hlt2PhiIncPhiDecision_TOS);
-    RooArgList observables4(m_Kpipi,DsDaughters_min_PT,XsDaughters_min_PT);
-
-    observables.add(observables2);
-    observables.add(observables3);
-    observables.add(observables4);
+	RooArgList observables2(Bs_L0Global_TIS, Bs_L0HadronDecision_TOS, Bs_Hlt1TrackMVADecision_TOS, Bs_Hlt1TwoTrackMVADecision_TOS, Bs_Hlt1TrackAllL0Decision_TOS);
+	RooArgList observables3(Bs_Hlt2Topo2BodyDecision_TOS, Bs_Hlt2Topo3BodyDecision_TOS, Bs_Hlt2Topo4BodyDecision_TOS, Bs_Hlt2Topo2BodyBBDTDecision_TOS, Bs_Hlt2Topo3BodyBBDTDecision_TOS, Bs_Hlt2Topo4BodyBBDTDecision_TOS,Bs_Hlt2IncPhiDecision_TOS,Bs_Hlt2PhiIncPhiDecision_TOS);
+	RooArgList observables4(m_Kpipi,DsDaughters_min_PT,XsDaughters_min_PT);
+	
+	observables.add(observables2);
+	observables.add(observables3);
+	observables.add(observables4);
 
 	RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(N_Bs_sw.GetName()), Cut(CutString.c_str()));
 	
@@ -282,8 +281,8 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
  	RooCubicSplineFun* spl = new RooCubicSplineFun("splinePdf", "splinePdf", Bs_TAU, myBinning, tacc_list);
 		
 	RooRealVar trm_mean( "trm_mean" , "trm_mean", 0.0, "ps" );
-	RooRealVar trm_offset( "trm_offset", "trm_offset", 0.0103);
-	RooRealVar trm_scale( "trm_scale", "trm_scale", 1.28);
+	RooRealVar trm_offset( "trm_offset", "trm_offset", offset_dt);
+	RooRealVar trm_scale( "trm_scale", "trm_scale", scale_dt);
 	//RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *spl, trm_mean, Bs_TAUERR, trm_mean, trm_scale );
         RooFormulaVar dt_scaled( "dt_scaled","dt_scaled", "@0+@1*@2",RooArgList(trm_offset,trm_scale,Bs_TAUERR));
         RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *spl, RooRealConstant::value(0.), dt_scaled, trm_mean, RooRealConstant::value(1.) );
@@ -293,17 +292,22 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 			RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMs),
 			trm, RooBDecay::SingleSided);
 	
-        // Marginal pdfs
-        TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
-        
-        TH1D* h_dt = new TH1D( *((TH1D*) f_pdfs->Get(("h_dt_norm"+(string)marginalPdfsPrefix).c_str())));
-        RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",Bs_TAUERR,h_dt);
-        RooHistPdf* pdf_sigma_t = new RooHistPdf("pdf_sigma_t","pdf_sigma_t",Bs_TAUERR,*r_h_dt);
+        /// Marginal pdfs
+	TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
+	TH1D* h_dt;
+	if((string)marginalPdfsPrefix != "")h_dt = new TH1D( *((TH1D*) f_pdfs->Get(("h_dt_norm_"+(string)marginalPdfsPrefix).c_str())));
+	else h_dt = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
+	// RooHistPdf doesn't like negative or 0 bins, set them to a small positive number
+	h_dt->Smooth();
+	for(int i= 1 ; i<=h_dt->GetNbinsX(); i++){
+	if(h_dt->GetBinContent(i) <= 0.)h_dt->SetBinContent(i,0.000000001*h_dt->GetMaximum());
+	}
+	RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",Bs_TAUERR,h_dt);
+	RooHistPdf* pdf_sigma_t = new RooHistPdf("pdf_sigma_t","pdf_sigma_t",Bs_TAUERR,*r_h_dt);
+	f_pdfs->Close();
 
 	RooProdPdf* totPdf= new RooProdPdf("totPdf","totPdf",RooArgSet(*pdf_sigma_t),Conditional(RooArgSet(*timePdf),RooArgSet(Bs_TAU)));
         
-        f_pdfs->Close();
-	
 	///Fit and Print
 	RooFitResult *myfitresult = totPdf->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
 	myfitresult->Print("v");
@@ -422,12 +426,12 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 		
 	pad2->Update();
 	canvas->Update();
-	canvas->SaveAs(("Plot/timeAccFit_"+(string)BinningName+ ".eps").c_str());
+	canvas->SaveAs(("Plot/timeAccFit_"+(string)BinningName+ "_" + marginalPdfsPrefix + ".eps").c_str());
 	
 	pad1->SetLogy(1);
 	pad1->Update();
 	canvas->Update();
-	canvas->SaveAs(("Plot/timeAccFit_"+(string)BinningName+ "_log.eps").c_str());
+	canvas->SaveAs(("Plot/timeAccFit_"+(string)BinningName+ "_" + marginalPdfsPrefix + "_log.eps").c_str());
 	
 	// ???
 	double chi2 = frame_m->chiSquare("pdf","data",values.size());
@@ -439,14 +443,14 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
     	myCoeffsAndErr.push_back(myCoeffsErr);    
 
 	ofstream resultsFile;
-	resultsFile.open(("results_" + label + "_" + (string)BinningName+ ".txt").c_str(),std::ofstream::trunc);
+	resultsFile.open(("results_norm_" + marginalPdfsPrefix + "_" + (string)BinningName+ ".txt").c_str(),std::ofstream::trunc);
 	resultsFile << "knot_positions " ;
 	for(int i= 0; i< myBinning.size(); i++){
 		resultsFile << myBinning[i] << " " ;
 	}
 	resultsFile << endl;
 	for(int i= 0; i< myBinning.size(); i++){
-		resultsFile << "c" + anythingToString(i) + "_" + label << "  " << 2 << "  " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() 
+		resultsFile << "c" + anythingToString(i) + "_" + marginalPdfsPrefix << "  " << 2 << "  " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() 
 		<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
 	}
 	
@@ -718,8 +722,9 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
         TCanvas* canvas = new TCanvas();
         canvas->SetTopMargin(0.05);
         canvas->SetBottomMargin(0.05);
-        
-        TLegend leg(0.65,0.5,0.9,0.9,"");
+	double legY = 0.6;
+	if(A_is_in_B("norm",(string)decays[i])) legY = 0.4;
+        TLegend leg(0.65,legY,0.9,0.9,"");
         leg.SetLineStyle(0);
         leg.SetLineColor(0);
         leg.SetFillColor(0);
@@ -762,7 +767,8 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
 		pdf_signal_B0->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]));
 	}
 	else{
-        	dataset->plotOn(frame_m, Binning(nBins), Name("data_"+decays[i]),Cut("decay==decay::"+decays[i]));
+		if(decays[i]=="signal_B0")dataset->plotOn(frame_m, Binning(nBins/2), Name("data_"+decays[i]),Cut("decay==decay::"+decays[i]));
+        	else dataset->plotOn(frame_m, Binning(nBins), Name("data_"+decays[i]),Cut("decay==decay::"+decays[i]));
 		//simPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]),Slice(decay,decays[i]),ProjWData(decay,*dataset),ProjWData(Bs_TAUERR,*dataset));
         	simPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]),Slice(decay,decays[i]),ProjWData(decay,*dataset));
 	}
@@ -782,21 +788,21 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
             spline_signal->plotOn(frame_m, LineColor(kRed), LineWidth(3), LineStyle(kDashed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_signal_"+decays[i]));
         }
         
-        if(decays[i]=="signal_mc")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{s}#rightarrow D_{s}K#pi#pi MC","ep");
-        else if(decays[i]=="signal_B0")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{d}#rightarrow D_{s}K#pi#pi Data","ep");
-	else if(decays[i]=="norm")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{s}#rightarrow D_{s}#pi#pi#pi Data","ep");
-        else if(decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{s}#rightarrow D_{s}#pi#pi#pi MC","ep");
+        if(decays[i]=="signal_mc")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{s}#rightarrowD_{s}K#pi#pi MC","ep");
+        else if(decays[i]=="signal_B0")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{d}#rightarrowD_{s}K#pi#pi Data","ep");
+	else if(decays[i]=="norm")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{s}#rightarrowD_{s}#pi#pi#pi Data","ep");
+        else if(decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("data_"+decays[i]),"B_{s}#rightarrowD_{s}#pi#pi#pi MC","ep");
 
         leg.AddEntry(frame_m->findObject("pdf_"+decays[i]),"Fit","l");
         
-        if(decays[i]=="signal_mc")leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"Acc(t)_{D_{s}K#pi#pi}^{MC}","l");
-        else if(decays[i]=="signal_B0")leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"Acc(t)_{D_{s}K#pi#pi}^{Data}","l");
-	else if(decays[i]=="norm")leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"Acc(t)_{D_{s}#pi#pi#pi}^{Data}","l");
-        else if(decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"Acc(t)_{D_{s}#pi#pi#pi}^{MC}","l");
+        if(decays[i]=="signal_mc")leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"#varepsilon_{D_{s}K#pi#pi}^{MC}(t)","l");
+        else if(decays[i]=="signal_B0")leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"#varepsilon_{D_{s}K#pi#pi}^{Data}(t)","l");
+	else if(decays[i]=="norm")leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"#varepsilon_{D_{s}#pi#pi#pi}^{Data}(t)","l");
+        else if(decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("spline_"+decays[i]),"#varepsilon_{D_{s}#pi#pi#pi}^{MC}(t)","l");
 
-        if(decays[i]=="norm")leg.AddEntry(frame_m->findObject("spline_signal_"+decays[i]),"Acc(t)_{D_{s}K#pi#pi}^{Data}","l");
-        else if(decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("spline_signal_"+decays[i]),"Acc(t)_{D_{s}K#pi#pi}^{MC}","l");
-        if(decays[i]=="norm" || decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("spline_ratio_"+decays[i]),"Ratio","l");
+        if(decays[i]=="norm")leg.AddEntry(frame_m->findObject("spline_signal_"+decays[i]),"#varepsilon_{D_{s}K#pi#pi}^{Data}(t)","l");
+        else if(decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("spline_signal_"+decays[i]),"#varepsilon_{D_{s}K#pi#pi}^{MC}(t)","l");
+        if(decays[i]=="norm" || decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("spline_ratio_"+decays[i]),"R(t)","l");
 
         double chi2 = frame_m->chiSquare("pdf_"+decays[i],"data_"+decays[i],values.size());
         cout << "chi2 = " << chi2 << endl;
@@ -859,14 +865,14 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
     datafile << "\\centering" << "\n";
     datafile << "\\small" << "\n";
     datafile << "\\caption{Time acceptance parameters for ";
-    if(CutString == "") datafile << " all events. " << "\n";
+    if(CutString == "") datafile << " all events. }" << "\n";
     else datafile << "events in category [";
     if(A_is_in_B("run == 1", CutString)) datafile << "\\textsf{Run-I}"; 
     else if(A_is_in_B("run == 2", CutString)) datafile << "\\textsf{Run-II}"; 
     if(A_is_in_B("&&", CutString)) datafile << ","; 
     if(A_is_in_B("TriggerCat == 0", CutString)) datafile << "\\textsf{L0-TOS}"; 
     else if(A_is_in_B("TriggerCat == 1", CutString)) datafile << "\\textsf{L0-TIS}"; 
-    if(CutString != "") datafile << "]." << "\n";
+    if(CutString != "") datafile << "].}" << "\n";
     datafile << "\\begin{tabular}{c c c c c}" << "\n";
     datafile << "\\hline" << "\n";
     datafile << "\\hline" << "\n";
@@ -1571,7 +1577,8 @@ int main(int argc, char** argv){
     
     NamedParameter<int> CompareAcceptance("CompareAcceptance", 1);
     NamedParameter<int> FitSplineAccRatio("FitSplineAccRatio", 1);
-    
+    NamedParameter<int> FitSplineNorm("FitSplineNorm", 1);
+
     NamedParameter<double> offset_sigma_dt("offset_sigma_dt", 0.0);
     NamedParameter<double> scale_sigma_dt("scale_sigma_dt", 1.2);
     NamedParameter<double> offset_sigma_dt_MC("offset_sigma_dt_MC", 0.0);
@@ -1592,19 +1599,20 @@ int main(int argc, char** argv){
     if(CompareAcceptance)compareAcceptance();
 
     if(FitSplineAccRatio){
-	//if(FitSplineAccRatio)fitSplineAccRatio("run == 1", "run == 1", "_Run1", "combined");
-	//fitSplineAccRatio(" run == 1 && TriggerCat == 0 " , "run == 1 && TriggerCat == 0", "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, (double) offset_sigma_dt_Run1_MC, (double) scale_sigma_dt_Run1_MC);
-	//fitSplineAccRatio(" run == 1 && TriggerCat == 1 " , "run == 1 && TriggerCat == 1", "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, (double) offset_sigma_dt_Run1_MC, (double) scale_sigma_dt_Run1_MC);
-	fitSplineAccRatio(" run == 2 && TriggerCat == 0 ","", "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC);
-	fitSplineAccRatio(" run == 2 && TriggerCat == 1 ","","Run2_t1",(double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC);
+	//fitSplineAccRatio("", "", "", "combined",(double) offset_sigma_dt, (double) scale_sigma_dt, (double) offset_sigma_dt, (double) scale_sigma_dt);
+	fitSplineAccRatio(" run == 1 && TriggerCat == 0 " , "run == 1 && TriggerCat == 0", "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, (double) offset_sigma_dt_Run1_MC, (double) scale_sigma_dt_Run1_MC);
+	fitSplineAccRatio(" run == 1 && TriggerCat == 1 " , "run == 1 && TriggerCat == 1", "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, (double) offset_sigma_dt_Run1_MC, (double) scale_sigma_dt_Run1_MC);
+	//fitSplineAccRatio(" run == 2 && TriggerCat == 0 ","", "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC);
+	//fitSplineAccRatio(" run == 2 && TriggerCat == 1 ","","Run2_t1",(double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC);
     }
 
-    //fitSplineAcc("" , "", "norm");
-    //fitSplineAcc(" run == 1 && TriggerCat == 0 " , "_Run1", "Run1_t0_norm");
-    //fitSplineAcc(" run == 1 && TriggerCat == 1 " , "_Run1", "Run1_t1_norm");
-    //fitSplineAcc(" run == 2 && TriggerCat == 0 " , "_Run2", "Run2_t0_norm");
-    //fitSplineAcc(" run == 2 && TriggerCat == 1 " , "_Run2", "Run2_t1_norm");
-    
+    if(FitSplineNorm){
+	//fitSplineAcc("" , "", "norm");
+	fitSplineAcc(" run == 1 && TriggerCat == 0 " , "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
+	fitSplineAcc(" run == 1 && TriggerCat == 1 " , "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
+	fitSplineAcc(" run == 2 && TriggerCat == 0 " , "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
+	fitSplineAcc(" run == 2 && TriggerCat == 1 " , "Run2_t1", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
+    }
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
     cout << "==============================================" << endl;

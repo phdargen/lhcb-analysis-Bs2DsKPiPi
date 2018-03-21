@@ -2,7 +2,8 @@
 "Bs_TAU_Var"		"Bs_DTF_TAU"
 
 "CompareAcceptance"	0
-"FitSplineAccRatio"	1
+"FitSplineAccRatio"	0
+"FitSplineNorm"	1
 "updateAnaNote"		1
 
 * binning options
@@ -14,7 +15,7 @@
 "nBins"		 80
 
 "fitB0"	 	1
-"fixRatio"	1
+"fixRatio"	0
 "fixFirstKnot"	0
 
 "useAdaptiveBinningKnots"	 0
@@ -31,7 +32,7 @@
 
 * N = 4
 "knot_positions"	0.8 1.6 2.5 6.5
-"knot_values"	 	 3.7571e-01 5.2204e-01 6.6662e-01 8.5160e-01
+"knot_values"	 	 0.5 0.7 1 1
 
 * N = 5
 *"knot_positions" 	0.7 1.2 1.7 2.2 6.3
