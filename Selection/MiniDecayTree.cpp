@@ -257,7 +257,7 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
         // Ds veto
         if(TMath::Abs((K_plus + pi_plus + pi_minus).M() - massDs) < 20) return false;
 	// Semi-lep. veto
-	//if( pi_plus_isMuon == 1 ) return false;
+	//if( K_plus_isMuon == 1 ) return false;
     }
     
     else if(_decay == Decay::norm){
@@ -282,6 +282,45 @@ inline Bool_t MiniDecayTree::Preselection_Cuts(){
 	}
         return true;
 }
+
+inline Bool_t MiniDecayTree::LTU_Cuts(){
+    
+	if(!PID_Cuts())return false;
+
+	if(_Ds_finalState == Ds_finalState::phipi || _Ds_finalState == Ds_finalState::KsK || _Ds_finalState == Ds_finalState::KKpi_NR){
+		
+		//D0 veto
+		if((K_plus_fromDs + K_minus_fromDs).M() > 1840.) return false;
+		
+		if(_Ds_finalState == Ds_finalState::phipi){
+			//Lambda_c veto
+			if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && ((K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) < 0) ) return false;
+		}
+		else if(_Ds_finalState == Ds_finalState::KsK){
+			//Lambda_c veto
+			if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && ((K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) < 5) ) return false;
+			//D- veto
+			if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M() - massDminus) < 30. && K_minus_fromDs_PIDK < 10 ) return false;
+		}
+		else if(_Ds_finalState == Ds_finalState::KKpi_NR){
+			//Lambda_c veto
+			if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && ((K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) < 5) ) return false;
+			//D- veto
+			if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M() - massDminus) < 30. && K_minus_fromDs_PIDK < 20 ) return false;
+		}
+	}
+	
+	else if(_Ds_finalState == Ds_finalState::pipipi){
+		//D0 veto
+		if((pi_plus_fromDs + pi_minus_fromDs).M() > 1700 || (pi_plus_fromDs + pi_minus2_fromDs).M() > 1700) return false;
+	}
+	
+	else if(_Ds_finalState == Ds_finalState::Kpipi){
+	}
+	
+        return true;
+}
+
 
 inline Ds_finalState::Type MiniDecayTree::get_Ds_finalState(){
 
@@ -366,7 +405,7 @@ void MiniDecayTree::Loop()
    cout << "Have " << nentries << " events" <<  endl;
    
     // Add new branches to output tree
-    int Ds_finalState, sample, TriggerCat,run;
+    int Ds_finalState, sample, TriggerCat,run,Bs_BKGCAT = 0;
     int year = (int)_year;
     if(year == 11 || year == 12) run = 1;
     else run = 2;
@@ -378,7 +417,8 @@ void MiniDecayTree::Loop()
     summary_tree->Branch("run", &run, "run/I");
     summary_tree->Branch("NTracks", &NTracks, "NTracks/D");
     summary_tree->Branch("TriggerCat", &TriggerCat, "TriggerCat/I");
-  
+    if(_data)summary_tree->Branch("Bs_BKGCAT", &Bs_BKGCAT, "Bs_BKGCAT/I");
+
     double weight = 1.;
     summary_tree->Branch("weight",&weight,"weight/D"); 
     
@@ -399,7 +439,7 @@ void MiniDecayTree::Loop()
     double Xs_max_ProbNNghost = 0;
     double Ds_max_ProbNNghost = 0;
     double max_ProbNNghost = 0;
-    double track_min_PT,track_min_IPCHI2;    
+    double track_min_PT,track_min_IPCHI2,Xs_ptasy;    
 
     summary_tree->Branch("DsDaughters_min_IPCHI2",&DsDaughters_min_IPCHI2,"DsDaughters_min_IPCHI2/D");
     summary_tree->Branch("XsDaughters_min_IPCHI2",&XsDaughters_min_IPCHI2,"XsDaughters_min_IPCHI2/D");
@@ -409,6 +449,8 @@ void MiniDecayTree::Loop()
     summary_tree->Branch("DsDaughters_min_PT",&DsDaughters_min_PT,"DsDaughters_min_PT/D");
     summary_tree->Branch("XsDaughters_min_PT",&XsDaughters_min_PT,"XsDaughters_min_PT/D");
     summary_tree->Branch("track_min_PT",&track_min_PT,"track_min_PT/D");
+    summary_tree->Branch("Xs_ptasy_1.00",&Xs_ptasy,"Xs_ptasy_1.00/D");
+
     summary_tree->Branch("Xs_max_DOCA",&Xs_max_DOCA,"Xs_max_DOCA/D");
     summary_tree->Branch("Ds_max_DOCA",&Ds_max_DOCA,"Ds_max_DOCA/D");
     summary_tree->Branch("Xs_max_ghostProb",&Xs_max_ghostProb,"Xs_max_ghostProb/D");
@@ -684,7 +726,7 @@ void MiniDecayTree::Loop()
         fChain->GetEntry(i);           
         
         // Apply preselection cust
-        if(!Preselection_Cuts()) continue;
+        if(!_ltu)if(!Preselection_Cuts()) continue;
 
 	if(!_data){
 		if(_decay == Decay::signal){
@@ -864,11 +906,15 @@ void MiniDecayTree::Loop()
         set_LorentzVectors();    
         _Ds_finalState = get_Ds_finalState();
 
-        if(!PID_Cuts()) continue;    
-        if(!Veto_Cuts()) continue;
-	if(!_bkg)if(!PhaseSpace_Cuts()) continue;
-
-	if(!_data)if(!MC_Cuts()) continue;        
+	if(_ltu){
+		if(!LTU_Cuts()) continue;
+	}
+	else {
+		if(!PID_Cuts()) continue;    
+		if(!Veto_Cuts()) continue;
+		if(!_bkg)if(!PhaseSpace_Cuts()) continue;
+		if(!_data)if(!MC_Cuts()) continue;        
+	}
 
         // Add new variables
         Ds_finalState = _Ds_finalState;
@@ -897,6 +943,7 @@ void MiniDecayTree::Loop()
             Xs_max_DOCA = max(K_1_1270_plus_DOCA1,max(K_1_1270_plus_DOCA2,K_1_1270_plus_DOCA3));
             Xs_max_ghostProb = max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,pi_minus_TRACK_GhostProb)); 
             Xs_max_ProbNNghost = max(pi_plus_ProbNNghost,max(K_plus_ProbNNghost,pi_minus_ProbNNghost)); 
+	    Xs_ptasy = K_1_1270_plus_ptasy_1_00;
 
             m_DsK = (Ds+K_plus).M();
             m_Dspi = (Ds+pi_plus).M();
@@ -976,7 +1023,8 @@ void MiniDecayTree::Loop()
             XsDaughters_min_PT = min(pi_plus1_PT,min(pi_minus_PT,pi_plus2_PT));          
             Xs_max_DOCA = max(a_1_1260_plus_DOCA1,max(a_1_1260_plus_DOCA2,a_1_1260_plus_DOCA3));
             Xs_max_ghostProb = max(pi_plus1_TRACK_GhostProb,max(pi_plus2_TRACK_GhostProb,pi_minus_TRACK_GhostProb));   
-            Xs_max_ProbNNghost = max(pi_plus1_ProbNNghost,max(pi_plus2_ProbNNghost,pi_minus_ProbNNghost));               
+            Xs_max_ProbNNghost = max(pi_plus1_ProbNNghost,max(pi_plus2_ProbNNghost,pi_minus_ProbNNghost));          
+	    Xs_ptasy = a_1_1260_plus_ptasy_1_00;
 
             m_DsK = (Ds+pi_plus1).M();
             m_Dspi = (Ds+pi_plus2).M();
@@ -1125,10 +1173,10 @@ void MiniDecayTree::Loop()
         track_min_IPCHI2 = min(XsDaughters_min_IPCHI2,DsDaughters_min_IPCHI2);
 
 	NTracks = (double) nTracks;
-	if(Bs_L0Global_TIS)TriggerCat = 0;
-	else TriggerCat = 1;
-        if(Bs_L0HadronDecision_TOS)TriggerCat = 2;
+	if(Bs_L0Global_TIS)TriggerCat = 2;
 	else TriggerCat = 3;
+        if(Bs_L0HadronDecision_TOS)TriggerCat = 0;
+	else TriggerCat = 1;
 	
         Bs_PV_MM = Bs_PV_M[0];
         Bs_DTF_MM = Bs_DTF_M[0];
@@ -1148,9 +1196,10 @@ void MiniDecayTree::Loop()
         Bs_DTF_TAUERR = Bs_DTF_ctauErr[0] * 3.33564095;
         Bs_BsDTF_TAU = Bs_BsDTF_ctau[0] * 3.33564095;
         Bs_BsDTF_TAUERR = Bs_BsDTF_ctauErr[0] * 3.33564095;
-
-	if(Bs_DTF_TAU < 0.4 || Bs_DTF_TAU > 10.) continue;
-        if(Bs_DTF_TAUERR < 0. || Bs_DTF_TAUERR > 0.1) continue;
+	if(!_ltu){
+		if(Bs_DTF_TAU < 0.4 || Bs_DTF_TAU > 10.) continue;
+		if(Bs_DTF_TAUERR < 0. || Bs_DTF_TAUERR > 0.1) continue;
+	}
 
         PV_status = Bs_PV_status[0];
         DTF_status = Bs_DTF_status[0];

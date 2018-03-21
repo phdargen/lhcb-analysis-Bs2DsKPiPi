@@ -14,7 +14,7 @@ public :
     TString _inFileName;
     Bool_t _charmLess;
     TString _usePIDvar;
-    MiniDecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString polarity, TString inFileLoc = "/auto/data/dargent/BsDsKpipi/", TString outFileLoc = "/auto/data/dargent/BsDsKpipi/", Bool_t charmLess = false, TString _usePIDvar = "Corr" );
+    MiniDecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString polarity, TString inFileLoc = "/auto/data/dargent/BsDsKpipi/", TString outFileLoc = "/auto/data/dargent/BsDsKpipi/", Bool_t charmLess = false, TString _usePIDvar = "Corr", Bool_t bkg = false, Bool_t ltu = false );
     virtual ~MiniDecayTree();
     
     virtual void  Init();
@@ -35,6 +35,7 @@ public :
     inline Bool_t PhaseSpace_Cuts();
     inline Bool_t PIDCalib_Cuts();
     inline Bool_t MC_Cuts();
+    inline Bool_t LTU_Cuts();
 
     TLorentzVector K_plus_fromDs;
     TLorentzVector K_minus_fromDs;
@@ -1097,7 +1098,7 @@ pi_minus_fromDs_PIDp_corr_MagUp;
 #endif
 
 #ifdef MiniDecayTree_cxx
-MiniDecayTree::MiniDecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString polarity, TString inFileLoc, TString outFileLoc, Bool_t charmLess, TString usePIDvar ) : DecayTree(decay,year,finalState,dataType, polarity, inFileLoc, outFileLoc), _charmLess(charmLess), _usePIDvar(usePIDvar) 
+MiniDecayTree::MiniDecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString polarity, TString inFileLoc, TString outFileLoc, Bool_t charmLess, TString usePIDvar, Bool_t bkg, Bool_t ltu ) : DecayTree(decay,year,finalState,dataType, polarity, inFileLoc, outFileLoc, bkg, ltu), _charmLess(charmLess), _usePIDvar(usePIDvar)
 {
     _inFileName = _outFileName;
     if(!_data) _inFileName.ReplaceAll(".root","_PID.root");

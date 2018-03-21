@@ -54,9 +54,10 @@ public :
     Ds_finalState::Type _Ds_finalState;
     DataType::Type _data;
     Bool_t _bkg;
+    Bool_t _ltu;
     TString _polarity;
 
-    DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString polarity = "Both", TString inFileLoc = "/auto/data/dargent/BsDsKpipi/", TString outFileLoc = "/auto/data/dargent/BsDsKpipi/", Bool_t bkg = false );
+    DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString polarity = "Both", TString inFileLoc = "/auto/data/dargent/BsDsKpipi/", TString outFileLoc = "/auto/data/dargent/BsDsKpipi/", Bool_t bkg = false, Bool_t ltu = false );
     virtual ~DecayTree();
     virtual Int_t    GetEntry(Long64_t entry);
     virtual Long64_t LoadTree(Long64_t entry);
@@ -68,6 +69,7 @@ public :
     
     inline  Bool_t TriggerCuts(Long64_t entry);
     inline  Bool_t LooseCuts(Long64_t entry);
+    inline  Bool_t LooseCutsLTU(Long64_t entry);
 
     // Declaration of leaf types
     Double_t        Bs_DOCA1;
@@ -4692,8 +4694,13 @@ void DecayTree::Init()
     
     fChain->SetBranchAddress("Bs_PV_M", Bs_PV_M, &b_Bs_PV_M);
     fChain->SetBranchAddress("Bs_DTF_M", Bs_DTF_M, &b_Bs_DTF_M);
-    fChain->SetBranchAddress("Bs_BsDTF_M", Bs_BsDTF_M, &b_Bs_BsDTF_M);
-
+    if(!_ltu)fChain->SetBranchAddress("Bs_BsDTF_M", Bs_BsDTF_M, &b_Bs_BsDTF_M);
+    if(_decay== Decay::signal){
+	fChain->SetBranchAddress("K_plus_PIDK", &K_plus_PIDK, &b_K_plus_PIDK);
+	fChain->SetBranchAddress("K_plus_isMuon", &K_plus_isMuon, &b_K_plus_isMuon);
+	fChain->SetBranchAddress("pi_plus_PIDK", &pi_plus_PIDK, &b_pi_plus_PIDK);
+	fChain->SetBranchAddress("pi_minus_PIDK", &pi_minus_PIDK, &b_pi_minus_PIDK);
+    }
     fChain->SetBranchAddress("Bs_ETA", &Bs_ETA, &b_Bs_ETA);
     fChain->SetBranchAddress("Bs_ENDVERTEX_X", &Bs_ENDVERTEX_X, &b_Bs_ENDVERTEX_X);
     fChain->SetBranchAddress("Bs_ENDVERTEX_Y", &Bs_ENDVERTEX_Y, &b_Bs_ENDVERTEX_Y);
@@ -4760,13 +4767,13 @@ void DecayTree::Init()
     fChain->SetBranchAddress("Bs_Hlt2Topo3BodyDecision_TOS", &Bs_Hlt2Topo3BodyDecision_TOS, &b_Bs_Hlt2Topo3BodyDecision_TOS);
     fChain->SetBranchAddress("Bs_Hlt2Topo4BodyDecision_TIS", &Bs_Hlt2Topo4BodyDecision_TIS, &b_Bs_Hlt2Topo4BodyDecision_TIS);
     fChain->SetBranchAddress("Bs_Hlt2Topo4BodyDecision_TOS", &Bs_Hlt2Topo4BodyDecision_TOS, &b_Bs_Hlt2Topo4BodyDecision_TOS);
-    fChain->SetBranchAddress("Bs_TAGDECISION", &Bs_TAGDECISION, &b_Bs_TAGDECISION);
+   /* fChain->SetBranchAddress("Bs_TAGDECISION", &Bs_TAGDECISION, &b_Bs_TAGDECISION);
     fChain->SetBranchAddress("Bs_TAGOMEGA", &Bs_TAGOMEGA, &b_Bs_TAGOMEGA);
     fChain->SetBranchAddress("Bs_TAGDECISION_OS", &Bs_TAGDECISION_OS, &b_Bs_TAGDECISION_OS);
     fChain->SetBranchAddress("Bs_TAGOMEGA_OS", &Bs_TAGOMEGA_OS, &b_Bs_TAGOMEGA_OS);
     fChain->SetBranchAddress("Bs_TAGGER", &Bs_TAGGER, &b_Bs_TAGGER);
     fChain->SetBranchAddress("Bs_ptasy_1.00", &Bs_ptasy_1_00, &b_Bs_ptasy_1_00);
-    /*fChain->SetBranchAddress("Bs_B0DTF_nPV", &Bs_B0DTF_nPV, &b_Bs_B0DTF_nPV);
+   */ /*fChain->SetBranchAddress("Bs_B0DTF_nPV", &Bs_B0DTF_nPV, &b_Bs_B0DTF_nPV);
     fChain->SetBranchAddress("Bs_B0DTF_D_splus_Kplus_0_ID", Bs_B0DTF_D_splus_Kplus_0_ID, &b_Bs_B0DTF_D_splus_Kplus_0_ID);
     fChain->SetBranchAddress("Bs_B0DTF_D_splus_Kplus_0_PE", Bs_B0DTF_D_splus_Kplus_0_PE, &b_Bs_B0DTF_D_splus_Kplus_0_PE);
     fChain->SetBranchAddress("Bs_B0DTF_D_splus_Kplus_0_PX", Bs_B0DTF_D_splus_Kplus_0_PX, &b_Bs_B0DTF_D_splus_Kplus_0_PX);
@@ -5018,7 +5025,7 @@ void DecayTree::Init()
     fChain->SetBranchAddress("Bs_PV_nDOF", Bs_PV_nDOF, &b_Bs_PV_nDOF);
     fChain->SetBranchAddress("Bs_PV_nIter", Bs_PV_nIter, &b_Bs_PV_nIter);
     fChain->SetBranchAddress("Bs_PV_status", Bs_PV_status, &b_Bs_PV_status);*/
-    fChain->SetBranchAddress("Bs_BsTaggingTool_TAGDECISION_OS", &Bs_BsTaggingTool_TAGDECISION_OS, &b_Bs_BsTaggingTool_TAGDECISION_OS);
+    /*fChain->SetBranchAddress("Bs_BsTaggingTool_TAGDECISION_OS", &Bs_BsTaggingTool_TAGDECISION_OS, &b_Bs_BsTaggingTool_TAGDECISION_OS);
     fChain->SetBranchAddress("Bs_BsTaggingTool_TAGOMEGA_OS", &Bs_BsTaggingTool_TAGOMEGA_OS, &b_Bs_BsTaggingTool_TAGOMEGA_OS);
     fChain->SetBranchAddress("Ds_DOCA1", &Ds_DOCA1, &b_Ds_DOCA1);
     fChain->SetBranchAddress("Ds_DOCA2", &Ds_DOCA2, &b_Ds_DOCA2);
@@ -5042,7 +5049,7 @@ void DecayTree::Init()
     fChain->SetBranchAddress("Ds_OWNPV_NDOF", &Ds_OWNPV_NDOF, &b_Ds_OWNPV_NDOF);
     fChain->SetBranchAddress("Ds_IP_OWNPV", &Ds_IP_OWNPV, &b_Ds_IP_OWNPV);
     fChain->SetBranchAddress("Ds_IPCHI2_OWNPV", &Ds_IPCHI2_OWNPV, &b_Ds_IPCHI2_OWNPV);
-    fChain->SetBranchAddress("Ds_FD_OWNPV", &Ds_FD_OWNPV, &b_Ds_FD_OWNPV);
+    */fChain->SetBranchAddress("Ds_FD_OWNPV", &Ds_FD_OWNPV, &b_Ds_FD_OWNPV);
     fChain->SetBranchAddress("Ds_FDCHI2_OWNPV", &Ds_FDCHI2_OWNPV, &b_Ds_FDCHI2_OWNPV);
     fChain->SetBranchAddress("Ds_DIRA_OWNPV", &Ds_DIRA_OWNPV, &b_Ds_DIRA_OWNPV);
     fChain->SetBranchAddress("Ds_ORIVX_X", &Ds_ORIVX_X, &b_Ds_ORIVX_X);
@@ -5275,7 +5282,6 @@ void DecayTree::Init()
     fChain->SetBranchAddress("K_plus_PZ", &K_plus_PZ, &b_K_plus_PZ);
     fChain->SetBranchAddress("K_plus_ID", &K_plus_ID, &b_K_plus_ID);
     fChain->SetBranchAddress("K_plus_PIDmu", &K_plus_PIDmu, &b_K_plus_PIDmu);
-    fChain->SetBranchAddress("K_plus_PIDK", &K_plus_PIDK, &b_K_plus_PIDK);
     fChain->SetBranchAddress("K_plus_PIDp", &K_plus_PIDp, &b_K_plus_PIDp);
     fChain->SetBranchAddress("K_plus_ProbNNk", &K_plus_ProbNNk, &b_K_plus_ProbNNk);
     fChain->SetBranchAddress("K_plus_ProbNNp", &K_plus_ProbNNp, &b_K_plus_ProbNNp);
