@@ -2,8 +2,8 @@
 "Bs_TAU_Var"		"Bs_DTF_TAU"
 
 "CompareAcceptance"	0
-"FitSplineAccRatio"	0
-"FitSplineNorm"	1
+"FitSplineAccRatio"	1
+"FitSplineNorm"		0
 "updateAnaNote"		1
 
 * binning options

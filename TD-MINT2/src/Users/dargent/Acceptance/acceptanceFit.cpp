@@ -861,7 +861,7 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
     ofstream datafile;
     if(updateAnaNote) datafile.open(("../../../../../TD-AnaNote/latex/tables/Acceptance/"+(string)BinningName+"/splineCoeffs_"+ marginalPdfsPrefix + ".tex").c_str(),std::ofstream::trunc);
     else datafile.open(("splineCoeffs_"+ marginalPdfsPrefix + "_" + (string)BinningName+ ".tex").c_str(),std::ofstream::trunc);
-    datafile << "\\begin{table}[h]" << "\n";
+    datafile << "\\begin{table}[hp!]" << "\n";
     datafile << "\\centering" << "\n";
     datafile << "\\small" << "\n";
     datafile << "\\caption{Time acceptance parameters for ";
@@ -904,7 +904,7 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
     datafile << "\\hline" << "\n";
     datafile << "\\end{tabular}" << "\n";
     datafile << "\\label{table:splines}" << "\n";
-    datafile << "\\end{table}" << "\n";
+    datafile << "\\end{table}";
 
     ofstream resultsFile;
     resultsFile.open(("results_" + marginalPdfsPrefix + "_" + (string)BinningName+ ".txt").c_str(),std::ofstream::trunc);
@@ -1600,10 +1600,10 @@ int main(int argc, char** argv){
 
     if(FitSplineAccRatio){
 	//fitSplineAccRatio("", "", "", "combined",(double) offset_sigma_dt, (double) scale_sigma_dt, (double) offset_sigma_dt, (double) scale_sigma_dt);
-	fitSplineAccRatio(" run == 1 && TriggerCat == 0 " , "run == 1 && TriggerCat == 0", "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, (double) offset_sigma_dt_Run1_MC, (double) scale_sigma_dt_Run1_MC);
-	fitSplineAccRatio(" run == 1 && TriggerCat == 1 " , "run == 1 && TriggerCat == 1", "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, (double) offset_sigma_dt_Run1_MC, (double) scale_sigma_dt_Run1_MC);
-	//fitSplineAccRatio(" run == 2 && TriggerCat == 0 ","", "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC);
-	//fitSplineAccRatio(" run == 2 && TriggerCat == 1 ","","Run2_t1",(double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC);
+	//fitSplineAccRatio(" run == 1 && TriggerCat == 0 " , "run == 1 && TriggerCat == 0", "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, (double) offset_sigma_dt_Run1_MC, (double) scale_sigma_dt_Run1_MC);
+	//fitSplineAccRatio(" run == 1 && TriggerCat == 1 " , "run == 1 && TriggerCat == 1", "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, (double) offset_sigma_dt_Run1_MC, (double) scale_sigma_dt_Run1_MC);
+	fitSplineAccRatio(" run == 2 && TriggerCat == 0 ","", "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC);
+	fitSplineAccRatio(" run == 2 && TriggerCat == 1 ","","Run2_t1",(double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC);
     }
 
     if(FitSplineNorm){
