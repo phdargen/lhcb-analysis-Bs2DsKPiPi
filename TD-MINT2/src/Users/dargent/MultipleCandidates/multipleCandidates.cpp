@@ -76,8 +76,7 @@ void writeMultipleDataCanidatesToFile(TString listName = ""){
     
   }
   fileOut.close();
-  cout<< endl << "single candidate events = "<<counter1<< endl << "events with multiple candidates = "<<counter2<< endl << "sum = "<< counter1+counter2<<endl;
-  cout << "Fraction of events with multiple candidates = " << counter2/((double)(counter1+counter2)) * 100. << " %" << endl << endl;
+  cout<< endl << "single candidate events = "<<counter1<< endl << "events with potential multiple candidates = "<<counter2<< endl << "sum = "<< counter1+counter2<<endl;
 }
 
 void chose_multiple_Data_events(TString listName = "", bool writeAllCandidatesToFile=false){
@@ -213,7 +212,9 @@ void chose_multiple_Data_events(TString listName = "", bool writeAllCandidatesTo
   }
   fout.close();
 
-  cout << "Done. Removed candidates: " << chosenCandidates.size()<<endl << endl;
+  cout << endl << "Removed " << counter3 << " events out of " << nentries << " ( " << counter3/(double)nentries * 100. << " %) " << endl; 
+  cout << "Remaining events " << nentries-counter3 << " ( " << (nentries-counter3)/(double)nentries * 100. << " %) " << endl; 
+  cout << "Fraction of events with multiple candidates = " << counter2/((double)nentries) * 100. << " %" << endl << endl;
   //cout << counter1 <<"  "<<counter2<<"  "<<counter3<< endl;
 }
 
@@ -277,9 +278,6 @@ void addMultipleCandidateBranchData(TString listName){
     if(isRejectedMultipleCandidate == true)counter++;
     Bra->Fill();
   }
-
-  cout << endl << "Removed " << counter << " events out of " << numEvents << " ( " << counter/(double)numEvents * 100. << " %) " << endl; 
-  cout << "Remaining events " << numEvents-counter << " ( " << (numEvents-counter)/(double)numEvents * 100. << " %) " << endl; 
 
   out_tree->SetBranchStatus("*",1);
   out_tree->Write();
