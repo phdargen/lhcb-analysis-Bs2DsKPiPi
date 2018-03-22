@@ -1,0 +1,10 @@
+* options
+
+"makeNewList"    	1
+"matchList"      	1
+
+"inFileName"   		"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_16_LTU.root"
+"outFileName"   	"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_16_LTU_multCand.root"
+
+"cut"       		""
+"listName"		"Ds3pi_LTU"

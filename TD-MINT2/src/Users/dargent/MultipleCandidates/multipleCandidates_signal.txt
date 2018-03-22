@@ -1,0 +1,10 @@
+* options
+
+"makeNewList"    	1
+"matchList"      	1
+
+"inFileName"   		"/auto/data/dargent/BsDsKpipi/BDT/Data/signal.root"
+"outFileName"   	"/auto/data/dargent/BsDsKpipi/BDT/Data/signal_multCand.root"
+
+"cut"       		"BDTG_response > 0.3"
+"listName"		"signal"
