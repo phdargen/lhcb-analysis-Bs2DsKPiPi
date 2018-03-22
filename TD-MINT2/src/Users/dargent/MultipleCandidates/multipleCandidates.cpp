@@ -77,7 +77,7 @@ void writeMultipleDataCanidatesToFile(TString listName = ""){
   }
   fileOut.close();
   cout<< endl << "single candidate events = "<<counter1<< endl << "events with multiple candidates = "<<counter2<< endl << "sum = "<< counter1+counter2<<endl;
-  cout << "Fraction of events with multiple candidates = " << counter2/((double)(counter1+counter2)) << endl << endl;
+  cout << "Fraction of events with multiple candidates = " << counter2/((double)(counter1+counter2)) * 100. << " %" << endl << endl;
 }
 
 void chose_multiple_Data_events(TString listName = "", bool writeAllCandidatesToFile=false){
@@ -298,7 +298,7 @@ int main(int argc, char** argv){
   NamedParameter<string> listName("listName",(string)"");
   NamedParameter<int> matchList("matchList", 0);
 
-  cout <<"Searching for multiple candidates ..."<< endl;
+  cout <<"Searching for multiple candidates in file "<< (string)inFileName <<  endl;
   /// Load file
   TFile *file = new TFile(((string)inFileName).c_str());
   TTree* tree = (TTree*) file->Get("DecayTree");	
@@ -311,5 +311,7 @@ int main(int argc, char** argv){
 
   addMultipleCandidateBranchData(TString((string)listName));
    
+  cout << endl << "Created new file "<< (string)outFileName <<  endl;
+
 return 0;
 }

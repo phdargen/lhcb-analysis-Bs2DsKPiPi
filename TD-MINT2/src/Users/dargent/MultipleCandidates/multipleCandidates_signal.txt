@@ -6,5 +6,5 @@
 "inFileName"   		"/auto/data/dargent/BsDsKpipi/BDT/Data/signal.root"
 "outFileName"   	"/auto/data/dargent/BsDsKpipi/BDT/Data/signal_multCand.root"
 
-"cut"       		"BDTG_response > 0.3"
+"cut"       		"Bs_DTF_MM >=  5200 && Bs_DTF_MM <= 5700 && BDTG_response > 0.3"
 "listName"		"signal"
