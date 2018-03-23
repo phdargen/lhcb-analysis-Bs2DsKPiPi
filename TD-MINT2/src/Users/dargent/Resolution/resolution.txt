@@ -1,7 +1,18 @@
+"fitDsMass"	 	0	
+"fitIntegratedResolution"	 1	
+"fitResoRelation"		 1
+
+"dataType"		"MC"
+"inFileName"		"/auto/data/dargent/BsDsKpipi/Final/MC/signal.root"
 "minEventsPerBin"	 1200
 "Bs_TAU_Var"		"Bs_DTF_TAU"
 "TAUERR_min"	 0.
-"TAUERR_max"	 0.15
+"TAUERR_max"	 0.12
 
-"updateTable"			1
-"updateAnaNotePlots"		1
+"useTransformedSigma"	 0
+"nGauss"	 2
+"fixGaussFraction"	 1
+"gaussFraction"		 0.75
+"fixMean"		 0
+
+"updateAnaNote"		1

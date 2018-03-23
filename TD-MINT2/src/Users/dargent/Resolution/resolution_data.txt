@@ -1,0 +1,24 @@
+* general options
+"updateAnaNote"		1
+
+"fitDsMass"	 	0
+"fitIntegratedResolution"	 1
+"fitResoRelation"		 1
+
+* options for Ds mass fit
+"inFileNameForDsMassFit"		"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_16_LTU_multCand.root"
+"sWeight"			1
+
+* options for scale factor fit
+"dataType"		"Data"
+"inFileName"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_Ds2KKpi_16_LTU_multCand.root"
+"minEventsPerBin"	 600
+"Bs_TAU_Var"		"Bs_DTF_TAU"
+"TAUERR_min"	 0.
+"TAUERR_max"	 0.1
+
+"useTransformedSigma"	 0
+"nGauss"	 2
+"fixMean"	1
+"fixGaussFraction"	 1
+"gaussFraction"		 0.75
