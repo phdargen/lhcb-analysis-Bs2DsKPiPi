@@ -1,0 +1,4 @@
+\begin{equation}
+\sigma_{eff}^{MC}(\sigma_t) = \left( 0.0 \pm 0.0 \right) \text{fs} + \left( 1.232 \pm 0.010 \right) \sigma_t
+\label{eq:scaleFactorMC}
+\end{equation}
