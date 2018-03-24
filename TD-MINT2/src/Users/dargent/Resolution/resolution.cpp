@@ -423,7 +423,9 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
 	else datafile.open("ResoTable_"+dataType+".txt", std::ofstream::trunc);		
 	datafile << "\\begin{table}[h]" << "\n";
 	datafile << "\\centering" << "\n";
-	datafile << " \\begin{tabular}{l || l l l | l l}" << "\n";
+	datafile << " \\begin{tabular}{c | c c c | c c}" << "\n";
+	datafile << "\\hline" << "\n";
+	datafile << "\\hline" << "\n";
 	datafile << "$\\sigma_{t}$ Bin [fs] & $\\sigma_{1}$ [fs] & $\\sigma_{2}$ [fs] & $f_{1}$ & D & $\\sigma_{eff}$ [fs]" << " \\\\" << "\n";
 	datafile << "\\hline" << "\n";
 	datafile.close();
@@ -456,9 +458,13 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
 	if(updateAnaNote)datafile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ResoTable_"+dataType+".txt",std::ios_base::app);
 	else datafile.open("ResoTable_"+dataType+".txt", std::ios_base::app);		
 	datafile << "\\hline" << "\n";
+	datafile << "\\hline" << "\n";
 	datafile << "\\end{tabular}" << "\n";
-	datafile << "\\caption{Summary of the obtained parameters from the resolution fits described above.}" << "\n";
-	datafile << "\\label{table:ResoParams}" << "\n";
+	datafile << "\\caption{Measured time resolution for ";
+	if(dataType=="MC")datafile << "$B_s #to D_s K #pi #pi$ MC ";
+	else datafile << "prompt-$D_s$ data ";
+	datafile <<  "in bins of the per-event decay time error estimate.}" << "\n";
+	datafile << "\\label{table:ResoParams"+dataType+"}" << "\n";
 	datafile << "\\end{table}" << "\n";
 	datafile.close();
 
@@ -483,7 +489,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
 	fitFunc2->SetParameters(0.,1.2,0.);
 	fitFunc2->SetParLimits(0,-0.5,0.5);
 	fitFunc2->SetParLimits(1,-5.,5.);
-	fitFunc2->SetParLimits(2,-10.,10.);
+	fitFunc2->SetParLimits(2,-20.,20.);
 	//fitFunc2->FixParameter(0,0.);
 	//fitFunc->FixParameter(1,1.280);
 
@@ -504,8 +510,15 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
 	fitFunc_DsK_mc->FixParameter(0,0.);
 	fitFunc_DsK_mc->FixParameter(1,1.201);
 
-	TCanvas* c = new TCanvas();
+	TF1 *fitFunc_jpsiPhi_data = new TF1("fitFunc_jpsiPhi_data", "[0]+[1]*x ", 0., 0.15);
+	fitFunc_jpsiPhi_data->SetParNames("c0_data","s_data");
+	fitFunc_jpsiPhi_data->SetLineColor(kRed);
+	fitFunc_jpsiPhi_data->SetLineStyle(kDotted);
+	fitFunc_jpsiPhi_data->SetParameters(10.,1.2);
+	fitFunc_jpsiPhi_data->FixParameter(0,0.01206);
+	fitFunc_jpsiPhi_data->FixParameter(1,0.8793);
 
+	TCanvas* c = new TCanvas();
         TLegend leg(0.15,0.65,0.45,0.9,"");
         leg.SetLineStyle(0);
         leg.SetLineColor(0);
@@ -522,6 +535,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
 	fitFunc->Draw("same");
 	//fitFunc_DsK_data->Draw("same");
 	if(dataType=="MC")fitFunc_DsK_mc->Draw("same");
+	else fitFunc_jpsiPhi_data->Draw("same");
 	fitFunc2->Draw("same");
 	//ResoRelation_ga->Draw("Psame");
 
@@ -531,11 +545,12 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
         leg.AddEntry(fitFunc,"Linear Fit","l");
 	leg.AddEntry(fitFunc2,"Quadratic Fit","l");
         if(dataType=="MC")leg.AddEntry(fitFunc_DsK_mc,"B_{s} #rightarrow D_{s}K MC","l");
+	else leg.AddEntry(fitFunc_jpsiPhi_data,"B_{s} #rightarrow J/#psi #phi Data","l");
 // 	else leg.AddEntry(fitFunc2,"Quadratic Fit","l");
 	leg.Draw();
 	
 	c->Print("Plots/ScaleFactor_"+dataType+".eps");
-        if(updateAnaNote)c->Print("../../../../../TD-AnaNote/latex/figs/Resolution/ProperTimeReso_"+dataType+".pdf");
+        if(updateAnaNote)c->Print("../../../../../TD-AnaNote/latex/figs/Resolution/ScaleFactor_"+dataType+".pdf");
 }
 
 void fitSignalShape(TCut cut = ""){
@@ -548,16 +563,19 @@ void fitSignalShape(TCut cut = ""){
 	NamedParameter<double> max_MM("max_MM",2015.);
 	NamedParameter<string> InFileName("inFileNameForDsMassFit",(string)"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_16_LTU.root");
 	TString inFileName = (TString)((string)InFileName);
- 	//NamedParameter<string> outFileName("outFileNameNorm",(string)"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
+ 	NamedParameter<string> outFileNameForDsMassFit("outFileNameForDsMassFit",(string)"/auto/data/dargent/BsDsKpipi/Final/Data/signal_LTU.root");
 	
 	/// Load file
-	TFile *file = new TFile(inFileName);
-	TTree* tree = (TTree*) file->Get("DecayTree");	
+	//TFile *file = new TFile(inFileName);
+	//TTree* tree = (TTree*) file->Get("DecayTree");	
+	TChain* tree = new TChain("DecayTree");
+	tree->Add(inFileName);
 	tree->SetBranchStatus("weight",0);
 
 	TFile* output;
 	if(!sWeight) output = new TFile("dummy.root","RECREATE");
-	else output = new TFile(inFileName.ReplaceAll("/Preselected/","/Final/"),"RECREATE");
+	//else output = new TFile((inFileName.ReplaceAll("/Preselected/","/Final/")).ReplaceAll(),"RECREATE");
+	else output = new TFile(((string)outFileNameForDsMassFit).c_str(),"RECREATE");
 
 	cut += ("Ds_MM >= " + anythingToString((double)min_MM) + " && Ds_MM <= " + anythingToString((double)max_MM)).c_str();
 	TTree* out_tree = tree->CopyTree(cut);
@@ -577,7 +595,7 @@ void fitSignalShape(TCut cut = ""){
 	RooJohnsonSU* signal= new RooJohnsonSU("signal","signal",DTF_Bs_M, mean,sigma,gamma,delta);
 
 	/// Bkg pdf
-	RooRealVar c0("c0", "c0", .0); 
+	RooRealVar c0("c0", "c0", .0,-1,1); 
 	RooRealVar c1("c1", "c1", .0,-10,10); 
 	RooRealVar c2("c2", "c2", .0,-10,10); 
 	RooChebychev* bkg= new RooChebychev("bkg","bkg",DTF_Bs_M, RooArgList(c0));
@@ -682,7 +700,7 @@ void fitSignalShape(TCut cut = ""){
         pad2->Update();
         canvas->Update();
         canvas->SaveAs("Ds_M_pull.eps");
- 	if(updateAnaNote) c->Print("../../../../../TD-AnaNote/latex/figs/Resolution/Ds_M_pull.pdf");
+ 	if(updateAnaNote)canvas->Print("../../../../../TD-AnaNote/latex/figs/Resolution/Ds_M_pull.pdf");
 
 	out_tree->Write();
 	output->Close();
