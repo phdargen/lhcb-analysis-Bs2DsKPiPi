@@ -18,6 +18,6 @@ $\sigma_{t}$ Bin [fs] & $\sigma_{1}$ [fs] & $\sigma_{2}$ [fs] & $f_{1}$ & D & $\
 \hline
 \hline
 \end{tabular}
-\caption{Measured time resolution for $B_s #to D_s K #pi #pi$ MC in bins of the per-event decay time error estimate.}
+\caption{Measured time resolution for $B_s \to D_s K \pi \pi$ MC in bins of the per-event decay time error estimate.}
 \label{table:ResoParamsMC}
 \end{table}

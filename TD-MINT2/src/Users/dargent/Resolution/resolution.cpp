@@ -461,7 +461,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
 	datafile << "\\hline" << "\n";
 	datafile << "\\end{tabular}" << "\n";
 	datafile << "\\caption{Measured time resolution for ";
-	if(dataType=="MC")datafile << "$B_s #to D_s K #pi #pi$ MC ";
+	if(dataType=="MC")datafile << "$B_s \\to D_s K \\pi \\pi$ MC ";
 	else datafile << "prompt-$D_s$ data ";
 	datafile <<  "in bins of the per-event decay time error estimate.}" << "\n";
 	datafile << "\\label{table:ResoParams"+dataType+"}" << "\n";
@@ -551,6 +551,19 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
 	
 	c->Print("Plots/ScaleFactor_"+dataType+".eps");
         if(updateAnaNote)c->Print("../../../../../TD-AnaNote/latex/figs/Resolution/ScaleFactor_"+dataType+".pdf");
+
+	if(updateAnaNote){
+		ofstream eqfile;
+		eqfile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ScaleFactor_"+dataType+".txt",std::ofstream::trunc);
+		eqfile << "\\begin{equation}" << "\n";
+		eqfile <<  "\\sigma_{eff}^{"+dataType+"}(\\sigma_t) = \\left( " ;
+		eqfile << std::setprecision(1) << std::fixed <<  fitFunc->GetParameter(0) * 1000. << " \\pm " << fitFunc->GetParError(0) * 1000. << " \\right) \\text{fs} + \\left( ";
+		eqfile << std::setprecision(3) << std::fixed  <<  fitFunc->GetParameter(1) << " \\pm " << fitFunc->GetParError(1) ;
+		eqfile << " \\right) \\sigma_t" << "\n";
+		eqfile << "\\label{eq:scaleFactor"+dataType+"}" << "\n";
+		eqfile << "\\end{equation}" << "\n";
+		eqfile.close();
+	}
 }
 
 void fitSignalShape(TCut cut = ""){
