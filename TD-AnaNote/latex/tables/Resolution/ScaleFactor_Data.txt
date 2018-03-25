@@ -1,4 +1,4 @@
 \begin{equation}
-\sigma_{eff}^{Data}(\sigma_t) = \left( 7.7 \pm 2.2 \right) \text{fs} + \left( 0.901 \pm 0.054 \right) \sigma_t
+\sigma_{eff}^{Data}(\sigma_t) = \left( 9.7 \pm 1.7 \right) \text{fs} + \left( 0.915 \pm 0.040 \right) \sigma_t
 \label{eq:scaleFactorData}
 \end{equation}
