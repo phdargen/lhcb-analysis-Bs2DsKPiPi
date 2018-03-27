@@ -1,0 +1,27 @@
+lb-dev DaVinci/vXrY cd ./ DaVinci_vXrY git lb-use LHCb
+git lb-checkout
+LHCb/dev-flavtag-master Event/PhysEvent LHCb/dev-flavtag-master Event/EventPacker LHCb/dev-flavtag-master Hlt/HltDAQ
+git lb-checkout
+git lb-checkout
+git lb-use Phys
+git lb-checkout
+git lb-checkout
+git lb-checkout
+git lb-use Analysis
+git lb-checkout Analysis/dev-flavtag-master Phys/DecayTreeTupleBase git lb-checkout Analysis/dev-flavtag-master Phys/DecayTreeTuple
+git lb-use DaVinci
+git lb-checkout DaVinci/dev-flavtag-master Phys/DaVinci
+make
+
+tt_tagging = dttuple.addTupleTool("TupleToolTagging") tt_tagging.Verbose = True
+# uncomment next three lines if you do tagging development or similar, and need
+# all the information
+# tt_tagging.AddMVAFeatureInfo = True # Writes out all MVA features for the final tag
+# tt_tagging.AddTagPartsInfo = True # Writes out all features of all tagging
+#
+# particles used in the selection
+from Configurables import BTaggingTool
+btagtool = tt_tagging.addTool(BTaggingTool , name = "MyBTaggingTool")
+from FlavourTagging.Tunings import applyTuning as applyFTTuning # pick the right tuning here ...
+applyFTTuning(btagtool , tuning_version="Summer2017Optimisation")
+tt_tagging.TaggingToolName = btagtool.getFullName ()
