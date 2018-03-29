@@ -3,7 +3,7 @@ from Configurables import DaVinci
 from Configurables import CombineParticles
 
 ############# Global settings
-year = "2016"
+year = "2017"
 data = True
 down = False
 stream = "AllStreams"

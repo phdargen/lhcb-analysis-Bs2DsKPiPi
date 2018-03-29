@@ -21,6 +21,7 @@ source collect-output.sh LFNs.txt
 start ganga without monitoring: 
 
 ganga --no-mon
+ganga --ganga-version 6.7.4 --no-mon
 
 run Monitoring over selected jobs:
 
@@ -64,3 +65,12 @@ lb-run LHCBDIRAC python get_bookkeeping_info.py
 # Get generated lifetimes for given ddb tag
 
 lb-run bender/latest python getGeneratedLifetimes.py
+
+
+# Get dst file for testing
+
+d = DiracFile('LFN:/lhcb/LHCb/Collision12/BHADRON.MDST/00041834/0000/00041834_00000001_1.bhadron.mdst')
+d.localDir = '/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/'
+d.get()
+
+lb-run DaVinci/v41r4p4 gaudirun.py b2dkpipi_16.py
