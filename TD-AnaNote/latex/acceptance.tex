@@ -26,7 +26,7 @@ while the mean and the tail parameters are shared between them.
 The background component is only included for the second category.
 \\
 A significant fraction of $8\%$ of the true signal candidates are classified as ghosts,
-while only $x.x \%$ of the events classified with \textsf{BKGCAT}$=60$ are indeed genuine ghosts.
+while only $20 \%$ of the events classified with \textsf{BKGCAT}$=60$ are indeed genuine ghosts.
 
 
 %We repeat the efficiency determination with an alternative fit model to assign a systematic uncertainty.
@@ -73,11 +73,37 @@ classified with \textsf{BKGCAT} = 20 or 50 (left) and \textsf{BKGCAT} = 60 (righ
 \end{figure}
 
 
+\clearpage
 \subsubsection{BDT efficiencies}
 
+\begin{figure}[h]
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_Bs_DTF_TAU.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_Kpipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_Dspipi.pdf}
 
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_Kpi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_pipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_Dspi.pdf}
+\caption{}
+\label{fig:}
+\end{figure}
+
+
+\begin{figure}[h]
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_Bs_DTF_TAU.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_Kpipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_Dspipi.pdf}
+
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_Kpi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_pipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_Dspi.pdf}
+\caption{}
+\label{fig:}
+\end{figure}
+
+
+\clearpage
 \subsubsection{Tracking efficiencies}
-
 
 \clearpage
 
@@ -152,33 +178,32 @@ The deviations are most pronounced in the $(0-5) \ps$ region, where the majority
 Therefore, the time-dependent efficiency has to be treated separately for the runs and L0 categories. 
 This is achieved by implementing a simultaneous fit, where the acceptance description is allowed to vary in the subsamples.   
 
+
+
 \clearpage
 \subsubsection{Results}
 
 The nominal fit to $\Bs\to\Ds\pion\pion\pion$ data using this configuration is shown in Figure \ref{fig:accFit}. 
 Note that the normalization of the splines in the following figures is not in scale.
 The fit parameters obtained from the described fits to data and simulation are summarised in Table \ref{table:splines}.
-
-\begin{figure}[h]
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_combined.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_combined.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_combined.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_combined.pdf}
-\caption{The red line shows the spline function describing the acceptance and the blue line depicts the total fit function.}
-\label{fig:accFit}
-\end{figure}
-
-\input{tables/Acceptance/adaptive_N4/splineCoeffs_combined.tex}
+%
+%\begin{figure}[h]
+%\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_combined.pdf}
+%\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_combined.pdf}
+%\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_combined.pdf}
+%\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_combined.pdf}
+%\caption{The red line shows the spline function describing the acceptance and the blue line depicts the total fit function.}
+%\label{fig:accFit}
+%\end{figure}
+%\input{tables/Acceptance/adaptive_N4/splineCoeffs_combined.tex}
 
 \clearpage
-
 \input{tables/Acceptance/adaptive_N4/splineCoeffs_Run1_t0.tex}
 \input{tables/Acceptance/adaptive_N4/splineCoeffs_Run1_t1.tex}
 \input{tables/Acceptance/adaptive_N4/splineCoeffs_Run2_t0.tex}
 \input{tables/Acceptance/adaptive_N4/splineCoeffs_Run2_t1.tex}
 
 \clearpage
-
 \begin{figure}[h]
 \includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t0.pdf}
 \includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t0.pdf}
@@ -195,7 +220,6 @@ The fit parameters obtained from the described fits to data and simulation are s
 \end{figure}
 
 \clearpage
-
 \begin{figure}[h]
 \includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf}
 \includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2_t0.pdf}
@@ -211,6 +235,6 @@ The fit parameters obtained from the described fits to data and simulation are s
 \label{fig:}
 \end{figure}
 
-
+\clearpage
 \subsection{Phasespace acceptance}
 \label{sec:phasespaceAcceptance}

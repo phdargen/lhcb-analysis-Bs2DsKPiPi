@@ -110,7 +110,7 @@ and \textsf{L0} trigger category.
 \section{Decay-time Resolution fits}
 \label{sec:DecResFits}
 
-This section contains all fits to the distirbutions of the decay time difference $\Delta t$ between the true and the reconstructed decay time of the truth-matched $\Bs$ candidates on MC.
+This section contains all fits to the distributions of the decay time difference $\Delta t$ between the true and the reconstructed decay time of the truth-matched $\Bs$ candidates on MC.
 The fits are performed in bins of the decay time error $\sigma_{t}$, where an adaptive binning scheme is used to ensure that approximately the same number of events are found in each bin. 
 
 \begin{figure}[h]
@@ -126,6 +126,30 @@ The fits are performed in bins of the decay time error $\sigma_{t}$, where an ad
 
 \includegraphics[height=!,width=0.4\textwidth]{figs/Resolution/SignalMC_bin_7.pdf}
 \includegraphics[height=!,width=0.4\textwidth]{figs/Resolution/SignalMC_bin_8.pdf}
-\caption{Difference of the true and measured decay time of $\Bs\to\Ds\kaon\pion\pion$ candidates from MC in all bins. The fit described in \ref{sec:Resolution} is overlaid.}
-\label{fig:massfits_signal_Run2}
+\caption{Difference of the true and measured decay time of $\Bs\to\Ds\kaon\pion\pion$ MC candidates in bins of the per-event decay time error estimate..}
+\label{fig:}
 \end{figure}
+
+\input{tables/Resolution/ResoTable_MC.txt}
+
+\clearpage
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.4\textwidth]{figs/Resolution/SignalData_bin_1.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/Resolution/SignalData_bin_2.pdf}
+
+\includegraphics[height=!,width=0.4\textwidth]{figs/Resolution/SignalData_bin_3.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/Resolution/SignalData_bin_4.pdf}
+
+\includegraphics[height=!,width=0.4\textwidth]{figs/Resolution/SignalData_bin_5.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/Resolution/SignalData_bin_6.pdf}
+
+\includegraphics[height=!,width=0.4\textwidth]{figs/Resolution/SignalData_bin_7.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/Resolution/SignalData_bin_8.pdf}
+\caption{Decay-time distribution for fake $B_s$ candidates from promptly produced $D_s$ candidates, combined with random prompt $K\pi\pi$ bachelor tracks, for bins in the per-event decay time error estimate.}
+\label{fig:}
+\end{figure}
+
+\input{tables/Resolution/ResoTable_Data.txt}
+
