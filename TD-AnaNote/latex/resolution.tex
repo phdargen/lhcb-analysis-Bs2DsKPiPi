@@ -101,13 +101,14 @@ Details of the fit results in each slice are shown in appendix \ref{sec:DecResFi
 %
 %
 Figure \ref{fig:scaleFactorMC} shows the obtained values for $\sigma_{eff}$ as a function of the per-event decay time error $\sigma_{t}$. 
+To account for the variable binning, the bin values are not placed at the bin center but at the weighted mean of the respective per-event-error bin.
 A linear function 
 %of the form  
 %\begin{equation}
 %\sigma(\sigma_{t})_{mc} = s_{0} + s_{1}\cdot \sigma_{t} 
 %\label{eq:resfit}
 %\end{equation}
-is used to parametrize this distribution. 
+is used to parametrize the distribution. 
 The obtained values are 
 \input{tables/Resolution/ScaleFactor_MC.txt}
 where 
