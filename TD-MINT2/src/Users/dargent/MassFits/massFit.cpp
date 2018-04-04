@@ -35,6 +35,7 @@
 #include "RooDecay.h"
 #include "RooPlot.h"
 #include "RooGaussian.h"
+#include "RooProdPdf.h"
 #include "RooDstD0BG.h"
 #include "RooAddPdf.h"
 #include "RooExtendPdf.h"
@@ -213,8 +214,9 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi"){
 
 vector<double> fitPartRecoBkgShape(){
 
+	NamedParameter<double> min_MM("min_MM",5100.);
+	NamedParameter<double> max_MM("max_MM",5700.);
 	///define shape of Bs->Ds*pipipi BG as 3 bifurcated gaussians
-	
 	RooRealVar Bs_MM("Bs_DTF_MM", "m(D_{s}*K#pi#pi)", 5000., 5350.,"MeV/c^{2}");
 	//mean of gaussians
 	RooRealVar mean1("mean1","mu", 5059.,5040.,5070.);
@@ -264,6 +266,10 @@ vector<double> fitPartRecoBkgShape(){
 	frame_m->Draw();
 	c1->Print("eps/BkgShape/Bs2Dsstartpipipi.eps");
 
+	Bs_MM.setRange("signal_range",min_MM,max_MM);
+	double eff_signal_range = pdf->createIntegral(Bs_MM,NormSet(Bs_MM),Range("signal_range"))->getVal();
+	cout << "eff_signal_range" << eff_signal_range << endl;
+
 	/// Return fit parameters
 	vector<double> params;
 	params.push_back(mean1.getVal());
@@ -277,6 +283,7 @@ vector<double> fitPartRecoBkgShape(){
 	params.push_back(sigmaR3.getVal());
 	params.push_back(f_1.getVal());
 	params.push_back(f_2.getVal());
+	params.push_back(eff_signal_range);
 
 	file->Close();
 	
@@ -1358,8 +1365,8 @@ vector< vector<double> > fitNorm(){
 				else if(str_Ds[j]=="pipipi")label = "D_{s}^{-}#rightarrow #pi^{+}#pi^{-}#pi^{-}";
 				lhcbtext->SetTextFont(132);
 				lhcbtext->DrawLatex(0.6,0.78,label);
-				if(str_trigger[k]=="t0")lhcbtext->DrawLatex(0.6,0.65,"L0Hadron TOS");
-				else lhcbtext->DrawLatex(0.6,0.65,"L0Global TIS");
+				if(str_trigger[k]=="t0")lhcbtext->DrawLatex(0.6,0.68,"L0-TOS");
+				else lhcbtext->DrawLatex(0.6,0.68,"L0-TIS");
 				c1->Print("eps/norm_" + str_run[i] + "_" + str_Ds[j]+ "_" + str_trigger[k]  + ".eps");
 				if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/norm_" + str_run[i] + "_" + str_Ds[j] + "_" + str_trigger[k]  + ".pdf");
 				hpull = frame->pullHist("data_slice2","pdf_slice2") ;
@@ -1562,6 +1569,7 @@ vector< vector<double> > fitNorm(){
 	partReco_params.push_back(sigmaR3.getVal());
 	partReco_params.push_back(f_1.getVal());
 	partReco_params.push_back(f_2.getVal());
+	partReco_params.push_back(bkg_partReco_params[11]);
 
 	vector< vector <double> > return_vec;
 	return_vec.push_back(signal_yields);
@@ -1587,12 +1595,14 @@ void fitSignal(){
 	NamedParameter<int> sWeight("sWeightSignal", 0);
 	NamedParameter<int> nBins("nBins", 80);
 	NamedParameter<double> min_MM("min_MM",5100.);
+	min_MM.setVal((double)min_MM-25.);
 	NamedParameter<double> max_MM("max_MM",5700.);
 	NamedParameter<double> cut_BDT("cut_BDT",0.);
 	NamedParameter<int> fixMisIDyields("fixMisIDyields",1);
 	NamedParameter<int> useNormScaleFactors("useNormScaleFactors",1);
 	NamedParameter<int> useNormSignalShape("useNormSignalShape",1);
 	NamedParameter<int> useTriggerCat("useTriggerCat", 0);
+	NamedParameter<int> constrainCombBkgFromSS("constrainCombBkgFromSS",0);
 	NamedParameter<int> optimizeBDT("optimizeBDT",0);
 	NamedParameter<int> newTable("newTable",0);
 	NamedParameter<int> useB0("useB0", 0);
@@ -1664,7 +1674,7 @@ void fitSignal(){
 	/// Combinatorial bkg pdf
 	RooRealVar exp_par("exp_par","exp_par",-1.6508e-03,-10.,0.);	
 	RooExponential bkg_exp("bkg_exp","bkg_exp",DTF_Bs_M,exp_par);
-	bkg_exp.fitTo(*data,Save(kTRUE),Range(5600.,5800.));
+	if(!constrainCombBkgFromSS)bkg_exp.fitTo(*data,Save(kTRUE),Range(5600.,5800.));
 
 	/// Part. reco bkg
 	vector<double> bkg_partReco_params = norm_paramSet[3];
@@ -1682,6 +1692,7 @@ void fitSignal(){
 	RooRealVar sigmaR3("sigmaR3", "sigmaR3",  bkg_partReco_params[8]);
 	RooRealVar f_1("f_1", "f_1", bkg_partReco_params[9]);
 	RooRealVar f_2("f_2", "f_2", bkg_partReco_params[10]);
+	double eff_bkg_partReco_inSigRange = bkg_partReco_params[11];
 
 	RooBifurGauss BifGauss1_Bs("BifGauss1_Bs","BifGauss1_Bs", DTF_Bs_M, mean1, sigmaL1,sigmaR1);
 	RooBifurGauss BifGauss2_Bs("BifGauss2_Bs","BifGauss2_Bs", DTF_Bs_M, mean2, sigmaL2,sigmaR2);
@@ -1809,12 +1820,12 @@ void fitSignal(){
 
 	if(useTriggerCat){
 		for(int i=0; i<str_run.size(); i++) for(int j=0; j<str_Ds.size(); j++) for(int k=0; k<str_trigger.size(); k++){
-			double val = fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]   ;
+			double val = fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]/eff_bkg_partReco_inSigRange   ;
 			((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(val);
 			if(fixMisIDyields)((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setConstant();
 			else ((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setRange(val * 0. , val * 2.);
 	
-			((RooRealVar*) fitParams->find("misID_f_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal( fake_prob_Ds * Ds_yields[counter] / (fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]   ));
+			((RooRealVar*) fitParams->find("misID_f_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal( fake_prob_Ds * Ds_yields[counter] / (fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]/eff_bkg_partReco_inSigRange   ));
 			((RooRealVar*) fitParams->find("misID_f_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setConstant();
 	
 			/// Set start values for yields
@@ -1829,12 +1840,12 @@ void fitSignal(){
 	}
 	else {
 		for(int i=0; i<str_year.size(); i++) for(int j=0; j<str_Ds.size(); j++){
-			double val = fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]   ;
+			double val = fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]/eff_bkg_partReco_inSigRange   ;
 			((RooRealVar*) fitParams->find("n_misID_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setVal(val);
 			if(fixMisIDyields)((RooRealVar*) fitParams->find("n_misID_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setConstant();
 			else ((RooRealVar*) fitParams->find("n_misID_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setRange(val * 0. , val * 2.);
 	
-			((RooRealVar*) fitParams->find("misID_f_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setVal( fake_prob_Ds * Ds_yields[counter] / (fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]   ));
+			((RooRealVar*) fitParams->find("misID_f_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setVal( fake_prob_Ds * Ds_yields[counter] / (fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]/eff_bkg_partReco_inSigRange   ));
 			((RooRealVar*) fitParams->find("misID_f_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setConstant();
 	
 			/// Set start values for yields
@@ -1847,8 +1858,51 @@ void fitSignal(){
 			counter++;
 		}
 	}
+
+
+	/// Constrain Exp from SS line
+	RooArgSet constr_set;
+	if(constrainCombBkgFromSS){		
+		TFile *file_SS= new TFile("/auto/data/dargent/BsDsKpipi/BDT/Data/signal_SS.root");
+		TTree* tree_SS = (TTree*) file_SS->Get("DecayTree");	
+		tree_SS->SetBranchStatus("*",0);
+		tree_SS->SetBranchStatus("Bs_DTF_MM",1);
+		tree_SS->SetBranchStatus("Ds_finalState",1);
+		tree_SS->SetBranchStatus("year",1);
+		tree_SS->SetBranchStatus("TriggerCat",1);
+		tree_SS->SetBranchStatus("run",1);      
+		tree_SS->SetBranchStatus("BDTG_response",1);      	
+
+		RooArgList list_SS =  RooArgList(DTF_Bs_M,Ds_finalState,year,run,TriggerCat);
+		RooDataSet*  data_SS = new RooDataSet("data_SS","data_SS",tree_SS,list,("BDTG_response > " + anythingToString((double)cut_BDT)).c_str() );
+
+		for(int j=0; j<str_Ds.size(); j++){
+			/// Get data slice
+			RooDataSet* data_slice = new RooDataSet("data_SS_slice","data_SS_slice",data_SS,list,"Ds_finalState == Ds_finalState::" + str_Ds[j]);
+			/// Fit
+			bkg_exp.fitTo(*data_slice,Save(kTRUE));
+			/// Constrain parameters
+			((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setVal(exp_par.getVal());
+			//((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setConstant();
+			RooGaussian* constr = new RooGaussian("constr_"+str_Ds[j],"constr_"+str_Ds[j],*((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j])),RooRealConstant::value(exp_par.getVal()),RooRealConstant::value(exp_par.getError()));
+			constr_set.add(*constr);
+			/// Plot
+			TCanvas* c = new TCanvas();
+			RooPlot* frame= DTF_Bs_M.frame();
+			frame->SetTitle("");
+			data_slice->plotOn(frame,Name("data"),MarkerSize(1),Binning(nBins));
+			bkg_exp.plotOn(frame,Name("bkg_exp"),LineColor(kBlue+1),LineWidth(3));
+			frame->Draw();
+			c->Print("eps/comb_"+str_Ds[j]+".eps");
+		}
+	}
+	RooProdPdf* constr_exp; 
+	if(constrainCombBkgFromSS) constr_exp = new RooProdPdf("constr_exp","constr_exp",constr_set);
+
 	/// Perform fit
-	RooFitResult* result = simPdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),NumCPU(numCPU));
+	RooFitResult* result;
+	if(constrainCombBkgFromSS)result = simPdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),NumCPU(numCPU),ExternalConstraints(*constr_exp));
+	else result = simPdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),NumCPU(numCPU));
 	cout << "result is --------------- "<<endl;
 	result->Print("v");
 
@@ -2181,8 +2235,8 @@ void fitSignal(){
 				else if(str_Ds[j]=="pipipi")label = "D_{s}^{-}#rightarrow #pi^{+}#pi^{-}#pi^{-}";
 				lhcbtext->SetTextFont(132);
 				lhcbtext->DrawLatex(0.6,0.78,label);
-				if(str_trigger[k]=="t0")lhcbtext->DrawLatex(0.6,0.65,"L0Hadron TOS");
-				else lhcbtext->DrawLatex(0.6,0.65,"L0Global TIS");
+				if(str_trigger[k]=="t0")lhcbtext->DrawLatex(0.6,0.68,"L0-TOS");
+				else lhcbtext->DrawLatex(0.6,0.68,"L0-TIS");
 				c->Print("eps/signal_" + str_run[i] + "_" + str_Ds[j] + "_" + str_trigger[k] + ".eps");
 				if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/signal_" + str_run[i] + "_" + str_Ds[j] + "_" + str_trigger[k] + ".pdf");
 				hpull = frame->pullHist("data_slice2","pdf_slice2") ;

@@ -6,7 +6,7 @@
 "cut_BDT" 	0.3
 "numCPU"	 10
 "newTable"	0
-"updateAnaNotePlots"  0
+"updateAnaNotePlots"  1
 "useTriggerCat"		1
 
 * Norm fit :
@@ -21,9 +21,12 @@
 "fixMisIDyields"	1
 "useNormScaleFactors"	1
 "useNormSignalShape"	1
-"sWeightSignal"	 	0
-"optimizeBDT"		1
+"constrainCombBkgFromSS"	1
+
+"sWeightSignal"	 	1
+"optimizeBDT"		0
 *"inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root"
 
 * MC fit:
 "sWeightMC"	0
+
