@@ -23,7 +23,7 @@
 "useNormSignalShape"	1
 "constrainCombBkgFromSS"	1
 
-"sWeightSignal"	 	1
+"sWeightSignal"	 	0
 "optimizeBDT"		0
 *"inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root"
 
