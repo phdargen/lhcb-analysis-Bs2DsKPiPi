@@ -1,0 +1,105 @@
+"RandomSeed"		0
+"Event Pattern"         531 -431 211 211 -211
+
+*"InputDir"	"../Files/"
+"OutputDir"	"norm_taggingCalib/"
+"channel"	"norm"
+
+"updateAnaNotePlots"	 1
+"nBinst" 	40
+"min_TAU" 	0.4
+"max_TAU" 	10
+"max_TAU_ForMixingPlot" 	4
+"w_max"		 0.5
+"nBinsAsym" 	10
+
+*"min_year" 	11
+*"max_year" 	12
+"doSimFit"	1
+
+
+"tau"		2	1.509 	0.01	0.5	2.0
+"dGamma" 	2 	-0.09 	0.01	0.0	0.0
+"dm" 		2 	17.757  0.01	0.0	0.0
+
+"C"	2	1	0.05	
+"D"	2	0.	0.05	
+"D_bar"	2	0.	0.05	
+"S"	2	0.	0.05	
+"S_bar" 2	0.	0.05	
+*"C_Blind"	1	-1   1
+*"D_Blind"	1	-1   1
+*"D_bar_Blind"	1	-1   1
+*"S_Blind"	1	-1   1
+*"S_bar_Blind"	1	-1   1
+
+knot_positions 0.8 1.6 2.5 6.5 
+
+c0_Run1_t0  2  0.532991  0.0125663
+c1_Run1_t0  2  0.769336  0.0207108
+c2_Run1_t0  2  0.892017  0.032426
+c3_Run1_t0  2  1.09911  0.022165
+
+c0_Run1_t1  2  0.347654  0.0113458
+c1_Run1_t1  2  0.547588  0.0197926
+c2_Run1_t1  2  0.874034  0.0379027
+c3_Run1_t1  2  1.06554  0.0272429
+
+c0_Run2_t0  2  0.486612  0.0090654
+c1_Run2_t0  2  0.690537  0.015058
+c2_Run2_t0  2  0.852551  0.024185
+c3_Run2_t0  2  1.06518  0.0173135
+
+c0_Run2_t1  2  0.299872  0.00709963
+c1_Run2_t1  2  0.475443  0.0124702
+c2_Run2_t1  2  0.720577  0.0231785
+c3_Run2_t1  2  1.06694  0.0187704
+
+***
+"offset_sigma_dt_Run1"	2 	0.0103	0.001
+"scale_sigma_dt_Run1"	2	1.28	0.05
+
+"p0_os_Run1"			0	0.389677	0.005
+"p1_os_Run1"			0	0.884908	0.06
+"delta_p0_os_Run1"		0	0.	0.005
+"delta_p1_os_Run1"		0	0.	0.005
+"avg_eta_os_Run1"		2	0.373	0.001
+"tageff_os_Run1"		0	0.385074	0.001
+"tageff_asym_os_Run1"		0	0.	0.005
+
+"p0_ss_Run1"			0	0.446859	0.005
+"p1_ss_Run1"			0	1.07739		0.06
+"delta_p0_ss_Run1"		0	0.	0.005
+"delta_p1_ss_Run1"		0	0.	0.005
+"avg_eta_ss_Run1"		2	0.4331	0.001
+"tageff_ss_Run1"		0	0.688189	0.001
+"tageff_asym_ss_Run1"		0	0.	0.005
+
+"production_asym_Run1"	0	0.	0.005
+"detection_asym_Run1"	2	0.	0.005
+
+***
+"offset_sigma_dt_Run2"		2	0.0097	0.005
+"scale_sigma_dt_Run2"		2	0.915	0.005
+* From J/psi phi 
+*"offset_sigma_dt_Run2"		2	0.01206
+*"scale_sigma_dt_Run2"		2	0.8793	
+
+"p0_os_Run2"			0	0.367591	0.005
+"p1_os_Run2"			0	0.933794	0.06
+"delta_p0_os_Run2"		0	0.	0.005
+"delta_p1_os_Run2"		0	0.	0.005
+"avg_eta_os_Run2"		2	0.373	0.001
+"tageff_os_Run2"		0	0.352499	0.001
+"tageff_asym_os_Run2"		0	0.	0.005
+
+"p0_ss_Run2"			0	0.45306	0.005
+"p1_ss_Run2"			0	0.911244	0.06
+"delta_p0_ss_Run2"		0	0.	0.005
+"delta_p1_ss_Run2"		0	0.	0.005
+"avg_eta_ss_Run2"		2	0.4331	0.001
+"tageff_ss_Run2"		0	0.680385	0.001
+"tageff_asym_ss_Run2"		0	0.	0.005
+
+"production_asym_Run2"	0	0.	0.005
+"detection_asym_Run2"	2	0.	0.005

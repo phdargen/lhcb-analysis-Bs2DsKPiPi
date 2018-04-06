@@ -1,0 +1,156 @@
+* general options
+"Event Pattern"         531 -431 321 211 -211
+"RandomSeed"  	1
+"Phases given in"       "degrees"
+
+"InputGenMCFile"    "/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_DsKpipi_CPV.root"
+*"InputGenMCFile"    "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/GenLevMC/GenMC_DsKpipi_CP_test.root"
+
+* setup MC integrator
+*"IntegratorEventFile"	"SignalIntegrationEvents_DsKpipi_GenMC.root"
+"IntegratorEventFile"	"SignalIntegrationEvents_toys.root"
+"IntegratorEvents"	500000
+"IntegPrecision"        6.0e-3
+"IntegMethod"           "efficient"
+"IntegratorSource"        "file"
+"channel"	"signal"
+
+* options for toy generation
+*"InputFileName"		"toys.root"
+"Nevents"               3700
+"pdf_max"               100
+"saveEvents"		1
+"OutputRootFile"	"toys.root"
+
+"updateAnaNote"		 0
+"nBinst" 	50
+"min_TAU" 	0.4
+"max_TAU" 	10
+"min_TAUERR" 	0.
+"max_TAUERR" 	0.1
+"max_TAU_ForMixingPlot" 	4
+"w_max"		 0.5
+"nBinsAsym" 	10
+
+"doSimFit"		0
+"doTimeFit"		0
+"doDalitzFit"		0
+"do2DScan"		0
+"doPlots"		1
+"OutputDir"		"signal_DsKpipi_CPV_MC/"
+
+"randomizeStartVals"		0
+"fitGenMC"	1
+"doBootstrap"	1
+"N_bootstrap"	4000
+
+
+** name		Fix?	init	step	min	max
+*
+
+"r"	2	1	0.05	0.	2.
+"delta"	2	0	5	-360    360		
+"gamma"	2	0	5	
+*"gamma_Blind"	1	-180   180
+*"gamma_Scan"	0	360	
+"k" 	1	1.	0.05	0.	1.
+
+"r_K1_Re"	2 0. 0.05 0.0 0.0
+"r_K1_Im"	2 0. 0.05 0.0 0.0
+*"r_2_Re"	0	0.2 0.05
+*"r_2_Im"	0	0. 0.05
+*"r_3_Re"	0	-0.2 0.05
+*"r_3_Im"	0	0. 0.05
+*"r_4_Re"	2	0 0.05
+*"r_4_Im"	2	0 0.05 
+
+"xp"	0	0.0571193	0.05
+"yp"	0	0.365564	 0.05
+"xm"	0	0.178684	 0.05
+"ym"	0	-0.323994 	0.05
+
+*"r_Scan" 0 1
+*"delta_Scan" 0 360
+*"gamma_Scan" 0 360
+
+"Default3bodyBW"	"SBW"
+"NormBF"			3
+"BW_radius"             2	0.00	0.0001	0.0	0.0
+"mass_K(1)(1270)+"	2	1400 1
+"width_K(1)(1270)+"	2	200  1
+"mass_K*(892)0"	                     		2	892	 1	0.0	0.0
+"width_K*(892)0"                     		2	51	 1 	0.0	0.0
+
+
+
+
+*Baseline:
+*---------------------		
+"NonRes::alpha_K*(892)0"	2	-0.25  0.1
+"NonRes::alpha_K(1)(1270)+"	2	-0.25  0.1
+"NonRes::alpha_K(1)(1400)+"	2	-0.25  0.1
+"NonRes::alpha_rho(770)0"	2	-0.25  0.1
+"NonRes::alpha_NonResS0"	2	0.  0.1
+"NonRes::alpha_NonResA0"	2	0.  0.1
+"NonRes::alpha_Bs0"		2	-0.5  0.1
+
+"NonRes::c1_K*(892)0"		2	0.  0.1
+"NonRes::c2_K*(892)0"		2	0.  0.1
+"NonRes::c3_K*(892)0"		2	0.  0.1
+
+"NonRes::c1_K(1)(1400)+"	2	0.  0.1
+"NonRes::c2_K(1)(1400)+"	2	0.  0.1
+"NonRes::c3_K(1)(1400)+"	2	0.  0.1
+
+*"SBW_113BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"		2       1    0.001     0.0     0.0
+*"SBW_113BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"		2       0     0.05     0.0     0.0
+"SBW_313BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"              2	1	0.01	0.0	0.0
+"SBW_313BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"              2	0.	0.01	0.0	0.0
+
+* For toy and integrator event generation:
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"              2	1	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"              2	0.	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"		2       1      0.05     0.0     0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"		2       0     0.05     0.0     0.0
+*"Inco_BgSpinZeroBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Re"              	2	0.7	0.01	0.0	0.0
+*"Inco_BgSpinZeroBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Im"             	2	0.	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Re"	2	0.5	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Im" 2	0.	0.01	0.0	0.0
+
+
+"knot_positions"	 0.5 1. 1.5 2. 3. 6. 9.5
+"knot_values"	 	1 1 1 1 1 1 1
+
+"c0"	2	1	0.001
+"c1"	2	1	0.001
+"c2"	2	1	0.001
+"c3"	2	1	0.001
+"c4"	2	1.		0.001
+"c5"	2	1.		0.001
+"c6"	2	1.		0.001
+
+"offset_sigma_dt"	2 	0.	0.001
+"scale_sigma_dt"	2	1.	0.1
+
+"tau"		2	1.5	0.01	0.5	2.0
+"dGamma" 	2 	-0.1	0.01	0.0	0.0
+"dm" 		2 	17.757  0.01	0.0	0.0
+
+"p0_os"			2	0.	0.005
+"p1_os"			2	1.	0.06
+"delta_p0_os"		2	0.	0.
+"delta_p1_os"		2	0.	0.
+"avg_eta_os"		2	0.	0.001
+"tageff_os"		2	1.	0.001
+"tageff_asym_os"	2	0.	0.
+
+"p0_ss"			2	0.	0.005
+"p1_ss"			2	1.	0.06
+"delta_p0_ss"		2	0.	0.
+"delta_p1_ss"		2	0.	0.
+"avg_eta_ss"		2	0.	0.001
+"tageff_ss"		2	1.	0.001
+"tageff_asym_ss"	2	0.	0.
+
+"production_asym"	2	0.	0.
+"detection_asym"	2	0.	0.

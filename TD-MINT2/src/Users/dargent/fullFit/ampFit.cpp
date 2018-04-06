@@ -315,14 +315,18 @@ std::vector<double> coherenceFactor(FitAmpSum& fas, FitAmpSum& fas_bar, double r
     result.push_back(sqrt(val2/val1));
     result.push_back(std::abs(valK)/sqrt(val1)/sqrt(val2));
     result.push_back(std::arg(valK)/(2.*pi)*360.);
+
+    result.push_back((1.-pow(result[0],2))/(1.+pow(result[0],2)));
+    result.push_back(-2. * valK.real()/val1 /(1.+pow(result[0],2)) );
+    result.push_back(2. * valK.imag()/val1 /(1.+pow(result[0],2)) );
     
     cout << "r = " << result[0] << endl;
     cout << "k = " << result[1] << endl;
     cout << "phase = " << result[2] << " [deg]" << endl << endl;
 
-    cout << "C = " << (1.-pow(result[0],2))/(1.+pow(result[0],2)) << endl;
-    cout << "D = " << -2. * valK.real()/val1 /(1.+pow(result[0],2)) << endl;
-    cout << "S = " << -2. * valK.imag()/val1 /(1.+pow(result[0],2)) << endl;
+    cout << "C = " << result[3] << endl;
+    cout << "D = " << result[4] << endl;
+    cout << "S = " << result[5] << endl;
 
     return result;
 }
@@ -353,14 +357,18 @@ std::vector<double> coherenceFactor(FitAmpSum& fas, FitAmpSum& fas_bar, double r
     result.push_back(sqrt(val2/val1));
     result.push_back(std::abs(valK)/sqrt(val1)/sqrt(val2));
     result.push_back(std::arg(valK)/(2.*pi)*360.);
+
+    result.push_back((1.-pow(result[0],2))/(1.+pow(result[0],2)));
+    result.push_back(-2. * valK.real()/val1 /(1.+pow(result[0],2)) );
+    result.push_back(2. * valK.imag()/val1 /(1.+pow(result[0],2)) );
     
     cout << "r = " << result[0] << endl;
     cout << "k = " << result[1] << endl;
     cout << "d = " << result[2] << " [deg]" << endl << endl;
 
-    cout << "C = " << (1.-pow(result[0],2))/(1.+pow(result[0],2)) << endl;
-    cout << "D = " << -2. * valK.real()/val1 /(1.+pow(result[0],2)) << endl;
-    cout << "S = " << -2. * valK.imag()/val1 /(1.+pow(result[0],2)) << endl;
+    cout << "C = " << result[3] << endl;
+    cout << "D = " << result[4] << endl;
+    cout << "S = " << result[5] << endl;
     
     return result;
 }
@@ -393,13 +401,17 @@ std::vector<double> coherenceFactor_CP(FitAmpSum& fas, FitAmpSum& fas_bar, doubl
     result.push_back(std::abs(valK)/sqrt(val1)/sqrt(val2));
     result.push_back(std::arg(valK)/(2.*pi)*360.);
     
+    result.push_back((1.-pow(result[0],2))/(1.+pow(result[0],2)));
+    result.push_back(-2. * valK.real()/val1 /(1.+pow(result[0],2)) );
+    result.push_back(-2. * valK.imag()/val1 /(1.+pow(result[0],2)) );
+
     cout << "r = " << result[0] << endl;
     cout << "k = " << result[1] << endl;
     cout << "d = " << result[2] << " [deg]" << endl << endl;
 
-    cout << "C = " << (1.-pow(result[0],2))/(1.+pow(result[0],2)) << endl;
-    cout << "D = " << -2. * valK.real()/val1 /(1.+pow(result[0],2)) << endl;
-    cout << "S = " << -2. * valK.imag()/val1 /(1.+pow(result[0],2)) << endl;
+    cout << "C = " << result[3] << endl;
+    cout << "Dbar = " << result[4]<< endl;
+    cout << "Sbar = " << result[5] << endl;
     
     return result;
 }
@@ -425,19 +437,23 @@ std::vector<double> coherenceFactor_CP(FitAmpSum& fas, FitAmpSum& fas_bar, doubl
                 val1 += norm(amp)*evt.getWeight()/ evt.getGeneratorPdfRelativeToPhaseSpace();
                 val2 += norm(amp_bar)*evt.getWeight()/ evt.getGeneratorPdfRelativeToPhaseSpace();
             }
-    
-        std::vector<double> result;
-        result.push_back(sqrt(val2/val1));
-        result.push_back(std::abs(valK)/sqrt(val1)/sqrt(val2));
-        result.push_back(std::arg(valK)/(2.*pi)*360.);
-    
-        cout << "r = " << result[0] << endl;
-        cout << "k = " << result[1] << endl;
-        cout << "d = " << result[2] << " [deg]" << endl << endl;
-
-        cout << "C = " << (1.-pow(result[0],2))/(1.+pow(result[0],2)) << endl;
-        cout << "D = " << -2. * valK.real()/val1 /(1.+pow(result[0],2)) << endl;
-        cout << "S = " << -2. * valK.imag()/val1 /(1.+pow(result[0],2)) << endl;
+	
+	std::vector<double> result;
+	result.push_back(sqrt(val2/val1));
+	result.push_back(std::abs(valK)/sqrt(val1)/sqrt(val2));
+	result.push_back(std::arg(valK)/(2.*pi)*360.);
+	
+	result.push_back((1.-pow(result[0],2))/(1.+pow(result[0],2)));
+	result.push_back(-2. * valK.real()/val1 /(1.+pow(result[0],2)) );
+	result.push_back(-2. * valK.imag()/val1 /(1.+pow(result[0],2)) );
+	
+	cout << "r = " << result[0] << endl;
+	cout << "k = " << result[1] << endl;
+	cout << "d = " << result[2] << " [deg]" << endl << endl;
+	
+	cout << "C = " << result[3] << endl;
+	cout << "Dbar = " << result[4]<< endl;
+	cout << "Sbar = " << result[5] << endl;
     
         return result;
 }
@@ -655,9 +671,10 @@ public:
         		 ( norm(amp) - norm(amp_bar) ) ,
         		 -( norm(amp_CP) - norm(amp_bar_CP) ),
         		 -2.* real(amp_bar*conj(amp) * phase_diff) ,
-        		 2.* real(amp_bar_CP*conj(amp_CP) * phase_diff_CP) ,
-        		 2. * imag(amp_bar*conj(amp) * phase_diff) ,
-        		 2. * imag(amp_bar_CP*conj(amp_CP) * phase_diff_CP) );
+        		 -2.* real(amp_bar_CP*conj(amp_CP) * phase_diff_CP) ,
+        		 2. * imag(amp_bar*conj(amp) * phase_diff) ,   /// - sign included in DecRateCoeff !!!
+        		 -2. * imag(amp_bar_CP*conj(amp_CP) * phase_diff_CP) /// - sign included in DecRateCoeff !!!
+			);
         
         const double val = 
              ( _timePdfMaster->get_cosh_term_Val(evt)
@@ -685,11 +702,12 @@ public:
 			(_intA + r* r * _intAbar),
 			(_intA_CP + r* r * _intAbar_CP),
         		(_intA - r* r * _intAbar),
-        		-(_intA_CP - r* r * _intAbar_CP) ,  /// sign ?
-        		(- int_interference.real() ),
-        		( int_interference_CP.real() ),
-        		(int_interference.imag() ),
-        		(int_interference_CP.imag() ) ); /// sign ?
+        		-(_intA_CP - r* r * _intAbar_CP) , 
+        		(- int_interference.real() ), /// *2 included in integration !!!
+        		(- int_interference_CP.real() ), 
+        		(int_interference.imag() ),  /// - sign included in DecRateCoeff !!!
+        		(- int_interference_CP.imag() )   
+		 ); 
         
         double norm =  // (_intA + r* r * _intAbar)  *
         (     _timePdfMaster->get_cosh_term_Integral(evt)
@@ -743,7 +761,8 @@ public:
 		AmpsPdfFlexiFast* ampsSum, AmpsPdfFlexiFast* ampsSum_CP, 
                 MINT::FitParameter& r,MINT::FitParameter& delta, MINT::FitParameter& gamma,
 		const MINT::FitParameter& tau, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
-                ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt
+                ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt 
+		,const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
                 ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
                 ,const MINT::FitParameter& c3, const MINT::FitParameter& c4, const MINT::FitParameter& c5
                 ,const MINT::FitParameter& c6, const MINT::FitParameter& c7, const MINT::FitParameter& c8
@@ -1012,12 +1031,12 @@ double getChi2_6D(DalitzEventList& data, DiskResidentEventList& mc){
 void ampFit(int step=0){
 
     /// Options
+    NamedParameter<int> updateAnaNote("updateAnaNote", 0);
     TRandom3 ranLux;
     NamedParameter<int> RandomSeed("RandomSeed", 0);
     int seed = RandomSeed + step;
     ranLux.SetSeed((int)seed);
     gRandom = &ranLux;
-    
     TString prefix = "";
 
     // Generate list of amplitudes
@@ -1028,6 +1047,8 @@ void ampFit(int step=0){
     DalitzEventPattern pat_CP = pat.makeCPConjugate();
 
     NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
+    NamedParameter<string> InputGenMCFile("InputGenMCFile", (std::string) "/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_DsKpipi_CPV.root", (char*) 0);
+
     NamedParameter<string> channel("channel", (std::string) "norm", (char*) 0);
     NamedParameter<int>  generateNew("generateToys", 0);
 
@@ -1045,6 +1066,10 @@ void ampFit(int step=0){
     NamedParameter<int>  nBinsAsym("nBinsAsym", 10);
     NamedParameter<int>  randomizeStartVals("randomizeStartVals", 0);
     NamedParameter<int>  doSimFit("doSimFit", 0);
+
+    NamedParameter<int>  fitGenMC("fitGenMC", 0);
+    NamedParameter<int>  doBootstrap("doBootstrap", 0);
+    NamedParameter<int>  N_bootstrap("N_bootstrap", 10000);
 
     NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
     TString integratorEventFile = (string) IntegratorEventFile;
@@ -1104,9 +1129,9 @@ void ampFit(int step=0){
     FitParameter r_K1_im("r_K1_Im",2,0,0.01); 
     counted_ptr<IReturnComplex> r_K1_plus = new CPV_amp(r_K1_re,r_K1_im,1);
     counted_ptr<IReturnComplex> r_K1_minus = new CPV_amp(r_K1_re,r_K1_im,-1);
-    fas.multiply(r_K1_plus); 
-    fas_bar.multiply(r_K1_minus);
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1)(1400)+", r_K1_plus, r_K1_minus );
+    //fas.multiply(r_K1_plus); 
+    //fas_bar.multiply(r_K1_minus);
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1)(1400)+", r_K1_plus, r_K1_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_K1_plus, r_K1_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)", r_K1_plus, r_K1_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_K1_plus, r_K1_minus );
@@ -1143,12 +1168,12 @@ void ampFit(int step=0){
    
     //AddAmpsToList(fas_tmp, fas, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)" );
     //AddAmpsToList(fas_tmp, fas, "K(1)(1400)+");
-    AddAmpsToList(fas_tmp, fas, "K*(1410)+");
-    AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)");
+    //AddAmpsToList(fas_tmp, fas, "K*(1410)+");
+    //AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)");
 
     //AddAmpsToList(fas_tmp, fas_bar, "K(1)(1400)+");
-    AddAmpsToList(fas_tmp, fas_bar, "K(1460)");
-    AddAmpsToList(fas_tmp, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)");
+    //AddAmpsToList(fas_tmp, fas_bar, "K(1460)");
+    //AddAmpsToList(fas_tmp, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)");
 
     FitParameter r_4_re("r_4_Re",2,0,0.01);
     FitParameter r_4_im("r_4_Im",2,0,0.01); 
@@ -1251,7 +1276,7 @@ void ampFit(int step=0){
     FitParameter  scale_mean_dt_Run1("scale_mean_dt_Run1",1,1,0.1);
     FitParameter  offset_sigma_dt_Run1("offset_sigma_dt_Run1",1,0.,0.1);
     FitParameter  scale_sigma_dt_Run1("scale_sigma_dt_Run1",1,1.2,0.1);
-    FitParameter  scale_sigma_dt_2_Run1("scale_sigma_dt_2_Run1",1,0.,0.1);
+    FitParameter  scale_sigma_2_dt_Run1("scale_sigma_2_dt_Run1",1,0.,0.1);
     FitParameter  p0_os_Run1("p0_os_Run1",1,0.,0.);
     FitParameter  p1_os_Run1("p1_os_Run1",1,0.,0.);
     FitParameter  delta_p0_os_Run1("delta_p0_os_Run1",1,0.,0.);
@@ -1272,7 +1297,7 @@ void ampFit(int step=0){
     FitParameter  scale_mean_dt_Run2("scale_mean_dt_Run2",1,1,0.1);
     FitParameter  offset_sigma_dt_Run2("offset_sigma_dt_Run2",1,0.,0.1);
     FitParameter  scale_sigma_dt_Run2("scale_sigma_dt_Run2",1,1.2,0.1);
-    FitParameter  scale_sigma_dt_2_Run2("scale_sigma_dt_2_Run2",1,1.2,0.1);
+    FitParameter  scale_sigma_2_dt_Run2("scale_sigma_2_dt_Run2",1,1.2,0.1);
     FitParameter  p0_os_Run2("p0_os_Run2",1,0.,0.);
     FitParameter  p1_os_Run2("p1_os_Run2",1,0.,0.);
     FitParameter  delta_p0_os_Run2("delta_p0_os_Run2",1,0.,0.);
@@ -1341,6 +1366,8 @@ void ampFit(int step=0){
     vector<double> k_gen_CP = coherenceFactor_CP(fas_CP,fas_bar_CP,(double)r, (double)delta,eventListPhsp);
     
     /// Make full time-dependent PDF
+    string marginalPdfsPrefix = "comb";
+    if(fitGenMC)marginalPdfsPrefix = "Uniform";
     FullAmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma,tau, dGamma, dm
                       ,offset_sigma_dt, scale_mean_dt, scale_sigma_dt, scale_sigma_2_dt
                       ,c0, c1, c2 ,c3, c4, c5
@@ -1349,7 +1376,7 @@ void ampFit(int step=0){
                       avg_eta_os, tageff_os, tageff_asym_os, 
                       p0_ss, p1_ss, delta_p0_ss, delta_p1_ss, 
                       avg_eta_ss, tageff_ss, tageff_asym_ss, 
-                      production_asym, detection_asym, "" );
+                      production_asym, detection_asym, marginalPdfsPrefix );
 
     // Simultaneous pdfs
     FullAmpsPdfFlexiFastCPV pdf_Run1_t0(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma,
@@ -1360,7 +1387,7 @@ void ampFit(int step=0){
                       avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
                       p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
                       avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
-                      production_asym_Run1, detection_asym_Run1, "_Run1" );
+                      production_asym_Run1, detection_asym_Run1, "Run1_t0" );
 
     FullAmpsPdfFlexiFastCPV pdf_Run1_t1(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma,
 		      tau, dGamma, dm,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
@@ -1370,7 +1397,7 @@ void ampFit(int step=0){
                       avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
                       p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
                       avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
-                      production_asym_Run1, detection_asym_Run1, "_Run1" );
+                      production_asym_Run1, detection_asym_Run1, "Run1_t1" );
 
     FullAmpsPdfFlexiFastCPV pdf_Run2_t0(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma,
 		      tau, dGamma, dm,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
@@ -1380,7 +1407,7 @@ void ampFit(int step=0){
                       avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
                       p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                       avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-                      production_asym_Run2, detection_asym_Run2, "_Run2" );
+                      production_asym_Run2, detection_asym_Run2, "Run2_t0" );
 
     FullAmpsPdfFlexiFastCPV pdf_Run2_t1(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP, r,delta,gamma,
 		      tau, dGamma, dm,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
@@ -1390,7 +1417,7 @@ void ampFit(int step=0){
                       avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
                       p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                       avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-                      production_asym_Run2, detection_asym_Run2, "_Run2" );
+                      production_asym_Run2, detection_asym_Run2, "Run2_t1" );
 
     /*
     cout << fas.getVal(eventListPhsp[0]) << endl;
@@ -1407,7 +1434,10 @@ void ampFit(int step=0){
     // values only used for importance sampling:
     double eff_tag_OS = 0.3852;
     double eff_tag_SS = 0.6903;
-    
+    if(fitGenMC){
+	eff_tag_OS = 1;
+	eff_tag_SS = 1;
+    }
     TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
     
     RooRealVar* r_t = new RooRealVar("t", "t",min_TAU, max_TAU);
@@ -1416,7 +1446,7 @@ void ampFit(int step=0){
     RooRealVar* r_eta_SS = new RooRealVar("eta_SS", "eta_SS",0.,0.5);
     
     // time
-    TH1D* h_t_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_t_norm")));
+    TH1D* h_t_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_t_norm_comb")));
     RooDataHist* r_h_t = new RooDataHist("r_h_t","r_h_t",*r_t,h_t_norm);
     RooRealVar mean1_t("mean1_t","mean1_t", 1,0.,3.0);
     RooRealVar mean2_t("mean2_t","mean2_t", 0.,0.,10.0);
@@ -1430,7 +1460,7 @@ void ampFit(int step=0){
     gen_t->fitTo(*r_h_t,Save(kTRUE),SumW2Error(kTRUE));
     
     // time error
-    TH1D* h_dt_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm")));
+    TH1D* h_dt_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm_comb")));
     RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",*r_dt,h_dt_norm);
     RooRealVar mean1_dt("mean1_dt","mean1_dt", 0.02,0.,1.0);
     RooRealVar mean2_dt("mean2_dt","mean2_dt", 0.03,0.,1.0);
@@ -1444,7 +1474,7 @@ void ampFit(int step=0){
     gen_dt->fitTo(*r_h_dt,Save(kTRUE),SumW2Error(kTRUE));
     
     // mistag OS
-    TH1D* h_w_OS_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_w_OS_norm")));
+    TH1D* h_w_OS_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_w_OS_norm_comb")));
     RooDataHist* r_h_eta_OS = new RooDataHist("r_eta_OS","r_eta_OS",*r_eta_OS,h_w_OS_norm);
     RooRealVar mean1_eta_OS("mean1_eta_OS","mean1_eta_OS", 0.02,0.,1.0);
     RooRealVar mean2_eta_OS("mean2_eta_OS","mean2_eta_OS", 0.04,0.,1.0);
@@ -1458,7 +1488,7 @@ void ampFit(int step=0){
     gen_eta_OS->fitTo(*r_h_eta_OS,Save(kTRUE),SumW2Error(kTRUE));
     
     // mistag SS
-    TH1D* h_w_SS_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_w_SS_norm")));
+    TH1D* h_w_SS_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_w_SS_norm_comb")));
     RooDataHist* r_h_eta_SS = new RooDataHist("r_eta_SS","r_eta_SS",*r_eta_SS,h_w_SS_norm);
     RooRealVar mean1_eta_SS("mean1_eta_SS","mean1_eta_SS", 0.02,0.,1.0);
     RooRealVar mean2_eta_SS("mean2_eta_SS","mean2_eta_SS", 0.06,0.,1.0);
@@ -1659,6 +1689,7 @@ void ampFit(int step=0){
         /// Load data
         double t,dt;
         int f;
+        double Bs_ID,Ds_ID;
         int q_OS;
         Short_t q_SS;
         double eta_OS;
@@ -1672,166 +1703,264 @@ void ampFit(int step=0){
         double Ds_Kp[4],Ds_Km[4],Ds_pim[4];
         double mB;
         
-        TChain* tree=new TChain("DecayTree");
-        tree->Add(((string)InputDir+"Data/"+(string)channel+".root").c_str());
-        tree->SetBranchStatus("*",0);
-        tree->SetBranchStatus("N_Bs_sw",1);
-        tree->SetBranchStatus("year",1);
-        tree->SetBranchStatus("*DEC",1);
-        tree->SetBranchStatus("*PROB",1);
-        tree->SetBranchStatus("*OS",1);
-        tree->SetBranchStatus("*TAU*",1);
-        tree->SetBranchStatus("*ID*",1);
-        tree->SetBranchStatus("weight",1);
-        tree->SetBranchStatus("Bs_DTF_MM",1);
-        tree->SetBranchStatus("BsDTF_*P*",1);
-        tree->SetBranchStatus("TriggerCat",1);
-        tree->SetBranchStatus("run",1);
- 
-        tree->SetBranchAddress("Bs_DTF_TAU",&t);
-        tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
-        tree->SetBranchAddress("Ds_ID",&f);
-        tree->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
-        tree->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&eta_OS);
-        tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
-        tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&eta_SS);
-        tree->SetBranchAddress("N_Bs_sw",&sw);
-        tree->SetBranchAddress("year",&year);
-        tree->SetBranchAddress("run",&run);
-        tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
-        tree->SetBranchAddress("TriggerCat",&trigger);
-        tree->SetBranchAddress("Bs_DTF_MM",&mB);
-        
-        tree->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
-        tree->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
-        tree->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
-        tree->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
-        
-        tree->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
-        tree->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
-        tree->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
-        tree->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);
-        
-        tree->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
-        tree->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
-        tree->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
-        tree->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);
-        
-        tree->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
-        tree->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
-        tree->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
-        tree->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);
-        
-        tree->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
-        tree->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
-        tree->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
-        tree->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
+        TChain* tree;
 
-        tree->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
-        tree->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
-        tree->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
-        tree->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
+	if(fitGenMC){
+		tree=new TChain("MCDecayTreeTuple/MCDecayTree");
+		tree->Add(((string)InputGenMCFile).c_str());
+		tree->SetBranchStatus("*",0);
+		tree->SetBranchStatus("*TAU*",1);
+		tree->SetBranchStatus("*ID*",1);
+		tree->SetBranchStatus("*P*",1);
+		/*
+		tree->SetBranchAddress("B_s0_TRUETAU",&t);
+		tree->SetBranchAddress("D_sminus_TRUEID",&Ds_ID);
+		tree->SetBranchAddress("B_s0_TRUEID",&Bs_ID);
+		tree->SetBranchAddress("Kplus_TRUEP_X",&K[0]);
+		tree->SetBranchAddress("Kplus_TRUEP_Y",&K[1]);
+		tree->SetBranchAddress("Kplus_TRUEP_Z",&K[2]);
+		tree->SetBranchAddress("Kplus_TRUEP_E",&K[3]);
+		tree->SetBranchAddress("piplus_TRUEP_X",&pip[0]);
+		tree->SetBranchAddress("piplus_TRUEP_Y",&pip[1]);
+		tree->SetBranchAddress("piplus_TRUEP_Z",&pip[2]);
+		tree->SetBranchAddress("piplus_TRUEP_E",&pip[3]);    
+		tree->SetBranchAddress("piminus_TRUEP_X",&pim[0]);
+		tree->SetBranchAddress("piminus_TRUEP_Y",&pim[1]);
+		tree->SetBranchAddress("piminus_TRUEP_Z",&pim[2]);
+		tree->SetBranchAddress("piminus_TRUEP_E",&pim[3]);    
+		tree->SetBranchAddress("Kplus0_TRUEP_X",&Ds_Kp[0]);
+		tree->SetBranchAddress("Kplus0_TRUEP_Y",&Ds_Kp[1]);
+		tree->SetBranchAddress("Kplus0_TRUEP_Z",&Ds_Kp[2]);
+		tree->SetBranchAddress("Kplus0_TRUEP_E",&Ds_Kp[3]);
+		tree->SetBranchAddress("Kminus_TRUEP_X",&Ds_Km[0]);
+		tree->SetBranchAddress("Kminus_TRUEP_Y",&Ds_Km[1]);
+		tree->SetBranchAddress("Kminus_TRUEP_Z",&Ds_Km[2]);
+		tree->SetBranchAddress("Kminus_TRUEP_E",&Ds_Km[3]);
+		tree->SetBranchAddress("piminus0_TRUEP_X",&Ds_pim[0]);
+		tree->SetBranchAddress("piminus0_TRUEP_Y",&Ds_pim[1]);
+		tree->SetBranchAddress("piminus0_TRUEP_Z",&Ds_pim[2]);
+		tree->SetBranchAddress("piminus0_TRUEP_E",&Ds_pim[3]);
+		*/
+		tree->SetBranchAddress("B_s0_TRUETAU",&t);
+		tree->SetBranchAddress("D_splus_TRUEID",&Ds_ID);
+		tree->SetBranchAddress("B_s0_TRUEID",&Bs_ID);
+		tree->SetBranchAddress("Kminus_TRUEP_X",&K[0]);
+		tree->SetBranchAddress("Kminus_TRUEP_Y",&K[1]);
+		tree->SetBranchAddress("Kminus_TRUEP_Z",&K[2]);
+		tree->SetBranchAddress("Kminus_TRUEP_E",&K[3]);
+		tree->SetBranchAddress("piplus_TRUEP_X",&pim[0]);
+		tree->SetBranchAddress("piplus_TRUEP_Y",&pim[1]);
+		tree->SetBranchAddress("piplus_TRUEP_Z",&pim[2]);
+		tree->SetBranchAddress("piplus_TRUEP_E",&pim[3]);    
+		tree->SetBranchAddress("piminus_TRUEP_X",&pip[0]);
+		tree->SetBranchAddress("piminus_TRUEP_Y",&pip[1]);
+		tree->SetBranchAddress("piminus_TRUEP_Z",&pip[2]);
+		tree->SetBranchAddress("piminus_TRUEP_E",&pip[3]);    
+		tree->SetBranchAddress("Kplus_TRUEP_X",&Ds_Kp[0]);
+		tree->SetBranchAddress("Kplus_TRUEP_Y",&Ds_Kp[1]);
+		tree->SetBranchAddress("Kplus_TRUEP_Z",&Ds_Kp[2]);
+		tree->SetBranchAddress("Kplus_TRUEP_E",&Ds_Kp[3]);
+		tree->SetBranchAddress("Kminus0_TRUEP_X",&Ds_Km[0]);
+		tree->SetBranchAddress("Kminus0_TRUEP_Y",&Ds_Km[1]);
+		tree->SetBranchAddress("Kminus0_TRUEP_Z",&Ds_Km[2]);
+		tree->SetBranchAddress("Kminus0_TRUEP_E",&Ds_Km[3]);
+		tree->SetBranchAddress("piplus0_TRUEP_X",&Ds_pim[0]);
+		tree->SetBranchAddress("piplus0_TRUEP_Y",&Ds_pim[1]);
+		tree->SetBranchAddress("piplus0_TRUEP_Z",&Ds_pim[2]);
+		tree->SetBranchAddress("piplus0_TRUEP_E",&Ds_pim[3]);
+    	}
+    	else {
+		tree=new TChain("DecayTree");
+		tree->Add(((string)InputDir+"Data/"+(string)channel+".root").c_str());
+		tree->SetBranchStatus("*",0);
+		tree->SetBranchStatus("N_Bs_sw",1);
+		tree->SetBranchStatus("year",1);
+		tree->SetBranchStatus("*DEC",1);
+		tree->SetBranchStatus("*PROB",1);
+		tree->SetBranchStatus("*OS",1);
+		tree->SetBranchStatus("*TAU*",1);
+		tree->SetBranchStatus("*ID*",1);
+		tree->SetBranchStatus("weight",1);
+		tree->SetBranchStatus("Bs_DTF_MM",1);
+		tree->SetBranchStatus("BsDTF_*P*",1);
+		tree->SetBranchStatus("TriggerCat",1);
+		tree->SetBranchStatus("run",1);
+	
+		tree->SetBranchAddress("Bs_DTF_TAU",&t);
+		tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+		tree->SetBranchAddress("Ds_ID",&f);
+		tree->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
+		tree->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&eta_OS);
+		tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
+		tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&eta_SS);
+		tree->SetBranchAddress("N_Bs_sw",&sw);
+		tree->SetBranchAddress("year",&year);
+		tree->SetBranchAddress("run",&run);
+		tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
+		tree->SetBranchAddress("TriggerCat",&trigger);
+		tree->SetBranchAddress("Bs_DTF_MM",&mB);
+		
+		tree->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
+		tree->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
+		tree->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
+		tree->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
+		
+		tree->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
+		tree->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
+		tree->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
+		tree->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);
+		
+		tree->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
+		tree->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
+		tree->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
+		tree->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);
+		
+		tree->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
+		tree->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
+		tree->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
+		tree->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);
+		
+		tree->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
+		tree->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
+		tree->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
+		tree->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
+	
+		tree->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
+		tree->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
+		tree->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
+		tree->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
+	}
 
-        TRandom3 rndm;
-        int badEvents = 0;
-        for(int i=0; i< tree->GetEntries(); i++)
-        {
-            if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
-            tree->GetEntry(i);
+	int N_sample = tree->GetEntries();
+        vector<int> b_indices;
+        while( b_indices.size() < N_bootstrap )b_indices.push_back(TMath::Nint(ranLux.Uniform(0,N_sample)));
+        sort(b_indices.begin(), b_indices.end());
+        if(doBootstrap)N_sample = b_indices.size();
 
-            if(t < min_TAU || t > max_TAU )continue;
-            if( dt < min_TAUERR || dt > max_TAUERR )continue;
+	TRandom3 rndm;
+	int badEvents = 0;
+	for(int i=0; i< N_sample; i++){
+		if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << N_sample << endl;
+		if(doBootstrap) tree->GetEntry(b_indices[i]);
+		else tree->GetEntry(i);
+	
+		if(fitGenMC){
+			if(Ds_ID<0)f=-1;
+	        	else if(Ds_ID > 0)f= 1;
+		}
+		double sign = 1.;
+		//if(f > 0) sign = -1.;
+		TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
+		TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
+		TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
+		TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
+		TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
+		TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
+		TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+		TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+		// array of vectors
+		vector<TLorentzVector> vectorOfvectors;
+	
+		if((string)channel=="norm"){
+			TLorentzVector pip1_p, pip2_p;
+			if(rndm.Rndm()<0.5) {
+			pip1_p = K_p;
+			pip2_p = pip_p;
+			}
+			else {
+			pip1_p = pip_p;
+			pip2_p = K_p;
+			}
+			K_p = pip1_p;
+			pip_p = pip2_p;
+		}
+	
+		vectorOfvectors.push_back(B_p*MeV);
+		vectorOfvectors.push_back(D_p*MeV);
+		vectorOfvectors.push_back(K_p*MeV);
+		vectorOfvectors.push_back(pip_p*MeV);
+		vectorOfvectors.push_back(pim_p*MeV);
+	
+		DalitzEvent evt;
+	
+		if(f < 0)evt = DalitzEvent(pat, vectorOfvectors);
+		else evt = DalitzEvent(pat_CP, vectorOfvectors);
+	
+		if(!(evt.phaseSpace() > 0.)){
+			/*
+			cout << "evt " << i << " 0 phsp " << endl; // << evt << endl;
+			cout << "t =" << t << endl;
+			cout << "dt =" <<dt << endl;
+			cout << "year =" <<year <<  endl;
+			cout << "sw =" <<sw <<  endl;
+			cout << "Dspi =" <<sqrt(evt.s(1,3))/GeV << endl;
+			cout << "Kpi =" <<sqrt(evt.s(2,4))/GeV << endl;
+			cout << "pipi =" <<sqrt(evt.s(3,4))/GeV << endl;
+			cout << "DsKpi =" <<sqrt(evt.sij(s124))/GeV << endl;
+			cout << "Kpipi =" <<sqrt(evt.sij(s234))/GeV << endl << endl;
+			*/
+			badEvents++;
+			continue;
+		}
+		//if(TMath::IsNaN(norm(fas.getVal(evt)))){
+			//cout << "evt " << i << " isNaN " << endl << evt << endl;
+			//badEvents++;
+			//continue;
+		//}
+	
+		if(fitGenMC){		
+			t = t*1000.+ranLux.Gaus(0.,0.04);
+			if(t < min_TAU || t > max_TAU )continue;
+			if(sqrt(evt.sij(s234)/(GeV*GeV)) > 1.95 || sqrt(evt.s(2,4)/(GeV*GeV)) > 1.2 || sqrt(evt.s(3,4)/(GeV*GeV)) > 1.2) continue;
 
-            double sign = 1.;
-            //if(f > 0) sign = -1.;
+			evt.setValueInVector(0, t);
+			evt.setValueInVector(1, 0.04);
+			evt.setValueInVector(2, -f);
+			int q = 0;
+			if(Bs_ID>0)q=1;
+			else q = -1;
+			evt.setValueInVector(3, q);
+			evt.setValueInVector(4, 0.);
+			evt.setValueInVector(5, q);
+			evt.setValueInVector(6, 0.);
+			evt.setValueInVector(7, 1);
+			evt.setValueInVector(8, 0);
+			eventList.Add(evt);
+			continue;
+		}
+	
+		if(t < min_TAU || t > max_TAU )continue;
+		if( dt < min_TAUERR || dt > max_TAUERR )continue;
+	
+		evt.setWeight(sw);
+		evt.setValueInVector(0, t);
+		evt.setValueInVector(1, dt);
+		//evt.setValueInVector(2, 1); /// ???
+		if(f<0)evt.setValueInVector(2, 1);   /// ???
+		else if(f > 0)evt.setValueInVector(2, -1);  /// ???
+		else {
+			cout << "ERROR:: Undefined final state";
+			throw "ERROR";
+		}
+		evt.setValueInVector(3, sign*q_OS);
+		evt.setValueInVector(4, eta_OS);
+		evt.setValueInVector(5, sign*q_SS);
+		evt.setValueInVector(6, eta_SS);
+		evt.setValueInVector(7, run);
+		evt.setValueInVector(8, trigger);
+	
+		eventList.Add(evt);
+		if(evt.getValueFromVector(2) == 1)eventList_f.Add(evt);
+		else eventList_f_bar.Add(evt);
+	
+		if(run == 1 && trigger == 0) eventList_Run1_t0.Add(evt);
+		else if(run == 1 && trigger == 1) eventList_Run1_t1.Add(evt);
+		else if(run == 2 && trigger == 0) eventList_Run2_t0.Add(evt);
+		else if(run == 2 && trigger == 1) eventList_Run2_t1.Add(evt);
+	}
+	cout << endl << "bad events " << badEvents << " ( " << badEvents/(double) N_sample * 100. << " %)" << endl << endl;
+    }        
 
-            TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
-            TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
-            TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
-            TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
-            TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
-            TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
-            TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
-            TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
-            // array of vectors
-            vector<TLorentzVector> vectorOfvectors;
-
-            if((string)channel=="norm"){
-                TLorentzVector pip1_p, pip2_p;
-                if(rndm.Rndm()<0.5) {
-                    pip1_p = K_p;
-                    pip2_p = pip_p;
-                }
-                else {
-                    pip1_p = pip_p;
-                    pip2_p = K_p;
-                }
-                K_p = pip1_p;
-                pip_p = pip2_p;
-            }
-
-            vectorOfvectors.push_back(B_p*MeV);
-            vectorOfvectors.push_back(D_p*MeV);
-            vectorOfvectors.push_back(K_p*MeV);
-            vectorOfvectors.push_back(pip_p*MeV);
-            vectorOfvectors.push_back(pim_p*MeV);
-
-            DalitzEvent evt;
-
-            if(f < 0)evt = DalitzEvent(pat, vectorOfvectors);
-            else evt = DalitzEvent(pat_CP, vectorOfvectors);
-
-            if(!(evt.phaseSpace() > 0.)){
-                /*
-                cout << "evt " << i << " 0 phsp " << endl; // << evt << endl;
-                cout << "t =" << t << endl;
-                cout << "dt =" <<dt << endl;
-                cout << "year =" <<year <<  endl;
-                cout << "sw =" <<sw <<  endl;
-                cout << "Dspi =" <<sqrt(evt.s(1,3))/GeV << endl;
-                cout << "Kpi =" <<sqrt(evt.s(2,4))/GeV << endl;
-                cout << "pipi =" <<sqrt(evt.s(3,4))/GeV << endl;
-                cout << "DsKpi =" <<sqrt(evt.sij(s124))/GeV << endl;
-                cout << "Kpipi =" <<sqrt(evt.sij(s234))/GeV << endl << endl;
-                 */
-                badEvents++;
-                continue;
-            }
-            //if(TMath::IsNaN(norm(fas.getVal(evt)))){
-                //cout << "evt " << i << " isNaN " << endl << evt << endl;
-                //badEvents++;
-                //continue;
-            //}
-
-            evt.setWeight(sw);
-            evt.setValueInVector(0, t);
-            evt.setValueInVector(1, dt);
-            //evt.setValueInVector(2, 1); /// ???
-            if(f<0)evt.setValueInVector(2, 1);   /// ???
-            else if(f > 0)evt.setValueInVector(2, -1);  /// ???
-            else {
-                cout << "ERROR:: Undefined final state";
-                throw "ERROR";
-            }
-            evt.setValueInVector(3, sign*q_OS);
-            evt.setValueInVector(4, eta_OS);
-            evt.setValueInVector(5, sign*q_SS);
-            evt.setValueInVector(6, eta_SS);
-            evt.setValueInVector(7, run);
-            evt.setValueInVector(8, trigger);
-
-            eventList.Add(evt);
-            if(evt.getValueFromVector(2) == 1)eventList_f.Add(evt);
-            else eventList_f_bar.Add(evt);
-
-            if(run == 1 && trigger == 0) eventList_Run1_t0.Add(evt);
-            else if(run == 1 && trigger == 1) eventList_Run1_t1.Add(evt);
-            else if(run == 2 && trigger == 0) eventList_Run2_t0.Add(evt);
-            else if(run == 2 && trigger == 1) eventList_Run2_t1.Add(evt);
-        }
-        cout << endl << "bad events " << badEvents << " ( " << badEvents/(double) tree->GetEntries() * 100. << " %)" << endl << endl;
-    }
-        
     /// Fit with MINT Pdf
     Neg2LL neg2LL(pdf, eventList);   
 
@@ -1860,16 +1989,27 @@ void ampFit(int step=0){
 
     TTree* pull_tree = new TTree("Coherence","Coherence");
     double r_val,delta_val,gamma_val,k_val,n2ll;
+    double C_val,D_val,S_val;
+    double Cbar_val,Dbar_val,Sbar_val;
     double xp_val,xm_val,yp_val,ym_val;
     double chi2_val,chi2_6D_val;
     TBranch* br_r = pull_tree->Branch( "r", &r_val, "r_val/D" );
     TBranch* br_delta = pull_tree->Branch( "delta", &delta_val, "delta_val/D" );
     TBranch* br_gamma = pull_tree->Branch( "gamma", &gamma_val, "gamma_val/D" );
     TBranch* br_k = pull_tree->Branch( "k", &k_val, "k_val/D" );
+
+    TBranch* br_C = pull_tree->Branch( "C", &C_val, "C_val/D" );
+    TBranch* br_Cbar = pull_tree->Branch( "Cbar", &Cbar_val, "Cbar_val/D" );
+    TBranch* br_D = pull_tree->Branch( "D", &D_val, "D_val/D" );
+    TBranch* br_Dbar = pull_tree->Branch( "Dbar", &Dbar_val, "Dbar_val/D" );
+    TBranch* br_S = pull_tree->Branch( "S", &S_val, "S_val/D" );
+    TBranch* br_Sbar = pull_tree->Branch( "Sbar", &Sbar_val, "Sbar_val/D" );
+
     TBranch* br_xp = pull_tree->Branch( "xp", &xp_val, "xp_val/D" );
     TBranch* br_xm = pull_tree->Branch( "xm", &xm_val, "xm_val/D" );
     TBranch* br_yp = pull_tree->Branch( "yp", &yp_val, "yp_val/D" );
     TBranch* br_ym = pull_tree->Branch( "ym", &ym_val, "ym_val/D" );
+
     TBranch* br_chi2 = pull_tree->Branch( "chi2", &chi2_val, "chi2_val/D" );
     TBranch* br_chi2_6D = pull_tree->Branch( "chi2_6D", &chi2_6D_val, "chi2_6D_val/D" );
     TBranch* br_n2ll = pull_tree->Branch( "n2ll", &n2ll, "n2ll/D" );
@@ -1895,7 +2035,13 @@ void ampFit(int step=0){
     r_val = k_fit[0];
     k_val = k_fit[1];
     delta_val = k_fit[2];
+    C_val = k_fit[3];
+    D_val = k_fit[4];
+    S_val = k_fit[5];
     vector<double> k_fit_CP = coherenceFactor_CP(fas_CP,fas_bar_CP,(double)r, (double)delta,eventListMC);
+    Cbar_val = -k_fit_CP[3];
+    Dbar_val = k_fit_CP[4];
+    Sbar_val = k_fit_CP[5];
 
     pdf.doFinalStatsAndSaveForAmp12(&mini,((string)OutputDir+"FitAmpResults_rand_"+anythingToString((int)seed)).c_str(),((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
    
@@ -2185,102 +2331,130 @@ void ampFit(int step=0){
     DiskResidentEventList eventListMC_rw(pat,("dummy_"+anythingToString(step)+".root").c_str(),"RECREATE");
     for(int i = 0; i < eventListMC.size(); i++){
         
-        double t_MC = 0.;
-        double gaus_t = ranLux.Uniform();
-        if(gaus_t < f_t.getVal()) {
-            while(true){
-                t_MC = ranLux.Gaus(mean1_t.getVal(),sigma1_t.getVal());
-                if(t_MC < max_TAU && t_MC > min_TAU)break;
-            }
-        }
-        else {
-            while(true){
-                t_MC = ranLux.Gaus(mean2_t.getVal(),sigma2_t.getVal());
-                if(t_MC < max_TAU && t_MC > min_TAU)break;
-            }
-        }
-        r_t->setVal(t_MC) ;
-        
-        double dt_MC = 0.;
-        double gaus_f = ranLux.Uniform();
-        if(gaus_f < f_dt.getVal()) {
-            while(true){
-                dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
-                if(dt_MC < max_TAUERR && dt_MC > min_TAUERR)break;
-            }
-        }
-        else {
-            while(true){
-                dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
-                if(dt_MC < max_TAUERR && dt_MC > min_TAUERR)break;
-            }
-        }
-        r_dt->setVal(dt_MC) ;
-        
-        
-        double q_rand = ranLux.Uniform();
-        int q_OS_MC = 0;
-        if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
-        if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
-        
-        double eta_OS_MC = 0;
-        if(q_OS_MC == 0)eta_OS_MC = 0.5;
-        else {
-            double gaus_eta_OS = ranLux.Uniform();
-            if(gaus_eta_OS < f_eta_OS.getVal()){
-                while(true){
-                    eta_OS_MC = ranLux.Gaus(mean1_eta_OS.getVal(),sigma1_eta_OS.getVal());
-                    if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
-                }
-            }
-            else{
-                while(true){
-                    eta_OS_MC = ranLux.Gaus(mean2_eta_OS.getVal(),sigma2_eta_OS.getVal());
-                    if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
-                }
-            }
-        }
-        r_eta_OS->setVal(eta_OS_MC) ;
-        
-        q_rand = ranLux.Uniform();
-        int q_SS_MC = 0;
-        if (q_rand < eff_tag_SS/2.  ) q_SS_MC = -1;
-        if (q_rand > (1.-eff_tag_SS/2.) ) q_SS_MC = 1;
-        
-        double eta_SS_MC = 0;
-        if(q_SS_MC == 0)eta_SS_MC = 0.5;
-        else {
-            double gaus_eta_SS = ranLux.Uniform();
-            if(gaus_eta_SS < f_eta_SS.getVal()){
-                while(true){
-                    eta_SS_MC = ranLux.Gaus(mean1_eta_SS.getVal(),sigma1_eta_SS.getVal());
-                    if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
-                }
-            }
-            else{
-                while(true){
-                    eta_SS_MC = ranLux.Gaus(mean2_eta_SS.getVal(),sigma2_eta_SS.getVal());
-                    if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
-                }
-            }
-        }
-        r_eta_SS->setVal(eta_SS_MC) ;
-        
-        q_rand = ranLux.Uniform();
-        int f_MC = 0;
-        if (q_rand > .5) f_MC = -1;
-        else f_MC = 1;
+	double t_MC,dt_MC,eta_OS_MC,eta_SS_MC;
+	int q_OS_MC,q_SS_MC,f_MC,trigger_MC,run_MC;
 
-        q_rand = ranLux.Uniform();
-        int run_MC = 0;
-        if (q_rand > .5) run_MC = 1;
-        else run_MC = 2;
+	if(fitGenMC){
+		t_MC = ranLux.Exp(tau);
+		if(t_MC > max_TAU && t_MC < min_TAU)continue;
+	
+		dt_MC = 0.04;
+		
+		double q_rand = ranLux.Uniform();
+		q_OS_MC = 0;
+		if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
+		if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
+		
+		q_rand = ranLux.Uniform();
+		q_SS_MC = q_OS_MC;
+		
+		eta_OS_MC = 0;
+		eta_SS_MC = 0;
+	
+		q_rand = ranLux.Uniform();
+		f_MC = 0;
+		if (q_rand > .5) f_MC = -1;
+		else f_MC = 1;
+	}
+	else {
+	
+		t_MC = 0.;
+		double gaus_t = ranLux.Uniform();
+		if(gaus_t < f_t.getVal()) {
+		while(true){
+			t_MC = ranLux.Gaus(mean1_t.getVal(),sigma1_t.getVal());
+			if(t_MC < max_TAU && t_MC > min_TAU)break;
+		}
+		}
+		else {
+		while(true){
+			t_MC = ranLux.Gaus(mean2_t.getVal(),sigma2_t.getVal());
+			if(t_MC < max_TAU && t_MC > min_TAU)break;
+		}
+		}
+		r_t->setVal(t_MC) ;
+		
+		dt_MC = 0.;
+		double gaus_f = ranLux.Uniform();
+		if(gaus_f < f_dt.getVal()) {
+		while(true){
+			dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
+			if(dt_MC < max_TAUERR && dt_MC > min_TAUERR)break;
+		}
+		}
+		else {
+		while(true){
+			dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
+			if(dt_MC < max_TAUERR && dt_MC > min_TAUERR)break;
+		}
+		}
+		r_dt->setVal(dt_MC) ;
+		
+		
+		double q_rand = ranLux.Uniform();
+		q_OS_MC = 0;
+		if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
+		if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
+		
+		eta_OS_MC = 0;
+		if(q_OS_MC == 0)eta_OS_MC = 0.5;
+		else {
+		double gaus_eta_OS = ranLux.Uniform();
+		if(gaus_eta_OS < f_eta_OS.getVal()){
+			while(true){
+			eta_OS_MC = ranLux.Gaus(mean1_eta_OS.getVal(),sigma1_eta_OS.getVal());
+			if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
+			}
+		}
+		else{
+			while(true){
+			eta_OS_MC = ranLux.Gaus(mean2_eta_OS.getVal(),sigma2_eta_OS.getVal());
+			if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
+			}
+		}
+		}
+		r_eta_OS->setVal(eta_OS_MC) ;
+		
+		q_rand = ranLux.Uniform();
+		q_SS_MC = 0;
+		if (q_rand < eff_tag_SS/2.  ) q_SS_MC = -1;
+		if (q_rand > (1.-eff_tag_SS/2.) ) q_SS_MC = 1;
+		
+		eta_SS_MC = 0;
+		if(q_SS_MC == 0)eta_SS_MC = 0.5;
+		else {
+		double gaus_eta_SS = ranLux.Uniform();
+		if(gaus_eta_SS < f_eta_SS.getVal()){
+			while(true){
+			eta_SS_MC = ranLux.Gaus(mean1_eta_SS.getVal(),sigma1_eta_SS.getVal());
+			if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
+			}
+		}
+		else{
+			while(true){
+			eta_SS_MC = ranLux.Gaus(mean2_eta_SS.getVal(),sigma2_eta_SS.getVal());
+			if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
+			}
+		}
+		}
+		r_eta_SS->setVal(eta_SS_MC) ;
+		
+		q_rand = ranLux.Uniform();
+		f_MC = 0;
+		if (q_rand > .5) f_MC = -1;
+		else f_MC = 1;
+	
+		q_rand = ranLux.Uniform();
+		run_MC = 0;
+		if (q_rand > .5) run_MC = 1;
+		else run_MC = 2;
+	
+		q_rand = ranLux.Uniform();
+		trigger_MC = 0;
+		if (q_rand > .5) trigger_MC = 0;
+		else trigger_MC = 1;
+	}
 
-        q_rand = ranLux.Uniform();
-        int trigger_MC = 0;
-        if (q_rand > .5) trigger_MC = 0;
-        else trigger_MC = 1;
-        
         DalitzEvent evt(eventListMC.getEvent(i));
         if(f_MC<0){
             evt.CP_conjugateYourself();
@@ -2294,8 +2468,8 @@ void ampFit(int step=0){
         evt.setValueInVector(4, eta_OS_MC);
         evt.setValueInVector(5, q_SS_MC);
         evt.setValueInVector(6, eta_SS_MC);
-        evt.setValueInVector(7, run_MC);
-        evt.setValueInVector(8, trigger_MC);
+        if(!fitGenMC)evt.setValueInVector(7, run_MC);
+        if(!fitGenMC)evt.setValueInVector(8, trigger_MC);
         
         double pdfVal = 0;
         if(doSimFit) {
@@ -2310,13 +2484,19 @@ void ampFit(int step=0){
 
         //double weight = pdfVal/exp(-fabs(t_MC)/(tau))*tau*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
         double weight = pdfVal*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
-        weight /=  //exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) 
-        gen_t->getVal(RooArgSet(*r_t))
-        * gen_dt->getVal(RooArgSet(*r_dt)) 
-        *  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) )
-        *  (abs(q_SS_MC)/2. * eff_tag_SS + ( 1. - abs(q_SS_MC)) * (1.-eff_tag_SS) )    ;
-        if(q_OS_MC != 0) weight /= gen_eta_OS->getVal(RooArgSet(*r_eta_OS));
-        if(q_SS_MC != 0) weight /= gen_eta_SS->getVal(RooArgSet(*r_eta_SS));
+	if(fitGenMC){
+		weight /=  exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) 
+		*  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) ) ;
+	}
+	else {
+		weight /=  //exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) 
+		gen_t->getVal(RooArgSet(*r_t))
+		* gen_dt->getVal(RooArgSet(*r_dt)) 
+		*  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) )
+		*  (abs(q_SS_MC)/2. * eff_tag_SS + ( 1. - abs(q_SS_MC)) * (1.-eff_tag_SS) )    ;
+		if(q_OS_MC != 0) weight /= gen_eta_OS->getVal(RooArgSet(*r_eta_OS));
+		if(q_SS_MC != 0) weight /= gen_eta_SS->getVal(RooArgSet(*r_eta_SS));
+	}
 
         h_t_fit->Fill(t_MC,weight);
         h_dt_fit->Fill(dt_MC,weight);
@@ -2451,8 +2631,10 @@ void ampFit(int step=0){
     h_t_fit->SetMarkerColor(kBlue); 
     h_t_fit->DrawNormalized("histcsame",1);
     c->Print(((string)OutputDir+"h_t.eps").c_str());
+    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t.pdf").c_str());
     gPad->SetLogy(1);
     c->Print(((string)OutputDir+"h_t_log.eps").c_str());
+    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t_log.pdf").c_str());
     gPad->SetLogy(0);
     
     h_dt->SetMinimum(0);        
@@ -2462,7 +2644,8 @@ void ampFit(int step=0){
     h_dt_fit->SetLineWidth(3);
     h_dt_fit->DrawNormalized("histcsame",1);
     c->Print(((string)OutputDir+"h_dt.eps").c_str());
-    
+    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_dt.pdf").c_str());
+
     h_eta_OS->SetMinimum(0);        
     h_eta_OS->SetLineColor(kBlack);
     h_eta_OS->DrawNormalized("e1",1);
@@ -2470,6 +2653,7 @@ void ampFit(int step=0){
     h_eta_OS_fit->SetLineWidth(3);
     h_eta_OS_fit->DrawNormalized("histcsame",1);
     c->Print(((string)OutputDir+"h_eta_OS.eps").c_str());
+    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_eta_OS.pdf").c_str());
     
     h_eta_SS->SetMinimum(0);        
     h_eta_SS->SetLineColor(kBlack);
@@ -2478,7 +2662,7 @@ void ampFit(int step=0){
     h_eta_SS_fit->SetLineWidth(3);
     h_eta_SS_fit->DrawNormalized("histcsame",1);
     c->Print(((string)OutputDir+"h_eta_SS.eps").c_str());
-
+    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_eta_SS.pdf").c_str());
 
     if((string)channel=="norm"){
 
@@ -2507,6 +2691,7 @@ void ampFit(int step=0){
         //h_t_untagegged_fit->DrawNormalized("histcsame",1);
         
         c->Print(((string)OutputDir+"h_t_mixed.eps").c_str());
+        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t_mixed.pdf").c_str());
 
 	TH1D* h_asym = (TH1D*) h_N_mixed->GetAsymmetry(h_N_unmixed);	
         h_asym->SetMinimum(-0.25);
@@ -2516,7 +2701,7 @@ void ampFit(int step=0){
 	h_asym->Draw("e");
 	h_asym_fit->Draw("histcsame");
         c->Print(((string)OutputDir+"h_asym.eps").c_str());
-
+        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_asym.pdf").c_str());
     }
 
     else{
@@ -2542,6 +2727,7 @@ void ampFit(int step=0){
         h_t_fit_pp->DrawNormalized("histcsame",1);
         
         c->Print(((string)OutputDir+"h_t_mixed_p.eps").c_str());
+        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t_mixed_p.pdf").c_str());
 
         h_t_pm->Scale(1./h_t_pm->Integral());
         h_t_pm->SetMinimum(0.);     
@@ -2563,6 +2749,7 @@ void ampFit(int step=0){
         h_t_fit_mm->DrawNormalized("histcsame",1);
         
         c->Print(((string)OutputDir+"h_t_mixed_m.eps").c_str());
+        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t_mixed_m.pdf").c_str());
 
 	cout << h_N_unmixed_p->GetEntries() << endl;
 	cout << h_N_mixed_p->GetEntries() << endl;
@@ -2575,6 +2762,7 @@ void ampFit(int step=0){
 	h_asym_p->Draw("e");
 	h_asym_p_fit->Draw("histcsame");
         c->Print(((string)OutputDir+"h_asym_p.eps").c_str());
+        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_asym_p.pdf").c_str());
 
 	TH1D* h_asym_m = (TH1D*) h_N_unmixed_m->GetAsymmetry(h_N_mixed_m);	
         //h_asym_m->SetMinimum(-20);
@@ -2584,11 +2772,22 @@ void ampFit(int step=0){
 	h_asym_m->Draw("e");
 	h_asym_m_fit->Draw("histcsame");
         c->Print(((string)OutputDir+"h_asym_m.eps").c_str());
+        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_asym_m.pdf").c_str());
 
-	h_asym_p_fit->Draw("histc");
+	h_asym_p->SetMaximum(max(h_asym_p->GetMaximum(),h_asym_m->GetMaximum())*1.25);
+	h_asym_p->SetMarkerColor(kRed);
+	h_asym_p->SetLineColor(kRed);
+	h_asym_p->Draw("e");
+	h_asym_m->SetLineColor(kBlue);
+	h_asym_m->SetMarkerColor(kBlue);
+	h_asym_m->Draw("esame");
+	h_asym_p_fit->SetLineWidth(3);
+	h_asym_m_fit->SetLineWidth(3);
+	h_asym_p_fit->Draw("histcsame");
 	h_asym_m_fit->SetLineColor(kBlue);
  	h_asym_m_fit->Draw("histcsame");
         c->Print(((string)OutputDir+"h_asym.eps").c_str());	
+        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_asym.pdf").c_str());
     }
     
             s_Kpipi->SetMinimum(0);
@@ -2598,7 +2797,8 @@ void ampFit(int step=0){
             s_Kpipi_fit->SetLineWidth(3);
             s_Kpipi_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_Kpipi.eps").c_str());
-            
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Kpipi.pdf").c_str());
+
             s_Kpi->SetMinimum(0);
             s_Kpi->SetLineColor(kBlack);
             s_Kpi->DrawNormalized("e1",1);
@@ -2606,7 +2806,8 @@ void ampFit(int step=0){
             s_Kpi_fit->SetLineWidth(3);
             s_Kpi_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_Kpi.eps").c_str());
-            
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Kpi.pdf").c_str());
+
 	    s_pipi->SetMinimum(0);            
             s_pipi->SetLineColor(kBlack);
             s_pipi->DrawNormalized("e1",1);
@@ -2614,7 +2815,8 @@ void ampFit(int step=0){
             s_pipi_fit->SetLineWidth(3);
             s_pipi_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_pipi.eps").c_str());
-            
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Kpi.pdf").c_str());
+
 	    s_Dspipi->SetMinimum(0);            
             s_Dspipi->SetLineColor(kBlack);
             s_Dspipi->DrawNormalized("e1",1);
@@ -2622,7 +2824,8 @@ void ampFit(int step=0){
             s_Dspipi_fit->SetLineWidth(3);
             s_Dspipi_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_Dspipi.eps").c_str());
-           
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Kpi.pdf").c_str());
+
 	    s_DsK->SetMinimum(0);
             s_DsK->SetLineColor(kBlack);
             s_DsK->DrawNormalized("e1",1);
@@ -2630,7 +2833,8 @@ void ampFit(int step=0){
             s_DsK_fit->SetLineWidth(3);
             s_DsK_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_DsK.eps").c_str());
-
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Kpi.pdf").c_str());
+	    
 	    s_DsKpi->SetMinimum(0);            
             s_DsKpi->SetLineColor(kBlack);
             s_DsKpi->DrawNormalized("e1",1);
@@ -2638,7 +2842,8 @@ void ampFit(int step=0){
             s_DsKpi_fit->SetLineWidth(3);
             s_DsKpi_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_DsKpi.eps").c_str());
-
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Kpi.pdf").c_str());
+	    
 	    s_Dspi->SetMinimum(0);
             s_Dspi->SetLineColor(kBlack);
             s_Dspi->DrawNormalized("e1",1);
@@ -2646,7 +2851,8 @@ void ampFit(int step=0){
             s_Dspi_fit->SetLineWidth(3);
             s_Dspi_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_Dspi.eps").c_str());
-
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Kpi.pdf").c_str());
+	    
 	    s_Dspim->SetMinimum(0);
             s_Dspim->SetLineColor(kBlack);
             s_Dspim->DrawNormalized("e1",1);
@@ -2654,7 +2860,8 @@ void ampFit(int step=0){
             s_Dspim_fit->SetLineWidth(3);
             s_Dspim_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_Dspim.eps").c_str());
-
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Kpi.pdf").c_str());
+	    
 /*
 	    s_Kpipi_unmixed->Rebin(4);
 	    s_Kpipi_mixed->Rebin(4);
@@ -2734,12 +2941,11 @@ void ampFit(int step=0){
 	    //s_Kpipi_asym_m_fit->Draw("histcsame");
 	    //s_Kpipi_asym_m->Draw("esame");
 
-
 	    //s_Kpipi_asym_p_fit->Draw("histcsame");
             c->Print(((string)OutputDir+"s_Kpipi_asym.eps").c_str());
             c->Print(((string)OutputDir+"s_Kpipi_asym.C").c_str());
-	    cout << "s_Kpipi_asym " << s_Kpipi_asym_p->Integral() << endl; 
-	    cout << "s_Kpipi_asym_fit " << s_Kpipi_asym_p_fit->Integral() << endl; 
+	    //cout << "s_Kpipi_asym " << s_Kpipi_asym_p->Integral() << endl; 
+	    //cout << "s_Kpipi_asym_fit " << s_Kpipi_asym_p_fit->Integral() << endl; 
 
             s_Kpipi_A->SetMinimum(0);
             s_Kpipi_A->SetLineColor(kBlue);
@@ -2916,14 +3122,17 @@ void ampFit(int step=0){
 }
 
 void produceMarginalPdfs(){
-
+    
     NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
-    NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
     TString prefix = "";
     //TString prefix = "BsTaggingTool_";
     NamedParameter<double> min_year("min_year", 11);
     NamedParameter<double> max_year("max_year", 16);
-    
+    NamedParameter<double> min_TAU("min_TAU", 0.4);
+    NamedParameter<double> max_TAU("max_TAU", 10.);
+    NamedParameter<double> min_TAUERR("min_TAUERR", 0.);
+    NamedParameter<double> max_TAUERR("max_TAUERR", 0.1);    
+
     /// Load files
     // Data
     int q_OS;
@@ -2933,33 +3142,7 @@ void produceMarginalPdfs(){
     double sw;
     int run,year,Ds_finalState,trigger;
     double t,dt;
-    double Bs_pt,Bs_eta,nTracks;
     
-    TChain* tree=new TChain("DecayTree");
-    tree->Add( ((string)InputDir + "Data/signal.root").c_str());
-    tree->SetBranchStatus("*",0);
-    tree->SetBranchStatus("N_Bs_sw",1);
-    tree->SetBranchStatus("year",1);
-    tree->SetBranchStatus("*DEC",1);
-    tree->SetBranchStatus("*PROB",1);
-    tree->SetBranchStatus("*OS",1);
-    tree->SetBranchStatus("*TAU*",1);
-    tree->SetBranchStatus("*ETA",1);
-    tree->SetBranchStatus("*PT",1);
-    tree->SetBranchStatus("NTracks",1);
-
-    tree->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
-    tree->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS);
-    tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
-    tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS);
-    tree->SetBranchAddress("N_Bs_sw",&sw);
-    tree->SetBranchAddress("year",&year);
-    tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
-    tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
-    tree->SetBranchAddress("Bs_PT",&Bs_pt);
-    tree->SetBranchAddress("Bs_ETA",&Bs_eta);
-    tree->SetBranchAddress("NTracks",&nTracks);
-
     TChain* tree_norm=new TChain("DecayTree");
     tree_norm->Add( ((string)InputDir + "Data/norm.root").c_str());
     tree_norm->SetBranchStatus("*",0);
@@ -2969,9 +3152,6 @@ void produceMarginalPdfs(){
     tree_norm->SetBranchStatus("*PROB",1);
     tree_norm->SetBranchStatus("*OS",1);
     tree_norm->SetBranchStatus("*TAU*",1);
-    tree_norm->SetBranchStatus("*ETA",1);
-    tree_norm->SetBranchStatus("*PT",1);
-    tree_norm->SetBranchStatus("NTracks",1);
     tree_norm->SetBranchStatus("run",1);
     tree_norm->SetBranchStatus("TriggerCat",1);
     
@@ -2985,345 +3165,113 @@ void produceMarginalPdfs(){
     tree_norm->SetBranchAddress("Ds_finalState",&Ds_finalState);
     tree_norm->SetBranchAddress("Bs_DTF_TAU",&t);
     tree_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt);
-    tree_norm->SetBranchAddress("Bs_PT",&Bs_pt);
-    tree_norm->SetBranchAddress("Bs_ETA",&Bs_eta);
-    tree_norm->SetBranchAddress("NTracks",&nTracks);
     tree_norm->SetBranchAddress("TriggerCat",&trigger);
-
-    // MC
-    int q_OS_MC;
-    Short_t q_SS_MC;
-    double w_OS_MC;
-    Float_t w_SS_MC;
-    double w;
-    int cat,yearMC,Ds_finalStateMC;
-    double dt_MC;
-    double Bs_pt_MC,Bs_eta_MC,nTracks_MC;
-
-    TChain* treeMC =new TChain("DecayTree");
-    treeMC->Add( ((string)InputDir + "MC/signal.root").c_str());
-    treeMC->SetBranchStatus("*",0);
-    treeMC->SetBranchStatus("Ds_finalState",1);
-    treeMC->SetBranchStatus("Bs_BKGCAT",1);
-    treeMC->SetBranchStatus("weight",1);
-    treeMC->SetBranchStatus("*DEC",1);
-    treeMC->SetBranchStatus("*PROB",1);
-    treeMC->SetBranchStatus("*OS",1);
-    treeMC->SetBranchStatus("*TAU*",1);
-    treeMC->SetBranchStatus("*ETA",1);
-    treeMC->SetBranchStatus("*PT",1);
-    treeMC->SetBranchStatus("NTracks",1);
-
-    treeMC->SetBranchAddress("Bs_BKGCAT",&cat);
-    treeMC->SetBranchAddress("year",&yearMC);
-    treeMC->SetBranchAddress("Ds_finalState",&Ds_finalStateMC);           
-    treeMC->SetBranchAddress("weight",&w);
-    treeMC->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS_MC);
-    treeMC->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS_MC);
-    treeMC->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS_MC);
-    treeMC->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS_MC);
-    treeMC->SetBranchAddress("Bs_DTF_TAUERR",&dt_MC);
-    treeMC->SetBranchAddress("Bs_PT",&Bs_pt_MC);
-    treeMC->SetBranchAddress("Bs_ETA",&Bs_eta_MC);
-    treeMC->SetBranchAddress("NTracks",&nTracks_MC);
-    
-    TChain* treeMC_norm =new TChain("DecayTree");
-    treeMC_norm->Add( ((string)InputDir + "MC/norm.root").c_str());
-    treeMC_norm->SetBranchStatus("*",0);
-    treeMC_norm->SetBranchStatus("Ds_finalState",1);
-    treeMC_norm->SetBranchStatus("Bs_BKGCAT",1);
-    treeMC_norm->SetBranchStatus("weight",1);
-    treeMC_norm->SetBranchStatus("*DEC",1);
-    treeMC_norm->SetBranchStatus("*PROB",1);
-    treeMC_norm->SetBranchStatus("*OS",1);
-    treeMC_norm->SetBranchStatus("*TAU*",1);
-    treeMC_norm->SetBranchStatus("*ETA",1);
-    treeMC_norm->SetBranchStatus("*PT",1);
-    treeMC_norm->SetBranchStatus("NTracks",1);
-
-    treeMC_norm->SetBranchAddress("Bs_BKGCAT",&cat);
-    treeMC_norm->SetBranchAddress("year",&yearMC);
-    treeMC_norm->SetBranchAddress("Ds_finalState",&Ds_finalStateMC);           
-    treeMC_norm->SetBranchAddress("weight",&w);
-    treeMC_norm->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS_MC);
-    treeMC_norm->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS_MC);
-    treeMC_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS_MC);
-    treeMC_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS_MC);
-    treeMC_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt_MC);
-    treeMC_norm->SetBranchAddress("Bs_PT",&Bs_pt_MC);
-    treeMC_norm->SetBranchAddress("Bs_ETA",&Bs_eta_MC);
-    treeMC_norm->SetBranchAddress("NTracks",&nTracks_MC);
     
     ///Make histograms
     int bins = 60;
-    TH1D* h_w_OS = new TH1D("h_w_OS","; #eta_{OS}",bins,0,0.5);
-    TH1D* h_w_OS_MC = new TH1D("h_w_OS_MC","; #eta_{OS}",bins,0,0.5);
-    TH1D* h_w_SS = new TH1D("h_w_SS","; #eta_{SS}",bins,0,0.5);
-    TH1D* h_w_SS_MC = new TH1D("h_w_SS_MC","; #eta_{SS}",bins,0,0.5);
-    
-    TH1D* h_q_OS = new TH1D("h_q_OS","; q_{OS}",3,-1.5,1.5);
-    TH1D* h_q_OS_MC = new TH1D("h_q_OS_MC","; q_{OS}",3,-1.5,1.5);
-    TH1D* h_q_SS = new TH1D("h_q_SS","; q_{SS}",3,-1.5,1.5);
-    TH1D* h_q_SS_MC = new TH1D("h_q_SS_MC","; q_{SS}",3,-1.5,1.5);
-    
-    TH1D* h_dt = new TH1D("h_dt",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-    TH1D* h_dt_MC = new TH1D("h_dt_MC",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-
-    TH1D* h_w_OS_norm = new TH1D("h_w_OS_norm","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm = new TH1D("h_w_OS_norm_comb","; #eta_{OS}",bins,0,0.5);
     TH1D* h_w_OS_norm_Run1 = new TH1D("h_w_OS_norm_Run1","; #eta_{OS}",bins,0,0.5);
     TH1D* h_w_OS_norm_Run2 = new TH1D("h_w_OS_norm_Run2","; #eta_{OS}",bins,0,0.5);
-    TH1D* h_w_OS_MC_norm = new TH1D("h_w_OS_MC_norm","; #eta_{OS}",bins,0,0.5);
-    TH1D* h_w_SS_norm = new TH1D("h_w_SS_norm","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_OS_norm_Run1_t0 = new TH1D("h_w_OS_norm_Run1_t0","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm_Run2_t0 = new TH1D("h_w_OS_norm_Run2_t0","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm_Run1_t1 = new TH1D("h_w_OS_norm_Run1_t1","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm_Run2_t1 = new TH1D("h_w_OS_norm_Run2_t1","; #eta_{OS}",bins,0,0.5);
+    
+    TH1D* h_w_SS_norm = new TH1D("h_w_SS_norm_comb","; #eta_{SS}",bins,0,0.5);
     TH1D* h_w_SS_norm_Run1 = new TH1D("h_w_SS_norm_Run1","; #eta_{SS}",bins,0,0.5);
     TH1D* h_w_SS_norm_Run2 = new TH1D("h_w_SS_norm_Run2","; #eta_{SS}",bins,0,0.5);
-    TH1D* h_w_SS_MC_norm = new TH1D("h_w_SS_MC_norm","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm_Run1_t0 = new TH1D("h_w_SS_norm_Run1_t0","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm_Run2_t0 = new TH1D("h_w_SS_norm_Run2_t0","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm_Run1_t1 = new TH1D("h_w_SS_norm_Run1_t1","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm_Run2_t1 = new TH1D("h_w_SS_norm_Run2_t1","; #eta_{SS}",bins,0,0.5);
     
-    TH1D* h_q_OS_norm = new TH1D("h_q_OS_norm","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm = new TH1D("h_q_OS_norm_comb","; q_{OS}",3,-1.5,1.5);
     TH1D* h_q_OS_norm_Run1 = new TH1D("h_q_OS_norm_Run1","; q_{OS}",3,-1.5,1.5);
     TH1D* h_q_OS_norm_Run2 = new TH1D("h_q_OS_norm_Run2","; q_{OS}",3,-1.5,1.5);
-    TH1D* h_q_OS_MC_norm = new TH1D("h_q_OS_MC_norm","; q_{OS}",3,-1.5,1.5);
-    TH1D* h_q_SS_norm = new TH1D("h_q_SS_norm","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm_Run1_t0 = new TH1D("h_q_OS_norm_Run1_t0","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm_Run2_t0 = new TH1D("h_q_OS_norm_Run2_t0","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm_Run1_t1 = new TH1D("h_q_OS_norm_Run1_t1","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm_Run2_t1 = new TH1D("h_q_OS_norm_Run2_t1","; q_{OS}",3,-1.5,1.5);
+    
+    TH1D* h_q_SS_norm = new TH1D("h_q_SS_norm_comb","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm_Run1 = new TH1D("h_q_SS_norm_Run1","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm_Run2 = new TH1D("h_q_SS_norm_Run2","; q_{SS}",3,-1.5,1.5);
-    TH1D* h_q_SS_MC_norm = new TH1D("h_q_SS_MC_norm","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm_Run1_t0 = new TH1D("h_q_SS_norm_Run1_t0","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm_Run2_t0 = new TH1D("h_q_SS_norm_Run2_t0","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm_Run1_t1 = new TH1D("h_q_SS_norm_Run1_t1","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm_Run2_t1 = new TH1D("h_q_SS_norm_Run2_t1","; q_{SS}",3,-1.5,1.5);
     
-    TH1D* h_t_norm = new TH1D("h_t_norm",";t (ps);Events (norm.) ",bins,0,15);
-    TH1D* h_t_norm_Run1 = new TH1D("h_t_norm_Run1",";t (ps);Events (norm.) ",bins,0,15);
-    TH1D* h_t_norm_Run2 = new TH1D("h_t_norm_Run2",";t (ps);Events (norm.) ",bins,0,15);
-    TH1D* h_dt_norm = new TH1D("h_dt_norm",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-    TH1D* h_dt_norm_Run1 = new TH1D("h_dt_norm_Run1",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-    TH1D* h_dt_norm_Run2 = new TH1D("h_dt_norm_Run2",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
-    TH1D* h_dt_MC_norm = new TH1D("h_dt_MC_norm",";#sigma_{t} (ps);Events (norm.) ",bins,0,0.25);
+    TH1D* h_t_norm = new TH1D("h_t_norm_comb",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
+    TH1D* h_t_norm_Run1 = new TH1D("h_t_norm_Run1",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
+    TH1D* h_t_norm_Run2 = new TH1D("h_t_norm_Run2",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
 
-    double eff_OS = 0; 
-    double eff_SS = 0;
-    double eff_OS_MC = 0; 
-    double eff_SS_MC = 0;
+    TH1D* h_dt_norm = new TH1D("h_dt_norm_comb",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run1 = new TH1D("h_dt_norm_Run1",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run2 = new TH1D("h_dt_norm_Run2",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run1_t0 = new TH1D("h_dt_norm_Run1_t0",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run2_t0 = new TH1D("h_dt_norm_Run2_t0",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run1_t1 = new TH1D("h_dt_norm_Run1_t1",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run2_t1 = new TH1D("h_dt_norm_Run2_t1",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
     
-    double eff_OS_norm = 0; 
-    double eff_SS_norm = 0;
-    double eff_OS_MC_norm = 0; 
-    double eff_SS_MC_norm = 0;
-    
-    double sumw = 0;
-
     ///loop over data events
-    for(int i=0; i< tree->GetEntries(); i++)
-    {	
-        //if (0ul == (i % 1000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
-        tree->GetEntry(i);        
-        
-        h_dt->Fill(dt,sw);
-        h_q_OS->Fill((double)q_OS,sw);
-        h_q_SS->Fill((double)q_SS,sw);
-
-        if(q_OS != 0) {
-            h_w_OS->Fill(w_OS,sw);
-            eff_OS += sw;
-        }
-        if(q_SS != 0){
-            h_w_SS->Fill(w_SS,sw);
-            eff_SS += sw;
-        }
-        sumw += sw;
-    }
-    
-    eff_OS /= sumw;
-    eff_SS /= sumw;
-    
-    sumw = 0;
     for(int i=0; i< tree_norm->GetEntries(); i++)
-    {	
+    {    
         tree_norm->GetEntry(i);
         if(year < min_year || year > max_year) continue;
-
+        
         h_t_norm->Fill(t,sw);
         h_dt_norm->Fill(dt,sw);
         h_q_OS_norm->Fill((double)q_OS,sw);
         h_q_SS_norm->Fill((double)q_SS,sw);
-
+        if(q_OS != 0)h_w_OS_norm->Fill(w_OS,sw);
+        if(q_SS != 0)h_w_SS_norm->Fill(w_SS,sw);
+            
         if(run==1){
             h_t_norm_Run1->Fill(t,sw);
             h_dt_norm_Run1->Fill(dt,sw);
             h_q_OS_norm_Run1->Fill((double)q_OS,sw);
             h_q_SS_norm_Run1->Fill((double)q_SS,sw);
+            if(q_OS != 0)h_w_OS_norm_Run1->Fill(w_OS,sw);
+            if(q_SS != 0)h_w_SS_norm_Run1->Fill(w_SS,sw);
+	    if(trigger == 0){
+		h_dt_norm_Run1_t0->Fill(dt,sw);
+            	h_q_OS_norm_Run1_t0->Fill((double)q_OS,sw);
+            	h_q_SS_norm_Run1_t0->Fill((double)q_SS,sw);
+	        if(q_OS != 0)h_w_OS_norm_Run1_t0->Fill(w_OS,sw);
+                if(q_SS != 0)h_w_SS_norm_Run1_t0->Fill(w_SS,sw);
+	    }
+	    else if(trigger == 1){
+		h_dt_norm_Run1_t1->Fill(dt,sw);
+            	h_q_OS_norm_Run1_t1->Fill((double)q_OS,sw);
+            	h_q_SS_norm_Run1_t1->Fill((double)q_SS,sw);
+	        if(q_OS != 0)h_w_OS_norm_Run1_t1->Fill(w_OS,sw);
+                if(q_SS != 0)h_w_SS_norm_Run1_t1->Fill(w_SS,sw);
+	    }
         }
         else if(run==2){
-                h_t_norm_Run2->Fill(t,sw);
-                h_dt_norm_Run2->Fill(dt,sw);
-                h_q_OS_norm_Run2->Fill((double)q_OS,sw);
-                h_q_SS_norm_Run2->Fill((double)q_SS,sw);
+            h_t_norm_Run2->Fill(t,sw);
+            h_dt_norm_Run2->Fill(dt,sw);
+            h_q_OS_norm_Run2->Fill((double)q_OS,sw);
+            h_q_SS_norm_Run2->Fill((double)q_SS,sw);
+            if(q_OS != 0)h_w_OS_norm_Run2->Fill(w_OS,sw);
+            if(q_SS != 0)h_w_SS_norm_Run2->Fill(w_SS,sw);
+	    if(trigger == 0){
+		h_dt_norm_Run2_t0->Fill(dt,sw);
+            	h_q_OS_norm_Run2_t0->Fill((double)q_OS,sw);
+            	h_q_SS_norm_Run2_t0->Fill((double)q_SS,sw);
+	        if(q_OS != 0)h_w_OS_norm_Run2_t0->Fill(w_OS,sw);
+                if(q_SS != 0)h_w_SS_norm_Run2_t0->Fill(w_SS,sw);
+	    }
+	    else if(trigger == 1){
+		h_dt_norm_Run2_t1->Fill(dt,sw);
+            	h_q_OS_norm_Run2_t1->Fill((double)q_OS,sw);
+            	h_q_SS_norm_Run2_t1->Fill((double)q_SS,sw);
+	        if(q_OS != 0)h_w_OS_norm_Run2_t1->Fill(w_OS,sw);
+                if(q_SS != 0)h_w_SS_norm_Run2_t1->Fill(w_SS,sw);
+	    }
         }
-        
-        if(q_OS != 0){
-            h_w_OS_norm->Fill(w_OS,sw);
-            if(run==1)h_w_OS_norm_Run1->Fill(w_OS,sw);
-            if(run==2)h_w_OS_norm_Run2->Fill(w_OS,sw);
-            eff_OS_norm += sw;
-        }
-        if(q_SS != 0){
-            h_w_SS_norm->Fill(w_SS,sw);
-            if(run==1)h_w_SS_norm_Run1->Fill(w_SS,sw);
-            if(run==2)h_w_SS_norm_Run2->Fill(w_SS,sw);
-            eff_SS_norm += sw;
-            }
-        sumw += sw;
+       
     }
-    
-    eff_OS_norm /= sumw;    
-    eff_SS_norm /= sumw;
-
-    ///loop over MC events
-    for(int i=0; i< treeMC->GetEntries(); i++)
-    {	
-        treeMC->GetEntry(i);
-        
-        h_dt_MC->Fill(dt_MC,sw);
-        h_q_OS_MC->Fill((double)q_OS_MC,sw);
-        h_q_SS_MC->Fill((double)q_SS_MC,sw);
-        
-        if(q_OS_MC != 0)h_w_OS_MC->Fill(w_OS_MC,w);
-        if(q_SS_MC != 0)h_w_SS_MC->Fill(w_SS_MC,w);
-    }
-    
-    for(int i=0; i< treeMC_norm->GetEntries(); i++)
-    {	
-        treeMC_norm->GetEntry(i);
-        
-        h_dt_MC_norm->Fill(dt_MC,sw);
-        h_q_OS_MC_norm->Fill((double)q_OS_MC,sw);
-        h_q_SS_MC_norm->Fill((double)q_SS_MC,sw);
-        
-        if(q_OS_MC != 0)h_w_OS_MC_norm->Fill(w_OS_MC,w);
-        if(q_SS_MC != 0)h_w_SS_MC_norm->Fill(w_SS_MC,w);
-    }
-    
-    ///Plot it
-    TCanvas* c= new TCanvas();
-
-    h_w_OS->SetMinimum(0);    
-    h_w_OS->SetLineColor(kBlack);
-    h_w_OS->DrawNormalized("e",1);
-    h_w_OS_norm->SetMarkerColor(kRed);
-    h_w_OS_norm->SetLineColor(kRed);
-    h_w_OS_norm->DrawNormalized("esame",1);
-    
-    double KolmoTest = h_w_OS->KolmogorovTest(h_w_OS_norm);
-    
-    TLegend *leg = new TLegend(0.2,0.6,0.4,0.9,"");
-    leg->SetLineStyle(0);
-    leg->SetLineColor(0);
-    leg->SetFillColor(0);
-    leg->SetTextFont(22);
-    leg->SetTextColor(1);
-    leg->SetTextSize(0.04);
-    leg->SetTextAlign(12);
-    
-    leg->AddEntry(h_w_OS,"B_{s} #rightarrow D_{s}K#pi#pi  Data","LEP");
-    
-    stringstream ss1 ;
-    TString leg_average = "<#omega_{OS}> = ";
-    ss1 << std::fixed << std::setprecision(3) << h_w_OS->GetMean() ;
-    leg_average += ss1.str();    
-    leg->AddEntry((TObject*)0, leg_average, "");
-
-    stringstream ss2 ;
-    TString leg_eff = "#epsilon_{OS} = ";
-    ss2 << std::fixed << std::setprecision(3) << eff_OS ;
-    leg_eff += ss2.str();    
-    leg->AddEntry((TObject*)0, leg_eff, "");
-
-    leg->AddEntry(h_w_OS_norm,"B_{s} #rightarrow D_{s}#pi#pi#pi  Data","LEP");
-    
-    stringstream ss ;
-    TString leg_kol = "Kolm.-Test : ";
-    ss << std::fixed << std::setprecision(2) << KolmoTest ;
-    leg_kol += ss.str();    
-    //TLegendEntry* le = leg->AddEntry((TObject*)0, leg_kol, "");
-    //le->SetTextColor(kRed);    
-    
-    //leg->Draw(); 
-    c->Print(prefix+"w_OS.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_OS.pdf");
-
-    h_w_SS->SetMinimum(0);    
-    h_w_SS->SetLineColor(kBlack);
-    h_w_SS->DrawNormalized("e",1);
-    h_w_SS_norm->SetMarkerColor(kRed);
-    h_w_SS_norm->SetLineColor(kRed);
-    h_w_SS_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"w_SS.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_SS.pdf");
-
-    h_w_OS_MC->SetMinimum(0);    
-    h_w_OS_MC->SetLineColor(kBlack);
-    h_w_OS_MC->DrawNormalized("e",1);
-    h_w_OS_MC_norm->SetMarkerColor(kRed);
-    h_w_OS_MC_norm->SetLineColor(kRed);
-    h_w_OS_MC_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"w_OS_MC.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_OS_MC.pdf");
-
-    h_w_SS_MC->SetMinimum(0);    
-    h_w_SS_MC->SetLineColor(kBlack);
-    h_w_SS_MC->DrawNormalized("e",1);
-    h_w_SS_MC_norm->SetMarkerColor(kRed);
-    h_w_SS_MC_norm->SetLineColor(kRed);
-    h_w_SS_MC_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"w_SS_MC.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/w_SS_MC.pdf");
-
-    h_q_OS->SetMinimum(0);    
-    h_q_OS->SetLineColor(kBlack);
-    h_q_OS->DrawNormalized("e",1);
-    h_q_OS_norm->SetMarkerColor(kRed);
-    h_q_OS_norm->SetLineColor(kRed);
-    h_q_OS_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"q_OS.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/qOS.pdf");
-
-    h_q_SS->SetMinimum(0);    
-    h_q_SS->SetLineColor(kBlack);
-    h_q_SS->DrawNormalized("e",1);
-    h_q_SS_norm->SetMarkerColor(kRed);
-    h_q_SS_norm->SetLineColor(kRed);
-    h_q_SS_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"q_SS.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/q_SS.pdf");
-    
-    h_q_OS_MC->SetMinimum(0);    
-    h_q_OS_MC->SetLineColor(kBlack);
-    h_q_OS_MC->DrawNormalized("e",1);
-    h_q_OS_MC_norm->SetMarkerColor(kRed);
-    h_q_OS_MC_norm->SetLineColor(kRed);
-    h_q_OS_MC_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"q_OS_MC.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/q_OS_MC.pdf");
-
-    h_q_SS_MC->SetMinimum(0);    
-    h_q_SS_MC->SetLineColor(kBlack);
-    h_q_SS_MC->DrawNormalized("e",1);
-    h_q_SS_MC_norm->SetMarkerColor(kRed);
-    h_q_SS_MC_norm->SetLineColor(kRed);
-    h_q_SS_MC_norm->DrawNormalized("esame",1);
-    c->Print(prefix+"q_SS_MC.eps");
-    if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Tagging/q_SS_MC.pdf");
-
-    h_dt->SetMinimum(0);    
-    h_dt->SetLineColor(kBlack);
-    h_dt->DrawNormalized("e",1);
-    h_dt_norm->SetMarkerColor(kRed);
-    h_dt_norm->SetLineColor(kRed);
-    h_dt_norm->DrawNormalized("esame",1);
-    c->Print("dt.eps");
-    
-    h_dt_MC->SetMinimum(0);    
-    h_dt_MC->SetLineColor(kBlack);
-    h_dt_MC->DrawNormalized("e",1);
-    h_dt_MC_norm->SetMarkerColor(kRed);
-    h_dt_MC_norm->SetLineColor(kRed);
-    h_dt_MC_norm->DrawNormalized("esame",1);
-    c->Print("dt_MC.eps");
     
     TFile* out = new TFile("Mistag_pdfs.root","RECREATE");
     h_t_norm->Write();
@@ -3339,17 +3287,40 @@ void produceMarginalPdfs(){
     h_w_OS_norm_Run1->Write();
     h_q_SS_norm_Run1->Write();
     h_w_SS_norm_Run1->Write();
-    
+
+    h_dt_norm_Run1_t0->Write();
+    h_q_OS_norm_Run1_t0->Write();
+    h_w_OS_norm_Run1_t0->Write();
+    h_q_SS_norm_Run1_t0->Write();
+    h_w_SS_norm_Run1_t0->Write();
+   
+    h_dt_norm_Run1_t1->Write();
+    h_q_OS_norm_Run1_t1->Write();
+    h_w_OS_norm_Run1_t1->Write();
+    h_q_SS_norm_Run1_t1->Write();
+    h_w_SS_norm_Run1_t1->Write();
+       
     h_t_norm_Run2->Write();
     h_dt_norm_Run2->Write();
     h_q_OS_norm_Run2->Write();
     h_w_OS_norm_Run2->Write();
     h_q_SS_norm_Run2->Write();
     h_w_SS_norm_Run2->Write();
-    
+
+    h_dt_norm_Run2_t0->Write();
+    h_q_OS_norm_Run2_t0->Write();
+    h_w_OS_norm_Run2_t0->Write();
+    h_q_SS_norm_Run2_t0->Write();
+    h_w_SS_norm_Run2_t0->Write();
+
+    h_dt_norm_Run2_t1->Write();
+    h_q_OS_norm_Run2_t1->Write();
+    h_w_OS_norm_Run2_t1->Write();
+    h_q_SS_norm_Run2_t1->Write();
+    h_w_SS_norm_Run2_t1->Write();
+
     out->Write();
 }
-
 
 void produceIntegratorFile_CP(){
     
@@ -3388,7 +3359,7 @@ void makeIntegratorFileForToys(){
     
     eventListPhsp.generatePhaseSpaceEvents(100000,pat);
     
-    FitAmpIncoherentSum fas((DalitzEventPattern)pat);
+    FitAmpSum fas((DalitzEventPattern)pat);
     fas.print();
     fas.getVal(eventListPhsp[0]);
     fas.normalizeAmps(eventListPhsp);
@@ -3425,12 +3396,13 @@ int main(int argc, char** argv){
   TH2::SetDefaultSumw2();
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
-  produceMarginalPdfs();
+  //produceMarginalPdfs();
   //produceIntegratorFile_CP();
   //makeIntegratorFileForToys();
     
-  ampFit(atoi(argv[1]));
-  
+  for(int i = 0; i < 200; i++)ampFit(atoi(argv[1])+i);
+  //ampFit(atoi(argv[1]));
+
   cout << "==============================================" << endl;
   cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
   cout << "==============================================" << endl;

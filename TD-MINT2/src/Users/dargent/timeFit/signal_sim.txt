@@ -1,11 +1,13 @@
 "RandomSeed"		0
-"Event Pattern"         531 -431 221 211 -211
+"Event Pattern"         531 -431 321 211 -211
 
 *"InputDir"	"../Files/"
 "OutputDir"	"signal/"
 "channel"	"signal"
+"updateAnaNote"		 1
 
-"nBinst" 	30
+"nBinst" 	50
+"nBinsAsym"	 5
 "min_TAU" 	0.4
 "max_TAU" 	10
 "min_TAUERR" 	0.
@@ -20,87 +22,87 @@
 ** name		Fix?	init	step	min	max
 
 "tau"		2	1.509 	0.01	0.5	2.0
-"dGamma" 	2 	0.09 	0.01	0.0	0.0
+"dGamma" 	2 	-0.09 	0.01	0.0	0.0
 "dm" 		2 	17.757  0.01	0.0	0.0
 
-"C"	0	0.735	0.05	
-"D"	0	0.395	0.05	
-"D_bar"	0	0.314	0.05	
-"S"	0	-0.518	0.05	
-"S_bar" 0	-0.496	0.05	
+"C"	0	0.7	0.05	-1 2
+"D"	0	0.1	0.05	-4 4	
+"D_bar"	0	0.1	0.05	-4 4
+"S"	0	0.1	0.05	-4 4
+"S_bar" 0	0.1	0.05	-4 4
 
-"C_Blind"	1	-1   1
-"D_Blind"	1	-1   1
-"D_bar_Blind"	1	-1   1
-"S_Blind"	1	-1   1
-"S_bar_Blind"	1	-1   1
+*"C_Blind"	1	-1   1
+*"D_Blind"	1	-1   1
+*"D_bar_Blind"	1	-1   1
+*"S_Blind"	1	-1   1
+*"S_bar_Blind"	1	-1   1
 "k" 	2	1.	0.05	0.	1.
 ***
-"knot_positions"	 0.7 1.2 1.7 2.2 6.3 
+knot_positions 0.8 1.6 2.5 6.5 
+c0_Run1_t0  2  0.561206  0.0379515
+c1_Run1_t0  2  0.825712  0.059164
+c2_Run1_t0  2  0.842828  0.0871307
+c3_Run1_t0  2  1.15351  0.0363123
 
-"c0_Run1_t0"  2  0.505938  0.0559735
-"c1_Run1_t0"  2  0.685195  0.0813419
-"c2_Run1_t0"  2  0.810245  0.0744337
-"c3_Run1_t0"  2  1.09506  0.113688
-"c4_Run1_t0"  2  1.0903  0.0508716
+c0_Run1_t1  2  0.367854  0.0312567
+c1_Run1_t1  2  0.583259  0.0499699
+c2_Run1_t1  2  0.939489  0.101348
+c3_Run1_t1  2  1.05215  0.0536167
 
-"c0_Run1_t1"  2  0.596591  0.160349
-"c1_Run1_t1"  2  0.79963  0.242771
-"c2_Run1_t1"  2  0.957576  0.0992615
-"c3_Run1_t1"  2  1.15062  0.222303
-"c4_Run1_t1"  2  1.05602  0.0707798
+c0_Run2_t0  2  0.485751  0.00866747
+c1_Run2_t0  2  0.690922  0.0144009
+c2_Run2_t0  2  0.851369  0.0240612
+c3_Run2_t0  2  1.0615  0.0173365
 
-"c0_Run2_t0"  2  0.434129  0.0296884
-"c1_Run2_t0"  2  0.601906  0.0428371
-"c2_Run2_t0"  2  0.747947  0.064358
-"c3_Run2_t0"  2  0.944499  0.0800396
-"c4_Run2_t0"  2  1.03996  0.0545798
+c0_Run2_t1  2  0.300331  0.00707767
+c1_Run2_t1  2  0.475732  0.012471
+c2_Run2_t1  2  0.725032  0.0232909
+c3_Run2_t1  2  1.06383  0.0186883
 
-"c0_Run2_t1"  2  0.515856  0.0497177
-"c1_Run2_t1"  2  0.692689  0.067293
-"c2_Run2_t1"  2  0.781724  0.105522
-"c3_Run2_t1"  2  1.06027  0.143249
-"c4_Run2_t1"  2  1.02254  0.0750958
 ***
 "offset_sigma_dt_Run1"	2 	0.0103	0.001
 "scale_sigma_dt_Run1"	2	1.28	0.05
 
-"p0_os_Run1"			2	0.393117	0.005
-"p1_os_Run1"			2	0.962882	0.06
+"p0_os_Run1"			2	0.389677	0.005
+"p1_os_Run1"			2	0.884908	0.06
 "delta_p0_os_Run1"		2	0.	0.
 "delta_p1_os_Run1"		2	0.	0.
 "avg_eta_os_Run1"		2	0.373	0.001
-"tageff_os_Run1"		2	0.385343	0.001
+"tageff_os_Run1"		2	0.385074	0.001
 "tageff_asym_os_Run1"		2	0.	0.
 
-"p0_ss_Run1"			2	0.444363	0.005
-"p1_ss_Run1"			2	1.05404	0.06
+"p0_ss_Run1"			2	0.446859	0.005
+"p1_ss_Run1"			2	1.07739		0.06
 "delta_p0_ss_Run1"		2	0.	0.
 "delta_p1_ss_Run1"		2	0.	0.
 "avg_eta_ss_Run1"		2	0.4331	0.001
-"tageff_ss_Run1"		2	0.688942	0.001
+"tageff_ss_Run1"		2	0.688189	0.001
 "tageff_asym_ss_Run1"		2	0.	0.
 
 "production_asym_Run1"	2	0.	0.
 "detection_asym_Run1"	2	0.	0.
-***
-"offset_sigma_dt_Run2"	2 	0.0188	0.001
-"scale_sigma_dt_Run2"	2	1.029	0.05
 
-"p0_os_Run2"			2	0.344353	0.005
-"p1_os_Run2"			2	1.08873	0.06
+***
+"offset_sigma_dt_Run2"		2	0.0097	0.005
+"scale_sigma_dt_Run2"		2	0.915	0.005
+* From J/psi phi 
+*"offset_sigma_dt_Run2"		2	0.01206
+*"scale_sigma_dt_Run2"		2	0.8793	
+
+"p0_os_Run2"			2	0.367591	0.005
+"p1_os_Run2"			2	0.933794	0.06
 "delta_p0_os_Run2"		2	0.	0.
 "delta_p1_os_Run2"		2	0.	0.
 "avg_eta_os_Run2"		2	0.373	0.001
-"tageff_os_Run2"		2	0.354427	0.001
+"tageff_os_Run2"		2	0.352499	0.001
 "tageff_asym_os_Run2"		2	0.	0.
 
-"p0_ss_Run2"			2	0.451189	0.005
-"p1_ss_Run2"			2	1.0151	0.06
+"p0_ss_Run2"			2	0.45306	0.005
+"p1_ss_Run2"			2	0.911244	0.06
 "delta_p0_ss_Run2"		2	0.	0.
 "delta_p1_ss_Run2"		2	0.	0.
 "avg_eta_ss_Run2"		2	0.4331	0.001
-"tageff_ss_Run2"		2	0.682366	0.001
+"tageff_ss_Run2"		2	0.680385	0.001
 "tageff_asym_ss_Run2"		2	0.	0.
 
 "production_asym_Run2"	2	0.	0.

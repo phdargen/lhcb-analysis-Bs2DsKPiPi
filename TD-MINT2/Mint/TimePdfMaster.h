@@ -20,6 +20,7 @@
 
 #include "RooConstVar.h"
 #include "RooAbsReal.h"
+#include "RooUniform.h"
 #include "RooRealVar.h"
 #include "RooRealConstant.h"
 #include "RooCategory.h"
@@ -475,35 +476,57 @@ class TimePdfMaster
                                           ,_c6, _c7, _c8
                                           ,_c9);
         
-        // Marginal pdfs
-        TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
-        
-        _h_dt = new TH1D( *((TH1D*) f_pdfs->Get(("h_dt_norm"+(string)_marginalPdfsPrefix).c_str())));
-        _r_h_dt = new RooDataHist("r_h_dt","r_h_dt",*_r_dt,_h_dt);
-        _pdf_sigma_t = (RooAbsPdf*) (new RooHistPdf("pdf_sigma_t","pdf_sigma_t",*_r_dt,*_r_h_dt));
-        
-        _h_eta_OS = new TH1D( *((TH1D*) f_pdfs->Get(("h_w_OS_norm"+(string)_marginalPdfsPrefix).c_str())));
-        _r_h_eta_OS = new RooDataHist("r_eta_OS","r_eta_OS",*_r_eta_OS,_h_eta_OS);
-        _pdf_eta_OS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_OS","pdf_eta_OS",*_r_eta_OS,*_r_h_eta_OS));
-        
-        _h_eta_SS = new TH1D( *((TH1D*) f_pdfs->Get(("h_w_SS_norm"+(string)_marginalPdfsPrefix).c_str())));
-        _r_h_eta_SS = new RooDataHist("r_eta_SS","r_eta_SS",*_r_eta_SS,_h_eta_SS);
-        _pdf_eta_SS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_SS","pdf_eta_SS",*_r_eta_SS,*_r_h_eta_SS));
-        
-        f_pdfs->Close();
-
-       TH1F *h_spline = new TH1F("", "", 100, _min_TAU, _max_TAU);
-       for (int i = 1; i<=h_spline->GetNbinsX(); i++) {
-           _r_t->setVal(h_spline->GetXaxis()->GetBinCenter(i));
-           h_spline->SetBinContent(i,_spline->getVal());
-       }
-       
-       TCanvas* c = new TCanvas();
-       h_spline->SetLineColor(kRed);
-       h_spline->Draw("histc");
-       c->Print("spline.eps");
+        /// Marginal pdfs        
+	cout << (string)_marginalPdfsPrefix << endl;
+	if((string)_marginalPdfsPrefix == "Uniform"){
+		_pdf_sigma_t = (RooAbsPdf*) (new RooUniform("pdf_sigma_t","pdf_sigma_t",*_r_dt));
+		_pdf_eta_OS = (RooAbsPdf*) (new RooUniform("pdf_eta_OS","pdf_eta_OS",*_r_eta_OS));
+		_pdf_eta_SS = (RooAbsPdf*) (new RooUniform("pdf_eta_SS","pdf_eta_SS",*_r_eta_SS));
+	}
+	else {
+		TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
+	
+		_h_dt = new TH1D( *((TH1D*) f_pdfs->Get(("h_dt_norm_"+(string)_marginalPdfsPrefix).c_str())));
+		// RooHistPdf doesn't like negative or 0 bins (can happen due to sweights), set them to a small positive number
+		_h_dt->Smooth();
+		for(int i= 1 ; i<=_h_dt->GetNbinsX(); i++){
+			if(_h_dt->GetBinContent(i) <= 0.)_h_dt->SetBinContent(i,0.000000001*_h_dt->GetMaximum());
+		}
+		_r_h_dt = new RooDataHist("r_h_dt","r_h_dt",*_r_dt,_h_dt);
+		_pdf_sigma_t = (RooAbsPdf*) (new RooHistPdf("pdf_sigma_t","pdf_sigma_t",*_r_dt,*_r_h_dt));
+		
+		_h_eta_OS = new TH1D( *((TH1D*) f_pdfs->Get(("h_w_OS_norm_"+(string)_marginalPdfsPrefix).c_str())));
+		_h_eta_OS->Smooth();
+		for(int i= 1 ; i<=_h_eta_OS->GetNbinsX(); i++){
+			if(_h_eta_OS->GetBinContent(i) <= 0.)_h_eta_OS->SetBinContent(i,0.000000001*_h_eta_OS->GetMaximum());
+		}
+		_r_h_eta_OS = new RooDataHist("r_eta_OS","r_eta_OS",*_r_eta_OS,_h_eta_OS);
+		_pdf_eta_OS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_OS","pdf_eta_OS",*_r_eta_OS,*_r_h_eta_OS));
+		
+		_h_eta_SS = new TH1D( *((TH1D*) f_pdfs->Get(("h_w_SS_norm_"+(string)_marginalPdfsPrefix).c_str())));
+		_h_eta_SS->Smooth();
+		for(int i= 1 ; i<=_h_eta_SS->GetNbinsX(); i++){
+			if(_h_eta_SS->GetBinContent(i) <= 0.)_h_eta_SS->SetBinContent(i,0.000000001*_h_eta_SS->GetMaximum());
+		}
+		_r_h_eta_SS = new RooDataHist("r_eta_SS","r_eta_SS",*_r_eta_SS,_h_eta_SS);
+		_pdf_eta_SS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_SS","pdf_eta_SS",*_r_eta_SS,*_r_h_eta_SS));
+		
+		f_pdfs->Close();
+		/*
+		TH1F *h_spline = new TH1F("", "", 100, _min_TAU, _max_TAU);
+		for (int i = 1; i<=h_spline->GetNbinsX(); i++) {
+			_r_t->setVal(h_spline->GetXaxis()->GetBinCenter(i));
+			h_spline->SetBinContent(i,_spline->getVal());
+		}
+		
+		TCanvas* c = new TCanvas();
+		h_spline->SetLineColor(kRed);
+		h_spline->Draw("histc");
+		c->Print("spline.eps");
+		*/
+    	}
     }
-         
+    
     double get_cosh_term_Val(IDalitzEvent& evt){
         return _cosh_coeff->evaluate() * _cosh_term->getVal(evt).real();
     }

@@ -3,10 +3,14 @@
 
 *"InputDir"	"../Files/"
 
-"InputGenMCFile"    "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/GenLevMC/Gen_DsK_test2.root"
-*"InputGenMCFile"    "/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_13266007.root"
+*"InputGenMCFile"    "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/GenLevMC/Gen_DsK_test2.root"
+*"InputGenMCFile"    "/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_DsK_CPV.root"
+*"InputGenMCFile"    "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/GenLevMC/GenMC_DsKpipi_CP_test.root"
+"InputGenMCFile"    "/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_DsKpipi_CPV.root"
 
-"OutputDir"	"signal_DsK_MC/"
+
+"updateAnaNote"		 0
+"OutputDir"	"signal_DsKpipi_CPV_MC/"
 "channel"	"signal"
 
 "nBinst" 	100
@@ -40,29 +44,15 @@
 "scale_sigma_dt"	2	1.	0.1
 
 * PDG values:
-*"tau"		2	1.51199922586 	0.01	0.5	2.0
-*"dGamma" 	2 	-0.08068783069 	0.01	0.0	0.0
-
-"tau"		2	1.504 	0.01	0.5	2.0
-"dGamma" 	2 	6.64893617021276584e-02	0.01	0.0	0.0
+"tau"		2	1.5	0.01	0.5	2.0
+"dGamma" 	2 	-0.1	0.01	0.0	0.0
 "dm" 		2 	17.757  0.01	0.0	0.0
-
-*"C"	0	0.		0.05	
-*"D"	0	0.	0.05	
-*"D_bar"	0	0.	0.05	
-*"S"	0	0.	0.05	
-*"S_bar" 0	0.	0.05	
 
 "C"	0	0.759170	0.05	
 "D"	0	-0.314335	0.05	
 "D_bar"	0	-0.100483	0.05	
 "S"	0	-0.569961	0.05	
-"S_bar" 0	0.643090	0.05	
-*"C_Blind"	1	-1   1
-*"D_Blind"	1	-1   1
-*"D_bar_Blind"	1	-1   1
-*"S_Blind"	1	-1   1
-*"S_bar_Blind"	1	-1   1
+"S_bar" 0	-0.643090	0.05	
 "k" 	2	1.	0.05	0.	1.
 
 "p0_os"			2	0.	0.005
