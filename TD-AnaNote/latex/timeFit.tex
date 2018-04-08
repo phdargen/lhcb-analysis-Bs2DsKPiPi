@@ -1,8 +1,9 @@
+% !TEX root = main.tex
 \section{Time dependent fit}
 \label{sec:Tfit}
 
 This section will cover the phasespace integrated, time dependent fit to $\Bs\to\Ds\hadron\pion\pion$ data, which is described by the PDF formulated in Eq. \ref{eq:PDF_intX}.
-For the phasespace integrated fit to $\Bs\to\Ds\kaon\pion\pion$ data, the sensitivity to the CKM phase $\gamma$ will depent on the magnitude of the coherence factor $\kappa$, defined in Eq. \ref{eq:coherenceFactor}, 
+For the phasespace integrated fit to $\Bs\to\Ds\kaon\pion\pion$ data, the sensitivity to the CKM phase $\gamma$ will depend on the magnitude of the coherence factor $\kappa$, defined in Eq. \ref{eq:coherenceFactor}, 
 which is added as an additional fit parameter. 
 In order to avoid any pollution of the final data samples by background events, both samples are weighted using the sWeights obtained by the fits to the invariant mass distributions, described in Sec. \ref{sec: massfits}.
 This fit approach is commonly known as \textit{sFit}. 
@@ -21,14 +22,14 @@ where $\int P(x,t,q_t,q_f) \text d$ is the PDF given by Eq. \ref{eq:PDF_intX}, $
 
 \subsection{sFit to $\Bs\to\Ds\pion\pion\pion$ data}  
 The phasespace-integrated, time-dependent fit is performed to the full sWeighted sample of selected candidates from Run I and 2015+2016 Run II data, containing both possible magnet polarities and $\Ds$ final states.
-In the fit, the values of $\Gs$ and $\DGs$ are fixed to the latest PDG report. All tagging parameters are fxed to the central values found in the tagging calibration, described in Sec. \ref{sec:Tagging}.
+In the fit, the values of $\Gs$ and $\DGs$ are fixed to the latest PDG report. All tagging parameters are fixed to the central values found in the tagging calibration, described in Sec. \ref{sec:Tagging}.
 Due to the fact that the $\Bs\to\Ds\pion\pion\pion$ decay is flavour specific, the CP-coefficients can be fixed to $C=1$ and $D_{f} = D_{\bar{f}} = S_{f} = S_{\bar{f}} = 0$, reducing Eq. \ref{eq:PDF_intX} to
 
 \begin{equation}
 \int P(x,t,q_t,q_f) \text d x = [\text{cosh} \left( \frac{\Delta \Gamma \, t}{2}\right) + q_t q_f \, C \, \text{cos} \left( m_s \, t \right)] e^{- \Gamma t}.
 \end{equation}
 
-Note that in this case, the dependence on the coherance factor $\kappa$ is dropped and the same relation as found for $\Bs\to\Ds\pion$ decays is recovered. 
+Note that in this case, the dependence on the coherence factor $\kappa$ is dropped and the same relation as found for $\Bs\to\Ds\pion$ decays is recovered. 
 Therefore, the only free fit parameter left is $\dms$. The data distribution with the overlaid fit is shown in Fig. xXx and the obtained value for the mixing frequency is
 
 \begin{equation}
@@ -36,14 +37,24 @@ Therefore, the only free fit parameter left is $\dms$. The data distribution wit
 \dms = xx.xxx \pm 0.yyy.
 \end{equation}
 
+\begin{figure}[h]
+	\centering
+		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t.pdf} 
+		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t_mixed.pdf} 
 
+		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_asym.pdf} 		
+		\caption{} 		
+\end{figure}	
 
 \subsection{sFit to $\Bs\to\Ds\kaon\pion\pion$ data}
 
+\begin{figure}[h]
+	\centering
+		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal/h_t.pdf} 
+%		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal/h_asym.pdf} 		
+		\caption{} 		
+\end{figure}	
 
 
 
-
-
-
-\subsection{Results}
+%\subsection{Results}
