@@ -560,8 +560,10 @@ $B_s \to D_s \left( K_1(1400) \to K^{*}(892) \pi \right)$. Table \ref{tab:InputG
 The toy data set is fitted with our \textsf{MINT2} implementation of the full time-dependent amplitude pdf and the phasespace-integrated pdf.
 
 The CP coefficients $C,D,\bar D,S,\bar S$ are the fit parameters in case of the phasespace-integrated pdf,
-while the full pdf determines $x_\pm = r \, cos(\delta\pm(\gamma-2\beta_s))$ and $y_\pm = r \, sin(\delta\pm(\gamma-2\beta_s))$.
-As shown in Tab.~\ref{tab:FitGenMC} and \ref{tab:FitGenMC2}, the fit results are in excellent agreement with the generated input values.
+while the full pdf determines $x_\pm = r \, \text{cos}(\delta\pm(\gamma-2\beta_s))$ and $y_\pm = r \, \text{sin}(\delta\pm(\gamma-2\beta_s))$.
+The fit parameters are converted to the physical observables $r,\kappa,\delta,\gamma$ using the \textsf{GammaCombo} package \cite{GammaCombo}.
+As shown in Tab.~\ref{tab:FitGenMC}, \ref{tab:FitGenMC2} and \ref{tab:FitGenMC3}, the fit results are in excellent agreement with the generated input values.
+The 1-CL contours are shown in Figs.~\ref{fig:FitGenMC} and \ref{fig:FitGenMC2}.
 The phasespace-integrated fit is, in addition, performed with the \textsf{B2DX} fitter used for the $B_s \to D_s K$ analysis yielding identical results.
 Note though that some parts of the \textsf{B2DX} fitter have been taken over to our \textsf{MINT2} fitter, such that the implementations are not fully independent.
 
@@ -577,89 +579,117 @@ Note though that some parts of the \textsf{B2DX} fitter have been taken over to 
      $\Delta m_s$  & $17.757 \ps^{-1}$ \\   
      r & 0.37\\
      $\kappa$ & 1\\
-     $\delta$ & \\
-     $\gamma$ & \\
+     $\delta$ & $10.00^\circ$\\
+     $\gamma$ & $71.12^\circ$\\
+     $\beta_s$ & $0.0^\circ$\\
     \hline \hline
   \end{tabular}
   \label{tab:InputGenMC}
 \end{table}
 
+\clearpage
 \begin{figure}[h]
 	\centering
-		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_t.pdf} 
-		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_asym.pdf} 
-
-		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_t_mixed_m.pdf} 
-		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_t_mixed_p.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_t.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_t_mixed_m.pdf} 	
+		\includegraphics[width=0.32\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_t_mixed_p.pdf} 
 		
-		\caption{Time distribution of $B_s \to D_s K \pi\pi$ events generated with \textsf{EVTGEN} (points with error bars) and \textsf{MINT2} fit projections (blue solid line).} 		
+		\includegraphics[width=0.32\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_asym.pdf} 
+		
+		\caption{Time distribution of $B_s \to D_s K \pi\pi$ events generated with \textsf{EVTGEN} (points with error bars) and \textsf{MINT2} fit projections (blue solid line).} 	
+		\label{fig:FitGenMC}	
 \end{figure}	
 
 \begin{figure}[h]
 	\centering
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_DsKpipi_CPV_MC/h_t.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_DsKpipi_CPV_MC/s_Kpipi.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_DsKpipi_CPV_MC/s_Dspipi.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/fullFit/signal_DsKpipi_CPV_MC/h_t.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/fullFit/signal_DsKpipi_CPV_MC/s_Kpipi.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/fullFit/signal_DsKpipi_CPV_MC/s_Dspipi.pdf} 
 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_DsKpipi_CPV_MC/s_Kpi.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_DsKpipi_CPV_MC/s_pipi.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_DsKpipi_CPV_MC/s_Dspi.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/fullFit/signal_DsKpipi_CPV_MC/s_Kpi.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/fullFit/signal_DsKpipi_CPV_MC/s_pipi.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/fullFit/signal_DsKpipi_CPV_MC/s_Dspi.pdf} 
 		
 		\caption{Time and invariant mass distributions of $B_s \to D_s K \pi\pi$ events generated with \textsf{EVTGEN} (points with error bars) and \textsf{MINT2} fit projections (blue solid line).} 		
+		\label{fig:FitGenMC2}	
 \end{figure}	
 
 \begin{table}[h]
 \caption{Result of the phasespace-integrated fit to \textsf{EVTGEN} toy events.} 		
+%\resizebox{0.45\linewidth}{!}{
 %  \scriptsize
   \centering
   \begin{tabular}
-    {l c c}
+    {l c c c}
     \hline \hline
-    & Generated &  Fit result  \\   \hline
-    $C$ &   &  	 \\
-    $D$ &   &  	 \\
-    $\bar D$ &   &  	 \\
-    $S$ &   &  	 \\
-    $\bar S$ &   &  	 \\
+    & Generated &  Fit result  & Pull($\sigma$) \\   \hline
+    $C$ & 0.759  &  $0.763 \pm 0.026 $  & 0.2 	 \\
+    $D$ &  -0.314 &  $-0.376 \pm 0.227$ & -0.3	 \\
+    $\bar D$ &  -0.101 &  $-0.261 \pm 0.246$ & -0.7	 \\
+    $S$ &   -0.570 &  $-0.626 \pm 0.035$	& 1.6 \\
+    $\bar S$ &  -0.643   &  $-0.669\pm 0.035$ & -0.7	 \\
     \hline \hline
   \end{tabular}
     \label{tab:FitGenMC}
+%    }
 \end{table}
 
 \begin{table}[h]
 \caption{Result of the time-dependent amplitude fit to \textsf{EVTGEN} toy events.} 		
+%   \resizebox{0.45\linewidth}{!}{ 
 %  \scriptsize
   \centering
   \begin{tabular}
-    {l c c}
+    {l c c c}
     \hline \hline
-    & Generated &  Fit result  \\   \hline
-    $x_-$ &   &  	 \\
-    $y_-$ &   &  	 \\
-    $x_+$ &   &  	 \\
-    $y_+$ &   &  	 \\
+    & Generated &  Fit result & Pull($\sigma$) \\   \hline
+    $x_-$ & 0.179  &  $0.135 \pm 0.050$ & -0.9	 \\
+    $y_-$ &  -0.324 & $-0.307 \pm 0.022$ 	& 0.8 \\
+    $x_+$ &  0.057 & $0.102 \pm 0.065$ & 0.6	 \\
+    $y_+$ &   0.366 &  $0.394 \pm 0.023$	& 1.3 \\
     \hline \hline
   \end{tabular}
     \label{tab:FitGenMC2}
+%    }
 \end{table}
 
-%\begin{table}[h]
-%\caption{} 		
-%%  \scriptsize
-%  \centering
-%  \begin{tabular}
-%    {l c c c c}
-%    \hline \hline
-%    & Generated &  Full PDF     &   Phasespace integrated  \\   \hline
-%	$r$ & 0.4 & $0.38 \pm 0.06$   &  unstable \\
-%	$\kappa$  & \textcolor{red}{0.2} & $0.23 \pm 0.13$ & 0.2 (fixed)  \\
-%	$\delta$ & 100 & $99 \pm 22$ &  unstable\\
-%	$\gamma$ & 70 & $70 \pm 17$  & unstable \\
-%    \hline \hline
-%  \end{tabular}
-%\end{table}
+\begin{table}[h]
+\caption{Results for the physical observables obtained from fits to \textsf{EVTGEN} toy events.} 		
+%  \scriptsize
+  \centering
+  \begin{tabular}
+    {l c c c c}
+    \hline \hline
+    & Generated &  Full PDF     &   Phasespace integrated  \\   \hline
+	$r$ & 0.37 & $0.379 \pm 0.021 $ & $0.379 \pm 0.0171$  \\
+	$\kappa$  &1.0 & 1.0 &  $1.000 \pm  0.059$  \\
+	$\delta$ & $10.00^\circ$ &  $9.0 \pm  5.1$ & $6.0 \pm  6.0$   \\
+	$\gamma$ & $71.12^\circ$ &   $67.3 \pm 5.9$ &  $75.1 \pm 6.9$\\
+    \hline \hline
+  \end{tabular}
+      \label{tab:FitGenMC3}
+\end{table}
 
+    
+\begin{figure}[h]
+	\centering
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_DsKpipi_CPV_MC/cartesian_cp_coeff_r.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_DsKpipi_CPV_MC/cartesian_cp_coeff_k.pdf} 
+		
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_DsKpipi_CPV_MC/cartesian_cp_coeff_d.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_DsKpipi_CPV_MC/cartesian_cp_coeff_g.pdf} 
+		\caption{The 1-CL contours for the physical observable $r,\kappa,\delta,\gamma$ obtained with the phasespace integrated fit to the \textsf{EVTGEN} toy sample. } 	
+\end{figure}    
 
+\begin{figure}[h]
+	\centering
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_DsKpipi_CPV_MC/cartesian_GenMC_r.pdf} 		
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_DsKpipi_CPV_MC/cartesian_GenMC_d.pdf} 
+		
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_DsKpipi_CPV_MC/cartesian_GenMC_g.pdf} 
+		\caption{The 1-CL contours for the physical observable $r,\delta,\gamma$ obtained with the time-dependent amplitude fit fit to the \textsf{EVTGEN} toy sample. } 	
+\end{figure}  
+    
 %\subsection{Estimation of coherence factor}
 %
 %To estimate the coherence factor we could generate many toys with random $a_i$ and $\bar a_i$ values (see https://twiki.cern.ch/twiki/pub/LHCbPhysics/Bu2DKstar/LHCb-ANA-2017-005\_v1.pdf) using the set of amplitudes show in our last talk. However with so many interfering amplitudes, I would be surprised if you couldn't generate every possible value for $\kappa$. In any case, this would give us a  range where to expect possible values for $\kappa$. Worst case would be $0 \leq \kappa \leq 1$. \\
