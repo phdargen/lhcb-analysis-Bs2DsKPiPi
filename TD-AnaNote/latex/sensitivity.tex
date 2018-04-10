@@ -23,7 +23,6 @@ We assume $\vert q/p \vert = 1 $ for the complex coefficients $p$ and $q$ which 
 	A(\bar B_s^0 \to D_s^{-} K^{+} \pi\pi) &= \bar A(x)  \, \, \text{(Assuming no direct CPV)} \\
 	A(\bar B_s^0 \to D_s^{+} K^{-} \pi\pi) &= A(\bar x)  \, \, \text{(Assuming no direct CPV)} 
 \end{align}
-
 The full time-dependent amplitude pdf is given by:
 \begin{equation}
 \begin{split}
@@ -35,37 +34,47 @@ The full time-dependent amplitude pdf is given by:
 	 & -2 q_t q_f \text{Im}\left( A(x)^{*}  \bar A(x) \, e^{-i q_f (\gamma - 2\beta_s)}  \right)\, \text{sin} \left( m_s \, t \right)  ]  e^{- \Gamma t}
 \end{split}
 \end{equation}
-where $q_t = +1$ $(-1) $for a $B_s^{0}$ ($\bar B_s^{0}$) tag and 
-$q_f$ = +1 $ $(-1) for $D_s^{-} K^{+} \pi\pi$ ($D_s^{+} K^{-} \pi\pi$) final states. \\
-
+where $q_t = +1,-1,0$ for events tagged as $B_s^{0}$, $\bar B_s^{0}$ or untagged events 
+and $q_f$ = +1 $ $(-1) for $D_s^{-} K^{+} \pi\pi$ ($D_s^{+} K^{-} \pi\pi$) final states. 
 Integrating over the phasespace, we get
+%\begin{equation}
+%\begin{split}
+%\label{eq:PDF_intX}
+%	\int P(x,t,q_t,q_f) \text d x &\propto   [
+%	\, \text{cosh} \left( \frac{\Delta \Gamma \, t}{2}\right) \\
+%	 & + q_t q_f \left( \frac{1-r^2}{1+r^2} \right) \, \text{cos} \left( m_s \, t \right)  \\
+%	 & -2 \left( \frac{\kappa \, r \, \text{cos}(\delta - q_f(\gamma - 2 \beta_s))}{1+r^2}  \right) \, \text{sinh} \left( \frac{\Delta \Gamma \, t}{2}\right)  \\
+%	 & -2 q_t q_f \left( \frac{\kappa \, r \, \text{sin}(\delta - q_f(\gamma - 2 \beta_s))}{1+r^2}   \right)\, \text{sin} \left( m_s \, t \right)  ]  e^{- \Gamma t} \\
+%	 &=   [
+%	\, \text{cosh} \left( \frac{\Delta \Gamma \, t}{2}\right) 
+%	  + q_t q_f \, C \, \text{cos} \left( m_s \, t \right)  
+%	  + \kappa \, D_{q_f} \, \text{sinh} \left( \frac{\Delta \Gamma \, t}{2}\right)  
+%	  - q_t \, \kappa \, S_{q_f}\, \text{sin} \left( m_s \, t \right)  ]  e^{- \Gamma t}
+%\end{split}
+%\end{equation}
 \begin{equation}
-\begin{split}
 \label{eq:PDF_intX}
-	\int P(x,t,q_t,q_f) \text d x &\propto   [
-	\, \text{cosh} \left( \frac{\Delta \Gamma \, t}{2}\right) \\
-	 & + q_t q_f \left( \frac{1-r^2}{1+r^2} \right) \, \text{cos} \left( m_s \, t \right)  \\
-	 & -2 \left( \frac{\kappa \, r \, \text{cos}(\delta - q_f(\gamma - 2 \beta_s))}{1+r^2}  \right) \, \text{sinh} \left( \frac{\Delta \Gamma \, t}{2}\right)  \\
-	 & -2 q_t q_f \left( \frac{\kappa \, r \, \text{sin}(\delta - q_f(\gamma - 2 \beta_s))}{1+r^2}   \right)\, \text{sin} \left( m_s \, t \right)  ]  e^{- \Gamma t} \\
-	 &=   [
+	\int P(x,t,q_t,q_f) \text d x \propto    [
 	\, \text{cosh} \left( \frac{\Delta \Gamma \, t}{2}\right) 
 	  + q_t q_f \, C \, \text{cos} \left( m_s \, t \right)  
-	  - \textcolor{red}{\kappa} \, D_{q_f} \, \text{sinh} \left( \frac{\Delta \Gamma \, t}{2}\right)  
-	  - q_t \, \textcolor{red}{\kappa} \, S_{q_f}\, \text{sin} \left( m_s \, t \right)  ]  e^{- \Gamma t}
-\end{split}
+	  + \kappa \, D_{q_f} \, \text{sinh} \left( \frac{\Delta \Gamma \, t}{2}\right)  
+	  - q_t \, \kappa \, S_{q_f}\, \text{sin} \left( m_s \, t \right)  ]  e^{- \Gamma t}
 \end{equation}
-where the $C,D_{q_f},S_{q_f}$ are defined exactly as for $D_s K$.
-The coherence factor is defined as :
+where the same convention for the CP coefficients as for  the $B_s \to D_s K$ analysis is used:
+\begin{align}
+\label{eq:CPcoeff}
+	C= & \frac{1-r^2}{1+r^2}   \\
+	D_{q_f} = &  -\frac{2r \, \text{cos}(\delta-q_f \, (\gamma-2\beta_s))}{1+r^2}   \\
+	S_{q_f} = & \, q_f \frac{2r \, \text{sin}(\delta-q_f \, (\gamma-2\beta_s))}{1+r^2}   
+\end{align}
+The coherence factor $\kappa$, the strong phase difference $\delta$ and the ratio of the suppressed ($b\to u$) over favored ($b\to c$) decay mode are defined as:
 \begin{align}
 \label{eq:coherenceFactor}
 	\kappa \, e^{i\delta} &\equiv \, \frac{\int A(x)^{*}  \bar A(x)  \text d x}{\sqrt{\int \vert A(x) \vert^2\text d x} \sqrt{\int \vert \bar A(x) \vert^2\text d x}  } \\
-	r &\equiv \, \frac{\sqrt{\int \vert \bar A(x) \vert^2\text d x }}{\sqrt{\int \vert A(x) \vert^2\text d x}} 
+	r &\equiv \, \frac{\sqrt{\int \vert \bar A(x) \vert^2\text d x }}{\sqrt{\int \vert A(x) \vert^2\text d x}} .
 \end{align}
-and appears in front of the $D_{q_f},S_{q_f}$  terms.
 In the limit of only one contributing resonance $\kappa \to 1$. \\
 
-
-\clearpage
 \subsection{Amplitude model}
 
 The differential decay rate of a $B_s$ meson 
@@ -125,7 +134,7 @@ decay is given by the coherent sum over all
 intermediate state amplitudes $A_{i}(\phsPoint )$, each weighted by a complex coefficient $a_{i} = \vert a_{i} \vert \, e^{i \, \phi_i}$
 to be measured from data,
 \begin{equation}
-	A_{\Dz}(\phsPoint ) = \sum_{i}  a_{i} \, A_{i}(\phsPoint )   \, .
+	A(\phsPoint ) = \sum_{i}  a_{i} \, A_{i}(\phsPoint )   \, .
 \end{equation}
 
 To construct $A_{i}(\phsPoint )$,
@@ -579,8 +588,8 @@ Note though that some parts of the \textsf{B2DX} fitter have been taken over to 
      $\Delta m_s$  & $17.757 \ps^{-1}$ \\   
      r & 0.37\\
      $\kappa$ & 1\\
-     $\delta$ & $10.00^\circ$\\
-     $\gamma$ & $71.12^\circ$\\
+     $\delta$ & $10.0^\circ$\\
+     $\gamma$ & $71.1^\circ$\\
      $\beta_s$ & $0.0^\circ$\\
     \hline \hline
   \end{tabular}
@@ -661,10 +670,10 @@ Note though that some parts of the \textsf{B2DX} fitter have been taken over to 
     {l c c c c}
     \hline \hline
     & Generated &  Full PDF     &   Phasespace integrated  \\   \hline
-	$r$ & 0.37 & $0.379 \pm 0.021 $ & $0.379 \pm 0.0171$  \\
+	$r$ & 0.370 & $0.379 \pm 0.021 $ & $0.379 \pm 0.017$  \\
 	$\kappa$  &1.0 & 1.0 &  $1.000 \pm  0.059$  \\
-	$\delta$ & $10.00^\circ$ &  $9.0 \pm  5.1$ & $6.0 \pm  6.0$   \\
-	$\gamma$ & $71.12^\circ$ &   $67.3 \pm 5.9$ &  $75.1 \pm 6.9$\\
+	$\delta$ & $10.0^\circ$ &  $9.0 \pm  5.1$ & $5.9 \pm  6.0$   \\
+	$\gamma$ & $71.1^\circ$ &   $67.3 \pm 5.9$ &  $75.1 \pm 6.9$\\
     \hline \hline
   \end{tabular}
       \label{tab:FitGenMC3}
