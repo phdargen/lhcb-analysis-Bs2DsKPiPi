@@ -1,0 +1,202 @@
+* general options
+"Event Pattern"         531 -431 321 211 -211
+"RandomSeed"  	1
+"Phases given in"       "degrees"
+
+* setup MC integrator
+"IntegratorEventFile"	"SignalIntegrationEvents_EvtGen_inAcc.root"
+"IntegratorEvents"	300000
+"IntegPrecision"        3.0e-3
+"IntegMethod"           "efficient"
+"IntegratorSource"        "file"
+"channel"	"signal"
+
+* options for toy generation
+*"InputFileName"		"toys.root"
+"Nevents"               3700
+"pdf_max"               100
+"saveEvents"		1
+"OutputRootFile"	"toys.root"
+
+"updateAnaNotePlots"	 0
+
+"nBins" 	50
+"nBinst" 	50
+"min_TAU" 	0.4
+"max_TAU" 	10
+"min_TAUERR" 	0.
+"max_TAUERR" 	0.1
+"max_TAU_ForMixingPlot" 	4
+"w_max"		 0.5
+"nBinsAsym" 	8
+
+"initCPcoeff"	 0
+"doSimFit"	1
+"doTimeFit"		0
+"doDalitzFit"		0
+"do2DScan"		0
+"doPlots"		1
+"OutputDir"		"LASSO_2/"
+
+"randomizeStartVals"		0
+"useLASSO"	 1
+"lambda"	 5
+
+** name		Fix?	init	step	min	max
+*
+
+"r"	2	1	0.05	0.	2.
+"delta"	2	0	5	-360    360		
+"gamma"	2	0	5	
+*"gamma_Blind"	1	-180   180
+*"gamma_Scan"	0	360	
+"k" 	1	1.	0.05	0.	1.
+
+"r_K1_Re"	2 0. 0.05 0.0 0.0
+"r_K1_Im"	2 0. 0.05 0.0 0.0
+*"r_2_Re"	0	0.2 0.05
+*"r_2_Im"	0	0. 0.05
+*"r_3_Re"	0	-0.2 0.05
+*"r_3_Im"	0	0. 0.05
+"r_4_Re"	0.2	0 0.05
+"r_4_Im"	0	0 0.05 
+
+*"xp"	0	0.4	0.05  -2 2
+"yp"	0	0.0	 5 -360	360
+"xm"	0	0.4	 0.05 0 1
+"ym"	0	0. 	 5 -360	360
+
+*"r_Scan" 0 1
+*"delta_Scan" 0 360
+*"gamma_Scan" 0 360
+
+"mass_K(1)(1270)+"	2	1269.32 1
+"width_K(1)(1270)+"	2	115.366 1
+"mass_K(1)(1400)+"	2	1378.52 1
+"width_K(1)(1400)+"	2	238.517 1
+"mass_K*(1410)+"	2	1446.68 1
+"width_K*(1410)+"	2	363.287 1
+"RhoOmegaGS::Delta_Re_rho(770)0"	2	-0.00018435 0.0001
+"RhoOmegaGS::Delta_Im_rho(770)0"	2	-0.00249643 0.0001
+
+*Baseline:
+*---------------------		
+"BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Re"	2	1.05262 0.01
+"BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Im"	2	0.341585 0.01
+"Bs0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Re"	2	-0.247675 0.01 -2 2
+"Bs0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Im"	2	0.685321 0.01   -2 2
+"Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"	2	0.186362 0.01 -2 2
+"Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"	2	0.997648 0.01 -2 2
+"Bs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"	2	2.02156 0.01 -5 5
+"Bs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"	2	0.474219 0.01 -5 5
+"BuggBs0->NonResS0(->Ds-,K+),sigma10(->pi+,pi-)_Re"	2	-0.369684 0.01 -2 2
+"BuggBs0->NonResS0(->Ds-,K+),sigma10(->pi+,pi-)_Im"	2	0.906899 0.01 -2 2
+"RhoOmegaGSBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"	2	1 0.01 
+"RhoOmegaGSBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"	2	0 0.01
+"GSBs0->K*(1410)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"	2	0.440347 0.01 -2 2
+"GSBs0->K*(1410)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"	2	-0.230075 0.01	 -2 2
+"Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"	2	0.6 0.01 -2 2 
+"Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"	2	0. 0.01 -2 2
+"Bs0->NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)_Re"	2	-0.805106 0.01
+"Bs0->NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)_Im"	2	0.111376 0.01
+
+
+*"Bs0->K(1460)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Re"                                           	 0	0.0	0.01	0.0	0.0
+*"Bs0->K(1460)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Im"                                         	 0	0.0	0.01	0.0	0.0
+*"Bs0->K(1460)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"                                               	 0	0.2	0.01	-2 2
+*"Bs0->K(1460)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"                                             	 0	0.5	0.01    -2 2
+*"Bs0->K(1460)+(->f(0)(980)0(->pi+,pi-),K+),Ds-_Re"                                             	 0	0.0	0.01	0.0	0.0
+*"Bs0->K(1460)+(->f(0)(980)0(->pi+,pi-),K+),Ds-_Im"                                           	 0	0.0	0.01	0.0	0.0
+*"Bs0->K(1460)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"                                              	 0	0.0	0.01	0.0	0.0
+*"Bs0->K(1460)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"                                            	 0	0.0	0.01	0.0	0.0
+*"BuggBs0->K(1460)+(->sigma10(->pi+,pi-),K+),Ds-_Re"                                                	 0	0.2	0.01	0.0	0.0
+*"BuggBs0->K(1460)+(->sigma10(->pi+,pi-),K+),Ds-_Im"                                              	 0	0.2	0.01	0.0	0.0
+
+
+* For toy and integrator event generation:
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"              2	1	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"              2	0.	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"		2       1      0.05     0.0     0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"		2       0     0.05     0.0     0.0
+*"Inco_BgSpinZeroBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Re"              	2	0.7	0.01	0.0	0.0
+*"Inco_BgSpinZeroBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Im"             	2	0.	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Re"	2	0.5	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Im" 2	0.	0.01	0.0	0.0
+
+
+
+
+"tau"		2	1.509 	0.01	0.5	2.0
+"dGamma" 	2 	-0.09 	0.01	0.0	0.0
+"dm" 		2 	17.757  0.01	0.0	0.0
+
+***
+knot_positions 0.8 1.6 2.5 6.5 
+c0_Run1_t0  2  0.561206  0.0379515
+c1_Run1_t0  2  0.825712  0.059164
+c2_Run1_t0  2  0.842828  0.0871307
+c3_Run1_t0  2  1.15351  0.0363123
+
+c0_Run1_t1  2  0.367854  0.0312567
+c1_Run1_t1  2  0.583259  0.0499699
+c2_Run1_t1  2  0.939489  0.101348
+c3_Run1_t1  2  1.05215  0.0536167
+
+c0_Run2_t0  2  0.485751  0.00866747
+c1_Run2_t0  2  0.690922  0.0144009
+c2_Run2_t0  2  0.851369  0.0240612
+c3_Run2_t0  2  1.0615  0.0173365
+
+c0_Run2_t1  2  0.300331  0.00707767
+c1_Run2_t1  2  0.475732  0.012471
+c2_Run2_t1  2  0.725032  0.0232909
+c3_Run2_t1  2  1.06383  0.0186883
+
+***
+"offset_sigma_dt_Run1"	2 	0.0103	0.001
+"scale_sigma_dt_Run1"	2	1.28	0.05
+
+"p0_os_Run1"			2	0.389677	0.005
+"p1_os_Run1"			2	0.884908	0.06
+"delta_p0_os_Run1"		2	0.	0.
+"delta_p1_os_Run1"		2	0.	0.
+"avg_eta_os_Run1"		2	0.373	0.001
+"tageff_os_Run1"		2	0.385074	0.001
+"tageff_asym_os_Run1"		2	0.	0.
+
+"p0_ss_Run1"			2	0.446859	0.005
+"p1_ss_Run1"			2	1.07739		0.06
+"delta_p0_ss_Run1"		2	0.	0.
+"delta_p1_ss_Run1"		2	0.	0.
+"avg_eta_ss_Run1"		2	0.4331	0.001
+"tageff_ss_Run1"		2	0.688189	0.001
+"tageff_asym_ss_Run1"		2	0.	0.
+
+"production_asym_Run1"	2	0.	0.
+"detection_asym_Run1"	2	0.	0.
+
+***
+"offset_sigma_dt_Run2"		2	0.0097	0.005
+"scale_sigma_dt_Run2"		2	0.915	0.005
+* From J/psi phi 
+*"offset_sigma_dt_Run2"		2	0.01206
+*"scale_sigma_dt_Run2"		2	0.8793	
+
+"p0_os_Run2"			2	0.367591	0.005
+"p1_os_Run2"			2	0.933794	0.06
+"delta_p0_os_Run2"		2	0.	0.
+"delta_p1_os_Run2"		2	0.	0.
+"avg_eta_os_Run2"		2	0.373	0.001
+"tageff_os_Run2"		2	0.352499	0.001
+"tageff_asym_os_Run2"		2	0.	0.
+
+"p0_ss_Run2"			2	0.45306	0.005
+"p1_ss_Run2"			2	0.911244	0.06
+"delta_p0_ss_Run2"		2	0.	0.
+"delta_p1_ss_Run2"		2	0.	0.
+"avg_eta_ss_Run2"		2	0.4331	0.001
+"tageff_ss_Run2"		2	0.680385	0.001
+"tageff_asym_ss_Run2"		2	0.	0.
+
+"production_asym_Run2"	2	0.	0.
+"detection_asym_Run2"	2	0.	0.
