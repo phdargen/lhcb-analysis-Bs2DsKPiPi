@@ -238,6 +238,7 @@ int ampFit(int step=0){
     
     FitAmplitude::AutogenerateFitFile();
     
+    NamedParameter<int> updateAnaNote("updateAnaNote", 0);
     NamedParameter<string> InputFileName("InputFileName", (std::string) "");
     NamedParameter<string> InputTreeName("InputTreeName", (std::string) "DalitzEventList");
     std::string inputFile = InputFileName;
@@ -480,14 +481,23 @@ int ampFit(int step=0){
             s124.push_back(2);
             s124.push_back(4);
             
-            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,4);
-            TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,2);
-            TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
-            TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_DsKpi = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
-            TH1D* s_Dspi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+	    TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,1,4);
+	    TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.3,1.6);
+	    TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,1.6);
+	    TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+	    TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30)  ;
+	    TH1D* s_DsKpi = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
+	    TH1D* s_Dspi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
             TH1D* s_Dspim = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+		
+ 	    TH1D* m_Kpipi = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
+	    TH1D* m_Kpi = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
+	    TH1D* m_pipi = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
+	    TH1D* m_Dspipi = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_DsK = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
+	    TH1D* m_DsKpi = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Dspi = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+	    TH1D* m_Dspim = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
             
             TH2D* s_Kpi_pipi = new TH2D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4}) ",60,0.2,1.6,60,0.,1.6);
             TH2D* s_DsKpi_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",80,5,30,80,0,25);
@@ -503,21 +513,38 @@ int ampFit(int step=0){
                 s_Dspi->Fill(eventList[i].s(1,3)/(GeV*GeV),eventList[i].getWeight());
                 s_Dspim->Fill(eventList[i].s(1,4)/(GeV*GeV),eventList[i].getWeight());
 
+                m_Kpipi->Fill(sqrt(eventList[i].sij(s234)/(GeV*GeV)),eventList[i].getWeight());
+                m_Kpi->Fill(sqrt(eventList[i].s(2,4)/(GeV*GeV)),eventList[i].getWeight());
+                m_pipi->Fill(sqrt(eventList[i].s(3,4)/(GeV*GeV)),eventList[i].getWeight());
+                m_Dspipi->Fill(sqrt(eventList[i].sij(s134)/(GeV*GeV)),eventList[i].getWeight());
+                m_DsK->Fill(sqrt(eventList[i].s(1,2)/(GeV*GeV)),eventList[i].getWeight());
+                m_DsKpi->Fill(sqrt(eventList[i].sij(s124)/(GeV*GeV)),eventList[i].getWeight());
+                m_Dspi->Fill(sqrt(eventList[i].s(1,3)/(GeV*GeV)),eventList[i].getWeight());
+                m_Dspim->Fill(sqrt(eventList[i].s(1,4)/(GeV*GeV)),eventList[i].getWeight());
+
                 s_Kpi_pipi->Fill(eventList[i].s(2,4)/(GeV*GeV),eventList[i].s(3,4)/(GeV*GeV),eventList[i].getWeight());
                 s_DsKpi_Dspi->Fill(eventList[i].sij(s124)/(GeV*GeV),eventList[i].s(1,3)/(GeV*GeV),eventList[i].getWeight());
                 s_DsK_Dspi->Fill(eventList[i].s(1,2)/(GeV*GeV),eventList[i].s(1,3)/(GeV*GeV),eventList[i].getWeight());
 
             }    
             
-            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,4);
-            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,2);
-            TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,2);
-            TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
-            TH1D* s_Dspi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
-            TH1D* s_Dspim_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
-                        
+	    TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,1,4);
+	    TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.3,1.6);
+	    TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,1.6);
+	    TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+	    TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+	    TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
+	    TH1D* s_Dspi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+	    TH1D* s_Dspim_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+	
+	    TH1D* m_Kpipi_fit = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
+	    TH1D* m_Kpi_fit = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
+	    TH1D* m_pipi_fit = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
+	    TH1D* m_Dspipi_fit = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_DsK_fit = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
+	    TH1D* m_DsKpi_fit = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Dspi_fit = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+	    TH1D* m_Dspim_fit = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);		
             //SignalGenerator sg(pat,&fas);
             //sg.setWeighted();
 
@@ -540,6 +567,15 @@ int ampFit(int step=0){
                 s_DsKpi_fit->Fill(eventListMC[i].sij(s124)/(GeV*GeV),weight);
                 s_Dspi_fit->Fill(eventListMC[i].s(1,3)/(GeV*GeV),weight);
                 s_Dspim_fit->Fill(eventListMC[i].s(1,4)/(GeV*GeV),weight);
+
+   	        m_Kpipi_fit->Fill(sqrt(eventListMC[i].sij(s234)/(GeV*GeV)),weight);
+	        m_Kpi_fit->Fill(sqrt(eventListMC[i].s(2,4)/(GeV*GeV)),weight);
+	        m_pipi_fit->Fill(sqrt(eventListMC[i].s(3,4)/(GeV*GeV)),weight);
+	        m_Dspipi_fit->Fill(sqrt(eventListMC[i].sij(s134)/(GeV*GeV)),weight);
+	        m_DsK_fit->Fill(sqrt(eventListMC[i].s(1,2)/(GeV*GeV)),weight);
+	        m_DsKpi_fit->Fill(sqrt(eventListMC[i].sij(s124)/(GeV*GeV)),weight);
+	        m_Dspi_fit->Fill(sqrt(eventListMC[i].s(1,3)/(GeV*GeV)),weight);
+	        m_Dspim_fit->Fill(sqrt(eventListMC[i].s(1,4)/(GeV*GeV)),weight);
 		
 		eventListMC[i].setWeight(weight);
             }
@@ -569,10 +605,8 @@ int ampFit(int step=0){
             s_Kpipi_fit->SetLineWidth(3);
             s_Kpipi_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_Kpipi.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"s_Kpipi.pdf").c_str());
 
-            s_Kpipi->DrawNormalized("e1",1);
-            c->Print(((string)OutputDir+"s_Kpipi_data.eps").c_str());
-            
             s_Kpi->SetMinimum(0);
             s_Kpi->SetLineColor(kBlack);
             s_Kpi->DrawNormalized("e1",1);
@@ -580,7 +614,8 @@ int ampFit(int step=0){
             s_Kpi_fit->SetLineWidth(3);
             s_Kpi_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_Kpi.eps").c_str());
-            
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"s_Kpi.pdf").c_str());
+
 	    s_pipi->SetMinimum(0);            
             s_pipi->SetLineColor(kBlack);
             s_pipi->DrawNormalized("e1",1);
@@ -588,7 +623,8 @@ int ampFit(int step=0){
             s_pipi_fit->SetLineWidth(3);
             s_pipi_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_pipi.eps").c_str());
-            
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"s_pipi.pdf").c_str());
+
 	    s_Dspipi->SetMinimum(0);            
             s_Dspipi->SetLineColor(kBlack);
             s_Dspipi->DrawNormalized("e1",1);
@@ -596,7 +632,8 @@ int ampFit(int step=0){
             s_Dspipi_fit->SetLineWidth(3);
             s_Dspipi_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_Dspipi.eps").c_str());
-           
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"s_Dspipi.pdf").c_str());
+
 	    s_DsK->SetMinimum(0);
             s_DsK->SetLineColor(kBlack);
             s_DsK->DrawNormalized("e1",1);
@@ -604,7 +641,8 @@ int ampFit(int step=0){
             s_DsK_fit->SetLineWidth(3);
             s_DsK_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_DsK.eps").c_str());
-
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"s_DsK.pdf").c_str());
+	    
 	    s_DsKpi->SetMinimum(0);            
             s_DsKpi->SetLineColor(kBlack);
             s_DsKpi->DrawNormalized("e1",1);
@@ -612,7 +650,8 @@ int ampFit(int step=0){
             s_DsKpi_fit->SetLineWidth(3);
             s_DsKpi_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_DsKpi.eps").c_str());
-
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"s_DsKpi.pdf").c_str());
+	    
 	    s_Dspi->SetMinimum(0);
             s_Dspi->SetLineColor(kBlack);
             s_Dspi->DrawNormalized("e1",1);
@@ -620,7 +659,8 @@ int ampFit(int step=0){
             s_Dspi_fit->SetLineWidth(3);
             s_Dspi_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_Dspi.eps").c_str());
-
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"s_Dspi.pdf").c_str());
+	    
 	    s_Dspim->SetMinimum(0);
             s_Dspim->SetLineColor(kBlack);
             s_Dspim->DrawNormalized("e1",1);
@@ -628,6 +668,80 @@ int ampFit(int step=0){
             s_Dspim_fit->SetLineWidth(3);
             s_Dspim_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"s_Dspim.eps").c_str());
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"s_Dspim.pdf").c_str());
+	    
+
+            m_Kpipi->SetMinimum(0);
+            m_Kpipi->SetLineColor(kBlack);
+            m_Kpipi->DrawNormalized("e1",1);
+            m_Kpipi_fit->SetLineColor(kBlue);
+            m_Kpipi_fit->SetLineWidth(3);
+            m_Kpipi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"m_Kpipi.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Kpipi.pdf").c_str());
+
+            m_Kpi->SetMinimum(0);
+            m_Kpi->SetLineColor(kBlack);
+            m_Kpi->DrawNormalized("e1",1);
+            m_Kpi_fit->SetLineColor(kBlue);
+            m_Kpi_fit->SetLineWidth(3);
+            m_Kpi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"m_Kpi.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Kpi.pdf").c_str());
+
+	    m_pipi->SetMinimum(0);            
+            m_pipi->SetLineColor(kBlack);
+            m_pipi->DrawNormalized("e1",1);
+            m_pipi_fit->SetLineColor(kBlue);
+            m_pipi_fit->SetLineWidth(3);
+            m_pipi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"m_pipi.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_pipi.pdf").c_str());
+
+	    m_Dspipi->SetMinimum(0);            
+            m_Dspipi->SetLineColor(kBlack);
+            m_Dspipi->DrawNormalized("e1",1);
+            m_Dspipi_fit->SetLineColor(kBlue);
+            m_Dspipi_fit->SetLineWidth(3);
+            m_Dspipi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"m_Dspipi.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Dspipi.pdf").c_str());
+
+	    m_DsK->SetMinimum(0);
+            m_DsK->SetLineColor(kBlack);
+            m_DsK->DrawNormalized("e1",1);
+            m_DsK_fit->SetLineColor(kBlue);
+            m_DsK_fit->SetLineWidth(3);
+            m_DsK_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"m_DsK.eps").c_str());
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_DsK.pdf").c_str());
+	    
+	    m_DsKpi->SetMinimum(0);            
+            m_DsKpi->SetLineColor(kBlack);
+            m_DsKpi->DrawNormalized("e1",1);
+            m_DsKpi_fit->SetLineColor(kBlue);
+            m_DsKpi_fit->SetLineWidth(3);
+            m_DsKpi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"m_DsKpi.eps").c_str());
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_DsKpi.pdf").c_str());
+	    
+	    m_Dspi->SetMinimum(0);
+            m_Dspi->SetLineColor(kBlack);
+            m_Dspi->DrawNormalized("e1",1);
+            m_Dspi_fit->SetLineColor(kBlue);
+            m_Dspi_fit->SetLineWidth(3);
+            m_Dspi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"m_Dspi.eps").c_str());
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Dspi.pdf").c_str());
+	    
+	    m_Dspim->SetMinimum(0);
+            m_Dspim->SetLineColor(kBlack);
+            m_Dspim->DrawNormalized("e1",1);
+            m_Dspim_fit->SetLineColor(kBlue);
+            m_Dspim_fit->SetLineWidth(3);
+            m_Dspim_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"m_Dspim.eps").c_str());
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Dspim.pdf").c_str());
 
 	    getChi2(eventList,eventListMC);
 

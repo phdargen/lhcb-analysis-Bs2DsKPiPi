@@ -1,0 +1,34 @@
+
+[1mRooFit v3.57 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+INFO in constructor of NamedParameterBase:
+  > For parameter named: "makeNewHistos"
+  > You did not provide a filename.
+  > I'll read from stdin. This is completely OK,
+  > but if there is no input from stdin ending in EOF,
+  > the program will stall after this message.
+  > If you find yourself in this situation, press Ctr-d.
+  > In future, run the program as ./program < inputFile.txt
+  > even if inputFile.txt is just an empty dummy file.
+  > This message is only printed once.
+
+Production asymmetries for year = 11
+Normalization channel: 
+Asymmetry = -0.00210574 +/- 0.0189955
+
+Signal channel: 
+Asymmetry = -0.00506342 +/- 0.0187838
+
+
+Production asymmetries for year = 12
+Normalization channel: 
+Asymmetry = 0.00471172 +/- 0.0129602
+
+Signal channel: 
+Asymmetry = 0.00164359 +/- 0.0124882
+
+
+Combined Asymmetry (Norm) = 0.00271833 +/- 0.0107215
+Combined Asymmetry (Signal) = -0.000450934 +/- 0.0104004
