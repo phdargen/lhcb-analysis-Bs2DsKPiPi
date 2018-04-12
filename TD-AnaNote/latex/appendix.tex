@@ -3,6 +3,11 @@
 \section{Details of multivariate classifier}
 \label{sec:appendix_BDT}
 
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\renewcommand{\thefigure}{A.\arabic{figure}}
+
 \begin{figure}[h]
 \centering
 \includegraphics[height=!,width=0.8\textwidth]{figs/TMVA/BDTG_Data_run1_t0_even/variables_id_c1.pdf}
@@ -23,6 +28,11 @@
 \clearpage
 \section{Detailed mass fits}
 \label{sec:DetailedMassfits}
+
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\renewcommand{\thefigure}{B.\arabic{figure}}
 
 In this section, all fits to the mass distribution of $\Bs\to\Ds\pion\pion\pion$ and $\Bs\to\Ds\kaon\pion\pion$ candidates are shown. 
 The fits are performed simultaneously 
@@ -110,6 +120,11 @@ and \textsf{L0} trigger category.
 \section{Decay-time Resolution fits}
 \label{sec:DecResFits}
 
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\renewcommand{\thefigure}{C.\arabic{figure}}
+
 This section contains all fits to the distributions of the decay time difference $\Delta t$ between the true and the reconstructed decay time of the truth-matched $\Bs$ candidates on MC.
 The fits are performed in bins of the decay time error $\sigma_{t}$, where an adaptive binning scheme is used to ensure that approximately the same number of events are found in each bin. 
 
@@ -152,4 +167,123 @@ The fits are performed in bins of the decay time error $\sigma_{t}$, where an ad
 \end{figure}
 
 \input{tables/Resolution/ResoTable_Data.txt}
+
+
+\clearpage
+\clearpage\section{Spin Amplitudes} 
+\label{a:sf}
+
+The spin factors used for $B \to P_1 \, P_2 \, P_3 \, P_4$ decays are given in Table \ref{tab:Sf}.
+%\renewcommand{\thetable}{B.\arabic{table}}
+
+\begin{table}[h]
+  \scriptsize
+  \centering
+  \caption{\small Spin factors for all topologies considered in this analysis. 
+  In the decay chains, $S$, $P$, $V$, $A$, $T$ and $PT$ stand for scalar, pseudoscalar, vector, axial vector, tensor and pseudotensor, respectively. 
+  If no angular momentum is specified, the lowest angular momentum state compatible with angular momentum conservation and, where appropriate, parity conservation, is used.}
+  	\resizebox{\linewidth}{!}{
+	\begin{tabular}{@{\hspace{0.5cm}}c@{\hspace{0.25cm}} @{\hspace{0.25cm}} l@{\hspace{0.25cm}}  @{\hspace{0.25cm}}l@{\hspace{0.5cm}}}
+     \hline \hline
+	Number & Decay chain & Spin amplitude  \\ \hline
+	1 & $B \to (P \, P_{1})$, $P \to (S \, P_{2})$, $S \to (P_{3} \, P_{4})$ & $1$ \\
+	 2 & $B \to (P \, P_{1})$, $P \to (V \, P_{2})$, $V \to (P_{3} \, P_{4})$ & $L_{(1)\alpha}(P) \,   \, L_{(1)}^{\alpha}(V) $ \\
+
+	 3 & $B \to (A \, P_{1})$, $A \to (V \, P_{2})$, $V \to (P_{3} \, P_{4})$ & $L_{(1)\alpha}(B) \, P_{(1)}^{\alpha \beta}(A)  \, L_{(1)\beta}(V) $ \\
+	 4 & $B \to (A \, P_{1})$, $A[D] \to (P_{2} \, V)$, $V \to (P_{3} \, P_{4})$ & $L_{(1)\alpha}(B) \, L_{(2)}^{\alpha \beta}(A)  \, L_{(1)\beta}(V) $   \\
+	 5 & $B \to (A \, P_{1})$, $A \to (S \, P_{2})$, $S \to (P_{3} \, P_{4})$ & $L_{(1)\alpha}(B) \, L_{(1)}^{\alpha}(A) $    \\
+	6 &  $B \to (A \, P_{1})$, $A \to (T \, P_{2})$, $T \to (P_{3} \, P_{4})$ &  $L_{(1)\alpha}(B) \, L_{(1)\beta}(A) \, L_{(2)}^{\alpha \beta}(T) $  \\
+	
+	7 &  $B \to (V_{1} \, P_{1})$, $V_{1} \to (V_{2} \, P_{2})$, $V_{2} \to (P_{3} \, P_{4})$ & 
+	$ L_{(1)\mu}(B) \, P_{(1)}^{\mu \alpha }(V_{1})  \, \epsilon_{\alpha \beta \gamma \delta} \, L_{(1)}^{\beta}(V_{1}) \, p_{V_{1}}^{\gamma} \, L_{(1)}^{\delta}(V_{2}) $ \\
+	
+	 8 & $B \to (PT \, P_{1})$, $PT \to (V \, P_{2})$, $V \to (P_{3} \, P_{4})$ & 
+	  $L_{(2)\alpha \beta}(B) \, P_{(2)}^{\alpha \beta \gamma \delta}(PT)  \, L_{(1)\gamma}(PT) \, L_{(1)\delta}(V) $ \\
+	 9 &  $B \to (PT \, P_{1})$, $PT \to (S \, P_{2})$, $S \to (P_{3} \, P_{4})$ & 
+	  $L_{(2)\alpha \beta}(B)  \, L_{(2)}(PT)^{\alpha \beta}  $ \\
+	  10 & $B \to (PT \, P_{1})$, $PT \to (T \, P_{2})$, $T \to (P_{3} \, P_{4})$ & 
+	  $L_{(2)\alpha \beta}(B) \, P_{(2)}^{\alpha \beta \gamma \delta}(PT)  \, L_{(2)\gamma \delta}(T)  $ \\
+	  
+	   11 & $B \to (T \, P_{1})$, $T \to (V \, P_{2})$, $V \to (P_{3} \, P_{4})$ & 
+	  $L_{(2)\mu \nu}(B) \, P_{(2)}^{\mu \nu \rho \alpha}(T)  \, \epsilon_{\alpha \beta \gamma \delta}  
+	  \, L_{(2)\rho}^{\beta}(T) \, p_{T}^{\gamma} \,  P_{(1)}^{\delta \sigma}(T) \, L_{(1)\sigma}(V) $ \\
+	  
+	   12 & $B \to (T_{1} \, P_{1})$, $T_{1} \to (T_{2} \, P_{2})$, $T_{2} \to (P_{3} \, P_{4})$ & 
+	  $L_{(2)\mu \nu}(B) \, P_{(2)}^{\mu \nu \rho \alpha}(T_{1})  \, \epsilon_{\alpha \beta \gamma \delta}  
+	  \, L_{(1)}^{\beta}(T_{1}) \, p_{T_{1}}^{\gamma} \,  L_{(2)\rho}^{\delta}(T_{2}) $ \\
+
+	  13 & $B \to (S_{1} \, S_{2})$, $S_{1} \to (P_{1} \, P_{2})$, $S_{2} \to (P_{3} \, P_{4})$ & $ 1$ \\	  
+	 
+	  14 & $B \to (V \, S)$, $V \to (P_{1} \, P_{2})$, $S \to (P_{3} \, P_{4})$ & $L_{(1)\alpha}(B) \, L_{(1)}^{\alpha}(V) $ \\
+	 
+	  15 & $B \to (V_{1} \, V_{2})$, $V_{1} \to (P_{1} \, P_{2})$, $V_{2} \to (P_{3} \, P_{4})$ & $L_{(1)\alpha}(V_{1})  \, L_{(1)}^{\alpha}(V_{2}) $ \\
+	  16 & $B[P] \to (V_{1} \, V_{2})$, $V_{1} \to (P_{1} \, P_{2})$, $V_{2} \to (P_{3} \, P_{4})$ & 
+	 $\epsilon_{\alpha \beta \gamma \delta} \, L_{(1)}^{\alpha}(B) \, L_{(1)}^{\beta}(V_{1}) \, L_{(1)}^{\gamma}(V_{2}) \, p_{B}^{\delta}$ \\
+	 17 &  $B[D] \to (V_{1} \, V_{2})$, $V_{1} \to (P_{1} \, P_{2})$, $V_{2} \to (P_{3} \, P_{4})$ &   $ L_{(2)\alpha \beta}(B)  \,L_{(1)}^{\alpha}(V_{1}) \, L_{(1)}^{\beta}(V_{2}) $ \\
+
+	   18 & $B \to (T \, S)$, $T \to (P_{1} \, P_{2})$, $S \to (P_{3} \, P_{4})$ & $L_{(2)\alpha \beta}(B) \, L_{(2)}^{\alpha \beta}(T) $ \\
+	   19 & $B \to (V \, T)$, $T \to (P_{1} \, P_{2})$, $V \to (P_{3} \, P_{4})$ & $L_{(1)\alpha}(B) \, L_{(2)}^{\alpha \beta}(T) \, L_{(1)\beta}(V) $ \\
+	   20 & $B[D] \to (T \, V)$, $T \to (P_{1} \, P_{2})$, $V \to (P_{3} \, P_{4})$ &
+	   $\epsilon_{\alpha \beta \delta \gamma} \, L_{2}^{\alpha \mu}(B) \, L_{2\mu}^{\beta} \, L_{(1)}^{\gamma}(V) \, p_{B}^{\delta} $ \\
+	
+	   21 & $B \to (T_{1} \, T_{2})$, $T_{1} \to (P_{1} \, P_{2})$, $T_{2} \to (P_{3} \, P_{4})$ & $L_{(2)\alpha \beta}(T_{1}) \, L_{(2)}^{\alpha \beta}(T_{2}) $ \\
+	  22 &  $B[P] \to (T_{1} \, T_{2})$, $T_{1} \to (P_{1} \, P_{2})$, $T_{2} \to (P_{3} \, P_{4})$ & 
+	  $\epsilon_{\alpha \beta \gamma \delta} \, L_{(1)}^{\alpha}(B) \, L_{(2)}^{\beta \mu}(T_{1}) \, L_{(2)\mu}^{\gamma}(T_{2}) \, p_{B}^{\delta} $ \\
+	  23 &  $B[D] \to (T_{1} \, T_{2})$, $T_{1} \to (P_{1} \, P_{2})$, $T_{2} \to (P_{3} \, P_{4})$ & 
+	  $L_{(2)\alpha \beta}(B) \, L_{(2)}^{\alpha \gamma}(T_{1}) \, L_{(2)\gamma}^{\beta}(T_{2}) $ \\
+
+     \hline \hline
+	\end{tabular}
+	}
+	\label{tab:Sf}
+\end{table}
+
+
+
+\clearpage\section{Considered Decay Chains}
+\label{a:decays}
+
+The various decay channels considered in the model building are listed in Table \ref{tab:components}.
+%\setcounter{table}{0}
+%\renewcommand{\thetable}{C.\arabic{table}}
+
+\begin{table}[h]
+  \footnotesize
+  \centering
+  \caption{Decays considered in the LASSO model building. \label{tab:components}}
+           \begin{tabular} {@{\hspace{0.5cm}}l@{\hspace{0.25cm}}}
+     \hline \hline
+	 Decay channel  \\ \hline
+              %cascade 
+              $B_s \to D_s^- \, [K_{1}(1270)^{+}[S,D]\to \pi^+ \, K^{*}(892)^{0}]$ \\
+              $B_s \to D_s^- \, [K_{1}(1270)^{+}\to \pi^+ \, K^{*}(1430)^{0}]$ \\
+              $B_s \to D_s^- \, [K_{1}(1270)^{+}[S,D]\to K^+ \, \rho(770)^{0}]$ \\
+              $B_s \to D_s^- \, [K_{1}(1270)^{+}[S,D]\to K^+ \, \omega(782)]$ \\
+              $B_s \to D_s^- \, [K_{1}(1400)^{+}[S,D]\to \pi^+ \, K^{*}(892)^{0}]$ \\
+              $B_s \to D_s^- \, [K_{1}(1400)^{+}[S,D]\to K^+ \, \rho(770)^{0}]$ \\
+              $B_s \to D_s^- \, [K(1460)^{+}\to \pi^+ \, \kappa]$ \\
+              $B_s \to D_s^- \, [K(1460)^{+}\to K^+ \, \sigma]$ \\
+              $B_s \to D_s^- \, [K(1460)^{+}\to \pi^+ \, K^{*}(892)^{0}]$ \\
+              $B_s \to D_s^- \, [K(1460)^{+}\to K^+ \, \rho(770)^{0}]$ \\
+              $B_s \to D_s^- \, [K^{*}(1410)^+\to \pi^+\, K^{*}(892)^{0}]$ \\
+              $B_s \to D_s^- \, [K^{*}(1410)^+\to K^+ \, \rho(770)^{0}]$ \\
+              $B_s \to D_s^- \, [K_{2}^*(1430)^{+}\to \pi^+ \, K^{*}(892)^{0}]$ \\
+              $B_s \to D_s^- \, [K_{2}^*(1430)^{+}\to K^+ \, \rho(770)^{0}]$ \\
+              $B_s \to D_s^- \, [K^*(1680)^{+}\to \pi^+ \, K^{*}(892)^{0}]$ \\
+              $B_s \to D_s^- \, [K^*(1680)^{+}\to K^+ \, \rho(770)^{0}]$ \\      
+               $B_s \to D_s^- \, [K_{2}(1770)^{+}\to \pi^+ \, K^{*}(892)^{0}]$ \\
+              $B_s \to D_s^- \, [K_{2}(1770)^{+}\to K^+ \, \rho(770)^{0}]$ \\
+%              %Single res. 
+              $B_s \to \sigma^{0} (D_s^- K^+)_S$ \\
+              $B_s[S,P,D] \to \sigma^{0} (D_s^- K^+)_V$ \\
+              $B_s \to \rho(770)^{0} (D_s^- K^+)_S$ \\
+              $B_s[S,P,D] \to \rho(770)^{0} \, (D_s^- K^+)_V$\\
+              $B_s \to  K^{*}(892)^{0} \, (D_s^- \pi^+)_S$ \\
+              $B_s[S,P,D]  \to  K^{*}(892)^{0} \, (D_s^- \pi^+)_V$ \\
+              %NonResNonRes
+              $B_s \to (D_s^- K^+)_{S} \, (\pi^+ \pi^-)_{S}$ \\
+              \hline \hline
+           \end{tabular}
+\end{table}
+
 
