@@ -59,6 +59,14 @@ class MinuitParameterSet{
       return 0;
   }
 
+  int findParPtr(std::string name){
+      for(unsigned int i=0; i <this->size(); i++){
+          if(0 == this->getParPtr(i)) continue;
+          if(A_is_in_B(name,this->getParPtr(i)->name()))return i;
+      }
+      return -1;
+  }
+
   // regarding the two routines below:
   // normally you don't want to use deleteListAndObjects()
   // This object is a collection of pointers

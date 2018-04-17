@@ -56,6 +56,7 @@
 #include "RooUniform.h"
 #include "RooExponential.h"
 #include "RooGaussian.h"
+#include "RooMultiVarGaussian.h"
 #include "RooTruthModel.h"
 #ifndef __CINT__
 #include "RooGlobalFunc.h"
@@ -102,13 +103,13 @@ using namespace RooFit ;
 //using namespace RooStats;
 using namespace MINT;
 
-// Full DsK like time PDF with additional coherence factor and optional direct CPV
+
+// Full DsK like time PDF with additional coherence factor 
 class FullTimePdf : public MINT::PdfBase<IDalitzEvent>
 {
 protected:
     /// fit parameters
     const FitParameter& _C;
-    const FitParameter& _C_bar;
     const FitParameter& _D;
     const FitParameter& _D_bar;
     const FitParameter& _S;
@@ -158,8 +159,6 @@ protected:
     
     // Time pdf master
     TimePdfMaster* _timePdfMaster;
-
-    bool _directCPV;
     
 public:
     void parametersChanged(){
@@ -175,13 +174,12 @@ public:
         //const double t = (double) evt.getValueFromVector(0);
         //if(t < _min_TAU || t > _max_TAU )return 0.;
         _timePdfMaster->setAllObservablesAndFitParameters(evt);
-	double C_bar = _directCPV ? (double)_C_bar : - (double) _C;
         
         // C,Cbar,D,Dbar,S,Sbar
         _timePdfMaster->setCP_coeff(1.,
 				   1.,
                                    _C,
-                                   C_bar,
+                                   -_C,
                                    _k * _D,
                                    _k * _D_bar,
                                    _k * _S,
@@ -217,13 +215,12 @@ public:
         const double t = (double) evt.getValueFromVector(0);
         //if(t < _min_TAU || t > _max_TAU )return 0.;
         _timePdfMaster->setAllObservablesAndFitParameters(evt);
-	double C_bar = _directCPV ? (double)_C_bar : - (double) _C;
-
+        
         // C,Cbar,D,Dbar,S,Sbar
         _timePdfMaster->setCP_coeff(1.,
 				   1.,
                                    _C,
-                                   C_bar,
+                                   -_C,
                                    _k * _D,
                                    _k * _D_bar,
                                    _k * _S,
@@ -246,17 +243,28 @@ public:
         return val;
     }
 
-
     std::pair<double, double> getCalibratedMistag_OS(IDalitzEvent& evt){
         return _timePdfMaster->getCalibratedMistag_OS(evt);
+    }
+
+    std::pair<double, double> getCalibratedMistag_OS(IDalitzEvent& evt,double& avg_eta_os,double& p0_os,double& p1_os,double& delta_p0_os,double& delta_p1_os ){
+        return _timePdfMaster->getCalibratedMistag_OS(evt, avg_eta_os, p0_os, p1_os, delta_p0_os, delta_p1_os);
     }
     
     std::pair<double, double> getCalibratedMistag_SS(IDalitzEvent& evt){
         return _timePdfMaster->getCalibratedMistag_SS(evt);
     }
 
+    std::pair<double, double> getCalibratedMistag_SS(IDalitzEvent& evt,double& avg_eta_ss,double& p0_ss,double& p1_ss,double& delta_p0_ss,double& delta_p1_ss ){
+        return _timePdfMaster->getCalibratedMistag_SS(evt, avg_eta_ss, p0_ss, p1_ss, delta_p0_ss, delta_p1_ss);
+    }
+
     double getCalibratedResolution(double dt){
         return _timePdfMaster->getCalibratedResolution(dt);
+    }
+
+    double getCalibratedResolution(double& dt,double& scale_sigma_dt,double& scale_sigma_2_dt){
+        return _timePdfMaster->getCalibratedResolution(dt,scale_sigma_dt,scale_sigma_2_dt);
     }
     
     virtual double getVal_withPs(IDalitzEvent& evt){return getVal(evt);}
@@ -275,7 +283,7 @@ public:
         return getVal_noPs(*evt);
     }
     
-    FullTimePdf(const MINT::FitParameter& C, const MINT::FitParameter& C_bar, const MINT::FitParameter& D, const MINT::FitParameter& D_bar,
+    FullTimePdf(const MINT::FitParameter& C, const MINT::FitParameter& D, const MINT::FitParameter& D_bar,
                 const MINT::FitParameter& S, const MINT::FitParameter& S_bar, const MINT::FitParameter& k,
                 const MINT::FitParameter& tau, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
                 ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
@@ -287,11 +295,9 @@ public:
                 const MINT::FitParameter& avg_eta_os, const MINT::FitParameter& tageff_os, const MINT::FitParameter& tageff_asym_os, 
                 const MINT::FitParameter& p0_ss, const MINT::FitParameter& p1_ss, const MINT::FitParameter& delta_p0_ss, const MINT::FitParameter& delta_p1_ss, 
                 const MINT::FitParameter& avg_eta_ss, const MINT::FitParameter& tageff_ss, const MINT::FitParameter& tageff_asym_ss, 
-                const MINT::FitParameter& production_asym, const MINT::FitParameter& detection_asym, 
-		string marginalPdfsPrefix = "", bool directCPV = false
+                const MINT::FitParameter& production_asym, const MINT::FitParameter& detection_asym, string marginalPdfsPrefix = ""
                 ):
     _C(C),
-    _C_bar(C_bar),
     _D(D),
     _D_bar(D_bar),
     _S(S),
@@ -330,8 +336,7 @@ public:
     _tageff_asym_ss(tageff_asym_ss),
     _production_asym(production_asym),
     _detection_asym(detection_asym),
-    _marginalPdfsPrefix(marginalPdfsPrefix),
-    _directCPV(directCPV)
+    _marginalPdfsPrefix(marginalPdfsPrefix)
     {
         _timePdfMaster = new TimePdfMaster(_tau, _dGamma, _dm
                                           ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
@@ -622,8 +627,6 @@ void fullTimeFit(int step=0){
     NamedParameter<double> min_year("min_year", 10);
     NamedParameter<double> max_year("max_year", 20);
 
-    NamedParameter<int>  directCPV("directCPV", 0);
-
     /// Common fit parameters
     FitParameter  r("r",1,0.,0.1);
     FitParameter  delta("delta",1,100.,1.);
@@ -631,28 +634,24 @@ void fullTimeFit(int step=0){
     FitParameter  k("k",1,1,1.);
         
     FitParameter  C("C",1,0.,0.1);
-    FitParameter  C_bar("C_bar",1,0.,0.1);
     FitParameter  D("D",1,0.,0.1);
     FitParameter  D_bar("D_bar",1,0.,0.1);
     FitParameter  S("S",1,0.,0.1);
     FitParameter  S_bar("S_bar",1,0.,0.1);
     
     FitParameter  C_1("C_1",1,0.,0.1);
-    FitParameter  C_bar_1("C_bar_1",1,0.,0.1);
     FitParameter  D_1("D_1",1,0.,0.1);
     FitParameter  D_bar_1("D_bar_1",1,0.,0.1);
     FitParameter  S_1("S_1",1,0.,0.1);
     FitParameter  S_bar_1("S_bar_1",1,0.,0.1);
     
     FitParameter  C_2("C_2",1,0.,0.1);
-    FitParameter  C_bar_2("C_bar_2",1,0.,0.1);
     FitParameter  D_2("D_2",1,0.,0.1);
     FitParameter  D_bar_2("D_bar_2",1,0.,0.1);
     FitParameter  S_2("S_2",1,0.,0.1);
     FitParameter  S_bar_2("S_bar_2",1,0.,0.1);
     
     FitParameter  C_3("C_3",1,0.,0.1);
-    FitParameter  C_bar_3("C_bar_3",1,0.,0.1);
     FitParameter  D_3("D_3",1,0.,0.1);
     FitParameter  D_bar_3("D_bar_3",1,0.,0.1);
     FitParameter  S_3("S_3",1,0.,0.1);
@@ -785,7 +784,7 @@ void fullTimeFit(int step=0){
     //FullTimePdf_mod t_pdf(r,delta,gamma,k);
     string marginalPdfsPrefix = "comb";
     if(fitGenMC)marginalPdfsPrefix = "Uniform";
-    FullTimePdf t_pdf(C, C_bar, D, D_bar, S, S_bar, k,
+    FullTimePdf t_pdf(C, D, D_bar, S, S_bar, k,
                       tau, dGamma, dm
                       ,offset_sigma_dt, scale_mean_dt, scale_sigma_dt, scale_sigma_2_dt
                       ,c0, c1, c2 ,c3, c4, c5
@@ -794,10 +793,10 @@ void fullTimeFit(int step=0){
                       avg_eta_os, tageff_os, tageff_asym_os, 
                       p0_ss, p1_ss, delta_p0_ss, delta_p1_ss, 
                       avg_eta_ss, tageff_ss, tageff_asym_ss, 
-                      production_asym, detection_asym, marginalPdfsPrefix,directCPV );
+                      production_asym, detection_asym, marginalPdfsPrefix );
 
     /// Simultaneous pdfs
-    FullTimePdf t_pdf_Run1_t0(C, C_bar, D, D_bar, S, S_bar, k,
+    FullTimePdf t_pdf_Run1_t0(C, D, D_bar, S, S_bar, k,
                       tau, dGamma, dm
                       ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
@@ -806,9 +805,9 @@ void fullTimeFit(int step=0){
                       avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
                       p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
                       avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
-                      production_asym_Run1, detection_asym_Run1, "Run1_t0",directCPV );
+                      production_asym_Run1, detection_asym_Run1, "Run1_t0" );
     
-    FullTimePdf t_pdf_Run1_t1(C, C_bar, D, D_bar, S, S_bar, k,
+    FullTimePdf t_pdf_Run1_t1(C, D, D_bar, S, S_bar, k,
                               tau, dGamma, dm
                               ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                               ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
@@ -817,9 +816,9 @@ void fullTimeFit(int step=0){
                               avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
                               p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
                               avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
-                              production_asym_Run1, detection_asym_Run1, "Run1_t1",directCPV );
+                              production_asym_Run1, detection_asym_Run1, "Run1_t1" );
     
-    FullTimePdf t_pdf_Run2_t0(C, C_bar, D, D_bar, S, S_bar, k,
+    FullTimePdf t_pdf_Run2_t0(C, D, D_bar, S, S_bar, k,
                               tau, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
@@ -828,9 +827,9 @@ void fullTimeFit(int step=0){
                               avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
                               p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-                              production_asym_Run2, detection_asym_Run2, "Run2_t0",directCPV );
+                              production_asym_Run2, detection_asym_Run2, "Run2_t0" );
     
-    FullTimePdf t_pdf_Run2_t1(C, C_bar, D, D_bar, S, S_bar, k,
+    FullTimePdf t_pdf_Run2_t1(C, D, D_bar, S, S_bar, k,
                               tau, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
@@ -839,10 +838,10 @@ void fullTimeFit(int step=0){
                               avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
                               p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-                              production_asym_Run2, detection_asym_Run2, "Run2_t1",directCPV );
+                              production_asym_Run2, detection_asym_Run2, "Run2_t1" );
     
     //phasespace bins
-    FullTimePdf t_pdf_Run1_t0_bin1(C_1, C_bar_1, D_1, D_bar_1, S_1, S_bar_1, k,
+    FullTimePdf t_pdf_Run1_t0_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
                       tau, dGamma, dm
                       ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
@@ -851,9 +850,9 @@ void fullTimeFit(int step=0){
                       avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
                       p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
                       avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
-                      production_asym_Run1, detection_asym_Run1, "Run1_t0",directCPV);
+                      production_asym_Run1, detection_asym_Run1, "Run1_t0" );
     
-    FullTimePdf t_pdf_Run1_t1_bin1(C_1, C_bar_1, D_1, D_bar_1, S_1, S_bar_1, k,
+    FullTimePdf t_pdf_Run1_t1_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
                               tau, dGamma, dm
                               ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                               ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
@@ -862,9 +861,9 @@ void fullTimeFit(int step=0){
                               avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
                               p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
                               avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
-                              production_asym_Run1, detection_asym_Run1, "Run1_t0",directCPV );
+                              production_asym_Run1, detection_asym_Run1, "Run1_t0" );
     
-    FullTimePdf t_pdf_Run2_t0_bin1(C_1, C_bar_1, D_1, D_bar_1, S_1, S_bar_1, k,
+    FullTimePdf t_pdf_Run2_t0_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
                               tau, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
@@ -873,9 +872,9 @@ void fullTimeFit(int step=0){
                               avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
                               p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-                              production_asym_Run2, detection_asym_Run2, "Run2_t0",directCPV );
+                              production_asym_Run2, detection_asym_Run2, "Run2_t0" );
     
-    FullTimePdf t_pdf_Run2_t1_bin1(C_1, C_bar_1, D_1, D_bar_1, S_1, S_bar_1, k,
+    FullTimePdf t_pdf_Run2_t1_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
                               tau, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
@@ -884,9 +883,9 @@ void fullTimeFit(int step=0){
                               avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
                               p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-                              production_asym_Run2, detection_asym_Run2, "Run2_t1",directCPV );
+                              production_asym_Run2, detection_asym_Run2, "Run2_t1" );
     
-    FullTimePdf t_pdf_Run1_t0_bin2(C_2, C_bar_2, D_2, D_bar_2, S_2, S_bar_2, k,
+    FullTimePdf t_pdf_Run1_t0_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
                       tau, dGamma, dm
                       ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
@@ -895,9 +894,9 @@ void fullTimeFit(int step=0){
                       avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
                       p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
                       avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
-                      production_asym_Run1, detection_asym_Run1, "Run1_t0",directCPV );
+                      production_asym_Run1, detection_asym_Run1, "Run1_t0" );
     
-    FullTimePdf t_pdf_Run1_t1_bin2(C_2, C_bar_2, D_2, D_bar_2, S_2, S_bar_2, k,
+    FullTimePdf t_pdf_Run1_t1_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
                               tau, dGamma, dm
                               ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                               ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
@@ -906,9 +905,9 @@ void fullTimeFit(int step=0){
                               avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
                               p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
                               avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
-                              production_asym_Run1, detection_asym_Run1, "Run1_t1",directCPV );
+                              production_asym_Run1, detection_asym_Run1, "Run1_t1" );
     
-    FullTimePdf t_pdf_Run2_t0_bin2(C_2, C_bar_2, D_2, D_bar_2, S_2, S_bar_2, k,
+    FullTimePdf t_pdf_Run2_t0_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
                               tau, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
@@ -917,9 +916,9 @@ void fullTimeFit(int step=0){
                               avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
                               p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-                              production_asym_Run2, detection_asym_Run2, "Run2_t0",directCPV );
+                              production_asym_Run2, detection_asym_Run2, "Run2_t0" );
     
-    FullTimePdf t_pdf_Run2_t1_bin2(C_2, C_bar_2, D_2, D_bar_2, S_2, S_bar_2, k,
+    FullTimePdf t_pdf_Run2_t1_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
                               tau, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
@@ -928,9 +927,9 @@ void fullTimeFit(int step=0){
                               avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
                               p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-                              production_asym_Run2, detection_asym_Run2, "Run2_t1",directCPV );
+                              production_asym_Run2, detection_asym_Run2, "Run2_t1" );
     
-    FullTimePdf t_pdf_Run1_t0_bin3(C_3, C_bar_3, D_3, D_bar_3, S_3, S_bar_3, k,
+    FullTimePdf t_pdf_Run1_t0_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
                       tau, dGamma, dm
                       ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
@@ -939,9 +938,9 @@ void fullTimeFit(int step=0){
                       avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
                       p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
                       avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
-                      production_asym_Run1, detection_asym_Run1, "Run1_t0",directCPV );
+                      production_asym_Run1, detection_asym_Run1, "Run1_t0" );
     
-    FullTimePdf t_pdf_Run1_t1_bin3(C_3, C_bar_3, D_3, D_bar_3, S_3, S_bar_3, k,
+    FullTimePdf t_pdf_Run1_t1_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
                               tau, dGamma, dm
                               ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                               ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
@@ -950,9 +949,9 @@ void fullTimeFit(int step=0){
                               avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
                               p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
                               avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
-                              production_asym_Run1, detection_asym_Run1, "Run1_t1",directCPV );
+                              production_asym_Run1, detection_asym_Run1, "Run1_t1" );
     
-    FullTimePdf t_pdf_Run2_t0_bin3(C_3, C_bar_3, D_3, D_bar_3, S_3, S_bar_3, k,
+    FullTimePdf t_pdf_Run2_t0_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
                               tau, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
@@ -961,9 +960,9 @@ void fullTimeFit(int step=0){
                               avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
                               p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-                              production_asym_Run2, detection_asym_Run2, "Run2_t0",directCPV );
+                              production_asym_Run2, detection_asym_Run2, "Run2_t0" );
     
-    FullTimePdf t_pdf_Run2_t1_bin3(C_3, C_bar_3, D_3, D_bar_3, S_3, S_bar_3, k,
+    FullTimePdf t_pdf_Run2_t1_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
                               tau, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
@@ -972,7 +971,7 @@ void fullTimeFit(int step=0){
                               avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
                               p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-                              production_asym_Run2, detection_asym_Run2, "Run2_t1",directCPV );
+                              production_asym_Run2, detection_asym_Run2, "Run2_t1" );
     
     /// Load data
     double t,dt;
@@ -1552,6 +1551,369 @@ void fullTimeFit(int step=0){
     cout << "SS only  | " << N_SS/N << " | " <<  w_SS/N_SS << " | " << N_SS/N * D_SS/N_SS << endl;
     cout << "OS+SS    | " << N_OS_SS/N << " | " <<  w_OS_SS/N_OS_SS << " | " << N_OS_SS/N * D_OS_SS/N_OS_SS << endl;
     cout << "Combined | " << (N_OS+N_SS+N_OS_SS)/N << " | "<<  (w_OS+w_SS+w_OS_SS)/(N_OS+N_SS+N_OS_SS) << " | " << (N_OS+N_SS+N_OS_SS)/N * D_comb/(N_OS+N_SS+N_OS_SS) << endl << endl ;
+
+    MinuitParameterSet* mps = MinuitParameterSet::getDefaultSet();
+
+    /// Create tagging perfromance tables
+    if(updateAnaNote){
+
+	ofstream resultsfile;
+	resultsfile.open(("../../../../../TD-AnaNote/latex/tables/timeFit/"+(string)OutputDir+"result.tex").c_str(),std::ofstream::trunc);
+	resultsfile << "\\begin{table}[h]" << "\n";
+	resultsfile << "\\centering" << "\n";
+// 	resultsfile << "\\small" << "\n";
+	resultsfile << "\\caption{Result of the phase-space integrated fit to "; 
+	if((string)channel == "norm")resultsfile << "$B_s \\to D_s \\pi \\pi \\pi$";
+	else if((string)channel == "signal")resultsfile << "$B_s \\to D_s K \\pi \\pi$";
+	resultsfile << " data.}\n";
+	resultsfile << "\\begin{tabular}{c c c}" << "\n";
+	resultsfile << "\\hline" << "\n";
+	resultsfile << "\\hline" << "\n";
+	resultsfile << "Fit parameter & Value \\\\" << "\n";
+	resultsfile << "\\hline" << "\n";
+
+	if((string)channel == "norm"){
+	resultsfile << std::fixed << std::setprecision(4) 
+	<< "Run-I & $p_{0}^{\\text{OS}}$ & " <<  mps->getParPtr("p0_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("p0_os_Run1")->err() << "\\\\" << "\n"
+	<< "&$p_{1}^{\\text{OS}}$  & " <<  mps->getParPtr("p1_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("p1_os_Run1")->err() << "\\\\" << "\n"
+	<< "&$\\Delta p_{0}^{\\text{OS}}$  & " <<  mps->getParPtr("delta_p0_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("delta_p0_os_Run1")->err() << "\\\\" << "\n"
+	<< "&$\\Delta p_{1}^{\\text{OS}}$  & " <<  mps->getParPtr("delta_p1_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("delta_p1_os_Run1")->err() << "\\\\" << "\n"
+	<< "&$\\epsilon_{tag}^{\\text{OS}}$  & " <<  mps->getParPtr("tageff_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("tageff_os_Run1")->err() << "\\\\" << "\n"
+	<< "&$\\Delta\\epsilon_{tag}^{\\text{OS}}$  & " <<  mps->getParPtr("tageff_asym_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("tageff_asym_os_Run1")->err() << "\\\\" << "\n"
+	
+	<< "& $p_{0}^{\\text{SS}}$ & " <<  mps->getParPtr("p0_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("p0_ss_Run1")->err() << "\\\\" << "\n"
+	<< "&$p_{1}^{\\text{SS}}$  & " <<  mps->getParPtr("p1_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("p1_ss_Run1")->err() << "\\\\" << "\n"
+	<< "&$\\Delta p_{0}^{\\text{SS}}$  & " <<  mps->getParPtr("delta_p0_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("delta_p0_ss_Run1")->err() << "\\\\" << "\n"
+	<< "&$\\Delta p_{1}^{\\text{SS}}$  & " <<  mps->getParPtr("delta_p1_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("delta_p1_ss_Run1")->err() << "\\\\" << "\n"
+	<< "&$\\epsilon_{tag}^{\\text{SS}}$  & " <<  mps->getParPtr("tageff_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("tageff_ss_Run1")->err() << "\\\\" << "\n"
+	<< "&$\\Delta\\epsilon_{tag}^{\\text{SS}}$  & " <<  mps->getParPtr("tageff_asym_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("tageff_asym_ss_Run1")->err() << "\\\\" << "\n"
+
+	<< "&$A_{p}$ & " <<  mps->getParPtr("production_asym_Run1")->mean() << " $\\pm$ " << mps->getParPtr("production_asym_Run1")->err() << "\\\\" << "\n";
+
+	resultsfile << "\\\\" << "\n" ;
+	resultsfile << std::fixed << std::setprecision(4) 
+	<< "Run-II & $p_{0}^{\\text{OS}}$  & " <<  mps->getParPtr("p0_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("p0_os_Run2")->err() << "\\\\" << "\n"
+	<< "&$p_{1}^{\\text{OS}}$  & " <<  mps->getParPtr("p1_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("p1_os_Run2")->err() << "\\\\" << "\n"
+	<< "&$\\Delta p_{0}^{\\text{OS}}$  & " <<  mps->getParPtr("delta_p0_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("delta_p0_os_Run2")->err() << "\\\\" << "\n"
+	<< "&$\\Delta p_{1}^{\\text{OS}}$  & " <<  mps->getParPtr("delta_p1_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("delta_p1_os_Run2")->err() << "\\\\" << "\n"
+	<< "&$\\epsilon_{tag}^{\\text{OS}}$  & " <<  mps->getParPtr("tageff_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("tageff_os_Run2")->err() << "\\\\" << "\n"
+	<< "&$\\Delta\\epsilon_{tag}^{\\text{OS}}$  & " <<  mps->getParPtr("tageff_asym_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("tageff_asym_os_Run2")->err() << "\\\\" << "\n"
+
+	<< "& $p_{0}^{\\text{SS}}$  & " <<  mps->getParPtr("p0_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("p0_ss_Run2")->err() << "\\\\" << "\n"
+	<< "&$p_{1}^{\\text{SS}}$  & " <<  mps->getParPtr("p1_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("p1_ss_Run2")->err() << "\\\\" << "\n"
+	<< "&$\\Delta p_{0}^{\\text{SS}}$  & " <<  mps->getParPtr("delta_p0_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("delta_p0_ss_Run2")->err() << "\\\\" << "\n"
+	<< "&$\\Delta p_{1}^{\\text{SS}}$  & " <<  mps->getParPtr("delta_p1_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("delta_p1_ss_Run2")->err() << "\\\\" << "\n"
+	<< "&$\\epsilon_{tag}^{\\text{SS}}$  & " <<  mps->getParPtr("tageff_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("tageff_ss_Run2")->err() << "\\\\" << "\n"
+	<< "&$\\Delta\\epsilon_{tag}^{\\text{SS}}$  & " <<  mps->getParPtr("tageff_asym_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("tageff_asym_ss_Run2")->err() << "\\\\" << "\n"
+
+	<< "&$A_{p}$ & " <<  mps->getParPtr("production_asym_Run2")->mean() << " $\\pm$ " << mps->getParPtr("production_asym_Run2")->err() << "\\\\" << "\n";
+
+	resultsfile << "\\\\" << "\n" ;
+	resultsfile << std::fixed << std::setprecision(4) 
+	<< "&$\\Delta m_{s}$ & " 
+	//<<   mps->getParPtr("dm")->mean() 
+	<< " xx.xx " 
+	<< " $\\pm$ " << mps->getParPtr("dm")->err() << "\\\\" << "\n";
+	}
+
+	else {
+	resultsfile << std::fixed << std::setprecision(3) 
+	<< "& $C$ & " 
+// 	<<   mps->getParPtr("C")->mean() 
+	<< " xx.xx " 
+	<< " $\\pm$ " << mps->getParPtr("C")->err() << "\\\\" << "\n";
+	resultsfile << std::fixed << std::setprecision(3) 
+	<< "&$D$ & " 
+// 	<<   mps->getParPtr("D")->mean() 
+	<< " xx.xx " 
+	<< " $\\pm$ " << mps->getParPtr("D")->err() << "\\\\" << "\n";
+	resultsfile << std::fixed << std::setprecision(3) 
+	<< "&$\\bar D$ & " 
+// 	<<   mps->getParPtr("D_bar")->mean() 
+	<< " xx.xx " 
+	<< " $\\pm$ " << mps->getParPtr("D_bar")->err() << "\\\\" << "\n";
+	resultsfile << std::fixed << std::setprecision(3) 
+	<< "& $S$ & " 
+// 	<<   mps->getParPtr("S")->mean() 
+	<< " xx.xx " 
+	<< " $\\pm$ " << mps->getParPtr("S")->err() << "\\\\" << "\n";
+	resultsfile << std::fixed << std::setprecision(3) 
+	<< "& $\\bar S$ & " 
+// 	<<   mps->getParPtr("S_bar")->mean() 
+	<< " xx.xx " 
+	<< " $\\pm$ " << mps->getParPtr("S_bar")->err() << "\\\\" << "\n";
+	}
+
+	resultsfile << "\\hline" << "\n";
+	resultsfile << "\\hline" << "\n";
+	resultsfile << "\\end{tabular}" << "\n";
+	resultsfile << "\\label{table:timeFit_" << (string) channel << "}" << "\n";
+	resultsfile << "\\end{table}";	
+	resultsfile.close();
+
+        TMatrixTSym<double> cov_full = mini.covMatrixFull();     
+        //cov_full.Print();
+
+	
+	vector<string> prefix;
+	if(doSimFit){
+		prefix.push_back("_Run1");
+    		prefix.push_back("_Run2");
+    	}
+	else prefix.push_back("");
+
+	for(int p = 0 ; p < prefix.size(); p++){
+
+		vector<string> cov_params;
+    		if(!mps->getParPtr("tau")->iFixInit())cov_params.push_back("tau");
+    		if(!mps->getParPtr("dGamma")->iFixInit())cov_params.push_back("dGamma");
+    		if(!mps->getParPtr("dm")->iFixInit())cov_params.push_back("dm");
+
+    		if(!mps->getParPtr("offset_sigma_dt"+prefix[p])->iFixInit())cov_params.push_back("offset_sigma_dt"+prefix[p]);
+    		if(!mps->getParPtr("scale_sigma_dt"+prefix[p])->iFixInit())cov_params.push_back("scale_sigma_dt"+prefix[p]);
+
+		if(!mps->getParPtr("p0_os"+prefix[p])->iFixInit())cov_params.push_back("p0_os"+prefix[p]);
+    		if(!mps->getParPtr("p1_os"+prefix[p])->iFixInit())cov_params.push_back("p1_os"+prefix[p]);
+    		if(!mps->getParPtr("delta_p0_os"+prefix[p])->iFixInit())cov_params.push_back("delta_p0_os"+prefix[p]);
+    		if(!mps->getParPtr("delta_p1_os"+prefix[p])->iFixInit())cov_params.push_back("delta_p1_os"+prefix[p]);
+    		if(!mps->getParPtr("avg_eta_os"+prefix[p])->iFixInit())cov_params.push_back("avg_eta_os"+prefix[p]);
+    		//if(!mps->getParPtr("tageff_os"+prefix[p])->iFixInit())cov_params.push_back("tageff_os"+prefix[p]);
+    		//if(!mps->getParPtr("tageff_asym_os"+prefix[p])->iFixInit())cov_params.push_back("tageff_asym_os"+prefix[p]);
+
+		if(!mps->getParPtr("p0_ss"+prefix[p])->iFixInit())cov_params.push_back("p0_ss"+prefix[p]);
+    		if(!mps->getParPtr("p1_ss"+prefix[p])->iFixInit())cov_params.push_back("p1_ss"+prefix[p]);
+    		if(!mps->getParPtr("delta_p0_ss"+prefix[p])->iFixInit())cov_params.push_back("delta_p0_ss"+prefix[p]);
+    		if(!mps->getParPtr("delta_p1_ss"+prefix[p])->iFixInit())cov_params.push_back("delta_p1_ss"+prefix[p]);
+    		if(!mps->getParPtr("avg_eta_ss"+prefix[p])->iFixInit())cov_params.push_back("avg_eta_ss"+prefix[p]);
+    		//if(!mps->getParPtr("tageff_ss"+prefix[p])->iFixInit())cov_params.push_back("tageff_ss"+prefix[p]);
+    		//if(!mps->getParPtr("tageff_asym_ss"+prefix[p])->iFixInit())cov_params.push_back("tageff_asym_ss"+prefix[p]);
+
+    		if(!mps->getParPtr("production_asym"+prefix[p])->iFixInit())cov_params.push_back("production_asym"+prefix[p]);
+    		if(!mps->getParPtr("detection_asym"+prefix[p])->iFixInit())cov_params.push_back("detection_asym"+prefix[p]);
+
+		vector<int> cov_params_id;
+		RooArgList xvec, mu;
+		
+		for(int i = 0; i < cov_params.size(); i++){
+			cov_params_id.push_back(mps->findParPtr(cov_params[i]));
+			double mean = mps->getParPtr(cov_params[i])->mean();	
+			double error = mps->getParPtr(cov_params[i])->err();	
+		
+			RooRealVar* x = new RooRealVar(("x_"+cov_params[i]).c_str(), ("x_"+cov_params[i]).c_str(),mean-10.*error,mean+10.*error);
+			xvec.add(*x);
+			mu.add(RooRealConstant::value(mean));
+		}
+		
+		TMatrixTSym<double> cov(cov_params.size());	
+		for(int i = 0; i < cov_params_id.size(); i++)for(int j = 0; j < cov_params_id.size(); j++) cov[i][j] = cov_full[cov_params_id[i]][cov_params_id[j]]; 
+			
+		cov.Print();
+		xvec.Print();
+		mu.Print();
+	
+		RooMultiVarGaussian gauss_cov("gauss_cov","gauss_cov",xvec, mu, cov);
+
+		const int N_toys_cov = 500; 
+		RooDataSet* data_cov = gauss_cov.generate(xvec, N_toys_cov);
+
+		double N_tot = 0;
+		vector<double> v_N_OS(N_toys_cov,0.);
+		vector<double> v_N_SS(N_toys_cov,0.);
+		vector<double> v_N_OS_SS(N_toys_cov,0.);
+		
+		vector<double> v_w_OS(N_toys_cov,0.);
+		vector<double> v_w_SS(N_toys_cov,0.);
+		vector<double> v_w_OS_SS(N_toys_cov,0.);
+			
+		vector<double> v_D_OS(N_toys_cov,0.);
+		vector<double> v_D_SS(N_toys_cov,0.);
+		vector<double> v_D_OS_SS(N_toys_cov,0.);
+		vector<double> v_D_comb(N_toys_cov,0.);
+		
+		for (unsigned int i=0; i<eventList.size(); i++) {
+		
+			int f_evt = eventList[i].getValueFromVector(2);
+			int q1 = eventList[i].getValueFromVector(3);
+			int q2 = eventList[i].getValueFromVector(5);   
+			int q_eff = 0;
+			double w_eff = 0.5;
+			int run_evt = eventList[i].getValueFromVector(7);   
+			int trigger_evt = eventList[i].getValueFromVector(8);   
+
+			if(A_is_in_B("Run1",prefix[p]) && run_evt == 1) continue;
+			else if(A_is_in_B("Run2",prefix[p]) && run_evt == 2) continue;
+
+			N_tot += eventList[i].getWeight();
+
+			for(int j = 0 ; j < N_toys_cov; j++){
+				RooArgSet* xvec_cov= (RooArgSet*)data_cov->get(j);
+
+				double x_avg_eta_ss = xvec_cov->find(("x_avg_eta_ss"+prefix[p]).c_str()) ? ((RooRealVar*)xvec_cov->find(("x_avg_eta_ss"+prefix[p]).c_str()))->getVal() :  mps->getParPtr("avg_eta_ss"+prefix[p])->mean(); 
+				double x_p0_ss = xvec_cov->find(("x_p0_ss"+prefix[p]).c_str()) ? ((RooRealVar*)xvec_cov->find(("x_p0_ss"+prefix[p]).c_str()))->getVal() :  mps->getParPtr("p0_ss"+prefix[p])->mean();
+				double x_p1_ss = xvec_cov->find(("x_p1_ss"+prefix[p]).c_str()) ? ((RooRealVar*)xvec_cov->find(("x_p1_ss"+prefix[p]).c_str()))->getVal() :  mps->getParPtr("p1_ss"+prefix[p])->mean(); 
+ 				double x_delta_p0_ss = xvec_cov->find(("x_delta_p0_ss"+prefix[p]).c_str()) ? ((RooRealVar*)xvec_cov->find(("x_delta_p0_ss"+prefix[p]).c_str()))->getVal() :  mps->getParPtr("delta_p0_ss"+prefix[p])->mean();
+				double x_delta_p1_ss = xvec_cov->find(("x_delta_p1_ss"+prefix[p]).c_str()) ? ((RooRealVar*)xvec_cov->find(("x_delta_p1_ss"+prefix[p]).c_str()))->getVal() :  mps->getParPtr("delta_p1_ss"+prefix[p])->mean(); 
+
+				double x_avg_eta_os = xvec_cov->find(("x_avg_eta_os"+prefix[p]).c_str()) ? ((RooRealVar*)xvec_cov->find(("x_avg_eta_os"+prefix[p]).c_str()))->getVal() :  mps->getParPtr("avg_eta_os"+prefix[p])->mean(); 
+				double x_p0_os = xvec_cov->find(("x_p0_os"+prefix[p]).c_str()) ? ((RooRealVar*)xvec_cov->find(("x_p0_os"+prefix[p]).c_str()))->getVal() :  mps->getParPtr("p0_os"+prefix[p])->mean();
+				double x_p1_os = xvec_cov->find(("x_p1_os"+prefix[p]).c_str()) ? ((RooRealVar*)xvec_cov->find(("x_p1_os"+prefix[p]).c_str()))->getVal() :  mps->getParPtr("p1_os"+prefix[p])->mean(); 
+ 				double x_delta_p0_os = xvec_cov->find(("x_delta_p0_os"+prefix[p]).c_str()) ? ((RooRealVar*)xvec_cov->find(("x_delta_p0_os"+prefix[p]).c_str()))->getVal() :  mps->getParPtr("delta_p0_os"+prefix[p])->mean();
+				double x_delta_p1_os = xvec_cov->find(("x_delta_p1_os"+prefix[p]).c_str()) ? ((RooRealVar*)xvec_cov->find(("x_delta_p1_os"+prefix[p]).c_str()))->getVal() :  mps->getParPtr("delta_p1_os"+prefix[p])->mean(); 
+
+				std::pair<double, double> calibrated_mistag_os;
+				std::pair<double, double> calibrated_mistag_ss;
+	
+				calibrated_mistag_ss = t_pdf.getCalibratedMistag_SS(eventList[i],x_avg_eta_ss,x_p0_ss,x_p1_ss,x_delta_p0_ss,x_delta_p1_ss);
+				calibrated_mistag_os = t_pdf.getCalibratedMistag_OS(eventList[i],x_avg_eta_os,x_p0_os,x_p1_os,x_delta_p0_os,x_delta_p1_os);    
+	
+				double p = ( (1.-q1)/2. + q1 * (1.- calibrated_mistag_os.first )) * ( (1.-q2)/2. + q2 * (1.- calibrated_mistag_ss.first ));
+				double p_bar = ( (1.+q1)/2. - q1 * (1.- calibrated_mistag_os.second )) * ( (1.+q2)/2. - q2 * (1.- calibrated_mistag_ss.second ));
+				
+				if( p/(p+p_bar) > 0.5 ){ 
+					q_eff = 1;
+					w_eff = 1-p/(p+p_bar);
+				}
+				else if( p/(p+p_bar) < 0.5 ){
+					q_eff = -1;
+					w_eff = p/(p+p_bar);
+				}
+			
+				if(q1 != 0 && q2 != 0){
+				if(q_eff != 0){
+					v_N_OS_SS[j] += eventList[i].getWeight();
+					v_w_OS_SS[j] += w_eff * eventList[i].getWeight();
+					v_D_OS_SS[j] += pow(1.-2.*w_eff,2)* eventList[i].getWeight();
+				}
+				}
+				else if( q1 != 0){
+					//q_eff = q1;  flip tag ???
+					v_N_OS[j] += eventList[i].getWeight();
+					v_w_OS[j] += w_eff * eventList[i].getWeight(); 
+					v_D_OS[j] += pow(1.-2.*w_eff,2)* eventList[i].getWeight();
+				}
+				else if( q2 != 0){
+					//q_eff = q2;
+					v_N_SS[j] += eventList[i].getWeight();
+					v_w_SS[j] += w_eff * eventList[i].getWeight(); 
+					v_D_SS[j] += pow(1.-2.*w_eff,2)* eventList[i].getWeight(); 
+				} 
+			}
+		}
+
+		double eff_OS = 0;
+		double eff_OS_err = 0;
+		double w_OS = 0;
+		double w_OS_err = 0;
+		double e_OS = 0;
+		double e_OS_err = 0;
+
+		double eff_SS = 0;
+		double eff_SS_err = 0;
+		double w_SS = 0;
+		double w_SS_err = 0;
+		double e_SS = 0;
+		double e_SS_err = 0;
+
+		double eff_OS_SS = 0;
+		double eff_OS_SS_err = 0;
+		double w_OS_SS = 0;
+		double w_OS_SS_err = 0;
+		double e_OS_SS = 0;
+		double e_OS_SS_err = 0;
+	
+		for(int j = 0 ; j < N_toys_cov; j++){
+			eff_OS += (v_N_OS[j])/N_tot/N_toys_cov;
+			w_OS += (v_w_OS[j])/(v_N_OS[j])/N_toys_cov;
+			e_OS += (v_D_OS[j])/N_tot/N_toys_cov;
+
+			eff_SS += (v_N_SS[j])/N_tot/N_toys_cov;
+			w_SS += (v_w_SS[j])/(v_N_SS[j])/N_toys_cov;
+			e_SS += (v_D_SS[j])/N_tot/N_toys_cov;
+
+			eff_OS_SS += (v_N_OS_SS[j])/N_tot/N_toys_cov;
+			w_OS_SS += (v_w_OS_SS[j])/(v_N_OS_SS[j])/N_toys_cov;
+			e_OS_SS += (v_D_OS_SS[j])/N_tot/N_toys_cov;	
+		}
+		for(int j = 0 ; j < N_toys_cov; j++){
+			eff_OS_err += pow(((v_N_OS[j])/N_tot-eff_OS),2)/(N_toys_cov-1.);
+			w_OS_err += pow(((v_w_OS[j])/(v_N_OS[j]) - w_OS),2)/(N_toys_cov-1.);
+			e_OS_err += pow((v_D_OS[j]/N_tot-e_OS),2)/(N_toys_cov-1.);
+
+			eff_SS_err += pow(((v_N_SS[j])/N_tot-eff_SS),2)/(N_toys_cov-1.);
+			w_SS_err += pow(((v_w_SS[j])/(v_N_SS[j]) - w_SS),2)/(N_toys_cov-1.);
+			e_SS_err += pow((v_D_SS[j]/N_tot-e_SS),2)/(N_toys_cov-1.);
+
+			eff_OS_SS_err += pow(((v_N_OS_SS[j])/N_tot-eff_OS_SS),2)/(N_toys_cov-1.);
+			w_OS_SS_err += pow(((v_w_OS_SS[j])/(v_N_OS_SS[j]) - w_OS_SS),2)/(N_toys_cov-1.);
+			e_OS_SS_err += pow((v_D_OS_SS[j]/N_tot-e_OS_SS),2)/(N_toys_cov-1.);
+		}
+		
+		double rel_eff_err_OS = mps->getParPtr("tageff_os"+prefix[p])->iFixInit() ? 0. : mps->getParPtr("tageff_os"+prefix[p])->err() / mps->getParPtr("tageff_os"+prefix[p])->mean(); 
+
+		eff_OS_err += pow( rel_eff_err_OS * eff_OS,2);
+		w_OS_err += pow( rel_eff_err_OS * w_OS,2);
+		e_OS_err += pow( rel_eff_err_OS * e_OS,2);
+
+		double rel_eff_err_SS = mps->getParPtr("tageff_ss"+prefix[p])->iFixInit() ? 0. : mps->getParPtr("tageff_ss"+prefix[p])->err() / mps->getParPtr("tageff_ss"+prefix[p])->mean(); 
+
+		eff_SS_err += pow( rel_eff_err_SS * eff_SS,2);
+		w_SS_err += pow( rel_eff_err_SS * w_SS,2);
+		e_SS_err += pow( rel_eff_err_SS * e_SS,2);
+
+		eff_OS_SS_err += pow( rel_eff_err_OS * eff_OS_SS,2) + pow( rel_eff_err_SS * eff_OS_SS,2);
+		w_OS_SS_err += pow( rel_eff_err_OS * w_OS_SS,2) + pow( rel_eff_err_SS * w_OS_SS,2);
+		e_OS_SS_err += pow( rel_eff_err_OS * e_OS_SS,2) + pow( rel_eff_err_SS * e_OS_SS,2);
+
+		double eff_tot = eff_OS + eff_SS + eff_OS_SS;
+		double eff_tot_err = eff_OS_err + eff_SS_err + eff_OS_SS_err;
+		double w_tot = (eff_OS * w_OS + eff_SS * w_SS + eff_OS_SS * w_OS_SS)/eff_tot;
+		double w_tot_err = (eff_OS * w_OS_err + eff_SS * w_SS_err + eff_OS_SS * w_OS_SS_err)/eff_tot;
+		double e_tot = e_OS + e_SS + e_OS_SS;
+		double e_tot_err = e_OS_err + e_SS_err + e_OS_SS_err;
+
+		ofstream datafile;
+		datafile.open(("../../../../../TD-AnaNote/latex/tables/Tagging/"+(string)OutputDir + "tagPower"+ prefix[p] + ".tex").c_str(),std::ofstream::trunc);
+		datafile << "\\begin{table}[h]" << "\n";
+		datafile << "\\centering" << "\n";
+// 		datafile << "\\small" << "\n";
+		datafile << "\\caption{The flavour tagging performances for only OS tagged, only SS tagged and both OS and SS tagged events";
+		if(A_is_in_B("Run1", prefix[p])) datafile << " for Run-I data"; 
+		else if(A_is_in_B("Run2", prefix[p])) datafile << " for Run-II data"; 
+		datafile << ".}\n";;
+		datafile << "\\begin{tabular}{c c c c}" << "\n";
+		datafile << "\\hline" << "\n";
+		datafile << "\\hline" << "\n";
+		if((string)channel == "norm")datafile << "$ B_s \\to D_s \\pi \\pi \\pi$";
+		else if((string)channel == "signal")datafile << "$ B_s \\to D_s K \\pi \\pi$";
+		datafile << " & $\\epsilon_{tag} [\\%]$ & $\\langle \\omega \\rangle [\\%] $ & $\\epsilon_{eff} [\\%]$ \\\\" << "\n";
+		datafile << "\\hline" << "\n";
+		datafile << std::fixed << std::setprecision(2) << "Only OS & " 
+		<< eff_OS * 100. << " $\\pm$ " << sqrt(eff_OS_err) * 100. << " & " 
+		<< w_OS * 100. << " $\\pm$ " << sqrt(w_OS_err) * 100. << " & "
+		<< e_OS * 100.<< " $\\pm$ " << sqrt(e_OS_err) * 100. << "\\\\" << "\n";
+
+		datafile << std::fixed << std::setprecision(2) << "Only SS & " 
+		<< eff_SS * 100.<< " $\\pm$ " << sqrt(eff_SS_err) * 100. << " & " 
+		<< w_SS * 100.<< " $\\pm$ " << sqrt(w_SS_err) * 100. << " & "
+		<< e_SS * 100.<< " $\\pm$ " << sqrt(e_SS_err) * 100. << "\\\\" << "\n";
+
+		datafile << std::fixed << std::setprecision(2) << "Both OS-SS & " 
+		<< eff_OS_SS * 100.<< " $\\pm$ " << sqrt(eff_OS_SS_err) * 100. << " & " 
+		<< w_OS_SS * 100.<< " $\\pm$ " << sqrt(w_OS_SS_err) * 100. << " & "
+		<< e_OS_SS * 100.<< " $\\pm$ " << sqrt(e_OS_SS_err) * 100. << "\\\\" << "\n";
+
+		datafile << "\\hline" << "\n" << std::fixed << std::setprecision(2) << "Combined & " 
+		<< eff_tot * 100.<< " $\\pm$ " << sqrt(eff_tot_err) * 100. << " & " 
+		<< w_tot * 100.<< " $\\pm$ " << sqrt(w_tot_err) * 100. << " & "
+		<< e_tot * 100.<< " $\\pm$ " << sqrt(e_tot_err) * 100. << "\\\\" << "\n";
+
+		datafile << "\\hline" << "\n";
+		datafile << "\\hline" << "\n";
+		datafile << "\\end{tabular}" << "\n";
+		datafile << "\\label{table:tagging" << prefix[p] << "}" << "\n";
+		datafile << "\\end{table}";	
+	}
+    }
 
     TH1D* h_t_fit = new TH1D("h_t_fit",";t",nBinst,min_TAU,max_TAU);
     

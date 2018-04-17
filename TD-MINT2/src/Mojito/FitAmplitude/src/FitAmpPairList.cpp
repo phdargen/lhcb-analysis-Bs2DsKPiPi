@@ -755,12 +755,63 @@ bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
        << _singleAmpFractions.sum().frac() 
     + _interferenceFractions.sum().frac();
   cout << endl;
-  ofstream os(fname.c_str());
-  if(os){
-    os << _singleAmpFractions << endl;
-    os << _interferenceFractions << endl;
-    os.close();
+  ofstream os(fname.c_str(),std::ofstream::trunc);
+//   if(os){
+//     os << _singleAmpFractions << endl;
+//     os << _interferenceFractions << endl;
+//     os.close();
+//   }
+  /// latex table
+  os << "\\begin{table}[h]" << "\n";
+  os << "\\centering" << "\n";
+  os << "\\caption{Fit fractions for "; 
+  os << "$B_s \\to D_s K \\pi \\pi$";
+  os << " data.}\n";
+  os << "\\begin{tabular}{c c}" << "\n";
+  os << "\\hline" << "\n";
+  os << "\\hline" << "\n";
+  os << "Decay channel & Fraction [$\\%$] \\\\" << "\n";
+  os << "\\hline" << "\n";
+
+  for(unsigned int i=0; i < this->size(); i++){    
+    double frac = this->at(i).integral()/norm;
+    TString name;
+    if(this->at(i).isSingleAmp()) name = this->at(i).fitAmp1().name();
+    else continue;
+    FitFraction f((string)name, frac);
+    double frac_err = fcov->getFractionError(i);
+    
+    name.ReplaceAll("->"," \\to ");
+    name.ReplaceAll("Bs0","B_s");
+    name.ReplaceAll("Ds","D_s");
+    name.ReplaceAll("pi","\\pi");
+    name.ReplaceAll("rho","\\rho");
+    name.ReplaceAll("sigma10","\\sigma");
+
+    name.ReplaceAll("K*(892)0","K^{*}(892)");
+    name.ReplaceAll("K(0)*(1430)0","K(0)^{*}(1430)");
+    name.ReplaceAll("GS","");
+    name.ReplaceAll("SBW","");
+    name.ReplaceAll("RhoOmega","");
+    name.ReplaceAll("LASS","");
+    name.ReplaceAll("+","^+");
+    name.ReplaceAll("-","^-");
+    name.ReplaceAll(")0",")^0");
+    //name.ReplaceAll("("," \\left [ ");
+    //name.ReplaceAll(")"," \\right ] ");
+    name.ReplaceAll(","," \\, ");
+
+    os << std::fixed << std::setprecision(2) << "$" << name << "$ & " << frac * 100. << " $\\pm$ "  << frac_err * 100. <<  " \\\\" << "\n";
+
   }
+  os <<  " \\hline" << "\n";
+  os << " Sum & " << std::fixed << std::setprecision(2) << _singleAmpFractions.sum().frac() * 100. << " $\\pm$ "  << fcov->getFractionSumError() * 100. <<  " \\\\" << "\n";
+  os << "\\hline" << "\n";
+  os << "\\hline" << "\n";
+  os << "\\end{tabular}" << "\n";
+  os << "\\label{table:ampFit}" << "\n";
+  os << "\\end{table}";	
+  os.close();
   
   return true;
 }

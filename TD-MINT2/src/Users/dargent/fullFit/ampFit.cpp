@@ -817,8 +817,8 @@ public:
     void doFinalStatsAndSaveForAmp12(MINT::Minimiser* min=0,const std::string& fname = "FitAmpResults", const std::string& fnameROOT="fitFractions"){
         _amps->redoIntegrator();
         _amps_bar->redoIntegrator();
-        _amps->doFinalStatsAndSave(min,((string)fname+".txt").c_str(),((string)fnameROOT+".root").c_str());
-        _amps_bar->doFinalStatsAndSave(min,((string)fname+"_bar.txt").c_str(),((string)fnameROOT+"_Bar.root").c_str());        
+        _amps->doFinalStatsAndSave(min,((string)fname+".tex").c_str(),((string)fnameROOT+".root").c_str());
+        _amps_bar->doFinalStatsAndSave(min,((string)fname+"_bar.tex").c_str(),((string)fnameROOT+"_Bar.root").c_str());        
     }
     
     FullAmpsPdfFlexiFastCPV(
@@ -1265,12 +1265,13 @@ void ampFit(int step=0){
     //AddAmpsToList(fas_tmp, fas, "K(1)(1400)+");
     AddAmpsToList(fas_tmp, fas, "K*(1410)+");
     //AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)");
+    //AddAmpsToList(fas_tmp, fas_bar, "NonResS0(->Ds-,K+)");
 
     //AddAmpsToList(fas_tmp, fas_bar, "K(1)(1400)+");
     AddAmpsToList(fas_tmp, fas_bar, "K(1460)");
+    //AddAmpsToList(fas_tmp, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)");
     AddAmpsToList(fas_tmp, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)");
-    //AddAmpsToList(fas_tmp, fas_bar, "NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)");
-    //AddAmpsToList(fas_tmp, fas_bar, "NonResS0(->Ds-,K+),rho(770)0(->pi+,pi-)");
+    //AddAmpsToList(fas_tmp, fas_bar, "NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)");
 
     FitParameter r_4_re("r_4_Re",2,0,0.01);
     FitParameter r_4_im("r_4_Im",2,0,0.01); 
@@ -2166,8 +2167,57 @@ void ampFit(int step=0){
     Sbar_val = k_fit_CP[5];
     pdf.coherenceFactor();
 
-    pdf.doFinalStatsAndSaveForAmp12(&mini,((string)OutputDir+"FitAmpResults_rand_"+anythingToString((int)seed)).c_str(),((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
-   
+    string outTableName = (string)OutputDir+"FitAmpResults_"+anythingToString((int)seed);
+    if(updateAnaNote)outTableName = "../../../../../TD-AnaNote/latex/tables/fullFit/"+(string)OutputDir+"fitFractions";
+
+    pdf.doFinalStatsAndSaveForAmp12(&mini,outTableName,((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
+
+    /// Create result tables
+    if(updateAnaNote){
+
+	ofstream resultsfile;
+	resultsfile.open(("../../../../../TD-AnaNote/latex/tables/fullFit/"+(string)OutputDir+"result.tex").c_str(),std::ofstream::trunc);
+	resultsfile << "\\begin{table}[h]" << "\n";
+	resultsfile << "\\centering" << "\n";
+// 	resultsfile << "\\small" << "\n";
+	resultsfile << "\\caption{Result of the time-dependent amplitude fit to "; 
+	resultsfile << "$B_s \\to D_s K \\pi \\pi$";
+	resultsfile << " data.}\n";
+	resultsfile << "\\begin{tabular}{c c}" << "\n";
+	resultsfile << "\\hline" << "\n";
+	resultsfile << "\\hline" << "\n";
+	resultsfile << "Fit parameter & Value \\\\" << "\n";
+	resultsfile << "\\hline" << "\n";
+	resultsfile << std::fixed << std::setprecision(3) 
+	<< "$x_{-}$ & " 
+// 	<<   mps->getParPtr("xm")->mean() 
+	<< " xx.xx " 
+	<< " $\\pm$ " << mps->getParPtr("xm")->err() << "\\\\" << "\n";
+	resultsfile << std::fixed << std::setprecision(3) 
+	<< "$y_{-}$ & " 
+// 	<<   mps->getParPtr("ym")->mean() 
+	<< " xx.xx " 
+	<< " $\\pm$ " << mps->getParPtr("ym")->err() << "\\\\" << "\n";
+	resultsfile << std::fixed << std::setprecision(3) 
+	<< "$x_{+}$ & " 
+// 	<<   mps->getParPtr("xp")->mean() 
+	<< " xx.xx " 
+	<< " $\\pm$ " << mps->getParPtr("xp")->err() << "\\\\" << "\n";
+	resultsfile << std::fixed << std::setprecision(3) 
+	<< "$y_{+}$ & " 
+// 	<<   mps->getParPtr("yp")->mean() 
+	<< " xx.xx " 
+	<< " $\\pm$ " << mps->getParPtr("yp")->err() << "\\\\" << "\n";
+	
+	resultsfile << "\\hline" << "\n";
+	resultsfile << "\\hline" << "\n";
+	resultsfile << "\\end{tabular}" << "\n";
+	resultsfile << "\\label{table:fullFit_" << (string) channel << "}" << "\n";
+	resultsfile << "\\end{table}";	
+	resultsfile.close();
+
+    } 
+  
     /// Data histograms
     TH1D* h_t = new TH1D("h_t",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU);    
     TH1D* h_t_mixed = new TH1D("h_t_mixed",";t (ps);Events (norm.) ",nBinst,min_TAU,max_TAU_ForMixingPlot);

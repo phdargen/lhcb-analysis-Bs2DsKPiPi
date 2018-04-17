@@ -625,12 +625,24 @@ class TimePdfMaster
         return _cosh_coeff->calibrate(evt.getValueFromVector(4), _avg_eta_os, _p0_os, _p1_os, _delta_p0_os, _delta_p1_os);
     }
     
+    std::pair<double, double> getCalibratedMistag_OS(IDalitzEvent& evt,double& avg_eta_os,double& p0_os,double& p1_os,double& delta_p0_os,double& delta_p1_os ){
+        return _cosh_coeff->calibrate(evt.getValueFromVector(4), avg_eta_os, p0_os, p1_os, delta_p0_os, delta_p1_os);
+    }
+    
     std::pair<double, double> getCalibratedMistag_SS(IDalitzEvent& evt){
         return _cosh_coeff->calibrate(evt.getValueFromVector(6), _avg_eta_ss, _p0_ss, _p1_ss, _delta_p0_ss, _delta_p1_ss);
     }
-    
+
+    std::pair<double, double> getCalibratedMistag_SS(IDalitzEvent& evt,double& avg_eta_ss,double& p0_ss,double& p1_ss,double& delta_p0_ss,double& delta_p1_ss ){
+        return _cosh_coeff->calibrate(evt.getValueFromVector(6), avg_eta_ss, p0_ss, p1_ss, delta_p0_ss, delta_p1_ss);
+    }
+        
     double getCalibratedResolution(double& dt){
         return _offset_sigma_dt + _scale_sigma_dt * dt + _scale_sigma_2_dt * dt *dt;
+    }
+
+    double getCalibratedResolution(double& dt,double& scale_sigma_dt,double& scale_sigma_2_dt){
+        return _offset_sigma_dt + scale_sigma_dt * dt + scale_sigma_2_dt * dt *dt;
     }
     
    void listFitParDependencies(){
