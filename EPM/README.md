@@ -12,7 +12,7 @@ Options that you can set in the files are:
 
 - General:
 ---------------------------------------------------
-datafile = "<path-to-rootfile>"
+datafile = "path-to-rootfile"
 
 TupleName = "TreeName"
 
@@ -27,6 +27,7 @@ CalibrationDegree = 1 # the usual linear calibration model, set 2 for quadratic 
 CalibrationModel = "POLY"
 
 UseNewtonRaphson = 0 # use minuit (more stable), NewtonRaphson is good for big samples
+
 
 Selection = "CutString" # e.g. year == 11 || year == 12 for Run1 only
 
@@ -52,6 +53,7 @@ UseWeight      = 1 # using sWeights / MC weights
 
 BranchWeight   = "N_Bs_sw" 
 
+
 UseTau  = 1 # set 0 for MC, where TRUEID = ID at production 
 
 TypeTau = "Double_t"
@@ -66,6 +68,7 @@ TypeTauErr = "Double_t"
 
 BranchTauErr = "Bs_DTF_TAUERR"
 
+
 DrawOscillationPlots = 1 # draws  A = mixed-unmixed (normalized to 1) 
 
 OscillationPlotsMaximum = 1 # default, draws one period  
@@ -76,6 +79,8 @@ OscillationPlotsMaximum = 1 # default, draws one period
 ResolutionGaussian1_A = 0.0103 # in ps (same as on our tuples)
 
 ResolutionGaussian1_B = 1.28
+
+
 
 This corresponds to scaling of the form: sigma_t_eff = A + B * sigma_t
 
@@ -113,6 +118,8 @@ OS_nnetKaon_InOSComb = 1
 
 VtxCharge_InOSComb = 1
 
+
+
 PerformOfflineCombination_OSplusSS = 1 # set for combining OS_Combination + one SS tagger
 
 OS_Combination_InComb = 1
@@ -130,12 +137,13 @@ Combination_Write = 1
 
 CalibratedOutputFile = <"outputfileName.root">
 
+
 saves the combined tagging decision and probabilities in <outputfile>
 
 
 -Import Calibration from file:
 -------------------------------------------------
-import "<path-to-CalibFile.py>"
+import "path-to-CalibFile.py"
 
 In this case set DoCalibrations = 0 above.
 
