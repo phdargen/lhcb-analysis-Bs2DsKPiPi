@@ -26,9 +26,16 @@
 #include "RooCategory.h"
 #include "RooDataHist.h"
 #include "RooHistPdf.h"
+#include "RooBDecay.h"
+#include "RooEffProd.h"
+#include "RooProdPdf.h"
+#include "RooProduct.h"
+#include "RooGaussModel.h"
+#include "RooMCStudy.h"
 
 #include "Mint/RooGaussEfficiencyModel.h"
 #include "Mint/RooCubicSplineFun.h"
+#include "Mint/RooCubicSplinePdf.h"
 #include "Mint/DecRateCoeff_Bd.h"
 #include "Mint/TimePdfIntegrator.h"
 
@@ -95,6 +102,8 @@ class TimePdfMaster
     RooCategory* _r_q_SS;
     RooRealVar* _r_eta_SS;
     RooCategory* _r_f;
+    RooCategory* _r_run;
+    RooCategory* _r_trigger;
 
     RooRealVar* _r_tau;
     RooRealVar* _r_dGamma;
@@ -137,6 +146,7 @@ class TimePdfMaster
 
     // Acceptance function
     RooCubicSplineFun* _spline;
+    RooProduct* _splinePdf;
     RooGaussEfficiencyModel* _efficiency;
     
     // CP coefficients
@@ -163,11 +173,16 @@ class TimePdfMaster
     
     // Marginal pdfs
     string _marginalPdfsPrefix;
-    
+    TFile* _f_pdfs;
+
     TH1D* _h_dt;
     RooDataHist* _r_h_dt;
     RooAbsPdf* _pdf_sigma_t;
     
+    TH1D* _h_q_f;
+    TH1D* _h_q_OS;
+    TH1D* _h_q_SS;
+
     RooAbsPdf* _pdf_eta_OS;
     TH1D* _h_eta_OS;
     RooDataHist* _r_h_eta_OS;
@@ -181,6 +196,17 @@ class TimePdfMaster
     NamedParameter<double> _max_TAU;
     NamedParameter<double> _min_TAUERR;
     NamedParameter<double> _max_TAUERR;
+
+    // 
+    RooBDecay* _samplingPdf_t;
+    RooBDecay* _fitPdf_t;
+    RooGaussModel* _resmodel;
+    RooEffProd* _samplingPdf_t_eff;
+    RooProdPdf* _samplingPdf;
+    RooProdPdf* _fitPdf;
+    RooDataSet* _protoData; 
+    RooDataSet* _protoData_rt; 
+    RooMCStudy* _sampleGen;
 
  public:
     TimePdfMaster(const MINT::FitParameter& tau, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
@@ -253,7 +279,13 @@ class TimePdfMaster
         _r_q_SS->defineType("B-", -1) ;
         _r_q_SS->defineType("untagged", 0);
         _r_eta_SS = new RooRealVar("eta_SS", "eta_SS",0.,0.5);
-        
+        _r_run = new RooCategory("run", "run");
+        _r_run->defineType("Run1", 1);
+        _r_run->defineType("Run2", 2);
+        _r_trigger = new RooCategory("trigger", "trigger");
+        _r_trigger->defineType("t0", 0);
+        _r_trigger->defineType("t1", 1);
+
         // Fit parameters
         _r_tau = new RooRealVar("tau", "tau",_tau);
         _r_dGamma = new RooRealVar("dGamma", "dGamma",_dGamma);
@@ -320,9 +352,11 @@ class TimePdfMaster
         tacc_list.add(*_coeff_last);	
         
         // Cubic spline function
-        _spline = new RooCubicSplineFun("splinePdf", "splinePdf", *_r_t, myBinning, tacc_list);        
+        _spline = new RooCubicSplineFun("spline", "spline", *_r_t, myBinning, tacc_list);        
+        //_splinePdf = new RooCubicSplinePdf("splinePdf", "splinePdf", *_r_t, myBinning, tacc_list);
+	_splinePdf = new RooProduct("splinePdf", "splinePdf", RooArgList(*_spline,RooRealConstant::value(0.1)));
+
         //_efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt, *_r_scale_mean_dt, *_r_scale_sigma_dt );
-        
         _r_dt_scaled = (RooRealVar*) new RooFormulaVar( "r_dt_scaled","r_dt_scaled", "@0+@1*@2+@3*@2*@2",RooArgList(*_r_offset_sigma_dt,*_r_scale_sigma_dt,*_r_dt,*_r_scale_sigma_2_dt));
         _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt_scaled, *_r_scale_mean_dt, RooRealConstant::value(1.) );
         
@@ -484,9 +518,9 @@ class TimePdfMaster
 		_pdf_eta_SS = (RooAbsPdf*) (new RooUniform("pdf_eta_SS","pdf_eta_SS",*_r_eta_SS));
 	}
 	else {
-		TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
+		_f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
 	
-		_h_dt = new TH1D( *((TH1D*) f_pdfs->Get(("h_dt_norm_"+(string)_marginalPdfsPrefix).c_str())));
+		_h_dt = new TH1D( *((TH1D*) _f_pdfs->Get(("h_dt_norm_"+(string)_marginalPdfsPrefix).c_str())));
 		// RooHistPdf doesn't like negative or 0 bins (can happen due to sweights), set them to a small positive number
 		_h_dt->Smooth();
 		for(int i= 1 ; i<=_h_dt->GetNbinsX(); i++){
@@ -495,7 +529,7 @@ class TimePdfMaster
 		_r_h_dt = new RooDataHist("r_h_dt","r_h_dt",*_r_dt,_h_dt);
 		_pdf_sigma_t = (RooAbsPdf*) (new RooHistPdf("pdf_sigma_t","pdf_sigma_t",*_r_dt,*_r_h_dt));
 		
-		_h_eta_OS = new TH1D( *((TH1D*) f_pdfs->Get(("h_w_OS_norm_"+(string)_marginalPdfsPrefix).c_str())));
+		_h_eta_OS = new TH1D( *((TH1D*) _f_pdfs->Get(("h_w_OS_norm_"+(string)_marginalPdfsPrefix).c_str())));
 		_h_eta_OS->Smooth();
 		for(int i= 1 ; i<=_h_eta_OS->GetNbinsX(); i++){
 			if(_h_eta_OS->GetBinContent(i) <= 0.)_h_eta_OS->SetBinContent(i,0.000000001*_h_eta_OS->GetMaximum());
@@ -503,15 +537,19 @@ class TimePdfMaster
 		_r_h_eta_OS = new RooDataHist("r_eta_OS","r_eta_OS",*_r_eta_OS,_h_eta_OS);
 		_pdf_eta_OS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_OS","pdf_eta_OS",*_r_eta_OS,*_r_h_eta_OS));
 		
-		_h_eta_SS = new TH1D( *((TH1D*) f_pdfs->Get(("h_w_SS_norm_"+(string)_marginalPdfsPrefix).c_str())));
+		_h_eta_SS = new TH1D( *((TH1D*) _f_pdfs->Get(("h_w_SS_norm_"+(string)_marginalPdfsPrefix).c_str())));
 		_h_eta_SS->Smooth();
 		for(int i= 1 ; i<=_h_eta_SS->GetNbinsX(); i++){
 			if(_h_eta_SS->GetBinContent(i) <= 0.)_h_eta_SS->SetBinContent(i,0.000000001*_h_eta_SS->GetMaximum());
 		}
 		_r_h_eta_SS = new RooDataHist("r_eta_SS","r_eta_SS",*_r_eta_SS,_h_eta_SS);
 		_pdf_eta_SS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_SS","pdf_eta_SS",*_r_eta_SS,*_r_h_eta_SS));
-		
-		f_pdfs->Close();
+
+		_h_q_f = new TH1D( *((TH1D*) _f_pdfs->Get(("h_q_f_norm_"+(string)_marginalPdfsPrefix).c_str())));
+		_h_q_OS = new TH1D( *((TH1D*) _f_pdfs->Get(("h_q_OS_norm_"+(string)_marginalPdfsPrefix).c_str())));
+		_h_q_SS = new TH1D( *((TH1D*) _f_pdfs->Get(("h_q_SS_norm_"+(string)_marginalPdfsPrefix).c_str())));
+
+		//f_pdfs->Close();
 		/*
 		TH1F *h_spline = new TH1F("", "", 100, _min_TAU, _max_TAU);
 		for (int i = 1; i<=h_spline->GetNbinsX(); i++) {
@@ -525,8 +563,78 @@ class TimePdfMaster
 		c->Print("spline.eps");
 		*/
     	}
+
+
+	_resmodel = new RooGaussModel("resmodel", "resmodel", *_r_t,  RooRealConstant::value(0.), *_r_dt_scaled);              
+
+	_samplingPdf_t = new RooBDecay(("samplingPdf_t"+(string)_marginalPdfsPrefix).c_str(), ("samplingPdf_t"+(string)_marginalPdfsPrefix).c_str(),
+				*_r_t,*_r_tau, *_r_dGamma, 
+                                *_cosh_coeff,*_sinh_coeff,*_cos_coeff,*_sin_coeff,
+				*_r_dm, *_resmodel, RooBDecay::SingleSided); 
+
+   	_samplingPdf_t_eff = new RooEffProd(("samplingPdf_t_eff"+(string)_marginalPdfsPrefix).c_str(), ("samplingPdf_t_eff"+(string)_marginalPdfsPrefix).c_str(),
+						 *_samplingPdf_t, *_splinePdf);
+	
+        _samplingPdf = new RooProdPdf(("samplingPdf"+(string)_marginalPdfsPrefix).c_str(),("samplingPdf"+(string)_marginalPdfsPrefix).c_str(),
+				RooArgSet(*_pdf_sigma_t,*_pdf_eta_OS,*_pdf_eta_SS),Conditional(RooArgSet(*_samplingPdf_t_eff),RooArgSet(*_r_t,*_r_f,*_r_q_OS,*_r_q_SS)));
+
+
+	_fitPdf_t = new RooBDecay(("fitPdf_t"+(string)_marginalPdfsPrefix).c_str(), ("fitPdf_t"+(string)_marginalPdfsPrefix).c_str(),
+				*_r_t,*_r_tau, *_r_dGamma, 
+                                *_cosh_coeff,*_sinh_coeff,*_cos_coeff,*_sin_coeff,
+				*_r_dm, *_efficiency, RooBDecay::SingleSided); 
+
+        _fitPdf = new RooProdPdf(("fitPdf"+(string)_marginalPdfsPrefix).c_str(),("fitPdf"+(string)_marginalPdfsPrefix).c_str(),
+				RooArgSet(*_pdf_sigma_t,*_pdf_eta_OS,*_pdf_eta_SS),Conditional(RooArgSet(*_fitPdf_t),RooArgSet(*_r_t,*_r_f,*_r_q_OS,*_r_q_SS)));
+
+    	//_protoData = 0; //new RooDataSet("protoData","protoData",RooArgSet(*_r_dt,*_r_f,*_r_q_OS,*_r_eta_OS,*_r_q_SS,*_r_eta_SS));
+	//_sampleGen = 0;
     }
     
+    RooDataSet* sampleEvents(int N = 10000, int run = -1, int trigger = -1){
+	//cout << "Sample " << N << " events" << endl;
+	//_samplingPdf->Print("v");
+        if(_sampleGen == 0){
+    		_protoData = new RooDataSet("protoData","protoData",RooArgSet(*_r_dt,*_r_f,*_r_q_OS,*_r_eta_OS,*_r_q_SS,*_r_eta_SS));
+    		_protoData_rt = new RooDataSet("protoData_rt","protoData_rt",RooArgSet(*_r_run,*_r_trigger));
+		for(int i = 0 ; i < N; i++){
+ 		        _r_dt->setVal(_h_dt->GetRandom());        
+ 		        _r_q_SS->setIndex((int)_h_q_SS->GetBinCenter(_h_q_SS->FindBin(_h_q_SS->GetRandom())));
+         		_r_q_OS->setIndex((int)_h_q_OS->GetBinCenter(_h_q_OS->FindBin(_h_q_OS->GetRandom())));
+         		_r_f->setIndex((int)_h_q_f->GetBinCenter(_h_q_f->FindBin(_h_q_f->GetRandom())));
+         		_r_eta_OS->setVal(_h_eta_OS->GetRandom());
+         		_r_eta_SS->setVal(_h_eta_SS->GetRandom());
+		        _protoData->add(RooArgSet(*_r_dt,*_r_q_OS,*_r_q_SS,*_r_f,*_r_eta_OS,*_r_eta_SS));
+         		_r_run->setIndex(run);
+         		_r_trigger->setIndex(trigger);
+		        _protoData_rt->add(RooArgSet(*_r_run,*_r_trigger));
+		}
+		_sampleGen = new RooMCStudy(*_samplingPdf,RooArgSet(*_r_t),ProtoData(*_protoData,kFALSE,kTRUE));
+	}
+	_sampleGen->generate(1,N,kTRUE);
+	RooDataSet* data = (RooDataSet*)_sampleGen->genData(0);
+	data->merge(_protoData_rt);
+/*	RooDataSet* data = _samplingPdf->generate(RooArgSet(*_r_t),N,ProtoData(*protoData,kFALSE,kTRUE));*/
+// 	RooDataSet* data = _samplingPdf->generate(RooArgSet(*_r_t,*_r_dt,*_r_eta_OS,*_r_eta_SS,*_r_f,*_r_q_OS,*_r_q_SS),N,ProtoData(*protoData,kFALSE,kTRUE));
+	//data->Print("v");
+	return data;
+    }
+
+    void fillProtoData(double dt, int f, int q_OS, double eta_OS, int q_SS, double eta_SS){
+        _r_dt->setVal(dt);        
+        _r_q_SS->setIndex(q_SS);
+        _r_q_OS->setIndex(q_OS);
+        _r_f->setIndex(f);
+        _r_eta_OS->setVal(eta_OS);
+        _r_eta_SS->setVal(eta_SS);
+        _protoData->add(RooArgSet(*_r_dt,*_r_f,*_r_q_OS,*_r_eta_OS,*_r_q_SS,*_r_eta_SS));
+    }
+
+    double getSamplingPdfVal(IDalitzEvent& evt){
+	setAllObservablesAndFitParameters(evt);
+	return _fitPdf->getVal(RooArgSet(*_r_t,*_r_dt,*_r_eta_OS,*_r_eta_SS,*_r_f,*_r_q_OS,*_r_q_SS));
+    }
+
     double get_cosh_term_Val(IDalitzEvent& evt){
         return _cosh_coeff->evaluate() * _cosh_term->getVal(evt).real();
     }
@@ -604,7 +712,11 @@ class TimePdfMaster
                 * ( abs(q_OS) * _pdf_eta_OS->getVal(RooArgSet(*_r_eta_OS)) + ( 1. - abs(q_OS)) * 1./0.5 )
                 * ( abs(q_SS) * _pdf_eta_SS->getVal(RooArgSet(*_r_eta_SS)) + ( 1. - abs(q_SS)) * 1./0.5 );
     }
-    
+
+    double get_marginalPdfs_product(IDalitzEvent& evt){
+        return  _pdf_sigma_t->getVal(RooArgSet(*_r_dt)) * _pdf_eta_OS->getVal(RooArgSet(*_r_eta_OS)) * _pdf_eta_SS->getVal(RooArgSet(*_r_eta_SS));
+    }
+
     double get_spline_Val(IDalitzEvent& evt){
         return  _spline->getVal();
     }
@@ -624,6 +736,10 @@ class TimePdfMaster
     std::pair<double, double> getCalibratedMistag_OS(IDalitzEvent& evt){
         return _cosh_coeff->calibrate(evt.getValueFromVector(4), _avg_eta_os, _p0_os, _p1_os, _delta_p0_os, _delta_p1_os);
     }
+
+    std::pair<double, double> getCalibratedMistag_OS(double& eta_OS){
+        return _cosh_coeff->calibrate(eta_OS, _avg_eta_os, _p0_os, _p1_os, _delta_p0_os, _delta_p1_os);
+    }
     
     std::pair<double, double> getCalibratedMistag_OS(IDalitzEvent& evt,double& avg_eta_os,double& p0_os,double& p1_os,double& delta_p0_os,double& delta_p1_os ){
         return _cosh_coeff->calibrate(evt.getValueFromVector(4), avg_eta_os, p0_os, p1_os, delta_p0_os, delta_p1_os);
@@ -635,6 +751,10 @@ class TimePdfMaster
 
     std::pair<double, double> getCalibratedMistag_SS(IDalitzEvent& evt,double& avg_eta_ss,double& p0_ss,double& p1_ss,double& delta_p0_ss,double& delta_p1_ss ){
         return _cosh_coeff->calibrate(evt.getValueFromVector(6), avg_eta_ss, p0_ss, p1_ss, delta_p0_ss, delta_p1_ss);
+    }
+
+    std::pair<double, double> getCalibratedMistag_SS(double& eta_SS){
+        return _cosh_coeff->calibrate(eta_SS, _avg_eta_ss, _p0_ss, _p1_ss, _delta_p0_ss, _delta_p1_ss);
     }
         
     double getCalibratedResolution(double& dt){
