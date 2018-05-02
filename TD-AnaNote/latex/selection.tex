@@ -1,39 +1,90 @@
 % !TEX root = main.tex
 
-\section{Selection}
+\section{Data samples and event selection}
 \label{sec:Selection}
 
-For the presented analysis, we reconstruct the $\Bs\to\Ds\kaon\pion\pion$ decay through two different final states of the $\Ds$ meson, $\Ds\to\kaon\kaon\pion$ and $\Ds\to\pion\pion\pion$.
-Of those two final states $\Ds\to\kaon\kaon\pion$ is the most prominent one,
-while $\mathcal{BR}(\Ds\to\pion\pion\pion) \approx 0.2\cdot\mathcal{BR}(\Ds\to\kaon\kaon\pion)$ holds for the other one. \newline
+%Throughout the note, we abbreviate $\Bs\to\Ds X_{s}(\to\kaon\pion\pion)$ and $\Bs\to\Ds X_{d}(\to\pion\pion\pion)$. 
+%, identifying $X_{s}\to\kaon\pion\pion$ and $X_{d}\to\pion\pion\pion$ as the various resonances through which the decays proceed. 
+
+\subsection{Stripping and Trigger selection}
+
+The dataset used for this analysis corresponds to $1 \invfb$ of proton-proton collision data
+collected in 2011 with a centre of mass energy $\sqrt{s} = 7\tev$,  $2 \invfb$  collected in
+2012 with $\sqrt{s} = 7\tev$ and $2 \invfb$  collected in
+2015/2016 with $\sqrt{s} = 13\tev$.
+Candidate $\Bs\to\Ds\kaon\pion\pion$ ($\Bs\to\Ds\pion\pion\pion$) decays are reconstructed using the
+\textsf{B02DKPiPiD2HHHPIDBeauty2CharmLine} (\textsf{B02DPiPiPiD2HHHPIDBeauty2CharmLine})
+line of the \textsf{BHadronCompleteEvent} stream of  
+\textsf{Stripping21r1} (2011), \textsf{Stripping21} (2012),
+\textsf{Stripping24r1} (2015)  and \textsf{Stripping28r1p1} (2016).
+%and \textsf{Stripping29r2} (2017)
+Both stripping lines employ the same selection cuts, listed in Appendix \ref{sec:StripAndTrigger}, except for the PID requirement on the bachelor kaon/pion.
+We reconstruct the $\Bs\to\Ds h\pion\pion$ decay through two different final states of the $\Ds$ meson, $\Ds\to\kaon\kaon\pion$ and $\Ds\to\pion\pion\pion$.
+Of those, $\Ds\to\kaon\kaon\pion$ is the most prominent final state,
+while $\mathcal{BR}(\Ds\to\pion\pion\pion) \approx 0.2\cdot\mathcal{BR}(\Ds\to\kaon\kaon\pion)$ holds for the other one. 
+
+Events that pass the stripping selection are further required to fulfill the following trigger requirements:
+at the hardware stage, the $\Bs$ candidates are required to be TOS on the \textsf{L0Hadron} trigger or TIS on \textsf{L0Global};
+at Hlt1, $\Bs$ candidates are required to be TOS on the \textsf{Hlt1TrackAllL0} (\textsf{Hlt1TrackMVA} or \textsf{Hlt1TwoTrackMVA}) trigger line for Run-I (Run-II) data;
+at Hlt2, candidates have to be TOS on either one of the 2, 3 or 4-body topological trigger lines or the inclusive $\phi$ trigger. 
+More details on the used HLT lines are given in Appendix \ref{sec:StripAndTrigger}.
+
+Due to a residual kinematic dependence on whether the event is triggered by \textsf{L0Hadron} or not and on the data taking condition,
+the analysis is performed in four disjoint categories: 
+$[\text{Run-I,}\textsf{L0-TOS}]$, $[\text{Run-I,}\textsf{L0-TIS}]$, $ [\text{Run-II,}\textsf{L0-TOS}]$ and $ [\text{Run-II,}\textsf{L0-TIS}]$,
+where for simplicity we denote $\textsf{L0-TOS}$ as $\textsf{L0Hadron-TOS}$ and $\textsf{L0-TIS} $ as $ (\textsf{L0Global-TIS} \text{ and not } \textsf{L0Hadron-TOS}$).
+ 
+
+
+\subsection{Offline selection}
+
 A two-fold approach is used to isolate the $\Bs\to\Ds\kaon\pion\pion$ candidates from data passing the stripping line. 
 First, further one-dimensional cuts are applied to reduce the level of combinatorial background and to veto some specific physical background. 
 This stage is specific to the respective final state in which the $\Ds$ meson is reconstructed, since different physical backgrounds, depending on the respective final state, have to be taken into account.   
 After that, a multivariate classifier is trained which combines the information of several input variables, including their correlation, into one powerful discriminator
 between signal and combinatorial background. For this stage, all possible $\Ds$ final states are treated equally. 
 
-\subsection{Cut-based selection}
+In order to clean up the sample and to align the Run-I to the slightly tighter Run-2 stripping selection, we apply the following loose cuts to the b hadron:
+\begin{itemize}
+\item DIRA $>$ 0.99994
+\item min IP $\chi^{2}$ $<$ 20 to any PV,
+\item FD $\chi^{2}$ $>$ 100 to any PV,
+\item Vertex $\chi^{2}$/nDoF $<$ 8,
+%\item ($Z_{\Ds}-Z_{\Bs}$) $>$ 0 , where $Z_{M}$ is the z-component of the position $\vec{x}$ of the decay vertex for the $\Bs$/$\Ds$ meson.
+\end{itemize}    
 
-In order to minimize the contribution of combinatorial background to our samples, we apply the following cuts to the b hadron:
+The most prominent final state used in this analysis is $\Bs\to\Ds(\to\kaon\kaon\pion)\kaon\pion\pion$, 
+where the $\Ds$ decay can either proceed via the narrow $\phiz$ resonance, the broader $\Kstarz$ resonance, or non resonant.
+Depending on the decay process being resonant or not, we apply additional PID requirements on this final state:
+
+\begin{itemize}
+\item resonant case: 
+\begin{itemize}
+\item $\Dsp\to\phiz\pip$, with $|M(\Kp\Km) - m_{\phiz}|$ $<$ 20 $\mevcc$ : no additional requirements, since $\phiz$ is narrow and almost pure $\Kp\Km$. 
+\item $\Dsp\to\Kstarzb\Kp$, with  $|M(\Km\pip) -m_{\Kstarz}|$ $<$ 75 $\mevcc$ :  $\dllkpi$ $>$ 0 for kaons, since this resonance is more than ten times broader than $\phiz$. 
+\end{itemize}
+
+\item non resonant case: $\dllkpi$ $>$ 5 for kaons, since the non resonant category has significant charmless contributions.
+
+\end{itemize}
+
+
+For the $\Ds\to\pion\pion\pion$ final state, we apply global PID requirements:
 
 \begin{itemize}
 
-\item DIRA $>$ 0.99994
+\item $\dllkpi$ $<$ 10 for all pions.
 
-\item min IP $\chi^{2}$ $<$ 20 to any PV,
+\item $\dllppi$ $<$ 10 for all pions.
 
-\item FD $\chi^{2}$ $>$ 100 to any PV,
+\end{itemize}
+ 
 
-\item Vertex $\chi^{2}$/nDoF $<$ 8,
 
-\item ($Z_{\Ds}-Z_{\Bs}$) $>$ 0 , where $Z_{M}$ is the z-component of the position $\vec{x}$ of the decay vertex for the $\Bs$/$\Ds$ meson.
-
-\end{itemize}    
-
+\subsubsection{Physics background vetoes}
 
 Additionally, we veto various physical backgrounds, which have either the same final state as our signal decay, or can contribute via a single misidentification of $\kaon\to\pion$ or $\kaon\to\proton$. 
 In the following, the vetoes are ordered by the reconstructed $\Ds$ final state they apply to: 
-
 
 \begin{enumerate}
 
@@ -72,37 +123,7 @@ or the $\Kp$ has to fulfill ($\dllkpi$ - $\dllppi$) $>$ 5.
 
 \end{enumerate}
 
-
-The most prominent final state used in this analysis is $\Bs\to\Ds(\to\kaon\kaon\pion)\kaon\pion\pion$, 
-where the $\Ds$ decay can either proceed via the narrow $\phiz$ resonance, the broader $\Kstarz$ resonance, or non resonant.
-Depending on the decay process being resonant or not, we apply additional PID requirements on this final state:
-
-\begin{itemize}
-
-\item resonant case: 
-\begin{itemize}
-\item $\Dsp\to\phiz\pip$, with $|M(\Kp\Km) - m_{\phiz}|$ $<$ 20 $\mevcc$ : no additional requirements, since $\phiz$ is narrow and almost pure $\Kp\Km$. 
-\item $\Dsp\to\Kstarzb\Kp$, with  $|M(\Km\pip) -m_{\Kstarz}|$ $<$ 75 $\mevcc$ :  $\dllkpi$ $>$ 0 for kaons, since this resonance is more than ten times broader than $\phiz$. 
-\end{itemize}
-
-\item non resonant case: $\dllkpi$ $>$ 5 for kaons, since the non resonant category has significant charmless contributions.
-
-\end{itemize}
-
-
-For the $\Ds\to\pion\pion\pion$ final state, we apply global PID requirements:
-
-\begin{itemize}
-
-\item $\dllkpi$ $<$ 10 for all pions.
-
-\item $\dllppi$ $<$ 10 for all pions.
-
-\end{itemize}
- 
-
-
-\subsection{Multivariate stage}
+\subsubsection{Training of multivariate classifier}
 
 We use TMVA \cite{Hocker:2007ht} to train a multivariate discriminator, which is used to further improve the signal to background ratio. 
 The following variables are used for the training:
@@ -134,18 +155,17 @@ Various classifiers were investigated in order to select the best performing dis
 We use truth-matched MC as signal input. 
 Simulated signal candidates are required to pass the same trigger, stripping and preselection requirements, that were used to select the data samples.  
 For the background we use events from the high mass sideband ($m_{\Bs candidate}$ $>$ 5600 $\mevcc$) of our data samples. 
-As shown in Fig. \ref{fig:massforBDT}, this mass region is sufficiently far away from signal structures and is expected to be dominantly composed of combinatorial background.
-For completeness, the mass distribution of preselected $\Ds\to\hadron\hadron\hadron$ candidates (where $\hadron = \pion$ or $\hadron = \kaon$) is also shown in Fig. \ref{fig:massforBDT}.    \newline
-
-\begin{figure}[h]
-%\vspace*{-0.4cm}
-\includegraphics[height=7.0cm,width=0.49\textwidth]{figs/Ds_MM_afterpresel.pdf}
-\includegraphics[height=7.0cm,width=0.49\textwidth]{figs/Bs_MM_afterpresel.pdf}
-%\vspace*{-0.2cm}
-\caption{Invariant mass distribution of preselected (left) $\Ds\to\hadron\hadron\hadron$ and (right) $\Bs\to\Ds\kaon\pion\pion$ candidates. 
-For the  $\Bs\to\Ds\kaon\pion\pion$ candidates, the region right from the red colored line with $m_{\Bs candidate}$ $>$ 5600 $\mevcc$ is used as background input for the boosted decision tree.}
-\label{fig:massforBDT}
-\end{figure}
+%As shown in Fig. \ref{fig:massforBDT}, this mass region is sufficiently far away from signal structures and is expected to be dominantly composed of combinatorial background.
+%For completeness, the mass distribution of preselected $\Ds\to\hadron\hadron\hadron$ candidates (where $\hadron = \pion$ or $\hadron = \kaon$) is also shown in Fig. \ref{fig:massforBDT}.    \newline
+%\begin{figure}[h]
+%%\vspace*{-0.4cm}
+%\includegraphics[height=7.0cm,width=0.49\textwidth]{figs/Ds_MM_afterpresel.pdf}
+%\includegraphics[height=7.0cm,width=0.49\textwidth]{figs/Bs_MM_afterpresel.pdf}
+%%\vspace*{-0.2cm}
+%\caption{Invariant mass distribution of preselected (left) $\Ds\to\hadron\hadron\hadron$ and (right) $\Bs\to\Ds\kaon\pion\pion$ candidates. 
+%For the  $\Bs\to\Ds\kaon\pion\pion$ candidates, the region right from the red colored line with $m_{\Bs candidate}$ $>$ 5600 $\mevcc$ is used as background input for the boosted decision tree.}
+%\label{fig:massforBDT}
+%\end{figure}
 
 The distributions of the input variables for signal and background and 
 the BDTG output distribution are shown in the appendix.
@@ -157,6 +177,10 @@ the BDTG output distribution are shown in the appendix.
 \caption{}
 \label{fig:}
 \end{figure}
+
+
+\subsubsection{Final selection}
+
 
 %\begin{figure}[h]
 %%\vspace*{-0.4cm}
@@ -232,6 +256,115 @@ the BDTG output distribution are shown in the appendix.
 %\end{figure}
 
 
+\clearpage
+
+
+
+\begin{table}[h]
+\centering
+\caption{Offline selection requirements for $D_s \to 3 h$ candidates.}
+\resizebox{\linewidth}{!}{
+ \renewcommand{\arraystretch}{1.}
+ \small
+ \begin{tabular}{l l l}
+\hline
+\hline
+ & Description & Requirement  \\
+\hline
+$D_s \to h h h$ &  $m(hhh)$ & = $m_{D_s} \pm 20 \mev$  \\
+\\
+$D_s^- \to K K \pi^-$  & $D^0$ veto  & $m(K K) < 1840$ MeV \\
+\\
+$D_s^- \to \phi \pi^-$ & $m(KK)$  & $= m_{\phi} \pm 20$ MeV \\
+& PIDK($K^+$) & $> -10$ \\
+& PIDK($K^-$) & $> -10$ \\
+& PIDK($\pi^-$) & $< 20$ \\
+&  $\chi^{2}_{FD}$ & $> 0$ \\
+&  FD in $z$  &$ > -1$ \\
+& $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV  $||$ $\text{PIDK}(K^-) > 0$\\
+& $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV   $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 0$ \\
+\\
+$D_s^- \to K^{*}(892) K^-$ & $m(KK)$  & $\ne m_{\phi} \pm 20$ MeV \\
+& $m(K^+\pi^-)$  & $= m_{K^{*}(892)} \pm 75$ MeV \\
+& PIDK($K^+$) & $> -10$ \\
+& PIDK($K^-$) & $> -5$ \\
+& PIDK($\pi^-$) & $< 10$ \\
+&  $\chi^{2}_{FD}$ & $> 2$ \\
+&  FD in $z$  &$ > 0$ \\
+& $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV  $||$ $\text{PIDK}(K^-) > 5$\\
+& $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV   $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 5$ \\
+\\
+$D_s^- \to (K K \pi^-)_{NR}$ & $m(KK)$  & $\ne m_{\phi} \pm 20$ MeV \\
+& $m(K^+\pi^-)$  & $\ne m_{K^{*}(892)} \pm 75$ MeV \\
+& PIDK($K^+$) & $> 5$ \\
+& PIDK($K^-$) & $> 5$ \\
+& PIDK($\pi^-$) & $< 10$ \\
+&  $\chi^{2}_{FD}$ & $> 5$ \\
+&  FD in $z$  &$ > 0$ \\
+& $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV  $||$ $\text{PIDK}(K^-) > 20$\\
+& $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV  $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 5$ \\
+\\
+$D_s \to \pi \pi \pi$ & PIDK($\pi$) & $< 10$  \\
+& PIDp($\pi$) & $< 10$ \\
+& $D^0$ veto  & $m(\pip \pim) < 1700$ MeV \\
+&  $\chi^{2}_{FD}$ & $> 9$ \\
+&  FD in $z$  &$ > 0$ \\
+\\
+$D_s^- \to K^- \pip \pim$ & PIDK($K$) & $> 10$  \\
+& PIDK($\pi$) & $< 5$ \\
+& PIDp($\pi$) & $< 10$ \\
+& $D^0$ veto  & $m(K^- \pip) < 1750$ MeV \\
+&  $\chi^{2}_{FD}$ & $> 9$ \\
+&  FD in $z$  &$ > 0$ \\
+\\
+\hline
+\hline
+\end{tabular}
+}
+\label{table:selDs}
+\end{table}
+
+
+\begin{table}[h]
+\centering
+\caption{Offline selection requirements for $B_s\to D_s K \pi\pi (D_s \pi\pi\pi)$ candidates.}
+%\resizebox{\linewidth}{!}{
+ \renewcommand{\arraystretch}{1.}
+ \small
+ \begin{tabular}{l l l}
+\hline
+\hline
+ & Description & Requirement  \\
+\hline
+$B_s \to D_s h \pi \pi$  & $m(D_s h \pi \pi)$ & $> 5200 \mev$ \\
+&  $\chi^{2}_{vtx}/\text{ndof}  $&$ <  8$ \\
+& DIRA &$ > 0.99994$ \\
+& $\chi^{2}_{FD}$ & $> 100$ \\
+& $\chi^{2}_{IP}$ & $< 20$ \\
+&  $\chi^{2}_{DTF}/\text{ndof} $&$   <  15 $ \\
+& $t$  & $ > 0.4 \ps$ \\
+& $\delta t$  & $ < 0.15 \ps$ \\
+& Phasespace region & $m(h\pi\pi) < 1.95 \gev$ \\ & & $m(h\pi) < 1.2 \gev$ \\ & & $m(\pi\pi) < 1.2 \gev$ \\
+& Wrong PV veto & nPV = 1 $||$  $\text{min}(\Delta\chi^{2}_{IP}) > 20$ \\
+\\
+$X_s^+ \to K^+ \pi^+ \pi^-$  & PIDK(K) & $> 10$ \\
+& PIDK($\pi^+$) & $< 10$ \\
+& PIDK($\pi^-$) & $< 5$ \\
+& Semi.-lep. veto & isMuon($K^+$) = 0 \\
+\\
+$X_s^+ \to \pi^+ \pi^+ \pi^-$  & PIDK($\pi^+$) & $< 5$ \\
+& PIDK($\pi^-$) & $< 10$ \\
+& Semi.-lep. veto & isMuon($\pip$) = 0 \\
+
+\hline
+\hline
+\end{tabular}
+%}
+\label{table:selBs}
+\end{table}
+
+
+\subsection{Simulation}
 
 
 
