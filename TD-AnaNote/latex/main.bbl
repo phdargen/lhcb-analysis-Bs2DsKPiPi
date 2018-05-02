@@ -51,6 +51,242 @@ LHCb, S.~Blusk, \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of the
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
+\bibitem{Peskin}
+M.~E. Peskin and D.~V. Schroeder, {\em An Introduction To Quantum Field Theory
+  (Frontiers in Physics)}, Westview Press, 1995\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{kinematics}
+E.~Byckling and K.~Kajantie, {\em Particle Kinematics}, John Wiley \& Sons,
+  1973\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{isobar1}
+S.~Mandelstam, J.~E. Paton, R.~F. Peierls, and A.~Q. Sarker,
+  \ifthenelse{\boolean{articletitles}}{\emph{Isobar approximation of production
+  processes},
+  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0003-4916(62)90067-2}{Annals
+  of Physics \textbf{18} (1962), no.~2 198 }\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{isobar}
+D.~J. Herndon, P.~S\"oding, and R.~J. Cashmore,
+  \ifthenelse{\boolean{articletitles}}{\emph{Generalized isobar model
+  formalism}, }{}\href{http://dx.doi.org/10.1103/PhysRevD.11.3165}{Phys.\ Rev.\
+  D \textbf{11} (1975) 3165}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{isobar2}
+J.~J. Brehm, \ifthenelse{\boolean{articletitles}}{\emph{Unitarity and the
+  isobar model: Two-body discontinuities},
+  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0003-4916(77)90023-9}{Annals
+  of Physics \textbf{108} (1977), no.~2 454 }\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Bl2}
+F.~von Hippel and C.~Quigg,
+  \ifthenelse{\boolean{articletitles}}{\emph{Centrifugal-barrier effects in
+  resonance partial decay widths, shapes, and production amplitudes},
+  }{}\href{http://dx.doi.org/10.1103/PhysRevD.5.624}{Phys.\ Rev.\ D \textbf{5}
+  (1972) 624}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{BW}
+J.~D. Jackson, \ifthenelse{\boolean{articletitles}}{\emph{Remarks on the
+  phenomenological analysis of resonances},
+  }{}\href{http://dx.doi.org/10.1007/BF02750563}{Il Nuovo Cimento Series 10
+  \textbf{34} (1964), no.~6 1644}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{PDG2016}
+Particle Data Group, C.~Patrignani {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Review of Particle Physics}},
+  }{}\href{http://dx.doi.org/10.1088/1674-1137/40/10/100001}{Chin.\ Phys.\
+  \textbf{C40} (2016), no.~10 100001}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{BuggSigma}
+D.~V. {Bugg}, \ifthenelse{\boolean{articletitles}}{\emph{{The mass of the
+  {$\sigma$} pole}},
+  }{}\href{http://dx.doi.org/10.1088/0954-3899/34/1/011}{Journal of Physics G
+  Nuclear Physics \textbf{34} (2007) 151},
+  \href{http://arxiv.org/abs/hep-ph/0608081}{{\normalfont\ttfamily
+  arXiv:hep-ph/0608081}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{GS}
+G.~J. Gounaris and J.~J. Sakurai,
+  \ifthenelse{\boolean{articletitles}}{\emph{Finite-width corrections to the
+  vector-meson-dominance prediction for $\rho \rightarrow{e}^{+}{e}^{-}$},
+  }{}\href{http://dx.doi.org/10.1103/PhysRevLett.21.244}{Phys.\ Rev.\ Lett.\
+  \textbf{21} (1968) 244}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Flatte}
+S.~M. Flatt\'{e}, \ifthenelse{\boolean{articletitles}}{\emph{Coupled-channel
+  analysis of the $\pi \eta$ and \text{KK} systems near \text{KK} threshold},
+  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0370-2693(76)90654-7}{Physics
+  Letters B \textbf{63} (1976), no.~2 224 }\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Flatte2}
+BES Collaboration, M.~Ablikim {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Resonances in $\jpsi \to \phi
+  \pip \pim$ and $\phi \Kp \Km$}},
+  }{}\href{http://dx.doi.org/10.1016/j.physletb.2004.12.041}{Phys.\ Lett.\
+  \textbf{B607} (2005) 243},
+  \href{http://arxiv.org/abs/hep-ex/0411001}{{\normalfont\ttfamily
+  arXiv:hep-ex/0411001}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Buggf0}
+D.~V. Bugg, \ifthenelse{\boolean{articletitles}}{\emph{{A study in depth of
+  f0(1370)}}, }{}\href{http://dx.doi.org/10.1140/epjc/s10052-007-0389-1}{Eur.\
+  Phys.\ J.\  \textbf{C52} (2007) 55},
+  \href{http://arxiv.org/abs/0706.1341}{{\normalfont\ttfamily
+  arXiv:0706.1341}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{LHCb:2012ae}
+LHCb Collaboration, R.~Aaij {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Analysis of the resonant
+  components in $B_s \to J/\psi\pi^+\pi^-$}},
+  }{}\href{http://dx.doi.org/10.1103/PhysRevD.86.052006}{Phys.\ Rev.\
+  \textbf{D86} (2012) 052006},
+  \href{http://arxiv.org/abs/1204.5643}{{\normalfont\ttfamily
+  arXiv:1204.5643}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Zemach}
+C.~Zemach, \ifthenelse{\boolean{articletitles}}{\emph{{Use of angular momentum
+  tensors}}, }{}\href{http://dx.doi.org/10.1103/PhysRev.140.B97}{Phys.\ Rev.\
+  \textbf{140} (1965) B97}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Rarita}
+W.~Rarita and J.~Schwinger, \ifthenelse{\boolean{articletitles}}{\emph{{On a
+  theory of particles with half integral spin}},
+  }{}\href{http://dx.doi.org/10.1103/PhysRev.60.61}{Phys.\ Rev.\  \textbf{60}
+  (1941) 61}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{helicity3}
+S.~U. Chung, \ifthenelse{\boolean{articletitles}}{\emph{General formulation of
+  covariant helicity-coupling amplitudes},
+  }{}\href{http://dx.doi.org/10.1103/PhysRevD.57.431}{Phys.\ Rev.\ D
+  \textbf{57} (1998) 431}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Zou}
+B.~S. Zou and D.~V. Bugg, \ifthenelse{\boolean{articletitles}}{\emph{{Covariant
+  tensor formalism for partial wave analyses of $\psi$ decay to mesons}},
+  }{}\href{http://dx.doi.org/10.1140/epja/i2002-10135-4}{Eur.\ Phys.\ J.\
+  \textbf{A16} (2003) 537},
+  \href{http://arxiv.org/abs/hep-ph/0211457}{{\normalfont\ttfamily
+  arXiv:hep-ph/0211457}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Filippini}
+V.~Filippini, A.~Fontana, and A.~Rotondi,
+  \ifthenelse{\boolean{articletitles}}{\emph{{Covariant spin tensors in meson
+  spectroscopy}}, }{}\href{http://dx.doi.org/10.1103/PhysRevD.51.2247}{Phys.\
+  Rev.\  \textbf{D51} (1995) 2247}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Zhu}
+J.-J. Zhu, \ifthenelse{\boolean{articletitles}}{\emph{{Explicit expressions of
+  spin wave functions}},
+  }{}\href{http://arxiv.org/abs/hep-ph/9906250}{{\normalfont\ttfamily
+  arXiv:hep-ph/9906250}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{dArgent:2017gzv}
+P.~d'Argent {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{Amplitude
+  Analyses of $D^0 \to {\pi^+\pi^-\pi^+\pi^-}$ and $D^0 \to {K^+K^-\pi^+\pi^-}$
+  Decays}}, }{}\href{http://dx.doi.org/10.1007/JHEP05(2017)143}{JHEP
+  \textbf{05} (2017) 143},
+  \href{http://arxiv.org/abs/1703.08505}{{\normalfont\ttfamily
+  arXiv:1703.08505}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Williams:2008wu}
+M.~Williams, \ifthenelse{\boolean{articletitles}}{\emph{{Numerical Object
+  Oriented Quantum Field Theory Calculations}},
+  }{}\href{http://dx.doi.org/10.1016/j.cpc.2009.05.017}{Comput.\ Phys.\
+  Commun.\  \textbf{180} (2009) 1847},
+  \href{http://arxiv.org/abs/0805.2956}{{\normalfont\ttfamily
+  arXiv:0805.2956}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Aaij:2017kbo}
+LHCb, R.~Aaij {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{Studies
+  of the resonance structure in $D^{0} \to K^\mp \pi^\pm \pi^\pm \pi^\mp$
+  decays}}, }{}Submitted to: Eur.\ Phys.\ J.\ C (2017)
+  \href{http://arxiv.org/abs/1712.08609}{{\normalfont\ttfamily
+  arXiv:1712.08609}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Lange:2001uf}
+D.~J. Lange, \ifthenelse{\boolean{articletitles}}{\emph{{The EvtGen particle
+  decay simulation package}},
+  }{}\href{http://dx.doi.org/10.1016/S0168-9002(01)00089-4}{Nucl.\ Instrum.\
+  Meth.\  \textbf{A462} (2001) 152}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{GammaCombo}
+\ifthenelse{\boolean{articletitles}}{\emph{Gammacombo package}, }{} 2014\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
 \bibitem{Hocker:2007ht}
 A.~Hoecker {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{TMVA:
   Toolkit for Multivariate Data Analysis}}, }{}PoS \textbf{ACAT} (2007) 040,
@@ -82,10 +318,9 @@ N.~L. Johnson, \ifthenelse{\boolean{articletitles}}{\emph{Systems of frequency
 \EndOfBibitem
 \bibitem{PDG2014}
 Particle Data Group, K.~A. Olive {\em et~al.},
-  \ifthenelse{\boolean{articletitles}}{\emph{{\href{http://pdg.lbl.gov/}{Review
-  of particle physics}}},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Review of Particle Physics}},
   }{}\href{http://dx.doi.org/10.1088/1674-1137/38/9/090001}{Chin.\ Phys.\
-  \textbf{C38} (2014) 090001}, {and 2015 update}\relax
+  \textbf{C38} (2014) 090001}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -119,8 +354,7 @@ Heavy Flavor Averaging Group, Y.~Amhis {\em et~al.},
   $c$-hadron, and $\tau$-lepton properties as of summer 2014}},
   }{}\href{http://arxiv.org/abs/1412.7515}{{\normalfont\ttfamily
   arXiv:1412.7515}}, {updated results and plots available at
-  \href{http://www.slac.stanford.edu/xorg/hfag/}{{\texttt{http://www.slac.stan%
-ford.edu/xorg/hfag/}}}}\relax
+  \href{http://www.slac.stanford.edu/xorg/hfag/}{{\texttt{http://www.slac.stanford.edu/xorg/hfag/}}}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -152,6 +386,85 @@ LHCb, R.~Aaij {\em et~al.},
   $B_s^0 \to D_s^{\mp} K^{\pm}$ decays}}, }{}Submitted to: JHEP (2017)
   \href{http://arxiv.org/abs/1712.07428}{{\normalfont\ttfamily
   arXiv:1712.07428}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Aaij:2017mso}
+LHCb, R.~Aaij {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of $B^0$, $B^0_s$,
+  $B^+$ and $\Lambda^0_b$ production asymmetries in 7 and 8 TeV proton-proton
+  collisions}},
+  }{}\href{http://dx.doi.org/10.1016/j.physletb.2017.09.023}{Phys.\ Lett.\
+  \textbf{B774} (2017) 139},
+  \href{http://arxiv.org/abs/1703.08464}{{\normalfont\ttfamily
+  arXiv:1703.08464}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Gordon:1482647}
+H.~Gordon, R.~W. Lambert, J.~van Tilburg, and M.~Vesterinen,
+  \ifthenelse{\boolean{articletitles}}{\emph{{A Measurement of the $K\pi$
+  Detection Asymmetry}}, }{} Tech. Rep. LHCb-INT-2012-027.
+  CERN-LHCb-INT-2012-027, CERN, Geneva, Feb, 2013\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Davis:2310213}
+A.~Davis {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{Measurement
+  of the instrumental asymmetry for $K^{-}\pi^{+}$-pairs at LHCb in Run 2”}},
+  }{} Tech. Rep. LHCb-PUB-2018-004. CERN-LHCb-PUB-2018-004, CERN, Geneva, Mar,
+  2018\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Bigi:1994aw}
+I.~I.~Y. Bigi and H.~Yamamoto,
+  \ifthenelse{\boolean{articletitles}}{\emph{{Interference between Cabibbo
+  allowed and doubly forbidden transitions in D ---> K(S), K(L) + pi's
+  decays}}, }{}\href{http://dx.doi.org/10.1016/0370-2693(95)00285-S}{Phys.\
+  Lett.\  \textbf{B349} (1995) 363},
+  \href{http://arxiv.org/abs/hep-ph/9502238}{{\normalfont\ttfamily
+  arXiv:hep-ph/9502238}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Guegan:2015mea}
+B.~Guegan, J.~Hardin, J.~Stevens, and M.~Williams,
+  \ifthenelse{\boolean{articletitles}}{\emph{{Model selection for amplitude
+  analysis}}, }{}\href{http://dx.doi.org/10.1088/1748-0221/10/09/P09002}{JINST
+  \textbf{10} (2015), no.~09 P09002},
+  \href{http://arxiv.org/abs/1505.05133}{{\normalfont\ttfamily
+  arXiv:1505.05133}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Tibshirani94regressionshrinkage}
+R.~Tibshirani, \ifthenelse{\boolean{articletitles}}{\emph{Regression shrinkage
+  and selection via the {Lasso}}, }{}Journal of the Royal Statistical Society,
+  Series B \textbf{58} (1994) 267\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{BIC}
+G.~Schwarz, \ifthenelse{\boolean{articletitles}}{\emph{Estimating the dimension
+  of a model}, }{}\href{http://dx.doi.org/10.1214/aos/1176344136}{Ann.\
+  Statist.\  \textbf{6} (1978) 461}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{AIC}
+H.~Akaike, \ifthenelse{\boolean{articletitles}}{\emph{A new look at the
+  statistical model identification},
+  }{}\href{http://dx.doi.org/10.1109/TAC.1974.1100705}{IEEE Transactions on
+  Automatic Control \textbf{19} (1974) 716}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
