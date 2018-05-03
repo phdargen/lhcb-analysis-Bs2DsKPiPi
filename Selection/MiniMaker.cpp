@@ -37,6 +37,7 @@ int main(int argc, char** argv){
     else if(atoi(argv[4]) == 12) year = Year::y12;
     else if(atoi(argv[4]) == 15) year = Year::y15;
     else if(atoi(argv[4]) == 16) year = Year::y16;
+    else if(atoi(argv[4]) == 17) year = Year::y17;
     else {
 		cout << "Missing or wrong config! I'll crash now, see commands.txt how to run me " << endl;
 		throw "ERROR" ;
@@ -47,7 +48,8 @@ int main(int argc, char** argv){
 	    if((string)argv[5] == "Down") polarity = "Down" ;
     }
 
-    DecayTree d(decay, year, finalState, dataType,polarity);
+    /// bools : bkg, ltu, ss
+    DecayTree d(decay, year, finalState, dataType,polarity,"/auto/data/dargent/BsDsKpipi/","/auto/data/dargent/BsDsKpipi/",false,false,false);
     d.Loop();
 
     return 0;

@@ -21,88 +21,46 @@ TTree* DecayTree::GetInputTree(){
     TChain* chain = new TChain(tupleName);
 
     if(_decay==Decay::signal && _data==DataType::data && _year == 11){
-        TString loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/5/";
-        TString file = "/output/b2dhhh.root";
-        for(int i = 0; i<1000; i++){
-            TString dir_i = TString::Format("%d",i);
-             chain->Add(loc + dir_i + file);
-        }
-	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/33/";
-        for(int i = 0; i<110; i++){
-	  TString dir_i = TString::Format("%d",i);
-	  chain->Add(loc + dir_i + file);
-        }
+	TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/11/";
+        chain->Add(loc+"b2dhhh*.root");
     }
     
-    else if(_decay==Decay::signal && _data==DataType::data && _year == 12){
-        TString loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/8/";
-        TString file = "/output/b2dhhh.root";
-        for(int i = 0; i<1100; i++){
-            TString dir_i = TString::Format("%d",i);
-            chain->Add(loc + dir_i + file);
-        }
-	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/34/";
-        for(int i = 0; i<1100; i++){
-            TString dir_i = TString::Format("%d",i);
-            chain->Add(loc + dir_i + file);
-        }
+    else if(_decay==Decay::signal && _data==DataType::data && _year == 12 && _ss == false){
+	TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/12/";
+        chain->Add(loc+"b2dhhh*.root");
+	loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/12b/";
+        chain->Add(loc+"b2dhhh*.root");
     }
-    
+
+    else if(_decay==Decay::signal && _data==DataType::data && _year == 12 && _ss == true){
+	TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/12SS/";
+        chain->Add(loc+"b2dhhh*.root");
+	loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/12SSb/";
+        chain->Add(loc+"b2dhhh*.root");
+    }    
+
     else if(_decay==Decay::norm && _data==DataType::data && _year == 11){
-        TString loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/9/";
-        TString file = "/output/b2dhhh.root";
-        for(int i = 0; i<1000; i++){
-            TString dir_i = TString::Format("%d",i);
-            chain->Add(loc + dir_i + file);
-        }
-	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/35/";
-        for(int i = 0; i<1000; i++){
-            TString dir_i = TString::Format("%d",i);
-            chain->Add(loc + dir_i + file);
-        }
+	TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Norm/Data/11/";
+        chain->Add(loc+"b2dhhh*.root");
+	loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Norm/Data/11b/";
+        chain->Add(loc+"b2dhhh*.root");
     }
     
     else if(_decay==Decay::norm && _data==DataType::data && _year == 12){
-        TString loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/10/";
-        TString file = "/output/b2dhhh.root";
-        for(int i = 0; i<1100; i++){
-            TString dir_i = TString::Format("%d",i);
-            chain->Add(loc + dir_i + file);
-        }
-	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/36/";
-        for(int i = 0; i<1000; i++){
-            TString dir_i = TString::Format("%d",i);
-            chain->Add(loc + dir_i + file);
-        }
+	TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Norm/Data/12/";
+        chain->Add(loc+"b2dhhh*.root");
+	loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Norm/Data/12b/";
+        chain->Add(loc+"b2dhhh*.root");
     }
 
     else if(_decay==Decay::signal && _data==DataType::data && _year == 15){
-        TString loc = "/auto/data/kecke/B2DKPiPi/15/";
-        chain->Add(loc+"b2dhhh*.root");
-	loc = "/auto/data/kecke/B2DKPiPi/15-rest/";
+	TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/15/";
         chain->Add(loc+"b2dhhh*.root");
     }
 
-    else if(_decay==Decay::signal && _data==DataType::data && _year == 16 && _ltu == false){
-        TString loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16U/";
-        if(_polarity != "Down")chain->Add(loc+"b2dhhh*.root");
-	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/38/";
-        TString file = "/output/b2dhhh.root";
-        for(int i = 0; i<2000; i++){
-            TString dir_i = TString::Format("%d",i);
-            if(_polarity != "Down")chain->Add(loc + dir_i + file);
-        }
-	loc = "/auto/data/dargent/gangadir/workspace/phdargen/LocalXML/40/";
-        for(int i = 0; i<10; i++){
-            TString dir_i = TString::Format("%d",i);
-            if(_polarity != "Down")chain->Add(loc + dir_i + file);
-        }
-        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16D/";
-        if(_polarity != "Up")chain->Add(loc+"b2dhhh*.root");
-        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16Db/";
-        if(_polarity != "Up")chain->Add(loc+"b2dhhh*.root");
-        loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16Dc/";
-        if(_polarity != "Up")chain->Add(loc+"b2dhhh*.root");
+    else if(_decay==Decay::signal && _data==DataType::data && _year == 16 && _ltu == false && _ss == false){
+        TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/16/";
+        chain->Add(loc+"b2dhhh*.root");
     }
 
     else if(_decay==Decay::signal && _data==DataType::data && _year == 16 && _ltu == true){
@@ -110,19 +68,22 @@ TTree* DecayTree::GetInputTree(){
         chain->Add(loc+"b2dhhh*.root");
     }
 
+    else if(_decay==Decay::signal && _data==DataType::data && _year == 16 && _ss == true){
+	TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/16SS/";
+        chain->Add(loc+"b2dhhh*.root");
+	loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/16SSb/";
+        chain->Add(loc+"b2dhhh*.root");
+    }
+
     else if(_decay==Decay::norm && _data==DataType::data && _year == 15){
         TString loc = "/auto/data/kecke/B2DPiPiPi/15/";
         chain->Add(loc+"b2dhhh*.root");
-	loc = "/auto/data/kecke/B2DPiPiPi/15-rest/";
-        chain->Add(loc+"b2dhhh*.root");
-    }
+   }
 
     else if(_decay==Decay::norm && _data==DataType::data && _year == 16){
         TString loc = "/auto/data/kecke/B2DPiPiPi/16/";
         chain->Add(loc+"b2dhhh*.root");
-	loc = "/auto/data/kecke/B2DPiPiPi/16-rest/";
-        chain->Add(loc+"b2dhhh*.root");
-    }
+   }
 
     else {
         TString fileName = _inFileLoc + "Stripped/";
@@ -157,8 +118,8 @@ TTree* DecayTree::GetInputTree(){
     return (TTree*)chain;
 }
 
-DecayTree::DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString polarity, TString inFileLoc, TString outFileLoc, Bool_t bkg, Bool_t ltu ) : 
-fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataType), _polarity(polarity), _inFileLoc(inFileLoc), _outFileLoc(outFileLoc), _bkg(bkg), _ltu(ltu)
+DecayTree::DecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString polarity, TString inFileLoc, TString outFileLoc, Bool_t bkg, Bool_t ltu, Bool_t ss ) : 
+fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataType), _polarity(polarity), _inFileLoc(inFileLoc), _outFileLoc(outFileLoc), _bkg(bkg), _ltu(ltu), _ss(ss)
 {    
     cout << "Requested to process files with options: " << endl << endl;
 
@@ -176,7 +137,10 @@ fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataTyp
     cout << "Decay: " << s2 << endl;
     cout << "Ds finalState: " << s3 << endl;
     cout << "Year: " << _year << endl;
-    cout << "Polarity: " << _polarity << endl << endl;
+    cout << "Polarity: " << _polarity  << endl;
+    cout << "Bkg: " << _bkg << endl;
+    cout << "LTU: " << _ltu << endl;
+    cout << "SS: " << _ss << endl << endl;
 
     _outFileName = _outFileLoc;    
     _outFileName += "Mini/";
@@ -191,6 +155,7 @@ fChain(0), _decay(decay), _year(year), _Ds_finalState(finalState), _data(dataTyp
     if(_polarity == "Down") _outFileName += "_down";
     if(_bkg)_outFileName += "_Dstar_bkg";
     if(_ltu)_outFileName += "_LTU";
+    if(_ss)_outFileName += "_SS";	
     _outFileName += ".root";    
 }
 
@@ -243,8 +208,8 @@ inline Bool_t DecayTree::LooseCuts(Long64_t i){
     b_Bs_ENDVERTEX_NDOF->GetEntry(i);
     if((Bs_ENDVERTEX_CHI2/Bs_ENDVERTEX_NDOF)> 8) return false;
     
-    b_Bs_TAU->GetEntry(i);
-    if(Bs_TAU < 0.0002) return false;
+//     b_Bs_TAU->GetEntry(i);
+//     if(Bs_TAU < 0.0002) return false;
 
     b_Bs_MM->GetEntry(i);
     if(Bs_MM < 4800. || Bs_MM > 6000.) return false;
@@ -278,29 +243,61 @@ inline Bool_t DecayTree::LooseCuts(Long64_t i){
 
 inline Bool_t DecayTree::LooseCutsLTU(Long64_t i){
 
+    //b_nPV->GetEntry(i);
+    //if(nPV > 5) return false;
+
     b_Bs_MM->GetEntry(i);
-    if(Bs_MM < 4800. || Bs_MM > 6000.) return false;
+    if(Bs_MM < 5200. || Bs_MM > 5700.) return false;
         
     b_Bs_PV_M->GetEntry(i);
-    if (Bs_PV_M[0] < 4800. || Bs_PV_M[0] > 6000.) return false;
+    if(Bs_PV_M[0] < 4800. || Bs_PV_M[0] > 6000.) return false;
     
-    //b_Ds_FDCHI2_ORIVX->GetEntry(i);
-    //if(Ds_FDCHI2_ORIVX > 2) return false;
+    b_Bs_PV_Dplus_M->GetEntry(i);
+    if(Bs_PV_Dplus_M[0] < 1500 || Bs_PV_Dplus_M[0] > 2500) return false; 
+
+    b_Bs_ENDVERTEX_CHI2->GetEntry(i);
+    b_Bs_ENDVERTEX_NDOF->GetEntry(i);
+    if((Bs_ENDVERTEX_CHI2/Bs_ENDVERTEX_NDOF)> 8) return false;
+
+    b_Bs_PV_chi2->GetEntry(i);
+    b_Bs_PV_nDOF->GetEntry(i);
+    if(Bs_PV_chi2[0]/Bs_PV_nDOF[0] > 15 )return false;
+
+    b_Ds_IPCHI2_OWNPV->GetEntry(i);
+    if(Ds_IPCHI2_OWNPV > 9)return false;
+
+    b_Ds_FDCHI2_ORIVX->GetEntry(i);
+    if(Ds_FDCHI2_ORIVX < 9) return false;
+
+    b_Ds_PT->GetEntry(i);
+    if(Ds_PT < 1800) return false;
+
+    b_Ds_ENDVERTEX_CHI2->GetEntry(i);
+    b_Ds_ENDVERTEX_NDOF->GetEntry(i);
+    if((Ds_ENDVERTEX_CHI2/Ds_ENDVERTEX_NDOF)> 5) return false;
 
     if(_decay== Decay::signal){
         b_K_plus_PIDK->GetEntry(i);
-        b_pi_plus_PIDK->GetEntry(i);
-        b_pi_minus_PIDK->GetEntry(i);
         b_K_plus_isMuon->GetEntry(i);
+
+        b_pi_plus_PIDK->GetEntry(i);
+        b_pi_plus_isMuon->GetEntry(i);
+
+        b_pi_minus_PIDK->GetEntry(i);
+        b_pi_minus_isMuon->GetEntry(i);
         
-	if( K_plus_isMuon == 1 ) return false;
-        if(K_plus_PIDK < 10) return false;
-        else if(pi_plus_PIDK > 10) return false;
+	if(K_plus_PIDK < 10) return false;
+        else if(pi_plus_PIDK > 5) return false;
         else if(pi_minus_PIDK > 5) return false;
 	// remove events with no PID info
 	if( fabs(K_plus_PIDK) > 200 ) return false;        
 	if( fabs(pi_plus_PIDK) > 200 ) return false;        
 	if( fabs(pi_minus_PIDK) > 200 ) return false;   
+
+	if( K_plus_isMuon == 1 ) return false;
+ 	if( pi_plus_isMuon == 1 ) return false;
+ 	if( pi_minus_isMuon == 1 ) return false;
+      
     }
     
     return true;
@@ -325,10 +322,10 @@ void DecayTree::Loop()
    fChain->SetBranchStatus("Bs_*Hlt*Phys*_T*S",0);  
    fChain->SetBranchStatus("Bs_*Hlt*Global*_T*S",0);  
    
-   if(!_ltu){ 
-	fChain->SetBranchStatus("Bs_TAG*",1);  
+   if(!_ltu && !_ss){ 
+	fChain->SetBranchStatus("Bs_*TAG*",1);  
 	fChain->SetBranchStatus("Bs_*DEC",1);  
-	fChain->SetBranchStatus("Bs_*PROB",1);  
+	if(_year < 15)fChain->SetBranchStatus("Bs_*PROB",1);  
    }
    fChain->SetBranchStatus("Bs_*DTF*",1);  
    fChain->SetBranchStatus("Bs_*PV*",1);  
@@ -337,7 +334,8 @@ void DecayTree::Loop()
    fChain->SetBranchStatus("Bs*OWNPV*",1);  
    fChain->SetBranchStatus("Bs*ENDVERTEX_COV*",0);  
    fChain->SetBranchStatus("Bs*OWNPV_COV*",0);  
-       
+
+   fChain->SetBranchStatus("Ds_M",1);         
    fChain->SetBranchStatus("Ds*ENDVERTEX*",1);  
    fChain->SetBranchStatus("Ds*OWNPV*",1);  
    fChain->SetBranchStatus("Ds*ENDVERTEX_COV*",0);  
@@ -368,6 +366,7 @@ void DecayTree::Loop()
    fChain->SetBranchStatus("*MM*",1);  
    fChain->SetBranchStatus("*TAU*",1);  
    fChain->SetBranchStatus("*ptasy_1.00",1);  
+   fChain->SetBranchStatus("*Chi2*",1);  
 
    fChain->SetBranchStatus("*DIRA*",1);  
    fChain->SetBranchStatus("Ds_DOCA*",1);  

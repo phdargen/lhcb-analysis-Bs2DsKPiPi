@@ -11,7 +11,7 @@ cd ..
 #User job limit -> 1000/nJobs = ujl310
 #$ -l ujl=11
 #(the cpu time for this job)
-#$ -l h_cpu=100:59:59
+#$ -l h_cpu=200:59:59
 #$-l os=slc5 
 #(the maximum memory usage of this job)
 #$-l h_vmem=12000M

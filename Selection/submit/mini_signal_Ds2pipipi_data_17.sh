@@ -20,6 +20,6 @@ cd ..
 #(setup the environment)
 . /local/AZ/envfor.sh root 5.34.10;
 
-#$ -o ./submit/log/out_signal_Ds2pipipi_data_16.log
+#$ -o ./submit/log/out_signal_Ds2pipipi_data_17.log
 
-./MiniMaker "Signal" "Ds2pipipi" "Data" 16
+./MiniMaker "Signal" "Ds2pipipi" "Data" 17

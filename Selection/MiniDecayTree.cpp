@@ -151,7 +151,7 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
         
         if(K_plus_fromDs_PIDK < -10) return false;
         else if(K_minus_fromDs_PIDK < -5) return false;
-        else if(pi_minus_fromDs_PIDK > 20) return false;        
+        else if(pi_minus_fromDs_PIDK > 10) return false;        
     }
 
     else if(_Ds_finalState == Ds_finalState::KKpi_NR){
@@ -170,7 +170,6 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
         if(pi_plus_fromDs_PIDp > 10) return false;
         else if(pi_minus_fromDs_PIDp > 10) return false;
         else if(pi_minus2_fromDs_PIDp > 10) return false;
-
 	// remove events with no PID info
 	if( abs(pi_plus_fromDs_PIDK) > 200 ) return false;        
 	if( abs(pi_minus_fromDs_PIDK) > 200 ) return false;        
@@ -178,8 +177,16 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
     }
     
     else if(_Ds_finalState == Ds_finalState::Kpipi){
-        
-        
+        if(pi_plus_fromDs_PIDK > 5) return false;
+        else if(K_minus_fromDs_PIDK < 10) return false;
+        else if(pi_minus_fromDs_PIDK > 5) return false;
+
+        if(pi_plus_fromDs_PIDp > 10) return false;
+        else if(pi_minus_fromDs_PIDp > 10) return false;
+	// remove events with no PID info
+	if( abs(K_plus_fromDs_PIDK) > 200 ) return false;        
+	if( abs(K_minus_fromDs_PIDK) > 200 ) return false;        
+	if( abs(pi_minus_fromDs_PIDK) > 200 ) return false;             
     }
     
 
@@ -221,6 +228,8 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
             if(Ds_FDCHI2_ORIVX < 0) return false;
             //Lambda_c veto
             if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && ((K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) < 0) ) return false;
+	    //D- veto
+            if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M() - massDminus) < 30. && K_minus_fromDs_PIDK < 0 ) return false;
 	}
         else if(_Ds_finalState == Ds_finalState::KsK){
             // Charmless veto
@@ -251,22 +260,34 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
     }
     
     else if(_Ds_finalState == Ds_finalState::Kpipi){
+	// D0 veto
+        if((pi_plus_fromDs + K_minus_fromDs).M() > 1750) return false;
+        // Charmless veto
+        if((Ds_ENDVERTEX_Z - Bs_ENDVERTEX_Z) < 0) return false;
+        if(Ds_FDCHI2_ORIVX < 9) return false;
+	//Lambda_c veto
+        if( TMath::Abs((pi_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && ((K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) < 5) ) return false;
+	//D- veto
+        if( TMath::Abs((pi_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M() - massDminus) < 30. && K_minus_fromDs_PIDK < 20 ) return false;
     }
     
     if(_decay == Decay::signal){
         // Ds veto
         if(TMath::Abs((K_plus + pi_plus + pi_minus).M() - massDs) < 20) return false;
 	// Semi-lep. veto
-	//if( K_plus_isMuon == 1 ) return false;
+	if( K_plus_isMuon == 1 ) return false;
     }
     
     else if(_decay == Decay::norm){
         // Ds veto
         if(TMath::Abs((pi_plus1 + pi_plus2 + pi_minus).M() - massDs) < 20) return false;
 	// Semi-lep. veto
-	//if( pi_plus1_isMuon == 1 ) return false;
-	//if( pi_plus2_isMuon == 1 ) return false;
+	if( pi_plus1_isMuon == 1 ) return false;
+	if( pi_plus2_isMuon == 1 ) return false;
     }
+
+    // Wrong PV veto
+    if(nPV > 1 && (Bs_MINIPCHI2NEXTBEST-Bs_IPCHI2_OWNPV) < 20) return false;
 
     return true;
 }
@@ -285,29 +306,75 @@ inline Bool_t MiniDecayTree::Preselection_Cuts(){
 
 inline Bool_t MiniDecayTree::LTU_Cuts(){
     
-	if(!PID_Cuts())return false;
+	//if((Bs_ENDVERTEX_CHI2/Bs_ENDVERTEX_NDOF)> 5) return false;
+        //if(Bs_IPCHI2_OWNPV>20) return false;
+    	if((Ds_ENDVERTEX_CHI2/Ds_ENDVERTEX_NDOF)> 5) return false;
+        //if(Ds_FDCHI2_ORIVX < 25) return false;
+    	//if(Ds_FDCHI2_OWNPV < 25) return false;
+        if(Ds_IPCHI2_OWNPV>9) return false;
+    	//if(Ds_PT < 1800) return false;
+        if(Ds_DIRA_OWNPV<0.99994) return false;
 
-	if(_Ds_finalState == Ds_finalState::phipi || _Ds_finalState == Ds_finalState::KsK || _Ds_finalState == Ds_finalState::KKpi_NR){
-		
+	if(!PID_Cuts())return false;
+/*
+	if(_Ds_finalState == Ds_finalState::phipi){	
+		if(K_plus_fromDs_PIDK < -5) return false;
+		else if(K_minus_fromDs_PIDK < -5) return false;
+		else if(pi_minus_fromDs_PIDK > 10) return false;
+	}
+	
+	if(_Ds_finalState == Ds_finalState::KsK){
+		if(K_plus_fromDs_PIDK < 5) return false;
+		else if(K_minus_fromDs_PIDK < 5) return false;
+		else if(pi_minus_fromDs_PIDK > 0) return false;        
+	}
+	
+	if(_Ds_finalState == Ds_finalState::KKpi_NR){
+		if(K_plus_fromDs_PIDK < 15) return false;
+		else if(K_minus_fromDs_PIDK < 15) return false;
+		else if(pi_minus_fromDs_PIDK > -5) return false;
+	}
+	
+	if(_Ds_finalState == Ds_finalState::pipipi){
+		if(pi_plus_fromDs_PIDK > 0) return false;
+		else if(pi_minus_fromDs_PIDK > 0) return false;
+		else if(pi_minus2_fromDs_PIDK > 0) return false;
+	
+		if(pi_plus_fromDs_PIDp > 5) return false;
+		else if(pi_minus_fromDs_PIDp > 5) return false;
+		else if(pi_minus2_fromDs_PIDp > 5) return false;
+
+		if(pi_plus_fromDs_isMuon == 1) return false;
+		if(pi_minus_fromDs_isMuon == 1) return false;
+		if(pi_minus2_fromDs_isMuon == 1) return false;
+	}
+	
+	else if(_Ds_finalState == Ds_finalState::Kpipi){
+	
+	}
+	
+	else {
+		if(K_plus_fromDs_isMuon == 1) return false;
+		if(K_minus_fromDs_isMuon == 1) return false;
+		if(pi_minus_fromDs_isMuon == 1) return false;
+	}
+*/
+	if(_decay == Decay::signal){	
+		//if(K_plus_PIDK < 15) return false;
+		//if(pi_plus_PIDK > 0) return false;
+		//else if(pi_minus_PIDK > 0) return false;
+		//if(K_plus_isMuon == 1) return false;
+		//if(pi_plus_isMuon == 1) return false;
+		//if(pi_minus_isMuon == 1) return false;
+	}
+
+	if(_Ds_finalState == Ds_finalState::phipi || _Ds_finalState == Ds_finalState::KsK || _Ds_finalState == Ds_finalState::KKpi_NR){		
 		//D0 veto
 		if((K_plus_fromDs + K_minus_fromDs).M() > 1840.) return false;
-		
-		if(_Ds_finalState == Ds_finalState::phipi){
-			//Lambda_c veto
-			if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && ((K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) < 0) ) return false;
-		}
-		else if(_Ds_finalState == Ds_finalState::KsK){
-			//Lambda_c veto
-			if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && ((K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) < 5) ) return false;
-			//D- veto
-			if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M() - massDminus) < 30. && K_minus_fromDs_PIDK < 10 ) return false;
-		}
-		else if(_Ds_finalState == Ds_finalState::KKpi_NR){
-			//Lambda_c veto
-			if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && ((K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) < 5) ) return false;
-			//D- veto
-			if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M() - massDminus) < 30. && K_minus_fromDs_PIDK < 20 ) return false;
-		}
+		//Lambda_c veto
+		if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. )return false;
+		//D- veto
+		if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M() - massDminus) < 30.) return false;
 	}
 	
 	else if(_Ds_finalState == Ds_finalState::pipipi){
@@ -316,11 +383,16 @@ inline Bool_t MiniDecayTree::LTU_Cuts(){
 	}
 	
 	else if(_Ds_finalState == Ds_finalState::Kpipi){
+		// D0 veto
+		if((pi_plus_fromDs + K_minus_fromDs).M() > 1750) return false;
+		//Lambda_c veto
+		if( TMath::Abs((pi_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && ((K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) < 5) ) return false;
+		//D- veto
+		if( TMath::Abs((pi_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M() - massDminus) < 30. && K_minus_fromDs_PIDK < 20 ) return false;
 	}
 	
         return true;
 }
-
 
 inline Ds_finalState::Type MiniDecayTree::get_Ds_finalState(){
 
@@ -357,6 +429,13 @@ inline void MiniDecayTree::set_LorentzVectors(){
     }
     
     else if(_Ds_finalState == Ds_finalState::Kpipi){
+        pi_minus_fromDs.SetXYZM(pi_minus_fromDs_PX,pi_minus_fromDs_PY,pi_minus_fromDs_PZ,massPion);        
+        pi_plus_fromDs.SetXYZM(pi_plus_fromDs_PX,pi_plus_fromDs_PY,pi_plus_fromDs_PZ,massKaon);
+        K_minus_fromDs.SetXYZM(K_minus_fromDs_PX,K_minus_fromDs_PY,K_minus_fromDs_PZ,massKaon);
+        Ds = pi_minus_fromDs + pi_plus_fromDs + K_minus_fromDs;
+        
+        Kminus_fromDs_asProton_MissID.SetXYZM(K_minus_fromDs_PX,K_minus_fromDs_PY,K_minus_fromDs_PZ, massProton);
+        Kminus_fromDs_asPiminus_MissID.SetXYZM(K_minus_fromDs_PX,K_minus_fromDs_PY,K_minus_fromDs_PZ,massPion);
     }
     
     if(_decay == Decay::signal){
@@ -439,7 +518,7 @@ void MiniDecayTree::Loop()
     double Xs_max_ProbNNghost = 0;
     double Ds_max_ProbNNghost = 0;
     double max_ProbNNghost = 0;
-    double track_min_PT,track_min_IPCHI2,Xs_ptasy;    
+    double track_min_PT,track_min_IPCHI2,Xs_ptasy,Xs_PT,Xs_ETA;    
 
     summary_tree->Branch("DsDaughters_min_IPCHI2",&DsDaughters_min_IPCHI2,"DsDaughters_min_IPCHI2/D");
     summary_tree->Branch("XsDaughters_min_IPCHI2",&XsDaughters_min_IPCHI2,"XsDaughters_min_IPCHI2/D");
@@ -450,6 +529,8 @@ void MiniDecayTree::Loop()
     summary_tree->Branch("XsDaughters_min_PT",&XsDaughters_min_PT,"XsDaughters_min_PT/D");
     summary_tree->Branch("track_min_PT",&track_min_PT,"track_min_PT/D");
     summary_tree->Branch("Xs_ptasy_1.00",&Xs_ptasy,"Xs_ptasy_1.00/D");
+    summary_tree->Branch("Xs_PT",&Xs_PT,"Xs_PT/D");
+    summary_tree->Branch("Xs_ETA",&Xs_ETA,"Xs_ETA/D");
 
     summary_tree->Branch("Xs_max_DOCA",&Xs_max_DOCA,"Xs_max_DOCA/D");
     summary_tree->Branch("Ds_max_DOCA",&Ds_max_DOCA,"Ds_max_DOCA/D");
@@ -648,38 +729,41 @@ void MiniDecayTree::Loop()
     double K_plus_PIDK_gen, K_plus_PIDK_corr, K_plus_PIDK_raw;
     double pi_plus_PIDK_gen, pi_plus_PIDK_corr, pi_plus_PIDK_raw;
     double pi_minus_PIDK_gen, pi_minus_PIDK_corr, pi_minus_PIDK_raw;    
-    summary_tree->Branch("K_plus_PIDK_gen", &K_plus_PIDK_gen, "K_plus_PIDK_gen/D");
-    summary_tree->Branch("K_plus_PIDK_corr", &K_plus_PIDK_corr, "K_plus_PIDK_corr/D");
-    summary_tree->Branch("K_plus_PIDK_raw", &K_plus_PIDK_raw, "K_plus_PIDK_raw/D");
-    summary_tree->Branch("pi_plus_PIDK_gen", &pi_plus_PIDK_gen, "pi_plus_PIDK_gen/D");
-    summary_tree->Branch("pi_plus_PIDK_corr", &pi_plus_PIDK_corr, "pi_plus_PIDK_corr/D");
-    summary_tree->Branch("pi_plus_PIDK_raw", &pi_plus_PIDK_raw, "pi_plus_PIDK_raw/D");
-    summary_tree->Branch("pi_minus_PIDK_gen", &pi_minus_PIDK_gen, "pi_minus_PIDK_gen/D");
-    summary_tree->Branch("pi_minus_PIDK_corr", &pi_minus_PIDK_corr, "pi_minus_PIDK_corr/D");
-    summary_tree->Branch("pi_minus_PIDK_raw", &pi_minus_PIDK_raw, "pi_minus_PIDK_raw/D");
-
+    if(!_data){
+	summary_tree->Branch("K_plus_PIDK_gen", &K_plus_PIDK_gen, "K_plus_PIDK_gen/D");
+	summary_tree->Branch("K_plus_PIDK_corr", &K_plus_PIDK_corr, "K_plus_PIDK_corr/D");
+	summary_tree->Branch("K_plus_PIDK_raw", &K_plus_PIDK_raw, "K_plus_PIDK_raw/D");
+	summary_tree->Branch("pi_plus_PIDK_gen", &pi_plus_PIDK_gen, "pi_plus_PIDK_gen/D");
+	summary_tree->Branch("pi_plus_PIDK_corr", &pi_plus_PIDK_corr, "pi_plus_PIDK_corr/D");
+	summary_tree->Branch("pi_plus_PIDK_raw", &pi_plus_PIDK_raw, "pi_plus_PIDK_raw/D");
+	summary_tree->Branch("pi_minus_PIDK_gen", &pi_minus_PIDK_gen, "pi_minus_PIDK_gen/D");
+	summary_tree->Branch("pi_minus_PIDK_corr", &pi_minus_PIDK_corr, "pi_minus_PIDK_corr/D");
+	summary_tree->Branch("pi_minus_PIDK_raw", &pi_minus_PIDK_raw, "pi_minus_PIDK_raw/D");
+    }
     double pi_plus1_PIDK_gen, pi_plus1_PIDK_corr, pi_plus1_PIDK_raw;
     double pi_plus2_PIDK_gen, pi_plus2_PIDK_corr, pi_plus2_PIDK_raw;
-    summary_tree->Branch("pi_plus1_PIDK_gen", &pi_plus1_PIDK_gen, "pi_plus1_PIDK_gen/D");
-    summary_tree->Branch("pi_plus1_PIDK_corr", &pi_plus1_PIDK_corr, "pi_plus1_PIDK_corr/D");
-    summary_tree->Branch("pi_plus1_PIDK_raw", &pi_plus1_PIDK_raw, "pi_plus1_PIDK_raw/D");
-    summary_tree->Branch("pi_plus2_PIDK_gen", &pi_plus2_PIDK_gen, "pi_plus2_PIDK_gen/D");
-    summary_tree->Branch("pi_plus2_PIDK_corr", &pi_plus2_PIDK_corr, "pi_plus2_PIDK_corr/D");
-    summary_tree->Branch("pi_plus2_PIDK_raw", &pi_plus2_PIDK_raw, "pi_plus2_PIDK_raw/D");
-
+    if(!_data){
+	summary_tree->Branch("pi_plus1_PIDK_gen", &pi_plus1_PIDK_gen, "pi_plus1_PIDK_gen/D");
+	summary_tree->Branch("pi_plus1_PIDK_corr", &pi_plus1_PIDK_corr, "pi_plus1_PIDK_corr/D");
+	summary_tree->Branch("pi_plus1_PIDK_raw", &pi_plus1_PIDK_raw, "pi_plus1_PIDK_raw/D");
+	summary_tree->Branch("pi_plus2_PIDK_gen", &pi_plus2_PIDK_gen, "pi_plus2_PIDK_gen/D");
+	summary_tree->Branch("pi_plus2_PIDK_corr", &pi_plus2_PIDK_corr, "pi_plus2_PIDK_corr/D");
+	summary_tree->Branch("pi_plus2_PIDK_raw", &pi_plus2_PIDK_raw, "pi_plus2_PIDK_raw/D");
+    }
     double pi_minus_fromDs_PIDK_gen, pi_minus_fromDs_PIDK_corr, pi_minus_fromDs_PIDK_raw;
     double K_minus_fromDs_PIDK_gen, K_minus_fromDs_PIDK_corr, K_minus_fromDs_PIDK_raw;
     double K_plus_fromDs_PIDK_gen, K_plus_fromDs_PIDK_corr, K_plus_fromDs_PIDK_raw;
-    summary_tree->Branch("pi_minus_fromDs_PIDK_gen", &pi_minus_fromDs_PIDK_gen, "pi_minus_fromDs_PIDK_gen/D");
-    summary_tree->Branch("pi_minus_fromDs_PIDK_corr", &pi_minus_fromDs_PIDK_corr, "pi_minus_fromDs_PIDK_corr/D");
-    summary_tree->Branch("pi_minus_fromDs_PIDK_raw", &pi_minus_fromDs_PIDK_raw, "pi_minus_fromDs_PIDK_raw/D");
-    summary_tree->Branch("K_minus_fromDs_PIDK_gen", &K_minus_fromDs_PIDK_gen, "K_minus_fromDs_PIDK_gen/D");
-    summary_tree->Branch("K_minus_fromDs_PIDK_corr", &K_minus_fromDs_PIDK_corr, "K_minus_fromDs_PIDK_corr/D");
-    summary_tree->Branch("K_minus_fromDs_PIDK_raw", &K_minus_fromDs_PIDK_raw, "K_minus_fromDs_PIDK_raw/D");
-    summary_tree->Branch("K_plus_fromDs_PIDK_gen", &K_plus_fromDs_PIDK_gen, "K_plus_fromDs_PIDK_gen/D");
-    summary_tree->Branch("K_plus_fromDs_PIDK_corr", &K_plus_fromDs_PIDK_corr, "K_plus_fromDs_PIDK_corr/D");
-    summary_tree->Branch("K_plus_fromDs_PIDK_raw", &K_plus_fromDs_PIDK_raw, "K_plus_fromDs_PIDK_raw/D");
-
+    if(!_data){
+	summary_tree->Branch("pi_minus_fromDs_PIDK_gen", &pi_minus_fromDs_PIDK_gen, "pi_minus_fromDs_PIDK_gen/D");
+	summary_tree->Branch("pi_minus_fromDs_PIDK_corr", &pi_minus_fromDs_PIDK_corr, "pi_minus_fromDs_PIDK_corr/D");
+	summary_tree->Branch("pi_minus_fromDs_PIDK_raw", &pi_minus_fromDs_PIDK_raw, "pi_minus_fromDs_PIDK_raw/D");
+	summary_tree->Branch("K_minus_fromDs_PIDK_gen", &K_minus_fromDs_PIDK_gen, "K_minus_fromDs_PIDK_gen/D");
+	summary_tree->Branch("K_minus_fromDs_PIDK_corr", &K_minus_fromDs_PIDK_corr, "K_minus_fromDs_PIDK_corr/D");
+	summary_tree->Branch("K_minus_fromDs_PIDK_raw", &K_minus_fromDs_PIDK_raw, "K_minus_fromDs_PIDK_raw/D");
+	summary_tree->Branch("K_plus_fromDs_PIDK_gen", &K_plus_fromDs_PIDK_gen, "K_plus_fromDs_PIDK_gen/D");
+	summary_tree->Branch("K_plus_fromDs_PIDK_corr", &K_plus_fromDs_PIDK_corr, "K_plus_fromDs_PIDK_corr/D");
+	summary_tree->Branch("K_plus_fromDs_PIDK_raw", &K_plus_fromDs_PIDK_raw, "K_plus_fromDs_PIDK_raw/D");
+    }
     /*
     double K_plus_PIDp_gen, K_plus_PIDp_corr, K_plus_PIDp_raw;
     double pi_plus_PIDp_gen, pi_plus_PIDp_corr, pi_plus_PIDp_raw;
@@ -944,7 +1028,14 @@ void MiniDecayTree::Loop()
             Xs_max_ghostProb = max(pi_plus_TRACK_GhostProb,max(K_plus_TRACK_GhostProb,pi_minus_TRACK_GhostProb)); 
             Xs_max_ProbNNghost = max(pi_plus_ProbNNghost,max(K_plus_ProbNNghost,pi_minus_ProbNNghost)); 
 	    Xs_ptasy = K_1_1270_plus_ptasy_1_00;
-
+	    if(_ltu){
+	    	Xs_PT = (K_plus+pi_plus+pi_minus).Pt();
+	    	Xs_ETA = (K_plus+pi_plus+pi_minus).PseudoRapidity();
+	    }
+	    else {
+	    	Xs_PT = K_1_1270_plus_PT;
+	    	Xs_ETA = K_1_1270_plus_ETA;
+	    }
             m_DsK = (Ds+K_plus).M();
             m_Dspi = (Ds+pi_plus).M();
             m_Dspipi = (Ds+pi_plus+pi_minus).M();
@@ -1025,6 +1116,8 @@ void MiniDecayTree::Loop()
             Xs_max_ghostProb = max(pi_plus1_TRACK_GhostProb,max(pi_plus2_TRACK_GhostProb,pi_minus_TRACK_GhostProb));   
             Xs_max_ProbNNghost = max(pi_plus1_ProbNNghost,max(pi_plus2_ProbNNghost,pi_minus_ProbNNghost));          
 	    Xs_ptasy = a_1_1260_plus_ptasy_1_00;
+	    Xs_PT = a_1_1260_plus_PT;
+	    Xs_ETA = a_1_1260_plus_ETA;
 
             m_DsK = (Ds+pi_plus1).M();
             m_Dspi = (Ds+pi_plus2).M();
@@ -1109,7 +1202,55 @@ void MiniDecayTree::Loop()
         }
         
         else if(_Ds_finalState == Ds_finalState::Kpipi){
-        
+            DsDaughters_min_IPCHI2 = min(pi_plus_fromDs_IPCHI2_OWNPV,min(pi_minus_fromDs_IPCHI2_OWNPV,K_minus_fromDs_IPCHI2_OWNPV));            
+            DsDaughters_max_IPCHI2 = max(pi_plus_fromDs_IPCHI2_OWNPV,max(pi_minus_fromDs_IPCHI2_OWNPV,K_minus_fromDs_IPCHI2_OWNPV));            
+            DsDaughters_min_PT = min(pi_plus_fromDs_PT,min(pi_minus_fromDs_PT,K_minus_fromDs_PT));            
+            Ds_max_DOCA = max(Ds_DOCA1,max(Ds_DOCA2,Ds_DOCA3));
+            Ds_max_ghostProb = max(pi_plus_fromDs_TRACK_GhostProb,max(K_minus_fromDs_TRACK_GhostProb,pi_minus_fromDs_TRACK_GhostProb));  
+            Ds_max_ProbNNghost = max(pi_plus_fromDs_ProbNNghost,max(K_minus_fromDs_ProbNNghost,pi_minus_fromDs_ProbNNghost));  
+            
+            Ds_m12 = (pi_plus_fromDs + K_minus_fromDs).M(); 
+            Ds_m13 = (pi_plus_fromDs + pi_minus_fromDs).M(); 
+            
+            bkg_D_as_Ds_m= (pi_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M() - massDminus;
+
+            bkg_Dstar_as_Ds_dm1= (pi_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M() - (pi_plus_fromDs + pi_minus_fromDs ).M();
+            bkg_Dstar_as_Ds_dm3= (pi_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M() - (pi_plus_fromDs + Kminus_fromDs_asPiminus_MissID ).M();
+            bkg_Dstar_as_Ds_dm4= (pi_plus_fromDs + K_minus_fromDs + pi_minus_fromDs).M() - (pi_plus_fromDs + K_minus_fromDs ).M();
+
+            bkg_Ks_as_KK_fromDs_m = (pi_plus_fromDs + Kminus_fromDs_asPiminus_MissID).M();  
+
+            bkg_Lambdac_as_Ds_m=  (pi_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c;  
+            
+            if(_decay == Decay::signal){
+                bkg_D_as_Ds_Bs_m= (K_plus+pi_plus+pi_minus+pi_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M();
+                bkg_Lambdac_as_Ds_Bs_m=  (K_plus+pi_plus+pi_minus+pi_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M();  
+            }else {
+                bkg_D_as_Ds_Bs_m= (pi_plus1+pi_plus2+pi_minus+pi_plus_fromDs + Kminus_fromDs_asPiminus_MissID + pi_minus_fromDs).M();
+                bkg_Lambdac_as_Ds_Bs_m=  (pi_plus1+pi_plus2+pi_minus+pi_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M();  
+            }
+            beta_K_minus_fromDs = (pi_plus_fromDs_P + pi_minus_fromDs_P - K_minus_fromDs_P) / (pi_plus_fromDs_P + pi_minus_fromDs_P + K_minus_fromDs_P);
+            beta_K_plus_fromDs = (-pi_plus_fromDs_P + pi_minus_fromDs_P + K_minus_fromDs_P) / (pi_plus_fromDs_P + pi_minus_fromDs_P + K_minus_fromDs_P);
+            beta_pi_minus_fromDs = (pi_plus_fromDs_P - pi_minus_fromDs_P + K_minus_fromDs_P) / (pi_plus_fromDs_P + pi_minus_fromDs_P + K_minus_fromDs_P);
+            
+            BsDTF_Ds_Kplus_PX = Bs_BsDTF_D_splus_piplus_0_PX[0] ;
+            BsDTF_Ds_Kplus_PY = Bs_BsDTF_D_splus_piplus_0_PY[0] ;
+            BsDTF_Ds_Kplus_PZ = Bs_BsDTF_D_splus_piplus_0_PZ[0] ;
+            BsDTF_Ds_Kplus_PE = Bs_BsDTF_D_splus_piplus_0_PE[0] ;
+            
+            BsDTF_Ds_Kminus_PX = Bs_BsDTF_D_splus_Kplus_PX[0] ;
+            BsDTF_Ds_Kminus_PY = Bs_BsDTF_D_splus_Kplus_PY[0] ;
+            BsDTF_Ds_Kminus_PZ = Bs_BsDTF_D_splus_Kplus_PZ[0] ;
+            BsDTF_Ds_Kminus_PE = Bs_BsDTF_D_splus_Kplus_PE[0] ;
+            
+            BsDTF_Ds_piminus_PX = Bs_BsDTF_D_splus_piplus_PX[0] ;
+            BsDTF_Ds_piminus_PY = Bs_BsDTF_D_splus_piplus_PY[0] ;
+            BsDTF_Ds_piminus_PZ = Bs_BsDTF_D_splus_piplus_PZ[0] ;
+            BsDTF_Ds_piminus_PE = Bs_BsDTF_D_splus_piplus_PE[0] ;
+
+	    tv.push_back(pi_plus_fromDs);
+	    tv.push_back(K_minus_fromDs);
+	    tv.push_back(pi_minus_fromDs);
         }
         
         else {
@@ -1172,12 +1313,19 @@ void MiniDecayTree::Loop()
         track_min_PT = min(XsDaughters_min_PT,DsDaughters_min_PT);
         track_min_IPCHI2 = min(XsDaughters_min_IPCHI2,DsDaughters_min_IPCHI2);
 
-	NTracks = (double) nTracks;
+	NTracks = (double)(nTracks);
 	if(Bs_L0Global_TIS)TriggerCat = 2;
 	else TriggerCat = 3;
         if(Bs_L0HadronDecision_TOS)TriggerCat = 0;
 	else TriggerCat = 1;
 	
+        PV_status = Bs_PV_status[0];
+        DTF_status = Bs_DTF_status[0];
+        BsDTF_status = Bs_BsDTF_status[0];
+        PV_CHI2NDOF = Bs_PV_chi2[0]/Bs_PV_nDOF[0];
+        DTF_CHI2NDOF = Bs_DTF_chi2[0]/Bs_DTF_nDOF[0];
+        BsDTF_CHI2NDOF = Bs_BsDTF_chi2[0]/Bs_BsDTF_nDOF[0];
+ 
         Bs_PV_MM = Bs_PV_M[0];
         Bs_DTF_MM = Bs_DTF_M[0];
         Ds_PV_MM = Bs_PV_Dplus_M[0];
@@ -1197,19 +1345,15 @@ void MiniDecayTree::Loop()
         Bs_BsDTF_TAU = Bs_BsDTF_ctau[0] * 3.33564095;
         Bs_BsDTF_TAUERR = Bs_BsDTF_ctauErr[0] * 3.33564095;
 	if(!_ltu){
-		if(Bs_DTF_TAU < 0.4 || Bs_DTF_TAU > 10.) continue;
-		if(Bs_DTF_TAUERR < 0. || Bs_DTF_TAUERR > 0.1) continue;
+		if(Bs_DTF_TAU < 0.2 || Bs_DTF_TAU > 20.) continue;
+		if(Bs_DTF_TAUERR < 0. || Bs_DTF_TAUERR > 0.15) continue;
 	}
-
-        PV_status = Bs_PV_status[0];
-        DTF_status = Bs_DTF_status[0];
-        BsDTF_status = Bs_BsDTF_status[0];
-        PV_CHI2NDOF = Bs_PV_chi2[0]/Bs_PV_nDOF[0];
-        DTF_CHI2NDOF = Bs_DTF_chi2[0]/Bs_DTF_nDOF[0];
-        BsDTF_CHI2NDOF = Bs_BsDTF_chi2[0]/Bs_BsDTF_nDOF[0];
-        
-        if(r.Rndm()<0.5)sample=1;
-        else sample=2;
+	else {
+		//if(PV_CHI2NDOF > 10)continue;
+		//if(max_ghostProb > 0.35) continue;
+		if(track_min_PT < 500)continue;
+// 		if(DsDaughters_min_IPCHI2 < 9)continue;
+	}
 
 	m_15 = (tv[1] + tv[5]).M();
         m_16 = (tv[1] + tv[6]).M();
