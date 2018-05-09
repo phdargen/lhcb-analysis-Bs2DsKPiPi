@@ -544,7 +544,13 @@ int ampFit(int step=0){
         mini.doFit();
         
         mini.printResultVsInput();
-        ampsSig.doFinalStats(&mini);
+        
+	if(useLASSO)ampsSig.doFinalStats(&mini);
+	else {
+		string outTableName = (string)OutputDir+"FitAmpResults.tex";
+        	if(updateAnaNote)outTableName = "../../../../../TD-AnaNote/latex/tables/lassoFit/"+(string)OutputDir+"fitFractions.tex";
+        	ampsSig.doFinalStatsAndSave(&mini,outTableName,((string)OutputDir+"FitAmpResults.root").c_str());
+        }
                 
         if(useLASSO){
             
