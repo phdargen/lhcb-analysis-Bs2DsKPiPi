@@ -297,6 +297,7 @@ Double_t RooGaussEfficiencyModel::evaluate(Int_t basisCodeInt, Double_t tau, Dou
     if (TMath::IsNaN(_eff))
         cxcoutE(Tracing) << "RooGaussEfficiencyModel::evaluate(" << GetName()
         << ") got nan during efficiency " << endl;
+    //return val;
     return _eff*val;
 }
 

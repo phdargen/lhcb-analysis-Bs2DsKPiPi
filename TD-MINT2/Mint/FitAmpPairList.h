@@ -103,6 +103,7 @@ class FitAmpPairList
     
   FitFractionList getFractions() const{return _singleAmpFractions;}
   FitFractionList getInterferenceTerms() const{return _interferenceFractions;}
+  bool doFractions();
 
   void setEfficiency(MINT::counted_ptr<MINT::IReturnRealForEvent<IDalitzEvent> > eff);
   void unsetEfficiency();

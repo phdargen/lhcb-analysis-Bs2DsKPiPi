@@ -166,6 +166,10 @@ class FlexiFastAmplitudeIntegrator : virtual public IDalitzIntegrator{
         return _integCalc->numberOfFitFractionsLargerThanThreshold(threshold);
   } 
 
+  FitFractionList getFractions() const{return _integCalc->getFractions();}
+  FitFractionList getInterferenceTerms() const{return _integCalc->getInterferenceTerms();}
+  bool doFractions() {return _integCalc->doFractions();}
+
   double variance() const;
 
   DalitzHistoSet histoSet() const;

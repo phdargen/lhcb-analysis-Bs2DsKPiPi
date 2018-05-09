@@ -216,21 +216,20 @@ std::complex<double> FitAmpSum::getVal(IDalitzEvent& evt){
 double FitAmpSum::getAmpSqr(IDalitzEvent& evt, std::vector<string> ampNames, bool CC){
     double dbThis=false;
     
-    double sum = 0;
+    std::complex<double> sum(0);
     if(0 == size()) createAllAmps(evt.eventPattern());
     for(unsigned int i=0; i< this->size(); i++){
         for (unsigned int n=0; n <ampNames.size(); n++) {
             if(A_is_in_B(ampNames[n], this->getAmpPtr(i)->name())){
                 if(A_is_in_B("Cconj_FS", this->getAmpPtr(i)->name()) && !CC) continue;
                 if(dbThis) cout << "found amp " << this->getAmpPtr(i)->name() << endl;
-                sum += norm(this->getAmpPtr(i)->getVal(evt));
+                sum += this->getAmpPtr(i)->getVal(evt);
             }
         }
     }
-    if(dbThis){
-        cout << "sum= " << sum << endl;
-    }
-    return sum;
+    std::complex<double> result(sqrt(fabs(efficiency(evt)))*sum);
+
+    return norm(result);
 }
 
 void FitAmpSum::Gradient(IDalitzEvent& evt,vector<double>& grad,MinuitParameterSet* mps){

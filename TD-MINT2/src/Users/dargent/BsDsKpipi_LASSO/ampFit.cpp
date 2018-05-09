@@ -41,6 +41,7 @@
 #include "TTree.h"
 #include "TFile.h"
 #include <TStyle.h>
+#include <TChain.h>
 #include "TRandom2.h"
 #include "TRandom3.h"
 #include <ctime>
@@ -56,7 +57,6 @@
 
 using namespace std;
 using namespace MINT;
-
 
 class AmpsPdfFlexiFast
 : public DalitzPdfBaseFlexiFastInteg
@@ -134,7 +134,6 @@ public:
         if(0 != _localRnd) delete _localRnd;
     }
 };
-
 
 double getChi2(DalitzEventList& data, DalitzEventList& mc){
 	
@@ -230,6 +229,76 @@ double getChi2(DalitzEventList& data, DalitzEventList& mc){
     return (double)chi2/(nBins-1.);
 }
 
+void AddScaledAmpsToList(FitAmpSum& fas_tmp, FitAmpSum& fas, std::string name, counted_ptr<IReturnComplex>& scale){
+    counted_ptr<FitAmpList> List = fas_tmp.GetCloneOfSubsetSameFitParameters(name);
+    FitAmpSum fas_2(*List);
+    //fasCC_2.CPConjugateSameFitParameters();
+    //fasCC_2.CConjugateFinalStateSameFitParameters();
+    fas.multiply(scale);
+    fas.addAsList(fas_2,1.);
+}
+
+void AddAmpsToList(FitAmpSum& fas_tmp, FitAmpSum& fas, std::string name){
+    counted_ptr<FitAmpList> List = fas_tmp.GetCloneOfSubsetSameFitParameters(name);
+    FitAmpSum fas_2(*List);
+    //fasCC_2.CPConjugateSameFitParameters();
+    //fasCC_2.CConjugateFinalStateSameFitParameters();
+    fas.addAsList(fas_2,1.);
+}
+
+class AmpRatio : virtual public IReturnComplex{
+    FitParameter& _re;
+    FitParameter& _im;
+    int _f;
+public:
+    AmpRatio(FitParameter& re, FitParameter& im,int f = 1)
+    : _re(re), _im(im), _f(f) {}
+    
+    complex<double> ComplexVal(){
+        std::complex<double> result(_re,static_cast<double>(_f) * _im); 
+        return result;
+    }
+};
+
+double cosThetaAngle(const DalitzEvent& evt, int a, int b, int c, int d){
+	TLorentzVector p0 = evt.p(a);
+  	TLorentzVector p1 = evt.p(b) ;
+  	TLorentzVector p2 = evt.p(c) ;
+ 	TLorentzVector p3 = evt.p(d) ;
+ 	TLorentzVector pD = p0 + p1 + p2 + p3 ;
+ 	p0.Boost( - pD.BoostVector() );
+ 	p1.Boost( - pD.BoostVector() );
+ 	p2.Boost( - pD.BoostVector() );
+ 	p3.Boost( - pD.BoostVector() );
+
+	TVector3 mother = (p0+p1).Vect().Unit();
+	p0.Boost( - (p0+p1).BoostVector());
+	TVector3 daughter = p0.Vect().Unit();
+	
+	return mother.Dot(daughter);
+}
+
+double acoplanarityAngle(const DalitzEvent& evt, int a, int b, int c, int d){
+	TLorentzVector p0 = evt.p(a);
+  	TLorentzVector p1 = evt.p(b) ;
+  	TLorentzVector p2 = evt.p(c) ;
+ 	TLorentzVector p3 = evt.p(d) ;
+ 	TLorentzVector pD = p0 + p1 + p2 + p3 ;
+ 	p0.Boost( - pD.BoostVector() );
+ 	p1.Boost( - pD.BoostVector() );
+ 	p2.Boost( - pD.BoostVector() );
+ 	p3.Boost( - pD.BoostVector() );
+ 	TVector3 e1 = (p0.Vect().Cross( p1.Vect() )).Unit();
+ 	TVector3 e2 = (p2.Vect().Cross( p3.Vect() )).Unit();
+ 	//return t1.Angle( t2 ); 	
+	TVector3 ez=  (p3+p2).Vect().Unit();
+
+        double cosPhi= e1.Dot(e2);
+	double sinPhi = (e1.Cross(e2)).Dot(ez);
+	double phi= acos(cosPhi);
+	return (sinPhi > 0.0 ? phi : -phi);
+}
+
 int ampFit(int step=0){
     TRandom3 ranLux;
     NamedParameter<int> RandomSeed("RandomSeed", 0);
@@ -237,7 +306,9 @@ int ampFit(int step=0){
     gRandom = &ranLux;
     
     FitAmplitude::AutogenerateFitFile();
-    
+    NamedParameter<string> channel("channel", (std::string) "norm", (char*) 0);
+    NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
+
     NamedParameter<int> updateAnaNote("updateAnaNote", 0);
     NamedParameter<string> InputFileName("InputFileName", (std::string) "");
     NamedParameter<string> InputTreeName("InputTreeName", (std::string) "DalitzEventList");
@@ -264,30 +335,52 @@ int ampFit(int step=0){
     
     NamedParameter<int>  useLASSO("useLASSO", 1);
     NamedParameter<double>  lambda("lambda", 1.);
+    NamedParameter<int>  doBootstrap("doBootstrap", 0);
+    NamedParameter<int>  N_bootstrap("N_bootstrap", 10000);
     
     NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
     DalitzEventPattern pat(EventPattern.getVector());
     cout << " got event pattern: " << pat << endl;
-        
-    DalitzEventList eventNorm;
-    eventNorm.generatePhaseSpaceEvents(1,pat); 
-    
-    FitAmpSum fas(pat);
-    fas.getVal(eventNorm[0]);
-    fas.print();
-        
+            
+    FitAmpSum fas_tmp(pat);
     FitAmpIncoherentSum fasBkg(pat);
-    fasBkg.getVal(eventNorm[0]);
-
     {
-        DalitzEventList eventNorm2;
-        eventNorm2.generatePhaseSpaceEvents(200000,pat); 
-        fas.normalizeAmps(eventNorm2);
-        fasBkg.normalizeAmps(eventNorm2);
+	fas_tmp.print();    
+    	DalitzEventList eventListNorm;
+  	TFile *file =  TFile::Open("SignalIntegrationEvents_toys_phspCut.root");
+  	TTree* tree=dynamic_cast<TTree*>(file->Get("DalitzEventList"));
+  	eventListNorm.fromNtuple(tree,0.5);
+  	fas_tmp.normalizeAmps(eventListNorm);
+        fasBkg.normalizeAmps(eventListNorm);
     }
     
+    counted_ptr<FitAmpList> List_1 = fas_tmp.GetCloneOfSubsetSameFitParameters("K(1)(1400)+");
+    FitAmpSum fas(*List_1);
+
+    /// Fix relative decay modes from charm input
+    FitParameter a_K1_1270_re("a_K1_1270_Re",2,1,0.01);
+    FitParameter a_K1_1270_im("a_K1_1270_Im",2,0,0.01); 
+    counted_ptr<IReturnComplex> a_K1_1270 = new AmpRatio(a_K1_1270_re,a_K1_1270_im);
+
+    FitParameter a_K_1460_re("a_K_1460_Re",2,1,0.01);
+    FitParameter a_K_1460_im("a_K_1460_Im",2,0,0.01); 
+    counted_ptr<IReturnComplex> a_K_1460 = new AmpRatio(a_K_1460_re,a_K_1460_im);
+
+    FitParameter a_Ks_1410_re("a_Ks_1410_Re",2,1,0.01);
+    FitParameter a_Ks_1410_im("a_Ks_1410_Im",2,0,0.01); 
+    counted_ptr<IReturnComplex> a_Ks_1410 = new AmpRatio(a_Ks_1410_re,a_Ks_1410_im);
+
+    AddScaledAmpsToList(fas_tmp, fas, "K(1)(1270)+",a_K1_1270);
+    AddScaledAmpsToList(fas_tmp, fas, "K(1460)",a_K_1460);
+    AddScaledAmpsToList(fas_tmp, fas, "K*(1410)+",a_Ks_1410);
+//     AddAmpsToList(fas_tmp, fas, "K*(1680)+");
+/*    AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,pi+)");*/
+//     AddAmpsToList(fas_tmp, fas, "NonResV0(->Ds-,pi+)");
+//     AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,K+)");
+//     AddAmpsToList(fas_tmp, fas, "NonResV0(->Ds-,K+)");
+    AddAmpsToList(fas_tmp, fas, "NonRes");
+
     FitParameter sigfraction("SigFraction",2,1.,0.01);
-    
     DalitzEventList eventList;
     
     if(generateNew){
@@ -298,14 +391,138 @@ int ampFit(int step=0){
     }
     
     if(!generateNew){
-        TFile *_InputFile =  TFile::Open(inputFile.c_str());
-        TTree* in_tree;
-        in_tree=dynamic_cast<TTree*>(_InputFile->Get(inputTreeName.c_str()));
-        cout << "reading events from file " << inputFile << endl;
-        eventList.fromNtuple(in_tree,1);
-        cout << " I've got " << eventList.size() << " events." << endl;
-        _InputFile->Close();
-    }
+        /// Load data
+        double t,dt;
+        int f;
+        double Bs_ID,Ds_ID;
+        int q_OS;
+        Short_t q_SS;
+        double eta_OS;
+        Float_t eta_SS;
+        double sw;
+        int year,run,Ds_finalState,trigger;
+
+        double K[4];
+        double pip[4];
+        double pim[4];
+        double Ds_Kp[4],Ds_Km[4],Ds_pim[4];
+        double mB;
+        
+        TChain* tree;
+	tree=new TChain("DecayTree");
+	tree->Add(((string)InputDir+"Data/"+(string)channel+".root").c_str());
+	tree->SetBranchStatus("*",0);
+	tree->SetBranchStatus("N_Bs_sw",1);
+	tree->SetBranchStatus("year",1);
+	tree->SetBranchStatus("*DEC",1);
+	tree->SetBranchStatus("*PROB",1);
+	tree->SetBranchStatus("*OS",1);
+	tree->SetBranchStatus("*TAU*",1);
+	tree->SetBranchStatus("*ID*",1);
+	tree->SetBranchStatus("weight",1);
+	tree->SetBranchStatus("Bs_DTF_MM",1);
+	tree->SetBranchStatus("BsDTF_*P*",1);
+	tree->SetBranchStatus("TriggerCat",1);
+	tree->SetBranchStatus("run",1);
+
+	tree->SetBranchAddress("Bs_DTF_TAU",&t);
+	tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+	tree->SetBranchAddress("Ds_ID",&f);
+	tree->SetBranchAddress("N_Bs_sw",&sw);
+	tree->SetBranchAddress("year",&year);
+	tree->SetBranchAddress("run",&run);
+	tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
+	tree->SetBranchAddress("TriggerCat",&trigger);
+	tree->SetBranchAddress("Bs_DTF_MM",&mB);
+	
+	tree->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
+	tree->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
+	tree->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
+	tree->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
+	
+	tree->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
+	tree->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
+	tree->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
+	tree->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);
+	
+	tree->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
+	tree->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
+	tree->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
+	tree->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);
+	
+	tree->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
+	tree->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
+	tree->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
+	tree->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);
+	
+	tree->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
+	tree->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
+	tree->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
+	tree->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
+
+	tree->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
+	tree->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
+	tree->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
+	tree->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
+
+	int N_sample = tree->GetEntries();
+        vector<int> b_indices;
+        while( b_indices.size() < N_bootstrap )b_indices.push_back(TMath::Nint(ranLux.Uniform(0,N_sample)));
+        sort(b_indices.begin(), b_indices.end());
+        if(doBootstrap)N_sample = b_indices.size();
+
+	TRandom3 rndm;
+	int badEvents = 0;
+	for(int i=0; i< N_sample; i++){
+		if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << N_sample << endl;
+		if(doBootstrap) tree->GetEntry(b_indices[i]);
+		else tree->GetEntry(i);
+
+		double sign = 1.;
+		if(f > 0) sign = -1.;
+		TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
+		TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
+		TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
+		TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
+		TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
+		TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
+		TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+		TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+		// array of vectors
+		vector<TLorentzVector> vectorOfvectors;
+	
+		if((string)channel=="norm"){
+			TLorentzVector pip1_p, pip2_p;
+			if(rndm.Rndm()<0.5) {
+			pip1_p = K_p;
+			pip2_p = pip_p;
+			}
+			else {
+			pip1_p = pip_p;
+			pip2_p = K_p;
+			}
+			K_p = pip1_p;
+			pip_p = pip2_p;
+		}
+	
+		vectorOfvectors.push_back(B_p*MeV);
+		vectorOfvectors.push_back(D_p*MeV);
+		vectorOfvectors.push_back(K_p*MeV);
+		vectorOfvectors.push_back(pip_p*MeV);
+		vectorOfvectors.push_back(pim_p*MeV);
+	
+		DalitzEvent evt = DalitzEvent(pat, vectorOfvectors);
+	
+		if(!(evt.phaseSpace() > 0.)){
+			badEvents++;
+			continue;
+		}
+		
+		evt.setWeight(sw);
+		eventList.Add(evt);	
+	}
+	cout << endl << "bad events " << badEvents << " ( " << badEvents/(double) N_sample * 100. << " %)" << endl << endl;
+     }
     
         DalitzHistoSet datH = eventList.weightedHistoSet();
         
@@ -319,6 +536,7 @@ int ampFit(int step=0){
         lambda = lambda + (step-1) * stepSize;
         LASSO_flexi lasso(&ampsSig,lambda);
         Neg2LLSum fcn(&neg2ll,&lasso);
+        fcn.addConstraints(); 
         
         Minimiser mini;
         if(useLASSO)mini.attachFunction(&fcn);
@@ -348,7 +566,7 @@ int ampFit(int step=0){
             
             x[0]=lambda;
             for(int i = 0; i < thresholds.size() ; i++){
-                y[0]=neg2ll.getVal() + 2. * lasso.numberOfFitFractionsLargerThanThreshold(thresholds[i]);
+                y[0]=neg2ll.getVal() + 4. * lasso.numberOfFitFractionsLargerThanThreshold(thresholds[i]);
                 TGraph* aic = new TGraph(1,x,y);
                 aic->SetName( ("AIC_"+anythingToString((int) (thresholds[i]*1000))).c_str());
                 aic->SetTitle("");
@@ -360,7 +578,7 @@ int ampFit(int step=0){
             }
             
             for(int i = 0; i < thresholds.size() ; i++){
-                y[0]=neg2ll.getVal() + lasso.numberOfFitFractionsLargerThanThreshold(thresholds[i]) * log(eventList.size()*sigfraction);
+                y[0]=neg2ll.getVal() + 2. * lasso.numberOfFitFractionsLargerThanThreshold(thresholds[i]) * log(eventList.size()*sigfraction);
                 TGraph* bic = new TGraph(1,x,y);
                 bic->SetName( ("BIC_"+anythingToString((int) (thresholds[i]*1000))).c_str());
                 bic->SetTitle("");
@@ -498,6 +716,10 @@ int ampFit(int step=0){
 	    TH1D* m_DsKpi = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
 	    TH1D* m_Dspi = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
 	    TH1D* m_Dspim = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+
+	    TH1D* h_cosTheta_Kpi= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
+	    TH1D* h_cosTheta_Dspi= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+    	    TH1D* h_phi_Kpi_Dspi= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
             
             TH2D* s_Kpi_pipi = new TH2D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4}) ",60,0.2,1.6,60,0.,1.6);
             TH2D* s_DsKpi_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",80,5,30,80,0,25);
@@ -526,6 +748,9 @@ int ampFit(int step=0){
                 s_DsKpi_Dspi->Fill(eventList[i].sij(s124)/(GeV*GeV),eventList[i].s(1,3)/(GeV*GeV),eventList[i].getWeight());
                 s_DsK_Dspi->Fill(eventList[i].s(1,2)/(GeV*GeV),eventList[i].s(1,3)/(GeV*GeV),eventList[i].getWeight());
 
+		h_cosTheta_Kpi->Fill(cosThetaAngle(eventList[i],2,4,1,3),eventList[i].getWeight());
+		h_cosTheta_Dspi->Fill(cosThetaAngle(eventList[i],1,3,2,4),eventList[i].getWeight());
+		h_phi_Kpi_Dspi->Fill(acoplanarityAngle(eventList[i],2,4,1,3),eventList[i].getWeight());
             }    
             
 	    TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,1,4);
@@ -544,7 +769,71 @@ int ampFit(int step=0){
 	    TH1D* m_DsK_fit = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
 	    TH1D* m_DsKpi_fit = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
 	    TH1D* m_Dspi_fit = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
-	    TH1D* m_Dspim_fit = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);		
+	    TH1D* m_Dspim_fit = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);	
+	    TH1D* h_cosTheta_Kpi_fit= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
+	    TH1D* h_cosTheta_Dspi_fit= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+    	    TH1D* h_phi_Kpi_Dspi_fit= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
+
+	    TH1D* m_Kpipi_fit_1 = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
+	    TH1D* m_Kpi_fit_1 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
+	    TH1D* m_pipi_fit_1 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
+	    TH1D* m_Dspipi_fit_1 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_DsK_fit_1 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
+	    TH1D* m_DsKpi_fit_1 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Dspi_fit_1 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+	    TH1D* m_Dspim_fit_1 = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);	
+	    TH1D* h_cosTheta_Kpi_fit_1= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
+	    TH1D* h_cosTheta_Dspi_fit_1= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+    	    TH1D* h_phi_Kpi_Dspi_fit_1= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
+
+	    TH1D* m_Kpipi_fit_2 = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
+	    TH1D* m_Kpi_fit_2 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
+	    TH1D* m_pipi_fit_2 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
+	    TH1D* m_Dspipi_fit_2 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_DsK_fit_2 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
+	    TH1D* m_DsKpi_fit_2 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Dspi_fit_2 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+	    TH1D* m_Dspim_fit_2 = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);	
+	    TH1D* h_cosTheta_Kpi_fit_2= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
+	    TH1D* h_cosTheta_Dspi_fit_2= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+    	    TH1D* h_phi_Kpi_Dspi_fit_2= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
+
+	    TH1D* m_Kpipi_fit_3 = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
+	    TH1D* m_Kpi_fit_3 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
+	    TH1D* m_pipi_fit_3 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
+	    TH1D* m_Dspipi_fit_3 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_DsK_fit_3 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
+	    TH1D* m_DsKpi_fit_3 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Dspi_fit_3 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+	    TH1D* m_Dspim_fit_3 = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);	
+	    TH1D* h_cosTheta_Kpi_fit_3= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
+	    TH1D* h_cosTheta_Dspi_fit_3= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+    	    TH1D* h_phi_Kpi_Dspi_fit_3= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
+
+	    TH1D* m_Kpipi_fit_4 = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
+	    TH1D* m_Kpi_fit_4 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
+	    TH1D* m_pipi_fit_4 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
+	    TH1D* m_Dspipi_fit_4 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_DsK_fit_4 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
+	    TH1D* m_DsKpi_fit_4 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Dspi_fit_4 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+	    TH1D* m_Dspim_fit_4 = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);	
+	    TH1D* h_cosTheta_Kpi_fit_4= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
+	    TH1D* h_cosTheta_Dspi_fit_4= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+    	    TH1D* h_phi_Kpi_Dspi_fit_4= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
+
+	    TH1D* m_Kpipi_fit_5 = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
+	    TH1D* m_Kpi_fit_5 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
+	    TH1D* m_pipi_fit_5 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
+	    TH1D* m_Dspipi_fit_5 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_DsK_fit_5 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
+	    TH1D* m_DsKpi_fit_5 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Dspi_fit_5 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+	    TH1D* m_Dspim_fit_5 = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);	
+	    TH1D* h_cosTheta_Kpi_fit_5= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
+	    TH1D* h_cosTheta_Dspi_fit_5= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+    	    TH1D* h_phi_Kpi_Dspi_fit_5= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
+	
             //SignalGenerator sg(pat,&fas);
             //sg.setWeighted();
 
@@ -553,12 +842,27 @@ int ampFit(int step=0){
 	    TTree* treeMC = dynamic_cast<TTree*>(FileMC->Get("DalitzEventList"));
 	    eventListMC.fromNtuple(treeMC,1);
 	    FileMC->Close();
-            
+
+	    vector<string> ampNames1;
+	    ampNames1.push_back("K(1)(1270)+");
+
+	    vector<string> ampNames2;
+	    ampNames2.push_back("K(1)(1400)+");
+
+	    vector<string> ampNames3;
+	    ampNames3.push_back("K*(1410)+");
+
+	    vector<string> ampNames4;
+	    ampNames4.push_back("NonRes");
+
+	    vector<string> ampNames5;
+	    ampNames5.push_back("K(1460)+");
+		           
             for(int i = 0; i < eventListMC.size(); i++){
                                 
                 //counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
                 //DalitzEvent evt(evtPtr.get());
-                double weight = ampsSig.RealVal(eventListMC[i])*eventListMC[i].getWeight()/eventListMC[i].getGeneratorPdfRelativeToPhaseSpace();
+                double weight = ampsSig.un_normalised_noPs(eventListMC[i])*eventListMC[i].getWeight()/eventListMC[i].getGeneratorPdfRelativeToPhaseSpace();
                 s_Kpipi_fit->Fill(eventListMC[i].sij(s234)/(GeV*GeV),weight);
                 s_Kpi_fit->Fill(eventListMC[i].s(2,4)/(GeV*GeV),weight);
                 s_pipi_fit->Fill(eventListMC[i].s(3,4)/(GeV*GeV),weight);
@@ -576,10 +880,85 @@ int ampFit(int step=0){
 	        m_DsKpi_fit->Fill(sqrt(eventListMC[i].sij(s124)/(GeV*GeV)),weight);
 	        m_Dspi_fit->Fill(sqrt(eventListMC[i].s(1,3)/(GeV*GeV)),weight);
 	        m_Dspim_fit->Fill(sqrt(eventListMC[i].s(1,4)/(GeV*GeV)),weight);
+		h_cosTheta_Kpi_fit->Fill(cosThetaAngle(eventListMC[i],2,4,1,3),weight);
+		h_cosTheta_Dspi_fit->Fill(cosThetaAngle(eventListMC[i],1,3,2,4),weight);
+		h_phi_Kpi_Dspi_fit->Fill(acoplanarityAngle(eventListMC[i],2,4,1,3),weight);
+ 
+		double weight1 = fas.getAmpSqr(eventListMC[i], ampNames1) 
+			* eventListMC[i].getWeight()/ eventListMC[i].getGeneratorPdfRelativeToPhaseSpace();
+		double weight2 = fas.getAmpSqr(eventListMC[i], ampNames2) 
+			* eventListMC[i].getWeight()/ eventListMC[i].getGeneratorPdfRelativeToPhaseSpace();
+ 		double weight3 = fas.getAmpSqr(eventListMC[i], ampNames3) 
+			* eventListMC[i].getWeight()/ eventListMC[i].getGeneratorPdfRelativeToPhaseSpace();
+ 		double weight4 = fas.getAmpSqr(eventListMC[i], ampNames4) 
+			* eventListMC[i].getWeight()/ eventListMC[i].getGeneratorPdfRelativeToPhaseSpace();
+ 		double weight5 = fas.getAmpSqr(eventListMC[i], ampNames5) 
+			* eventListMC[i].getWeight()/ eventListMC[i].getGeneratorPdfRelativeToPhaseSpace();
+  
+		m_Kpipi_fit_1->Fill(sqrt(eventListMC[i].sij(s234)/(GeV*GeV)),weight1);
+	        m_Kpi_fit_1->Fill(sqrt(eventListMC[i].s(2,4)/(GeV*GeV)),weight1);
+	        m_pipi_fit_1->Fill(sqrt(eventListMC[i].s(3,4)/(GeV*GeV)),weight1);
+	        m_Dspipi_fit_1->Fill(sqrt(eventListMC[i].sij(s134)/(GeV*GeV)),weight1);
+	        m_DsK_fit_1->Fill(sqrt(eventListMC[i].s(1,2)/(GeV*GeV)),weight1);
+	        m_DsKpi_fit_1->Fill(sqrt(eventListMC[i].sij(s124)/(GeV*GeV)),weight1);
+	        m_Dspi_fit_1->Fill(sqrt(eventListMC[i].s(1,3)/(GeV*GeV)),weight1);
+	        m_Dspim_fit_1->Fill(sqrt(eventListMC[i].s(1,4)/(GeV*GeV)),weight1);
+		h_cosTheta_Kpi_fit_1->Fill(cosThetaAngle(eventListMC[i],2,4,1,3),weight1);
+		h_cosTheta_Dspi_fit_1->Fill(cosThetaAngle(eventListMC[i],1,3,2,4),weight1);
+		h_phi_Kpi_Dspi_fit_1->Fill(acoplanarityAngle(eventListMC[i],2,4,1,3),weight1);
+
+   	        m_Kpipi_fit_2->Fill(sqrt(eventListMC[i].sij(s234)/(GeV*GeV)),weight2);
+	        m_Kpi_fit_2->Fill(sqrt(eventListMC[i].s(2,4)/(GeV*GeV)),weight2);
+	        m_pipi_fit_2->Fill(sqrt(eventListMC[i].s(3,4)/(GeV*GeV)),weight2);
+	        m_Dspipi_fit_2->Fill(sqrt(eventListMC[i].sij(s134)/(GeV*GeV)),weight2);
+	        m_DsK_fit_2->Fill(sqrt(eventListMC[i].s(1,2)/(GeV*GeV)),weight2);
+	        m_DsKpi_fit_2->Fill(sqrt(eventListMC[i].sij(s124)/(GeV*GeV)),weight2);
+	        m_Dspi_fit_2->Fill(sqrt(eventListMC[i].s(1,3)/(GeV*GeV)),weight2);
+	        m_Dspim_fit_2->Fill(sqrt(eventListMC[i].s(1,4)/(GeV*GeV)),weight2);
+		h_cosTheta_Kpi_fit_2->Fill(cosThetaAngle(eventListMC[i],2,4,1,3),weight2);
+		h_cosTheta_Dspi_fit_2->Fill(cosThetaAngle(eventListMC[i],1,3,2,4),weight2);
+		h_phi_Kpi_Dspi_fit_2->Fill(acoplanarityAngle(eventListMC[i],2,4,1,3),weight2);
+
+   	        m_Kpipi_fit_3->Fill(sqrt(eventListMC[i].sij(s234)/(GeV*GeV)),weight3);
+	        m_Kpi_fit_3->Fill(sqrt(eventListMC[i].s(2,4)/(GeV*GeV)),weight3);
+	        m_pipi_fit_3->Fill(sqrt(eventListMC[i].s(3,4)/(GeV*GeV)),weight3);
+	        m_Dspipi_fit_3->Fill(sqrt(eventListMC[i].sij(s134)/(GeV*GeV)),weight3);
+	        m_DsK_fit_3->Fill(sqrt(eventListMC[i].s(1,2)/(GeV*GeV)),weight3);
+	        m_DsKpi_fit_3->Fill(sqrt(eventListMC[i].sij(s124)/(GeV*GeV)),weight3);
+	        m_Dspi_fit_3->Fill(sqrt(eventListMC[i].s(1,3)/(GeV*GeV)),weight3);
+	        m_Dspim_fit_3->Fill(sqrt(eventListMC[i].s(1,4)/(GeV*GeV)),weight3);
+		h_cosTheta_Kpi_fit_3->Fill(cosThetaAngle(eventListMC[i],2,4,1,3),weight3);
+		h_cosTheta_Dspi_fit_3->Fill(cosThetaAngle(eventListMC[i],1,3,2,4),weight3);
+		h_phi_Kpi_Dspi_fit_3->Fill(acoplanarityAngle(eventListMC[i],2,4,1,3),weight3);
+
+   	        m_Kpipi_fit_4->Fill(sqrt(eventListMC[i].sij(s234)/(GeV*GeV)),weight4);
+	        m_Kpi_fit_4->Fill(sqrt(eventListMC[i].s(2,4)/(GeV*GeV)),weight4);
+	        m_pipi_fit_4->Fill(sqrt(eventListMC[i].s(3,4)/(GeV*GeV)),weight4);
+	        m_Dspipi_fit_4->Fill(sqrt(eventListMC[i].sij(s134)/(GeV*GeV)),weight4);
+	        m_DsK_fit_4->Fill(sqrt(eventListMC[i].s(1,2)/(GeV*GeV)),weight4);
+	        m_DsKpi_fit_4->Fill(sqrt(eventListMC[i].sij(s124)/(GeV*GeV)),weight4);
+	        m_Dspi_fit_4->Fill(sqrt(eventListMC[i].s(1,3)/(GeV*GeV)),weight4);
+	        m_Dspim_fit_4->Fill(sqrt(eventListMC[i].s(1,4)/(GeV*GeV)),weight4);
+		h_cosTheta_Kpi_fit_4->Fill(cosThetaAngle(eventListMC[i],2,4,1,3),weight4);
+		h_cosTheta_Dspi_fit_4->Fill(cosThetaAngle(eventListMC[i],1,3,2,4),weight4);
+		h_phi_Kpi_Dspi_fit_4->Fill(acoplanarityAngle(eventListMC[i],2,4,1,3),weight4);
+
+   	        m_Kpipi_fit_5->Fill(sqrt(eventListMC[i].sij(s234)/(GeV*GeV)),weight5);
+	        m_Kpi_fit_5->Fill(sqrt(eventListMC[i].s(2,4)/(GeV*GeV)),weight5);
+	        m_pipi_fit_5->Fill(sqrt(eventListMC[i].s(3,4)/(GeV*GeV)),weight5);
+	        m_Dspipi_fit_5->Fill(sqrt(eventListMC[i].sij(s134)/(GeV*GeV)),weight5);
+	        m_DsK_fit_5->Fill(sqrt(eventListMC[i].s(1,2)/(GeV*GeV)),weight5);
+	        m_DsKpi_fit_5->Fill(sqrt(eventListMC[i].sij(s124)/(GeV*GeV)),weight5);
+	        m_Dspi_fit_5->Fill(sqrt(eventListMC[i].s(1,3)/(GeV*GeV)),weight5);
+	        m_Dspim_fit_5->Fill(sqrt(eventListMC[i].s(1,4)/(GeV*GeV)),weight5);
+		h_cosTheta_Kpi_fit_5->Fill(cosThetaAngle(eventListMC[i],2,4,1,3),weight5);
+		h_cosTheta_Dspi_fit_5->Fill(cosThetaAngle(eventListMC[i],1,3,2,4),weight5);
+		h_phi_Kpi_Dspi_fit_5->Fill(acoplanarityAngle(eventListMC[i],2,4,1,3),weight5);
 		
 		eventListMC[i].setWeight(weight);
-            }
-            
+           }
+
+
             TCanvas* c = new TCanvas();
                      
             s_Kpi_pipi->SetMinimum(0);
@@ -670,7 +1049,6 @@ int ampFit(int step=0){
             c->Print(((string)OutputDir+"s_Dspim.eps").c_str());
 	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"s_Dspim.pdf").c_str());
 	    
-
             m_Kpipi->SetMinimum(0);
             m_Kpipi->SetLineColor(kBlack);
             m_Kpipi->DrawNormalized("e1",1);
@@ -743,11 +1121,443 @@ int ampFit(int step=0){
             c->Print(((string)OutputDir+"m_Dspim.eps").c_str());
 	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Dspim.pdf").c_str());
 
-	    getChi2(eventList,eventListMC);
+	    h_cosTheta_Kpi->SetMinimum(0);
+            h_cosTheta_Kpi->SetLineColor(kBlack);
+            h_cosTheta_Kpi->DrawNormalized("e1",1);
+            h_cosTheta_Kpi_fit->SetLineColor(kBlue);
+            h_cosTheta_Kpi_fit->SetLineWidth(3);
+            h_cosTheta_Kpi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"h_cosTheta_Kpi.eps").c_str());
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"h_cosTheta_Kpi.pdf").c_str());
 
+	    h_cosTheta_Dspi->SetMinimum(0);
+            h_cosTheta_Dspi->SetLineColor(kBlack);
+            h_cosTheta_Dspi->DrawNormalized("e1",1);
+            h_cosTheta_Dspi_fit->SetLineColor(kBlue);
+            h_cosTheta_Dspi_fit->SetLineWidth(3);
+            h_cosTheta_Dspi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"h_cosTheta_Dspi.eps").c_str());
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"h_cosTheta_Dspi.pdf").c_str());
+
+	    h_phi_Kpi_Dspi->SetMinimum(0);
+            h_phi_Kpi_Dspi->SetLineColor(kBlack);
+            h_phi_Kpi_Dspi->DrawNormalized("e1",1);
+            h_phi_Kpi_Dspi_fit->SetLineColor(kBlue);
+            h_phi_Kpi_Dspi_fit->SetLineWidth(3);
+            h_phi_Kpi_Dspi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"h_phi_Kpi_Dspi.eps").c_str());
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"h_phi_Kpi_Dspi.pdf").c_str());
+
+
+            m_Kpipi->SetMinimum(0.01);
+            m_Kpipi->SetLineColor(kBlack);
+            m_Kpipi->DrawNormalized("e1",1);
+            m_Kpipi_fit->SetLineColor(kBlue);
+            m_Kpipi_fit->SetLineWidth(3);
+            m_Kpipi_fit->DrawNormalized("histcsame",1);
+            m_Kpipi_fit_1->SetLineColor(kRed+1);
+            m_Kpipi_fit_1->SetLineWidth(2);
+            m_Kpipi_fit_1->SetFillColor(kRed+1);
+            m_Kpipi_fit_1->SetFillStyle(3353);
+            m_Kpipi_fit_1->DrawNormalized("histcsame",m_Kpipi_fit_1->Integral()/m_Kpipi_fit->Integral());
+            m_Kpipi_fit_2->SetLineColor(kGreen+3);
+            m_Kpipi_fit_2->SetLineWidth(2);
+            m_Kpipi_fit_2->SetFillColor(kGreen+3);
+            m_Kpipi_fit_2->SetFillStyle(3353);
+            m_Kpipi_fit_2->DrawNormalized("histcsame",m_Kpipi_fit_2->Integral()/m_Kpipi_fit->Integral());
+            m_Kpipi_fit_3->SetLineColor(kMagenta+3);
+            m_Kpipi_fit_3->SetLineWidth(2);
+            m_Kpipi_fit_3->SetFillColor(kMagenta+3);
+            m_Kpipi_fit_3->SetFillStyle(3353);
+            m_Kpipi_fit_3->DrawNormalized("histcsame",m_Kpipi_fit_3->Integral()/m_Kpipi_fit->Integral());
+            m_Kpipi_fit_4->SetLineColor(kBlack);
+            m_Kpipi_fit_4->SetLineWidth(3);
+            m_Kpipi_fit_4->SetLineStyle(kDashed);
+            m_Kpipi_fit_4->DrawNormalized("histcsame",m_Kpipi_fit_4->Integral()/m_Kpipi_fit->Integral());
+            m_Kpipi_fit_5->SetLineColor(kGray+3);
+            m_Kpipi_fit_5->SetLineWidth(2);
+            m_Kpipi_fit_5->SetFillColor(kGray+3);
+            m_Kpipi_fit_5->SetFillStyle(1001);
+            m_Kpipi_fit_5->DrawNormalized("histcsame",m_Kpipi_fit_5->Integral()/m_Kpipi_fit->Integral());
+            c->Print(((string)OutputDir+"m_Kpipi_mod.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Kpipi_mod.pdf").c_str());
+	    gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"m_Kpipi_mod_log.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Kpipi_mod_log.pdf").c_str());
+            gPad->SetLogy(0);
+
+            m_Kpi->SetMinimum(0.01);
+            m_Kpi->SetLineColor(kBlack);
+            m_Kpi->DrawNormalized("e1",1);
+            m_Kpi_fit->SetLineColor(kBlue);
+            m_Kpi_fit->SetLineWidth(3);
+            m_Kpi_fit->DrawNormalized("histcsame",1);
+            m_Kpi_fit_1->SetLineColor(kRed+1);
+            m_Kpi_fit_1->SetLineWidth(2);
+            m_Kpi_fit_1->SetFillColor(kRed+1);
+            m_Kpi_fit_1->SetFillStyle(3353);
+            m_Kpi_fit_1->DrawNormalized("histcsame",m_Kpi_fit_1->Integral()/m_Kpi_fit->Integral());
+            m_Kpi_fit_2->SetLineColor(kGreen+3);
+            m_Kpi_fit_2->SetLineWidth(2);
+            m_Kpi_fit_2->SetFillColor(kGreen+3);
+            m_Kpi_fit_2->SetFillStyle(3353);
+            m_Kpi_fit_2->DrawNormalized("histcsame",m_Kpi_fit_2->Integral()/m_Kpi_fit->Integral());
+            m_Kpi_fit_3->SetLineColor(kMagenta+3);
+            m_Kpi_fit_3->SetLineWidth(2);
+            m_Kpi_fit_3->SetFillColor(kMagenta+3);
+            m_Kpi_fit_3->SetFillStyle(3353);
+            m_Kpi_fit_3->DrawNormalized("histcsame",m_Kpi_fit_3->Integral()/m_Kpi_fit->Integral());
+            m_Kpi_fit_4->SetLineColor(kBlack);
+            m_Kpi_fit_4->SetLineWidth(3);
+            m_Kpi_fit_4->SetLineStyle(kDashed);
+            m_Kpi_fit_4->DrawNormalized("histcsame",m_Kpi_fit_4->Integral()/m_Kpi_fit->Integral());
+            m_Kpi_fit_5->SetLineColor(kGray+3);
+            m_Kpi_fit_5->SetLineWidth(2);
+            m_Kpi_fit_5->SetFillColor(kGray+3);
+            m_Kpi_fit_5->SetFillStyle(1001);
+            m_Kpi_fit_5->DrawNormalized("histcsame",m_Kpi_fit_5->Integral()/m_Kpi_fit->Integral());
+            c->Print(((string)OutputDir+"m_Kpi_mod.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Kpi_mod.pdf").c_str());
+	    gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"m_Kpi_mod_log.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Kpi_mod_log.pdf").c_str());
+            gPad->SetLogy(0);
+
+            m_pipi->SetMinimum(0.01);
+            m_pipi->SetLineColor(kBlack);
+            m_pipi->DrawNormalized("e1",1);
+            m_pipi_fit->SetLineColor(kBlue);
+            m_pipi_fit->SetLineWidth(3);
+            m_pipi_fit->DrawNormalized("histcsame",1);
+            m_pipi_fit_1->SetLineColor(kRed+1);
+            m_pipi_fit_1->SetLineWidth(2);
+            m_pipi_fit_1->SetFillColor(kRed+1);
+            m_pipi_fit_1->SetFillStyle(3353);
+            m_pipi_fit_1->DrawNormalized("histcsame",m_pipi_fit_1->Integral()/m_pipi_fit->Integral());
+            m_pipi_fit_2->SetLineColor(kGreen+3);
+            m_pipi_fit_2->SetLineWidth(2);
+            m_pipi_fit_2->SetFillColor(kGreen+3);
+            m_pipi_fit_2->SetFillStyle(3353);
+            m_pipi_fit_2->DrawNormalized("histcsame",m_pipi_fit_2->Integral()/m_pipi_fit->Integral());
+            m_pipi_fit_3->SetLineColor(kMagenta+3);
+            m_pipi_fit_3->SetLineWidth(2);
+            m_pipi_fit_3->SetFillColor(kMagenta+3);
+            m_pipi_fit_3->SetFillStyle(3353);
+            m_pipi_fit_3->DrawNormalized("histcsame",m_pipi_fit_3->Integral()/m_pipi_fit->Integral());
+            m_pipi_fit_4->SetLineColor(kBlack);
+            m_pipi_fit_4->SetLineWidth(3);
+            m_pipi_fit_4->SetLineStyle(kDashed);
+            m_pipi_fit_4->DrawNormalized("histcsame",m_pipi_fit_4->Integral()/m_pipi_fit->Integral());
+            m_pipi_fit_5->SetLineColor(kGray+3);
+            m_pipi_fit_5->SetLineWidth(2);
+            m_pipi_fit_5->SetFillColor(kGray+3);
+            m_pipi_fit_5->SetFillStyle(1001);
+            m_pipi_fit_5->DrawNormalized("histcsame",m_pipi_fit_5->Integral()/m_pipi_fit->Integral());
+            c->Print(((string)OutputDir+"m_pipi_mod.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_pipi_mod.pdf").c_str());
+	    gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"m_pipi_mod_log.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_pipi_mod_log.pdf").c_str());
+            gPad->SetLogy(0);
+
+            m_Dspipi->SetMinimum(0.01);
+            m_Dspipi->SetLineColor(kBlack);
+            m_Dspipi->DrawNormalized("e1",1);
+            m_Dspipi_fit->SetLineColor(kBlue);
+            m_Dspipi_fit->SetLineWidth(3);
+            m_Dspipi_fit->DrawNormalized("histcsame",1);
+            m_Dspipi_fit_1->SetLineColor(kRed+1);
+            m_Dspipi_fit_1->SetLineWidth(2);
+            m_Dspipi_fit_1->SetFillColor(kRed+1);
+            m_Dspipi_fit_1->SetFillStyle(3353);
+            m_Dspipi_fit_1->DrawNormalized("histcsame",m_Dspipi_fit_1->Integral()/m_Dspipi_fit->Integral());
+            m_Dspipi_fit_2->SetLineColor(kGreen+3);
+            m_Dspipi_fit_2->SetLineWidth(2);
+            m_Dspipi_fit_2->SetFillColor(kGreen+3);
+            m_Dspipi_fit_2->SetFillStyle(3353);
+            m_Dspipi_fit_2->DrawNormalized("histcsame",m_Dspipi_fit_2->Integral()/m_Dspipi_fit->Integral());
+            m_Dspipi_fit_3->SetLineColor(kMagenta+3);
+            m_Dspipi_fit_3->SetLineWidth(2);
+            m_Dspipi_fit_3->SetFillColor(kMagenta+3);
+            m_Dspipi_fit_3->SetFillStyle(3353);
+            m_Dspipi_fit_3->DrawNormalized("histcsame",m_Dspipi_fit_3->Integral()/m_Dspipi_fit->Integral());
+            m_Dspipi_fit_4->SetLineColor(kBlack);
+            m_Dspipi_fit_4->SetLineWidth(3);
+            m_Dspipi_fit_4->SetLineStyle(kDashed);
+            m_Dspipi_fit_4->DrawNormalized("histcsame",m_Dspipi_fit_4->Integral()/m_Dspipi_fit->Integral());
+            m_Dspipi_fit_5->SetLineColor(kGray+3);
+            m_Dspipi_fit_5->SetLineWidth(2);
+            m_Dspipi_fit_5->SetFillColor(kGray+3);
+            m_Dspipi_fit_5->SetFillStyle(1001);
+            m_Dspipi_fit_5->DrawNormalized("histcsame",m_Dspipi_fit_5->Integral()/m_Dspipi_fit->Integral());
+            c->Print(((string)OutputDir+"m_Dspipi_mod.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Dspipi_mod.pdf").c_str());
+	    gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"m_Dspipi_mod_log.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Dspipi_mod_log.pdf").c_str());
+            gPad->SetLogy(0);
+
+            m_Dspi->SetMinimum(0.01);
+            m_Dspi->SetLineColor(kBlack);
+            m_Dspi->DrawNormalized("e1",1);
+            m_Dspi_fit->SetLineColor(kBlue);
+            m_Dspi_fit->SetLineWidth(3);
+            m_Dspi_fit->DrawNormalized("histcsame",1);
+            m_Dspi_fit_1->SetLineColor(kRed+1);
+            m_Dspi_fit_1->SetLineWidth(2);
+            m_Dspi_fit_1->SetFillColor(kRed+1);
+            m_Dspi_fit_1->SetFillStyle(3353);
+            m_Dspi_fit_1->DrawNormalized("histcsame",m_Dspi_fit_1->Integral()/m_Dspi_fit->Integral());
+            m_Dspi_fit_2->SetLineColor(kGreen+3);
+            m_Dspi_fit_2->SetLineWidth(2);
+            m_Dspi_fit_2->SetFillColor(kGreen+3);
+            m_Dspi_fit_2->SetFillStyle(3353);
+            m_Dspi_fit_2->DrawNormalized("histcsame",m_Dspi_fit_2->Integral()/m_Dspi_fit->Integral());
+            m_Dspi_fit_3->SetLineColor(kMagenta+3);
+            m_Dspi_fit_3->SetLineWidth(2);
+            m_Dspi_fit_3->SetFillColor(kMagenta+3);
+            m_Dspi_fit_3->SetFillStyle(3353);
+            m_Dspi_fit_3->DrawNormalized("histcsame",m_Dspi_fit_3->Integral()/m_Dspi_fit->Integral());
+            m_Dspi_fit_4->SetLineColor(kBlack);
+            m_Dspi_fit_4->SetLineWidth(3);
+            m_Dspi_fit_4->SetLineStyle(kDashed);
+            m_Dspi_fit_4->DrawNormalized("histcsame",m_Dspi_fit_4->Integral()/m_Dspi_fit->Integral());
+            m_Dspi_fit_5->SetLineColor(kGray+3);
+            m_Dspi_fit_5->SetLineWidth(2);
+            m_Dspi_fit_5->SetFillColor(kGray+3);
+            m_Dspi_fit_5->SetFillStyle(1001);
+            m_Dspi_fit_5->DrawNormalized("histcsame",m_Dspi_fit_5->Integral()/m_Dspi_fit->Integral());
+            c->Print(((string)OutputDir+"m_Dspi_mod.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Dspi_mod.pdf").c_str());
+	    gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"m_Dspi_mod_log.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Dspi_mod_log.pdf").c_str());
+            gPad->SetLogy(0);
+
+            m_DsK->SetMinimum(0.01);
+            m_DsK->SetLineColor(kBlack);
+            m_DsK->DrawNormalized("e1",1);
+            m_DsK_fit->SetLineColor(kBlue);
+            m_DsK_fit->SetLineWidth(3);
+            m_DsK_fit->DrawNormalized("histcsame",1);
+            m_DsK_fit_1->SetLineColor(kRed+1);
+            m_DsK_fit_1->SetLineWidth(2);
+            m_DsK_fit_1->SetFillColor(kRed+1);
+            m_DsK_fit_1->SetFillStyle(3353);
+            m_DsK_fit_1->DrawNormalized("histcsame",m_DsK_fit_1->Integral()/m_DsK_fit->Integral());
+            m_DsK_fit_2->SetLineColor(kGreen+3);
+            m_DsK_fit_2->SetLineWidth(2);
+            m_DsK_fit_2->SetFillColor(kGreen+3);
+            m_DsK_fit_2->SetFillStyle(3353);
+            m_DsK_fit_2->DrawNormalized("histcsame",m_DsK_fit_2->Integral()/m_DsK_fit->Integral());
+            m_DsK_fit_3->SetLineColor(kMagenta+3);
+            m_DsK_fit_3->SetLineWidth(2);
+            m_DsK_fit_3->SetFillColor(kMagenta+3);
+            m_DsK_fit_3->SetFillStyle(3353);
+            m_DsK_fit_3->DrawNormalized("histcsame",m_DsK_fit_3->Integral()/m_DsK_fit->Integral());
+            m_DsK_fit_4->SetLineColor(kBlack);
+            m_DsK_fit_4->SetLineWidth(3);
+            m_DsK_fit_4->SetLineStyle(kDashed);
+            m_DsK_fit_4->DrawNormalized("histcsame",m_DsK_fit_4->Integral()/m_DsK_fit->Integral());
+            m_DsK_fit_5->SetLineColor(kGray+3);
+            m_DsK_fit_5->SetLineWidth(2);
+            m_DsK_fit_5->SetFillColor(kGray+3);
+            m_DsK_fit_5->SetFillStyle(1001);
+            m_DsK_fit_5->DrawNormalized("histcsame",m_DsK_fit_5->Integral()/m_DsK_fit->Integral());
+            c->Print(((string)OutputDir+"m_DsK_mod.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_DsK_mod.pdf").c_str());
+	    gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"m_DsK_mod_log.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_DsK_mod_log.pdf").c_str());
+            gPad->SetLogy(0);
+
+            m_DsKpi->SetMinimum(0.01);
+            m_DsKpi->SetLineColor(kBlack);
+            m_DsKpi->DrawNormalized("e1",1);
+            m_DsKpi_fit->SetLineColor(kBlue);
+            m_DsKpi_fit->SetLineWidth(3);
+            m_DsKpi_fit->DrawNormalized("histcsame",1);
+            m_DsKpi_fit_1->SetLineColor(kRed+1);
+            m_DsKpi_fit_1->SetLineWidth(2);
+            m_DsKpi_fit_1->SetFillColor(kRed+1);
+            m_DsKpi_fit_1->SetFillStyle(3353);
+            m_DsKpi_fit_1->DrawNormalized("histcsame",m_DsKpi_fit_1->Integral()/m_DsKpi_fit->Integral());
+            m_DsKpi_fit_2->SetLineColor(kGreen+3);
+            m_DsKpi_fit_2->SetLineWidth(2);
+            m_DsKpi_fit_2->SetFillColor(kGreen+3);
+            m_DsKpi_fit_2->SetFillStyle(3353);
+            m_DsKpi_fit_2->DrawNormalized("histcsame",m_DsKpi_fit_2->Integral()/m_DsKpi_fit->Integral());
+            m_DsKpi_fit_3->SetLineColor(kMagenta+3);
+            m_DsKpi_fit_3->SetLineWidth(2);
+            m_DsKpi_fit_3->SetFillColor(kMagenta+3);
+            m_DsKpi_fit_3->SetFillStyle(3353);
+            m_DsKpi_fit_3->DrawNormalized("histcsame",m_DsKpi_fit_3->Integral()/m_DsKpi_fit->Integral());
+            m_DsKpi_fit_4->SetLineColor(kBlack);
+            m_DsKpi_fit_4->SetLineWidth(3);
+            m_DsKpi_fit_4->SetLineStyle(kDashed);
+            m_DsKpi_fit_4->DrawNormalized("histcsame",m_DsKpi_fit_4->Integral()/m_DsKpi_fit->Integral());
+            m_DsKpi_fit_5->SetLineColor(kGray+3);
+            m_DsKpi_fit_5->SetLineWidth(2);
+            m_DsKpi_fit_5->SetFillColor(kGray+3);
+            m_DsKpi_fit_5->SetFillStyle(1001);
+            m_DsKpi_fit_5->DrawNormalized("histcsame",m_DsKpi_fit_5->Integral()/m_DsKpi_fit->Integral());
+            c->Print(((string)OutputDir+"m_DsKpi_mod.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_DsKpi_mod.pdf").c_str());
+	    gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"m_DsKpi_mod_log.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_DsKpi_mod_log.pdf").c_str());
+            gPad->SetLogy(0);
+
+            m_Dspim->SetMinimum(0.01);
+            m_Dspim->SetLineColor(kBlack);
+            m_Dspim->DrawNormalized("e1",1);
+            m_Dspim_fit->SetLineColor(kBlue);
+            m_Dspim_fit->SetLineWidth(3);
+            m_Dspim_fit->DrawNormalized("histcsame",1);
+            m_Dspim_fit_1->SetLineColor(kRed+1);
+            m_Dspim_fit_1->SetLineWidth(2);
+            m_Dspim_fit_1->SetFillColor(kRed+1);
+            m_Dspim_fit_1->SetFillStyle(3353);
+            m_Dspim_fit_1->DrawNormalized("histcsame",m_Dspim_fit_1->Integral()/m_Dspim_fit->Integral());
+            m_Dspim_fit_2->SetLineColor(kGreen+3);
+            m_Dspim_fit_2->SetLineWidth(2);
+            m_Dspim_fit_2->SetFillColor(kGreen+3);
+            m_Dspim_fit_2->SetFillStyle(3353);
+            m_Dspim_fit_2->DrawNormalized("histcsame",m_Dspim_fit_2->Integral()/m_Dspim_fit->Integral());
+            m_Dspim_fit_3->SetLineColor(kMagenta+3);
+            m_Dspim_fit_3->SetLineWidth(2);
+            m_Dspim_fit_3->SetFillColor(kMagenta+3);
+            m_Dspim_fit_3->SetFillStyle(3353);
+            m_Dspim_fit_3->DrawNormalized("histcsame",m_Dspim_fit_3->Integral()/m_Dspim_fit->Integral());
+            m_Dspim_fit_4->SetLineColor(kBlack);
+            m_Dspim_fit_4->SetLineWidth(3);
+            m_Dspim_fit_4->SetLineStyle(kDashed);
+            m_Dspim_fit_4->DrawNormalized("histcsame",m_Dspim_fit_4->Integral()/m_Dspim_fit->Integral());
+            m_Dspim_fit_5->SetLineColor(kGray+3);
+            m_Dspim_fit_5->SetLineWidth(2);
+            m_Dspim_fit_5->SetFillColor(kGray+3);
+            m_Dspim_fit_5->SetFillStyle(1001);
+            m_Dspim_fit_5->DrawNormalized("histcsame",m_Dspim_fit_5->Integral()/m_Dspim_fit->Integral());
+            c->Print(((string)OutputDir+"m_Dspim_mod.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Dspim_mod.pdf").c_str());
+	    gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"m_Dspim_mod_log.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"m_Dspim_mod_log.pdf").c_str());
+            gPad->SetLogy(0);
+
+            h_cosTheta_Kpi->SetMinimum(0.01);
+            h_cosTheta_Kpi->SetLineColor(kBlack);
+            h_cosTheta_Kpi->DrawNormalized("e1",1);
+            h_cosTheta_Kpi_fit->SetLineColor(kBlue);
+            h_cosTheta_Kpi_fit->SetLineWidth(3);
+            h_cosTheta_Kpi_fit->DrawNormalized("histcsame",1);
+            h_cosTheta_Kpi_fit_1->SetLineColor(kRed+1);
+            h_cosTheta_Kpi_fit_1->SetLineWidth(2);
+            h_cosTheta_Kpi_fit_1->SetFillColor(kRed+1);
+            h_cosTheta_Kpi_fit_1->SetFillStyle(3353);
+            h_cosTheta_Kpi_fit_1->DrawNormalized("histcsame",h_cosTheta_Kpi_fit_1->Integral()/h_cosTheta_Kpi_fit->Integral());
+            h_cosTheta_Kpi_fit_2->SetLineColor(kGreen+3);
+            h_cosTheta_Kpi_fit_2->SetLineWidth(2);
+            h_cosTheta_Kpi_fit_2->SetFillColor(kGreen+3);
+            h_cosTheta_Kpi_fit_2->SetFillStyle(3353);
+            h_cosTheta_Kpi_fit_2->DrawNormalized("histcsame",h_cosTheta_Kpi_fit_2->Integral()/h_cosTheta_Kpi_fit->Integral());
+            h_cosTheta_Kpi_fit_3->SetLineColor(kMagenta+3);
+            h_cosTheta_Kpi_fit_3->SetLineWidth(2);
+            h_cosTheta_Kpi_fit_3->SetFillColor(kMagenta+3);
+            h_cosTheta_Kpi_fit_3->SetFillStyle(3353);
+            h_cosTheta_Kpi_fit_3->DrawNormalized("histcsame",h_cosTheta_Kpi_fit_3->Integral()/h_cosTheta_Kpi_fit->Integral());
+            h_cosTheta_Kpi_fit_4->SetLineColor(kBlack);
+            h_cosTheta_Kpi_fit_4->SetLineWidth(3);
+            h_cosTheta_Kpi_fit_4->SetLineStyle(kDashed);
+            h_cosTheta_Kpi_fit_4->DrawNormalized("histcsame",h_cosTheta_Kpi_fit_4->Integral()/h_cosTheta_Kpi_fit->Integral());
+            h_cosTheta_Kpi_fit_5->SetLineColor(kGray+3);
+            h_cosTheta_Kpi_fit_5->SetLineWidth(2);
+            h_cosTheta_Kpi_fit_5->SetFillColor(kGray+3);
+            h_cosTheta_Kpi_fit_5->SetFillStyle(1001);
+            h_cosTheta_Kpi_fit_5->DrawNormalized("histcsame",h_cosTheta_Kpi_fit_5->Integral()/h_cosTheta_Kpi_fit->Integral());
+            c->Print(((string)OutputDir+"h_cosTheta_Kpi_mod.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"h_cosTheta_Kpi_mod.pdf").c_str());
+	    gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"h_cosTheta_Kpi_mod_log.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"h_cosTheta_Kpi_mod_log.pdf").c_str());
+            gPad->SetLogy(0);
+
+            h_cosTheta_Dspi->SetMinimum(0.01);
+            h_cosTheta_Dspi->SetLineColor(kBlack);
+            h_cosTheta_Dspi->DrawNormalized("e1",1);
+            h_cosTheta_Dspi_fit->SetLineColor(kBlue);
+            h_cosTheta_Dspi_fit->SetLineWidth(3);
+            h_cosTheta_Dspi_fit->DrawNormalized("histcsame",1);
+            h_cosTheta_Dspi_fit_1->SetLineColor(kRed+1);
+            h_cosTheta_Dspi_fit_1->SetLineWidth(2);
+            h_cosTheta_Dspi_fit_1->SetFillColor(kRed+1);
+            h_cosTheta_Dspi_fit_1->SetFillStyle(3353);
+            h_cosTheta_Dspi_fit_1->DrawNormalized("histcsame",h_cosTheta_Dspi_fit_1->Integral()/h_cosTheta_Dspi_fit->Integral());
+            h_cosTheta_Dspi_fit_2->SetLineColor(kGreen+3);
+            h_cosTheta_Dspi_fit_2->SetLineWidth(2);
+            h_cosTheta_Dspi_fit_2->SetFillColor(kGreen+3);
+            h_cosTheta_Dspi_fit_2->SetFillStyle(3353);
+            h_cosTheta_Dspi_fit_2->DrawNormalized("histcsame",h_cosTheta_Dspi_fit_2->Integral()/h_cosTheta_Dspi_fit->Integral());
+            h_cosTheta_Dspi_fit_3->SetLineColor(kMagenta+3);
+            h_cosTheta_Dspi_fit_3->SetLineWidth(2);
+            h_cosTheta_Dspi_fit_3->SetFillColor(kMagenta+3);
+            h_cosTheta_Dspi_fit_3->SetFillStyle(3353);
+            h_cosTheta_Dspi_fit_3->DrawNormalized("histcsame",h_cosTheta_Dspi_fit_3->Integral()/h_cosTheta_Dspi_fit->Integral());
+            h_cosTheta_Dspi_fit_4->SetLineColor(kBlack);
+            h_cosTheta_Dspi_fit_4->SetLineWidth(3);
+            h_cosTheta_Dspi_fit_4->SetLineStyle(kDashed);
+            h_cosTheta_Dspi_fit_4->DrawNormalized("histcsame",h_cosTheta_Dspi_fit_4->Integral()/h_cosTheta_Dspi_fit->Integral());
+            h_cosTheta_Dspi_fit_5->SetLineColor(kGray+3);
+            h_cosTheta_Dspi_fit_5->SetLineWidth(2);
+            h_cosTheta_Dspi_fit_5->SetFillColor(kGray+3);
+            h_cosTheta_Dspi_fit_5->SetFillStyle(1001);
+            h_cosTheta_Dspi_fit_5->DrawNormalized("histcsame",h_cosTheta_Dspi_fit_5->Integral()/h_cosTheta_Dspi_fit->Integral());
+            c->Print(((string)OutputDir+"h_cosTheta_Dspi_mod.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"h_cosTheta_Dspi_mod.pdf").c_str());
+	    gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"h_cosTheta_Dspi_mod_log.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"h_cosTheta_Dspi_mod_log.pdf").c_str());
+            gPad->SetLogy(0);
+
+            h_phi_Kpi_Dspi->SetMinimum(0.01);
+            h_phi_Kpi_Dspi->SetLineColor(kBlack);
+            h_phi_Kpi_Dspi->DrawNormalized("e1",1);
+            h_phi_Kpi_Dspi_fit->SetLineColor(kBlue);
+            h_phi_Kpi_Dspi_fit->SetLineWidth(3);
+            h_phi_Kpi_Dspi_fit->DrawNormalized("histcsame",1);
+            h_phi_Kpi_Dspi_fit_1->SetLineColor(kRed+1);
+            h_phi_Kpi_Dspi_fit_1->SetLineWidth(2);
+            h_phi_Kpi_Dspi_fit_1->SetFillColor(kRed+1);
+            h_phi_Kpi_Dspi_fit_1->SetFillStyle(3353);
+            h_phi_Kpi_Dspi_fit_1->DrawNormalized("histcsame",h_phi_Kpi_Dspi_fit_1->Integral()/h_phi_Kpi_Dspi_fit->Integral());
+            h_phi_Kpi_Dspi_fit_2->SetLineColor(kGreen+3);
+            h_phi_Kpi_Dspi_fit_2->SetLineWidth(2);
+            h_phi_Kpi_Dspi_fit_2->SetFillColor(kGreen+3);
+            h_phi_Kpi_Dspi_fit_2->SetFillStyle(3353);
+            h_phi_Kpi_Dspi_fit_2->DrawNormalized("histcsame",h_phi_Kpi_Dspi_fit_2->Integral()/h_phi_Kpi_Dspi_fit->Integral());
+            h_phi_Kpi_Dspi_fit_3->SetLineColor(kMagenta+3);
+            h_phi_Kpi_Dspi_fit_3->SetLineWidth(2);
+            h_phi_Kpi_Dspi_fit_3->SetFillColor(kMagenta+3);
+            h_phi_Kpi_Dspi_fit_3->SetFillStyle(3353);
+            h_phi_Kpi_Dspi_fit_3->DrawNormalized("histcsame",h_phi_Kpi_Dspi_fit_3->Integral()/h_phi_Kpi_Dspi_fit->Integral());
+            h_phi_Kpi_Dspi_fit_4->SetLineColor(kBlack);
+            h_phi_Kpi_Dspi_fit_4->SetLineWidth(3);
+            h_phi_Kpi_Dspi_fit_4->SetLineStyle(kDashed);
+            h_phi_Kpi_Dspi_fit_4->DrawNormalized("histcsame",h_phi_Kpi_Dspi_fit_4->Integral()/h_phi_Kpi_Dspi_fit->Integral());
+            h_phi_Kpi_Dspi_fit_5->SetLineColor(kGray+3);
+            h_phi_Kpi_Dspi_fit_5->SetLineWidth(2);
+            h_phi_Kpi_Dspi_fit_5->SetFillColor(kGray+3);
+            h_phi_Kpi_Dspi_fit_5->SetFillStyle(1001);
+            h_phi_Kpi_Dspi_fit_5->DrawNormalized("histcsame",h_phi_Kpi_Dspi_fit_5->Integral()/h_phi_Kpi_Dspi_fit->Integral());
+            c->Print(((string)OutputDir+"h_phi_Kpi_Dspi_mod.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"h_phi_Kpi_Dspi_mod.pdf").c_str());
+	    gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"h_phi_Kpi_Dspi_mod_log.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"h_phi_Kpi_Dspi_mod_log.pdf").c_str());
+            gPad->SetLogy(0);
+
+	    getChi2(eventList,eventListMC);
         }
-        
-        
     return 0;
 }
 

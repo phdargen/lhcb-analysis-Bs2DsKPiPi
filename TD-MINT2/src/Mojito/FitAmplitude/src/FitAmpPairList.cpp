@@ -657,11 +657,78 @@ void FitAmpPairList::doFinalStats(Minimiser* mini){
 }
 
 
+bool FitAmpPairList::doFractions(){
+
+  if(this->empty()) return 0;
+
+   _singleAmpFractions = FitFractionList() ;
+   _interferenceFractions = FitFractionList();
+
+  cout << "\n============================================"
+       << "============================================"
+       << "\n        Amplitude Fractions";
+
+  double norm = integral();
+
+  if(norm <= 0){
+    cout << "ERROR in FitAmpPairList::makeAndStoreFractions()"
+	 << " integral = " << integral()
+	 << " won't do fractions."
+	 << endl;
+    return false;
+  }
+
+  for(unsigned int i=0; i < this->size(); i++){    
+    double frac = this->at(i).integral()/norm;
+    string name;
+    if(this->at(i).isSingleAmp()){
+      name = this->at(i).fitAmp1().name();
+    }else{
+      name = this->at(i).name();
+    }
+    FitFraction f(name, frac);
+
+    if(this->at(i).isSingleAmp()){
+      this->at(i).fitAmp1().setFraction(frac);
+      _singleAmpFractions.add(f);
+    }else{
+      _interferenceFractions.add(f);
+    }
+  }
+
+  cout << "filled FitFractionLists" << endl;
+  _interferenceFractions.sortByMagnitudeDecending();
+  
+  cout <<   "================================================="
+       << "\n================================================="
+       << "\n FRACTIONS:"
+       << "\n ^^^^^^^^^^" << endl;
+  cout << _singleAmpFractions << endl;
+  cout <<   "================================================="
+       << "\n================================================="
+       << "\n Interference terms (sorted by size)"
+       << "\n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+  cout << _interferenceFractions << endl;
+  cout <<   "================================================="
+       << "\n=================================================" << endl;
+
+  cout << "\n\n\t X-check: total sum of all terms"
+       << " (amplitude fractions + interference terms): "
+       << _singleAmpFractions.sum().frac() 
+    + _interferenceFractions.sum().frac();
+
+  return true;
+}
+
+
 bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
 					   , const std::string&  // dummy
 					   , Minimiser* mini
 					   ){
   bool dbThis=true;
+
+   _singleAmpFractions = FitFractionList() ;
+   _interferenceFractions = FitFractionList();
 
   if(this->empty()) return 0;
   counted_ptr<FitAmpPairFitCovariance> fcov(0);
@@ -762,12 +829,13 @@ bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
 //     os.close();
 //   }
   /// latex table
+  if(!os)return true;
   os << "\\begin{table}[h]" << "\n";
   os << "\\centering" << "\n";
   os << "\\caption{Fit fractions for "; 
   os << "$B_s \\to D_s K \\pi \\pi$";
   os << " data.}\n";
-  os << "\\begin{tabular}{c c}" << "\n";
+  os << "\\begin{tabular}{l r}" << "\n";
   os << "\\hline" << "\n";
   os << "\\hline" << "\n";
   os << "Decay channel & Fraction [$\\%$] \\\\" << "\n";
@@ -788,14 +856,15 @@ bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
     name.ReplaceAll("rho","\\rho");
     name.ReplaceAll("sigma10","\\sigma");
 
-    name.ReplaceAll("K*(892)0","K^{*}(892)");
-    name.ReplaceAll("K(0)*(1430)0","K(0)^{*}(1430)");
+//     name.ReplaceAll("K*(892)0","K^{*}(892)");
+//     name.ReplaceAll("K(0)*(1430)0","K(0)^{*}(1430)");
     name.ReplaceAll("GS","");
     name.ReplaceAll("SBW","");
     name.ReplaceAll("RhoOmega","");
     name.ReplaceAll("LASS","");
     name.ReplaceAll("+","^+");
     name.ReplaceAll("-","^-");
+    name.ReplaceAll("*","^*");
     name.ReplaceAll(")0",")^0");
     //name.ReplaceAll("("," \\left [ ");
     //name.ReplaceAll(")"," \\right ] ");
@@ -975,9 +1044,9 @@ double FitAmpPairList::getFractionChi2() const{
       counter++;
       double frac = this->at(i).integral()/norm;
       double target_f = this->at(i).fitAmp1().getFraction();
-      if(i < 10){
-	cout << "(" << frac << " - " << target_f << ")" << endl;
-      }
+      //if(i < 10){
+	//cout << "(" << frac << " - " << target_f << ")" << endl;
+      //}
       double dfs=(frac - target_f)/canonicalError;
       if(ErrorProportionalToSqrtTarget && target_f > 0) dfs /= sqrt(0.01*target_f);
       sum += dfs*dfs;

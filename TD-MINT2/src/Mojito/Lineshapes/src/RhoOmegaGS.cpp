@@ -65,7 +65,7 @@ std::complex<double> RhoOmegaGS::omegaBW(IDalitzEvent& evt){
 std::complex<double> RhoOmegaGS::getVal(IDalitzEvent& evt){    
     
     double mass_omega = omegaMass();
-    complex<double> delta(delta_Re(),delta_Im());
+    complex<double> delta= polar(delta_Re(),delta_Im());
     
     return GounarisSakurai::getVal(evt)*(1. + mumsRecoMass2()/(mass_omega*mass_omega) *  (delta * omegaBW(evt)));
 }

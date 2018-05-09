@@ -14,9 +14,14 @@ using namespace std;
 using namespace MINT;
 
 std::complex<double> Histo_BW::BreitWigner(){
+	double mass = mumsMass();
+  	double width = mumsWidth();
+	double gamma = sqrt(mass*mass*(mass*mass+width*width));
+        double k = mass*width*gamma/sqrt(mass*mass+gamma);
+
         double mass2 = runningMass2();
         std::complex<double> invBW(mass2 - mumsRecoMass2(), - mumsMass() * GofM());
-        return 1.*GeV*GeV/invBW;
+        return sqrt(k)/invBW;
 }
 
 double Histo_BW::runningMass2(){

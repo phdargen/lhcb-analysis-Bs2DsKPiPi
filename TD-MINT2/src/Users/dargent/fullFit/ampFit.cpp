@@ -184,7 +184,7 @@ class AmpRatio : virtual public IReturnComplex{
     FitParameter& _im;
     int _f;
 public:
-    AmpRatio(FitParameter& re, FitParameter& im,int f)
+    AmpRatio(FitParameter& re, FitParameter& im,int f = 1)
     : _re(re), _im(im), _f(f) {}
     
     complex<double> ComplexVal(){
@@ -914,6 +914,17 @@ public:
   }
 };
 
+class FracLL : public Minimisable{
+  FlexiFastAmplitudeIntegrator* _integ;
+public:
+  FracLL(FlexiFastAmplitudeIntegrator* integ) : _integ(integ){
+    _integ->getVal();//makes sure we are initialised
+  }
+  double getVal(){
+    return _integ->getFractionChi2();
+  }
+};
+
 double getChi2(DalitzEventList& data, DiskResidentEventList& mc){
 	
     double minBinWidth = 0.;
@@ -1117,6 +1128,46 @@ double getChi2_6D(DalitzEventList& data, DiskResidentEventList& mc){
     return (double)chi2/(nBins-1.);
 }
 
+double cosThetaAngle(const DalitzEvent& evt, int a, int b, int c, int d){
+	TLorentzVector p0 = evt.p(a);
+  	TLorentzVector p1 = evt.p(b) ;
+  	TLorentzVector p2 = evt.p(c) ;
+ 	TLorentzVector p3 = evt.p(d) ;
+ 	TLorentzVector pD = p0 + p1 + p2 + p3 ;
+ 	p0.Boost( - pD.BoostVector() );
+ 	p1.Boost( - pD.BoostVector() );
+ 	p2.Boost( - pD.BoostVector() );
+ 	p3.Boost( - pD.BoostVector() );
+
+	TVector3 mother = (p0+p1).Vect().Unit();
+	p0.Boost( - (p0+p1).BoostVector());
+	TVector3 daughter = p0.Vect().Unit();
+	
+	return mother.Dot(daughter);
+}
+
+double acoplanarityAngle(const DalitzEvent& evt, int a, int b, int c, int d){
+	TLorentzVector p0 = evt.p(a);
+  	TLorentzVector p1 = evt.p(b) ;
+  	TLorentzVector p2 = evt.p(c) ;
+ 	TLorentzVector p3 = evt.p(d) ;
+ 	TLorentzVector pD = p0 + p1 + p2 + p3 ;
+ 	p0.Boost( - pD.BoostVector() );
+ 	p1.Boost( - pD.BoostVector() );
+ 	p2.Boost( - pD.BoostVector() );
+ 	p3.Boost( - pD.BoostVector() );
+ 	TVector3 e1 = (p0.Vect().Cross( p1.Vect() )).Unit();
+ 	TVector3 e2 = (p2.Vect().Cross( p3.Vect() )).Unit();
+ 	//return t1.Angle( t2 ); 	
+	TVector3 ez=  (p3+p2).Vect().Unit();
+
+        double cosPhi= e1.Dot(e2);
+	double sinPhi = (e1.Cross(e2)).Dot(ez);
+	double phi= acos(cosPhi);
+	return (sinPhi > 0.0 ? phi : -phi);
+}
+
+
 void ampFit(int step=0){
 
     /// Options
@@ -1155,7 +1206,7 @@ void ampFit(int step=0){
     NamedParameter<int>  nBinsAsym("nBinsAsym", 8);
     NamedParameter<int>  randomizeStartVals("randomizeStartVals", 0);
     NamedParameter<int>  doSimFit("doSimFit", 0);
-
+    NamedParameter<int>  constrainFF("constrainFF", 0);
     NamedParameter<int>  useLASSO("useLASSO", 1);
     NamedParameter<double>  lambda("lambda", 1.);
 
@@ -1199,38 +1250,69 @@ void ampFit(int step=0){
 
     /// Define amplitude model
     DalitzEventList eventListPhsp,eventListPhsp_CP;
-    
     eventListPhsp.generatePhaseSpaceEvents(200000,pat);
     eventListPhsp_CP.generatePhaseSpaceEvents(200000,pat_CP);
 
     FitAmpSum fas_tmp((DalitzEventPattern)pat);
-    fas_tmp.getVal(eventListPhsp[0]);
-    fas_tmp.normalizeAmps(eventListPhsp);
+    //fas_tmp.normalizeAmps(eventListPhsp);
     //if(randomizeStartVals)fas_tmp.randomizeStartVals(seed);
     //if(randomizeStartVals)fas_tmp.randomizePhaseStartVals(seed);
+    
+    /// Normalize amps
+    {
+    	DalitzEventList eventListNorm;
+  	TFile *file =  TFile::Open("SignalIntegrationEvents_toys_phspCut.root");
+  	TTree* tree=dynamic_cast<TTree*>(file->Get("DalitzEventList"));
+  	eventListNorm.fromNtuple(tree,0.5);
+  	fas_tmp.normalizeAmps(eventListNorm);
+    }
 
     MinuitParameterSet* mps = MinuitParameterSet::getDefaultSet();
-    //const IMinuitParameter* mp_K1_Re = mps->getParPtr("Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re");
-    //const IMinuitParameter* mp_K1_Im = mps->getParPtr("Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im");
     
+    /// Choose reference amp
     counted_ptr<FitAmpList> List_1 = fas_tmp.GetCloneOfSubsetSameFitParameters("K(1)(1400)+");
-    //counted_ptr<FitAmpList> List_2 = fas_tmp.GetCloneOfSubsetSameFitParameters("NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)");
     FitAmpSum fas(*List_1);
     FitAmpSum fas_bar(*List_1);
-    //fas_bar.CPConjugateSameFitParameters();
-    //fas_bar.CConjugateFinalStateSameFitParameters();
-    FitParameter r_K1_re("r_K1_Re",2,0,0.01);
-    FitParameter r_K1_im("r_K1_Im",2,0,0.01); 
-    counted_ptr<IReturnComplex> r_K1_plus = new CPV_amp(r_K1_re,r_K1_im,1);
-    counted_ptr<IReturnComplex> r_K1_minus = new CPV_amp(r_K1_re,r_K1_im,-1);
-    fas.multiply(r_K1_plus); 
-    fas_bar.multiply(r_K1_minus);
-    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1)(1400)+", r_K1_plus, r_K1_minus );
-    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_K1_plus, r_K1_minus );
-    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)", r_K1_plus, r_K1_minus );
-    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_K1_plus, r_K1_minus );
-    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)", r_K1_plus, r_K1_minus );
+    FitAmpSum fas_tot(*List_1);
+    FitParameter r_1_re("r_1_Re",2,0,0.01);
+    FitParameter r_1_im("r_1_Im",2,0,0.01); 
+    counted_ptr<IReturnComplex> r_1_plus = new CPV_amp(r_1_re,r_1_im,1);
+    counted_ptr<IReturnComplex> r_1_minus = new CPV_amp(r_1_re,r_1_im,-1);
+    fas.multiply(r_1_plus); 
+    fas_bar.multiply(r_1_minus);
+    //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K(1)(1270)+", r_K1_plus, r_K1_minus );
 
+    /// Fix relative decay modes from charm input
+    FitParameter a_K1_1270_re("a_K1_1270_Re",2,1,0.01);
+    FitParameter a_K1_1270_im("a_K1_1270_Im",2,0,0.01); 
+    counted_ptr<IReturnComplex> a_K1_1270 = new AmpRatio(a_K1_1270_re,a_K1_1270_im);
+
+    FitParameter a_Ks_1410_re("a_Ks_1410_Re",2,1,0.01);
+    FitParameter a_Ks_1410_im("a_Ks_1410_Im",2,0,0.01); 
+    counted_ptr<IReturnComplex> a_Ks_1410 = new AmpRatio(a_Ks_1410_re,a_Ks_1410_im);
+
+    FitParameter a_K_1460_re("a_K_1460_Re",2,1,0.01);
+    FitParameter a_K_1460_im("a_K_1460_Im",2,0,0.01); 
+    counted_ptr<IReturnComplex> a_K_1460 = new AmpRatio(a_K_1460_re,a_K_1460_im);
+
+    /// Add amps to A
+    AddScaledAmpsToList(fas_tmp, fas, "K(1)(1270)+",a_K1_1270);
+    AddScaledAmpsToList(fas_tmp, fas, "K*(1410)+",a_Ks_1410);
+    //AddAmpsToList(fas_tmp, fas, "K*(1410)+");
+    AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)");
+    //AddAmpsToList(fas_tmp, fas, "NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)");
+
+    /// Add amps to Abar
+    AddScaledAmpsToList(fas_tmp, fas_bar, "K(1460)",a_K_1460);
+    AddAmpsToList(fas_tmp, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)");
+
+    /// Add amp to Atot
+    AddScaledAmpsToList(fas_tmp, fas_tot, "K(1)(1270)+",a_K1_1270);
+    AddScaledAmpsToList(fas_tmp, fas_tot, "K(1460)",a_K_1460);
+    AddScaledAmpsToList(fas_tmp, fas_tot, "K*(1410)+",a_Ks_1410);
+    AddAmpsToList(fas_tmp, fas_tot, "NonRes");
+
+    /*
     const IMinuitParameter* mp_K1410_Re = mps->getParPtr("Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re");
     const IMinuitParameter* mp_K1410_Im = mps->getParPtr("Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im");
     FitParameter r_2_re("r_2_Re",2,0,0.01);
@@ -1259,19 +1341,6 @@ void ampFit(int step=0){
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->sigma10(->pi+,pi-),Ds-)", r_3_plus, r_3_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+", r_3_plus, r_3_minus );   
-   
-    AddAmpsToList(fas_tmp, fas, "K(1)(1270)+");
-    //AddAmpsToList(fas_tmp, fas, "BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)" );
-    //AddAmpsToList(fas_tmp, fas, "K(1)(1400)+");
-    AddAmpsToList(fas_tmp, fas, "K*(1410)+");
-    //AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,K+),sigma10(->pi+,pi-)");
-    //AddAmpsToList(fas_tmp, fas_bar, "NonResS0(->Ds-,K+)");
-
-    //AddAmpsToList(fas_tmp, fas_bar, "K(1)(1400)+");
-    AddAmpsToList(fas_tmp, fas_bar, "K(1460)");
-    //AddAmpsToList(fas_tmp, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)");
-    AddAmpsToList(fas_tmp, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)");
-    //AddAmpsToList(fas_tmp, fas_bar, "NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)");
 
     FitParameter r_4_re("r_4_Re",2,0,0.01);
     FitParameter r_4_im("r_4_Im",2,0,0.01); 
@@ -1284,6 +1353,7 @@ void ampFit(int step=0){
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResV0(->Ds-,K+),sigma10(->pi+,pi-)", r_4_plus, r_4_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_4_plus, r_4_minus );
     //AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)", r_4_plus, r_4_minus );
+    */
    
     /// Define B -> f amplitude        
     fas.setTag(1);
@@ -1538,6 +1608,17 @@ void ampFit(int step=0){
 	pdf.coherenceFactor();
 	throw "";
     }
+
+    /// Constrain total amp
+    fas_tot.print();
+    FromFileGenerator* fileGen = new FromFileGenerator(IntegratorEventFile, 0, "UPDATE");
+    FlexiFastAmplitudeIntegrator integ_tot(pat, &fas_tot, fileGen, gRandom, integPrecision);
+    FracLL fracLL(&integ_tot);
+    //Minimiser mini2(&fracLL);
+    //mini2.doFit();
+    //mini2.printResultVsInput();
+    //integ_tot.doFinalStats(&mini2);
+    //throw "";
 
     /// Make marginal pdfs for MC generation and plotting
     // values only used for importance sampling:
@@ -2090,6 +2171,10 @@ void ampFit(int step=0){
     LASSO_flexi lasso_bar(&ampsSig_bar,lambda);
     Neg2LLSum neg2LL_lasso(&neg2LL,&lasso,&lasso_bar);
     Neg2LLSum neg2LL_sim_lasso(&neg2LL_sim,&lasso,&lasso_bar);    
+
+    if(constrainFF){
+	neg2LL_sim.add(&fracLL);
+    }
     
     Minimiser mini;
     if(useLASSO){
@@ -2171,6 +2256,7 @@ void ampFit(int step=0){
     if(updateAnaNote)outTableName = "../../../../../TD-AnaNote/latex/tables/fullFit/"+(string)OutputDir+"fitFractions";
 
     pdf.doFinalStatsAndSaveForAmp12(&mini,outTableName,((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
+    if(constrainFF)integ_tot.doFinalStats(&mini);
 
     /// Create result tables
     if(updateAnaNote){
@@ -2261,6 +2347,10 @@ void ampFit(int step=0){
     TH1D* m_Dspi = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
     TH1D* m_Dspim = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
 
+    TH1D* h_cosTheta_Kpi= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
+    TH1D* h_cosTheta_Dspi= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+    TH1D* h_phi_Kpi_Dspi= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
+
     TH1D* s_Kpipi_mixed_p = (TH1D*) s_Kpipi->Clone("s_Kpipi_mixed_p");
     TH1D* s_Kpipi_unmixed_p = (TH1D*) s_Kpipi->Clone("s_Kpipi_unmixed_p");
     TH1D* s_Kpipi_mixed_m = (TH1D*) s_Kpipi->Clone("s_Kpipi_mixed_m");
@@ -2309,6 +2399,33 @@ void ampFit(int step=0){
     TH1D* m_DsKpi_fit = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
     TH1D* m_Dspi_fit = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
     TH1D* m_Dspim_fit = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+    TH1D* h_cosTheta_Kpi_fit= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1); 
+    TH1D* h_cosTheta_Dspi_fit= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+    TH1D* h_phi_Kpi_Dspi_fit= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
+
+    TH1D* m_Kpipi_fit_A = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
+    TH1D* m_Kpi_fit_A = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
+    TH1D* m_pipi_fit_A = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
+    TH1D* m_Dspipi_fit_A = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+    TH1D* m_DsK_fit_A = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
+    TH1D* m_DsKpi_fit_A = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+    TH1D* m_Dspi_fit_A = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+    TH1D* m_Dspim_fit_A = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+    TH1D* h_cosTheta_Kpi_fit_A= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1); 
+    TH1D* h_cosTheta_Dspi_fit_A= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+    TH1D* h_phi_Kpi_Dspi_fit_A= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
+
+    TH1D* m_Kpipi_fit_Abar = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
+    TH1D* m_Kpi_fit_Abar = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
+    TH1D* m_pipi_fit_Abar = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
+    TH1D* m_Dspipi_fit_Abar = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+    TH1D* m_DsK_fit_Abar = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
+    TH1D* m_DsKpi_fit_Abar = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+    TH1D* m_Dspi_fit_Abar = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+    TH1D* m_Dspim_fit_Abar = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+    TH1D* h_cosTheta_Kpi_fit_Abar= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1); 
+    TH1D* h_cosTheta_Dspi_fit_Abar= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+    TH1D* h_phi_Kpi_Dspi_fit_Abar= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
 
     TH1D* s_Kpipi_mixed_p_fit = (TH1D*) s_Kpipi->Clone("s_Kpipi_mixed_p_fit");
     TH1D* s_Kpipi_mixed_m_fit = (TH1D*) s_Kpipi->Clone("s_Kpipi_mixed_m_fit");
@@ -2331,7 +2448,6 @@ void ampFit(int step=0){
     TH1D* s_DsKpi_Abar = (TH1D*) s_DsKpi->Clone("s_DsKpi_Abar");
     TH1D* s_DsK_A = (TH1D*) s_DsK->Clone("s_DsK_A");
     TH1D* s_DsK_Abar = (TH1D*) s_DsK->Clone("s_DsK_Abar");
-
     TH1D* s_Kpipi_r = (TH1D*) s_Kpipi->Clone("s_Kpipi_r");
 
     double N = 0;
@@ -2501,6 +2617,9 @@ void ampFit(int step=0){
             m_DsKpi->Fill(sqrt(eventList[i].sij(s124)/(GeV*GeV)),eventList[i].getWeight());
             m_Dspi->Fill(sqrt(eventList[i].s(1,3)/(GeV*GeV)),eventList[i].getWeight());
             m_Dspim->Fill(sqrt(eventList[i].s(1,4)/(GeV*GeV)),eventList[i].getWeight());
+            h_cosTheta_Kpi->Fill(cosThetaAngle(eventList[i],2,4,1,3),eventList[i].getWeight());
+	    h_cosTheta_Dspi->Fill(cosThetaAngle(eventList[i],1,3,2,4),eventList[i].getWeight());
+	    h_phi_Kpi_Dspi->Fill(acoplanarityAngle(eventList[i],2,4,1,3),eventList[i].getWeight());
 
 	    if(w_eff<w_max){
 		//if(abs(fmod(eventList[i].getValueFromVector(0),2.*pi/dm)-0.18) < 2.*pi/dm/4.*0.5) s_Kpipi_mixed->Fill(eventList[i].sij(s234)/(GeV*GeV),eventList[i].getWeight());
@@ -2789,12 +2908,44 @@ void ampFit(int step=0){
 	m_DsKpi_fit->Fill(sqrt(evt.sij(s124)/(GeV*GeV)),weight);
 	m_Dspi_fit->Fill(sqrt(evt.s(1,3)/(GeV*GeV)),weight);
 	m_Dspim_fit->Fill(sqrt(evt.s(1,4)/(GeV*GeV)),weight);
+	h_cosTheta_Kpi_fit->Fill(cosThetaAngle(evt,2,4,1,3),weight);
+	h_cosTheta_Dspi_fit->Fill(cosThetaAngle(evt,1,3,2,4),weight);
+	h_phi_Kpi_Dspi_fit->Fill(acoplanarityAngle(evt,2,4,1,3),weight);
 
-	double weight_A = 1;//fas.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
-	//weight_A /=  exp(-t_MC/tau) / ( tau * ( exp(min_TAU/tau) - exp(max_TAU/tau) ) ) * gen_dt.getVal() * gen_eta_OS.getVal()* gen_eta_SS.getVal();
+	double weight_A = 0;
+	double weight_Abar = 0;
+	if(f_MC>0){
+		weight_A = fas.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
+		weight_Abar = fas_bar.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
+	}
+	else {
+		weight_A = fas_CP.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
+		weight_Abar = fas_bar_CP.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
+	}
 
-	double weight_Abar = 1;//fas_bar.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
-	//weight_Abar /=  exp(-t_MC/tau) / ( tau * ( exp(min_TAU/tau) - exp(max_TAU/tau) ) ) * gen_dt.getVal() * gen_eta_OS.getVal()* gen_eta_SS.getVal();
+	m_Kpipi_fit_A->Fill(sqrt(evt.sij(s234)/(GeV*GeV)),weight_A);
+	m_Kpi_fit_A->Fill(sqrt(evt.s(2,4)/(GeV*GeV)),weight_A);
+	m_pipi_fit_A->Fill(sqrt(evt.s(3,4)/(GeV*GeV)),weight_A);
+	m_Dspipi_fit_A->Fill(sqrt(evt.sij(s134)/(GeV*GeV)),weight_A);
+	m_DsK_fit_A->Fill(sqrt(evt.s(1,2)/(GeV*GeV)),weight_A);
+	m_DsKpi_fit_A->Fill(sqrt(evt.sij(s124)/(GeV*GeV)),weight_A);
+	m_Dspi_fit_A->Fill(sqrt(evt.s(1,3)/(GeV*GeV)),weight_A);
+	m_Dspim_fit_A->Fill(sqrt(evt.s(1,4)/(GeV*GeV)),weight_A);
+	h_cosTheta_Kpi_fit_A->Fill(cosThetaAngle(evt,2,4,1,3),weight_A);
+	h_cosTheta_Dspi_fit_A->Fill(cosThetaAngle(evt,1,3,2,4),weight_A);
+	h_phi_Kpi_Dspi_fit_A->Fill(acoplanarityAngle(evt,2,4,1,3),weight_A);
+
+	m_Kpipi_fit_Abar->Fill(sqrt(evt.sij(s234)/(GeV*GeV)),weight_Abar);
+	m_Kpi_fit_Abar->Fill(sqrt(evt.s(2,4)/(GeV*GeV)),weight_Abar);
+	m_pipi_fit_Abar->Fill(sqrt(evt.s(3,4)/(GeV*GeV)),weight_Abar);
+	m_Dspipi_fit_Abar->Fill(sqrt(evt.sij(s134)/(GeV*GeV)),weight_Abar);
+	m_DsK_fit_Abar->Fill(sqrt(evt.s(1,2)/(GeV*GeV)),weight_Abar);
+	m_DsKpi_fit_Abar->Fill(sqrt(evt.sij(s124)/(GeV*GeV)),weight_Abar);
+	m_Dspi_fit_Abar->Fill(sqrt(evt.s(1,3)/(GeV*GeV)),weight_Abar);
+	m_Dspim_fit_Abar->Fill(sqrt(evt.s(1,4)/(GeV*GeV)),weight_Abar);
+	h_cosTheta_Kpi_fit_Abar->Fill(cosThetaAngle(evt,2,4,1,3),weight_Abar);
+	h_cosTheta_Dspi_fit_Abar->Fill(cosThetaAngle(evt,1,3,2,4),weight_Abar);
+	h_phi_Kpi_Dspi_fit_Abar->Fill(acoplanarityAngle(evt,2,4,1,3),weight_Abar);
 
 	s_Kpipi_A->Fill(evt.sij(s234)/(GeV*GeV),weight_A);
         s_Kpipi_Abar->Fill(evt.sij(s234)/(GeV*GeV),weight_Abar);
@@ -3071,7 +3222,6 @@ void ampFit(int step=0){
             c->Print(((string)OutputDir+"s_Dspim.eps").c_str());
 	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Dspim.pdf").c_str());
 	    
-
             m_Kpipi->SetMinimum(0);
             m_Kpipi->SetLineColor(kBlack);
             m_Kpipi->DrawNormalized("e1",1);
@@ -3143,163 +3293,63 @@ void ampFit(int step=0){
             m_Dspim_fit->DrawNormalized("histcsame",1);
             c->Print(((string)OutputDir+"m_Dspim.eps").c_str());
 	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspim.pdf").c_str());
+
+	    h_cosTheta_Kpi->SetMinimum(0);
+            h_cosTheta_Kpi->SetLineColor(kBlack);
+            h_cosTheta_Kpi->DrawNormalized("e1",1);
+            h_cosTheta_Kpi_fit->SetLineColor(kBlue);
+            h_cosTheta_Kpi_fit->SetLineWidth(3);
+            h_cosTheta_Kpi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"h_cosTheta_Kpi.eps").c_str());
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Kpi.pdf").c_str());
+
+	    h_cosTheta_Dspi->SetMinimum(0);
+            h_cosTheta_Dspi->SetLineColor(kBlack);
+            h_cosTheta_Dspi->DrawNormalized("e1",1);
+            h_cosTheta_Dspi_fit->SetLineColor(kBlue);
+            h_cosTheta_Dspi_fit->SetLineWidth(3);
+            h_cosTheta_Dspi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"h_cosTheta_Dspi.eps").c_str());
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Dspi.pdf").c_str());
+
+	    h_phi_Kpi_Dspi->SetMinimum(0);
+            h_phi_Kpi_Dspi->SetLineColor(kBlack);
+            h_phi_Kpi_Dspi->DrawNormalized("e1",1);
+            h_phi_Kpi_Dspi_fit->SetLineColor(kBlue);
+            h_phi_Kpi_Dspi_fit->SetLineWidth(3);
+            h_phi_Kpi_Dspi_fit->DrawNormalized("histcsame",1);
+            c->Print(((string)OutputDir+"h_phi_Kpi_Dspi.eps").c_str());
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_phi_Kpi_Dspi.pdf").c_str());
 	    
-/*
-	    s_Kpipi_unmixed->Rebin(4);
-	    s_Kpipi_mixed->Rebin(4);
-            s_Kpipi_unmixed_fit->Rebin(4);
-            s_Kpipi_mixed_fit->Rebin(4);
-            s_Kpipi_unmixed->SetMinimum(0);
-            s_Kpipi_unmixed->SetLineColor(kRed);
-            s_Kpipi_unmixed->SetMarkerColor(kRed);
-            s_Kpipi_unmixed->DrawNormalized("e1",1);
-            s_Kpipi_unmixed_fit->SetLineColor(kRed);
-            s_Kpipi_unmixed_fit->SetLineWidth(3);
-            s_Kpipi_unmixed_fit->DrawNormalized("histcsame",1);
-            s_Kpipi_mixed->SetMarkerColor(kBlue);
-	    s_Kpipi_mixed->SetLineColor(kBlue);
-            s_Kpipi_mixed->DrawNormalized("esame",1);
-            s_Kpipi_mixed_fit->SetLineColor(kBlue);
-            s_Kpipi_mixed_fit->SetLineWidth(3);
-            s_Kpipi_mixed_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_Kpipi_asym2.eps").c_str());
-*/
 
-	    //s_Kpipi_unmixed_p->Add(s_Kpipi_unmixed_m,-1.);	  
-	    //s_Kpipi_mixed_p->Add(s_Kpipi_mixed_m,-1.);	  
-	    //s_Kpipi_unmixed_p_fit->Add(s_Kpipi_unmixed_m_fit,-1.);	  
-	    //s_Kpipi_mixed_p_fit->Add(s_Kpipi_mixed_m_fit,-1.);	  
-/*
-  	    for (int i=1; i<= s_Kpipi_unmixed_m->GetNbinsX(); i++) {
-      		  s_Kpipi_mixed_m->SetBinContent(i,-s_Kpipi_mixed_m->GetBinContent(i));
-      		  s_Kpipi_unmixed_m->SetBinContent(i,-s_Kpipi_unmixed_m->GetBinContent(i));
-      		  s_Kpipi_mixed_m_fit->SetBinContent(i,-s_Kpipi_mixed_m_fit->GetBinContent(i));
-      		  s_Kpipi_unmixed_m_fit->SetBinContent(i,-s_Kpipi_unmixed_m_fit->GetBinContent(i));
-  	    }
-*/
+	    double norm_A = m_Kpipi_fit_A->Integral()/(m_Kpipi_fit_A->Integral()+m_Kpipi_fit_Abar->Integral());
+	    double norm_Abar = m_Kpipi_fit_Abar->Integral()/(m_Kpipi_fit_Abar->Integral()+m_Kpipi_fit_Abar->Integral());
+	    cout << "ration = " << norm_Abar/norm_A << endl;
 
-    	    s_Kpipi_unmixed_p->Rebin(4);
-	    s_Kpipi_mixed_p->Rebin(4);
-            s_Kpipi_unmixed_p_fit->Rebin(4);
-            s_Kpipi_mixed_p_fit->Rebin(4);
-        
-    	    s_Kpipi_unmixed_m->Rebin(4);
-	    s_Kpipi_mixed_m->Rebin(4);
-            s_Kpipi_unmixed_m_fit->Rebin(4);
-            s_Kpipi_mixed_m_fit->Rebin(4);
-        
-	    TH1D* s_Kpipi_asym_p = (TH1D*) s_Kpipi_unmixed_p->GetAsymmetry(s_Kpipi_mixed_p);	
-	    //s_Kpipi_asym_p->Rebin(4);
-	    TH1D* s_Kpipi_asym_m = (TH1D*) s_Kpipi_unmixed_m->GetAsymmetry(s_Kpipi_mixed_m);	
-	    //s_Kpipi_asym_m->Rebin(4);
-  	    for (int i=1; i<= s_Kpipi_asym_m->GetNbinsX(); i++) {
-      		  s_Kpipi_asym_m->SetBinContent(i,-s_Kpipi_asym_m->GetBinContent(i));
-	     }
+            m_Kpipi->SetMinimum(0.01);
+            m_Kpipi->SetLineColor(kBlack);
+            m_Kpipi->DrawNormalized("e1",1);
+            m_Kpipi_fit->SetLineColor(kBlue);
+            m_Kpipi_fit->SetLineWidth(3);
+            m_Kpipi_fit->DrawNormalized("histcsame",1);
+            m_Kpipi_fit_A->SetLineColor(kRed+1);
+            m_Kpipi_fit_A->SetLineWidth(2);
+            m_Kpipi_fit_A->SetFillColor(kRed+1);
+            m_Kpipi_fit_A->SetFillStyle(3353);
+            m_Kpipi_fit_A->DrawNormalized("histcsame",norm_A);
+            m_Kpipi_fit_Abar->SetLineColor(kGreen+3);
+            m_Kpipi_fit_Abar->SetLineWidth(2);
+            m_Kpipi_fit_Abar->SetFillColor(kGreen+3);
+            m_Kpipi_fit_Abar->SetFillStyle(3353);
+            m_Kpipi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
+            c->Print(((string)OutputDir+"m_Kpipi_mod.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpipi_mod.pdf").c_str());
+	    gPad->SetLogy(1);
+            c->Print(((string)OutputDir+"m_Kpipi_mod_log.eps").c_str());
+            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpipi_mod_log.pdf").c_str());
+            gPad->SetLogy(0);
 
-	    s_Kpipi_asym_p->SetBit(TH1::kIsAverage);
-      	    s_Kpipi_asym_m->SetBit(TH1::kIsAverage);
-	    s_Kpipi_asym_p->Add(s_Kpipi_asym_m);
 
-	    TH1D* s_Kpipi_asym_p_fit = (TH1D*) s_Kpipi_unmixed_p_fit->GetAsymmetry(s_Kpipi_mixed_p_fit);	
-	    //s_Kpipi_asym_p_fit->Rebin(4);
-	    TH1D* s_Kpipi_asym_m_fit = (TH1D*) s_Kpipi_unmixed_m_fit->GetAsymmetry(s_Kpipi_mixed_m_fit);	
-	    //s_Kpipi_asym_m_fit->Rebin(4);
-  	    for (int i=1; i<= s_Kpipi_asym_m_fit->GetNbinsX(); i++) {
-      		  s_Kpipi_asym_m_fit->SetBinContent(i,-s_Kpipi_asym_m_fit->GetBinContent(i));
-	     }
-
-	    s_Kpipi_asym_p_fit->SetBit(TH1::kIsAverage);
-      	    s_Kpipi_asym_m_fit->SetBit(TH1::kIsAverage);
-	    s_Kpipi_asym_p_fit->Add(s_Kpipi_asym_m_fit);
-	    s_Kpipi_asym_p_fit->SetLineColor(kRed);
-
-            s_Kpipi_asym_p->SetMinimum(-.5);
-	    s_Kpipi_asym_p->SetMaximum(.5);
-	    s_Kpipi_asym_p->Draw("e");
-	    s_Kpipi_asym_p_fit->Draw("histcsame");
-	    
-	    //s_Kpipi_asym_m_fit->SetLineColor(kBlue);
-	    //s_Kpipi_asym_m->SetLineColor(kBlue);
-	    //s_Kpipi_asym_m_fit->Draw("histcsame");
-	    //s_Kpipi_asym_m->Draw("esame");
-
-	    //s_Kpipi_asym_p_fit->Draw("histcsame");
-            c->Print(((string)OutputDir+"s_Kpipi_asym.eps").c_str());
-            c->Print(((string)OutputDir+"s_Kpipi_asym.C").c_str());
-	    //cout << "s_Kpipi_asym " << s_Kpipi_asym_p->Integral() << endl; 
-	    //cout << "s_Kpipi_asym_fit " << s_Kpipi_asym_p_fit->Integral() << endl; 
-
-            s_Kpipi_A->SetMinimum(0);
-            s_Kpipi_A->SetLineColor(kBlue);
-            s_Kpipi_A->SetLineWidth(3);
-	    s_Kpipi_A->DrawNormalized("histc",1);
-            s_Kpipi_Abar->SetLineColor(kRed);
-            s_Kpipi_Abar->SetLineWidth(3);
-            s_Kpipi_Abar->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_Kpipi_AAbar.eps").c_str());
-
-            s_Kpi_A->SetMinimum(0);
-            s_Kpi_A->SetLineColor(kBlue);
-            s_Kpi_A->SetLineWidth(3);
-	    s_Kpi_A->DrawNormalized("histc",1);
-            s_Kpi_Abar->SetLineColor(kRed);
-            s_Kpi_Abar->SetLineWidth(3);
-            s_Kpi_Abar->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_Kpi_AAbar.eps").c_str());
-
-            s_pipi_A->SetMinimum(0);
-            s_pipi_A->SetLineColor(kBlue);
-            s_pipi_A->SetLineWidth(3);
-	    s_pipi_A->DrawNormalized("histc",1);
-            s_pipi_Abar->SetLineColor(kRed);
-            s_pipi_Abar->SetLineWidth(3);
-            s_pipi_Abar->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_pipi_AAbar.eps").c_str());
-
-            s_Dspipi_A->SetMinimum(0);
-            s_Dspipi_A->SetLineColor(kBlue);
-            s_Dspipi_A->SetLineWidth(3);
-	    s_Dspipi_A->DrawNormalized("histc",1);
-            s_Dspipi_Abar->SetLineColor(kRed);
-            s_Dspipi_Abar->SetLineWidth(3);
-            s_Dspipi_Abar->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_Dspipi_AAbar.eps").c_str());
-
-            s_Dspi_A->SetMinimum(0);
-            s_Dspi_A->SetLineColor(kBlue);
-            s_Dspi_A->SetLineWidth(3);
-	    s_Dspi_A->DrawNormalized("histc",1);
-            s_Dspi_Abar->SetLineColor(kRed);
-            s_Dspi_Abar->SetLineWidth(3);
-            s_Dspi_Abar->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_Dspi_AAbar.eps").c_str());
-
-            s_Dspim_A->SetMinimum(0);
-            s_Dspim_A->SetLineColor(kBlue);
-            s_Dspim_A->SetLineWidth(3);
-	    s_Dspim_A->DrawNormalized("histc",1);
-            s_Dspim_Abar->SetLineColor(kRed);
-            s_Dspim_Abar->SetLineWidth(3);
-            s_Dspim_Abar->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_Dspim_AAbar.eps").c_str());
-
-            s_DsK_A->SetMinimum(0);
-            s_DsK_A->SetLineColor(kBlue);
-            s_DsK_A->SetLineWidth(3);
-	    s_DsK_A->DrawNormalized("histc",1);
-            s_DsK_Abar->SetLineColor(kRed);
-            s_DsK_Abar->SetLineWidth(3);
-            s_DsK_Abar->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_DsK_AAbar.eps").c_str());
-
-            s_DsKpi_A->SetMinimum(0);
-            s_DsKpi_A->SetLineColor(kBlue);
-            s_DsKpi_A->SetLineWidth(3);
-	    s_DsKpi_A->DrawNormalized("histc",1);
-            s_DsKpi_Abar->SetLineColor(kRed);
-            s_DsKpi_Abar->SetLineWidth(3);
-            s_DsKpi_Abar->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_DsKpi_AAbar.eps").c_str());
 
 	    chi2_val = getChi2(eventList,eventListMC_rw);
 	    //chi2_6D_val = getChi2_6D(eventList,eventListMC_rw);
@@ -3549,6 +3599,7 @@ void ampFit(int step=0){
     return;
 }
 
+
 void produceMarginalPdfs(){
     
     NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
@@ -3563,7 +3614,7 @@ void produceMarginalPdfs(){
 
     /// Load files
     // Data
-    int q_OS;
+    int q_OS,f,Ds_ID;
     Short_t q_SS;
     double w_OS;
     Float_t w_SS;
@@ -3582,7 +3633,8 @@ void produceMarginalPdfs(){
     tree_norm->SetBranchStatus("*TAU*",1);
     tree_norm->SetBranchStatus("run",1);
     tree_norm->SetBranchStatus("TriggerCat",1);
-    
+    tree_norm->SetBranchStatus("Ds_ID",1);
+
     tree_norm->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
     tree_norm->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS);
     tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
@@ -3594,7 +3646,8 @@ void produceMarginalPdfs(){
     tree_norm->SetBranchAddress("Bs_DTF_TAU",&t);
     tree_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt);
     tree_norm->SetBranchAddress("TriggerCat",&trigger);
-    
+    tree_norm->SetBranchAddress("Ds_ID",&Ds_ID);
+
     ///Make histograms
     int bins = 60;
     TH1D* h_w_OS_norm = new TH1D("h_w_OS_norm_comb","; #eta_{OS}",bins,0,0.5);
@@ -3628,6 +3681,14 @@ void produceMarginalPdfs(){
     TH1D* h_q_SS_norm_Run2_t0 = new TH1D("h_q_SS_norm_Run2_t0","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm_Run1_t1 = new TH1D("h_q_SS_norm_Run1_t1","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm_Run2_t1 = new TH1D("h_q_SS_norm_Run2_t1","; q_{SS}",3,-1.5,1.5);
+
+    TH1D* h_q_f_norm = new TH1D("h_q_f_norm_comb","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run1 = new TH1D("h_q_f_norm_Run1","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run2 = new TH1D("h_q_f_norm_Run2","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run1_t0 = new TH1D("h_q_f_norm_Run1_t0","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run2_t0 = new TH1D("h_q_f_norm_Run2_t0","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run1_t1 = new TH1D("h_q_f_norm_Run1_t1","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run2_t1 = new TH1D("h_q_f_norm_Run2_t1","; q_{f}",2,-2,2);
     
     TH1D* h_t_norm = new TH1D("h_t_norm_comb",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
     TH1D* h_t_norm_Run1 = new TH1D("h_t_norm_Run1",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
@@ -3646,11 +3707,14 @@ void produceMarginalPdfs(){
     {    
         tree_norm->GetEntry(i);
         if(year < min_year || year > max_year) continue;
-        
+	if(Ds_ID>0)f = -1;
+	else f = 1;
+
         h_t_norm->Fill(t,sw);
         h_dt_norm->Fill(dt,sw);
         h_q_OS_norm->Fill((double)q_OS,sw);
         h_q_SS_norm->Fill((double)q_SS,sw);
+        h_q_f_norm->Fill((double)f,sw);
         if(q_OS != 0)h_w_OS_norm->Fill(w_OS,sw);
         if(q_SS != 0)h_w_SS_norm->Fill(w_SS,sw);
             
@@ -3659,12 +3723,14 @@ void produceMarginalPdfs(){
             h_dt_norm_Run1->Fill(dt,sw);
             h_q_OS_norm_Run1->Fill((double)q_OS,sw);
             h_q_SS_norm_Run1->Fill((double)q_SS,sw);
+	    h_q_f_norm_Run1->Fill((double)f,sw);
             if(q_OS != 0)h_w_OS_norm_Run1->Fill(w_OS,sw);
             if(q_SS != 0)h_w_SS_norm_Run1->Fill(w_SS,sw);
 	    if(trigger == 0){
 		h_dt_norm_Run1_t0->Fill(dt,sw);
             	h_q_OS_norm_Run1_t0->Fill((double)q_OS,sw);
             	h_q_SS_norm_Run1_t0->Fill((double)q_SS,sw);
+        	h_q_f_norm_Run1_t0->Fill((double)f,sw);
 	        if(q_OS != 0)h_w_OS_norm_Run1_t0->Fill(w_OS,sw);
                 if(q_SS != 0)h_w_SS_norm_Run1_t0->Fill(w_SS,sw);
 	    }
@@ -3672,6 +3738,7 @@ void produceMarginalPdfs(){
 		h_dt_norm_Run1_t1->Fill(dt,sw);
             	h_q_OS_norm_Run1_t1->Fill((double)q_OS,sw);
             	h_q_SS_norm_Run1_t1->Fill((double)q_SS,sw);
+       		h_q_f_norm_Run1_t1->Fill((double)f,sw);
 	        if(q_OS != 0)h_w_OS_norm_Run1_t1->Fill(w_OS,sw);
                 if(q_SS != 0)h_w_SS_norm_Run1_t1->Fill(w_SS,sw);
 	    }
@@ -3681,12 +3748,14 @@ void produceMarginalPdfs(){
             h_dt_norm_Run2->Fill(dt,sw);
             h_q_OS_norm_Run2->Fill((double)q_OS,sw);
             h_q_SS_norm_Run2->Fill((double)q_SS,sw);
+       	    h_q_f_norm_Run2->Fill((double)f,sw);
             if(q_OS != 0)h_w_OS_norm_Run2->Fill(w_OS,sw);
             if(q_SS != 0)h_w_SS_norm_Run2->Fill(w_SS,sw);
 	    if(trigger == 0){
 		h_dt_norm_Run2_t0->Fill(dt,sw);
             	h_q_OS_norm_Run2_t0->Fill((double)q_OS,sw);
             	h_q_SS_norm_Run2_t0->Fill((double)q_SS,sw);
+        	h_q_f_norm_Run2_t0->Fill((double)f,sw);
 	        if(q_OS != 0)h_w_OS_norm_Run2_t0->Fill(w_OS,sw);
                 if(q_SS != 0)h_w_SS_norm_Run2_t0->Fill(w_SS,sw);
 	    }
@@ -3694,6 +3763,7 @@ void produceMarginalPdfs(){
 		h_dt_norm_Run2_t1->Fill(dt,sw);
             	h_q_OS_norm_Run2_t1->Fill((double)q_OS,sw);
             	h_q_SS_norm_Run2_t1->Fill((double)q_SS,sw);
+        	h_q_f_norm_Run2_t1->Fill((double)f,sw);
 	        if(q_OS != 0)h_w_OS_norm_Run2_t1->Fill(w_OS,sw);
                 if(q_SS != 0)h_w_SS_norm_Run2_t1->Fill(w_SS,sw);
 	    }
@@ -3708,44 +3778,51 @@ void produceMarginalPdfs(){
     h_w_OS_norm->Write();
     h_q_SS_norm->Write();
     h_w_SS_norm->Write();
-    
+    h_q_f_norm->Write();
+
     h_t_norm_Run1->Write();
     h_dt_norm_Run1->Write();
     h_q_OS_norm_Run1->Write();
     h_w_OS_norm_Run1->Write();
     h_q_SS_norm_Run1->Write();
     h_w_SS_norm_Run1->Write();
+    h_q_f_norm_Run1->Write();
 
     h_dt_norm_Run1_t0->Write();
     h_q_OS_norm_Run1_t0->Write();
     h_w_OS_norm_Run1_t0->Write();
     h_q_SS_norm_Run1_t0->Write();
     h_w_SS_norm_Run1_t0->Write();
-   
+    h_q_f_norm_Run1_t0->Write();
+
     h_dt_norm_Run1_t1->Write();
     h_q_OS_norm_Run1_t1->Write();
     h_w_OS_norm_Run1_t1->Write();
     h_q_SS_norm_Run1_t1->Write();
     h_w_SS_norm_Run1_t1->Write();
-       
+    h_q_f_norm_Run1_t1->Write();
+
     h_t_norm_Run2->Write();
     h_dt_norm_Run2->Write();
     h_q_OS_norm_Run2->Write();
     h_w_OS_norm_Run2->Write();
     h_q_SS_norm_Run2->Write();
     h_w_SS_norm_Run2->Write();
+    h_q_f_norm_Run2->Write();
 
     h_dt_norm_Run2_t0->Write();
     h_q_OS_norm_Run2_t0->Write();
     h_w_OS_norm_Run2_t0->Write();
     h_q_SS_norm_Run2_t0->Write();
     h_w_SS_norm_Run2_t0->Write();
+    h_q_f_norm_Run2_t0->Write();
 
     h_dt_norm_Run2_t1->Write();
     h_q_OS_norm_Run2_t1->Write();
     h_w_OS_norm_Run2_t1->Write();
     h_q_SS_norm_Run2_t1->Write();
     h_w_SS_norm_Run2_t1->Write();
+    h_q_f_norm_Run2_t1->Write();
 
     out->Write();
 }

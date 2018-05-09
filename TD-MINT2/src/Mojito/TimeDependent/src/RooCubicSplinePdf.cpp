@@ -38,15 +38,15 @@
 #include "RooArgList.h"
 
 // P2VV
-#include "Mint/RooCubicSplineFun.h"
+#include "Mint/RooCubicSplinePdf.h"
 #include "Mint/RooCubicSplineKnot.h"
 
 using namespace std;
 
-//ClassImp(RooCubicSplineFun);
+//ClassImp(RooCubicSplinePdf);
 
 //_____________________________________________________________________________
-void RooCubicSplineFun::init(const char* name,
+void RooCubicSplinePdf::init(const char* name,
                              const vector<double>& heights,
                              const vector<double>& errors,
                              double smooth, bool constCoeffs) {
@@ -61,44 +61,40 @@ void RooCubicSplineFun::init(const char* name,
          _coefList.add( RooFit::RooConst( values[i] ) );
       } else {
          stringstream name_str;
-         name_str << name << "_bin_" << i;
+         name_str << name << "_smoothed_bin_" << i;
          string n(name_str.str());
-         RooRealVar* coeff = new RooRealVar(n.c_str(), n.c_str(), values[i], 0.0, 10.0);
-//          if (i == 0 || i == values.size() - 1) coeff->setConstant(true);
-         if (i == values.size() - 2){
-         	 coeff->setVal(1.0);
-		 coeff->setConstant(true);
-	}
-	_coefList.add(*coeff);
+         RooRealVar* coeff = new RooRealVar(n.c_str(), n.c_str(), values[i], 0.0, 1.0);
+         if (i == 0 || i == values.size() - 1) coeff->setConstant(true);
+         _coefList.add(*coeff);
          addOwnedComponents( *coeff );
       }
    }
 }
 
 //_____________________________________________________________________________
-RooCubicSplineFun::RooCubicSplineFun()
+RooCubicSplinePdf::RooCubicSplinePdf()
     : _aux(0,0)
 {
 }
 
 //_____________________________________________________________________________
-RooCubicSplineFun::RooCubicSplineFun(const char* name, const char* title, RooRealVar& x,
-                                     const vector<double>& knots,
+RooCubicSplinePdf::RooCubicSplinePdf(const char* name, const char* title, RooRealVar& x,
+                                     const vector<double>& _knots,
                                      const vector<double>& values,
                                      const vector<double>& errors,
                                      double smooth, bool constCoeffs) :
-   RooAbsGaussModelEfficiency(name, title),
+   RooAbsPdf(name, title),
    _x("x", "Dependent", this, x),
    _coefList("coefficients","List of coefficients",this),
-   _aux(knots.begin(),knots.end())
+   _aux(_knots.begin(),_knots.end())
 {
    init(name, values, errors, smooth, constCoeffs);
 }
 
 //_____________________________________________________________________________
-RooCubicSplineFun::RooCubicSplineFun(const char* name, const char* title,
+RooCubicSplinePdf::RooCubicSplinePdf(const char* name, const char* title,
                                      RooRealVar& x, const TGraph* graph, bool constCoeffs) :
-  RooAbsGaussModelEfficiency(name, title),
+  RooAbsPdf(name, title),
   _x("x", "Dependent", this, x),
   _coefList("coefficients","List of coefficients",this),
   _aux(0,0)
@@ -106,10 +102,10 @@ RooCubicSplineFun::RooCubicSplineFun(const char* name, const char* title,
     int nPoints = graph->GetN();
     vector<double> centres, values;
     for (int i=0;i<nPoints ;++i) {
-        double x,y;
-        graph->GetPoint(i,x,y);
-        centres.push_back(x);
-        values.push_back(y);
+        double xx,yy;
+        graph->GetPoint(i,xx,yy);
+        centres.push_back(xx);
+        values.push_back(yy);
     }
    _aux = RooCubicSplineKnot( centres.begin(), centres.end() );
     vector<double> errs;
@@ -117,10 +113,10 @@ RooCubicSplineFun::RooCubicSplineFun(const char* name, const char* title,
 }
 
 //_____________________________________________________________________________
-RooCubicSplineFun::RooCubicSplineFun(const char* name, const char* title,
+RooCubicSplinePdf::RooCubicSplinePdf(const char* name, const char* title,
                                      RooRealVar& x, const TH1* hist, double smooth,
                                      bool constCoeffs) :
-  RooAbsGaussModelEfficiency(name, title),
+  RooAbsPdf(name, title),
   _x("x", "Dependent", this, x),
   _coefList("coefficients","List of coefficients",this),
   _aux(0,0)
@@ -140,10 +136,10 @@ RooCubicSplineFun::RooCubicSplineFun(const char* name, const char* title,
     init(name, values, errs, smooth, constCoeffs);
 }
 //_____________________________________________________________________________
-RooCubicSplineFun::RooCubicSplineFun(const char* name, const char* title,
+RooCubicSplinePdf::RooCubicSplinePdf(const char* name, const char* title,
                                      RooRealVar& x, const TGraphErrors* graph, double smooth,
                                      bool constCoeffs) :
-  RooAbsGaussModelEfficiency(name, title),
+  RooAbsPdf(name, title),
   _x("x", "Dependent", this, x),
   _coefList("coefficients","List of coefficients",this),
   _aux(0,0)
@@ -151,10 +147,10 @@ RooCubicSplineFun::RooCubicSplineFun(const char* name, const char* title,
     int nPoints = graph->GetN();
     vector<double> centres, values;
     for (int i=0;i<nPoints ;++i) {
-        double x,y;
-        graph->GetPoint(i,x,y);
-        centres.push_back(x);
-        values.push_back(y);
+        double xx,yy;
+        graph->GetPoint(i,xx,yy);
+        centres.push_back(xx);
+        values.push_back(yy);
     }
    _aux = RooCubicSplineKnot( centres.begin(), centres.end() );
 
@@ -165,10 +161,10 @@ RooCubicSplineFun::RooCubicSplineFun(const char* name, const char* title,
 }
 
 //_____________________________________________________________________________
-RooCubicSplineFun::RooCubicSplineFun(const char* name, const char* title,
+RooCubicSplinePdf::RooCubicSplinePdf(const char* name, const char* title,
                                      RooRealVar& x, const char* knotBinningName,
                                      const RooArgList& coefList):
-  RooAbsGaussModelEfficiency(name, title),
+  RooAbsPdf(name, title),
   _x("x", "Dependent", this, x),
   _coefList("coefficients", "List of coefficients", this),
   _aux(0,0)
@@ -188,21 +184,21 @@ RooCubicSplineFun::RooCubicSplineFun(const char* name, const char* title,
 }
 
 //_____________________________________________________________________________
-RooCubicSplineFun::RooCubicSplineFun(const char* name, const char* title,
-                                     RooRealVar& x, const vector<double>& knots,
+RooCubicSplinePdf::RooCubicSplinePdf(const char* name, const char* title,
+                                     RooRealVar& x, const vector<double>& _knots,
                                      const RooArgList& coefList):
-  RooAbsGaussModelEfficiency(name, title),
+  RooAbsPdf(name, title),
   _x("x", "Dependent", this, x),
   _coefList("coefficients", "List of coefficients", this),
-   _aux(knots.begin(), knots.end())
+   _aux(_knots.begin(), _knots.end())
 {
-   assert(size_t(coefList.getSize()) == 2 + knots.size());
+   assert(size_t(coefList.getSize()) == 2 + _knots.size());
    _coefList.add(coefList);
 }
 
 //_____________________________________________________________________________
-RooCubicSplineFun::RooCubicSplineFun(const RooCubicSplineFun& other, const char* name) :
-  RooAbsGaussModelEfficiency(other, name),
+RooCubicSplinePdf::RooCubicSplinePdf(const RooCubicSplinePdf& other, const char* name) :
+  RooAbsPdf(other, name),
   _x("x", this, other._x),
   _coefList("coefList", this, other._coefList),
   _aux(other._aux)
@@ -210,18 +206,18 @@ RooCubicSplineFun::RooCubicSplineFun(const RooCubicSplineFun& other, const char*
 }
 
 //_____________________________________________________________________________
-RooCubicSplineFun::~RooCubicSplineFun()
+RooCubicSplinePdf::~RooCubicSplinePdf()
 {
 }
 
 //_____________________________________________________________________________
-Double_t RooCubicSplineFun::evaluate() const
+Double_t RooCubicSplinePdf::evaluate() const
 {
   return _aux.evaluate(_x,_coefList);
 }
 
 //_____________________________________________________________________________
-Int_t RooCubicSplineFun::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName) const
+Int_t RooCubicSplinePdf::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName) const
 {
   // No analytical calculation available (yet) of integrals over subranges
   if (_x.min(rangeName)!=_aux.knots().front() || _x.max(rangeName)!=_aux.knots().back() ) return 0;
@@ -229,10 +225,10 @@ Int_t RooCubicSplineFun::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& an
   return 0;
 }
 //_____________________________________________________________________________
-Double_t RooCubicSplineFun::analyticalIntegral(Int_t code, const char* /* rangeName */) const
+Double_t RooCubicSplinePdf::analyticalIntegral(Int_t code, const char* /* rangeName */) const
 {
   if (code != 1) {
-    coutE(InputArguments) << "RooCubicSplineFun::analyticalIntegral(" << GetName()
+    coutE(InputArguments) << "RooCubicSplinePdf::analyticalIntegral(" << GetName()
         << "): argument \"code\" can only have value 1" << std::endl;
     assert(code==1) ;
   }
@@ -240,57 +236,61 @@ Double_t RooCubicSplineFun::analyticalIntegral(Int_t code, const char* /* rangeN
 }
 
 //_____________________________________________________________________________
-complex<double>  RooCubicSplineFun::gaussIntegralE(bool left, const RooGaussModelAcceptance::M_n<4U>& dM,
-                                             const RooGaussModelAcceptance::K_n& K, double offset,
+complex<double>  RooCubicSplinePdf::gaussIntegralE(bool left, const RooGaussModelAcceptance::M_n<4U>& dM,
+                                             const RooGaussModelAcceptance::K_n& K, double _offset,
                                              double* sc) const
 {
-        RooCubicSplineKnot::S_edge s_jk( _aux.S_jk_edge( left, _coefList ), offset );
+        RooCubicSplineKnot::S_edge s_jk( _aux.S_jk_edge( left, _coefList ), _offset );
         return dM(0)*( s_jk(0,0) * K(0) * sc[0] + s_jk(0,1) * K(1) * sc[1] )
              + dM(1)*( s_jk(1,0) * K(0) * sc[1]                            );
 }
 
 //_____________________________________________________________________________
 std::complex<double>
-RooCubicSplineFun::productAnalyticalIntegral(Double_t umin, Double_t umax,
-                                             Double_t scale, Double_t offset,
+RooCubicSplinePdf::productAnalyticalIntegral(Double_t umin, Double_t umax,
+                                             Double_t scale, Double_t _offset,
                                              const std::complex<double>& z) const
 {
     RooGaussModelAcceptance::K_n K(z);
     assert(knotSize()>1);
-    double lo = scale*umin+offset;
-    double hi = scale*umax+offset+1.e-7;
     typedef RooGaussModelAcceptance::M_n<4U> M_n;
     std::vector<M_n> M; M.reserve( knotSize() );
     for (unsigned int i=0;i<knotSize();++i) {
-        double x = (u(i)-offset)/scale ;
-        // TODO: remove unnecessary calculation of integral (that gives 0) if lo>u(i) and/or u(i+1)<hi
-        if (lo>=u(i)) x = umin ; // take M[i] if lo<=u(i) else M_n(lo)
-        if (u(i)>=hi) x = umax ; // take M[i+1] if u(i+1)<=hi else M_n(hi)
+        double x = (u(i)-_offset)/scale ;
         M.push_back( M_n( x, z ) );
     }
     double sc[4]; for (int i=0;i<4;++i) sc[i] = pow(scale,i);
+    double lo = scale*umin+_offset;
+    double hi = scale*umax+_offset;
     std::complex<double> sum(0,0);
-    if (lo<u(0)) sum += gaussIntegralE(true,  M.front()-M_n( umin,z), K, offset, sc);
+    //TODO: verify we remain within [lo,hi]
+    assert(hi>=u(0)); // front only if hi>u(0)!!!
+    if (lo<u(0)) sum += gaussIntegralE(true,  M.front()-M_n( umin,z), K, _offset, sc);
     for (unsigned i=0;i<knotSize()-1 && u(i)<hi ;++i) {
-        M_n dM = M[i+1]-M[i];
-        RooCubicSplineKnot::S_jk s_jk( _aux.S_jk_sum( i, _coefList ), offset );  // pass sc into S_jk, remove from loop
+        if (u(i+1)<lo) continue;
+        // FIXME:TODO: we currently assume that u(0),u(knotSize()-1)] fully contained in [lo,hi]
+        assert(lo<=u(i));
+        assert(u(i+1)<=hi);
+        M_n dM = M[i+1]-M[i]; // take M[i] if lo<=u(i) else M_n(lo) ; take M[i+1] if u(i+1)<=hi else M_n(hi)
+        RooCubicSplineKnot::S_jk s_jk( _aux.S_jk_sum( i, _coefList ), _offset );  // pass sc into S_jk, remove from loop
         for (int j=0;j<4;++j) for (int k=0;k<4-j;++k) sum += dM(j)*s_jk(j,k)*K(k)*sc[j+k];
     }
-    if (hi>u(knotSize()-1)) sum += gaussIntegralE(false, M_n(umax,z)-M.back(),   K, offset, sc);
+    assert(lo<=u(knotSize()-1));// back only if lo<u(knotsiwze()-1)!!!
+    if (hi>u(knotSize()-1)) sum += gaussIntegralE(false, M_n(umax,z)-M.back(),   K, _offset, sc);
     return sum;
 }
 
 //_____________________________________________________________________________
-Int_t RooCubicSplineFun::getMaxVal(const RooArgSet& vars) const
+Int_t RooCubicSplinePdf::getMaxVal(const RooArgSet& vars) const
 {
     // check that vars only contains _x...
     return ( vars.getSize() == 1 && vars.contains( _x.arg() ) ) ? 1 : 0;
 }
 //_____________________________________________________________________________
-Double_t RooCubicSplineFun::maxVal(Int_t code) const
+Double_t RooCubicSplinePdf::maxVal(Int_t code) const
 {
     if (code != 1) {
-      coutE(InputArguments) << "RooCubicSplineFun::maxVal(" << GetName()
+      coutE(InputArguments) << "RooCubicSplinePdf::maxVal(" << GetName()
           << "): argument \"code\" can only have value 1" << std::endl;
       assert(code==1) ;
     }
