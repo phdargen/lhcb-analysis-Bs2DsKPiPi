@@ -49,6 +49,7 @@ public :
     TLorentzVector pi_plus1;
     TLorentzVector pi_plus2;
     // changed mass hypothesis
+    TLorentzVector pi_minus_asK_MissID;
     TLorentzVector Kminus_fromDs_asPiminus_MissID;
     TLorentzVector Kminus_fromDs_asProton_MissID;
     
@@ -681,7 +682,18 @@ pi_minus_fromDs_PIDp_corr_MagUp;
     Float_t         Bs_BsTaggingTool_OS_Charm_PROB;
    */
    
+    Bool_t	   K_plus_hasRich;
+    Bool_t	   pi_plus_hasRich;
+    Bool_t	   pi_minus_hasRich;
+    Bool_t	   pi_plus1_hasRich;
+    Bool_t	   pi_plus2_hasRich;
+    Bool_t	   K_plus_fromDs_hasRich;
+    Bool_t	   K_minus_fromDs_hasRich;
+    Bool_t	   pi_minus_fromDs_hasRich;
+    Bool_t	   pi_plus_fromDs_hasRich;
+    Bool_t	   pi_minus2_fromDs_hasRich;
    
+
     TBranch        *b_Bs_MINIPNEXTBEST;   //!
     TBranch        *b_Bs_MINIPCHI2NEXTBEST;   //!
 
@@ -1132,6 +1144,32 @@ void MiniDecayTree::Init()
         
     fChain->SetBranchAddress("Bs_MINIPNEXTBEST", &Bs_MINIPNEXTBEST, &b_Bs_MINIPNEXTBEST);
     fChain->SetBranchAddress("Bs_MINIPCHI2NEXTBEST", &Bs_MINIPCHI2NEXTBEST, &b_Bs_MINIPCHI2NEXTBEST);
+
+    if(_decay == Decay::signal){
+    	fChain->SetBranchAddress("K_plus_hasRich", &K_plus_hasRich);
+    	fChain->SetBranchAddress("pi_plus_hasRich", &pi_plus_hasRich);
+    	fChain->SetBranchAddress("pi_minus_hasRich", &pi_minus_hasRich);
+    }
+    if(_decay == Decay::norm){
+    	fChain->SetBranchAddress("pi_plus1_hasRich", &pi_plus1_hasRich);
+    	fChain->SetBranchAddress("pi_plus2_hasRich", &pi_plus2_hasRich);
+    	fChain->SetBranchAddress("pi_minus_hasRich", &pi_minus_hasRich);
+    }
+    if(_Ds_finalState == Ds_finalState::phipi){
+    	fChain->SetBranchAddress("K_plus_fromDs_hasRich", &K_plus_fromDs_hasRich);
+    	fChain->SetBranchAddress("K_minus_fromDs_hasRich", &K_minus_fromDs_hasRich);
+    	fChain->SetBranchAddress("pi_minus_fromDs_hasRich", &pi_minus_fromDs_hasRich);
+    }
+    if(_Ds_finalState == Ds_finalState::pipipi){
+    	fChain->SetBranchAddress("pi_plus_fromDs_hasRich", &pi_plus_fromDs_hasRich);
+    	fChain->SetBranchAddress("pi_minus_fromDs_hasRich", &pi_minus_fromDs_hasRich);
+    	fChain->SetBranchAddress("pi_minus2_fromDs_hasRich", &pi_minus2_fromDs_hasRich);
+    }
+    if(_Ds_finalState == Ds_finalState::Kpipi){
+    	fChain->SetBranchAddress("K_minus_fromDs_hasRich", &K_minus_fromDs_hasRich);
+    	fChain->SetBranchAddress("pi_plus_fromDs_hasRich", &pi_plus_fromDs_hasRich);
+    	fChain->SetBranchAddress("pi_minus_fromDs_hasRich", &pi_minus_fromDs_hasRich);
+    }
 
     if(_Ds_finalState == Ds_finalState::phipi && _decay == Decay::signal){
 

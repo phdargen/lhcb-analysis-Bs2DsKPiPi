@@ -135,45 +135,42 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
 
    if(_Ds_finalState == Ds_finalState::phipi || _Ds_finalState == Ds_finalState::KsK || _Ds_finalState == Ds_finalState::KKpi_NR){
 	// remove events with no PID info
-	if( abs(K_plus_fromDs_PIDK) > 200 ) return false;        
-	if( abs(K_minus_fromDs_PIDK) > 200 ) return false;        
-	if( abs(pi_minus_fromDs_PIDK) > 200 ) return false;     
+	if( K_plus_fromDs_hasRich == 0 ) return false;        
+	if( K_minus_fromDs_hasRich == 0 ) return false;        
+	if( pi_minus_fromDs_hasRich == 0 ) return false;     
     }
 
     if(_Ds_finalState == Ds_finalState::phipi){
-    
         if(K_plus_fromDs_PIDK < -10) return false;
         else if(K_minus_fromDs_PIDK < -10) return false;
         else if(pi_minus_fromDs_PIDK > 20) return false;
     }
 
     else if(_Ds_finalState == Ds_finalState::KsK){
-        
         if(K_plus_fromDs_PIDK < -10) return false;
         else if(K_minus_fromDs_PIDK < -5) return false;
         else if(pi_minus_fromDs_PIDK > 10) return false;        
     }
 
     else if(_Ds_finalState == Ds_finalState::KKpi_NR){
-        
         if(K_plus_fromDs_PIDK < 5) return false;
         else if(K_minus_fromDs_PIDK < 5) return false;
         else if(pi_minus_fromDs_PIDK > 10) return false;
+        else if(pi_minus_fromDs_PIDp > 20) return false;
     }
     
     else if(_Ds_finalState == Ds_finalState::pipipi){
-        
         if(pi_plus_fromDs_PIDK > 10) return false;
         else if(pi_minus_fromDs_PIDK > 10) return false;
         else if(pi_minus2_fromDs_PIDK > 10) return false;
         
-        if(pi_plus_fromDs_PIDp > 10) return false;
-        else if(pi_minus_fromDs_PIDp > 10) return false;
-        else if(pi_minus2_fromDs_PIDp > 10) return false;
+        if(pi_plus_fromDs_PIDp > 20) return false;
+        else if(pi_minus_fromDs_PIDp > 20) return false;
+        else if(pi_minus2_fromDs_PIDp > 20) return false;
 	// remove events with no PID info
-	if( abs(pi_plus_fromDs_PIDK) > 200 ) return false;        
-	if( abs(pi_minus_fromDs_PIDK) > 200 ) return false;        
-	if( abs(pi_minus2_fromDs_PIDK) > 200 ) return false;  
+	if( pi_plus_fromDs_hasRich == 0  ) return false;        
+	if( pi_minus_fromDs_hasRich == 0  ) return false;        
+	if( pi_minus2_fromDs_hasRich == 0  ) return false;  
     }
     
     else if(_Ds_finalState == Ds_finalState::Kpipi){
@@ -181,35 +178,33 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
         else if(K_minus_fromDs_PIDK < 10) return false;
         else if(pi_minus_fromDs_PIDK > 5) return false;
 
-        if(pi_plus_fromDs_PIDp > 10) return false;
-        else if(pi_minus_fromDs_PIDp > 10) return false;
+        if(pi_plus_fromDs_PIDp > 20) return false;
+        else if(pi_minus_fromDs_PIDp > 20) return false;
 	// remove events with no PID info
-	if( abs(K_plus_fromDs_PIDK) > 200 ) return false;        
-	if( abs(K_minus_fromDs_PIDK) > 200 ) return false;        
-	if( abs(pi_minus_fromDs_PIDK) > 200 ) return false;             
+	if( pi_plus_fromDs_hasRich == 0  ) return false;        
+	if( K_minus_fromDs_hasRich == 0  ) return false;        
+	if( pi_minus_fromDs_hasRich == 0  ) return false;             
     }
     
 
     if(_decay == Decay::signal){
-        
-        if(K_plus_PIDK < 10) return false;
+        if(K_plus_PIDK < 8) return false;
         else if(pi_plus_PIDK > 10) return false;
         else if(pi_minus_PIDK > 5) return false;
 	// remove events with no PID info
-	if( abs(K_plus_PIDK) > 200 ) return false;        
-	if( abs(pi_plus_PIDK) > 200 ) return false;        
-	if( abs(pi_minus_PIDK) > 200 ) return false;        
+	if( K_plus_hasRich == 0  ) return false;        
+	if( pi_plus_hasRich == 0  ) return false;        
+	if( pi_minus_hasRich == 0  ) return false;        
     }
 
     else if(_decay == Decay::norm){
-
         if(pi_plus1_PIDK > 5) return false;
         else if(pi_plus2_PIDK > 5) return false;
         else if(pi_minus_PIDK > 10) return false;
 	// remove events with no PID info
-	if( abs(pi_plus1_PIDK) > 200 ) return false;        
-	if( abs(pi_plus2_PIDK) > 200 ) return false;        
-	if( abs(pi_minus_PIDK) > 200 ) return false;     
+	if( pi_plus1_hasRich == 0  ) return false;        
+	if( pi_plus2_hasRich == 0  ) return false;        
+	if( pi_minus_hasRich == 0  ) return false;     
     }
 
     return true;
@@ -234,7 +229,7 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
         else if(_Ds_finalState == Ds_finalState::KsK){
             // Charmless veto
 	    if((Ds_ENDVERTEX_Z - Bs_ENDVERTEX_Z) < 0) return false;
-            if(Ds_FDCHI2_ORIVX < 0) return false;
+            if(Ds_FDCHI2_ORIVX < 1) return false;
             //Lambda_c veto
             if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && ((K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) < 5) ) return false;
 	    //D- veto
@@ -243,7 +238,7 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
         else if(_Ds_finalState == Ds_finalState::KKpi_NR){
 	    // Charmless veto 
             if((Ds_ENDVERTEX_Z - Bs_ENDVERTEX_Z) < 0) return false;
-            if(Ds_FDCHI2_ORIVX < 5) return false;
+            if(Ds_FDCHI2_ORIVX < 4) return false;
 	    //Lambda_c veto
             if( TMath::Abs((K_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && ((K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) < 5) ) return false;
 	    //D- veto
@@ -256,7 +251,10 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
         if((pi_plus_fromDs + pi_minus_fromDs).M() > 1700 || (pi_plus_fromDs + pi_minus2_fromDs).M() > 1700) return false;
         // Charmless veto
         if((Ds_ENDVERTEX_Z - Bs_ENDVERTEX_Z) < 0) return false;
-        if(Ds_FDCHI2_ORIVX < 9) return false;
+        if(Ds_FDCHI2_ORIVX < 6) return false;
+        //Lambda_c veto
+        if( TMath::Abs((pi_plus_fromDs + piminus_fromDs_asProton_MissID + pi_minus2_fromDs).M() - massLambda_c) < 30. && pi_minus_fromDs_PIDp < 0 ) return false;
+        if( TMath::Abs((pi_plus_fromDs + piminus2_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && pi_minus2_fromDs_PIDp < 0 ) return false;
     }
     
     else if(_Ds_finalState == Ds_finalState::Kpipi){
@@ -264,7 +262,7 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
         if((pi_plus_fromDs + K_minus_fromDs).M() > 1750) return false;
         // Charmless veto
         if((Ds_ENDVERTEX_Z - Bs_ENDVERTEX_Z) < 0) return false;
-        if(Ds_FDCHI2_ORIVX < 9) return false;
+        if(Ds_FDCHI2_ORIVX < 6) return false;
 	//Lambda_c veto
         if( TMath::Abs((pi_plus_fromDs + Kminus_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && ((K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) < 5) ) return false;
 	//D- veto
@@ -274,16 +272,20 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
     if(_decay == Decay::signal){
         // Ds veto
         if(TMath::Abs((K_plus + pi_plus + pi_minus).M() - massDs) < 20) return false;
+        if(TMath::Abs((K_plus + pi_plus + pi_minus_asK_MissID).M() - massDs) < 20 && pi_minus_PIDK > 0) return false;
 	// Semi-lep. veto
-	if( K_plus_isMuon == 1 ) return false;
+	//if( K_plus_isMuon == 1 ) return false;
     }
     
     else if(_decay == Decay::norm){
         // Ds veto
         if(TMath::Abs((pi_plus1 + pi_plus2 + pi_minus).M() - massDs) < 20) return false;
+        if(TMath::Abs((pi_plus1_asK_MissID + pi_plus2 + pi_minus).M() - massDs) < 20 && pi_plus1_PIDK > 0) return false;
+        if(TMath::Abs((pi_plus2_asK_MissID + pi_plus1 + pi_minus).M() - massDs) < 20 && pi_plus2_PIDK > 0) return false;
+
 	// Semi-lep. veto
-	if( pi_plus1_isMuon == 1 ) return false;
-	if( pi_plus2_isMuon == 1 ) return false;
+	//if( pi_plus1_isMuon == 1 ) return false;
+	//if( pi_plus2_isMuon == 1 ) return false;
     }
 
     // Wrong PV veto
@@ -430,7 +432,7 @@ inline void MiniDecayTree::set_LorentzVectors(){
     
     else if(_Ds_finalState == Ds_finalState::Kpipi){
         pi_minus_fromDs.SetXYZM(pi_minus_fromDs_PX,pi_minus_fromDs_PY,pi_minus_fromDs_PZ,massPion);        
-        pi_plus_fromDs.SetXYZM(pi_plus_fromDs_PX,pi_plus_fromDs_PY,pi_plus_fromDs_PZ,massKaon);
+        pi_plus_fromDs.SetXYZM(pi_plus_fromDs_PX,pi_plus_fromDs_PY,pi_plus_fromDs_PZ,massPion);
         K_minus_fromDs.SetXYZM(K_minus_fromDs_PX,K_minus_fromDs_PY,K_minus_fromDs_PZ,massKaon);
         Ds = pi_minus_fromDs + pi_plus_fromDs + K_minus_fromDs;
         
@@ -442,6 +444,7 @@ inline void MiniDecayTree::set_LorentzVectors(){
         K_plus.SetXYZM(K_plus_PX,K_plus_PY,K_plus_PZ,massKaon);
         pi_minus.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ,massPion);
         pi_plus.SetXYZM(pi_plus_PX,pi_plus_PY,pi_plus_PZ,massPion);        
+        pi_minus_asK_MissID.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ, massKaon);
     }
     
     else if(_decay == Decay::norm){
@@ -484,13 +487,15 @@ void MiniDecayTree::Loop()
    cout << "Have " << nentries << " events" <<  endl;
    
     // Add new branches to output tree
-    int Ds_finalState, sample, TriggerCat,run,Bs_BKGCAT = 0;
+    int Ds_finalState,Ds_finalState_mod,Ds_finalState_mod2, sample, TriggerCat,run,Bs_BKGCAT = 0;
     int year = (int)_year;
     if(year == 11 || year == 12) run = 1;
     else run = 2;
     double NTracks;
 
     summary_tree->Branch("Ds_finalState",&Ds_finalState,"Ds_finalState/I");    
+    summary_tree->Branch("Ds_finalState_mod",&Ds_finalState_mod,"Ds_finalState_mod/I");    
+    summary_tree->Branch("Ds_finalState_mod2",&Ds_finalState_mod2,"Ds_finalState_mod2/I");    
     summary_tree->Branch("sample", &sample, "sample/I");
     summary_tree->Branch("year", &year, "year/I");
     summary_tree->Branch("run", &run, "run/I");
@@ -594,6 +599,8 @@ void MiniDecayTree::Loop()
     summary_tree->Branch("bkg_Ks_as_pipi2_m", &bkg_Ks_as_pipi2_m, "bkg_Ks_as_pipi2_m/D");
     double bkg_rho_as_Kpi_m;
     summary_tree->Branch("bkg_rho_as_Kpi_m", &bkg_rho_as_Kpi_m, "bkg_rho_as_Kpi_m/D");
+    double bkg_phi_as_Kpi_m;
+    summary_tree->Branch("bkg_phi_as_Kpi_m", &bkg_phi_as_Kpi_m, "bkg_phi_as_Kpi_m/D");
 
     double m_15,m_16,m_25,m_26,m_34;
     summary_tree->Branch("m_15", &m_15, "m_15/D");
@@ -1002,6 +1009,9 @@ void MiniDecayTree::Loop()
 
         // Add new variables
         Ds_finalState = _Ds_finalState;
+        Ds_finalState_mod = _Ds_finalState;
+	if(Ds_finalState_mod == 4)Ds_finalState_mod = 2;
+        Ds_finalState_mod2 = 1;
 
         Bs_RFD = sqrt(pow(Bs_ENDVERTEX_X-Bs_OWNPV_X,2)+pow(Bs_ENDVERTEX_Y-Bs_OWNPV_Y,2));
         Ds_RFD = sqrt(pow(Ds_ENDVERTEX_X-Ds_OWNPV_X,2)+pow(Ds_ENDVERTEX_Y-Ds_OWNPV_Y,2));
@@ -1045,8 +1055,6 @@ void MiniDecayTree::Loop()
             m_Kpi = (K_plus+pi_minus).M();
             m_pipi = (pi_plus+pi_minus).M();            
 
-            TLorentzVector pi_minus_asK_MissID; 
-            pi_minus_asK_MissID.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ, massKaon);
             TLorentzVector pi_plus_asK_MissID; 
             pi_plus_asK_MissID.SetXYZM(pi_plus_PX,pi_plus_PY,pi_plus_PZ, massKaon);
             TLorentzVector K_plus_asPi_MissID; 
@@ -1070,6 +1078,7 @@ void MiniDecayTree::Loop()
             bkg_Ks_as_pipi1_m = (pi_plus_asK_MissID + pi_minus).M(); 
 	    bkg_Ks_as_pipi2_m = (pi_minus_asK_MissID + pi_plus).M(); 
 	    bkg_rho_as_Kpi_m = (K_plus_asPi_MissID + pi_minus).M();           
+	    bkg_phi_as_Kpi_m = (pi_minus_asK_MissID + K_plus).M();           
 
 	    bkg_Dstar_as_Xs_dm1 = (K_plus + pi_minus_asK_MissID + pi_plus).M() - (K_plus + pi_minus_asK_MissID).M();
 	    bkg_Dstar_as_Xs_dm2 = (K_plus + pi_minus + pi_plus).M() - (K_plus + pi_minus).M();

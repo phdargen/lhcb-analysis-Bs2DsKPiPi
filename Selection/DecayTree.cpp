@@ -75,12 +75,22 @@ TTree* DecayTree::GetInputTree(){
         chain->Add(loc+"b2dhhh*.root");
     }
 
+    else if(_decay==Decay::signal && _data==DataType::data && _year == 17 && _ltu == false){
+        TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/17/";
+        chain->Add(loc+"b2dhhh*.root");
+    }
+
     else if(_decay==Decay::norm && _data==DataType::data && _year == 15){
         TString loc = "/auto/data/kecke/B2DPiPiPi/15/";
         chain->Add(loc+"b2dhhh*.root");
    }
 
     else if(_decay==Decay::norm && _data==DataType::data && _year == 16){
+        TString loc = "/auto/data/kecke/B2DPiPiPi/16/";
+        chain->Add(loc+"b2dhhh*.root");
+   }
+
+    else if(_decay==Decay::norm && _data==DataType::data && _year == 17){
         TString loc = "/auto/data/kecke/B2DPiPiPi/16/";
         chain->Add(loc+"b2dhhh*.root");
    }
@@ -378,6 +388,7 @@ void DecayTree::Loop()
    fChain->SetBranchStatus("*TRACK_Ghost*",1);  
    fChain->SetBranchStatus("*TRACK_CHI2*",1);  
    fChain->SetBranchStatus("*isMuon*",1);  
+   fChain->SetBranchStatus("*hasRich",1);  
 
    fChain->SetBranchStatus("nCandidate",1) ;
    fChain->SetBranchStatus("nTracks",1) ;
