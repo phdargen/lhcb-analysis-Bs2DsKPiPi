@@ -92,13 +92,6 @@ Afterwards, this term must be discarded in the final amplitude fit with the sele
 The set of amplitudes is selected using the optimal value of $\lambda=28$, and is henceforth called the LASSO model; 
 Figure \ref{fig:BIC}(a) shows the distribution of BIC values obtained by scanning over $\lambda$
 where we choose the decay fraction threshold to be $0.5 \%$.
-%It is important to note that there are certain groups of amplitudes with the same angular distribution 
-%that are prone to produce artificially high interference effects.
-%Amongst them are the di-scalar amplitudes: 
-%$D \to (\pi \, \pi)_{S} \, (\pi \, \pi)_{S}$, $D \to (\pi \, \pi)_{S} \, \sigma$, $D \to \sigma \, \sigma$, $D \to \sigma \, f_{0}(1370)$
-%and $D \to f_{0}(1370) \, f_{0}(1370)$
-%as well as the di-vector amplitudes:  $D \to (\pi \, \pi)_{P} \, (\pi \, \pi)_{P}$, $D \to (\pi \, \pi)_{P} \, \rho(1450)^{0}$ and $D \to \rho(1450)^{0} \, \rho(1450)^{0}$.
-%In these cases, only one amplitude of the group is included at a time and the model selection is performed for each choice.
 In addition, we repeated the model selection procedure under multiple different conditions:
 \begin{enumerate}
 	\item The fit fraction threshold for inclusion in the final model was varied within the interval $[0.05, 5] \%$.
@@ -113,16 +106,6 @@ In addition, we repeated the model selection procedure under multiple different 
 \end{enumerate}
 From that we obtained a set of alternative models shown in Appendix~\ref{a:alternative}.
 
-%Due to the vast number of potential amplitude components and computational limits imposed by the consideration of multiple data samples in the $\Dz \to \KKpipi$ analysis, a staged LASSO method using only the flavor-tagged data, 
-%representing over 90\% of the available statistics, is employed. The approach taken is based on the assumption that the signal decay proceeds primarily by doubly resonant decays, \ie cascade and quasi-two-body decays, rather than decay amplitudes with non-resonant components. In Stage 1, only doubly resonant decays along with the simplest non-resonant component $(K^+K^-)_{S} \, (\pi^+ \pi^-)_{S}$ are considered. Figure \ref{fig:BIC}(b) shows a plot of the complexity factor $\lambda$, against the resulting BIC values. We found that the fit cannot distinguish between amplitudes with $K^*(1680)^+ \to K^*(892)^0\, \pip$ and $K^*(1410)^+ \to K^*(892)^0 \, \pip$, which both peak outside the kinematic range of the \D\ decay's phase space. We therefore only include $K^*(1680)^+ \to K^*(892)^0\, \pip$ in our nominal model. An alternative fit with the $K^*(1410)^{+}$, which has marginally worse fit quality is presented in Table~\ref{tab:alternativeModels2}.
-%
-%In Stage 2, the LASSO procedure is again performed with the components selected by Stage 1 and all single-resonant components. It should be noted in the case of 
-%%flavor-non-specific 
-%cascade decays that if LASSO picked an amplitude component but not its conjugate decay in the first stage, the conjugate is also considered again in this stage. Once more, the interplay between $D \rightarrow SS$ amplitudes leads to very large interference terms, and thus $f_0(980) \,(\pi^+ \pi^-)_{S}$ and $f_0(980) \, (K^+ K^-)_{S}$ components are considered as a replacement for the non-resonant $(K^+K^-)_{S} \, (\pi^+ \pi^-)_{S}$ component in an alternative model. 
-% %Similar interplay is seen between $\phi(1020) \rho^0(770)$ and $\phi(1020) (\pi^+ \pi^-)_{P}$, both in a relative $P$-wave.
-%%With the exception of $\phi(1020) (\pi^+ \pi^-)_{P}$ in a relative $P$-wave, only non-resonant $S$-waves combined with vector components are selected, however the component $\phi(1020) \rho^0(770)~P~$-wave drops out. The decays $\phi(1020) \{ \pi^+ \pi^- \}_{P}$ in a relative $P$-wave and $\phi(1020) \rho^0(770)~P~$-wave share the same angular structure and so given the initial assumption $\phi(1020) \rho^0(770)~P~$-wave is selected.
-%The final fit merges the components chosen in Stage 1 and Stage 2 and includes the \CP-tagged data. Within this set of amplitudes, 6 are considered insignificant relative to their error and removed from the fit with no significant impact on fit quality.
-
 %\begin{figure}[b]
 %  \centering
 %  \includegraphics[width=0.49\textwidth, height=!]{figs/BIC_4pi.eps} 
@@ -131,6 +114,25 @@ From that we obtained a set of alternative models shown in Appendix~\ref{a:alter
 %  \label{fig:BIC}
 %\end{figure}
 
+
+\input{tables/lassoFit/LASSO/fitFractions.tex}
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Kpipi_mod.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspipi_mod.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspim_mod.pdf} 
+
+		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Kpi_mod.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_pipi_mod.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspi_mod.pdf} 
+		
+		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_cosTheta_Kpi_mod.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_cosTheta_Dspi_mod.pdf} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_phi_Kpi_Dspi_mod.pdf} 
+
+		\caption{} 		
+\end{figure}	
 
 \subsection{Results}
 
@@ -144,12 +146,27 @@ From that we obtained a set of alternative models shown in Appendix~\ref{a:alter
 \begin{figure}[h]
 	\centering
 		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_t.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/s_Kpipi.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/s_Dspipi.pdf} 
+		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Kpipi.pdf} 
+		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Dspipi.pdf} 
 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/s_Kpi.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/s_pipi.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/s_Dspi.pdf} 
+		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Kpi.pdf} 
+		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_pipi.pdf} 
+		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Dspi.pdf} 
+
+		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_cosTheta_Kpi.pdf} 
+		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_cosTheta_Dspi.pdf} 
+		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_phi_Kpi_Dspi.pdf} 
+		
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Kpipi_mod.pdf} 
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Dspipi_mod.pdf} 
+
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Kpi_mod.pdf} 
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_pipi_mod.pdf} 
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Dspi_mod.pdf} 
+%
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_cosTheta_Kpi_mod.pdf} 
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_cosTheta_Dspi_mod.pdf} 
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_phi_Kpi_Dspi_mod.pdf} 
 
 		\caption{} 		
 \end{figure}	

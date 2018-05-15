@@ -19,9 +19,6 @@ line of the \textsf{BHadronCompleteEvent} stream of
 \textsf{Stripping24r1} (2015)  and \textsf{Stripping28r1p1} (2016).
 %and \textsf{Stripping29r2} (2017)
 Both stripping lines employ the same selection cuts, listed in Appendix \ref{sec:StripAndTrigger}, except for the PID requirement on the bachelor kaon/pion.
-We reconstruct the $\Bs\to\Ds h\pion\pion$ decay through two different final states of the $\Ds$ meson, $\Ds\to\kaon\kaon\pion$ and $\Ds\to\pion\pion\pion$.
-Of those, $\Ds\to\kaon\kaon\pion$ is the most prominent final state,
-while $\mathcal{BR}(\Ds\to\pion\pion\pion) \approx 0.2\cdot\mathcal{BR}(\Ds\to\kaon\kaon\pion)$ holds for the other one. 
 
 Events that pass the stripping selection are further required to fulfill the following trigger requirements:
 at the hardware stage, the $\Bs$ candidates are required to be TOS on the \textsf{L0Hadron} trigger or TIS on \textsf{L0Global};
@@ -38,91 +35,152 @@ where for simplicity we denote $\textsf{L0-TOS}$ as $\textsf{L0Hadron-TOS}$ and 
 
 \subsection{Offline selection}
 
-A two-fold approach is used to isolate the $\Bs\to\Ds\kaon\pion\pion$ candidates from data passing the stripping line. 
-First, further one-dimensional cuts are applied to reduce the level of combinatorial background and to veto some specific physical background. 
-This stage is specific to the respective final state in which the $\Ds$ meson is reconstructed, since different physical backgrounds, depending on the respective final state, have to be taken into account.   
-After that, a multivariate classifier is trained which combines the information of several input variables, including their correlation, into one powerful discriminator
-between signal and combinatorial background. For this stage, all possible $\Ds$ final states are treated equally. 
+The offline selection, in particular the requirements on the $D_s$ hadron, are guided by the previous analyses of 
+$B_s \to D_s K/\pi$, $B_d \to D^0 \pi$ as well as the branching fraction measurement of $\Bs\to\Ds\kaon\pion\pion$ decays.
+%A two-fold approach is used to isolate the signal candidates from data passing the stripping line. 
+%First, loose cuts are applied to suppress the combinatorial background, 
+%Following this, a multivariate classifier is trained which combines the information of several input variables, including their correlation, into one powerful discriminator
+%between signal and combinatorial background. 
 
-In order to clean up the sample and to align the Run-I to the slightly tighter Run-2 stripping selection, we apply the following loose cuts to the b hadron:
+In order to clean up the sample and to align the Run-I to the slightly tighter Run-2 stripping selection, we apply the following loose cuts to the b-hadron:
 \begin{itemize}
 \item DIRA $>$ 0.99994
 \item min IP $\chi^{2}$ $<$ 20 to any PV,
 \item FD $\chi^{2}$ $>$ 100 to any PV,
-\item Vertex $\chi^{2}$/nDoF $<$ 8,
+\item Vertex $\chi^{2}$/nDoF $<$ 8.
 %\item ($Z_{\Ds}-Z_{\Bs}$) $>$ 0 , where $Z_{M}$ is the z-component of the position $\vec{x}$ of the decay vertex for the $\Bs$/$\Ds$ meson.
 \end{itemize}    
-
-The most prominent final state used in this analysis is $\Bs\to\Ds(\to\kaon\kaon\pion)\kaon\pion\pion$, 
-where the $\Ds$ decay can either proceed via the narrow $\phiz$ resonance, the broader $\Kstarz$ resonance, or non resonant.
-Depending on the decay process being resonant or not, we apply additional PID requirements on this final state:
-
-\begin{itemize}
-\item resonant case: 
-\begin{itemize}
-\item $\Dsp\to\phiz\pip$, with $|M(\Kp\Km) - m_{\phiz}|$ $<$ 20 $\mevcc$ : no additional requirements, since $\phiz$ is narrow and almost pure $\Kp\Km$. 
-\item $\Dsp\to\Kstarzb\Kp$, with  $|M(\Km\pip) -m_{\Kstarz}|$ $<$ 75 $\mevcc$ :  $\dllkpi$ $>$ 0 for kaons, since this resonance is more than ten times broader than $\phiz$. 
-\end{itemize}
-
-\item non resonant case: $\dllkpi$ $>$ 5 for kaons, since the non resonant category has significant charmless contributions.
-
-\end{itemize}
+We reconstruct the $\Bs\to\Ds h\pion\pion$ decay through two different final states of the $\Ds$ meson, $\Ds\to\kaon\kaon\pion$ and $\Ds\to\pion\pion\pion$.
+Of those, $\Ds\to\kaon\kaon\pion$ is the most prominent one,
+while $\mathcal{BR}(\Ds\to\pion\pion\pion) \approx 0.2\cdot\mathcal{BR}(\Ds\to\kaon\kaon\pion)$ holds for the other. 
+For the $\kaon\kaon\pion$  final state we make use of the well known resonance structure;
+the decay proceeds either via the narrow $\phiz$ resonance, the broader $\Kstarz$ resonance or (predominantly) non-resonant.
+Within the $\phiz$ resonance region the sample is already sufficiently clean after the stripping so that we do not impose additional criteria on the $D_s$ daughters.
+For the $\Kstarz$ and non-resonant regions consecutively tighter requirements on the particle identification and the $D_s$ flight-distance are applied. 
+We apply global requirements for the $\Ds\to\pion\pion\pion$ final state.
 
 
-For the $\Ds\to\pion\pion\pion$ final state, we apply global PID requirements:
 
-\begin{itemize}
-
-\item $\dllkpi$ $<$ 10 for all pions.
-
-\item $\dllppi$ $<$ 10 for all pions.
-
-\end{itemize}
+%Depending on the decay process being resonant or not, we apply additional PID requirements on this final state:
+%
+%\begin{itemize}
+%\item resonant case: 
+%\begin{itemize}
+%\item $\Dsp\to\phiz\pip$, with $|M(\Kp\Km) - m_{\phiz}|$ $<$ 20 $\mevcc$ : no additional requirements, since $\phiz$ is narrow and almost pure $\Kp\Km$. 
+%\item $\Dsp\to\Kstarzb\Kp$, with  $|M(\Km\pip) -m_{\Kstarz}|$ $<$ 75 $\mevcc$ :  $\dllkpi$ $>$ 0 for kaons, since this resonance is more than ten times broader than $\phiz$. 
+%\end{itemize}
+%\item non resonant case: $\dllkpi$ $>$ 5 for kaons, since the non resonant category has significant charmless contributions.
+%\end{itemize}
+%
+%\begin{itemize}
+%\item $\dllkpi$ $<$ 10 for all pions.
+%\item $\dllppi$ $<$ 10 for all pions.
+%\end{itemize}
  
-
-
+ 
 \subsubsection{Physics background vetoes}
 
-Additionally, we veto various physical backgrounds, which have either the same final state as our signal decay, or can contribute via a single misidentification of $\kaon\to\pion$ or $\kaon\to\proton$. 
+We veto various physical backgrounds, which have either the same final state as our signal decay, or can contribute via a single misidentification of $\kaon\to\pion$ or $\kaon\to\proton$. 
 In the following, the vetoes are ordered by the reconstructed $\Ds$ final state they apply to: 
 
 \begin{enumerate}
 
-\item All:
+%\item All:
+%\begin{enumerate}
+%%\item $\Bs\to\Dsp\Dsm$ : $|M(\kaon\pion\pion) - m_{\Ds}| >$ 20 $\mevcc$.
+%\item $\Bs\to\Ds^{-}\Kp\Km\pip$ : possible with single missID of $\Km\rightarrow\pim$, rejected by requiring $\pim$ to fulfill $\dllkpi$ $<$ 5. 
+%\end{enumerate}
+
+\item $\Ds^-\to\kaon^+\kaon^-\pion^-$
+
+\begin{enumerate}
+	\item $\Dm \to\Kp\pim\pim$: 
+	possible with single missID of $\pim\rightarrow\Km$, vetoed by requiring 
+	$m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV 
+	or the $\Km$ has to fulfill more stringent PID criteria depending on the resonant region.
+	
+	\item $\Lambda_c^- \to \Kp \bar p \pim $: 
+	possible with single missID of $\bar p \rightarrow\Km$, vetoed by requiring
+	$m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV
+	or the $\Km$ has to fulfill more stringent PID criteria depending on the resonant region.
+	
+	\item $\Dz\to\kaon\kaon$: $\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\kaon\pion$ decay, vetoed by requiring $m(\kaon\kaon) < 1840 \mev$. 
+\end{enumerate}
+
+\item $\Ds^-\to\pion^+\pion^-\pion^-$
+
+\begin{enumerate}
+        \item $\Dm \to\Kp\pim\pim$: 
+%	possible with single missID of $\Km\rightarrow\pim$: $m(\pip_K \pim \pim) is shifted to lower masses and 
+	
+	\item $\Dz\to\pion\pion$: 
+		combined with a random $\pion$ can fake a $\Ds\to\pion\pion\pion$ decay, 
+		vetoed by requiring both possible combinations to have $m(\pion\pion) < 1700 \mev$.
+\end{enumerate}
+
+\item $\Ds^- \to K^- \pion^+\pion^-$
+
+\begin{enumerate}
+	\item $\Dm \to\pim \pip \pim$:  	$m(K^-_\pi \pip \pim) \ne m(D^-) \pm 30$ MeV 
+
+
+	\item $\Lambda_c^- \to \Kp \bar p \pim $: 
+
+	\item $\Dz\to\kaon\pion$: 
+		combined with a random $\pion$ can fake a $\Ds\to\kaon\pion\pion$ decay, 
+		vetoed by requiring both possible combinations to have $m(\kaon\pion) < 1700 \mev$.
+\end{enumerate}
+
+\end{enumerate}
+
+
 
 \begin{enumerate}
 
-\item $\Bs\to\Dsp\Dsm$ : $|M(\kaon\pion\pion) - m_{\Ds}| >$ 20 $\mevcc$.
-
-\item $\Bs\to\Ds^{-}\Kp\Km\pip$ : possible with single missID of $\Km\rightarrow\pim$, rejected by requiring $\pim$ to fulfill $\dllkpi$ $<$ 5. 
-
-\end{enumerate}
-
-\item $\Ds\to\kaon\kaon\pion$
-
+\item $X_s \to \Kp \pip \pim$:
 \begin{enumerate}
-
-\item $\Bz\to\Dp(\to\Kp\pim\pip)\kaon\pion\pion$ : possible with single missID of $\pip\rightarrow\Kp$, vetoed by changing particle hypothesis and recompute $|M(\Kp\pim\pip) - m_{Dp}|$ $>$ 30 $\mevcc$, 
-or the $\Kp$ has to fulfill $\dllkpi$ $>$ 10.
-
-\item $\Lb\to\Lc(\to\proton\Km\pip)\kaon\pion\pion$ : possible with single missID of $\proton\rightarrow\Kp$, vetoed by changing particle hypothesis and recompute $M(\proton\Km\pip) - m_{\Lc}$ $>$ 30 $\mevcc$, 
-or the $\Kp$ has to fulfill ($\dllkpi$ - $\dllppi$) $>$ 5.
-
-\item $\Dz\to\kaon\kaon$ : $\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\kaon\pion$ decay and be a background to our signal, vetoed by requiring $M(\kaon\kaon) < 1840 \mevcc$. 
-
+\item $\Bs\to\Ds\pion\pion\pion$
+\item $\Bs\to\Dsm\Dsp$ 
+\item $\Bs \to \Dsm \mu \nu X$
+%: $|M(\kaon\pion\pion) - m_{\Ds}| >$ 20 $\mevcc$.
+%\item $\Bs\to\Ds^{-}\Kp\Km\pip$ : possible with single missID of $\Km\rightarrow\pim$, rejected by requiring $\pim$ to fulfill $\dllkpi$ $<$ 5. 
 \end{enumerate}
 
-
-\item $\Ds\to\pion\pion\pion$
-
+\item $X_d \to \pip \pip \pim$:
 \begin{enumerate}
-
-\item $\Dz\to\pion\pion$ : combined with a random $\pion$ can fake a $\Ds\to\pion\pion\pion$ decay and be a background to our signal, vetoed by requiring both possible combinations to have $M(\pion\pion) < 1700 \mevcc$.
-
+\item $\Bs\to\Ds\kaon\pion\pion$
+\item $\Bs \to \Dsm \mu \nu X$
+%\item $\Bs\to\Dsp\Dsm$ 
+%: $|M(\kaon\pion\pion) - m_{\Ds}| >$ 20 $\mevcc$.
+%\item $\Bs\to\Ds^{-}\Kp\Km\pip$ : possible with single missID of $\Km\rightarrow\pim$, rejected by requiring $\pim$ to fulfill $\dllkpi$ $<$ 5. 
 \end{enumerate}
 
 \end{enumerate}
 
+
+Given the high number of $pp$ interactions per bunch crossing, a large fraction
+of events have more than one reconstructed PV. 
+We choose the 'best' PV to be the one to which the 
+$B_s$ candidate has the smallest $\chi^2_{IP}$.
+In instances where the association of the $B_s$ candidate to the best PV is wrong,
+the decay time of this candidate will be incorrect. 
+These wrongly associated candidates
+are rejected by requiring that the $B_s$ $\chi^2_{IP}$ with respect to any other PV is sufficiently higher than with respect to the best PV 
+($\Delta \chi^2_{IP} = \chi^2_{\text{IP,SECONDBEST}} - \chi^2_{\text{IP,BEST}} > 20$ ).
+Events with only a single PV are not affected.
+
+ \subsubsection{Phase space region}
+
+Due to the comparable low masses of the final state particles  with respect to the $B_s$ mass,
+there is, in contrast to for example b-hadron to charmonia or charm decays, a huge phase-space available for the $\Bs\to\Ds\kaon\pion\pion$ decay.
+For the invariant mass of the $K\pi\pi$ subsystem it extends up to $3.4 \gev$.
+It has however been observed that the decay proceeds predominantly through the low lying axial vector states $K(1270)$ and $K(1400)$, while
+the combinatorial background is concentrated at high $K\pi\pi$ invariant masses ($m(K\pi\pi) > 2000 \mev$).
+Moreover, the strange hadron spectrum above $2\gev$ is poorly understood experimentally such that an reliable extraction of the strong phase motion in that region is not possible.
+We consequently choose the considered phase space region to be $m(K\pi\pi) < 1950 \mev$, which is right below the charm-strange threshold ($\Bs\to\Dsp\Dsm$).
+
+
+\clearpage
 \subsubsection{Training of multivariate classifier}
 
 We use TMVA \cite{Hocker:2007ht} to train a multivariate discriminator, which is used to further improve the signal to background ratio. 

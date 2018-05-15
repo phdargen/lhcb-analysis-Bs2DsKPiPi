@@ -2,41 +2,39 @@
 \clearpage
 \section{Flavour Tagging}
 \label{sec:Tagging}
-To successfully perform a time- and amplitude-dependent measurement of $\gamma$, the identification of the initial state flavour of the $\Bs$ meson is crucial.
-In the presented analysis, a number of flavour tagging algorithms are used that either determine the flavour of the non-signal b-hadron produced in the event (opposite site, OS), 
-or they use particles produced in the fragmentation of the signal candidate $\Bs$/$\Bsb$ (same side, SS). \newline
-For the same side, the algorithm searching for the charge of an aditional kaon that acompanies the fragmentation of the signal candidate is used (SS-nnetKaon). For the opposite site, four different taggers are chosen: 
-The Two algorithms that use the charge of an electron or a muon from semileptonic B decays (OS- $\electron$,$\muon$), the tagger that uses the charge of a kaon from a b $\to$ c $\to$ s decay chain (OS-nnetKaon) 
+
+To identify the initial flavour state of the $\Bs$ meson,
+a number of flavour tagging algorithms are used that either determine the flavour of the non-signal b-hadron produced in the event (opposite site, OS)
+or use particles produced in the fragmentation of the signal candidate $\Bs$/$\Bsb$ (same side, SS). 
+
+For the same side, the algorithm searching for the charge of an additional kaon that accompanies the fragmentation of the signal candidate is used (SS-nnetKaon). 
+For the opposite site, four different taggers are chosen: 
+The algorithms that use the charge of an electron or a muon from semileptonic B decays (OS- $\electron$,$\muon$), the tagger that uses the charge of a kaon from a b $\to$ c $\to$ s decay chain (OS-nnetKaon) 
 and the algorithm that determines the $\Bs$/$\Bsb$ candidate flavour from the charge of a secondary vertex, reconstructed from the OS b decay product (OS-VtxCharge). 
-All four taggers are then combined into a signel OS tagger. \newline
+All four taggers are then combined into a single OS tagger. 
+
 Every single tagging algorithm is prone to misidentify the signal candidate at a certain mistag rate $\omega = (wrong tags)/ (all tags)$. 
 This might be caused by particle misidentification, flavour oscillation of the neutral opposite site B-meson or by tracks that are wrongly picked up from the underlying event. 
 For every signal $\Bs$/$\Bsb$ candidate, each tagging algorithm predicts a mistag probability $\eta$, which is calculated using a combination of inputs such as the kinematics of the tagging particles. 
 The inputs are then combined to a predicted mistag using neural networks. These are trained on simulated samples of $\Bs\to\Dsm\pip$ (SS algorithm) and $\Bu\to\jpsi\Kp$ (OS algorithms) decays.
 For the presented analysis, the measurable CP-violating coefficients are damped by the tagging dilution $D$, that depends on the mistag rate:
-
 \begin{equation}
 \label{eq: taggingDilution}
 D = 1 - 2\omega.
 \end{equation}
-
-This means that the statistical precision, with which these coeffcients can be measured, scales as the inverse square root of the effective tagging efficiency,
-
+This means that the statistical precision, with which these coefficients can be measured, scales as the inverse square root of the effective tagging efficiency,
 \begin{equation}
 \label{eq: taggingEfficiency}
 \epsilon_{eff} = \epsilon_{tag}(1 - 2\omega)^{2},
 \end{equation}
-
 where $epsilon_{tag}$ is the fraction of events that have a tagging decision. 
-The flavour tagging algorithms are optimised for highest $\epsilon_{eff}$ on data, using the $\Bs\to\Dsm\pip$ and $\Bu\to\jpsi\Kp$ samples. \newline
+The flavour tagging algorithms are optimized for highest $\epsilon_{eff}$ on data, using the $\Bs\to\Dsm\pip$ and $\Bu\to\jpsi\Kp$ samples. \newline
 Utilizing flavour-specific final states, the predicted mistag $\eta$ of each tagger has to be calibrated to match the observed mistag $\omega$ on the data sample. 
 For the calibration, a linear model of the form
-
 \begin{equation}
 \label{eq: mistagCalibration}
 \omega(\eta) = p_{o} + p_{1} \cdot (\eta - < \eta >), 
 \end{equation}  
-
 where the values of $p_{0}$ and $p_{1}$ are determined using the $\Bs\to\Ds\pion\pion\pion$ normalization mode and $<\eta>$ is the average estimated mistag probability $<\eta> = \Sigma_{i=1}^{N_{cand}}(\eta_{i}) / N_{cand}$.
 Following this model, a perfectly calibrated tagger would lead to $\omega(\eta) = \eta$ and one would expect $p_{1} = 1$ and $p_{0} = <\eta>$.
 Due to the different interaction cross-sections of oppositely charged particles, the tagging calibration parameters depend on the initial state flavour of the $\Bs$. 
@@ -48,7 +46,6 @@ The calibration procedure for the OS tagging algorithms (Sec.\ref{subsec: OScali
 the SS kaon tagger (Sec.\ref{subsec: SScalibration}) is applied on the full Run I and 2015 and 2016 Run II $\Bs\to\Ds\pion\pion\pion$ data sample, which is selected following the steps described in Sec. \ref{sec:Selection}.
 The similar selection ensures as close as possible agreement between the $\Bs\to\Ds\pion\pion\pion$ and $\Bs\to\Ds\kaon\pion\pion$ samples in terms of the decay kinematics, which are crucial for the flavour tagging.
 Section \ref{subsec: TaggingComparison} shows the compatibility of both samples. After applying the calibration, the response of the OS and SS taggers are combined, which is shown in Sec. \ref{subsec: TaggingCombination}.  
-
 
 
 

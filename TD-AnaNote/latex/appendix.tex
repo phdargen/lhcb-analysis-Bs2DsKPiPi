@@ -4,59 +4,78 @@
 \label{sec:StripAndTrigger}
 
 The following text describes variables which are used in Table \ref{table:StrippingCuts} and might be ambiguous, or which benefits are not straight forward. 
-Where noted, different cut values are applied for Run1 \& Run2 data.\newline
+Where noted, different cut values are applied for Run-I \& Run-II data.
 In Table \ref{table:StrippingCuts}, DOCA is the abbreviation for distance of closest approach. This variable is used to ensure that all $\Ds$ and $X_{s,d}$ daughters originate from the same vertex.
-The minimal flight distance (FD) $\chi^{2}$ is a measure on how likely a particle traveled some distance before it decayed. A cut on this variable is employed to reject prompt background for $\Ds$ and $X_{s,d}$ candidates.
+%The minimal flight distance (FD) $\chi^{2}$ is a measure on how likely a particle traveled some distance before it decayed. A cut on this variable is employed to reject prompt background for $\Ds$ and $X_{s,d}$ candidates.
+%$X_{s,d}$ $\Delta\rho$ (vertex displacement perpendicular to z-axis) & $>$ 0.1 $\mm$&\\
+%$X_{s,d}$ $\Delta Z$ (vertex displacement along z-axis) & $>$ 2.0 $\mm$&\\
 DIRA is the abbreviation for the cosine of the angle $\theta$ between the hadron's flight direction $\vec{x}$ and it's corresponding momentum vector $\vec{\ptot}$, $\cos{\theta_{\vec{x} -\vec{\ptot}}}$.
-For signal hadrons this variable is expected to be very close to one, while it can be arbitrary distributed for background.
-
+%For signal hadrons this variable is expected to be very close to one.
 \begin{table}[h]
 \centering
- \begin{tabular}{l l}
-Variable & Stripping Cut\\
+\caption{Summary of the stripping selections for $\Bs\to\Ds\kaon\pion\pion$ decays. The requirements for Run-II are only given if they have been changed.}
+\resizebox{\linewidth}{!}{
+ \renewcommand{\arraystretch}{1.1}
+ \begin{tabular}{l l l}
   \hline
-Track $\chi^{2}$/nDoF & $<$ 3\\
-Track $\ptot$ & $>$ 1000 $\mevc$\\
-Track $\pt$ & $>$ 100 $\mevc$\\
-Track IP $\chi^{2}$ & $>$ 4\\
-$\Ds$ Daughter $\pt$ & $\Sigma_{i=1}^{3} p_{i} > 1800 \mevc$\\
-$\Ds$ Daughter DOCA & $<0.5$ $\mm$\\
-$\Ds$ mass $m_{\Ds}$  & $\pm$ 50 (\bfseries 40 \normalfont) $\mevcc$ of PDG value \bfseries (Run2) \normalfont \\
-$\Ds$ Vertex $\chi^{2}$/nDoF & $<$ 10\\
-$\Ds$ min FD $\chi^{2}$ & $>$ 36\\
-$\Ds$ FD $\chi^{2}$ & $>$ 2 to any PV\\
+ \hline
+Variable & Stripping Cut (Run-I) & Stripping Cut (Run-II)\\
+ \hline
+Track $\chi^{2}$/nDoF & $<$ 3 & \\
+Track $\ptot$ & $>$ 1000 $\mevc$ &\\
+Track $\pt$ & $>$ 100 $\mevc$& \\
+Track IP $\chi^{2}$ & $>$ 4& \\
+Track ghost-prob. & $<$ 0.4 & \\
+$\Ds$ mass  & $m_{\Ds}  \pm 100 \mev $ &$m_{\Ds}  \pm 80 \mev $\\
+$\Ds$ Daughter $\pt$ & $\sum_{i=1}^{3} p_{t,i} > 1800 \mevc$&\\
+$\Ds$ Daughter DOCA & $<0.5$ $\mm$&\\
+$\Ds$ Vertex $\chi^{2}$/nDoF & $<$ 10 &\\
+$\Ds$ $\chi^{2}$-separation from PV & $>$ 36 &\\
+$\Ds$ daughter PID($\pi)$ & $< 20$ &\\
+$\Ds$ daughter PID(K) & $> -10$ &\\
+%$\Ds$ FD $\chi^{2}$ & $>$ 2 to any PV\\ ??
 %($Z_{\Ds\mbox{ }decay}$ - $Z_{\Bs\mbox{ }decay}$) & $>$ 0 $\mm$\\
-$X_{d}$ Daughter $\pt$ & $>$ 2 $\gevc$\\
-$X_{s,d}$ Daughter DOCA & $<0.4$ $\mm$\\
-$X_{s,d}$ Daughter $\pt$ & $\Sigma_{i=1}^{3} p_{t,i} > 1250 \mevc$\\
-$X_{s,d}$ Vertex $\chi^{2}$/nDoF & $<$ 8\\
-$X_{s,d}$ min FD $\chi^{2}$/nDoF & $>$ 16\\
-$X_{s,d}$ DIRA & $>$ 0.98\\
-$X_{s,d}$ $\Delta\rho$ (vertex displacement perpendicular to z-axis) & $>$ 0.1 $\mm$\\
-$X_{s,d}$ $\Delta Z$ (vertex displacement along z-axis) & $>$ 2.0 $\mm$\\
+$X_{s,d}$ mass  & $< 4000 \mev$ & $< 3500 \mev$\\
+$X_{s,d}$ Daughter $p$ & $>$ 2 $\gevc$ &\\
+$X_{s,d}$ Daughter DOCA & $<0.4$ $\mm$ &\\
+$X_{s,d}$ Daughter $\pt$ & $\sum_{i=1}^{3} p_{t,i} > 1250 \mevc$& \\
+$X_{s,d}$ Vertex $\chi^{2}$/nDoF & $<$ 8&\\
+$X_{s,d}$ $\chi^{2}$-separation from PV & $>$ 16&\\
+$X_{s,d}$ DIRA & $>$ 0.98&\\
+$X_{s,d}$ $\Delta\rho$ & $>$ 0.1 $\mm$&\\
+$X_{s,d}$ $\Delta z$  & $>$ 2.0 $\mm$&\\
+$X_{s,d}$ daughter PID($\pi)$ & $< 10$ &\\
+$X_{s}$ daughter PID(K) & $> -2$ & $> 4$\\
 %$\Bs$ $\Delta Z$ (vertex displacement $Z_{\Ds} - Z_{\Bs}$ along z-axis) & $>$ 0 $\mm$ \bfseries (only for Run2) \normalfont\\
-$\Bs$ mass \bfseries (only for Run2) \normalfont &  5000 $\mevcc$ $<$ $m_{\Bs}$ $<$6000 $\mevcc$ \\
-$\Bs$ DIRA & $>$ 0.98  \bfseries ( $>$ 0.999 for Run2) \normalfont\\
-$\Bs$ min IP $\chi^{2}$ & $<$ 25  \bfseries ( $<$ 20 for Run2) \normalfont\\
-$\Bs$ Vertex $\chi^{2}$/nDoF & $<$ 10 \bfseries ( $<$ 8 for Run2) \normalfont \\
-$\Bs$ $\tauBs$ & $>$ 0.2 $\ps$\\
-$\kaon$ \dllkpi & $>$ -10\\
-$\pion$ \dllkpi & $<$ 10 \bfseries ( $<$ 8 for Run2) \normalfont \\
+$\Bs$ mass  & $ [4750, 7000] \mevcc$ & $[5000,6000] \mevcc$ \\
+$\Bs$ DIRA & $>$ 0.98  & $>$ 0.99994 \\
+$\Bs$ min IP $\chi^{2}$ & $<$ 25  & $<$ 20  \\
+$\Bs$ Vertex $\chi^{2}$/nDoF & $<$ 10 & $<$ 8   \\
+$\Bs$ $\tauBs$ & $>$ 0.2 $\ps$ & \\
+%$\kaon$ \dllkpi & $>$ -10& \\
+%$\pion$ \dllkpi & $<$ 10 \bfseries ( $<$ 8 for Run2) \normalfont &\\
+ \hline
 \end{tabular}
-\caption{Summary of the stripping selections for $\Bs\to\Ds\kaon\pion\pion$ decays.}
+}
 \label{table:StrippingCuts}
 \end{table}
 
-
-Table \ref{table:HLT1} summarizes the trigger requirements imposed by the HLT1 line used in this analysis for Run 1.
+\clearpage
+\noindent Table \ref{table:HLT1} summarizes the trigger requirements imposed by the Hlt1 line used in this analysis for Run-I.
 At least one of the six decay particles must pass the listed requirements in order for the event to be stored for further analysis.
-For Run 2, this trigger line was updated and uses a multivariate classifier which takes the variables listed in Table \ref{table:HLT1} as input, rather than directly cutting on them. 
+For Run-II, this trigger line was updated and uses a multivariate classifier which takes the variables listed in Table \ref{table:HLT1} as input, rather than directly cutting on them. 
 
+The Hlt2 2, 3 and 4-body topological lines use a Boosted Decision Tree based on the b-hadron $\pt$,
+its flight distance $\chi^{2}$ from the nearest PV and the sum of the $\Bs$ and $\Ds$ vertex $\chi^{2}$ divided by the sum of their number of degrees of freedom.
+Table \ref{table:HLT1Phi} summarizes the cuts applied by the inclusive $\phi$ trigger, which requires that a $\phi\to\kaon\kaon$ candidate can be formed out of two tracks present in the event.
 \begin{table}[h]
 \centering
+\caption{Summary of the cuts applied by the Hlt1TrackAllL0 trigger for Run-I. At least one of the six decay particles must pass this requirements, in order for the event to be accepted.}
  \begin{tabular}{l l}
+  \hline
 Quantity & Hlt1TrackAllL0 requirement \\
   \hline
+   \hline
 Track IP [mm] & $>$ 0.1\\
 Track IP $\chi^{2}$ & $>$ 16\\
 Track $\chi^{2}$/nDoF & $<$ 2.5\\
@@ -65,33 +84,29 @@ Track $\ptot$ & $>$ 10 $\gevc$\\
 Number VELO hits/track & $>$ 9\\
 Number missed VELO hits/track & $<$ 3\\
 Number OT+IT $\times$ 2 hits/track & $>$ 16\\
+ \hline
 \end{tabular}
-\caption{Summary of the cuts applied by the Hlt1TrackAllL0 trigger for Run 1. At least one of the six decay particles must pass this requirements, in order for the event to be accepted.}
 \label{table:HLT1}
-\end{table}
 
-
-The HLt2 2, 3 and 4-body topological lines use a Boosted Decision Tree based on the b-hadron $\pt$,
-its flight distance $\chi^{2}$ from the nearest PV and the sum of the $\Bs$ and $\Ds$ vertex $\chi^{2}$ divided by the sum of their number of degrees of freedom.\newline
-Table \ref{table:HLT1Phi} summarizes the cuts applied by the inclusive $\phi$ trigger, which requires that a $\phi\to\kaon\kaon$ candidate can be formed out of two tracks present in the event.
-
-\begin{table}[h]
 \centering
+\caption{Summary of the cuts applied by the Hlt2 inclusive $\phi$ trigger. 
+A $\phi\to\kaon\kaon$ candidate, formed by two tracks in the event, must pass this requirements in order for the event to be accepted.}
  \begin{tabular}{l l}
+ \hline
 Quantity & Hlt2IncPhi requirement \\
   \hline
+   \hline
 $\phi$ mass & $m_{\phi}$ $\pm$ 12 $\mevcc$ of PDG value\\
 $\phi$ $\pt$ & $>$ 2.5 $\gevc$\\
 $\phi$ vertex $\chi^{2}$/nDoF & $<$ 20\\
 $\phi$ IP $\chi^{2}$ to any PV & $>$ 5\\
+ \hline
 \end{tabular}
-\caption{Summary of the cuts applied by the Hlt2 inclusive $\phi$ trigger. 
-A $\phi\to\kaon\kaon$ candidate, formed by two tracks in the event, must pass this requirements in order for the event to be accepted.}
 \label{table:HLT1Phi}
 \end{table}
 
 
-
+\clearpage
 \section{Details of multivariate classifier}
 \label{sec:appendix_BDT}
 
