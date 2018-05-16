@@ -34,6 +34,7 @@ struct DataType{
 static const double massKaon = 493.68;
 static const double massPion = 139.57;
 static const double massProton = 938.27;
+static const double massMuon = 195.65838;
 static const double massPhi = 1019.46;
 static const double massKstar = 895.81;
 static const double massDs = 1968.30;

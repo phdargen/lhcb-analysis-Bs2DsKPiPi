@@ -72,6 +72,11 @@ public :
     TLorentzVector piminus_fromDs_asProton_MissID;
     TLorentzVector piminus2_fromDs_asProton_MissID;
     
+    TLorentzVector K_plus_asMu_MissID;
+    TLorentzVector pi_plus_asMu_MissID;
+    TLorentzVector pi_plus1_asMu_MissID;
+    TLorentzVector pi_plus2_asMu_MissID;
+
     Double_t        Bs_MINIPNEXTBEST;
     Double_t        Bs_MINIPCHI2NEXTBEST;
 
