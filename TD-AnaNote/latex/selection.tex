@@ -80,80 +80,107 @@ We apply global requirements for the $\Ds\to\pion\pion\pion$ final state.
  
 \subsubsection{Physics background vetoes}
 
-We veto various physical backgrounds, which have either the same final state as our signal decay, or can contribute via a single misidentification of $\kaon\to\pion$ or $\kaon\to\proton$. 
-In the following, the vetoes are ordered by the reconstructed $\Ds$ final state they apply to: 
-
+We veto various physical backgrounds, which have either the same final state as our signal decay, or can contribute via a single misidentification of $\kaon \leftrightarrow \pion$, $\kaon\leftrightarrow\proton$ or $\pi \leftrightarrow\proton$. 
+Depending on the $D_s$ final state different vetoes are applied in order to account for peaking backgrounds originating from charm meson or charmed baryon decays.
 \begin{enumerate}
-
-%\item All:
-%\begin{enumerate}
-%%\item $\Bs\to\Dsp\Dsm$ : $|M(\kaon\pion\pion) - m_{\Ds}| >$ 20 $\mevcc$.
-%\item $\Bs\to\Ds^{-}\Kp\Km\pip$ : possible with single missID of $\Km\rightarrow\pim$, rejected by requiring $\pim$ to fulfill $\dllkpi$ $<$ 5. 
-%\end{enumerate}
 
 \item $\Ds^-\to\kaon^+\kaon^-\pion^-$
 
 \begin{enumerate}
-	\item $\Dm \to\Kp\pim\pim$: 
-	possible with single missID of $\pim\rightarrow\Km$, vetoed by requiring 
+	\item $\Dm \to\Kp\pim\pim$: \\
+	Possible with single missID of $\pim\rightarrow\Km$, vetoed by requiring 
 	$m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV 
 	or the $\Km$ has to fulfill more stringent PID criteria depending on the resonant region.
 	
-	\item $\Lambda_c^- \to \Kp \bar p \pim $: 
-	possible with single missID of $\bar p \rightarrow\Km$, vetoed by requiring
+	\item $\Lambda_c^- \to \Kp \bar p \pim $:  \\
+	Possible with single missID of $\bar p \rightarrow\Km$, vetoed by requiring
 	$m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV
 	or the $\Km$ has to fulfill more stringent PID criteria depending on the resonant region.
 	
-	\item $\Dz\to\kaon\kaon$: $\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\kaon\pion$ decay, vetoed by requiring $m(\kaon\kaon) < 1840 \mev$. 
+	\item $\Dz\to\kaon\kaon$: \\
+	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\kaon\pion$ decay, vetoed by requiring $m(\kaon\kaon) < 1840 \mev$. 
 \end{enumerate}
 
 \item $\Ds^-\to\pion^+\pion^-\pion^-$
 
 \begin{enumerate}
-        \item $\Dm \to\Kp\pim\pim$: 
+%        \item $\Dm \to\Kp\pim\pim$: 
 %	possible with single missID of $\Km\rightarrow\pim$: $m(\pip_K \pim \pim) is shifted to lower masses and 
-	
-	\item $\Dz\to\pion\pion$: 
-		combined with a random $\pion$ can fake a $\Ds\to\pion\pion\pion$ decay, 
+
+	\item $\Lambda_c^- \to \Kp \bar p \pim $: \\ 
+	Possible with double missID of $\bar p \rightarrow \pim$ and $\Kp \to \pip$
+
+	\item $\Lambda_c^- \to \pip \bar p \pim $: \\
+	Possible with single missID of $\bar p \rightarrow \pim$, vetoed by requiring
+	$m(\pip \pi^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV
+	or PIDp($\pim$) $< 0$ for each $\pim$.
+
+	\item $\Dz\to\pion\pion$: \\
+	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\pion\pion\pion$ decay, 
 		vetoed by requiring both possible combinations to have $m(\pion\pion) < 1700 \mev$.
 \end{enumerate}
 
 \item $\Ds^- \to K^- \pion^+\pion^-$
 
 \begin{enumerate}
-	\item $\Dm \to\pim \pip \pim$:  	$m(K^-_\pi \pip \pim) \ne m(D^-) \pm 30$ MeV 
 
+	\item $\Dm \to\Kp\pim\pim$: \\
+	Possible with double missID of $\Kp \rightarrow\pip$ and $\pim \to \Km$
 
-	\item $\Lambda_c^- \to \Kp \bar p \pim $: 
-
-	\item $\Dz\to\kaon\pion$: 
-		combined with a random $\pion$ can fake a $\Ds\to\kaon\pion\pion$ decay, 
-		vetoed by requiring both possible combinations to have $m(\kaon\pion) < 1700 \mev$.
+	\item $\Dm \to\pim\pip\pim$:  \\
+	Possible with single missID of $\pim\rightarrow\Km$, vetoed by requiring 
+	$m(K^-_\pi \pip \pim) \ne m(D^-) \pm 30$ MeV 
+	or PIDK($\Kp$) $> 20$.
+	
+	\item $\Lambda_c^- \to \Kp \bar p \pim $: \\ Possible with double missID of $\bar p \rightarrow \Km$ and $\Kp \to \pip$
+	
+	\item $\Lambda_c^- \to \bar p \pip \pim $: \\
+	Possible with single missID of $\bar p \rightarrow \Km$, vetoed by requiring
+	$m(K^-_p \pip \pim) \ne m(\Lambda_c) \pm 30$ MeV
+	or PIDK($\Km$) $-$ PIDp($\Km$) $> 5$.
+	
+	\item $\Dz\to\kaon\pion$: \\
+	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\pion\pion$ decay, 
+		vetoed by requiring both possible combinations to have $m(\kaon\pion) < 1750 \mev$.
 \end{enumerate}
 
 \end{enumerate}
 
 
+To reduce cross-feed from our calibration channel into the signal channel and vice-versa we require tight PID cuts on the bachelor kaons and pions. 
+In addition, we veto $\Bs\to\Dsm\Dsp$ decays.
 
 \begin{enumerate}
 
-\item $X_s \to \Kp \pip \pim$:
-\begin{enumerate}
-\item $\Bs\to\Ds\pion\pion\pion$
-\item $\Bs\to\Dsm\Dsp$ 
-\item $\Bs \to \Dsm \mu \nu X$
-%: $|M(\kaon\pion\pion) - m_{\Ds}| >$ 20 $\mevcc$.
-%\item $\Bs\to\Ds^{-}\Kp\Km\pip$ : possible with single missID of $\Km\rightarrow\pim$, rejected by requiring $\pim$ to fulfill $\dllkpi$ $<$ 5. 
-\end{enumerate}
+	\item $X_s^+ \to \Kp \pip \pim$:
+		\begin{enumerate}
+			\item $\Bs\to\Ds\pion\pion\pion$: \\
+			Possible with single missID of $\pip \to \Kp$, suppressed with PIDK($\Kp$) $>10$.
+			
+			\item $\Bs\to\Dsm (\Dsp \to \Kp \pip \pim)$: \\ Outside of considered phase-space region, see Sec.~\ref{ssec:phasespace}.
 
-\item $X_d \to \pip \pip \pim$:
-\begin{enumerate}
-\item $\Bs\to\Ds\kaon\pion\pion$
-\item $\Bs \to \Dsm \mu \nu X$
-%\item $\Bs\to\Dsp\Dsm$ 
-%: $|M(\kaon\pion\pion) - m_{\Ds}| >$ 20 $\mevcc$.
-%\item $\Bs\to\Ds^{-}\Kp\Km\pip$ : possible with single missID of $\Km\rightarrow\pim$, rejected by requiring $\pim$ to fulfill $\dllkpi$ $<$ 5. 
-\end{enumerate}
+			\item $\Bs\to\Dsm (\Dsp \to \Kp \Km \pip)$: \\
+			Possible with single missID of $\Km \to \pim$, vetoed by requiring
+			$m(\Kp \pip \pi^-_K) \ne m(D_s) \pm 30$ MeV or PIDK($\pim$) $< 0$.
+
+			%\item $\Bs \to \Dsm \mu \nu X$
+
+		\end{enumerate}
+
+	\item $X_d^+ \to \pip \pip \pim$:
+		\begin{enumerate}
+			\item $\Bs\to\Ds\kaon\pion\pion$: \\
+			Possible with single missID of $\Kp \to \pip$, suppressed with PIDK($\pip$) $<5$.
+
+			\item $\Bs\to\Dsm (\Dsp \to \pip \pip \pim)$:  \\ Outside of considered phase-space region, see Sec.~\ref{ssec:phasespace}.
+			
+			\item $\Bs\to\Dsm (\Dsp \to \Kp \pim \pip)$: \\
+			Possible with single missID of $\Kp \to \pip$, vetoed by requiring
+			$m(\pip \pi^+_K \pim) \ne m(D_s) \pm 30$ MeV or PIDK($\pip$) $< 0$ for both $\pip$.
+			
+			%\item $\Bs \to \Dsm \mu \nu X$
+
+		\end{enumerate}
 
 \end{enumerate}
 
@@ -170,6 +197,7 @@ are rejected by requiring that the $B_s$ $\chi^2_{IP}$ with respect to any other
 Events with only a single PV are not affected.
 
  \subsubsection{Phase space region}
+ \label{ssec:phasespace}
 
 Due to the comparable low masses of the final state particles  with respect to the $B_s$ mass,
 there is, in contrast to for example b-hadron to charmonia or charm decays, a huge phase-space available for the $\Bs\to\Ds\kaon\pion\pion$ decay.
@@ -329,11 +357,12 @@ the BDTG output distribution are shown in the appendix.
 \hline
  & Description & Requirement  \\
 \hline
-$D_s \to h h h$ &  $m(hhh)$ & = $m_{D_s} \pm 20 \mev$  \\
+$D_s \to h h h$ &  $m(hhh)$ & = $m_{D_s} \pm 25 \mev$  \\
+& $p_T $ & $> 1600 \mev$\\
 \\
 $D_s^- \to K K \pi^-$  & $D^0$ veto  & $m(K K) < 1840$ MeV \\
 \\
-$D_s^- \to \phi \pi^-$ & $m(KK)$  & $= m_{\phi} \pm 20$ MeV \\
+$D_s^- \to \phi \pi^-$ & $m(KK)$  & $= m_{\phi} \pm 10$ MeV \\
 & PIDK($K^+$) & $> -10$ \\
 & PIDK($K^-$) & $> -10$ \\
 & PIDK($\pi^-$) & $< 20$ \\
@@ -342,37 +371,37 @@ $D_s^- \to \phi \pi^-$ & $m(KK)$  & $= m_{\phi} \pm 20$ MeV \\
 & $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV  $||$ $\text{PIDK}(K^-) > 0$\\
 & $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV   $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 0$ \\
 \\
-$D_s^- \to K^{*}(892) K^-$ & $m(KK)$  & $\ne m_{\phi} \pm 20$ MeV \\
-& $m(K^+\pi^-)$  & $= m_{K^{*}(892)} \pm 75$ MeV \\
+$D_s^- \to K^{*}(892) K^-$ & $m(KK)$  & $\ne m_{\phi} \pm 10$ MeV \\
+& $m(K^+\pi^-)$  & $= m_{K^{*}(892)} \pm 70$ MeV \\
 & PIDK($K^+$) & $> -10$ \\
-& PIDK($K^-$) & $> -5$ \\
+& PIDK($K^-$) & $> -2$ \\
 & PIDK($\pi^-$) & $< 10$ \\
-&  $\chi^{2}_{FD}$ & $> 2$ \\
+&  $\chi^{2}_{FD}$ & $> 1$ \\
 &  FD in $z$  &$ > 0$ \\
 & $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV  $||$ $\text{PIDK}(K^-) > 5$\\
 & $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV   $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 5$ \\
 \\
-$D_s^- \to (K K \pi^-)_{NR}$ & $m(KK)$  & $\ne m_{\phi} \pm 20$ MeV \\
-& $m(K^+\pi^-)$  & $\ne m_{K^{*}(892)} \pm 75$ MeV \\
+$D_s^- \to (K K \pi^-)_{NR}$ & $m(KK)$  & $\ne m_{\phi} \pm 10$ MeV \\
+& $m(K^+\pi^-)$  & $\ne m_{K^{*}(892)} \pm 70$ MeV \\
 & PIDK($K^+$) & $> 5$ \\
 & PIDK($K^-$) & $> 5$ \\
 & PIDK($\pi^-$) & $< 10$ \\
-&  $\chi^{2}_{FD}$ & $> 5$ \\
+&  $\chi^{2}_{FD}$ & $> 4$ \\
 &  FD in $z$  &$ > 0$ \\
 & $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV  $||$ $\text{PIDK}(K^-) > 20$\\
 & $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV  $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 5$ \\
 \\
 $D_s \to \pi \pi \pi$ & PIDK($\pi$) & $< 10$  \\
-& PIDp($\pi$) & $< 10$ \\
+& PIDp($\pi$) & $< 20$ \\
 & $D^0$ veto  & $m(\pip \pim) < 1700$ MeV \\
-&  $\chi^{2}_{FD}$ & $> 9$ \\
+&  $\chi^{2}_{FD}$ & $> 6$ \\
 &  FD in $z$  &$ > 0$ \\
 \\
-$D_s^- \to K^- \pip \pim$ & PIDK($K$) & $> 10$  \\
+$D_s^- \to K^- \pip \pim$ & PIDK($K$) & $> 8$  \\
 & PIDK($\pi$) & $< 5$ \\
-& PIDp($\pi$) & $< 10$ \\
+& PIDp($\pi$) & $< 20$ \\
 & $D^0$ veto  & $m(K^- \pip) < 1750$ MeV \\
-&  $\chi^{2}_{FD}$ & $> 9$ \\
+&  $\chi^{2}_{FD}$ & $> 6$ \\
 &  FD in $z$  &$ > 0$ \\
 \\
 \hline
@@ -408,11 +437,14 @@ $B_s \to D_s h \pi \pi$  & $m(D_s h \pi \pi)$ & $> 5200 \mev$ \\
 $X_s^+ \to K^+ \pi^+ \pi^-$  & PIDK(K) & $> 10$ \\
 & PIDK($\pi^+$) & $< 10$ \\
 & PIDK($\pi^-$) & $< 5$ \\
-& Semi.-lep. veto & isMuon($K^+$) = 0 \\
+%& Semi.-lep. veto & isMuon($K^+$) = 0 \\
 \\
 $X_s^+ \to \pi^+ \pi^+ \pi^-$  & PIDK($\pi^+$) & $< 5$ \\
 & PIDK($\pi^-$) & $< 10$ \\
-& Semi.-lep. veto & isMuon($\pip$) = 0 \\
+%& Semi.-lep. veto & isMuon($\pip$) = 0 \\
+\\
+All tracks & hasRich & $= 1$ \\
+& $p$ & $> 2500 \mev$ \\ 
 
 \hline
 \hline
