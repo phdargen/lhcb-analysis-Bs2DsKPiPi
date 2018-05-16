@@ -16,13 +16,6 @@ using namespace std;
 inline Bool_t MiniDecayTree::PhaseSpace_Cuts(){
 
     if(_decay == Decay::signal){
-
-	TLorentzVector BsDTF_K_plus(Bs_BsDTF_K_1_1270_plus_Kplus_PX[0],Bs_BsDTF_K_1_1270_plus_Kplus_PY[0], Bs_BsDTF_K_1_1270_plus_Kplus_PZ[0],Bs_BsDTF_K_1_1270_plus_Kplus_PE[0]) ;
-            
-        TLorentzVector BsDTF_pi_plus(Bs_BsDTF_K_1_1270_plus_piplus_0_PX[0], Bs_BsDTF_K_1_1270_plus_piplus_0_PY[0], Bs_BsDTF_K_1_1270_plus_piplus_0_PZ[0], Bs_BsDTF_K_1_1270_plus_piplus_0_PE[0]);
-            
-        TLorentzVector BsDTF_pi_minus( Bs_BsDTF_K_1_1270_plus_piplus_PX[0], Bs_BsDTF_K_1_1270_plus_piplus_PY[0], Bs_BsDTF_K_1_1270_plus_piplus_PZ[0], Bs_BsDTF_K_1_1270_plus_piplus_PE[0]) ;  
-
         if((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() > 1950.) return false;
         if((BsDTF_K_plus + BsDTF_pi_minus).M()  > 1200.) return false;
         if((BsDTF_pi_plus + BsDTF_pi_minus).M() > 1200.) return false;
@@ -30,16 +23,8 @@ inline Bool_t MiniDecayTree::PhaseSpace_Cuts(){
         if((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() < massKaon + 2. * massPion) return false;
         if((BsDTF_K_plus + BsDTF_pi_minus).M()  < massKaon + massPion) return false;
         if((BsDTF_pi_plus + BsDTF_pi_minus).M() < 2. * massPion) return false;
-
     }
     else {
-
-	TLorentzVector BsDTF_pi_plus1(Bs_BsDTF_a_1_1260_plus_piplus_1_PX[0],Bs_BsDTF_a_1_1260_plus_piplus_1_PY[0],Bs_BsDTF_a_1_1260_plus_piplus_1_PZ[0], Bs_BsDTF_a_1_1260_plus_piplus_1_PE[0]) ;
-            
-        TLorentzVector BsDTF_pi_plus2( Bs_BsDTF_a_1_1260_plus_piplus_PX[0],Bs_BsDTF_a_1_1260_plus_piplus_PY[0],Bs_BsDTF_a_1_1260_plus_piplus_PZ[0],Bs_BsDTF_a_1_1260_plus_piplus_PE[0]) ;
-            
-        TLorentzVector BsDTF_pi_minus(Bs_BsDTF_a_1_1260_plus_piplus_0_PX[0],Bs_BsDTF_a_1_1260_plus_piplus_0_PY[0], Bs_BsDTF_a_1_1260_plus_piplus_0_PZ[0],Bs_BsDTF_a_1_1260_plus_piplus_0_PE[0]) ;
-	
     	if((BsDTF_pi_plus1 + BsDTF_pi_plus2 + BsDTF_pi_minus).M() > 1950.) return false;
         if((BsDTF_pi_plus1 + BsDTF_pi_minus).M()  > 1200.) return false;
         if((BsDTF_pi_plus2 + BsDTF_pi_minus).M()  > 1200.) return false;
@@ -47,14 +32,11 @@ inline Bool_t MiniDecayTree::PhaseSpace_Cuts(){
     	if((BsDTF_pi_plus1 + BsDTF_pi_plus2 + BsDTF_pi_minus).M() < 3. * massPion) return false;
         if((BsDTF_pi_plus1 + BsDTF_pi_minus).M()  < 2. * massPion) return false;
         if((BsDTF_pi_plus2 + BsDTF_pi_minus).M()  < 2. * massPion) return false;
-
     }
     return true;
 }
 
 inline Bool_t MiniDecayTree::PIDCalib_Cuts(){
-
-
 	return true;
 }
 
@@ -156,7 +138,7 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
         if(K_plus_fromDs_PIDK < 5) return false;
         else if(K_minus_fromDs_PIDK < 5) return false;
         else if(pi_minus_fromDs_PIDK > 10) return false;
-        else if(pi_minus_fromDs_PIDp > 20) return false;
+        //else if(pi_minus_fromDs_PIDp > 20) return false;
     }
     
     else if(_Ds_finalState == Ds_finalState::pipipi){
@@ -175,7 +157,7 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
     
     else if(_Ds_finalState == Ds_finalState::Kpipi){
         if(pi_plus_fromDs_PIDK > 5) return false;
-        else if(K_minus_fromDs_PIDK < 10) return false;
+        else if(K_minus_fromDs_PIDK < 8) return false;
         else if(pi_minus_fromDs_PIDK > 5) return false;
 
         if(pi_plus_fromDs_PIDp > 20) return false;
@@ -412,12 +394,16 @@ inline Ds_finalState::Type MiniDecayTree::get_Ds_finalState(){
 }
 
 inline void MiniDecayTree::set_LorentzVectors(){
-
+    
     if(_Ds_finalState == Ds_finalState::phipi || _Ds_finalState == Ds_finalState::KsK || _Ds_finalState == Ds_finalState::KKpi_NR){
         pi_minus_fromDs.SetXYZM(pi_minus_fromDs_PX,pi_minus_fromDs_PY,pi_minus_fromDs_PZ,massPion);        
         K_plus_fromDs.SetXYZM(K_plus_fromDs_PX,K_plus_fromDs_PY,K_plus_fromDs_PZ,massKaon);
         K_minus_fromDs.SetXYZM(K_minus_fromDs_PX,K_minus_fromDs_PY,K_minus_fromDs_PZ,massKaon);
         Ds = pi_minus_fromDs + K_plus_fromDs + K_minus_fromDs;
+        
+        DTF_pi_minus_fromDs=TLorentzVector(Bs_DTF_D_splus_piplus_PX[0],Bs_DTF_D_splus_piplus_PY[0],Bs_DTF_D_splus_piplus_PZ[0],Bs_DTF_D_splus_piplus_PE[0]  );  
+        DTF_K_plus_fromDs=TLorentzVector(Bs_DTF_D_splus_Kplus_PX[0],Bs_DTF_D_splus_Kplus_PY[0],Bs_DTF_D_splus_Kplus_PZ[0],Bs_DTF_D_splus_Kplus_PE[0]);
+        DTF_K_minus_fromDs=TLorentzVector(Bs_DTF_D_splus_Kplus_0_PX[0],Bs_DTF_D_splus_Kplus_0_PY[0],Bs_DTF_D_splus_Kplus_0_PZ[0],Bs_DTF_D_splus_Kplus_0_PE[0]);
         
         Kminus_fromDs_asProton_MissID.SetXYZM(K_minus_fromDs_PX,K_minus_fromDs_PY,K_minus_fromDs_PZ, massProton);
         Kminus_fromDs_asPiminus_MissID.SetXYZM(K_minus_fromDs_PX,K_minus_fromDs_PY,K_minus_fromDs_PZ,massPion);
@@ -428,6 +414,9 @@ inline void MiniDecayTree::set_LorentzVectors(){
         pi_minus_fromDs.SetXYZM(pi_minus_fromDs_PX,pi_minus_fromDs_PY,pi_minus_fromDs_PZ,massPion);        
         pi_minus2_fromDs.SetXYZM(pi_minus2_fromDs_PX,pi_minus2_fromDs_PY,pi_minus2_fromDs_PZ,massPion);
         Ds = pi_minus_fromDs + pi_plus_fromDs + pi_minus2_fromDs;
+        
+        piminus_fromDs_asProton_MissID = TLorentzVector(pi_minus_fromDs_PX,pi_minus_fromDs_PY,pi_minus_fromDs_PZ,massProton);
+        piminus2_fromDs_asProton_MissID = TLorentzVector(pi_minus2_fromDs_PX,pi_minus2_fromDs_PY,pi_minus2_fromDs_PZ,massProton);
     }
     
     else if(_Ds_finalState == Ds_finalState::Kpipi){
@@ -445,12 +434,24 @@ inline void MiniDecayTree::set_LorentzVectors(){
         pi_minus.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ,massPion);
         pi_plus.SetXYZM(pi_plus_PX,pi_plus_PY,pi_plus_PZ,massPion);        
         pi_minus_asK_MissID.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ, massKaon);
+    
+        BsDTF_K_plus= TLorentzVector(Bs_BsDTF_K_1_1270_plus_Kplus_PX[0],Bs_BsDTF_K_1_1270_plus_Kplus_PY[0],Bs_BsDTF_K_1_1270_plus_Kplus_PZ[0],Bs_BsDTF_K_1_1270_plus_Kplus_PE[0]) ;
+        BsDTF_pi_plus= TLorentzVector(Bs_BsDTF_K_1_1270_plus_piplus_0_PX[0], Bs_BsDTF_K_1_1270_plus_piplus_0_PY[0], Bs_BsDTF_K_1_1270_plus_piplus_0_PZ[0], Bs_BsDTF_K_1_1270_plus_piplus_0_PE[0]);
+        BsDTF_pi_minus= TLorentzVector( Bs_BsDTF_K_1_1270_plus_piplus_PX[0], Bs_BsDTF_K_1_1270_plus_piplus_PY[0], Bs_BsDTF_K_1_1270_plus_piplus_PZ[0], Bs_BsDTF_K_1_1270_plus_piplus_PE[0]) ;  
     }
     
-    else if(_decay == Decay::norm){
+    else if(_decay == Decay::norm){        
         pi_minus.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ,massPion);
         pi_plus1.SetXYZM(pi_plus1_PX,pi_plus1_PY,pi_plus1_PZ,massPion);
         pi_plus2.SetXYZM(pi_plus2_PX,pi_plus2_PY,pi_plus2_PZ,massPion);
+        
+        pi_minus_asK_MissID.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ, massKaon);
+        pi_plus1_asK_MissID.SetXYZM(pi_plus1_PX,pi_plus1_PY,pi_plus1_PZ, massKaon);
+        pi_plus2_asK_MissID.SetXYZM(pi_plus2_PX,pi_plus2_PY,pi_plus2_PZ, massKaon);
+
+        BsDTF_pi_plus1 = TLorentzVector(Bs_BsDTF_a_1_1260_plus_piplus_1_PX[0],Bs_BsDTF_a_1_1260_plus_piplus_1_PY[0],Bs_BsDTF_a_1_1260_plus_piplus_1_PZ[0], Bs_BsDTF_a_1_1260_plus_piplus_1_PE[0]) ;
+        BsDTF_pi_plus2= TLorentzVector( Bs_BsDTF_a_1_1260_plus_piplus_PX[0],Bs_BsDTF_a_1_1260_plus_piplus_PY[0],Bs_BsDTF_a_1_1260_plus_piplus_PZ[0],Bs_BsDTF_a_1_1260_plus_piplus_PE[0]) ;
+        BsDTF_pi_minus= TLorentzVector(Bs_BsDTF_a_1_1260_plus_piplus_0_PX[0],Bs_BsDTF_a_1_1260_plus_piplus_0_PY[0], Bs_BsDTF_a_1_1260_plus_piplus_0_PZ[0],Bs_BsDTF_a_1_1260_plus_piplus_0_PE[0]) ;
     }
     
     return;

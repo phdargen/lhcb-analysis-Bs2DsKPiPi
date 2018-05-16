@@ -48,10 +48,29 @@ public :
     TLorentzVector pi_minus2_fromDs;
     TLorentzVector pi_plus1;
     TLorentzVector pi_plus2;
+    
+    TLorentzVector BsDTF_Ds;
+    TLorentzVector BsDTF_K_plus;
+    TLorentzVector BsDTF_pi_plus;
+    TLorentzVector BsDTF_pi_minus;
+    TLorentzVector BsDTF_pi_plus1;
+    TLorentzVector BsDTF_pi_plus2;
+    
+    TLorentzVector DTF_K_plus_fromDs;
+    TLorentzVector DTF_K_minus_fromDs;
+    TLorentzVector DTF_pi_minus_fromDs;
+    TLorentzVector DTF_pi_plus_fromDs;
+    TLorentzVector DTF_pi_minus2_fromDs;
+    
     // changed mass hypothesis
     TLorentzVector pi_minus_asK_MissID;
+    TLorentzVector pi_plus1_asK_MissID;
+    TLorentzVector pi_plus2_asK_MissID;
+    
     TLorentzVector Kminus_fromDs_asPiminus_MissID;
     TLorentzVector Kminus_fromDs_asProton_MissID;
+    TLorentzVector piminus_fromDs_asProton_MissID;
+    TLorentzVector piminus2_fromDs_asProton_MissID;
     
     Double_t        Bs_MINIPNEXTBEST;
     Double_t        Bs_MINIPCHI2NEXTBEST;
