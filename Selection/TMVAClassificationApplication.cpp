@@ -42,21 +42,38 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    //---------------------------------------------------------------
    TChain* theTree = new TChain("DecayTree");
 
+
    TString outFileName = "/auto/data/dargent/BsDsKpipi/BDT/";
 
    if(decay == "Signal" && dataType == "Data"){ 	  
 	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_11.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_12.root");
 	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_15.root");
-   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_16_up.root");
-	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_16_down.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_16.root");
+	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_17.root");
 
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_11.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_12.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_15.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_16.root");
-	
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_17.root");
+
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2Kpipi_11.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2Kpipi_12.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2Kpipi_15.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2Kpipi_16.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2Kpipi_17.root");	
+
 	outFileName += "Data/signal.root";
+   }
+
+   else if(decay == "Signal" && dataType == "Data_SS"){ 	  
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_12_SS.root");
+	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_16_SS.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_12_SS.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_16_SS.root");
+	
+	outFileName += "Data/signal_SS.root";
    }
 
    else if(decay == "Signal" && dataType == "MC"){ 	  
@@ -64,7 +81,7 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/signal_Ds2KKpi_12.root");
    	//theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_11.root");
    	//theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_12.root");
-	outFileName += "MC/signal_PIDGen.root";
+	outFileName += "MC/signal.root";
    }
 
    else if(decay == "Norm" && dataType == "Data"){ 	  
@@ -72,11 +89,19 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2KKpi_12.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2KKpi_15.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2KKpi_16.root");
+   	//theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2KKpi_17.root");
    	
 	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2pipipi_11.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2pipipi_12.root");
 	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2pipipi_15.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2pipipi_16.root");
+   	//theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2pipipi_17.root");
+
+	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2Kpipi_11.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2Kpipi_12.root");
+	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2Kpipi_15.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2Kpipi_16.root");
+   	//theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2Kpipi_17.root");
 
 	outFileName += "Data/norm.root";
    }
@@ -96,13 +121,13 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    }
 
    // Disable not needed branches
-   theTree->SetBranchStatus("*PARTICLES*",0); 
+   //theTree->SetBranchStatus("*PARTICLES*",0); 
    theTree->SetBranchStatus("*MC12Tune*",0);
    if(decay == "Norm")theTree->SetBranchStatus("*a_1_1260*",0);
    else theTree->SetBranchStatus("*K_1_1270*",0);
-   theTree->SetBranchStatus("*SS_Proton*",0);
-   theTree->SetBranchStatus("*SS_Pion*",0);
-
+   //theTree->SetBranchStatus("*SS_Proton*",0);
+   //theTree->SetBranchStatus("*SS_Pion*",0);
+   /*
    theTree->SetBranchStatus("*",0); 
    theTree->SetBranchStatus("*CHI2*",1); 
    theTree->SetBranchStatus("*DOCA*",1);
@@ -120,7 +145,7 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    theTree->SetBranchStatus("pi_plus_isMuon",1);
    theTree->SetBranchStatus("weight",1);
    theTree->SetBranchStatus("eventNumber",1);
-
+   */
    // Ouput tree
    TFile *hFile = new TFile(outFileName,"RECREATE");
    TTree* tree = theTree->CloneTree(0);
@@ -144,22 +169,27 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    Float_t r_log_Ds_RFD;
    Float_t r_maxCos;
    Float_t r_max_ghostProb;
+   Float_t r_Bs_ptasy;
+   Float_t r_log_Bs_SmallestDeltaChi2OneTrack;
 
-   reader->AddVariable( "PV_CHI2NDOF", &r_DTF_CHI2NDOF );
    reader->AddVariable( "log_Bs_IPCHI2_OWNPV := log(Bs_IPCHI2_OWNPV)",&r_log_Bs_IPCHI2_OWNPV );
-   //reader->AddVariable( "log_Bs_DIRA := log(1-Bs_DIRA_OWNPV)",&r_log_Bs_DIRA );
-  
+   reader->AddVariable( "log_Bs_DIRA := log(1-Bs_DIRA_OWNPV)",&r_log_Bs_DIRA );
+   reader->AddVariable( "PV_CHI2NDOF", &r_DTF_CHI2NDOF );
+   reader->AddVariable( "log_Bs_SmallestDeltaChi2OneTrack:= log(Bs_SmallestDeltaChi2OneTrack)",&r_log_Bs_SmallestDeltaChi2OneTrack );
+   reader->AddVariable( "Bs_ptasy_1.00",&r_Bs_ptasy );
+   reader->AddVariable("max_ghostProb",&r_max_ghostProb);
+
    reader->AddVariable( "log_XsDaughters_min_IPCHI2 := log(XsDaughters_min_IPCHI2)",&r_log_XsDaughters_min_IPCHI2 );
-   reader->AddVariable( "Xs_ptasy_1.00",&r_Xs_ptasy );
+   //reader->AddVariable( "Xs_ptasy_1.00",&r_Xs_ptasy );
    reader->AddVariable( "Xs_max_DOCA",&r_Xs_max_DOCA);
 
-   reader->AddVariable( "log_DsDaughters_min_IPCHI2 := log(DsDaughters_min_IPCHI2)",&r_log_DsDaughters_min_IPCHI2);
-   reader->AddVariable( "Ds_ptasy_1.00",&r_Ds_ptasy);
-   reader->AddVariable( "log_Ds_FDCHI2_ORIVX := log(Ds_FDCHI2_ORIVX)",&r_log_Ds_FDCHI2_ORIVX);
-   //reader->AddVariable( "log_Ds_RFD:=log(Ds_RFD)",&r_log_Ds_RFD);
    reader->AddVariable( "maxCos", &r_maxCos );
 
-   reader->AddVariable("max_ghostProb",&r_max_ghostProb);
+   reader->AddVariable( "log_DsDaughters_min_IPCHI2 := log(DsDaughters_min_IPCHI2)",&r_log_DsDaughters_min_IPCHI2);
+   //reader->AddVariable( "Ds_ptasy_1.00",&r_Ds_ptasy);
+   reader->AddVariable( "log_Ds_FDCHI2_ORIVX := log(Ds_FDCHI2_ORIVX)",&r_log_Ds_FDCHI2_ORIVX);
+   reader->AddVariable( "log_Ds_RFD:=log(Ds_RFD)",&r_log_Ds_RFD);
+
 
    // --- Book the MVA methods
    TString prefix = "weights/TMVAClassification_"+trainedOn+ "_";
@@ -189,6 +219,8 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    Double_t Ds_RFD;
    Double_t maxCos;
    Double_t max_ghostProb;
+   Double_t Bs_ptasy;
+   Double_t Bs_SmallestDeltaChi2OneTrack;
 
    theTree->SetBranchAddress( "PV_CHI2NDOF", &DTF_CHI2NDOF );
    theTree->SetBranchAddress( "Bs_IPCHI2_OWNPV", &Bs_IPCHI2_OWNPV );
@@ -202,7 +234,9 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    theTree->SetBranchAddress( "Ds_RFD", &Ds_RFD );
    theTree->SetBranchAddress( "maxCos", &maxCos );
    theTree->SetBranchAddress( "max_ghostProb", &max_ghostProb );
-
+   theTree->SetBranchAddress( "Bs_ptasy_1.00", &Bs_ptasy );
+   theTree->SetBranchAddress( "Bs_SmallestDeltaChi2OneTrack", &Bs_SmallestDeltaChi2OneTrack );
+   
    Int_t year, run, Ds_finalState, TriggerCat; 
    ULong64_t eventNumber;
 
@@ -214,7 +248,9 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
 
    //output file---------------------------------------------------------------------------------------------------------------------------------------
    Float_t BDTG_response;
+   double BDTG;
    tree->Branch("BDTG_response",&BDTG_response, "BDTG_response/F");
+   tree->Branch("BDTG",&BDTG, "BDTG/D");
 
    std::cout << "--- Processing: " << theTree->GetEntries() << " events" << std::endl;
 
@@ -227,18 +263,25 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
 
         theTree->GetEntry(ievt);
 
+	if(Bs_SmallestDeltaChi2OneTrack<=5)continue;
+	if(maxCos <= -0.95) continue;
+	if(Bs_IPCHI2_OWNPV >= 16) continue;
+	if(DTF_CHI2NDOF >= 15)continue;
+
 	r_DTF_CHI2NDOF= float(DTF_CHI2NDOF);
         r_log_Bs_IPCHI2_OWNPV = float(log(Bs_IPCHI2_OWNPV));
-        //r_log_Bs_DIRA = float(log(1.-Bs_DIRA_OWNPV));
+        r_log_Bs_DIRA = float(log(1.-Bs_DIRA_OWNPV));
         r_log_XsDaughters_min_IPCHI2 = float(log(XsDaughters_min_IPCHI2));
-        r_Xs_ptasy = float(Xs_ptasy);
+        //r_Xs_ptasy = float(Xs_ptasy);
         r_Xs_max_DOCA = float(Xs_max_DOCA);
         r_log_DsDaughters_min_IPCHI2 = float(log(DsDaughters_min_IPCHI2));
-        r_Ds_ptasy = float(Ds_ptasy);
+        //r_Ds_ptasy = float(Ds_ptasy);
         r_log_Ds_FDCHI2_ORIVX = float(log(Ds_FDCHI2_ORIVX));
-        //r_log_Ds_RFD = float(log(Ds_RFD));
+        r_log_Ds_RFD = float(log(Ds_RFD));
    	r_maxCos = float(maxCos);
         r_max_ghostProb = float(max_ghostProb);
+        r_Bs_ptasy = float(Bs_ptasy);
+	r_log_Bs_SmallestDeltaChi2OneTrack = float(log(Bs_SmallestDeltaChi2OneTrack));
 
 	TString methodName = myMethod + "run";
 	methodName += run;
@@ -249,6 +292,7 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
 	else methodName += "_even";
 
         BDTG_response=reader->EvaluateMVA(methodName);
+	BDTG = double(BDTG_response);
         tree->Fill();    
    }
 
@@ -267,7 +311,7 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
 void applyToAll(TString myMethod = "BDTG", TString trainedOn = "MC" ){
 
 	TMVAClassificationApplication("Signal", "Data", myMethod, trainedOn );
-	TMVAClassificationApplication("Signal", "MC", myMethod, trainedOn );
+	//TMVAClassificationApplication("Signal", "MC", myMethod, trainedOn );
 	TMVAClassificationApplication("Norm", "Data", myMethod, trainedOn );
-	TMVAClassificationApplication("Norm", "MC", myMethod, trainedOn );
+	//TMVAClassificationApplication("Norm", "MC", myMethod, trainedOn );
 }

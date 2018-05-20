@@ -489,7 +489,7 @@ return params;
 vector<double> fitSignalShape(TString channel = "signal"){
 
         /// Options
-	NamedParameter<double> cut_BDT("cut_BDT",0.);
+	NamedParameter<double> cut_BDT("cut_BDT_MC",0.);
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 	NamedParameter<int> fitPreselected("fitPreselected", 0);
 	NamedParameter<int> sWeight("sWeightMC", 0);
@@ -832,14 +832,14 @@ vector< vector<double> > fitNorm(){
 	NamedParameter<int> nBins("nBins", 80);
 	NamedParameter<double> min_MM("min_MM",5100.);
 	NamedParameter<double> max_MM("max_MM",5700.);
-	NamedParameter<double> cut_BDT("cut_BDT",0.);
+	NamedParameter<string> cut_BDT("cut_BDT",(string)"");
 	NamedParameter<string> inFileName("inFileNameNorm",(string)"/auto/data/dargent/BsDsKpipi/BDT/Data/norm.root");
 	NamedParameter<string> outFileName("outFileNameNorm",(string)"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
         NamedParameter<int> altPartBkg("altPartBkg", 0);
         NamedParameter<int> fixSignalShapeFromMC("fixSignalShapeFromMC", 0);
 	NamedParameter<int> useB0("useB0", 0);
-	NamedParameter<int> useTriggerCat("useTriggerCat", 0);
+	NamedParameter<int> useTriggerCat("useTriggerCat", 1);
 	NamedParameter<int> fitPreselected("fitPreselected", 0);
 
 	/// Define categories
@@ -848,16 +848,18 @@ vector< vector<double> > fitNorm(){
 	year.defineType("y12",12);
 	year.defineType("y15",15);
 	year.defineType("y16",16);
+	year.defineType("y17",17);
 
   	RooCategory run("run","run") ;
   	run.defineType("Run1",1) ;
   	run.defineType("Run2",2) ;
 
-	RooCategory Ds_finalState("Ds_finalState","Ds_finalState") ;
-	Ds_finalState.defineType("phipi",0);
-	Ds_finalState.defineType("KsK",1);
-	Ds_finalState.defineType("KKpi_NR",2);
-	Ds_finalState.defineType("pipipi",3);
+	RooCategory Ds_finalState_mod("Ds_finalState_mod","Ds_finalState_mod") ;
+	Ds_finalState_mod.defineType("phipi",0);
+	Ds_finalState_mod.defineType("KsK",1);
+	Ds_finalState_mod.defineType("KKpi_NR",2);
+	Ds_finalState_mod.defineType("pipipi",3);
+	//Ds_finalState.defineType("Kpipi",4);
 
 	RooCategory TriggerCat("TriggerCat","TriggerCat") ;
 	TriggerCat.defineType("t0",0);
@@ -880,19 +882,19 @@ vector< vector<double> > fitNorm(){
 	}
 	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("Bs_DTF_MM",1);
-	if(!fitPreselected)tree->SetBranchStatus("BDTG_response",1);
-	tree->SetBranchStatus("Ds_finalState",1);
+	if(!fitPreselected)tree->SetBranchStatus("BDTG",1);
+	tree->SetBranchStatus("Ds_finalState*",1);
 	tree->SetBranchStatus("year",1);
 	tree->SetBranchStatus("TriggerCat",1);
 	tree->SetBranchStatus("run",1);
 
         RooRealVar DTF_Bs_M("Bs_DTF_MM", "m(D_{s}^{-}#pi^{+}#pi^{+}#pi^{-})", min_MM, max_MM,"MeV/c^{2}");
-        RooRealVar BDTG_response("BDTG_response", "BDTG_response", 0.);              
+        RooRealVar BDTG("BDTG", "BDTG", 0.);              
 
-	RooArgList list =  RooArgList(DTF_Bs_M,Ds_finalState,year,run,TriggerCat);
-	if(!fitPreselected)list.add(BDTG_response);	
+	RooArgList list =  RooArgList(DTF_Bs_M,Ds_finalState_mod,year,run,TriggerCat);
+	if(!fitPreselected)list.add(BDTG);	
 	RooDataSet*  data;
-	if(!fitPreselected)data = new RooDataSet("data","data",tree,list,(" BDTG_response > " + anythingToString((double)cut_BDT)).c_str() );
+	if(!fitPreselected)data = new RooDataSet("data","data",tree,list, ((string)cut_BDT).c_str() );
 	else data = new RooDataSet("data","data",tree,list);
 
 	/// Signal Pdf
@@ -1004,26 +1006,26 @@ vector< vector<double> > fitNorm(){
   	RooSimPdfBuilder* mgr = new RooSimPdfBuilder(*pdf) ;
   	RooArgSet* config = mgr->createProtoBuildConfig() ;
   	config->setStringValue("physModels","pdf") ;
-  	if(useTriggerCat)config->setStringValue("splitCats" ,"run Ds_finalState TriggerCat") ;
-	else config->setStringValue("splitCats" ,"year Ds_finalState") ;
+  	if(useTriggerCat)config->setStringValue("splitCats" ,"run Ds_finalState_mod TriggerCat") ;
+	else config->setStringValue("splitCats" ,"year Ds_finalState_mod") ;
 
 	if(useTriggerCat){
 		if (useB0 == 0) config->setStringValue("pdf", "run            : scale_sigma, scale_mean "
-					"Ds_finalState :  exp_par "  
-					"run,Ds_finalState,TriggerCat : n_sig, n_exp_bkg, n_partReco_bkg") ;  
+					"Ds_finalState_mod :  exp_par "  
+					"run,Ds_finalState_mod,TriggerCat : n_sig, n_exp_bkg, n_partReco_bkg") ;  
 	
 		if (useB0 == 1) config->setStringValue("pdf", "run            : scale_mean "
 					"run,TriggerCat :	scale_sigma "
-					"Ds_finalState :  exp_par "  
-					"run,Ds_finalState,TriggerCat : n_sig, n_exp_bkg, n_partReco_bkg, n_sig_B0") ; 
+					"Ds_finalState_mod :  exp_par "  
+					"run,Ds_finalState_mod,TriggerCat : n_sig, n_exp_bkg, n_partReco_bkg, n_sig_B0") ; 
 	}
 	else {
 		if (useB0 == 0) config->setStringValue("pdf", "year            : scale_sigma, scale_mean "
 					"Ds_finalState :  exp_par "  
-					"year,Ds_finalState : n_sig, n_exp_bkg, n_partReco_bkg") ;  
+					"year,Ds_finalState_mod : n_sig, n_exp_bkg, n_partReco_bkg") ;  
 	
 		if (useB0 == 1) config->setStringValue("pdf", "year            : scale_sigma, scale_mean "
-					"Ds_finalState :  exp_par "  
+					"Ds_finalState_mod :  exp_par "  
 					"year,Ds_finalState : n_sig, n_exp_bkg, n_partReco_bkg, n_sig_B0") ; 
 	}
 	
@@ -1035,7 +1037,7 @@ vector< vector<double> > fitNorm(){
 	if(useTriggerCat){		
 		for(int i=0; i<str_run.size(); i++) for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
 			/// Get data slice
-			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j] + " && TriggerCat == TriggerCat::" + str_trigger[k]);
+			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j] + " && TriggerCat == TriggerCat::" + str_trigger[k]);
 			/// Fit
 			bkg_exp.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
 			/// Fix parameters
@@ -1052,7 +1054,7 @@ vector< vector<double> > fitNorm(){
 	else {
 		for(int i=0; i<str_year.size(); i++) for(int j=0; j<str_Ds.size(); j++){
 			/// Get data slice
-			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]);
+			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"year==year::" + str_year[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j]);
 			/// Fit
 			bkg_exp.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
 			/// Fix parameters
@@ -1292,14 +1294,14 @@ vector< vector<double> > fitNorm(){
 		tree->SetBranchStatus("weight",0);
 
 		if(fitPreselected)out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) ).c_str() );
-		else out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
+		else out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && " + (string)cut_BDT).c_str() );
 
     		b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
     		b_w = out_tree->Branch("weight", &sw, "weight/D");
 
         	out_tree->SetBranchAddress("year", &t_year, &b_year);
         	out_tree->SetBranchAddress("run", &t_run, &b_run);
-        	out_tree->SetBranchAddress("Ds_finalState", &t_Ds_finalState, &b_Ds_finalState);
+        	out_tree->SetBranchAddress("Ds_finalState_mod", &t_Ds_finalState, &b_Ds_finalState);
         	out_tree->SetBranchAddress("TriggerCat", &t_TriggerCat, &b_TriggerCat);
 		if(out_tree->GetEntries() != data->numEntries()) {
 			cout << "ERROR:: Different number of events in input and outputfile ! " << endl;
@@ -1341,7 +1343,7 @@ vector< vector<double> > fitNorm(){
 	
 				/// Plot data and pdf slices
 				frame=DTF_Bs_M.frame();
-				data->plotOn(frame,Name("data_slice2"),Cut("run==run::" + str_run[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]),MarkerSize(1),Binning(nBins));
+				data->plotOn(frame,Name("data_slice2"),Cut("run==run::" + str_run[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]),MarkerSize(1),Binning(nBins));
 				pdf_slice->plotOn(frame,LineColor(kGray+3),Components("bkg_partReco"),Normalization(1.,RooAbsReal::RelativeExpected));
 				pdf_slice->plotOn(frame,DrawOption("F"),FillStyle(1001),FillColor(kGray+3),Components("bkg_partReco"),Normalization(1.,RooAbsReal::RelativeExpected));
 				pdf_slice->plotOn(frame,LineColor(kRed+1),Components("signal_{" + str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"),Normalization(1.,RooAbsReal::RelativeExpected));
@@ -1361,7 +1363,8 @@ vector< vector<double> > fitNorm(){
 				lhcbtext->DrawLatex(0.6,0.85,label.ReplaceAll("Run","Run-"));
 				if(str_Ds[j]=="phipi")label = "D_{s}^{-}#rightarrow #phi^{0}(1020)#pi^{-}";
 				else if(str_Ds[j]=="KsK")label = "D_{s}^{-}#rightarrow K^{*0}(892)K^{-}";
-				else if(str_Ds[j]=="KKpi_NR")label = "D_{s}^{-}#rightarrow (K^{+}K^{-}#pi^{-})_{NR}";
+				//else if(str_Ds[j]=="KKpi_NR")label = "D_{s}^{-}#rightarrow (K^{+}K^{-}#pi^{-})_{NR}";
+				else if(str_Ds[j]=="KKpi_NR")label = "D_{s}^{-}#rightarrow (K^{-}h^{+}#pi^{-})";
 				else if(str_Ds[j]=="pipipi")label = "D_{s}^{-}#rightarrow #pi^{+}#pi^{-}#pi^{-}";
 				lhcbtext->SetTextFont(132);
 				lhcbtext->DrawLatex(0.6,0.78,label);
@@ -1395,7 +1398,7 @@ vector< vector<double> > fitNorm(){
 					);
 					if(useB0)yield_list.add(*((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}")));
 					if(!ignorePartRecoBkg)yield_list.add(*((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}")));
-					RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]);
+					RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]);
 					pdf_slice->Print();
 					SPlot sPlot("sPlot","sPlot",*data_slice,pdf_slice,yield_list); 
 		
@@ -1454,7 +1457,7 @@ vector< vector<double> > fitNorm(){
 	
 				/// Plot data and pdf slices
 				frame=DTF_Bs_M.frame();
-				data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(nBins));
+				data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j]),MarkerSize(1),Binning(nBins));
 				pdf_slice->plotOn(frame,LineColor(kGray+3),Components("bkg_partReco"),Normalization(1.,RooAbsReal::RelativeExpected));
 				pdf_slice->plotOn(frame,DrawOption("F"),FillStyle(1001),FillColor(kGray+3),Components("bkg_partReco"),Normalization(1.,RooAbsReal::RelativeExpected));
 				pdf_slice->plotOn(frame,LineColor(kRed+1),Components("signal_{" + str_year[i] + ";" + str_Ds[j] + "}"),Normalization(1.,RooAbsReal::RelativeExpected));
@@ -1506,7 +1509,7 @@ vector< vector<double> > fitNorm(){
 					);
 					if(useB0)yield_list.add(*((RooRealVar*) fitParams->find("n_sig_B0_{"+str_year[i] + ";" + str_Ds[j] + "}")));
 					if(!ignorePartRecoBkg)yield_list.add(*((RooRealVar*) fitParams->find("n_partReco_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}")));
-					RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]);
+					RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"year==year::" + str_year[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j]);
 					pdf_slice->Print();
 					SPlot sPlot("sPlot","sPlot",*data_slice,pdf_slice,yield_list); 
 		
@@ -1595,9 +1598,9 @@ void fitSignal(){
 	NamedParameter<int> sWeight("sWeightSignal", 0);
 	NamedParameter<int> nBins("nBins", 80);
 	NamedParameter<double> min_MM("min_MM",5100.);
-	min_MM.setVal((double)min_MM-25.);
+	//min_MM.setVal((double)min_MM-25.);
 	NamedParameter<double> max_MM("max_MM",5700.);
-	NamedParameter<double> cut_BDT("cut_BDT",0.);
+	NamedParameter<string> cut_BDT("cut_BDT",(string)"");
 	NamedParameter<int> fixMisIDyields("fixMisIDyields",1);
 	NamedParameter<int> useNormScaleFactors("useNormScaleFactors",1);
 	NamedParameter<int> useNormSignalShape("useNormSignalShape",1);
@@ -1616,14 +1619,16 @@ void fitSignal(){
 	year.defineType("y12",12);
 	year.defineType("y15",15);
 	year.defineType("y16",16);
+	year.defineType("y17",17);
   	RooCategory run("run","run") ;
   	run.defineType("Run1",1) ;
   	run.defineType("Run2",2) ;
-	RooCategory Ds_finalState("Ds_finalState","Ds_finalState") ;
-	Ds_finalState.defineType("phipi",0);
-	Ds_finalState.defineType("KsK",1);
-	Ds_finalState.defineType("KKpi_NR",2);
-	Ds_finalState.defineType("pipipi",3);
+	RooCategory Ds_finalState_mod("Ds_finalState_mod","Ds_finalState_mod") ;
+	Ds_finalState_mod.defineType("phipi",0);
+	Ds_finalState_mod.defineType("KsK",1);
+	Ds_finalState_mod.defineType("KKpi_NR",2);
+	Ds_finalState_mod.defineType("pipipi",3);
+	//Ds_finalState.defineType("Kpipi",4);
 	RooCategory TriggerCat("TriggerCat","TriggerCat") ;
 	TriggerCat.defineType("t0",0);
 	TriggerCat.defineType("t1",1);
@@ -1633,8 +1638,8 @@ void fitSignal(){
 	TTree* tree = (TTree*) file->Get("DecayTree");	
    	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("Bs_DTF_MM",1);
-	tree->SetBranchStatus("BDTG_response",1);
-	tree->SetBranchStatus("Ds_finalState",1);
+	tree->SetBranchStatus("BDTG",1);
+	tree->SetBranchStatus("Ds_finalState*",1);
 	tree->SetBranchStatus("year",1);
 	tree->SetBranchStatus("*_PIDK",1);
 	tree->SetBranchStatus("pi_plus_isMuon",1);
@@ -1642,11 +1647,13 @@ void fitSignal(){
 	tree->SetBranchStatus("run",1);
 
         RooRealVar DTF_Bs_M("Bs_DTF_MM", "m(D_{s}^{-}K^{+}#pi^{+}#pi^{-})", min_MM, max_MM,"MeV/c^{2}");
-        RooRealVar BDTG_response("BDTG_response", "BDTG_response", 0.);        
-        RooRealVar pi_plus_isMuon("pi_plus_isMuon", "pi_plus_isMuon", 0.);        
+        RooRealVar BDTG_response("BDTG", "BDTG", 0.);        
+        RooRealVar K_plus_PIDK("K_plus_PIDK", "K_plus_PIDK", 0.);        
+        RooRealVar pi_plus_PIDK("pi_plus_PIDK", "pi_plus_PIDK", 0.);        
+        RooRealVar pi_minus_PIDK("pi_minus_PIDK", "pi_minus_PIDK", 0.);        
 
-	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState,year,TriggerCat,run,pi_plus_isMuon);
-	RooDataSet*  data = new RooDataSet("data","data",tree,list,("BDTG_response > " + anythingToString((double)cut_BDT)).c_str() );	
+	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState_mod,year,TriggerCat,run);
+	RooDataSet*  data = new RooDataSet("data","data",tree,list,((string)cut_BDT).c_str() );	
 
 	/// Fit normalization mode first
 	vector< vector <double> > norm_paramSet = fitNorm();
@@ -1672,9 +1679,16 @@ void fitSignal(){
 	RooJohnsonSU signal_B0("signal_B0","signal_B0",DTF_Bs_M, mean_B0,sigma_B0,alpha,beta);
 
 	/// Combinatorial bkg pdf
-	RooRealVar exp_par("exp_par","exp_par",-1.6508e-03,-10.,0.);	
-	RooExponential bkg_exp("bkg_exp","bkg_exp",DTF_Bs_M,exp_par);
-	if(!constrainCombBkgFromSS)bkg_exp.fitTo(*data,Save(kTRUE),Range(5600.,5800.));
+	RooRealVar exp_par1("exp_par1","exp_par1",-1.6508e-03,-10.,10.);	
+	RooRealVar exp_par("exp_par","exp_par",0.);	
+	RooExponential bkg_exp1("bkg_exp1","bkg_exp1",DTF_Bs_M,exp_par);
+	RooRealVar exp_par2("exp_par2","exp_par2",0,-10.,10.);	
+	RooRealVar exp_par3("exp_par3","exp_par3",0,-10.,10.);	
+
+	RooChebychev bkg_exp2("bkg_exp2","bkg_exp2",DTF_Bs_M,RooArgList(exp_par2,exp_par3));
+	RooRealVar f_bkg_exp("f_bkg_exp", "f_bkg_exp", 0.);
+	RooAddPdf bkg_exp("bkg_exp", "bkg_exp", RooArgList(bkg_exp1, bkg_exp2), RooArgList(f_bkg_exp));
+	//if(!constrainCombBkgFromSS)bkg_exp.fitTo(*data,Save(kTRUE),Range(5500.,5700.));
 
 	/// Part. reco bkg
 	vector<double> bkg_partReco_params = norm_paramSet[3];
@@ -1750,7 +1764,7 @@ void fitSignal(){
 	RooRealVar n_exp_bkg("n_exp_bkg", "n_exp_bkg", data->numEntries()/2., 0., data->numEntries());
 	//RooRealVar n_partReco_Bs_bkg("n_partReco_Bs_bkg", "n_partReco_Bs_bkg", data->numEntries()/2., 0., data->numEntries());
 	//RooRealVar n_partReco_B0_bkg("n_partReco_B0_bkg", "n_partReco_B0_bkg", data->numEntries()/2., 0., data->numEntries());
-	RooRealVar n_partReco_bkg("n_partReco_bkg", "n_partReco_bkg", data->numEntries()/2., 0., data->numEntries());
+	RooRealVar n_partReco_bkg("n_partReco_bkg", "n_partReco_bkg", data->numEntries()/6., 5., data->numEntries());
 	RooRealVar n_misID_bkg("n_misID_bkg", "n_misID_bkg", data->numEntries()*0.01, 0., data->numEntries()*0.25);
 
 	RooAddPdf pdf("pdf", "pdf", RooArgList(signal, signal_B0, bkg_exp, bkg_partReco, bkg_misID), RooArgList(n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg));
@@ -1759,19 +1773,19 @@ void fitSignal(){
   	RooSimPdfBuilder* mgr = new RooSimPdfBuilder(pdf) ;
   	RooArgSet* config = mgr->createProtoBuildConfig() ;
   	config->setStringValue("physModels","pdf") ;
-  	if(useTriggerCat)config->setStringValue("splitCats" ,"run Ds_finalState TriggerCat") ;
-	else config->setStringValue("splitCats" ,"year Ds_finalState") ;
+  	if(useTriggerCat)config->setStringValue("splitCats" ,"run Ds_finalState_mod TriggerCat") ;
+	else config->setStringValue("splitCats" ,"year Ds_finalState_mod") ;
 
 	if(useTriggerCat){
 		config->setStringValue("pdf", "run            : scale_mean "
 					"run,TriggerCat :	scale_sigma "
-					"Ds_finalState :  exp_par "  
-					"run,Ds_finalState,TriggerCat : n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg, misID_f") ; 
+					"Ds_finalState_mod :  exp_par "  
+					"run,Ds_finalState_mod,TriggerCat : n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg, misID_f") ; 
 	}
 	else {
 		config->setStringValue("pdf", "year            : scale_sigma, scale_mean "
-					"Ds_finalState :  exp_par "  
-					"year,Ds_finalState : n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg, misID_f") ; 
+					"Ds_finalState_mod :  exp_par "  
+					"year,Ds_finalState_mod : n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg, misID_f") ; 
 	}
 
   	RooSimultaneous* simPdf  = mgr->buildPdf(*config,data) ;
@@ -1829,7 +1843,7 @@ void fitSignal(){
 			((RooRealVar*) fitParams->find("misID_f_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setConstant();
 	
 			/// Set start values for yields
-			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]);
+			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]);
 			((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/2.);
 			((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/2.);
 			((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/10.);
@@ -1849,7 +1863,7 @@ void fitSignal(){
 			((RooRealVar*) fitParams->find("misID_f_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setConstant();
 	
 			/// Set start values for yields
-			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]);
+			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"year==year::" + str_year[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j]);
 			((RooRealVar*) fitParams->find("n_sig_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setVal(data_slice->numEntries()/2.);
 			((RooRealVar*) fitParams->find("n_exp_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setVal(data_slice->numEntries()/2.);
 			((RooRealVar*) fitParams->find("n_partReco_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setVal(data_slice->numEntries()/10.);
@@ -1867,18 +1881,18 @@ void fitSignal(){
 		TTree* tree_SS = (TTree*) file_SS->Get("DecayTree");	
 		tree_SS->SetBranchStatus("*",0);
 		tree_SS->SetBranchStatus("Bs_DTF_MM",1);
-		tree_SS->SetBranchStatus("Ds_finalState",1);
+		tree_SS->SetBranchStatus("Ds_finalState*",1);
 		tree_SS->SetBranchStatus("year",1);
 		tree_SS->SetBranchStatus("TriggerCat",1);
 		tree_SS->SetBranchStatus("run",1);      
-		tree_SS->SetBranchStatus("BDTG_response",1);      	
+		tree_SS->SetBranchStatus("BDTG",1);      	
 
-		RooArgList list_SS =  RooArgList(DTF_Bs_M,Ds_finalState,year,run,TriggerCat);
-		RooDataSet*  data_SS = new RooDataSet("data_SS","data_SS",tree_SS,list,("BDTG_response > " + anythingToString((double)cut_BDT)).c_str() );
+		RooArgList list_SS =  RooArgList(DTF_Bs_M,Ds_finalState_mod,year,run,TriggerCat);
+		RooDataSet*  data_SS = new RooDataSet("data_SS","data_SS",tree_SS,list,((string)cut_BDT).c_str() );
 
 		for(int j=0; j<str_Ds.size(); j++){
 			/// Get data slice
-			RooDataSet* data_slice = new RooDataSet("data_SS_slice","data_SS_slice",data_SS,list,"Ds_finalState == Ds_finalState::" + str_Ds[j]);
+			RooDataSet* data_slice = new RooDataSet("data_SS_slice","data_SS_slice",data_SS,list,"Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j]);
 			/// Fit
 			bkg_exp.fitTo(*data_slice,Save(kTRUE));
 			/// Constrain parameters
@@ -2163,13 +2177,13 @@ void fitSignal(){
 		tree->SetBranchStatus("*",1);
 		tree->SetBranchStatus("weight",0);
 
-		out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
+		out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && " + (string)cut_BDT ).c_str() );
     		b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
     		b_w = out_tree->Branch("weight", &sw_B0, "weight/D");
 
         	out_tree->SetBranchAddress("year", &t_year, &b_year);
         	out_tree->SetBranchAddress("run", &t_run, &b_run);
-        	out_tree->SetBranchAddress("Ds_finalState", &t_Ds_finalState, &b_Ds_finalState);
+        	out_tree->SetBranchAddress("Ds_finalState_mod", &t_Ds_finalState, &b_Ds_finalState);
         	out_tree->SetBranchAddress("TriggerCat", &t_TriggerCat, &b_TriggerCat);
 		if(out_tree->GetEntries() != data->numEntries()) {
 			cout << "ERROR:: Different number of events in input and outputfile ! " << endl;
@@ -2204,7 +2218,7 @@ void fitSignal(){
 				pdf_slice->Print();
 				/// Plot data and pdf slices
 				frame=DTF_Bs_M.frame();
-				data->plotOn(frame,Name("data_slice2"),Cut("run==run::" + str_run[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]),MarkerSize(1),Binning(nBins));
+				data->plotOn(frame,Name("data_slice2"),Cut("run==run::" + str_run[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]),MarkerSize(1),Binning(nBins));
 				pdf_slice->plotOn(frame,Name("pdf_slice2"),LineColor(kBlue+1),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected));
 	
 				pdf_slice->plotOn(frame,LineColor(kGray+3),Components(RooArgSet(bkg_partReco_Bs,bkg_partReco_B0)),Normalization(1.,RooAbsReal::RelativeExpected));
@@ -2231,7 +2245,8 @@ void fitSignal(){
 				lhcbtext->DrawLatex(0.6,0.85,label.ReplaceAll("Run","Run-"));
 				if(str_Ds[j]=="phipi")label = "D_{s}^{-}#rightarrow #phi^{0}(1020)#pi^{-}";
 				else if(str_Ds[j]=="KsK")label = "D_{s}^{-}#rightarrow K^{*0}(892)K^{-}";
-				else if(str_Ds[j]=="KKpi_NR")label = "D_{s}^{-}#rightarrow (K^{+} K^{-}#pi^{-})_{NR}";
+				else if(str_Ds[j]=="KKpi_NR")label = "D_{s}^{-}#rightarrow K^{-}h^{+}#pi^{-}";
+	 			//else if(str_Ds[j]=="KKpi_NR")label = "D_{s}^{-}#rightarrow (K^{+} K^{-}#pi^{-})_{NR}";
 				else if(str_Ds[j]=="pipipi")label = "D_{s}^{-}#rightarrow #pi^{+}#pi^{-}#pi^{-}";
 				lhcbtext->SetTextFont(132);
 				lhcbtext->DrawLatex(0.6,0.78,label);
@@ -2260,7 +2275,7 @@ void fitSignal(){
 					*((RooRealVar*) fitParams->find("n_partReco_bkg_{" + str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}")),
 					*((RooRealVar*) fitParams->find("n_misID_bkg_{" + str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))
 					);
-					RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]);
+					RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]);
 					SPlot sPlot("sPlot","sPlot",*data_slice,pdf_slice,yield_list); 
 		
 					/// Plot the sWeight distributions as a function of mass
@@ -2315,7 +2330,7 @@ void fitSignal(){
 				pdf_slice->Print();
 				/// Plot data and pdf slices
 				frame=DTF_Bs_M.frame();
-				data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]),MarkerSize(1),Binning(nBins));
+				data->plotOn(frame,Name("data_slice2"),Cut("year==year::" + str_year[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j]),MarkerSize(1),Binning(nBins));
 				pdf_slice->plotOn(frame,Name("pdf_slice2"),LineColor(kBlue+1),LineWidth(3),Normalization(1.,RooAbsReal::RelativeExpected));
 	
 				pdf_slice->plotOn(frame,LineColor(kGray+3),Components(RooArgSet(bkg_partReco_Bs,bkg_partReco_B0)),Normalization(1.,RooAbsReal::RelativeExpected));
@@ -2369,7 +2384,7 @@ void fitSignal(){
 					*((RooRealVar*) fitParams->find("n_partReco_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}")),
 					*((RooRealVar*) fitParams->find("n_misID_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))
 					);
-					RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"year==year::" + str_year[i] + " && Ds_finalState == Ds_finalState::" + str_Ds[j]);
+					RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"year==year::" + str_year[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j]);
 					SPlot sPlot("sPlot","sPlot",*data_slice,pdf_slice,yield_list); 
 		
 					/// Plot the sWeight distributions as a function of mass
@@ -2415,14 +2430,40 @@ void fitSignal(){
 
 	if(optimizeBDT){
 
+		TString cut_string = (string) cut_BDT;
+		double BDT = atoi(cut_string.ReplaceAll("BDTG > 0.",""))/10.;		
+
+		TCanvas* c_1 = new TCanvas();
+		TCanvas* c_2 = new TCanvas();
+		c_1->SetGrid(1);
+		c_2->SetGrid(1);
+
+		TH1D* h_BDT_s = new TH1D("h_BDT_s",";BDTG; Yield [norm.]",40,-1,1);
+		TH1D* h_BDT_b = new TH1D("h_BDT_b",";BDTG; Yield [norm.]",40,-1,1);
+
+		TH1D* h_BDT_Run1_t0_s = new TH1D("h_BDT_Run1_t0_s",";BDTG; Yield [norm.]",40,-1,1);
+		TH1D* h_BDT_Run1_t1_s = new TH1D("h_BDT_Run1_t1_s",";BDTG; Yield [norm.]",40,-1,1);
+		TH1D* h_BDT_Run2_t0_s = new TH1D("h_BDT_Run2_t0_s",";BDTG; Yield [norm.]",40,-1,1);
+		TH1D* h_BDT_Run2_t1_s = new TH1D("h_BDT_Run2_t1_s",";BDTG; Yield [norm.]",40,-1,1);
+
+		TH1D* h_BDT_Run1_t0_b = new TH1D("h_BDT_Run1_t0_b",";BDTG; Yield [norm.]",40,-1,1);
+		TH1D* h_BDT_Run1_t1_b = new TH1D("h_BDT_Run1_t1_b",";BDTG; Yield [norm.]",40,-1,1);
+		TH1D* h_BDT_Run2_t0_b = new TH1D("h_BDT_Run2_t0_b",";BDTG; Yield [norm.]",40,-1,1);
+		TH1D* h_BDT_Run2_t1_b = new TH1D("h_BDT_Run2_t1_b",";BDTG; Yield [norm.]",40,-1,1);
+
 		if(useTriggerCat){
 
 			double signal_yield_opt = 0;
 			double bkg_yield_opt = 0;
+			double signal_yield_opt_eff = 0;
+			double bkg_yield_opt_eff = 0;
+
+			float t_BDTG, t_weight;
+			int t_id;
 
 			for(int i=0; i<str_run.size(); i++)for(int k=0; k<str_trigger.size(); k++){
 
-				cout << endl << "Optimizing BDT cut for " << str_run[i] << " ; " << str_trigger[k] << endl << endl ;
+				cout << "***********" << endl << "Optimizing BDT cut for " << str_run[i] << " ; " << str_trigger[k] << endl << endl ;
 
 				/// Get yields for categories
 				double signal_yield_cat = 0;
@@ -2442,21 +2483,86 @@ void fitSignal(){
 				effFile.ReplaceAll("Run","run");				
 
 				TFile* f_even= TFile::Open(effFile);
+				TTree* tree_even=(TTree*)f_even->Get("TestTree");
+
+				tree_even->SetBranchAddress("classID",&t_id);
+				tree_even->SetBranchAddress("BDTG",&t_BDTG);
+				tree_even->SetBranchAddress("weight",&t_weight);
+				for(int n = 0; n < tree_even->GetEntries(); n++){
+					tree_even->GetEntry(n);
+					if(i==0 && k ==0){
+						if(t_id==0)h_BDT_Run1_t0_s->Fill(t_BDTG,t_weight);	
+						else h_BDT_Run1_t0_b->Fill(t_BDTG,t_weight);
+					}
+					if(i==0 && k ==1){
+						if(t_id==0)h_BDT_Run1_t1_s->Fill(t_BDTG,t_weight);	
+						else h_BDT_Run1_t1_b->Fill(t_BDTG,t_weight);
+					}
+					if(i==1 && k ==0){
+						if(t_id==0)h_BDT_Run2_t0_s->Fill(t_BDTG,t_weight);	
+						else h_BDT_Run2_t0_b->Fill(t_BDTG,t_weight);
+					}
+					if(i==1 && k ==1){
+						if(t_id==0)h_BDT_Run2_t1_s->Fill(t_BDTG,t_weight);	
+						else h_BDT_Run2_t1_b->Fill(t_BDTG,t_weight);
+					}
+
+					if(t_id==0)h_BDT_s->Fill(t_BDTG,t_weight);	
+					else h_BDT_b->Fill(t_BDTG,t_weight);
+				}
+
 				TH1D* effS_even=(TH1D*)f_even->Get("Method_BDT/BDTG/MVA_BDTG_effS");
 				TH1D* effB_even=(TH1D*)f_even->Get("Method_BDT/BDTG/MVA_BDTG_effB");
-				
+
+				effS_even->Rebin(100);
+				effB_even->Rebin(100);
+				effS_even->Scale(1./100.);
+				effB_even->Scale(1./100.);
+
 				effFile.ReplaceAll("even","odd");				
 				TFile* f_odd= TFile::Open(effFile);
+				TTree* tree_odd=(TTree*)f_odd->Get("TestTree");
+
+				tree_odd->SetBranchAddress("classID",&t_id);
+				tree_odd->SetBranchAddress("BDTG",&t_BDTG);
+				tree_odd->SetBranchAddress("weight",&t_weight);
+				for(int n = 0; n < tree_odd->GetEntries(); n++){
+					tree_odd->GetEntry(n);
+					if(i==0 && k ==0){
+						if(t_id==0)h_BDT_Run1_t0_s->Fill(t_BDTG,t_weight);	
+						else h_BDT_Run1_t0_b->Fill(t_BDTG,t_weight);
+					}
+					if(i==0 && k ==1){
+						if(t_id==0)h_BDT_Run1_t1_s->Fill(t_BDTG,t_weight);	
+						else h_BDT_Run1_t1_b->Fill(t_BDTG,t_weight);
+					}
+					if(i==1 && k ==0){
+						if(t_id==0)h_BDT_Run2_t0_s->Fill(t_BDTG,t_weight);	
+						else h_BDT_Run2_t0_b->Fill(t_BDTG,t_weight);
+					}
+					if(i==1 && k ==1){
+						if(t_id==0)h_BDT_Run2_t1_s->Fill(t_BDTG,t_weight);	
+						else h_BDT_Run2_t1_b->Fill(t_BDTG,t_weight);
+					}
+					if(t_id==0)h_BDT_s->Fill(t_BDTG,t_weight);	
+					else h_BDT_b->Fill(t_BDTG,t_weight);
+				}
+
 				TH1D* effS_odd=(TH1D*)f_odd->Get("Method_BDT/BDTG/MVA_BDTG_effS");
 				TH1D* effB_odd=(TH1D*)f_odd->Get("Method_BDT/BDTG/MVA_BDTG_effB");
-				
-				cout << "Yields with BDT > " << (double)cut_BDT << ":" << endl;
+
+				effS_odd->Rebin(100);
+				effB_odd->Rebin(100);
+				effS_odd->Scale(1./100.);
+				effB_odd->Scale(1./100.);
+
+				cout << "Yields with BDT > " << BDT << ":" << endl;
 				cout << "N_s = " << signal_yield_cat << endl;
 				cout << "N_b = " << bkg_yield_cat << endl;
 				
 				/// Correct yields for BDT efficency
-				double eff_s = ( effS_even->GetBinContent(effS_even->FindBin((double)cut_BDT)) + effS_odd->GetBinContent(effS_odd->FindBin((double)cut_BDT)))/2.;
-				double eff_b = ( effB_even->GetBinContent(effB_even->FindBin((double)cut_BDT)) + effB_odd->GetBinContent(effB_odd->FindBin((double)cut_BDT)) )/2.;
+				double eff_s = ( effS_even->GetBinContent(effS_even->FindBin(BDT)) + effS_odd->GetBinContent(effS_odd->FindBin(BDT)))/2.;
+				double eff_b = ( effB_even->GetBinContent(effB_even->FindBin(BDT)) + effB_odd->GetBinContent(effB_odd->FindBin(BDT)))/2.;
 				double n_s =  signal_yield_cat/eff_s ;
 				double n_b =  bkg_yield_cat/eff_b ;
 				
@@ -2466,21 +2572,52 @@ void fitSignal(){
 		
 				/// Find optimal BDT cut
 				TH1D* h_sig = (TH1D*)effS_even->Clone("h_sig");
+				TH1D* h_eff_s = (TH1D*)effS_even->Clone("h_eff_s");
+				TH1D* h_eff_b = (TH1D*)effS_even->Clone("h_eff_b");
+
 				for(int n = 1; n <= h_sig->GetNbinsX(); n++){
 					double e_s = (effS_even->GetBinContent(n)+effS_odd->GetBinContent(n))/2.;
 					double e_b = (effB_even->GetBinContent(n)+effB_odd->GetBinContent(n))/2.;
 					h_sig->SetBinContent(n, e_s * n_s / sqrt( e_s * n_s + e_b * n_b )  );
+					h_eff_s->SetBinContent(n, e_s  );
+					h_eff_b->SetBinContent(n, e_b );
 				}	
 		
-				h_sig->SetTitle(";BDTG; Signal Significance");
-				if(i==0 && k==0)h_sig->Draw("histc");
+				c_1->cd();
+				h_sig->SetTitle(";BDTG; Signal Significance [norm.]");
+				h_sig->Scale(1./h_sig->GetMaximum());
+				h_sig->SetMaximum(1.05);
+				h_sig->SetMinimum(0.8);
+				h_sig->SetLineWidth(4);
+				if(k==0)h_sig->SetLineColor(kBlue);
+				if(k==1){h_sig->SetLineColor(kRed);h_sig->SetLineStyle(7);}
+				//if(k==1)h_sig->SetMarkerStyle(4);
+				if(k==0)h_sig->Draw("histc");
 				else h_sig->Draw("histcsame");
-				c->Print("eps/BDT_scan.eps");
-		
-				int max_bin = h_sig->GetMaximumBin();
-				double cut_BDT_opt = h_sig->GetBinCenter(max_bin);		
-				
+				if(i==0 && k==1){
+					c_1->Print("eps/BDT_scan_Run1.eps");
+					c_1->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDT_scan_Run1.eps");
+				}
+				if(i==1 && k==1){
+					c_1->Print("eps/BDT_scan_Run2.eps");
+					c_1->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDT_scan_Run2.eps");
+				}
+
+				c_2->cd();
+				h_eff_s->SetTitle(";BDTG; Efficiency");
+				h_eff_s->SetLineWidth(4);
+				if(k==0)h_eff_s->SetLineColor(kBlue);
+				if(k==1){h_eff_s->SetLineColor(kRed);h_sig->SetLineStyle(7);}
+				//if(k==1)h_sig->SetMarkerStyle(4);
+				if(k==0)h_eff_s->Draw("histc");
+				else h_eff_s->Draw("histcsame");
+				if(i==0 && k==1)c_2->Print("eps/BDT_eff_Run1.eps");
+				if(i==1 && k==1)c_2->Print("eps/BDT_eff_Run2.eps");
+			
 				/// Update values with optimal cut
+				int max_bin = h_sig->GetMaximumBin();
+				double cut_BDT_opt = h_sig->GetBinCenter(max_bin);	
+
 				eff_s = (effS_even->GetBinContent(max_bin)+effS_odd->GetBinContent(max_bin))/2.;
 				eff_b = (effB_even->GetBinContent(max_bin)+effB_even->GetBinContent(max_bin))/2.;
 				n_s *=  eff_s ;
@@ -2491,69 +2628,152 @@ void fitSignal(){
 				cout << "effB = " << eff_b << endl;
 				cout <<  "N_s = " << n_s << endl;
 				cout <<  "N_b = " << n_b << endl;
-				//cout << "S/B = " << n_s/n_b << endl;
-				//cout << "S/(S+B) = " << n_s/(n_s+n_b) << endl;
-				cout << "Sig = " << n_s/sqrt(n_s+n_b) << endl;			
-
+				cout << "Sig = " << n_s/sqrt(n_s+n_b) << endl;	
+		
 				signal_yield_opt += n_s;
 				bkg_yield_opt += n_b;
+
+				/// Update values with eff = 0.9 cut
+				n_s /=  eff_s ;
+				n_b /=  eff_b ;
+				max_bin = h_eff_s->FindLastBinAbove(0.9);
+				cut_BDT_opt = h_eff_s->GetBinCenter(max_bin);	
+
+				eff_s = (effS_even->GetBinContent(max_bin)+effS_odd->GetBinContent(max_bin))/2.;
+				eff_b = (effB_even->GetBinContent(max_bin)+effB_even->GetBinContent(max_bin))/2.;
+				n_s *=  eff_s ;
+				n_b *=  eff_b ;
+				
+				cout << endl << "BDT cut with eff = 0.9 : BDT > " << cut_BDT_opt << endl; 
+				cout << "effS = " << eff_s << endl;
+				cout << "effB = " << eff_b << endl;
+				cout <<  "N_s = " << n_s << endl;
+				cout <<  "N_b = " << n_b << endl;
+				cout << "Sig = " << n_s/sqrt(n_s+n_b) << endl;	
+		
+				signal_yield_opt_eff += n_s;
+				bkg_yield_opt_eff += n_b;
 			}
 
-			cout << endl << "Summary :" << endl;
+			cout << "***********" << endl << "Summary :" << endl;
+			cout << "Optimal BDT cut " << endl;
 			cout <<  "N_s = " << signal_yield_opt << endl;
 			cout <<  "N_b = " << bkg_yield_opt << endl;
 			cout << "Sig = " << signal_yield_opt/sqrt(signal_yield_opt+bkg_yield_opt) << endl;	
+
+			cout << endl << "BDT cut with eff = 0.9" << endl;
+			cout <<  "N_s = " << signal_yield_opt_eff << endl;
+			cout <<  "N_b = " << bkg_yield_opt_eff << endl;
+			cout << "Sig = " << signal_yield_opt_eff/sqrt(signal_yield_opt_eff+bkg_yield_opt_eff) << endl;	
+				
+			c->cd();
+			gPad->SetLogy();
+
+			h_BDT_s->SetLineColor(kBlue+1);
+			h_BDT_s->SetMarkerColor(kBlue+1);
+			h_BDT_s->SetFillColor(kBlue-4);
+
+			h_BDT_b->SetLineColor(kRed+1);
+			h_BDT_b->SetMarkerColor(kRed+1);
+			h_BDT_b->SetFillColor(kRed+1);
+			h_BDT_b->SetFillStyle(3335);
+
+			h_BDT_Run1_t0_s->SetLineColor(kRed+1);
+			h_BDT_Run1_t0_s->SetMarkerColor(kRed+1);
+			h_BDT_Run1_t0_s->SetFillColor(kRed+1);
+			h_BDT_Run1_t0_s->SetFillStyle(3335);
+
+			h_BDT_Run1_t1_s->SetLineColor(kRed);
+			h_BDT_Run1_t1_s->SetMarkerColor(kRed);
+
+			h_BDT_Run1_t0_b->SetLineColor(kGray+1);
+			h_BDT_Run1_t0_b->SetMarkerColor(kGray+1);
+			h_BDT_Run1_t0_b->SetFillColor(kGray+1);
+
+			h_BDT_Run2_t0_s->SetLineColor(kRed+1);
+			h_BDT_Run2_t0_s->SetMarkerColor(kRed+1);
+			h_BDT_Run2_t0_s->SetFillColor(kRed+1);
+			h_BDT_Run2_t0_s->SetFillStyle(3335);
+
+			h_BDT_Run2_t1_s->SetLineColor(kRed);
+			h_BDT_Run2_t1_s->SetMarkerColor(kRed);
+
+			h_BDT_Run2_t0_b->SetLineColor(kGray+1);
+			h_BDT_Run2_t0_b->SetMarkerColor(kGray+1);
+			h_BDT_Run2_t0_b->SetFillColor(kGray+1);
+
+			h_BDT_b->SetMinimum(10);
+			h_BDT_b->Draw("e1");
+			h_BDT_s->Draw("e1same");
+			c->Print("eps/BDTG.eps");
+			c->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDTG.eps");
+
+			h_BDT_Run1_t0_b->SetMinimum(1);
+			h_BDT_Run1_t0_b->DrawNormalized("hist",1);
+			h_BDT_Run1_t1_b->DrawNormalized("e1same",1);
+			h_BDT_Run1_t0_s->DrawNormalized("histsame",1);
+			h_BDT_Run1_t1_s->DrawNormalized("e1same",1);
+			c->Print("eps/BDTG_Run1.eps");
+			c->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDTG_Run1.eps");
+
+			h_BDT_Run2_t0_b->SetMinimum(1);
+			h_BDT_Run2_t0_b->DrawNormalized("hist",1);
+			h_BDT_Run2_t1_b->DrawNormalized("e1same",1);
+			h_BDT_Run2_t0_s->DrawNormalized("histsame",1);
+			h_BDT_Run2_t1_s->DrawNormalized("e1same",1);
+			c->Print("eps/BDTG_Run2.eps");
+			c->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDTG_Run2.eps");
 		}
-		else {
-			TFile* f= TFile::Open("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/Selection/TMVA_Bs2DsKpipi.root");
-			TH1D* effS=(TH1D*)f->Get("Method_BDT/BDT/MVA_BDT_effS");
-			TH1D* effB=(TH1D*)f->Get("Method_BDT/BDT/MVA_BDT_effB");
-			
-			cout << endl << "Optimizing BDT cut" << endl << endl ;
-			
-			cout << "Yields with BDT > " << (double)cut_BDT << ":" << endl;
-			cout << "N_s = " << signal_yield << endl;
-			cout << "N_b = " << comb_bkg_yield << endl;
-			
-			/// Correct yields for BDT efficency
-			double eff_s = effS->GetBinContent(effS->FindBin((double)cut_BDT));
-			double eff_b = effB->GetBinContent(effB->FindBin((double)cut_BDT));
-			double n_s =  signal_yield/eff_s ;
-			double n_b =  comb_bkg_yield/eff_b ;
-			
-			cout << endl << "BDT eff.corrected yields :" << endl;
-			cout << "N_s = " << n_s << endl;
-			cout << "N_b = " << n_b << endl;
-	
-			/// Find optimal BDT cut
-			TH1D* h_sig = (TH1D*)effS->Clone("h_sig");
-			for(int i = 1; i <= h_sig->GetNbinsX(); i++){
-				double e_s = effS->GetBinContent(i);
-				double e_b = effB->GetBinContent(i);
-				h_sig->SetBinContent(i, e_s * n_s / sqrt( e_s * n_s + e_b * n_b )  );
-			}	
-	
-			h_sig->Draw("histc");
-			c->Print("eps/BDT_scan.eps");
-	
-			int max_bin = h_sig->GetMaximumBin();
-			double cut_BDT_opt = h_sig->GetBinCenter(max_bin);		
-			
-			/// Update values with optimal cut
-			eff_s = effS->GetBinContent(max_bin);
-			eff_b = effB->GetBinContent(max_bin);
-			n_s *=  eff_s ;
-			n_b *=  eff_b ;
-			
-			cout << endl << "Optimal BDT cut : BDT > " << cut_BDT_opt << endl; 
-			cout << "effS = " << eff_s << endl;
-			cout << "effB = " << eff_b << endl;
-			cout <<  "N_s = " << n_s << endl;
-			cout <<  "N_b = " << n_b << endl;
-			//cout << "S/B = " << n_s/n_b << endl;
-			//cout << "S/(S+B) = " << n_s/(n_s+n_b) << endl;
-			cout << "Sig = " << n_s/sqrt(n_s+n_b) << endl;			
-		}
+// 		else {
+// 			TFile* f= TFile::Open("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/Selection/TMVA_Bs2DsKpipi.root");
+// 			TH1D* effS=(TH1D*)f->Get("Method_BDT/BDT/MVA_BDT_effS");
+// 			TH1D* effB=(TH1D*)f->Get("Method_BDT/BDT/MVA_BDT_effB");
+// 			
+// 			cout << endl << "Optimizing BDT cut" << endl << endl ;
+// 			
+// 			cout << "Yields with BDT > " << (double)cut_BDT << ":" << endl;
+// 			cout << "N_s = " << signal_yield << endl;
+// 			cout << "N_b = " << comb_bkg_yield << endl;
+// 			
+// 			/// Correct yields for BDT efficency
+// 			double eff_s = effS->GetBinContent(effS->FindBin((double)cut_BDT));
+// 			double eff_b = effB->GetBinContent(effB->FindBin((double)cut_BDT));
+// 			double n_s =  signal_yield/eff_s ;
+// 			double n_b =  comb_bkg_yield/eff_b ;
+// 			
+// 			cout << endl << "BDT eff.corrected yields :" << endl;
+// 			cout << "N_s = " << n_s << endl;
+// 			cout << "N_b = " << n_b << endl;
+// 	
+// 			/// Find optimal BDT cut
+// 			TH1D* h_sig = (TH1D*)effS->Clone("h_sig");
+// 			for(int i = 1; i <= h_sig->GetNbinsX(); i++){
+// 				double e_s = effS->GetBinContent(i);
+// 				double e_b = effB->GetBinContent(i);
+// 				h_sig->SetBinContent(i, e_s * n_s / sqrt( e_s * n_s + e_b * n_b )  );
+// 			}	
+// 	
+// 			h_sig->Draw("histc");
+// 			c->Print("eps/BDT_scan.eps");
+// 	
+// 			int max_bin = h_sig->GetMaximumBin();
+// 			double cut_BDT_opt = h_sig->GetBinCenter(max_bin);		
+// 			
+// 			/// Update values with optimal cut
+// 			eff_s = effS->GetBinContent(max_bin);
+// 			eff_b = effB->GetBinContent(max_bin);
+// 			n_s *=  eff_s ;
+// 			n_b *=  eff_b ;
+// 			
+// 			cout << endl << "Optimal BDT cut : BDT > " << cut_BDT_opt << endl; 
+// 			cout << "effS = " << eff_s << endl;
+// 			cout << "effB = " << eff_b << endl;
+// 			cout <<  "N_s = " << n_s << endl;
+// 			cout <<  "N_b = " << n_b << endl;
+// 			//cout << "S/B = " << n_s/n_b << endl;
+// 			//cout << "S/(S+B) = " << n_s/(n_s+n_b) << endl;
+// 			cout << "Sig = " << n_s/sqrt(n_s+n_b) << endl;			
+// 		}
 
 	}
 
@@ -2861,6 +3081,7 @@ void AnalyticPartBkg(){
 
 }
 
+
 int main(int argc, char** argv){
 
     time_t startTime = time(0);
@@ -2875,6 +3096,7 @@ int main(int argc, char** argv){
     str_year.push_back(TString("y12"));
     str_year.push_back(TString("y15"));
     str_year.push_back(TString("y16"));
+    str_year.push_back(TString("y17"));
     
     str_run.push_back(TString("Run1"));
     str_run.push_back(TString("Run2"));
@@ -2883,6 +3105,7 @@ int main(int argc, char** argv){
     str_Ds.push_back(TString("KsK"));
     str_Ds.push_back(TString("KKpi_NR"));
     str_Ds.push_back(TString("pipipi"));
+    //str_Ds.push_back(TString("Kpipi"));
 
     str_trigger.push_back(TString("t0"));
     str_trigger.push_back(TString("t1"));

@@ -3,7 +3,11 @@
 "nBins"		100
 "min_MM"	5200.
 "max_MM"	5700.
-"cut_BDT" 	0.3
+"cut_BDT_MC" 	0.3
+*"cut_BDT" 	"BDTG > 0.3"
+"cut_BDT" 	"(run ==1 && TriggerCat == 0 && BDTG > 0.45) || (run ==1 && TriggerCat == 1 && BDTG > 0.45) || (run ==2 && TriggerCat == 0 && BDTG > 0.35) || (run ==2 && TriggerCat == 1 && BDTG > 0.45)"
+"optimizeBDT"		0
+
 "numCPU"	 10
 "newTable"	0
 "updateAnaNotePlots"  1
@@ -21,11 +25,10 @@
 "fixMisIDyields"	1
 "useNormScaleFactors"	1
 "useNormSignalShape"	1
-"constrainCombBkgFromSS"	1
+"constrainCombBkgFromSS"	0
 
 "sWeightSignal"	 	0
-"optimizeBDT"		0
-*"inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root"
+*"inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/BDT/Data/signal.root"
 
 * MC fit:
 "sWeightMC"	0
