@@ -4,7 +4,7 @@
 \label{sec:StripAndTrigger}
 
 The following text describes variables which are used in Table \ref{table:StrippingCuts} and might be ambiguous, or which benefits are not straight forward. 
-Where noted, different cut values are applied for Run-I \& Run-II data.
+Where noted, different cut values are applied for Run-I and Run-II data.
 In Table \ref{table:StrippingCuts}, DOCA is the abbreviation for distance of closest approach. This variable is used to ensure that all $\Ds$ and $X_{s,d}$ daughters originate from the same vertex.
 %The minimal flight distance (FD) $\chi^{2}$ is a measure on how likely a particle traveled some distance before it decayed. A cut on this variable is employed to reject prompt background for $\Ds$ and $X_{s,d}$ candidates.
 %$X_{s,d}$ $\Delta\rho$ (vertex displacement perpendicular to z-axis) & $>$ 0.1 $\mm$&\\
@@ -117,9 +117,25 @@ $\phi$ IP $\chi^{2}$ to any PV & $>$ 5\\
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.8\textwidth]{figs/TMVA/BDTG_Data_run1_t0_even/variables_id_c1.pdf}
-\includegraphics[height=!,width=0.8\textwidth]{figs/TMVA/BDTG_Data_run1_t0_even/variables_id_c2.pdf}
-\caption{Variables used to train the BDTG.}
+\includegraphics[height=5cm,width=0.9\textwidth]{figs/TMVA/BDTG_Data_run1_t0_all/variables_id_c1.pdf}
+\includegraphics[height=5cm,width=0.9\textwidth]{figs/TMVA/BDTG_Data_run1_t0_all/variables_id_c2.pdf}
+\caption{Variables used to train the BDTG for category [Run-I,\textsf{L0-TOS}].}
+\label{fig:}
+\includegraphics[height=5cm,width=0.9\textwidth]{figs/TMVA/BDTG_Data_run1_t1_all/variables_id_c1.pdf}
+\includegraphics[height=5cm,width=0.9\textwidth]{figs/TMVA/BDTG_Data_run1_t1_all/variables_id_c2.pdf}
+\caption{Variables used to train the BDTG for category [Run-I,\textsf{L0-TIS}].}
+\label{fig:}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=5cm,width=0.9\textwidth]{figs/TMVA/BDTG_Data_run2_t0_all/variables_id_c1.pdf}
+\includegraphics[height=5cm,width=0.9\textwidth]{figs/TMVA/BDTG_Data_run2_t0_all/variables_id_c2.pdf}
+\caption{Variables used to train the BDTG for category [Run-II,\textsf{L0-TOS}].}
+\label{fig:}
+\includegraphics[height=5cm,width=0.9\textwidth]{figs/TMVA/BDTG_Data_run2_t1_all/variables_id_c1.pdf}
+\includegraphics[height=5cm,width=0.9\textwidth]{figs/TMVA/BDTG_Data_run2_t1_all/variables_id_c2.pdf}
+\caption{Variables used to train the BDTG for category [Run-II,\textsf{L0-TIS}].}
 \label{fig:}
 \end{figure}
 
@@ -127,8 +143,38 @@ $\phi$ IP $\chi^{2}$ to any PV & $>$ 5\\
 \centering
 \includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run1_t0_even/overtrain_BDTG.pdf}
 \includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run1_t0_odd/overtrain_BDTG.pdf}
-\caption{Response of the classifier trained on the even (left) and odd (right) sample.}
-\label{fig:}
+\caption{Response of the classifier trained on the even and tested on the odd sample (left) and trained on the odd and tested on the even sample (right) for category [Run-I,\textsf{L0-TOS}].}
+
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run1_t1_even/overtrain_BDTG.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run1_t1_odd/overtrain_BDTG.pdf}
+\caption{Response of the classifier trained on the even and tested on the odd sample (left) and trained on the odd and tested on the even sample (right) for category [Run-I,\textsf{L0-TIS}].}
+
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run2_t0_even/overtrain_BDTG.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run2_t0_odd/overtrain_BDTG.pdf}
+\caption{Response of the classifier trained on the even and tested on the odd sample (left) and trained on the odd and tested on the even sample (right) for category [Run-II,\textsf{L0-TOS}].}
+
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run2_t1_even/overtrain_BDTG.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run2_t1_odd/overtrain_BDTG.pdf}
+\caption{Response of the classifier trained on the even and tested on the odd sample (left) and trained on the odd and tested on the even sample (right) for category [Run-II,\textsf{L0-TIS}].}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run1_t0_even/rejBvsS.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run1_t0_odd/rejBvsS.pdf}
+\caption{Signal efficiency versus background rejection for the BDT trained on the even (left) and odd (right) sample for category [Run-I,\textsf{L0-TOS}].}
+
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run1_t1_even/rejBvsS.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run1_t1_odd/rejBvsS.pdf}
+\caption{Signal efficiency versus background rejection for the BDT trained on the even (left) and odd (right) sample for category [Run-I,\textsf{L0-TIS}].}
+
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run2_t0_even/rejBvsS.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run2_t0_odd/rejBvsS.pdf}
+\caption{Signal efficiency versus background rejection for the BDT trained on the even (left) and odd (right) sample for category [Run-II,\textsf{L0-TOS}].}
+
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run2_t1_even/rejBvsS.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/TMVA/BDTG_Data_run2_t1_odd/rejBvsS.pdf}
+\caption{Signal efficiency versus background rejection for the BDT trained on the even (left) and odd (right) sample for category[Run-II,\textsf{L0-TIS}].}
 \end{figure}
 
 
