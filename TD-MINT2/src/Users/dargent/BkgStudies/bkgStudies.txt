@@ -1,0 +1,7 @@
+* general options
+
+"channel"       	"Signal"
+"do_Ds2pipipi"		1
+"do_Ds2Kpipi"		1
+"do_Ds2KKpi"		1
+
