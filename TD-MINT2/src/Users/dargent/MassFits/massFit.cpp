@@ -214,6 +214,7 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi"){
 
 vector<double> fitPartRecoBkgShape(){
 
+        NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 	NamedParameter<double> min_MM("min_MM",5100.);
 	NamedParameter<double> max_MM("max_MM",5700.);
 	///define shape of Bs->Ds*pipipi BG as 3 bifurcated gaussians
@@ -258,6 +259,7 @@ vector<double> fitPartRecoBkgShape(){
 	TCanvas* c1= new TCanvas("");
 	RooPlot* frame_m= Bs_MM.frame();
 	frame_m->SetTitle("");
+        frame_m->GetXaxis()->SetTitle("m(D_{s}^{-}#pi^{+}#pi^{+}#pi^{-}) [MeV/c^{2}]");
 	data->plotOn(frame_m,Name("data"),MarkerSize(1),Binning(50));
 	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlue),LineWidth(3));
 	pdf->plotOn(frame_m,Components(BifGauss1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
@@ -265,7 +267,7 @@ vector<double> fitPartRecoBkgShape(){
 	pdf->plotOn(frame_m,Components(BifGauss3),LineColor(kGreen),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
 	c1->Print("eps/BkgShape/Bs2Dsstartpipipi.eps");
-
+	if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dsstartpipipi.pdf");
 	Bs_MM.setRange("signal_range",min_MM,max_MM);
 	double eff_signal_range = pdf->createIntegral(Bs_MM,NormSet(Bs_MM),Range("signal_range"))->getVal();
 	cout << "eff_signal_range" << eff_signal_range << endl;
@@ -292,8 +294,8 @@ vector<double> fitPartRecoBkgShape(){
 
 vector<double> fitMisIdBkgShape_Ds3pi(){
 
+        NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 	/// Define shape of Bs->Ds(*)pipipi BG as 2 crystal balls
-	
 	RooRealVar Bs_Mass("fake_Bs_MM", "m(D_{s}^{-} #pi_{K}^{+}#pi^{+}#pi^{-})", 5300., 6000.,"MeV/c^{2}");
 	RooRealVar EventWeight("EventWeight", "EventWeight", 0.);
 	RooRealVar Ds_finalState("Ds_finalState","Ds_finalState", 0.);
@@ -336,12 +338,15 @@ vector<double> fitMisIdBkgShape_Ds3pi(){
 	TCanvas* c1= new TCanvas("");
 	RooPlot* frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
+        frame_m->GetXaxis()->SetTitle("m(D_{s}^{-}#pi^{+}_{K}#pi^{+}#pi^{-}) [MeV/c^{2}]");
+
 	data->plotOn(frame_m,Name("data"),MarkerSize(1),Binning(40),DataError(RooAbsData::SumW2));
 	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlue),LineWidth(3));
 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
 	c1->Print("eps/BkgShape/Bs2Dspipipi_as_DsKpipi.eps");
+	if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dspipipi_as_DsKpipi.pdf");
 
 	frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
@@ -390,8 +395,8 @@ vector<double> fitMisIdBkgShape_Ds3pi(){
 
 vector<double> fitMisIdBkgShape_Dsstar3pi(){
 
+        NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 	/// Define shape of Bs->Ds(*)pipipi BG as 2 crystal balls
-	
 	RooRealVar Bs_Mass("fake_Bs_MM", "m(D_{s}^{-} #pi_{K}^{+}#pi^{+}#pi^{-})", 4900., 6200.,"MeV/c^{2}");
 	RooRealVar EventWeight("EventWeight","EventWeight", 0.);
 	RooRealVar Ds_finalState("Ds_finalState","Ds_finalState", 0.);
@@ -434,12 +439,14 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(){
 	TCanvas* c1= new TCanvas("");
 	RooPlot* frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
+        frame_m->GetXaxis()->SetTitle("m(D_{s}^{-}#pi^{+}_{K}#pi^{+}#pi^{-}) [MeV/c^{2}]");
 	data->plotOn(frame_m,Name("data"),MarkerSize(1),Binning(40));
 	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlue),LineWidth(3));
 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
 	c1->Print("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi.eps");
+	if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dsstarpipipi_as_DsKpipi.pdf");
 
 	frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
@@ -887,11 +894,14 @@ vector< vector<double> > fitNorm(){
 	tree->SetBranchStatus("year",1);
 	tree->SetBranchStatus("TriggerCat",1);
 	tree->SetBranchStatus("run",1);
+	tree->SetBranchStatus("*PIDK",1);
 
         RooRealVar DTF_Bs_M("Bs_DTF_MM", "m(D_{s}^{-}#pi^{+}#pi^{+}#pi^{-})", min_MM, max_MM,"MeV/c^{2}");
         RooRealVar BDTG("BDTG", "BDTG", 0.);              
+        RooRealVar pi_plus1_PIDK("pi_plus1_PIDK", "pi_plus1_PIDK", 0.);              
+        RooRealVar pi_plus2_PIDK("pi_plus2_PIDK", "pi_plus2_PIDK", 0.);              
 
-	RooArgList list =  RooArgList(DTF_Bs_M,Ds_finalState_mod,year,run,TriggerCat);
+	RooArgList list =  RooArgList(DTF_Bs_M,Ds_finalState_mod,year,run,TriggerCat,pi_plus1_PIDK,pi_plus2_PIDK);
 	if(!fitPreselected)list.add(BDTG);	
 	RooDataSet*  data;
 	if(!fitPreselected)data = new RooDataSet("data","data",tree,list, ((string)cut_BDT).c_str() );
@@ -906,7 +916,7 @@ vector< vector<double> > fitNorm(){
 	RooFormulaVar mean("mean","@0 * @1", RooArgSet(scale_mean,mean_MC)); 
 	RooFormulaVar sigma("sigma","@0 * @1", RooArgSet(scale_sigma,sigma_MC)); 
 	RooRealVar alpha("alpha", "#alpha", sig_params[2],-5.,5.); 
-	RooRealVar beta("beta", "#beta", sig_params[3],-5.,5.);
+	RooRealVar beta("beta", "#beta", sig_params[3]);
 	if(fixSignalShapeFromMC){
 		alpha.setConstant();
 		beta.setConstant();
@@ -919,9 +929,19 @@ vector< vector<double> > fitNorm(){
 	RooJohnsonSU signal_B0("signal_B0","signal_B0",DTF_Bs_M, mean_B0,sigma,alpha,beta);
 
 	/// Combinatorial bkg pdf
-	RooRealVar exp_par("exp_par","#lambda",-1.6508e-03,-10.,0.);	
-	RooExponential bkg_exp("bkg_exp","exponential bkg",DTF_Bs_M,exp_par);
-	bkg_exp.fitTo(*data,Save(kTRUE),Range(5600.,5800.));
+// 	RooRealVar exp_par("exp_par","#lambda",-1.6508e-03,-10.,0.);	
+// 	RooExponential bkg_exp("bkg_exp","exponential bkg",DTF_Bs_M,exp_par);
+// 	bkg_exp.fitTo(*data,Save(kTRUE),Range(5600.,5800.));
+
+	RooRealVar exp_par1("exp_par1","exp_par1",-1.6508e-03,-10.,10.);	
+	RooRealVar exp_par("exp_par","exp_par",0.);	
+	RooExponential bkg_exp1("bkg_exp1","bkg_exp1",DTF_Bs_M,exp_par);
+	RooRealVar exp_par2("exp_par2","exp_par2",0,-10.,10.);	
+	RooRealVar exp_par3("exp_par3","exp_par3",0,-10.,10.);	
+
+	RooChebychev bkg_exp2("bkg_exp2","bkg_exp2",DTF_Bs_M,RooArgList(exp_par2,exp_par3));
+	RooRealVar f_bkg_exp("f_bkg_exp", "f_bkg_exp", 0.);
+	RooAddPdf bkg_exp("bkg_exp", "bkg_exp", RooArgList(bkg_exp1, bkg_exp2), RooArgList(f_bkg_exp));
 
 	/// Part. reco bkg
 	vector<double> bkg_partReco_params(20,0);
@@ -932,14 +952,14 @@ vector< vector<double> > fitNorm(){
 	RooRealVar sigmaL1("sigmaL1", "sigmaL1",  bkg_partReco_params[3]);
 	RooRealVar sigmaR1("sigmaR1", "sigmaR1",  bkg_partReco_params[4]);
 	RooRealVar sigmaL2("sigmaL2", "sigmaL2",  bkg_partReco_params[5]);//, bkg_partReco_params[5]*0.,bkg_partReco_params[5]*5);
-	RooRealVar sigmaR2("sigmaR2", "sigmaR2",  bkg_partReco_params[6], bkg_partReco_params[6]*0.,bkg_partReco_params[6]*2.);
+	RooRealVar sigmaR2("sigmaR2", "sigmaR2",  bkg_partReco_params[6]);//, bkg_partReco_params[6]*0.,bkg_partReco_params[6]*2.);
 	RooRealVar sigmaL3("sigmaL3", "sigmaL3",  bkg_partReco_params[7]);//,bkg_partReco_params[7]*0.5,bkg_partReco_params[7]*2.);
-	RooRealVar sigmaR3("sigmaR3", "sigmaR3",  bkg_partReco_params[8] ,bkg_partReco_params[8]*0.5,bkg_partReco_params[8]*2.);
+	RooRealVar sigmaR3("sigmaR3", "sigmaR3",  bkg_partReco_params[8]);// ,bkg_partReco_params[8]*0.5,bkg_partReco_params[8]*2.);
 	RooRealVar f_1("f_1", "f_1", bkg_partReco_params[9]);//,0,1);
 	RooRealVar f_2("f_2", "f_2", bkg_partReco_params[10]);//,0,1);
 
 	RooRealVar scale_mean_partReco("scale_mean_partReco", "scale_mean_partReco", 1.);
-	RooRealVar scale_sigma_partReco("scale_sigma_partReco", "scale_sigma_partReco", 1.);
+	RooRealVar scale_sigma_partReco("scale_sigma_partReco", "scale_sigma_partReco", 1.,0.5,2.);
 	RooFormulaVar mean1_scaled("mean1_scaled","@0 * @1", RooArgSet(scale_mean_partReco,mean1)); 
 	RooFormulaVar mean2_scaled("mean2_scaled","@0 * @1", RooArgSet(scale_mean_partReco,mean2)); 
 	RooFormulaVar mean3_scaled("mean3_scaled","@0 * @1", RooArgSet(scale_mean_partReco,mean3)); 
@@ -950,9 +970,9 @@ vector< vector<double> > fitNorm(){
 	RooFormulaVar sigmaL3_scaled("sigmaL3_scaled","@0 * @1", RooArgSet(scale_sigma_partReco,sigmaL3)); 
 	RooFormulaVar sigmaR3_scaled("sigmaR3_scaled","@0 * @1", RooArgSet(scale_sigma_partReco,sigmaR3)); 
 
-	RooBifurGauss BifGauss1("BifGauss1","BifGauss1", DTF_Bs_M, mean1_scaled, sigmaL1_scaled,sigmaR1_scaled);
-	RooBifurGauss BifGauss2("BifGauss2","BifGauss2", DTF_Bs_M, mean2_scaled, sigmaL2_scaled,sigmaR2_scaled);
-	RooBifurGauss BifGauss3("BifGauss3","BifGauss3", DTF_Bs_M, mean3_scaled, sigmaL3_scaled,sigmaR3_scaled);
+	RooBifurGauss BifGauss1("BifGauss1","BifGauss1", DTF_Bs_M, mean1_scaled, sigmaL1,sigmaR1);
+	RooBifurGauss BifGauss2("BifGauss2","BifGauss2", DTF_Bs_M, mean2_scaled, sigmaL2,sigmaR2_scaled);
+	RooBifurGauss BifGauss3("BifGauss3","BifGauss3", DTF_Bs_M, mean3_scaled, sigmaL3,sigmaR3_scaled);
 	RooAddPdf* bkg_partReco_alt1= new RooAddPdf("bkg_partReco_alt1", "bkg_partReco_alt1", RooArgList(BifGauss1, BifGauss2, BifGauss3), RooArgList(f_1,f_2),kTRUE);
 
 	///alternative modelling using RooHILLdini & RooHORNSdini 
@@ -990,9 +1010,9 @@ vector< vector<double> > fitNorm(){
 
 	/// Total pdf
 	RooRealVar n_sig("n_sig", "n_sig", data->numEntries()/2., 0., data->numEntries());
-	RooRealVar n_sig_B0("n_sig_B0", "n_sig_B0", data->numEntries()/10., 0., data->numEntries());
+	RooRealVar n_sig_B0("n_sig_B0", "n_sig_B0", data->numEntries()/10., 10., data->numEntries());
 	RooRealVar n_exp_bkg("n_exp_bkg", "n_exp_bkg", data->numEntries()/2., 0., data->numEntries());
-	RooRealVar n_partReco_bkg("n_partReco_bkg", "n_partReco_bkg", data->numEntries()/5., 0., data->numEntries() );
+	RooRealVar n_partReco_bkg("n_partReco_bkg", "n_partReco_bkg", data->numEntries()/5., 50., data->numEntries() );
         if(ignorePartRecoBkg){
                 n_partReco_bkg.setVal(0.);
                 n_partReco_bkg.setConstant();
@@ -1039,16 +1059,18 @@ vector< vector<double> > fitNorm(){
 			/// Get data slice
 			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j] + " && TriggerCat == TriggerCat::" + str_trigger[k]);
 			/// Fit
-			bkg_exp.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
+			//bkg_exp.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
 			/// Fix parameters
-			((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setVal(exp_par.getVal());
-			if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setConstant();
+			//((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setVal(exp_par.getVal());
+			//if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setConstant();
 	
 			/// Set start values for yields
 			((RooRealVar*) fitParams->find("n_sig_{"+str_run[i] + ";" + str_Ds[j] + ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/2.);
 			((RooRealVar*) fitParams->find("n_exp_bkg_{"+str_run[i] + ";" + str_Ds[j] + ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/2.);
-			if(!ignorePartRecoBkg)((RooRealVar*) fitParams->find("n_partReco_bkg_{"+str_run[i] + ";" + str_Ds[j] + ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/10.);
-			if(useB0)((RooRealVar*) fitParams->find("n_sig_B0_{"+str_run[i] + ";" + str_Ds[j] + ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/20.);
+			if(!ignorePartRecoBkg)((RooRealVar*) fitParams->find("n_partReco_bkg_{"+str_run[i] + ";" + str_Ds[j] + ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/2.);
+			//if(!ignorePartRecoBkg)((RooRealVar*) fitParams->find("n_partReco_bkg_{"+str_run[i] + ";" + str_Ds[j] + ";" + str_trigger[k] + "}"))->setRange(data_slice->numEntries()*0.02,data_slice->numEntries()*0.3);
+			if(useB0)((RooRealVar*) fitParams->find("n_sig_B0_{"+str_run[i] + ";" + str_Ds[j] + ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()*0.01);
+			if(useB0)((RooRealVar*) fitParams->find("n_sig_B0_{"+str_run[i] + ";" + str_Ds[j] + ";" + str_trigger[k] + "}"))->setRange(data_slice->numEntries()*0.005,data_slice->numEntries()*0.1);
 		}
 	}
 	else {
@@ -1359,6 +1381,8 @@ vector< vector<double> > fitNorm(){
 
 				/// Print label
 				TString label = "LHCb " + str_run[i];
+				label.ReplaceAll("1","I");
+				label.ReplaceAll("2","II");
 				lhcbtext->SetTextFont(22);
 				lhcbtext->DrawLatex(0.6,0.85,label.ReplaceAll("Run","Run-"));
 				if(str_Ds[j]=="phipi")label = "D_{s}^{-}#rightarrow #phi^{0}(1020)#pi^{-}";
@@ -1586,8 +1610,84 @@ vector< vector<double> > fitNorm(){
 	return_vec.push_back(signal_yieldsB0);
 	return_vec.push_back(signal_yieldsB0_err);
 
-	if(file!=0)file->Close();
+	if(updateAnaNotePlots){
 
+		double yield_sig = 0;
+		double yield_B0 = 0;
+		double yield_partReco = 0;
+		double yield_comb = 0;
+		double yield_sig_err = 0;
+		double yield_B0_err = 0;
+		double yield_partReco_err = 0;
+		double yield_comb_err = 0;
+		for(int i=0; i<str_run.size(); i++)for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
+			yield_sig += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_sig_err += pow(((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+
+			yield_B0 += ((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_B0_err += pow(((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);	
+
+			yield_partReco += ((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_partReco_err += pow(((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+
+			yield_comb += ((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_comb_err += pow(((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+		}
+
+		ofstream datafile;
+		datafile.open("../../../../../TD-AnaNote/latex/tables/MassFit/yields_norm.tex",std::ofstream::trunc);
+		//datafile << "\\begin{table}[h]" << "\n";
+		//datafile << "\\centering" << "\n";
+		datafile << " \\begin{tabular}{l r }" << "\n";
+		datafile << "\\hline\\hline" << "\n";
+		datafile << "Component & Yield\\" << " \\\\" << "\n";
+		datafile << "\\hline" << "\n";
+		datafile << std::fixed << std::setprecision(0) << "$B_s \\to D_s \\pi \\pi \\pi$" << " & "<< yield_sig << " $\\pm$ " << sqrt(yield_sig_err) << " \\\\" << "\n";
+		datafile << std::fixed<< std::setprecision(0) << "$B^{0} \\to D_s \\pi \\pi \\pi$" << " & "<< yield_B0 << " $\\pm$ " << sqrt(yield_B0_err) << " \\\\" << "\n";
+		datafile << std::fixed<< std::setprecision(0) << "Partially reconstructed bkg." << " & "<< yield_partReco << " $\\pm$ " << sqrt(yield_partReco_err) << " \\\\" << "\n";
+		datafile << std::fixed<< std::setprecision(0) << "Combinatorial bkg." << " & "<< yield_comb << " $\\pm$ " << sqrt(yield_comb_err) << " \\\\" << "\n";
+		datafile << "\\hline\\hline" << "\n";
+		datafile << "\\end{tabular}" << "\n";
+		//datafile << "\\caption{Total signal and background yields for the $B_s \\to D_s \\pi \\pi \\pi$ sample.}" << "\n";
+		datafile << "\\label{table:normYields}" << "\n";
+		//datafile << "\\end{table}" << "\n";
+		datafile.close();
+
+		vector<double> yield_sig_Ds(4,0);
+		vector<double> yield_sig_Ds_err(4,0);
+
+		for(int i=0; i<str_run.size(); i++)for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
+			yield_sig_Ds[j] += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_sig_Ds_err[j] += pow(((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+		}
+
+		ofstream datafileDs;
+		datafile.open("../../../../../TD-AnaNote/latex/tables/MassFit/yields_normDs.tex",std::ofstream::trunc);
+		//datafile << "\\begin{table}[h]" << "\n";
+		//datafile << "\\centering" << "\n";
+		datafile << " \\begin{tabular}{l r }" << "\n";
+		datafile << "\\hline\\hline" << "\n";
+		datafile << "$D_s$ final state  & Signal yield\\" << " \\\\" << "\n";
+		datafile << "\\hline" << "\n";
+		for(int j=0; j<str_Ds.size(); j++){ 
+			string caption;
+			if(str_Ds[j]=="phipi")caption = "$D_{s}^{-} \\to \\phi^{0}(1020)\\pi^{-}$";
+			else if(str_Ds[j]=="KsK")caption = "$D_{s}^{-}\\to K^{*0}(892)K^{-}$";
+			else if(str_Ds[j]=="KKpi_NR")caption = "$D_{s}^{-}\\to (K^{-}h^{+}\\pi^{-})$";
+			else if(str_Ds[j]=="pipipi")caption = "$D_{s}^{-}\\to \\pi^{+}\\pi^{-}\\pi^{-}$";
+
+			datafile << std::fixed << std::setprecision(0) << caption << " & "<< yield_sig_Ds[j] << " $\\pm$ " << sqrt(yield_sig_Ds_err[j]) << " \\\\" << "\n";
+		}
+		datafile << "\\hline\\hline" << "\n";
+		datafile << "\\end{tabular}" << "\n";
+		//datafile << "\\caption{Signal yield for the different $D_s$ final states contributing to the $B_s \\to D_s \\pi \\pi \\pi$ sample.}" << "\n";
+		datafile << "\\label{table:normYieldsDs}" << "\n";
+		//datafile << "\\end{table}" << "\n";
+		datafile.close();
+	}
+
+
+	if(file!=0)file->Close();
 	return return_vec;
 }
 
@@ -1652,8 +1752,8 @@ void fitSignal(){
         RooRealVar pi_plus_PIDK("pi_plus_PIDK", "pi_plus_PIDK", 0.);        
         RooRealVar pi_minus_PIDK("pi_minus_PIDK", "pi_minus_PIDK", 0.);        
 
-	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState_mod,year,TriggerCat,run);
-	RooDataSet*  data = new RooDataSet("data","data",tree,list,((string)cut_BDT).c_str() );	
+	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState_mod,year,TriggerCat,run,pi_minus_PIDK);
+	RooDataSet*  data = new RooDataSet("data","data",tree,list,((string)cut_BDT + " && pi_minus_PIDK < 0").c_str() );	
 
 	/// Fit normalization mode first
 	vector< vector <double> > norm_paramSet = fitNorm();
@@ -1666,7 +1766,7 @@ void fitSignal(){
 	RooRealVar scale_sigma("scale_sigma", "scale_sigma", 1.,0.,2.);
 	RooFormulaVar mean("mean","@0 * @1", RooArgSet(scale_mean,mean_MC)); 
 	RooFormulaVar sigma("sigma","@0 * @1", RooArgSet(scale_sigma,sigma_MC)); 
-	RooRealVar alpha("alpha", "alpha", sig_params[2]); 
+	RooRealVar alpha("alpha", "alpha", sig_params[2],-1,1); 
 	RooRealVar beta("beta", "beta", sig_params[3]); 
 
 	RooJohnsonSU signal("signal","signal",DTF_Bs_M, mean,sigma,alpha,beta);
@@ -1675,6 +1775,8 @@ void fitSignal(){
 	RooFormulaVar mean_B0("mean_B0","@0 - @1", RooArgSet(mean,RooConst(87.33))); 
 	RooRealVar scale_sigma_B0("scale_sigma_B0", "scale_sigma_B0", 1.,0.,2.);
 	RooFormulaVar sigma_B0("sigma_B0","@0 * @1", RooArgSet(scale_sigma_B0,sigma)); 
+	RooRealVar alpha_B0("alpha_B0", "alpha_B0", sig_params[2],-1,1); 
+	RooRealVar beta_B0("beta_B0", "beta_B0", sig_params[3]); 
 
 	RooJohnsonSU signal_B0("signal_B0","signal_B0",DTF_Bs_M, mean_B0,sigma_B0,alpha,beta);
 
@@ -1683,7 +1785,7 @@ void fitSignal(){
 	RooRealVar exp_par("exp_par","exp_par",0.);	
 	RooExponential bkg_exp1("bkg_exp1","bkg_exp1",DTF_Bs_M,exp_par);
 	RooRealVar exp_par2("exp_par2","exp_par2",0,-10.,10.);	
-	RooRealVar exp_par3("exp_par3","exp_par3",0,-10.,10.);	
+	RooRealVar exp_par3("exp_par3","exp_par3",0,-1,1);	
 
 	RooChebychev bkg_exp2("bkg_exp2","bkg_exp2",DTF_Bs_M,RooArgList(exp_par2,exp_par3));
 	RooRealVar f_bkg_exp("f_bkg_exp", "f_bkg_exp", 0.);
@@ -1718,7 +1820,7 @@ void fitSignal(){
 	RooBifurGauss BifGauss3_B0("BifGauss3_B0","BifGauss3_B0", DTF_Bs_M, mean3Shifted, sigmaL3,sigmaR3);
 	RooAddPdf bkg_partReco_B0("bkg_partReco_B0", "bkg_partReco_B0", RooArgList(BifGauss1_B0, BifGauss2_B0, BifGauss3_B0), RooArgList(f_1,f_2));
 
-	RooRealVar partReco_f("partReco_f", "partReco_f", 1.);
+	RooRealVar partReco_f("partReco_f", "partReco_f", 0.9,0,1);
 	RooAddPdf bkg_partReco("bkg_partReco", "bkg_partReco", RooArgList(bkg_partReco_Bs, bkg_partReco_B0), RooArgList(partReco_f));
 
 	/// MisID bkg
@@ -1764,7 +1866,7 @@ void fitSignal(){
 	RooRealVar n_exp_bkg("n_exp_bkg", "n_exp_bkg", data->numEntries()/2., 0., data->numEntries());
 	//RooRealVar n_partReco_Bs_bkg("n_partReco_Bs_bkg", "n_partReco_Bs_bkg", data->numEntries()/2., 0., data->numEntries());
 	//RooRealVar n_partReco_B0_bkg("n_partReco_B0_bkg", "n_partReco_B0_bkg", data->numEntries()/2., 0., data->numEntries());
-	RooRealVar n_partReco_bkg("n_partReco_bkg", "n_partReco_bkg", data->numEntries()/6., 5., data->numEntries());
+	RooRealVar n_partReco_bkg("n_partReco_bkg", "n_partReco_bkg", data->numEntries()/6., 100., data->numEntries());
 	RooRealVar n_misID_bkg("n_misID_bkg", "n_misID_bkg", data->numEntries()*0.01, 0., data->numEntries()*0.25);
 
 	RooAddPdf pdf("pdf", "pdf", RooArgList(signal, signal_B0, bkg_exp, bkg_partReco, bkg_misID), RooArgList(n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg));
@@ -1779,7 +1881,7 @@ void fitSignal(){
 	if(useTriggerCat){
 		config->setStringValue("pdf", "run            : scale_mean "
 					"run,TriggerCat :	scale_sigma "
-					"Ds_finalState_mod :  exp_par "  
+					"Ds_finalState_mod :  exp_par2, exp_par3 "  
 					"run,Ds_finalState_mod,TriggerCat : n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg, misID_f") ; 
 	}
 	else {
@@ -1837,17 +1939,18 @@ void fitSignal(){
 			double val = fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]/eff_bkg_partReco_inSigRange   ;
 			((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(val);
 			if(fixMisIDyields)((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setConstant();
-			else ((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setRange(val * 0. , val * 2.);
+			else ((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setRange(val * 0.5 , val * 3.);
 	
 			((RooRealVar*) fitParams->find("misID_f_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal( fake_prob_Ds * Ds_yields[counter] / (fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]/eff_bkg_partReco_inSigRange   ));
 			((RooRealVar*) fitParams->find("misID_f_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setConstant();
 	
 			/// Set start values for yields
 			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]);
-			((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/2.);
-			((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/2.);
-			((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/10.);
-			((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/20.);
+			((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
+			((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
+			((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
+			((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setRange(data_slice->numEntries()*0.03,data_slice->numEntries()*0.3);
+			((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
 	
 			counter++;
 		}
@@ -2080,7 +2183,7 @@ void fitSignal(){
 		}
 	}
 
-	if(useTriggerCat)simPdf->plotOn(frame,Name("pdf"),ProjWData(run,*data),LineColor(kBlue+1),LineWidth(3));
+	if(useTriggerCat)simPdf->plotOn(frame,Name("pdf"),ProjWData(run,*data),LineColor(kBlue+1),LineWidth(3));  //,VisualizeError(*result,1,kTRUE)
 	else simPdf->plotOn(frame,Name("pdf"),ProjWData(year,*data),LineColor(kBlue+1),LineWidth(3));
 	frame->Draw();
 	leg.Draw();
@@ -2241,6 +2344,8 @@ void fitSignal(){
 	
 				/// Print label
 				TString label = "LHCb " + str_run[i];
+				label.ReplaceAll("1","I");
+				label.ReplaceAll("2","II");
 				lhcbtext->SetTextFont(22);
 				lhcbtext->DrawLatex(0.6,0.85,label.ReplaceAll("Run","Run-"));
 				if(str_Ds[j]=="phipi")label = "D_{s}^{-}#rightarrow #phi^{0}(1020)#pi^{-}";
@@ -2596,11 +2701,11 @@ void fitSignal(){
 				else h_sig->Draw("histcsame");
 				if(i==0 && k==1){
 					c_1->Print("eps/BDT_scan_Run1.eps");
-					c_1->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDT_scan_Run1.eps");
+					c_1->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDT_scan_Run1.pdf");
 				}
 				if(i==1 && k==1){
 					c_1->Print("eps/BDT_scan_Run2.eps");
-					c_1->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDT_scan_Run2.eps");
+					c_1->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDT_scan_Run2.pdf");
 				}
 
 				c_2->cd();
@@ -2706,7 +2811,7 @@ void fitSignal(){
 			h_BDT_b->Draw("e1");
 			h_BDT_s->Draw("e1same");
 			c->Print("eps/BDTG.eps");
-			c->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDTG.eps");
+			c->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDTG.pdf");
 
 			h_BDT_Run1_t0_b->SetMinimum(1);
 			h_BDT_Run1_t0_b->DrawNormalized("hist",1);
@@ -2714,7 +2819,7 @@ void fitSignal(){
 			h_BDT_Run1_t0_s->DrawNormalized("histsame",1);
 			h_BDT_Run1_t1_s->DrawNormalized("e1same",1);
 			c->Print("eps/BDTG_Run1.eps");
-			c->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDTG_Run1.eps");
+			c->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDTG_Run1.pdf");
 
 			h_BDT_Run2_t0_b->SetMinimum(1);
 			h_BDT_Run2_t0_b->DrawNormalized("hist",1);
@@ -2722,7 +2827,7 @@ void fitSignal(){
 			h_BDT_Run2_t0_s->DrawNormalized("histsame",1);
 			h_BDT_Run2_t1_s->DrawNormalized("e1same",1);
 			c->Print("eps/BDTG_Run2.eps");
-			c->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDTG_Run2.eps");
+			c->Print("../../../../../TD-AnaNote/latex/figs/TMVA/BDTG_Run2.pdf");
 		}
 // 		else {
 // 			TFile* f= TFile::Open("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/Selection/TMVA_Bs2DsKpipi.root");
@@ -2778,247 +2883,86 @@ void fitSignal(){
 	}
 
 	///create a new table for Ana Note
-	if(newTable == 1 && !useTriggerCat){
+	if(updateAnaNotePlots && useTriggerCat){
 
-		int Yields_sig_11 = 0;
-		int Yields_sig_11_err = 0;
-		int Yields_sig_12 = 0;
-		int Yields_sig_12_err = 0;
-		int Yields_sig_15 = 0;
-		int Yields_sig_15_err = 0;
-		int Yields_sig_16 = 0;
-		int Yields_sig_16_err = 0;
+		double yield_sig = 0;
+		double yield_B0 = 0;
+		double yield_partReco = 0;
+		double yield_comb = 0;
+		double yield_misID = 0;
+		double yield_sig_err = 0;
+		double yield_B0_err = 0;
+		double yield_partReco_err = 0;
+		double yield_comb_err = 0;
+		double yield_misID_err = 0;
 
-		int Yields_sigB0_11 = 0;
-		int Yields_sigB0_11_err = 0;
-		int Yields_sigB0_12 = 0;
-		int Yields_sigB0_12_err = 0;
-		int Yields_sigB0_15 = 0;
-		int Yields_sigB0_15_err = 0;
-		int Yields_sigB0_16 = 0;
-		int Yields_sigB0_16_err = 0;
+		for(int i=0; i<str_run.size(); i++)for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
+			yield_sig += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_sig_err += pow(((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
 
-		int Yields_partRecoBkg_11 = 0;
-		int Yields_partRecoBkg_11_err = 0;
-		int Yields_partRecoBkg_12 = 0;
-		int Yields_partRecoBkg_12_err = 0;
-		int Yields_partRecoBkg_15 = 0;
-		int Yields_partRecoBkg_15_err = 0;
-		int Yields_partRecoBkg_16 = 0;
-		int Yields_partRecoBkg_16_err = 0;
+			yield_B0 += ((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_B0_err += pow(((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);	
 
-		int Yields_misIDBkg_11 = 0;
-		int Yields_misIDBkg_11_err = 0;
-		int Yields_misIDBkg_12 = 0;
-		int Yields_misIDBkg_12_err = 0;
-		int Yields_misIDBkg_15 = 0;
-		int Yields_misIDBkg_15_err = 0;
-		int Yields_misIDBkg_16 = 0;
-		int Yields_misIDBkg_16_err = 0;
+			yield_partReco += ((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_partReco_err += pow(((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
 
-		int Yields_expBkg_11 = 0;
-		int Yields_expBkg_11_err = 0;
-		int Yields_expBkg_12 = 0;
-		int Yields_expBkg_12_err = 0;
-		int Yields_expBkg_15 = 0;
-		int Yields_expBkg_15_err = 0;
-		int Yields_expBkg_16 = 0;
-		int Yields_expBkg_16_err = 0;
+			yield_comb += ((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_comb_err += pow(((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
 
-		vector<double> norm_yields = norm_paramSet[0];
-		vector<double> norm_yields_err = norm_paramSet[4];
-
-		vector<double> norm_yields_partBkg = norm_paramSet[2];
-		vector<double> norm_yields_partBkg_err = norm_paramSet[5];
-
-		vector<double> norm_yields_expBkg = norm_paramSet[6];
-		vector<double> norm_yields_expBkg_err = norm_paramSet[7];
-
-		vector<double> norm_yields_B0 = norm_paramSet[8];
-		vector<double> norm_yields_B0_err = norm_paramSet[9];
-
-		int Yields_norm_sig_11 =  norm_yields[0] + norm_yields[1] + norm_yields[2] + norm_yields[3];
-		int Yields_norm_sig_11_err =   TMath::Sqrt(TMath::Power(norm_yields_err[0],2) +  TMath::Power(norm_yields_err[1],2) +  TMath::Power(norm_yields_err[2],2) +  TMath::Power(norm_yields_err[3],2));
-
-		int Yields_norm_sig_12 =  norm_yields[4] + norm_yields[5] + norm_yields[6] + norm_yields[7];
-		int Yields_norm_sig_12_err =  TMath::Sqrt(TMath::Power(norm_yields_err[4],2) + TMath::Power(norm_yields_err[5],2) + TMath::Power(norm_yields_err[6],2) + TMath::Power(norm_yields_err[7],2));
-
-		int Yields_norm_sig_15 =  norm_yields[8] + norm_yields[9] + norm_yields[10] + norm_yields[11];
-		int Yields_norm_sig_15_err =  TMath::Sqrt(TMath::Power(norm_yields_err[8],2) + TMath::Power(norm_yields_err[9],2) + TMath::Power(norm_yields_err[10],2) + TMath::Power(norm_yields_err[11],2));
-
-		int Yields_norm_sig_16 =  norm_yields[12] + norm_yields[13] + norm_yields[14] + norm_yields[15];
-		int Yields_norm_sig_16_err =  TMath::Sqrt(TMath::Power(norm_yields_err[12],2) + TMath::Power(norm_yields_err[13],2) + TMath::Power(norm_yields_err[14],2) + TMath::Power(norm_yields_err[15],2));
-
-		int Yields_norm_B0_11 =  norm_yields_B0[0] + norm_yields_B0[1] + norm_yields_B0[2] + norm_yields_B0[3];
-		int Yields_norm_B0_11_err =   TMath::Sqrt(TMath::Power(norm_yields_B0_err[0],2) +  TMath::Power(norm_yields_B0_err[1],2) +  TMath::Power(norm_yields_B0_err[2],2) +  TMath::Power(norm_yields_B0_err[3],2));
-
-		int Yields_norm_B0_12 =  norm_yields_B0[4] + norm_yields_B0[5] + norm_yields_B0[6] + norm_yields_B0[7];
-		int Yields_norm_B0_12_err =  TMath::Sqrt(TMath::Power(norm_yields_B0_err[4],2) + TMath::Power(norm_yields_B0_err[5],2) + TMath::Power(norm_yields_B0_err[6],2) + TMath::Power(norm_yields_B0_err[7],2));
-
-		int Yields_norm_B0_15 =  norm_yields_B0[8] + norm_yields_B0[9] + norm_yields_B0[10] + norm_yields_B0[11];
-		int Yields_norm_B0_15_err =  TMath::Sqrt(TMath::Power(norm_yields_B0_err[8],2) + TMath::Power(norm_yields_B0_err[9],2) + TMath::Power(norm_yields_B0_err[10],2) + TMath::Power(norm_yields_B0_err[11],2));
-
-		int Yields_norm_B0_16 =  norm_yields_B0[12] + norm_yields_B0[13] + norm_yields_B0[14] + norm_yields_B0[15];
-		int Yields_norm_B0_16_err =  TMath::Sqrt(TMath::Power(norm_yields_B0_err[12],2) + TMath::Power(norm_yields_B0_err[13],2) + TMath::Power(norm_yields_B0_err[14],2) + TMath::Power(norm_yields_B0_err[15],2));
-
-
-		int Yields_norm_partBkg_11 =  norm_yields_partBkg[0] + norm_yields_partBkg[1] + norm_yields_partBkg[2] + norm_yields_partBkg[3];
-		int Yields_norm_partBkg_11_err =  TMath::Sqrt(TMath::Power(norm_yields_partBkg_err[0],2) + TMath::Power(norm_yields_partBkg_err[1],2) + TMath::Power(norm_yields_partBkg_err[2],2) + TMath::Power(norm_yields_partBkg_err[3],2));
-
-		int Yields_norm_partBkg_12 =  norm_yields_partBkg[4] + norm_yields_partBkg[5] + norm_yields_partBkg[6] + norm_yields_partBkg[7];
-		int Yields_norm_partBkg_12_err =  TMath::Sqrt(TMath::Power(norm_yields_partBkg_err[4],2) + TMath::Power(norm_yields_partBkg_err[5],2) + TMath::Power(norm_yields_partBkg_err[6],2) + TMath::Power(norm_yields_partBkg_err[7],2));
-
-		int Yields_norm_partBkg_15 =  norm_yields_partBkg[8] + norm_yields_partBkg[9] + norm_yields_partBkg[10] + norm_yields_partBkg[11];
-		int Yields_norm_partBkg_15_err =  TMath::Sqrt(TMath::Power(norm_yields_partBkg_err[8],2) + TMath::Power(norm_yields_partBkg_err[9],2) + TMath::Power(norm_yields_partBkg_err[10],2) + TMath::Power(norm_yields_partBkg_err[11],2));
-
-		int Yields_norm_partBkg_16 =  norm_yields_partBkg[12] + norm_yields_partBkg[13] + norm_yields_partBkg[14] + norm_yields_partBkg[15];
-		int Yields_norm_partBkg_16_err =  TMath::Sqrt(TMath::Power(norm_yields_partBkg_err[12],2) + TMath::Power(norm_yields_partBkg_err[13],2) + TMath::Power(norm_yields_partBkg_err[14],2) + TMath::Power(norm_yields_partBkg_err[15],2));
-
-		int Yields_norm_expBkg_11 =  norm_yields_expBkg[0] + norm_yields_expBkg[1] + norm_yields_expBkg[2] + norm_yields_expBkg[3];
-		int Yields_norm_expBkg_11_err =  TMath::Sqrt(TMath::Power(norm_yields_expBkg_err[0],2) + TMath::Power(norm_yields_expBkg_err[1],2) + TMath::Power(norm_yields_expBkg_err[2],2) + TMath::Power(norm_yields_expBkg_err[3],2));
-
-		int Yields_norm_expBkg_12 =  norm_yields_expBkg[4] + norm_yields_expBkg[5] + norm_yields_expBkg[6] + norm_yields_expBkg[7];
-		int Yields_norm_expBkg_12_err =  TMath::Sqrt(TMath::Power(norm_yields_expBkg_err[4],2) + TMath::Power(norm_yields_expBkg_err[5],2) + TMath::Power(norm_yields_expBkg_err[6],2) + TMath::Power(norm_yields_expBkg_err[7],2));
-
-		int Yields_norm_expBkg_15 =  norm_yields_expBkg[8] + norm_yields_expBkg[9] + norm_yields_expBkg[10] + norm_yields_expBkg[11];
-		int Yields_norm_expBkg_15_err =  TMath::Sqrt(TMath::Power(norm_yields_expBkg_err[8],2) + TMath::Power(norm_yields_expBkg_err[9],2) + TMath::Power(norm_yields_expBkg_err[10],2) + TMath::Power(norm_yields_expBkg_err[11],2));
-
-		int Yields_norm_expBkg_16 =  norm_yields_expBkg[12] + norm_yields_expBkg[13] + norm_yields_expBkg[14] + norm_yields_expBkg[15];
-		int Yields_norm_expBkg_16_err =  TMath::Sqrt(TMath::Power(norm_yields_expBkg_err[12],2) + TMath::Power(norm_yields_expBkg_err[13],2) + TMath::Power(norm_yields_expBkg_err[14],2) + TMath::Power(norm_yields_expBkg_err[15],2));
-
-		//add yields for same year
-		for(int j=0; j<str_Ds.size(); j++){
-
-			Yields_sig_11 += ((RooRealVar*) fitParams->find("n_sig_{y11;" + str_Ds[j] + "}"))->getVal();
-			Yields_sig_11_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_{y11;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_sig_12 += ((RooRealVar*) fitParams->find("n_sig_{y12;" + str_Ds[j] + "}"))->getVal();
-			Yields_sig_12_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_{y12;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_sig_15 += ((RooRealVar*) fitParams->find("n_sig_{y15;" + str_Ds[j] + "}"))->getVal();
-			Yields_sig_15_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_{y15;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_sig_16 += ((RooRealVar*) fitParams->find("n_sig_{y16;" + str_Ds[j] + "}"))->getVal();
-			Yields_sig_16_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_{y16;" + str_Ds[j] + "}"))->getError(),2);
-
-
-			Yields_sigB0_11 += ((RooRealVar*) fitParams->find("n_sig_B0_{y11;" + str_Ds[j] + "}"))->getVal();
-			Yields_sigB0_11_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_B0_{y11;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_sigB0_12 += ((RooRealVar*) fitParams->find("n_sig_B0_{y12;" + str_Ds[j] + "}"))->getVal();
-			Yields_sigB0_12_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_B0_{y12;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_sigB0_15 += ((RooRealVar*) fitParams->find("n_sig_B0_{y15;" + str_Ds[j] + "}"))->getVal();
-			Yields_sigB0_15_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_B0_{y15;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_sigB0_16 += ((RooRealVar*) fitParams->find("n_sig_B0_{y16;" + str_Ds[j] + "}"))->getVal();
-			Yields_sigB0_16_err += TMath::Power(((RooRealVar*) fitParams->find("n_sig_B0_{y16;" + str_Ds[j] + "}"))->getError(),2);
-
-
-			Yields_partRecoBkg_11 += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y11;" + str_Ds[j] + "}"))->getVal();
-			Yields_partRecoBkg_11_err += TMath::Power(((RooRealVar*) fitParams->find("n_partReco_bkg_{y11;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_partRecoBkg_12 += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y12;" + str_Ds[j] + "}"))->getVal();
-			Yields_partRecoBkg_12_err += TMath::Power(((RooRealVar*) fitParams->find("n_partReco_bkg_{y12;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_partRecoBkg_15 += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y15;" + str_Ds[j] + "}"))->getVal();
-			Yields_partRecoBkg_15_err += TMath::Power(((RooRealVar*) fitParams->find("n_partReco_bkg_{y15;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_partRecoBkg_16 += ((RooRealVar*) fitParams->find("n_partReco_bkg_{y16;" + str_Ds[j] + "}"))->getVal();
-			Yields_partRecoBkg_16_err += TMath::Power(((RooRealVar*) fitParams->find("n_partReco_bkg_{y16;" + str_Ds[j] + "}"))->getError(),2);
-
-
-			Yields_misIDBkg_11 += ((RooRealVar*) fitParams->find("n_misID_bkg_{y11;" + str_Ds[j] + "}"))->getVal();
-			Yields_misIDBkg_11_err += TMath::Power(((RooRealVar*) fitParams->find("n_misID_bkg_{y11;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_misIDBkg_12 += ((RooRealVar*) fitParams->find("n_misID_bkg_{y12;" + str_Ds[j] + "}"))->getVal();
-			Yields_misIDBkg_12_err += TMath::Power(((RooRealVar*) fitParams->find("n_misID_bkg_{y12;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_misIDBkg_15 += ((RooRealVar*) fitParams->find("n_misID_bkg_{y15;" + str_Ds[j] + "}"))->getVal();
-			Yields_misIDBkg_15_err += TMath::Power(((RooRealVar*) fitParams->find("n_misID_bkg_{y15;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_misIDBkg_16 += ((RooRealVar*) fitParams->find("n_misID_bkg_{y16;" + str_Ds[j] + "}"))->getVal();
-			Yields_misIDBkg_16_err += TMath::Power(((RooRealVar*) fitParams->find("n_misID_bkg_{y16;" + str_Ds[j] + "}"))->getError(),2);
-
-
-			Yields_expBkg_11 += ((RooRealVar*) fitParams->find("n_exp_bkg_{y11;" + str_Ds[j] + "}"))->getVal();
-			Yields_expBkg_11_err += TMath::Power(((RooRealVar*) fitParams->find("n_exp_bkg_{y11;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_expBkg_12 += ((RooRealVar*) fitParams->find("n_exp_bkg_{y12;" + str_Ds[j] + "}"))->getVal();
-			Yields_expBkg_12_err += TMath::Power(((RooRealVar*) fitParams->find("n_exp_bkg_{y12;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_expBkg_15 += ((RooRealVar*) fitParams->find("n_exp_bkg_{y15;" + str_Ds[j] + "}"))->getVal();
-			Yields_expBkg_15_err += TMath::Power(((RooRealVar*) fitParams->find("n_exp_bkg_{y15;" + str_Ds[j] + "}"))->getError(),2);
-
-			Yields_expBkg_16 += ((RooRealVar*) fitParams->find("n_exp_bkg_{y16;" + str_Ds[j] + "}"))->getVal();
-			Yields_expBkg_16_err += TMath::Power(((RooRealVar*) fitParams->find("n_exp_bkg_{y16;" + str_Ds[j] + "}"))->getError(),2);
+			yield_misID += ((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_misID_err += pow(((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
 		}
 
-		//take sqrt of quadratically combined errors to correctly add them
-		Yields_sig_11_err = TMath::Sqrt(Yields_sig_11_err);
-		Yields_sig_12_err = TMath::Sqrt(Yields_sig_12_err);
-		Yields_sig_15_err = TMath::Sqrt(Yields_sig_15_err);
-		Yields_sig_16_err = TMath::Sqrt(Yields_sig_16_err);
-
-		Yields_sigB0_11_err = TMath::Sqrt(Yields_sigB0_11_err);
-		Yields_sigB0_12_err = TMath::Sqrt(Yields_sigB0_12_err);
-		Yields_sigB0_15_err = TMath::Sqrt(Yields_sigB0_15_err);
-		Yields_sigB0_16_err = TMath::Sqrt(Yields_sigB0_16_err);
-
-		Yields_partRecoBkg_11_err = TMath::Sqrt(Yields_partRecoBkg_11_err);
-		Yields_partRecoBkg_12_err = TMath::Sqrt(Yields_partRecoBkg_12_err);
-		Yields_partRecoBkg_15_err = TMath::Sqrt(Yields_partRecoBkg_15_err);
-		Yields_partRecoBkg_16_err = TMath::Sqrt(Yields_partRecoBkg_16_err);
-
-		Yields_misIDBkg_11_err = TMath::Sqrt(Yields_misIDBkg_11_err);
-		Yields_misIDBkg_12_err = TMath::Sqrt(Yields_misIDBkg_12_err);
-		Yields_misIDBkg_15_err = TMath::Sqrt(Yields_misIDBkg_15_err);
-		Yields_misIDBkg_16_err = TMath::Sqrt(Yields_misIDBkg_16_err);
-
-		Yields_expBkg_11_err = TMath::Sqrt(Yields_expBkg_11_err);
-		Yields_expBkg_12_err = TMath::Sqrt(Yields_expBkg_12_err);
-		Yields_expBkg_15_err = TMath::Sqrt(Yields_expBkg_15_err);
-		Yields_expBkg_16_err = TMath::Sqrt(Yields_expBkg_16_err);
-
-
 		ofstream datafile;
-		datafile.open ("YieldsTable.tex");
+		datafile.open("../../../../../TD-AnaNote/latex/tables/MassFit/yields_signal.tex",std::ofstream::trunc);
+		//datafile << "\\begin{table}[h]" << "\n";
+		//datafile << "\\centering" << "\n";
+		datafile << " \\begin{tabular}{l r }" << "\n";
+		datafile << "\\hline\\hline" << "\n";
+		datafile << "Component & Yield\\" << " \\\\" << "\n";
+		datafile << "\\hline" << "\n";
+		datafile << std::fixed << std::setprecision(0) << "$B_s \\to D_s K \\pi \\pi$" << " & "<< yield_sig << " $\\pm$ " << sqrt(yield_sig_err) << " \\\\" << "\n";
+		datafile << std::fixed<< std::setprecision(0) << "$B^{0} \\to D_s K \\pi \\pi$" << " & "<< yield_B0 << " $\\pm$ " << sqrt(yield_B0_err) << " \\\\" << "\n";
+		datafile << std::fixed<< std::setprecision(0) << "Partially reconstructed bkg." << " & "<< yield_partReco << " $\\pm$ " << sqrt(yield_partReco_err) << " \\\\" << "\n";
+		datafile << std::fixed<< std::setprecision(0) << "Misidentified bkg." << " & "<< yield_misID << " $\\pm$ " << sqrt(yield_misID_err) << " \\\\" << "\n";
+		datafile << std::fixed<< std::setprecision(0) << "Combinatorial bkg." << " & "<< yield_comb << " $\\pm$ " << sqrt(yield_comb_err) << " \\\\" << "\n";
+		datafile << "\\hline\\hline" << "\n";
+		datafile << "\\end{tabular}" << "\n";
+		//datafile << "\\caption{Total signal and background yields for the $B_s \\to D_s \\pi \\pi \\pi$ sample.}" << "\n";
+		datafile << "\\label{table:signalYields}" << "\n";
+		//datafile << "\\end{table}" << "\n";
+		datafile.close();
 
-        	datafile << "\\begin{table}[h]" << "\n";
-        	datafile << "\\centering" << "\n";
-        	datafile << " \\begin{tabular}{l || l l l l}" << "\n";
-        	datafile << "fit component & yield 2011 & yield 2012 & yield 2015 & yield 2016\\" << " \\\\" << "\n";
-        	datafile << "\\hline\\hline" << "\n";
-		datafile << "$m(\\Ds\\kaon\\pion\\pion)$" << " & " << " & " << " & " << " & "<< " \\\\" << "\n";
-        	datafile << "\\hline" << "\n";
+		vector<double> yield_sig_Ds(4,0);
+		vector<double> yield_sig_Ds_err(4,0);
 
-		datafile << std::setprecision(0) << "$\\Bs\\to\\Ds\\kaon\\pion\\pion$" << " & "<< Yields_sig_11 << " $\\pm$ " << Yields_sig_11_err << " & " << Yields_sig_12 << " $\\pm$ " << Yields_sig_12_err << " & " << Yields_sig_15 << " $\\pm$ " << Yields_sig_15_err << " & " << Yields_sig_16 << " $\\pm$ " <<  Yields_sig_16_err << " \\\\" << "\n";
+		for(int i=0; i<str_run.size(); i++)for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
+			yield_sig_Ds[j] += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_sig_Ds_err[j] += pow(((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+		}
 
-		datafile << std::setprecision(0) << "$\\Bz\\to\\Ds\\kaon\\pion\\pion$" << " & "<< Yields_sigB0_11 << " $\\pm$ " << Yields_sigB0_11_err << " & " << Yields_sigB0_12 << " $\\pm$ " << Yields_sigB0_12_err << " & " << Yields_sigB0_15 << " $\\pm$ " << Yields_sigB0_15_err << " & " << Yields_sigB0_16 << " $\\pm$ " <<  Yields_sigB0_16_err << " \\\\" << "\n";
+		ofstream datafileDs;
+		datafile.open("../../../../../TD-AnaNote/latex/tables/MassFit/yields_signalDs.tex",std::ofstream::trunc);
+		//datafile << "\\begin{table}[h]" << "\n";
+		//datafile << "\\centering" << "\n";
+		datafile << " \\begin{tabular}{l r }" << "\n";
+		datafile << "\\hline\\hline" << "\n";
+		datafile << "$D_s$ final state  & Signal yield\\" << " \\\\" << "\n";
+		datafile << "\\hline" << "\n";
+		for(int j=0; j<str_Ds.size(); j++){ 
+			string caption;
+			if(str_Ds[j]=="phipi")caption = "$D_{s}^{-} \\to \\phi^{0}(1020)\\pi^{-}$";
+			else if(str_Ds[j]=="KsK")caption = "$D_{s}^{-}\\to K^{*0}(892)K^{-}$";
+			else if(str_Ds[j]=="KKpi_NR")caption = "$D_{s}^{-}\\to (K^{-}h^{+}\\pi^{-})$";
+			else if(str_Ds[j]=="pipipi")caption = "$D_{s}^{-}\\to \\pi^{+}\\pi^{-}\\pi^{-}$";
 
-		datafile << std::setprecision(0) << "$\\Bz/\\Bs\\to\\Ds^{*}\\kaon\\pion\\pion$" << " & "<< Yields_partRecoBkg_11 << " $\\pm$ " << Yields_partRecoBkg_11_err << " & " << Yields_partRecoBkg_12 << " $\\pm$ " << Yields_partRecoBkg_12_err << " & " << Yields_partRecoBkg_15 << " $\\pm$ " << Yields_partRecoBkg_15_err << " & " << Yields_partRecoBkg_16 << " $\\pm$ " <<  Yields_partRecoBkg_16_err << " \\\\" << "\n";
-
-		datafile << std::setprecision(0) << "$\\Bs\\to\\Ds^{(*)}\\pion\\pion\\pion$" << " & "<< Yields_misIDBkg_11 << " $\\pm$ " << Yields_misIDBkg_11_err << " & " << Yields_misIDBkg_12 << " $\\pm$ " << Yields_misIDBkg_12_err << " & " << Yields_misIDBkg_15 << " $\\pm$ " << Yields_misIDBkg_15_err << " & " << Yields_misIDBkg_16 << " $\\pm$ " <<  Yields_misIDBkg_16_err << " \\\\" << "\n";
-
-		datafile << std::setprecision(0) << "combinatorial" << " & "<< Yields_expBkg_11 << " $\\pm$ " << Yields_expBkg_11_err << " & " << Yields_expBkg_12 << " $\\pm$ " << Yields_expBkg_12_err << " & " << Yields_expBkg_15 << " $\\pm$ " << Yields_expBkg_15_err << " & " << Yields_expBkg_16 << " $\\pm$ " <<  Yields_expBkg_16_err << " \\\\" << "\n";
-
-        	datafile << "\\hline\\hline" << "\n";
-		datafile << "$m(\\Ds\\pion\\pion\\pion)$" << " & " << " & " << " & " << " & "<< " \\\\" << "\n";
-        	datafile << "\\hline" << "\n";
-
-		datafile << std::setprecision(0) << "$\\Bs\\to\\Ds\\pion\\pion\\pion$" << " & "<< Yields_norm_sig_11 << " $\\pm$ " << Yields_norm_sig_11_err << " & " << Yields_norm_sig_12 << " $\\pm$ " << Yields_norm_sig_12_err << " & " << Yields_norm_sig_15 << " $\\pm$ " << Yields_norm_sig_15_err  << " & " << Yields_norm_sig_16 << " $\\pm$ " << Yields_norm_sig_16_err << " \\\\" << "\n";
-
-	if(useB0)datafile << std::setprecision(0) << "$\\Bz\\to\\Ds\\pion\\pion\\pion$" << " & "<< Yields_norm_B0_11 << " $\\pm$ " << Yields_norm_B0_11_err << " & " << Yields_norm_B0_12 << " $\\pm$ " <<    Yields_norm_B0_12_err << " & " << Yields_norm_B0_15 << " $\\pm$ " << Yields_norm_B0_15_err  << " & " << Yields_norm_B0_16 << " $\\pm$ " << Yields_norm_B0_16_err << " \\\\" << "\n";
-
-		datafile << std::setprecision(0) << "$\\Bs\\to\\Ds^{*}\\pion\\pion\\pion$" << " & "<< Yields_norm_partBkg_11 << " $\\pm$ " << Yields_norm_partBkg_11_err  << " & " << Yields_norm_partBkg_12 << " $\\pm$ " << Yields_norm_partBkg_12_err << " & " << Yields_norm_partBkg_15 << " $\\pm$ " << Yields_norm_partBkg_15_err << " & " << Yields_norm_partBkg_16 << " $\\pm$ " << Yields_norm_partBkg_16_err << " \\\\" << "\n";
-
-		datafile << std::setprecision(0) << "combinatorial" << " & "<< Yields_norm_expBkg_11 << " $\\pm$ " << Yields_norm_expBkg_11_err << " & " << Yields_norm_expBkg_12 << " $\\pm$ " << Yields_norm_expBkg_12_err << " & " << Yields_norm_expBkg_15 << " $\\pm$ " << Yields_norm_expBkg_15_err << " & " << Yields_norm_expBkg_16 << " $\\pm$ " << Yields_norm_expBkg_16_err << " \\\\" << "\n";
-
-        	datafile << "\\hline" << "\n";
-        	datafile << "\\end{tabular}" << "\n";
-        	datafile << "\\caption{Summary of yields obtained from the fits to Run1 and Run2 data.}" << "\n";
-        	datafile << "\\label{table:YieldsFromMassfit}" << "\n";
-        	datafile << "\\end{table}" << "\n";
+			datafile << std::fixed << std::setprecision(0) << caption << " & "<< yield_sig_Ds[j] << " $\\pm$ " << sqrt(yield_sig_Ds_err[j]) << " \\\\" << "\n";
+		}
+		datafile << "\\hline\\hline" << "\n";
+		datafile << "\\end{tabular}" << "\n";
+		//datafile << "\\caption{Signal yield for the different $D_s$ final states contributing to the $B_s \\to D_s \\pi \\pi \\pi$ sample.}" << "\n";
+		datafile << "\\label{table:signalYieldsDs}" << "\n";
+		//datafile << "\\end{table}" << "\n";
 		datafile.close();
 	}
 }
