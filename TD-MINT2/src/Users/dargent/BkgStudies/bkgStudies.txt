@@ -1,6 +1,6 @@
 * general options
 
-"channel"       	"Signal"
+"channel"       	"Norm"
 "do_Ds2pipipi"		1
 "do_Ds2Kpipi"		1
 "do_Ds2KKpi"		1
