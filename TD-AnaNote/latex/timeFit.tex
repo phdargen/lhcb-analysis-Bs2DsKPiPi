@@ -2,20 +2,18 @@
 \section{Time dependent fit}
 \label{sec:Tfit}
 
-This section will cover the phasespace integrated, time dependent fit to $\Bs\to\Ds\hadron\pion\pion$ data, which is described by the PDF formulated in Eq. \ref{eq:PDF_intX}.
-For the phasespace integrated fit to $\Bs\to\Ds\kaon\pion\pion$ data, the sensitivity to the CKM phase $\gamma$ will depend on the magnitude of the coherence factor $\kappa$, defined in Eq. \ref{eq:coherenceFactor}, 
-which is added as an additional fit parameter. 
-In order to avoid any pollution of the final data samples by background events, both samples are weighted using the sWeights obtained by the fits to the invariant mass distributions, described in Sec. \ref{sec: massfits}.
-This fit approach is commonly known as \textit{sFit}. 
+This section covers the phasespace integrated, time-dependent fit to $\Bs\to\Ds\hadron\pion\pion$ data.
+%For the phasespace integrated fit to $\Bs\to\Ds\kaon\pion\pion$ data, the sensitivity to the CKM phase $\gamma$ will depend on the magnitude of the coherence factor $\kappa$, defined in Eq. \ref{eq:coherenceFactor}, 
+%which is added as an additional fit parameter. 
+We use the \textsf{sFit} technique \cite{Pivk:2004ty}  to statistically remove background from the decay time fit, leaving only the signal PDF to describe the decay time. 
+The \textsf{sWeights} are calculated based on the fit to the reconstructed $B_s$ mass distribution described in Sec.~\ref{sec:massFits}.
 As additional input to the fit, the tagging information (Sec. \ref{sec:Tagging}), 
 as well as the decay time acceptance (Sec. \ref{sec:Acceptance}) and resolution (Sec. \ref{sec:Resolution}) is used and fixed to the values obtained by the dedicated studies. 
 Taking all inputs into account, the final time dependent fit PDF is given by
-
 \begin{equation}
 \label{eq:TPDF_full}
 \mathcal{PDF}(t,\vec{\lambda}) = \left(\epsilon(t)\cdot \int P(x,t,q_t,q_f) \text d x \right) \times \mathcal{R}(t - t^{'}),
 \end{equation}
-
 where $\int P(x,t,q_t,q_f) \text d$ is the PDF given by Eq. \ref{eq:PDF_intX}, $\epsilon(t)$ is the efficiency due to the time acceptance effects and $\mathcal{R}(t - t^{'})$ is the Gaussian time resolution function. 
 
 

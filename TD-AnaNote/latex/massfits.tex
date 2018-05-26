@@ -13,12 +13,7 @@ $D_s \to \phi \pi$, $D_s \to K^*(892) \pi$, $D_s \to \pi \pi \pi$ and $D_s \to K
 to account for different signal purities. 
 The $D_s \to K h \pi$ category combines the two $D_s$ decay channels with the lowest statistics: $D_s \to K K \pi$ (non-resonant) and $D_s \to K \pi \pi$.
 This amounts to 16 categories in total.
-%After the full selection we assume that the resulting sample is composed of the following
-%components:
-%226 ? the signal (D0 ? K?K+?+??, D0 ? ?????+?? or D0 ? K??+?+?? decays);
-%227 ? peaking background from 4-body hadronic D0 ? h+h(?)??+?? decays, where the
-%228 two pions are both misidentified as muons;
-%229 ? combinatorial background.
+
 
 
 \subsection{Signal model}
@@ -31,8 +26,8 @@ results from a variable transformation of a normal distribution to allow for asy
 \frac{e^{- \frac{1}{2} r^2}}{2\pi \cdot c \cdot \sigma \cdot \tau \cdot \sqrt{z^2+1}} \\
 % \frac{\delta}{\sigma 2\pi \sqrt{1+(\frac{m_{\Bs}-\mu}{\sigma})^{2}}} exp \left(-\frac{1}{2}[\gamma + \delta Argsh (\frac{m_{\Bs} - \mu}{\sigma})^{2}]\right).
 r &= - \nu + \frac{\text{asinh}(z)}{\tau} \\
-z & = \frac{x-(\mu - c \cdot \sigma \cdot e^\tau \text{sinh}(\nu\cdot \tau)}{c \cdot \tau} \\
-c &= \frac{e^{\tau^2}-1}{2\sqrt{e^{\tau^2} \cdot \text{cosh}(2 c \cdot \tau)+1}} .
+z & = \frac{x-(\mu - c \cdot \sigma \cdot e^\tau \text{sinh}(\nu\cdot \tau))}{c \cdot \tau} \\
+c &= \frac{e^{\tau^2}-1}{2\sqrt{e^{\tau^2} \cdot \text{cosh}(2 \nu \cdot \tau)+1}} .
 \label{eq:RooJohnsonSU}
 \end{align}
 It is conveniently expressed in terms of the central moments up to order four: 
@@ -58,25 +53,12 @@ The scale factors are determined separately for each data-taking period and each
 \subsection{Background models} 
 \label{subsec:bkgModel}
 
-After the full selection we assume that the following residual background components have to be accounted for: \\
-%\begin{itemize}
-%
-%	\item combinatorial background;%: This contribution arises from either a real $\Ds$, which is paired with random tracks to form the $\Bs$ candidates, or via real $X_{d}$'s, which are 	combined with three tracks that fake a $\Ds$ candidate to form a fake $\Bs$.   
-%
-%	\item peaking background from true $B^0 \to D_s h \pi \pi$ decays;
-%
-%	\item partially reconstructed $\Bz/\Bs\to D_s^{*}h\pion\pion$ decays, with $D_s^{*}\to\Ds\gamma$ or $D_s^{*}\to\Ds\piz$, where the $\gamma$/$\piz$ is not reconstructed;
-%
-%	\item misidentified $\Bs\to\Ds\pion\pion\pion$ decays, where one of the pions is wrongly identified as a kaon $\pion\rightarrow\kaon$; 
-%
-%	\item misidentified, partially reconstructed $\Bs\to D_s^{*}\pion\pion\pion$ decays, where one of the pions is wrongly identified as a kaon $\pion\rightarrow\kaon$ and the $\gamma$/$\piz$ from $D_s^{*}\to\Ds\gamma$/$\piz$ is not reconstructed.
-%
-%\end{itemize}
+After the full selection the following residual background components have to be accounted for: \\
 
 \noindent \textbf{Combinatorial background}  \\
 The combinatorial background is described by a second order polynomial,
 whose parameters are determined, for each $D_s$ final state separately, in the fit to data.
-%For systematic studies an exponential PDF is used.
+For systematic studies an exponential PDF is used.
 \\
 
 \noindent\textbf{Peaking $B_d$ background}  \\
@@ -84,116 +66,89 @@ Decays of $B_d$ mesons into the $D_s h \pi \pi$ final state are described by the
 \\
 
 \noindent \textbf{Partially reconstructed background}  \\
-The shape of the  $\Bs\to D_s^{*}\pion\pion\pion$ contribution is expected to be peaking in the $m(\Ds\pion\pion\pion)$ spectrum, with large tails due to the missing momentum, which is carried away by the $\piz$ or $\gamma$. 
-%The pion or photon from $\Ds^{*}\to\Ds(\gamma/\piz)$ is excluded from the reconstruction. 
-We model the shape of this contribution using the sum of three bifurcated Gaussian functions.
-Figure \ref{fig: BsDsstar3piMC} shows the fit of the sum of three bifurcated Gaussian functions to the invariant mass distribution of simulated $\Bs\to D_s^{*}\pion\pion\pion$ event. 
-The shape parameters, 
-%are used as input values for the nominal $m(\Ds\pion\pion\pion)$ mass fit. 
-as well as the yield of this contribution, are directly determined on data from a fit to the $m(\Ds\pion\pion\pion)$ invariant mass distribution. 
-For the contribution of the $\Bz\to D_s^{*}\kaon\pion\pion$ background, the same shape is used but the means $\mu_{i}$ of the bifurcated gaussians are shifted down by $m_{\Bs} - m_{\Bz}$ \cite{Agashe:2014kda}. 
-The yields of both contributions are directly determined in the nominal fit. \\
+Partially reconstructed $\Bs\to D_s^{*}\pi\pion\pion$ decays, with $D_s^{*}\to\Ds\gamma$ or $D_s^{*}\to\Ds\piz$,
+are expected to be peaking lower than signal in the $m(\Ds\pion\pion\pion)$ spectrum with large tails due to the %missing 
+momentum carried away by the not reconstructed $\piz$ or $\gamma$. 
+An empirical description for the shape of this contribution is derived from a $\Bs\to D_s^{*}\pi\pion\pion$ MC sample subject to the nominal $\Bs\to D_s\pi\pion\pion$ selection.
+Figure \ref{fig:bgkShapes} (left) shows the respective reconstructed $m(D_s\pi\pi\pi)$ distribution.
+A sum of three bifurcated Gaussian functions is used to describe it.
+In the fit to data, all parameters are fixed to the ones obtained from MC except for the parameter which describes the width of the right tail of the distribution to account for
+data-simulation differences in mass resolution.
+The equivalent $\Bs\to D_s^{*}K\pion\pion$ component contributing to the $\Bs\to D_s K\pion\pion$ data sample is described by the same PDF with the right tail fixed to the 
+$\Bs\to D_s \pi\pion\pion$ result.
 
-\noindent\textbf{Miss-identified background}  \\
-To determine the shape of misidentified $\Bs\to\Ds\pion\pion\pion$ candidates in the $m(\Ds\kaon\pion\pion)$ spectrum, we take a truth-matched signal MC sample of our normalization channel. 
-We then use the PIDCalib package to determine the $\pion\rightarrow\kaon$ fake rate. For every candidate in our MC sample, a (momentum) $\ptot$ and (pseudorapidity) $\eta$-dependent event weight is computed and assigned. 
-We flip the particle hypothesis from pion to kaon for the $\pion$ with the biggest miss-ID weight for each event and recompute the invariant $\Bs$ mass. This distribution is then modeled using two Crystal Ball functions. 
-The distribution and the fit are shown in Fig. \ref{fig: BsDspipipiMCmissID}(left). 
+Contributions from $\Bz\to D_s^{*}K\pion\pion$ decays are modeled with the $\Bs\to D_s^{*}K\pion\pion$ PDF  shifted by $m_{\Bs} - m_{\Bz}$. \\
+%Contributions from $\Bz\to D_s^{*}h\pion\pion$ decays where initially considered as well (modeled with the same PDF as $\Bs\to D_s^{*}h\pion\pion$ decays shifted by $m_{\Bs} - m_{\Bz}$) but were found to be negligible within the considered mass range. \\
+%The yields of both contributions are directly determined in the nominal fit. \\
 
-The expected yield of misidentified $\Bs\to\Ds\pion\pion\pion$ candidates in the $m(\Ds\kaon\pion\pion)$ spectrum is computed by multiplying the fake probability of $\propto3.2\%$, which is derived from PIDCalib, by the yield of $\Bs\to\Ds\pion\pion\pion$ signal candidates, determined in the nominal mass fit of our normalization channel.  \newline
-In the same way as mentioned above, we can determine the rate of misidentified, partially reconstructed $\Bs\to\Ds^{*}\pion\pion\pion$ decays in our sample of $\Bs\to\Ds\kaon\pion\pion$ decays using PIDCalib and a MC sample of $\Bs\to\Ds^{*}\pion\pion\pion$ events. The invariant mass distribution we obtain when we exclude the $\gamma$/$\piz$, flip the the particle hypothesis $\pion\rightarrow\kaon$ and apply the event weights given by the fake rate, is shown in Fig. \ref{fig: BsDspipipiMCmissID} (right). The fit of two Crystal Ball functions to this distribution is overlaid. 
-The yield of this contribution is determined from the yield of $\Bs\to\Ds^{*}\pion\pion\pion$ candidates in the nominal mass fit of our normalization channel, multiplied by the misID probability of $\propto 3.6\%$.
+\noindent\textbf{Misidentified background}  \\
+A small fraction of $B_s \to D_s^- \pi^+ \pi^+ \pi^-$ and $\Bs\to D_s^{*}\pi^+ \pi^+ \pi^-$ decays, where one of the pions is misidentified as a kaon, contaminate the 
+$\Bs\to D_s K^+ \pi^+ \pi^-$ sample.
+To determine the corresponding background shapes, we use simulated events passing the nominal selection
+except for the PID cuts on the bachelor $\pi^+$ tracks. 
+The \textsf{PIDCalib} package is used to determine the $p_T,\eta$-dependent $\pi^+\rightarrow K^+$ misidentification probability for each pion. 
+%For every candidate in our MC sample, a (momentum) $\ptot$ and (pseudorapidity) $\eta$-dependent event weight is computed and assigned. 
+We change the particle hypothesis from pion to kaon for the pion with the higher misidentification probability and recompute the invariant $\Bs$ mass, $m(D_s^- \pi^+_K \pi^+ \pi^- )$. 
+Similar, the invariant masses $m(\pi^+_K \pi^+ \pi^- )$ and $m(\pi^+_K \pi^-)$ are recomputed and required to be within the considered phasespace region.
+The background distributions are shown in Fig.~\ref{fig:bgkShapes} (middle,right) and modeled by the sum of two Crystal Ball functions. 
+The expected yield of misidentified $\Bs\to\Ds\pion\pion\pion$ ($\Bs\to D_s^{*}\pi^+ \pi^+ \pi^-$) candidates in the $\Bs\to\Ds K\pion\pion$ sample is computed 
+by multiplying the fake rate (within the considered $B_s$ mass range) of $0.47\%$ ($0.61\%$) %, which is derived from \textsf{PIDCalib}, 
+by the $\Bs\to\Ds\pion\pion\pion$ ($\Bs\to D_s^{*}\pi^+ \pi^+ \pi^-$) yield as determined in the mass fit to the $\Bs\to\Ds\pion\pion\pion$ data sample which is 
+corrected for the PID($\pip$)$<0$ requirement.  
+The $\Bs\to D_s^{*}\pi^+ \pi^+ \pi^-$ yield is additionally corrected for the efficiency of the cut $m(\Ds K\pion\pion)>5200\mev$ evaluated on MC.
+In the fit to data, the misidentified background yields are fixed to the predicted ones.
+%In the same way as mentioned above, we can determine the rate of misidentified, partially reconstructed $\Bs\to\Ds^{*}\pion\pion\pion$ decays in our sample of $\Bs\to\Ds\kaon\pion\pion$ decays using \textsf{PIDCalib} and a MC sample of $\Bs\to\Ds^{*}\pion\pion\pion$ events. The invariant mass distribution we obtain when we exclude the $\gamma$/$\piz$, flip the the particle hypothesis $\pion\rightarrow\kaon$ and apply the event weights given by the fake rate, is shown in Fig.~\ref{fig:bgkShapes} (right). 
+%The fit of two Crystal Ball functions to this distribution is overlaid. 
+%The yield of this contribution is determined from the yield of $\Bs\to\Ds^{*}\pion\pion\pion$ candidates in the nominal mass fit of our normalization channel, multiplied by the misID probability of $\propto 3.6\%$.
 
-%
-%\begin{figure}[h]
-%\includegraphics[height=!,width=0.4\textwidth]{figs/Bs2Dsstartpipipi.pdf}
-%\caption{Invariant mass distribution of simulated $\Bs\to\Ds^{*}\pion\pion\pion$ events, where the $\gamma$/$\piz$ is excluded from the reconstruction. 
-%A fit of the sum of three bifurcated Gaussian functions to this distribution is overlaid.}
-%\label{fig: BsDsstar3piMC}
-%\end{figure}
+We consider the $\Bs\to D_s K\pion\pion$ and $\Bs\to D_s^{*}K\pion\pion$ components contributing to the $\Bs\to D_s \pi\pion\pion$ data sample to be negligible 
+due to the low branching fractions and the tight PID cuts on the bachelor pions.
 
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
-\includegraphics[height=!,width=0.32\textwidth]{figs/Bs2Dsstartpipipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/Bs2Dspipipi_as_DsKpipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/Bs2Dsstarpipipi_as_DsKpipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/MassFit/BkgShape/Bs2Dsstartpipipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/MassFit/BkgShape/Bs2Dspipipi_as_DsKpipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/MassFit/BkgShape/Bs2Dsstarpipipi_as_DsKpipi.pdf}
 \caption{
 Left: Invariant mass distribution of simulated $\Bs\to D_s^{*}\pion\pion\pion$ events, where the $\gamma$/$\piz$ is excluded from the reconstruction. 
-Middle: Invariant mass distribution of  simulated $\Bs\to\Ds\pion\pion\pion$ events, where one of the pions is reconstructed as a kaon taking the misID probability into account. 
+Middle: Invariant mass distribution of  simulated $\Bs\to\Ds\pion\pion\pion$ events, where one of the pions is reconstructed as a kaon taking the misidentification probability into account. 
 Right: Invariant mass distribution for simulated $\Bs\to D_s^{*}\pion\pion\pion$ events, where the $\gamma$/$\piz$ from the $D_s^{*}$ is excluded from reconstruction
-and one of the pions is reconstructed as a kaon taking the misID probability into account. The fitted PDF is shown in blue.}
-\label{fig: BsDspipipiMCmissID}
+and one of the pions is reconstructed as a kaon taking the misidentification probability into account. The fitted PDF is shown in blue.}
+\label{fig:bgkShapes}
 \end{figure}
  
-
-%\subsection{Fit to $\Bs\to\Ds\pion\pion\pion$ candidates}
-%\label{subsec: NormFit}
-%
-%An unbinned maximum likelihood fit is performed simultaneously to the invariant mass distribution of $\Bs\to\Ds\pion\pion\pion$ candidates. 
-%As discussed in Sec. \ref{subsec: signalmodel}, the fit is given as a Johnson SU signal model for the $\Bs$ and $\Bz$ signal, the sum of three bifurcated Gaussian functions to model the partially reconstructed $\Bs\to\Ds^{*}\pion\pion\pion$ background and an Exponential function to account for combinatorial background. The invariant mass distribution and the fit is shown in Fig.~\ref{fig: BsDsKpipiFit}. 
-%All simultaneously performed fits to the $m(\Ds\pion\pion\pion)$ distribution, ordered by the respective $\Ds$ final state, can be found in the Appendix \ref{subsec:DetailedMassfits}.   
-%The obtained yields are summarized in Table \ref{table:YieldsFromMassfit}. 
-%
-%
-%\subsection{Fit to $\Bs\to\Ds\kaon\pion\pion$ candidates}
-%\label{subsec: SigFit}
-%
-%The shape of the invariant mass distribution of$\Bs\to\Ds\kaon\pion\pion$ candidates is described by Johnson SU functions for the $\Bz$ and $\Bs$ signal, 
-%two sums of three bifurcated Gaussians for the $\Bs$/$\Bz\to\Ds^{*}\kaon\pion\pion$ partially reconstructed background contributions and 
-%two sums of double Crystal Ball functions for the single misID $\Bs\to\Ds\pion\pion\pion$ and the partially reconstructed, misidentified $\Bs\to\Ds^{*}\pion\pion\pion$ decays. 
-%A simultaneous unbinned maximum likelihood fit is performed and the result is shown in Fig.~\ref{fig: BsDsKpipiFit}.
-%All simultaneously performed fits to the $m(\Ds\kaon\pion\pion)$ distribution, ordered by the respective $\Ds$ final state, can be found in the Appendix \ref{subsec:DetailedMassfits}.
-%The obtained yields are summarized in Table \ref{table:YieldsFromMassfit}.
-% 
 
 \subsection{Results}
 \label{subsec:Results}
 
-The sPlot technique \cite{Pivk:2004ty} is used to extract signal weights from the fits to the invariant mass distributions of our signal and normalizaton channel. 
-This statistical tool assignes a weight to every event, according to it's position in the respective mass distribution, given the fitted signal and background models. 
-The weights can then be used to suppress the background components in every other observable distribution of interest.  
-Figure \ref{fig: sWeights} shows the distribution of weights across the invariant mass spectra of $\Bs\to\Ds\pion\pion\pion$ and $\Bs\to\Ds\kaon\pion\pion$ candidates.
-
+Figure \ref{fig:massFit} shows the invariant mass distribution for $\Bs\to\Ds\pion\pion\pion$ and  $\Bs\to\Ds\kaon\pion\pion$ candidates passing all selection criteria.
+The projections for all categories of the simultaneous fit are shown in Appendix \ref{sec:DetailedMassfits} together with the results for all fitted parameters.
+The integrated signal and background yields are listed in Tables \ref{tab:massFitNorm} and \ref{tab:massFitSig}.
 
 \begin{figure}[h]
 \centering
 \includegraphics[height=!,width=0.49\textwidth]{figs/MassFit/norm_pull.pdf}
 \includegraphics[height=!,width=0.49\textwidth]{figs/MassFit/signal_pull.pdf}
-\caption{Invariant mass distribution of (left) $\Bs\to\Ds\pion\pion\pion$ and (right) $\Bs\to\Ds\kaon\pion\pion$ candidates for Run-I and Run-II data.
-The respective fit described in the text is overlaid.}
-\label{fig: BsDsKpipiFit}
+\caption{Invariant mass distribution of $\Bs\to\Ds\pion\pion\pion$ (left) and  $\Bs\to\Ds\kaon\pion\pion$ (right) candidates.}
+\label{fig:massFit}
 \end{figure}
 
-
+\clearpage
 \begin{table}[h]
 \centering
- \begin{tabular}{l || l l l l}
-fit component & yield 2011 & yield 2012 & yield 2015 & yield 2016\ \\
-\hline\hline
-$m(\Ds\kaon\pion\pion)$ &  &  &  &  \\
-\hline
-$\Bs\to\Ds\kaon\pion\pion$ & 392 $\pm$ 25 & 860 $\pm$ 38 & 309 $\pm$ 21 & 1984 $\pm$ 55 \\
-$\Bz\to\Ds\kaon\pion\pion$ & 276 $\pm$ 26 & 692 $\pm$ 41 & 261 $\pm$ 23 & 1385 $\pm$ 58 \\
-$\Bz/\Bs\to\Ds^{*}\kaon\pion\pion$ & 7 $\pm$ 25 & 171 $\pm$ 75 & 114 $\pm$ 25 & 893 $\pm$ 84 \\
-$\Bs\to\Ds^{(*)}\pion\pion\pion$ & 63 $\pm$ 0 & 158 $\pm$ 0 & 53 $\pm$ 0 & 314 $\pm$ 0 \\
-combinatorial & 1482 $\pm$ 53 & 2884 $\pm$ 100 & 605 $\pm$ 43 & 4261 $\pm$ 133 \\
-\hline\hline
-$m(\Ds\pion\pion\pion)$ &  &  &  &  \\
-\hline
-$\Bs\to\Ds\pion\pion\pion$ & 9183 $\pm$ 105 & 22083 $\pm$ 166 & 7574 $\pm$ 95 & 43773 $\pm$ 245 \\
-$\Bz\to\Ds\pion\pion\pion$ & 289 $\pm$ 58 & 716 $\pm$ 95 & 229 $\pm$ 54 & 968 $\pm$ 147 \\
-$\Bs\to\Ds^{*}\pion\pion\pion$ & 3640 $\pm$ 130 & 9086 $\pm$ 232 & 3047 $\pm$ 110 & 17827 $\pm$ 421 \\
-combinatorial & 4991 $\pm$ 154 & 11127 $\pm$ 271 & 3728 $\pm$ 126 & 24589 $\pm$ 500 \\
-\hline
-\end{tabular}
-\caption{Summary of yields obtained from the fits to Run1 and Run2 data.}
-\label{table:YieldsFromMassfit}
+\caption{Total signal and background yields for the $B_s \to D_s \pi \pi \pi$ sample (left) and
+signal yield for the different $D_s$ final states contributing to the $B_s \to D_s \pi \pi \pi$ sample (right).}
+\input{tables/MassFit/yields_norm.tex} \hfill
+\input{tables/MassFit/yields_normDs.tex}
+\label{tab:massFitNorm}
+\end{table}
+\begin{table}[h]
+\centering
+\caption{Total signal and background yields for the $B_s \to D_s K \pi \pi$ sample (left) and
+signal yield for the different $D_s$ final states contributing to the $B_s \to D_s  K \pi \pi$ sample (right).}
+\input{tables/MassFit/yields_signal.tex} \hfill
+\input{tables/MassFit/yields_signalDs.tex}
+\label{tab:massFitSig}
 \end{table}
 
 
-%\begin{figure}[h]
-%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/norm_sweight_y11_phipi.pdf}
-%\includegraphics[height=7.cm,width=0.49\textwidth]{figs/signal_sweight_y11_phipi.pdf}
-%\caption{Distribution of sWeights across the invariant mass of (left) $\Bs\to\Ds\pion\pion\pion$ and (right) $\Bs\to\Ds\kaon\pion\pion$ candidates for Run1 and Run2 data.}
-%\label{fig: sWeights}
-%\end{figure}

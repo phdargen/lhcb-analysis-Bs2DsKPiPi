@@ -43,19 +43,30 @@ Tables \ref{table:selDs} and \ref{table:selBs} summarize all selection requireme
 %Following this, a multivariate classifier is trained which combines the information of several input variables, including their correlation, into one powerful discriminator
 %between signal and combinatorial background. 
 
+Given the high number of $pp$ interactions per bunch crossing, a large fraction
+of events have more than one reconstructed PV. 
+We choose the 'best' PV to be the one to which the 
+$B_s$ candidate has the smallest $\chi^2_{IP}$.
+In instances where the association of the $B_s$ candidate to the best PV is wrong,
+the decay time of this candidate will be incorrect. 
+These wrongly associated candidates
+are rejected by requiring that the $B_s$ $\chi^2_{IP}$ with respect to any other PV is sufficiently higher than with respect to the best PV 
+($\Delta \chi^2_{IP} = \chi^2_{\text{IP,SECONDBEST}} - \chi^2_{\text{IP,BEST}} > 20$ ).
+Events with only a single PV are not affected.
+
 In order to clean up the sample and to align the Run-I to the slightly tighter Run-II stripping selection, we apply the following loose cuts to the b-hadron:
 \begin{itemize}
 \item DIRA $>$ 0.99994
-\item min IP $\chi^{2}$ $<$ 16 to the PV,
-\item FD $\chi^{2}$ $>$ 100 to the PV,
+\item min IP $\chi^{2}$ $<$ 16 to the best PV,
+\item FD $\chi^{2}$ $>$ 100 to the best PV,
 \item Vertex $\chi^{2}$/nDoF $<$ 8.
 %\item ($Z_{\Ds}-Z_{\Bs}$) $>$ 0 , where $Z_{M}$ is the z-component of the position $\vec{x}$ of the decay vertex for the $\Bs$/$\Ds$ meson.
 \end{itemize}    
 The cut on the $B_s$ decay-time is tightened with respect to the stripping selection ($t > 0.2 \ps$) because, while offline we use the decay-time determined for a DTF in which the PV position, the $D_s$ and the $B_s$ mass are constrained, in the stripping the simple decay-time returned by a kinematic fit is used. 
-There difference between these two decay-times extends up to 0.1 ps, thus cutting at 0.4 ps avoids any boundary effects and simplifies the time-acceptance studies.
+The difference between these two decay-times extends up to 0.1 ps, thus cutting at 0.4 ps avoids any boundary effects and simplifies the time-acceptance studies.
 We further remove outliers with poorly estimated decay times ($\delta t< 0.15 \ps$).
 
-We reconstruct the $\Bs\to\Ds h\pion\pion$ decay through three different final states of the $\Ds$ meson, $\Ds\to\kaon\kaon\pion$, $\Ds\to\pion\pion\pion$ and $\Ds\to\kaon\pion\pion$.
+We reconstruct the $\Bs\to\Ds h\pion\pion$ decay through three different final states of the $\Ds$ meson: $\Ds\to\kaon\kaon\pion$, $\Ds\to\pion\pion\pion$ and $\Ds\to\kaon\pion\pion$.
 Of those, $\Ds\to\kaon\kaon\pion$ is the most prominent one,
 while $\mathcal{BR}(\Ds\to\pion\pion\pion) \approx 0.2\cdot\mathcal{BR}(\Ds\to\kaon\kaon\pion)$ and $\mathcal{BR}(\Ds\to\kaon\pion\pion) \approx 0.12\cdot\mathcal{BR}(\Ds\to\kaon\kaon\pion)$ holds for the others. 
 For the $\kaon\kaon\pion$  final state we make use of the well known resonance structure;
@@ -81,7 +92,18 @@ We apply global requirements for the other final states.
 %\item $\dllppi$ $<$ 10 for all pions.
 %\end{itemize}
  
+ \subsubsection{Phase space region}
+ \label{ssec:phasespace}
+
+Due to the comparable low masses of the final state particles  with respect to the $B_s$ mass,
+there is, in contrast to for example b-hadron to charmonia or charm decays, a huge phase-space available for the $\Bs\to\Ds\kaon\pion\pion$ decay.
+For the invariant mass of the $K\pi\pi$ subsystem it extends up to $3.4 \gev$.
+It has however been observed that the decay proceeds predominantly through the low lying axial vector states $K(1270)$ and $K(1400)$, while
+the combinatorial background is concentrated at high $K\pi\pi$ invariant masses ($m(K\pi\pi) > 2000 \mev$).
+Moreover, the strange hadron spectrum above $2\gev$ is poorly understood experimentally such that an reliable extraction of the strong phase motion in that region is not possible.
+We consequently choose the considered phase space region to be $m(K\pi\pi) < 1950 \mev$, which is right below the charm-strange threshold ($\Bs\to\Dsp\Dsm$).
  
+ \clearpage
 \subsubsection{Physics background vetoes}
 
 We veto various physical backgrounds, which have either the same final state as our signal decay, or can contribute via a single misidentification of $\kaon \leftrightarrow \pion$, $\kaon\leftrightarrow\proton$ or $\pi \leftrightarrow\proton$. 
@@ -92,13 +114,13 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 
 \begin{enumerate}
 	\item $\Dm \to\Kp\pim\pim$: \\
-	Possible with single missID of $\pim\rightarrow\Km$, vetoed by requiring 
-	$m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV 
+	Possible with $\pim\rightarrow\Km$ misidentification, vetoed by requiring 
+	$m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 40$ MeV 
 	or the $\Km$ has to fulfill more stringent PID criteria depending on the resonant region.
 	
 	\item $\Lambda_c^- \to \Kp \bar p \pim $:  \\
-	Possible with single missID of $\bar p \rightarrow\Km$, vetoed by requiring
-	$m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV
+	Possible with $\bar p \rightarrow\Km$ misidentification, vetoed by requiring
+	$m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 40$ MeV
 	or the $\Km$ has to fulfill more stringent PID criteria depending on the resonant region.
 	
 	\item $\Dz\to\kaon\kaon$: \\
@@ -111,13 +133,13 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 %        \item $\Dm \to\Kp\pim\pim$: 
 %	possible with single missID of $\Km\rightarrow\pim$: $m(\pip_K \pim \pim) is shifted to lower masses and 
 
-	\item $\Lambda_c^- \to \Kp \bar p \pim $: \\ 
-	Possible with double missID of $\bar p \rightarrow \pim$ and $\Kp \to \pip$
+%	\item $\Lambda_c^- \to \Kp \bar p \pim $: \\ 
+%	Possible with double missID of $\bar p \rightarrow \pim$ and $\Kp \to \pip$
 
-	\item $\Lambda_c^- \to \pip \bar p \pim $: \\
-	Possible with single missID of $\bar p \rightarrow \pim$, vetoed by requiring
-	$m(\pip \pi^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV
-	or PIDp($\pim$) $< 0$ for each $\pim$.
+%	\item $\Lambda_c^- \to \pip \bar p \pim $: \\
+%	Possible with single missID of $\bar p \rightarrow \pim$, vetoed by requiring
+%	$m(\pip \pi^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV
+%	or PIDp($\pim$) $< 0$ for each $\pim$.
 
 	\item $\Dz\to\pion\pion$: \\
 	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\pion\pion\pion$ decay, 
@@ -128,19 +150,19 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 
 \begin{enumerate}
 
-	\item $\Dm \to\Kp\pim\pim$: \\
-	Possible with double missID of $\Kp \rightarrow\pip$ and $\pim \to \Km$
+%	\item $\Dm \to\Kp\pim\pim$: \\
+%	Possible with double missID of $\Kp \rightarrow\pip$ and $\pim \to \Km$
 
 	\item $\Dm \to\pim\pip\pim$:  \\
-	Possible with single missID of $\pim\rightarrow\Km$, vetoed by requiring 
-	$m(K^-_\pi \pip \pim) \ne m(D^-) \pm 30$ MeV 
-	or PIDK($\Kp$) $> 20$.
+	Possible with $\pim\rightarrow\Km$ misidentification, vetoed by requiring 
+	$m(K^-_\pi \pip \pim) \ne m(D^-) \pm 40$ MeV 
+	or PIDK($\Kp$) $> 15$.
 	
-	\item $\Lambda_c^- \to \Kp \bar p \pim $: \\ Possible with double missID of $\bar p \rightarrow \Km$ and $\Kp \to \pip$
+%	\item $\Lambda_c^- \to \Kp \bar p \pim $: \\ Possible with double missID of $\bar p \rightarrow \Km$ and $\Kp \to \pip$
 	
 	\item $\Lambda_c^- \to \bar p \pip \pim $: \\
-	Possible with single missID of $\bar p \rightarrow \Km$, vetoed by requiring
-	$m(K^-_p \pip \pim) \ne m(\Lambda_c) \pm 30$ MeV
+	Possible with $\bar p \rightarrow \Km$ misidentification, vetoed by requiring
+	$m(K^-_p \pip \pim) \ne m(\Lambda_c) \pm 40$ MeV
 	or PIDK($\Km$) $-$ PIDp($\Km$) $> 5$.
 	
 	\item $\Dz\to\kaon\pion$: \\
@@ -149,24 +171,24 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 \end{enumerate}
 
 \end{enumerate}
-
-
+The effects of these veto cuts are illustrated in Figs.~\ref{fig:vetoD},\ref{fig:vetoLambda} and \ref{fig:vetoD0}.
 To reduce cross-feed from our calibration channel into the signal channel and vice-versa we require tight PID cuts on the ambiguous bachelor kaon/pion. 
-In addition, we veto $\Bs\to\Dsm\Dsp$ decays.
-
+In addition, we veto $\Bs\to\Dsm\Dsp$ decays which is illustrated in Fig.~\ref{fig:vetoDs}.
+ \clearpage
 \begin{enumerate}
 
 	\item $X_s^+ \to \Kp \pip \pim$:
 		\begin{enumerate}
 			\item $\Bs\to\Ds\pion\pion\pion$: \\
-			Possible with single missID of $\pip \to \Kp$, suppressed with PIDK($\Kp$) $>10$.
+			Possible with $\pip \to \Kp$ misidentification, suppressed with PIDK($\Kp$) $>10$.
 			
 			\item $\Bs\to\Dsm (\Dsp \to \Kp \pip \pim)$: \\ Outside of considered phase-space region, see Sec.~\ref{ssec:phasespace}.
 
 			\item $\Bs\to\Dsm (\Dsp \to \Kp \Km \pip)$: \\
-			Possible with single missID of $\Km \to \pim$, vetoed by requiring
-			$m(\Kp \pip \pi^-_K) \ne m(D_s) \pm 30$ MeV or PIDK($\pim$) $< 0$.
-
+			To suppress $\Bs\to\Dsm \Kp \Km \pip$ background, possible with $\Km \to \pim$ misidentification, we require PIDK($\pim$) $< 0$.
+			In case the invariant mass of the $\Kp \pip \pi$ system recomputed applying the kaon mass hypothesis to the pion
+			is close to the $D_s$ mass ($m(\Kp \pip \pi^-_K) = m(D_s) \pm 20$ MeV),
+			we further tighten the cut to PIDK($\pim$) $< -5$.
 			%\item $\Bs \to \Dsm \mu \nu X$
 
 		\end{enumerate}
@@ -174,42 +196,71 @@ In addition, we veto $\Bs\to\Dsm\Dsp$ decays.
 	\item $X_d^+ \to \pip \pip \pim$:
 		\begin{enumerate}
 			\item $\Bs\to\Ds\kaon\pion\pion$: \\
-			Possible with single missID of $\Kp \to \pip$, suppressed with PIDK($\pip$) $<5$.
+			Possible with single missID of $\Kp \to \pip$, suppressed with PIDK($\pip$) $<0$.
 
 			\item $\Bs\to\Dsm (\Dsp \to \pip \pip \pim)$:  \\ Outside of considered phase-space region, see Sec.~\ref{ssec:phasespace}.
 			
 			\item $\Bs\to\Dsm (\Dsp \to \Kp \pim \pip)$: \\
 			Possible with single missID of $\Kp \to \pip$, vetoed by requiring
-			$m(\pip \pi^+_K \pim) \ne m(D_s) \pm 30$ MeV or PIDK($\pip$) $< 0$ for both $\pip$.
+			$m(\pip \pi^+_K \pim) \ne m(D_s) \pm 20$ MeV or PIDK($\pip$) $<-5$ for both $\pip$.
 			
 			%\item $\Bs \to \Dsm \mu \nu X$
 
 		\end{enumerate}
-
 \end{enumerate}
 
 
-Given the high number of $pp$ interactions per bunch crossing, a large fraction
-of events have more than one reconstructed PV. 
-We choose the 'best' PV to be the one to which the 
-$B_s$ candidate has the smallest $\chi^2_{IP}$.
-In instances where the association of the $B_s$ candidate to the best PV is wrong,
-the decay time of this candidate will be incorrect. 
-These wrongly associated candidates
-are rejected by requiring that the $B_s$ $\chi^2_{IP}$ with respect to any other PV is sufficiently higher than with respect to the best PV 
-($\Delta \chi^2_{IP} = \chi^2_{\text{IP,SECONDBEST}} - \chi^2_{\text{IP,BEST}} > 20$ ).
-Events with only a single PV are not affected.
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2KKpi_as_D2Kpipi_compareVeto_0.pdf} 
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2KKpi_as_D2Kpipi_compareVeto_1.pdf}
 
- \subsubsection{Phase space region}
- \label{ssec:phasespace}
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2KKpi_as_D2Kpipi_compareVeto_2.pdf} 
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2Kpipi_as_D2pipipi_compareVeto.pdf}
+\caption{
+Background contributions from $D^-$ decays where the $\pim$ is misidentified as $\Km$. 
+The $D_s$ invariant mass is recomputed applying the pion mass hypothesis to the kaon and shown for the 
+$D_s \to \phi \pi$, $D_s \to K^*(892)K$, $D_s \to KK\pi$ (non-resonant) and $D_s \to K\pi\pi$ final state categories
+from top-left to bottom-right.
+The distributions are shown without (black) and with (blue) the $D^-$-veto applied. 
+%The $B_s \to D_s \pi\pi\pi$ sample passing all selection cuts listed in Tables \ref{table:selDs} and \ref{table:selBs} except for the 
+}
+\label{fig:vetoD}
+\end{figure}
+%
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2KKpi_as_Lc2KPpi_compareVeto_0.pdf} 
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2KKpi_as_Lc2KPpi_compareVeto_1.pdf}
 
-Due to the comparable low masses of the final state particles  with respect to the $B_s$ mass,
-there is, in contrast to for example b-hadron to charmonia or charm decays, a huge phase-space available for the $\Bs\to\Ds\kaon\pion\pion$ decay.
-For the invariant mass of the $K\pi\pi$ subsystem it extends up to $3.4 \gev$.
-It has however been observed that the decay proceeds predominantly through the low lying axial vector states $K(1270)$ and $K(1400)$, while
-the combinatorial background is concentrated at high $K\pi\pi$ invariant masses ($m(K\pi\pi) > 2000 \mev$).
-Moreover, the strange hadron spectrum above $2\gev$ is poorly understood experimentally such that an reliable extraction of the strong phase motion in that region is not possible.
-We consequently choose the considered phase space region to be $m(K\pi\pi) < 1950 \mev$, which is right below the charm-strange threshold ($\Bs\to\Dsp\Dsm$).
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2KKpi_as_Lc2KPpi_compareVeto_2.pdf} 
+%\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2pipipi_as_Lc2piPpi_compareVeto.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2Kpipi_as_Lc2piPpi_compareVeto.pdf}
+\caption{Background contributions from $\Lambda_c$ decays where the $\bar p$ is misidentified as $\Km$. 
+The $D_s$ invariant mass is recomputed applying the proton mass hypothesis to the kaon and shown for the 
+$D_s \to \phi \pi$, $D_s \to K^*(892)K$, $D_s \to KK\pi$ (non-resonant) and $D_s \to K\pi\pi$ final state categories
+from top-left to bottom-right.
+The distributions are shown without (black) and with (blue) the $\Lambda_c$-veto applied.}
+\label{fig:vetoLambda}
+\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2KKpi_as_D02KK_compareVeto.pdf} 
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2pipipi_as_D02pipi_compareVeto.pdf} 
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2Kpipi_as_D02Kpi_compareVeto.pdf} 
+\caption{Background contributions to $D_s \to KK\pi$ (left), $D_s \to \pi\pi\pi$ (middle) and $D_s \to K\pi\pi$ (right) from $D^0\to hh$ decays combined with a random pion. }
+\label{fig:vetoD0}
+\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/signal_Bs2DsKpipi_as_Bs2DsDs_compareVeto.pdf} 
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Bs2Dspipipi_as_Bs2DsDs_compareVeto.pdf} 
+\caption{Background contributions to  $B_s \to D_s K\pi\pi$ (left) and $B_s \to D_s \pi\pi\pi$ (right) from $B_s \to D_s D_s$ decays where the kaon is misidentified as pion.
+The $X_{s,d}$ invariant mass is recomputed applying the kaon mass hypothesis to the pion and shown without (black) and with (blue) the $D_s$-veto applied. 
+}
+\label{fig:vetoDs}
+\end{figure}
+
 
 
 \clearpage
@@ -387,8 +438,8 @@ $D_s^- \to \phi \pi^-$ & $m(KK)$  & $= m_{\phi} \pm 12$ MeV \\
 & PIDK($\pi^-$) & $< 20$ \\
 &  $\chi^{2}_{FD}$ & $> 0$ \\
 &  FD in $z$  &$ > -1$ \\
-& $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV  $||$ $\text{PIDK}(K^-) > 0$\\
-& $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV   $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 0$ \\
+& $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 40$ MeV  $||$ $\text{PIDK}(K^-) > 5$\\
+& $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 40$ MeV   $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 2$ \\
 \\
 $D_s^- \to K^{*}(892) K^-$ & $m(KK)$  & $\ne m_{\phi} \pm 12$ MeV \\
 & $m(K^+\pi^-)$  & $= m_{K^{*}(892)} \pm 75$ MeV \\
@@ -397,8 +448,8 @@ $D_s^- \to K^{*}(892) K^-$ & $m(KK)$  & $\ne m_{\phi} \pm 12$ MeV \\
 & PIDK($\pi^-$) & $< 10$ \\
 &  $\chi^{2}_{FD}$ & $> 0$ \\
 &  FD in $z$  &$ > 0$ \\
-& $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV  $||$ $\text{PIDK}(K^-) > 5$\\
-& $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV   $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 5$ \\
+& $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 40$ MeV  $||$ $\text{PIDK}(K^-) > 15$\\
+& $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 40$ MeV   $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 5$ \\
 \\
 $D_s^- \to (K K \pi^-)_{NR}$ & $m(KK)$  & $\ne m_{\phi} \pm 12$ MeV \\
 & $m(K^+\pi^-)$  & $\ne m_{K^{*}(892)} \pm 75$ MeV \\
@@ -407,8 +458,8 @@ $D_s^- \to (K K \pi^-)_{NR}$ & $m(KK)$  & $\ne m_{\phi} \pm 12$ MeV \\
 & PIDK($\pi^-$) & $< 10$ \\
 &  $\chi^{2}_{FD}$ & $> 4$ \\
 &  FD in $z$  &$ > 0$ \\
-& $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV  $||$ $\text{PIDK}(K^-) > 20$\\
-& $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV  $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 5$ \\
+& $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 40$ MeV  $||$ $\text{PIDK}(K^-) > 15$\\
+& $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 40$ MeV  $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 5$ \\
 \\
 $D_s \to \pi \pi \pi$ & PIDK($\pi$) & $< 10$  \\
 & PIDp($\pi$) & $< 20$ \\
@@ -422,6 +473,8 @@ $D_s^- \to K^- \pip \pim$ & PIDK($K$) & $> 8$  \\
 & $D^0$ veto  & $m(K^- \pip) < 1750$ MeV \\
 &  $\chi^{2}_{FD}$ & $> 9$ \\
 &  FD in $z$  &$ > 0$ \\
+& $D^-$ veto  & $m(K^-_\pi \pip \pim) \ne m(D^-) \pm 40$ MeV  $||$ $\text{PIDK}(K^-) > 15$\\
+& $\Lambda_c$ veto  & $m(K^-_p \pip \pim) \ne m(\Lambda_c) \pm 40$ MeV  $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 5$ \\
 \\
 \hline
 \hline
@@ -455,17 +508,19 @@ $B_s \to D_s h \pi \pi$  & $m(D_s h \pi \pi)$ & $> 5200 \mev$ \\
 & Phasespace region & $m(h\pi\pi) < 1.95 \gev$ \\ & & $m(h\pi) < 1.2 \gev$ \\ & & $m(\pi\pi) < 1.2 \gev$ \\
 & Wrong PV veto & nPV = 1 $||$  $\text{min}(\Delta\chi^{2}_{IP}) > 20$ \\
 & BDTG &  $> 0.45$ [Run-I,\textsf{L0-TOS}] \\
-& & $> 0.5$ [Run-I,\textsf{L0-TIS}] \\
+& & $> 0.50$ [Run-I,\textsf{L0-TIS}] \\
 & & $> 0.35$ [Run-II,\textsf{L0-TOS}] \\
-& & $> 0.5$ [Run-II,\textsf{L0-TIS}] \\
+& & $> 0.50$ [Run-II,\textsf{L0-TIS}] \\
 \\
 $X_s^+ \to K^+ \pi^+ \pi^-$  & PIDK(K) & $> 10$ \\
 & PIDK($\pi^+$) & $< 10$ \\
-& PIDK($\pi^-$) & $< 5$ \\
+& PIDK($\pi^-$) & $< 0$ \\
+& $D_s$ veto & $m(\Kp \pip \pi^-_K) \ne m(D_s) \pm 20$ MeV $||$ PIDK($\pim$) $< -5$ \\
 %& Semi.-lep. veto & isMuon($K^+$) = 0 \\
 \\
-$X_s^+ \to \pi^+ \pi^+ \pi^-$  & PIDK($\pi^+$) & $< 5$ \\
+$X_s^+ \to \pi^+ \pi^+ \pi^-$  & PIDK($\pi^+$) & $< 0$ \\
 & PIDK($\pi^-$) & $< 10$ \\
+& $D_s$ veto & $m(\pip \pi^+_K \pim) \ne m(D_s) \pm 20$ MeV $||$ PIDK($\pip$) $< -5$ \\
 %& Semi.-lep. veto & isMuon($\pip$) = 0 \\
 \\
 All tracks & hasRich & $= 1$ \\
@@ -479,7 +534,7 @@ All tracks & hasRich & $= 1$ \\
 \end{table}
 
 
-\subsection{Simulation}
+%\subsection{Simulation}
 
 
 

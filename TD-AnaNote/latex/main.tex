@@ -52,6 +52,11 @@
 \makeatletter \@addtoreset{table}{section} \makeatother
 
 \usepackage{longtable} % only for template; not usually to be used in PAPERs
+\usepackage[labelfont=bf]{caption}
+
+\usepackage{booktabs}
+\usepackage[nottoc]{tocbibind}
+\usepackage{cite}
 
 \begin{document}
 
@@ -100,7 +105,7 @@
 \clearpage
 \input{introduction}
 
-\clearpage
+%\clearpage
 \input{sensitivity}
 
 \clearpage
@@ -110,13 +115,13 @@
 \input{massfits}
 
 \clearpage
-\input{tagging}
+\input{resolution}
 
 \clearpage
 \input{acceptance}
 
 \clearpage
-\input{resolution}
+\input{tagging}
 
 \clearpage
 \input{KpiAsym}
