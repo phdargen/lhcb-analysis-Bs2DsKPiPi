@@ -21,7 +21,7 @@
 #  This is the file/directory that you want to run (LAST ONE IS TAKEN):
 #  if a directory is given all root files in it will be read:
   
-datafile = "/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+datafile = "/auto/data/dargent/BsDsKpipi/Final/Data/old/norm.root"
 TupleName = "DecayTree"
 
 ###########
@@ -29,7 +29,7 @@ TupleName = "DecayTree"
 ###########
 
 CalibrationMode = "Bs"
-DoCalibrations = 1
+DoCalibrations = 0
 CalibrationLink = "MISTAG"
 CalibrationDegree = 1
 CalibrationModel = "POLY"
@@ -83,23 +83,23 @@ DrawOscillationPlots = 1
 # TaggerName_NumBins = 20
 
 ### TAGGERS USED IN Bs->DsK
-OS_Muon_Use = 1
-OS_Muon_TypeDec          = "Short_t"
-OS_Muon_BranchDec        = "Bs_OS_Muon_DEC"
-OS_Muon_TypeProb        = "Float_t"
-OS_Muon_BranchProb      = "Bs_OS_Muon_PROB"
+#OS_Muon_Use = 1
+#OS_Muon_TypeDec          = "Short_t"
+#OS_Muon_BranchDec        = "Bs_OS_Muon_DEC"
+#OS_Muon_TypeProb        = "Float_t"
+#OS_Muon_BranchProb      = "Bs_OS_Muon_PROB"
 
-OS_nnetKaon_Use = 1
-OS_nnetKaon_TypeDec        = "Short_t"
-OS_nnetKaon_BranchDec      = "Bs_OS_nnetKaon_DEC"
-OS_nnetKaon_TypeProb      = "Float_t"
-OS_nnetKaon_BranchProb    = "Bs_OS_nnetKaon_PROB"
+#OS_nnetKaon_Use = 1
+#OS_nnetKaon_TypeDec        = "Short_t"
+#OS_nnetKaon_BranchDec      = "Bs_OS_nnetKaon_DEC"
+#OS_nnetKaon_TypeProb      = "Float_t"
+#OS_nnetKaon_BranchProb    = "Bs_OS_nnetKaon_PROB"
 
-OS_Electron_Use = 1
-OS_Electron_TypeDec      = "Short_t"
-OS_Electron_BranchDec    = "Bs_OS_Electron_DEC"
-OS_Electron_TypeProb    = "Float_t"
-OS_Electron_BranchProb  = "Bs_OS_Electron_PROB"
+#OS_Electron_Use = 1
+#OS_Electron_TypeDec      = "Short_t"
+#OS_Electron_BranchDec    = "Bs_OS_Electron_DEC"
+#OS_Electron_TypeProb    = "Float_t"
+#OS_Electron_BranchProb  = "Bs_OS_Electron_PROB"
 
 #OS_Kaon_Use = 1
 #OS_Kaon_TypeDec        = "Short_t"
@@ -107,11 +107,11 @@ OS_Electron_BranchProb  = "Bs_OS_Electron_PROB"
 #OS_Kaon_TypeProb      = "Float_t"
 #OS_Kaon_BranchProb    = "Bs_OS_Kaon_PROB"
 
-VtxCharge_Use = 1
-VtxCharge_TypeDec     = "Short_t"
-VtxCharge_BranchDec   = "Bs_VtxCharge_DEC"
-VtxCharge_TypeProb   = "Float_t"
-VtxCharge_BranchProb = "Bs_VtxCharge_PROB"
+#VtxCharge_Use = 1
+#VtxCharge_TypeDec     = "Short_t"
+#VtxCharge_BranchDec   = "Bs_VtxCharge_DEC"
+#VtxCharge_TypeProb   = "Float_t"
+#VtxCharge_BranchProb = "Bs_VtxCharge_PROB"
 
 
 
@@ -156,20 +156,20 @@ SS_nnetKaon_BranchProb  = "Bs_SS_nnetKaon_PROB"
 #SS_Proton_Use          = 0
 #Combination_Use              = 0
 
-#OS_Combination_Use  = 1
-#OS_Combination_TypeDec	= "Int_t"
-#OS_Combination_BranchDec  = "Bs_TAGDECISION_OS"
-#OS_Combination_TypeProb	= "Double_t"
-#OS_Combination_BranchProb = "Bs_TAGOMEGA_OS"
+OS_Combination_Use  = 1
+OS_Combination_TypeDec	= "Int_t"
+OS_Combination_BranchDec  = "Bs_TAGDECISION_OS"
+OS_Combination_TypeProb	= "Double_t"
+OS_Combination_BranchProb = "Bs_TAGOMEGA_OS"
 
 
 ### OS AND OS+SS COMBINATION
 
-PerformOfflineCombination_OS = 1
-OS_Muon_InOSComb = 1
-OS_Electron_InOSComb = 1
-OS_nnetKaon_InOSComb = 1
-VtxCharge_InOSComb = 1
+#PerformOfflineCombination_OS = 1
+#OS_Muon_InOSComb = 1
+#OS_Electron_InOSComb = 1
+#OS_nnetKaon_InOSComb = 1
+#VtxCharge_InOSComb = 1
 
 
 PerformOfflineCombination_OSplusSS = 1
@@ -196,5 +196,5 @@ CalibratedOutputFile = "Bs2Dspipipi_TaggingCalibration_Output.root"
 # CALIBRATION INPUT VALUES #
 ############################
 
-#import EspressoCalibrations.py
+import EspressoCalibrations.py
 

@@ -1,9 +1,18 @@
-
-This directory contains the options files in 'Options' used to perform the flavour tagging calibrations. Tutorial Slides can be found in the subdirectory 'Slides'.
-
 After compiling the code, you can run from the EPM main folder using
 
 ./bin/SimpleEvaluator "path-to-optionsfile"
+
+Compile macro to add OS combo to tuples:
+
+source make.sh
+
+run with:
+
+./mergeTrees
+
+Run the whole analysis chain:
+
+source calib.sh
 
 
 Options that you can set in the files are:
@@ -155,17 +164,5 @@ A saved calibration is imported and used to calibrate the branches, no fits are 
 -------------------------------------------------
 
 
-After completing calibration you can merge the input tree and the tree with with the combined OS and combined OS+SS branches using mergeTrees.cpp:
-
-open root shell
-
->.L mergeTrees.cpp
-
->mergeTrees("path-to-inputfile","path-to-taggingOutput","CutString")
-
-
-Enter inputfile and taggingOutput without ".root" extension.
-
-Make sure that CutString is identical to the cuts used in optionsfile (Selection = "CutString").
 
 
