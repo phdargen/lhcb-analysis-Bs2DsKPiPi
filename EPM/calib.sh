@@ -24,11 +24,11 @@ mv *.tex out_OS_Run2/
 
 # evaluate performance of OS taggers
 ./EspressoPerformanceMonitor/bin/SimpleEvaluator "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EPM/Options/performance_OSTagger_Run1.py"
-cp EspressoPerformanceTable.tex ../TD-AnaNote/latex/tables/Tagging/Run1/
+cp EspressoPerformanceTable.tex ../TD-AnaNote/latex/tables/Tagging/Run1/EspressoPerformanceTable_OS.tex
 mv *.tex out_OS_Run1/
 
 ./EspressoPerformanceMonitor/bin/SimpleEvaluator "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EPM/Options/performance_OSTagger_Run2.py"
-cp EspressoPerformanceTable.tex ../TD-AnaNote/latex/tables/Tagging/Run2/
+cp EspressoPerformanceTable.tex ../TD-AnaNote/latex/tables/Tagging/Run2/EspressoPerformanceTable_OS.tex
 mv *.tex out_OS_Run2/
 
 # combine OS taggers (no calibration is performed)
@@ -70,7 +70,7 @@ mv *.tex out_OS_SS_Run2/
 
 # evaluate performance of combo
 ./EspressoPerformanceMonitor/bin/SimpleEvaluator "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EPM/Options/performance_OS_SS_Run1.py"
-cp EspressoPerformanceTable.tex ../TD-AnaNote/latex/tables/Tagging/Run2/
+cp EspressoPerformanceTable.tex ../TD-AnaNote/latex/tables/Tagging/Run1/
 mv *.tex out_OS_SS_Run1/
 
 ./EspressoPerformanceMonitor/bin/SimpleEvaluator "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EPM/Options/performance_OS_SS_Run2.py"
