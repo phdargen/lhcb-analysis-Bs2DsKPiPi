@@ -27,7 +27,7 @@ checkPVs.MaxPVs = -1
 
 triggerlines = [ "L0HadronDecision", 
                 "L0MuonDecision",
-                "L0GlobalDecision",
+                #"L0GlobalDecision",
                 #"L0PhysicsDecision",
                 "Hlt1TrackAllL0Decision", 
                 #'Hlt1TrackAllL0TightDecision',
@@ -36,8 +36,8 @@ triggerlines = [ "L0HadronDecision",
                 #"Hlt1GlobalDecision",
                 "Hlt1TrackMVADecision",
                 "Hlt1TwoTrackMVADecision",
-                "Hlt1TrackMVALooseDecision",
-                "Hlt1TwoTrackMVALooseDecision",
+                #"Hlt1TrackMVALooseDecision",
+                #"Hlt1TwoTrackMVALooseDecision",
                  #hlt2
                  #topo
                 #'Hlt2CharmHadD2HHHHDecision', 
