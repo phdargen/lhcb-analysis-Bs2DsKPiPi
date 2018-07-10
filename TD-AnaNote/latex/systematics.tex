@@ -1,0 +1,65 @@
+\section{Systematic uncertainties}
+\label{sec:Systematics}
+
+This section covers all relevant systematic uncertainties on the measured observables.
+In particular, the model dependent description of the invariant $\Bs$ mass spectrum, the parametrization of the time acceptance using cubic splines, 
+as well as the scaling of the time resolution and tagging calibration are potential sources of systematic errors. 
+The largest contribution of systematic uncertainty is expected to appear in the choice of amplitudes entering the model to describe the 5 dimensional phase space, discussed in Section \ref{sec:fullFit}.
+
+\subsection{Models for $\Bs$ mass distribution}
+\label{subsec:SystMass}
+
+The statistical subtraction of the residual background \cite{Pivk:2004ty}, left after the full selection, relies on the correct description of the invariant $\Bs$ mass distribution.
+Since the choice of signal and background models is not unique, alternative descriptions which lead to slightly different yields for the signal and background components are available. 
+The difference in yields could result in shifted values for the measured observables and are therefore treated as systematic uncertainty. \newline
+
+\subsubsection{Signal model}
+
+The Johnson's SU function which is used as nominal signal model is replaced by a double Crystal Ball \cite{CB}. 
+The crystal ball model is given by a gaussian core with an exponential tail on one side. 
+Choosing a double Crystal Ball allows for asymmetric tails in a slightly different way compared to the Johnson's SU function. 
+Table xXx summarizes the observed differences in signal and background yields.
+
+\subsubsection{Background model}
+
+For the description of the partially reconstructed background, 
+a combination of the RooHILLdini and RooHORNsdini model [REF HERE] is used instead of the nominal model of three bifurcated gaussians. 
+The HORNSdini model is used to describe the $\Bs\to\Ds^{*}[\to\Ds(\piz)] X_{s/d}$ decay, where the brackets around the $\piz$ indicate that it is missed in the reconstruction. 
+The $\Ds^{*}\to\Ds\piz$ decay is a Vector $\to$ Scalar-Scalar ($1^{-}\to 0^{-}0^{-}$) transition. 
+Using the helicity of the $\Ds$, one can show that this results in a double-peak structure in the reconstructed $\Bs$ mass. 
+Therefore, the HORNSdini shape consists of a gaussian-like double-peak structure:
+
+\begin{equation}
+HORNS(m_{\Bs}) = \int^{b}_{a} dm_{\Bs}\left(m_{\Bs} - \frac{a+b}{2} \right)^{2}\mathcal{DG}(m_{\Bs}\vert\mu,\sigma,f_{G})\left(\frac{1-\zeta}{b-a}m_{\Bs} + \frac{b\zeta - a}{b - a} \right),
+\label{eq:HORNS}
+\end{equation}
+
+where a and b are the kinematic endpoins of the distribution and $\zeta$ is the positive, real fraction of the two peak hights. Additionaly, the shape is convoluted with a gaussian to account for resolution effects.
+
+The HILLdini model parametrizes the invariant mass shape of $\Bs\to\Ds^{*}[\to\Ds(\gamma)] X_{s/d}$ candidates, where the $\gamma$ is not reconstructed.
+Contrary to the previously discussed process, the $Ds^{*}\to\Ds\gamma$ is a Vector $\to$ Scalar-Vector ($1^{-} \to 0^{-} 1^{-}$) transition. 
+From helicity arguments, the expected shape in the mass distribution of $\Bs$ candidates follows a parabolic curve without any peaking structure.
+To accommodate for this shape, the HILLdini model consists of a parabolic curve between the kinematic endpoints a \& b: 
+
+
+\begin{equation}
+HILL(m_{\Bs}) = \begin{cases} -(m_{\Bs} - a)(m_{\Bs} - b),& \mbox{for } a < m_{\Bs} < b \\
+ 0, &  otherwise. \end{cases}
+\label{eq:HILLS}
+ \end{equation}
+
+This shape is convoluted with the same gaussian resolution function used for the HORNSdini model.
+The resulting differences in yields is shown in Table xXx. \newline
+
+
+To study systematic uncertainties originating from the description of the combinatorial background, the nominal second order polynomial is replaced by an exponential function. 
+The changes in signal and background yields after refitting with this alternative shape are shown in Table xXx. \newline
+
+\subsubsection{Systematic effect on observables}
+
+The shift of the central values of the observables in the full fit when using sWeights obtained from a combination of alternative models, 
+as well as using only one alternative model for the signal/comb.background/part.reco.background and keeping the nominal model for the other parts,
+is shown in Table yYy. We conservatively choose the biggest variation as systematic uncertainty from the modelling of the invariant $\Bs$ mass spectrum.
+
+
+
