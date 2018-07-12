@@ -63,3 +63,55 @@ is shown in Table yYy. We conservatively choose the biggest variation as systema
 
 
 
+\subsection{Decay-time acceptance}
+\label{subsec:SystTime}
+
+To investigate the systematic uncertainty related to the decay-time dependent efficiency, we vary our parametrization of the acceptance using cubic splines.
+This is explicitly done by choosing slightly different knot positions, 
+varying the spline coefficients at the nominal positions within their statistical uncertainties and adding/subtracting knots in the range $0.4\ps < t < 11\ps$.
+Additionaly, an adaptive binning scheme is used to determine the knot positions in a way that roughly equal amounts of data is covered between two knots.
+Strictly speaking, the variation of the spline coefficients within their uncertainty gives the statistical uncertainty of the decay-time acceptance parametrization.
+For the presented measurement, this is done using the covariance matrix of coefficients $c_{i}$, generating toy splines with randomized coefficient values $c_{i,toy}$ from this matrix and refitting using the toy spline.  
+Furthermore, the fit to the decay-time distribution of signal $\Bs\to\Ds\pion\pion\pion$ candidates, used to determine the spline parametrization, is reiterated with varying fixed/constrained values for $\DGs$.
+
+
+\subsubsection{Spline parametrization}
+The nominal knot positions are changed to be:
+
+\[ k_{alt1}(t) =  {0.5 1 1.5 2 3 6 9.5}, \mbox{ } \mbox{ } k_{alt2}(t) =  {0.5  1  1.5  2  3  9 11}  \mbox{ } \mbox{ } k_{adaptive}(t) =  {0.7 1.2 1.7 2.2 6.3} \]
+
+
+
+
+
+\subsubsection{Decay-time fit to $\Bs\to\Ds\pion\pion\pion$} 
+
+
+
+
+
+
+\subsection{Decay-time resolution}
+
+To study systematic effects originating from the scaling of the decay-time resolution $\sigma_{t}$, the decay-time distribution of fake $\Bs$ candidates using prompt $\Ds$ is described by single Gaussian function.
+The resultions of the single Gaussians in the different bins of the per-event decay-time error can then be used to derive the scaling function in a straightforward way.
+Since the distribution of the fake $\Bs$ decay time does not follow a perfect Gaussian distribution, two different approaches which either slightly overestimate or underestimate the decay time error are used:
+
+\begin{itemize}
+
+\item A double Gaussian is fit to the decay-time distributions of fake $\Bs$ candidates, but only the narrow with of the core Gaussian is considered to represent the time resolution in the respective bin. 
+This method assumes that the other, broader Gaussian component does not represent the decay-time resolution of the signal $\Bs$ sample. Therefore the resolution is slightly underestimated in this case.
+
+\item A singel Gaussian is fit to the decay-time distributions of fake $\Bs$ candidates in a wide range of $[-3\sigma_{t} : 1.5\sigma_{t}]$. 
+Due to the tails of the distribution, which broaden the width of the Gaussian function, this method slightly overestimates the decay-time resolution.   
+
+\end{itemize}
+
+The widths of the single Gaussians from the fits performed with the two methods in bins of the per-event decay-time error is studied and a new resolution scaling function is derived for both cases: \newline
+
+EQUATION HERE \newline
+
+The scaling functions are shown in Fig. xXx.
+
+
+    
