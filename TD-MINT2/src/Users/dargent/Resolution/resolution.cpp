@@ -83,6 +83,7 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 	NamedParameter<double> TAUERR_min("TAUERR_min", 0.);		
         NamedParameter<double> TAUERR_max("TAUERR_max", 0.15);
 	NamedParameter<int> useTransformedSigma("useTransformedSigma", 0);
+	NamedParameter<int> DoSystematics("DoSystematics", 0);
 
 	NamedParameter<int> nGauss("nGauss", 2);
         NamedParameter<int> fixMean("fixMean", 0);
@@ -335,15 +336,28 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 
 	///create a new table for Ana Note
 	ofstream datafile;
-	if(updateAnaNote)datafile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ResoTable_"+dataType+".txt",std::ios_base::app);
+	if(updateAnaNote) datafile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ResoTable_"+dataType+".txt",std::ios_base::app);
+
 	else datafile.open("ResoTable_"+dataType+".txt", std::ios_base::app);
-	datafile << std::setprecision(3) << leg_min.ReplaceAll("fs","") + " - " + leg_max.ReplaceAll("fs","") << " & "<< sig1 * 1000 << " $\\pm$ " << dsig1 * 1000 << " & " << sig2 * 1000 << " $\\pm$ " << dsig2 * 1000 << " & " << f1 << " $\\pm$ " << df1 << " & " << dilution_val << " $\\pm$ " <<  dilution_error << " & " << resolution_eff.getVal() * 1000 << " $\\pm$ " << resolution_eff.getPropagatedError(*result)* 1000 << " \\\\" << "\n";
+
+	if(!DoSystematics) datafile << std::setprecision(3) << leg_min.ReplaceAll("fs","") + " - " + leg_max.ReplaceAll("fs","") << " & "<< sig1 * 1000 << " $\\pm$ " << dsig1 * 1000 << " & " << sig2 * 1000 << " $\\pm$ " << dsig2 * 1000 << " & " << f1 << " $\\pm$ " << df1 << " & " << dilution_val << " $\\pm$ " <<  dilution_error << " & " << resolution_eff.getVal() * 1000 << " $\\pm$ " << resolution_eff.getPropagatedError(*result)* 1000 << " \\\\" << "\n";
+	if(DoSystematics) datafile << std::setprecision(3) << leg_min.ReplaceAll("fs","") + " - " + leg_max.ReplaceAll("fs","") << " & "<< sig1 * 1000 << " $\\pm$ " << dsig1 * 1000 << " \\\\" << "\n";
+
 	datafile.close();
 
 	vector<double> resoValues;
-	resoValues.push_back(resolution_eff.getVal());
-	resoValues.push_back(resolution_eff.getPropagatedError(*result));
-	resoValues.push_back(data->mean(Bs_TAUERR));
+	if(!DoSystematics){
+		resoValues.push_back(resolution_eff.getVal());
+		resoValues.push_back(resolution_eff.getPropagatedError(*result));
+		resoValues.push_back(data->mean(Bs_TAUERR));
+	}
+
+	if(DoSystematics){
+		resoValues.push_back(sig1);
+		resoValues.push_back(dsig1);
+		resoValues.push_back(data->mean(Bs_TAUERR));
+	}
+
 	return resoValues;
 }
 
@@ -758,7 +772,7 @@ int main(int argc, char** argv){
     if(fitIntegratedResolution)FitTimeRes(TAUERR_min, TAUERR_max, "all", TString((string) Bs_TAU_Var), dataType);
     if(fitResoRelation)FitResoRelation(TString((string) Bs_TAU_Var),dataType);
 
-    //if(!file_res)file_res->Close();
+    if(!file_res)file_res->Close();
   
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;

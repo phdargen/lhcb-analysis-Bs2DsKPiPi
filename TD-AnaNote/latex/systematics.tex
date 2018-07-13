@@ -78,15 +78,15 @@ Furthermore, the fit to the decay-time distribution of signal $\Bs\to\Ds\pion\pi
 \subsubsection{Spline parametrization}
 The nominal knot positions are changed to be:
 
-\[ k_{alt1}(t) =  {0.5 1 1.5 2 3 6 9.5}, \mbox{ } \mbox{ } k_{alt2}(t) =  {0.5  1  1.5  2  3  9 11}  \mbox{ } \mbox{ } k_{adaptive}(t) =  {0.7 1.2 1.7 2.2 6.3} \]
+\[ k_{alt1}(t) =  [0.5\mbox{ } 1 \mbox{ }1.5 \mbox{ }2 \mbox{ }3 \mbox{ }6 \mbox{ }9.5], 
+\mbox{ } k_{alt2}(t) =  [0.5 \mbox{ } 1\mbox{ }  1.5 \mbox{ } 2 \mbox{ } 3\mbox{ }  9\mbox{ } 11],  
+\mbox{ } k_{adaptive}(t) =  [0.7\mbox{ } 1.2\mbox{ } 1.7\mbox{ } 2.2\mbox{ } 6.3] \]
 
 
 
 
 
 \subsubsection{Decay-time fit to $\Bs\to\Ds\pion\pion\pion$} 
-
-
 
 
 
@@ -109,9 +109,29 @@ Due to the tails of the distribution, which broaden the width of the Gaussian fu
 
 The widths of the single Gaussians from the fits performed with the two methods in bins of the per-event decay-time error is studied and a new resolution scaling function is derived for both cases: \newline
 
-EQUATION HERE \newline
+\begin{equation}
+\sigma_{eff}^{core-Gauss}(\sigma_t) = \left(4.9  \pm 2.0 \right) \text{fs} + \left( 0.821 \pm 0.050 \right) \sigma_t
+\label{eq:ResoSyst1}
+\end{equation}
 
-The scaling functions are shown in Fig. xXx.
+\begin{equation}
+\sigma_{eff}^{single-Gauss}(\sigma_t) = \left(8.3  \pm 1.5 \right) \text{fs} + \left( 0.997 \pm 0.037 \right) \sigma_t
+\label{eq:ResoSyst2}
+\end{equation}
+
+The scaling functions are shown in Fig. \ref{fig:SystscaleFactor} and the systematic uncertainty to the CP-observables is summarized in Table yYy.
 
 
     
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ScaleFactor_Data_coreGauss.pdf}
+\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ScaleFactor_Data_singleGauss.pdf}
+\caption{The measured resolution $\sigma_{eff}$ as function of the per-event decay time error estimate $\sigma_t$ for fake $B_s$ candidates (Run-II data) 
+when (left) only using the narrow gaussian width of the double gaussian fit model or (right) when determining the resolution using a single gaussian model.
+The fitted calibration curve is shown in blue for both cases.}
+\label{fig:SystscaleFactor}
+\end{figure}
+
+
+\subsection{Tagging calibration}

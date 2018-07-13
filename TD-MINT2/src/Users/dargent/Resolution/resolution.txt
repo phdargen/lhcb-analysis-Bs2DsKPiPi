@@ -1,18 +1,19 @@
-"fitDsMass"	 	0	
-"fitIntegratedResolution"	 1	
+"fitDsMass"	 		 0	
+"fitIntegratedResolution"	 0	
 "fitResoRelation"		 1
 
-"dataType"		"MC"
-"inFileName"		"/auto/data/dargent/BsDsKpipi/Final/MC/signal.root"
-"minEventsPerBin"	 1200
+"dataType"		"Data"
+"inFileName"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_LTU.root"
+"minEventsPerBin"	 1000
 "Bs_TAU_Var"		"Bs_DTF_TAU"
 "TAUERR_min"	 0.
-"TAUERR_max"	 0.12
+"TAUERR_max"	 0.1
 
 "useTransformedSigma"	 0
-"nGauss"	 2
+"nGauss"	 	 2
 "fixGaussFraction"	 1
 "gaussFraction"		 0.75
-"fixMean"		 0
+"fixMean"		 1
 
-"updateAnaNote"		1
+"DoSystematics"		1
+"updateAnaNote"		0
