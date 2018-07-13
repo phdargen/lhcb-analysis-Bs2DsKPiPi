@@ -6,11 +6,7 @@
 The weak phase $\gamma$ is the least well known angle of the CKM unitary triangle. 
 A key channel to measure $\gamma$ is the time-dependent analysis of $\Bs\to\Ds\kaon$ decays \cite{Fleischer:2003yb,DeBruyn:2012jp}. 
 %The $\Bs\to\Ds\kaon\pion\pion$ proceeds at tree level via the transitions shown in Fig. \ref{fig: BsFeynman} a) and b). 
-%\begin{figure}[h]
-%\includegraphics[height=6.cm,width=0.90\textwidth]{figs/FeynmannGraphs.png}
-%\caption{Feynman diagram of the $\Bs\to\Ds\kaon\pion\pion$ decay, proceeding via a) $\bquark\to\cquark$ transitions or b) $\bquark\to\uquark$ transitions.}
-%\label{fig: BsFeynman}
-%\end{figure}
+
 To measure the weak CKM phase $\gamma \equiv arg[-(V_{ud}V_{ub}^{*})/(V_{cd}V_{cb}^{*})]$, a decay with interference between $\bquark\to\cquark$ and $\bquark\to\uquark$ transitions is needed \cite{Fleischer:2003yb}.
 %As illustrated in Fig. \ref{fig: BsFeynman}, this is the case for the presented decay mode.  
 This note present the first measurement of $\gamma$ using $\Bs\to\Ds\kaon\pi\pi$ decays, where the $\kaon\pion\pion$ subsystem 
@@ -23,3 +19,89 @@ or select a suitable phase-space region and introduce a coherence factor as addi
 This analysis is based on the first observation of the $\Bs\to\Ds\kaon\pion\pion$ decay by LHCb \cite{Blusk:1471393,Blusk:2012it}, where the branching ratio is measured relative to $\Bs\to\Ds\pion\pion\pion$.
 %The result obtained by the previous analysis is $0.052\mbox{ }\pm 0.005\mbox{ } 0.003$, where the uncertainties are statistical and systematical, respectively.  
 %The branching ratio measurement is updated, exploiting the full Run 1 data sample, corresponding to 3 $\invfb$ of integrated luminosity.         
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.]
+%Strange to beauty quark
+\draw [->,thick] (0,0) node[left]{$s$} -- (4,0) node[right]{$b$};
+%Beauty to strange Anti Quark
+\draw [<-,thick] (0,1) node[left]{$\bar{b}$} -- (4,1) node[right]{$\bar{s}$};
+%W boson
+\draw [dashed,thick] (2.5,0) -- (2.5,1);
+\draw [dashed,thick] (1.5,0) -- (1.5,1);
+
+%Labels
+\draw[decoration={brace},decorate,thick] (-0.5,0) -- node[left=0.2] {$B_s^0$} (-0.5,1);
+\draw[decoration={brace},decorate,thick] (4.5,1) -- node[right=6pt] {$\bar{B}_s^0$} (4.5,0);
+\node at (1.2,0.5) {$W$};
+\node at (2.8,0.5) {$W$};
+\node at (2,-0.3) {$u,c,t$};
+\node at (2,1.3) {$u,c,t$};
+\end{tikzpicture}
+\caption{Feynman diagram of $B_s$ mixing process.}
+\label{fig:mixing_feynman}
+\end{figure}
+
+
+\begin{figure}[h]
+\centering
+   
+\begin{subfigure}[b]{0.45\textwidth}
+
+\begin{tikzpicture}[scale=1]
+%Strange quark
+\draw [->,thick] (0,0) node[left]{$s$} -- (4,0) node[right]{$s$};
+%Beauty to Charm Quark
+\draw [<-,thick] (0,1) node[left]{$\bar{b}$} -- (4,1) node[right]{$\bar{c}$};
+%W+ boson
+\draw [dashed,thick] (1,1) -- (2.5,2.5);
+\node at (1.5,2) {$W^+$};
+%u Quark
+\draw [->,thick] (2.5,2.5) -- (4,3) node[right]{$s$};
+%d Quark
+\draw [<-,thick](2.5,2.5) -- (4,2) node[right]{$\bar{u}$};
+
+%pipipi brace and node
+\draw[decoration={brace},decorate,thick](4.5,3) -- node[right=6pt] {$K^+\pi^+\pi^-$} (4.5,2);
+%Ds brace and node
+\draw[decoration={brace},decorate,thick] (4.5,1) -- node[right=6pt] {$D_s^-$} (4.5,0);
+%Bs brace and node
+\draw[decoration={brace},decorate,thick] (-0.5,0) -- node[left=0.2] {$B_s^0$} (-0.5,1);
+\end{tikzpicture}
+
+\end{subfigure} \hfill
+%
+%
+%
+%
+%
+\begin{subfigure}[b]{0.45\textwidth}
+
+\begin{tikzpicture}[scale=1]
+%Strange quark
+\draw [<-,thick] (0,0) node[left]{$\bar s$} -- (4,0) node[right]{$\bar s$};
+%Beauty to Charm Quark
+\draw [->,thick] (0,1) node[left]{$b$} -- (4,1) node[right]{$u$};
+%W+ boson
+\draw [dashed,thick] (1,1) -- (2.5,2.5);
+\node at (1.5,2) {$W^-$};
+%u Quark
+\draw [->,thick] (2.5,2.5) -- (4,3) node[right]{$s$};
+%d Quark
+\draw [<-,thick](2.5,2.5) -- (4,2) node[right]{$\bar{c}$};
+
+%pipipi brace and node
+\draw[decoration={brace},decorate,thick](4.5,3) -- node[right=6pt] {$D_s^-$} (4.5,2);
+%Ds brace and node
+\draw[decoration={brace},decorate,thick] (4.5,1) -- node[right=6pt] {$K^+\pi^+\pi^-$} (4.5,0);
+%Bs brace and node
+\draw[decoration={brace},decorate,thick] (-0.5,0) -- node[left=0.2] {$\bar B_s^0$} (-0.5,1);
+\end{tikzpicture}
+
+\end{subfigure}
+\caption{Feynman diagram for $B_s^0/\bar B_s^0 \to D_s^- K^+ \pip \pim$ decays.}
+\label{fig:decay_feynman}
+
+\end{figure}
