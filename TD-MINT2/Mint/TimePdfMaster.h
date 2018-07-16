@@ -846,14 +846,19 @@ class TimePdfMaster
         setAllFitParameters();
     }
 
-   virtual ~TimePdfMaster(){
-       // Plot acceptance
-       TH1F *h_spline = new TH1F("", "", 100, _min_TAU, _max_TAU);
+   TH1D* plotSpline(){
+       setAllFitParameters();
+       TH1D *h_spline = new TH1D("", "", 100, _min_TAU, _max_TAU);
        for (int i = 1; i<=h_spline->GetNbinsX(); i++) {
            _r_t->setVal(h_spline->GetXaxis()->GetBinCenter(i));
            h_spline->SetBinContent(i,_spline->getVal());
        }
-       
+       return h_spline;
+   }
+
+   virtual ~TimePdfMaster(){
+       // Plot acceptance
+       TH1D* h_spline = plotSpline();       
        TCanvas* c = new TCanvas();
        h_spline->SetLineColor(kRed);
        h_spline->Draw("histc");

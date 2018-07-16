@@ -5,6 +5,7 @@
 #include "Mint/Minimiser.h"
 #include "Mint/Neg2LL.h"
 #include "Mint/Neg2LLSum.h"
+#include "Mint/Neg2LLMultiConstraint.h"
 #include "Mint/DalitzEventList.h"
 #include "Mint/NamedDecayTreeList.h"
 #include "Mint/DecayTree.h"
@@ -55,6 +56,7 @@
 #include "RooAddPdf.h"
 #include "RooUniform.h"
 #include "RooExponential.h"
+#include "RooRandom.h"
 #include "RooGaussian.h"
 #include "RooMultiVarGaussian.h"
 #include "RooTruthModel.h"
@@ -211,35 +213,7 @@ public:
     }
     
  inline double getSampledPdfVal(IDalitzEvent& evt){
-
-	//return _timePdfMaster->getSamplingPdfVal(evt);
-
-        _timePdfMaster->setAllObservablesAndFitParameters(evt);
-        _timePdfMaster->setCP_coeff(1.,
-				   1.,
-                                   _C,
-                                   -_C,
-                                   _k * _D,
-                                   _k * _D_bar,
-                                   _k * _S,
-                                   _k * _S_bar
-                                   );
-        
-        double val =
-        (
-         _timePdfMaster->get_cosh_term_Val(evt)
-         +  _timePdfMaster->get_cos_term_Val(evt)
-         +  _timePdfMaster->get_sinh_term_Val(evt)
-         +  _timePdfMaster->get_sin_term_Val(evt)
-         ) * _timePdfMaster->get_marginalPdfs_product(evt);
-        
-        double norm =
-        _timePdfMaster->get_cosh_term_Integral(evt)
-        +  _timePdfMaster->get_cos_term_Integral(evt)
-        +  _timePdfMaster->get_sinh_term_Integral(evt)
-        +  _timePdfMaster->get_sin_term_Integral(evt);
-        
-        return val/norm;
+	return _timePdfMaster->getSamplingPdfVal(evt);
     }
 
     std::pair<double, double> getCalibratedMistag_OS(IDalitzEvent& evt){
@@ -292,6 +266,227 @@ public:
 
     RooDataSet* sampleEvents(int N = 10000, int run = -1 , int trigger = -1){
 	return _timePdfMaster->sampleEvents(N,run,trigger);
+    }
+
+
+    void generateBkgToys(int N, DalitzEventList& eventListData){
+
+	DalitzEventList eventList,eventListDataSideband;
+
+	for(int i=0; i< eventListData.size(); i++)
+	{	
+		DalitzEvent evt = eventListData[i];
+		if(abs(evt.getValueFromVector(9) -5370) > 60)eventListDataSideband.Add(evt);
+	}
+	int N_sample = eventListDataSideband.size();
+
+	vector<int> b_indices;
+	while( b_indices.size() < N )b_indices.push_back(TMath::Nint(gRandom->Uniform(0,N_sample)));
+	sort(b_indices.begin(), b_indices.end());
+	
+	TRandom3 rndm;
+	for(int i=0; i< N; i++)
+	{	
+		DalitzEvent evt = eventListDataSideband[b_indices[i]];
+		eventList.Add(evt);
+	}
+	saveEventListToFile(eventList);
+    }
+
+    void generateToys(int N = 10000, int run = -1 , int trigger = -1){
+
+	int N_gen = 0;
+	int N_tot = 0;
+	int N_sample = 100000;
+        NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
+        DalitzEventPattern pat(EventPattern.getVector());
+	DalitzEventList eventList;
+
+	/// Estimate max val
+	RooDataSet* starterSet = sampleEvents(N_sample,run,trigger);
+	vector<double> vals;	
+
+	for(int i = 0; i < starterSet->numEntries(); i++){
+	
+		RooArgSet* sample_set= (RooArgSet*)starterSet->get(i);
+	
+		double t_MC = ((RooRealVar*)sample_set->find("t"))->getVal() ;
+		double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
+		int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
+		int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
+		double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
+		int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ;
+		double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
+		int run_MC = ((RooCategory*)sample_set->find("run"))->getIndex() ;
+		int trigger_MC = ((RooCategory*)sample_set->find("trigger"))->getIndex() ;
+	
+		DalitzEvent evt(pat);
+		evt.setValueInVector(0, t_MC);
+		evt.setValueInVector(1, dt_MC);
+		evt.setValueInVector(2, f_MC);
+		evt.setValueInVector(3, q_OS_MC);
+		evt.setValueInVector(4, eta_OS_MC);
+		evt.setValueInVector(5, q_SS_MC);
+		evt.setValueInVector(6, eta_SS_MC);
+
+		vals.push_back(getVal(evt)/getSampledPdfVal(evt));
+	}
+
+	double amax,pmax;
+	generalisedPareto_estimateMaximum(vals,0.9999,amax,pmax);
+	
+	double pdf_max = 1.;
+	if(!TMath::IsNaN(pmax))pdf_max = pmax;
+	else if(!TMath::IsNaN(amax))pdf_max = amax;
+
+	// for safety
+ 	pdf_max *= 1.2;	
+
+	while(true){
+
+		RooDataSet* sample = sampleEvents(N_sample,run,trigger);
+		
+		for(int i = 0; i < sample->numEntries(); i++){
+		
+			RooArgSet* sample_set= (RooArgSet*)sample->get(i);
+		
+			double t_MC = ((RooRealVar*)sample_set->find("t"))->getVal() ;
+			double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
+			int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
+			int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
+			double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
+			int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ;
+			double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
+			int run_MC = ((RooCategory*)sample_set->find("run"))->getIndex() ;
+			int trigger_MC = ((RooCategory*)sample_set->find("trigger"))->getIndex() ;
+		
+			DalitzEvent evt(pat);
+			evt.setValueInVector(0, t_MC);
+			evt.setValueInVector(1, dt_MC);
+			evt.setValueInVector(2, f_MC);
+			evt.setValueInVector(3, q_OS_MC);
+			evt.setValueInVector(4, eta_OS_MC);
+			evt.setValueInVector(5, q_SS_MC);
+			evt.setValueInVector(6, eta_SS_MC);
+			
+			const double pdfVal = getVal(evt)/getSampledPdfVal(evt);
+			double maxVal = pdf_max; //* getSampledPdfVal(evt);
+			
+			const double height = gRandom->Uniform(0,maxVal);
+			//Safety check on the maxmimum generated height
+			if( pdfVal > maxVal ){
+				std::cout << "ERROR: PDF above determined maximum." << std::endl;
+				std::cout << pdfVal << " > " << maxVal << std::endl;
+				//exit(1);
+				pdf_max = pdf_max * 10.;
+			}
+			
+			//Hit-and-miss
+			if( height < pdfVal ) { 
+				eventList.Add(evt);
+				N_gen++;
+			}		
+			N_tot ++;
+			if(N_gen == N)break;
+ 		}
+			if(N_gen == N)break;
+	}
+
+	cout << "Generated " << N_gen << " events ! Efficiecy = " << (double)N_gen/(double)N_tot << endl;
+
+	saveEventListToFile(eventList);
+   }
+
+    void saveEventListToFile(DalitzEventList& eventList, string name = "toys.root"){
+
+	    TFile* out = new TFile(name.c_str(),"RECREATE");
+	    TTree* tree = new TTree("DecayTree","DecayTree");
+    		
+	    double t,dt;
+	    int f;
+	    double Bs_ID,Ds_ID;
+	    int q_OS;
+	    Short_t q_SS;
+	    double eta_OS;
+	    Float_t eta_SS;
+	    double sw;
+	    int year,run,Ds_finalState,trigger;
+		
+	    double K[4];
+	    double pip[4];
+	    double pim[4];
+	    double Ds_Kp[4],Ds_Km[4],Ds_pim[4];
+	    double mB;
+
+    	    TBranch* br_mB = tree->Branch( "Bs_DTF_MM", &mB, "Bs_DTF_MM/D" );
+    	    TBranch* br_t = tree->Branch( "Bs_DTF_TAU", &t, "Bs_DTF_TAU/D" );
+    	    TBranch* br_dt = tree->Branch( "Bs_DTF_TAUERR", &dt, "Bs_DTF_TAUERR/D" );
+
+	    for(int i= 0; i < eventList.size(); i++){
+
+		t = eventList[i].getValueFromVector(0);
+		dt = eventList[i].getValueFromVector(1);
+
+
+		mB = eventList[i].getValueFromVector(9);
+		
+		tree->Fill();
+	     }
+
+	     tree->Write();
+	     out->Write();
+	     out->Close();
+
+// 		tree->SetBranchAddress("Bs_DTF_TAU",&t);
+// 		tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+// 		tree->SetBranchAddress("Ds_ID",&f);
+// 		tree->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
+// 		tree->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&eta_OS);
+// 		tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
+// 		tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&eta_SS);
+// 		tree->SetBranchAddress("N_Bs_sw",&sw);
+// 		tree->SetBranchAddress("year",&year);
+// 		tree->SetBranchAddress("run",&run);
+// 		tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
+// 		tree->SetBranchAddress("TriggerCat",&trigger);
+// 		tree->SetBranchAddress("Bs_DTF_MM",&mB);
+// 		
+// 		tree->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
+// 		tree->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
+// 		tree->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
+// 		tree->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
+// 		
+// 		tree->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
+// 		tree->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
+// 		tree->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
+// 		tree->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);
+// 		
+// 		tree->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
+// 		tree->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
+// 		tree->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
+// 		tree->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);
+// 		
+// 		tree->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
+// 		tree->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
+// 		tree->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
+// 		tree->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);
+// 		
+// 		tree->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
+// 		tree->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
+// 		tree->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
+// 		tree->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
+// 	
+// 		tree->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
+// 		tree->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
+// 		tree->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
+// 		tree->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
+
+	
+
+    }
+
+    TH1D* plotSpline() {
+	 return _timePdfMaster->plotSpline();
     }
     
     FullTimePdf(const MINT::FitParameter& C, const MINT::FitParameter& D, const MINT::FitParameter& D_bar,
@@ -608,7 +803,8 @@ void fullTimeFit(int step=0){
     int seed = RandomSeed + step;
     ranLux.SetSeed((int)seed);
     gRandom = &ranLux;
-    
+    RooRandom::randomGenerator()->SetSeed(seed);
+
     NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
     DalitzEventPattern pat(EventPattern.getVector());
     DalitzEventPattern pat_CP = pat.makeCPConjugate();
@@ -985,13 +1181,13 @@ void fullTimeFit(int step=0){
                               production_asym_Run2, detection_asym_Run2, "Run2_t1" );
     
     /// Load data
-    double t,dt;
+    double t,dt,mB;
     int f;
     int q_OS;
     double Bs_ID,Ds_ID;
-    Short_t q_SS;
+    Int_t q_SS;
     double eta_OS;
-    Float_t eta_SS;
+    Double_t eta_SS;
     double sw;
     int year,run,Ds_finalState,trigger;
     double K[4];
@@ -1040,7 +1236,7 @@ void fullTimeFit(int step=0){
     }
     else {
 	tree_norm=new TChain("DecayTree");
-	tree_norm->Add(((string)InputDir+"Data/"+(string)channel+".root").c_str());
+	tree_norm->Add(((string)InputDir+"Data/"+(string)channel+"_tagged.root").c_str());
 	tree_norm->SetBranchStatus("*",0);
 	tree_norm->SetBranchStatus("N_Bs_sw",1);
 	tree_norm->SetBranchStatus("year",1);
@@ -1053,14 +1249,17 @@ void fullTimeFit(int step=0){
 	tree_norm->SetBranchStatus("TriggerCat",1);
 	tree_norm->SetBranchStatus("run",1);
 	tree_norm->SetBranchStatus("BsDTF_*P*",1);
+	tree_norm->SetBranchStatus("Bs_DTF_MM",1);
 	
-	tree_norm->SetBranchAddress("Bs_DTF_TAU",&t);
-	tree_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+
+	tree_norm->SetBranchAddress("Bs_DTF_MM",&mB);
+	tree_norm->SetBranchAddress("Bs_BsDTF_TAU",&t);
+	tree_norm->SetBranchAddress("Bs_BsDTF_TAUERR",&dt);
 	tree_norm->SetBranchAddress("Ds_ID",&f);
-	tree_norm->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
-	tree_norm->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&eta_OS);
-	tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
-	tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&eta_SS);
+	tree_norm->SetBranchAddress("OS_Combination_DEC",&q_OS);
+	tree_norm->SetBranchAddress("OS_Combination_PROB",&eta_OS);
+	tree_norm->SetBranchAddress("SS_Kaon_DEC",&q_SS);
+	tree_norm->SetBranchAddress("SS_Kaon_PROB",&eta_SS);
 	tree_norm->SetBranchAddress("N_Bs_sw",&sw);
 	tree_norm->SetBranchAddress("year",&year);
 	tree_norm->SetBranchAddress("run",&run);
@@ -1136,6 +1335,7 @@ void fullTimeFit(int step=0){
     //RooDataSet* protoData = new RooDataSet("protoData","protoData",RooArgSet(*r_dt,*r_eta_OS,*r_eta_SS));
 
     int N_sample = tree_norm->GetEntries();
+    if(N_bootstrap == -1)N_bootstrap = N_sample;
 
     vector<int> b_indices;
     while( b_indices.size() < N_bootstrap )b_indices.push_back(TMath::Nint(ranLux.Uniform(0,N_sample)));
@@ -1241,6 +1441,7 @@ void fullTimeFit(int step=0){
         evt.setValueInVector(6, eta_SS);
         evt.setValueInVector(7, run);
         evt.setValueInVector(8, trigger);
+        evt.setValueInVector(9, mB);
         eventList.Add(evt);
 
 //         r_dt->setVal(dt);        
@@ -1284,6 +1485,14 @@ void fullTimeFit(int step=0){
 	}
 
     }
+
+    
+    /// Generate toys
+    t_pdf_Run1_t0.generateBkgToys(1000,eventList_Run1_t0);
+    throw "";
+
+
+
 
     /// Fit with MINT Pdf
     Neg2LL neg2LL(t_pdf, eventList);    
@@ -1331,6 +1540,10 @@ void fullTimeFit(int step=0){
     if(eventList_Run2_t1_bin3.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t1_bin3);
 
     //neg2LL_sim.addConstraints(); 
+
+    Neg2LLMultiConstraint gauss_constrains(MinuitParameterSet::getDefaultSet(),"_Run1");
+    //neg2LL_sim.add(&gauss_constrains);
+    gauss_constrains.smearInputValues();
 
     Minimiser mini;
     if(doSimFit)mini.attachFunction(&neg2LL_sim);
@@ -1500,6 +1713,8 @@ void fullTimeFit(int step=0){
         } 
 
         D_comb += pow(1.-2.*w_eff,2)* eventList[i].getWeight();
+
+	double D_tot = (1.-2.*abs(w_eff)) * exp(-pow(t_pdf.getCalibratedResolution(eventList[i].getValueFromVector(1))*dm,2)/2.);
         
         if(q1 != 0) N_OS_all += eventList[i].getWeight();
         if(q2 != 0){
@@ -1531,44 +1746,44 @@ void fullTimeFit(int step=0){
             if(q_eff==-1 && f_evt == 1){ 
 			h_t_mp->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
 			if(w_eff<w_max){
-				h_N_mixed_p->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
-				h_N_mixed_p_unfolded->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+				h_N_mixed_p->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight()*D_tot);
+				h_N_mixed_p_unfolded->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
 			}
 
             }
-            else if(q_eff==0 && f_evt == 1)h_t_0p->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+            else if(q_eff==0 && f_evt == 1)h_t_0p->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
             else if(q_eff==1 && f_evt == 1){
-                        h_t_pp->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+                        h_t_pp->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
                             if(w_eff<w_max){
-                                    h_N_unmixed_p->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
-                                    h_N_unmixed_p_unfolded->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+                                    h_N_unmixed_p->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight()*D_tot);
+                                    h_N_unmixed_p_unfolded->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
                             }
             }
             else if(q_eff==-1 && f_evt == -1){
-                    h_t_mm->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+                    h_t_mm->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
         	    	if(w_eff<w_max){
-                            h_N_unmixed_m->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
-                            h_N_unmixed_m_unfolded->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+                            h_N_unmixed_m->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight()*D_tot);
+                            h_N_unmixed_m_unfolded->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
                     }
            }
-           else if(q_eff==0 && f_evt == -1)h_t_0m->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+           else if(q_eff==0 && f_evt == -1)h_t_0m->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
            else if(q_eff==1 && f_evt == -1){
-                    h_t_pm->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+                    h_t_pm->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
                     if(w_eff<w_max){
-                        h_N_mixed_m->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
-                        h_N_mixed_m_unfolded->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+                        h_N_mixed_m->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight()*D_tot);
+                        h_N_mixed_m_unfolded->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
                     }
                 }
         }
         else { 	
-            if(q_eff == 0)h_t_untagegged->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
+            if(q_eff == 0)h_t_untagegged->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
                 else if(q_eff*f_evt > 0  ){
-                        h_t_mixed->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
-                        if(w_eff<w_max)h_N_mixed->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
+                        h_t_mixed->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
+                        if(w_eff<w_max)h_N_mixed->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight()*D_tot);
                     }
                 else {
-                    h_t_unmixed->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
-                    if(w_eff<w_max)h_N_unmixed->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight());
+                    h_t_unmixed->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
+                    if(w_eff<w_max)h_N_unmixed->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight()*D_tot);
                 }
         }
   
@@ -1741,6 +1956,7 @@ void fullTimeFit(int step=0){
 		vector<int> cov_params_id;
 		RooArgList xvec, mu;
 		
+
 		for(int i = 0; i < cov_params.size(); i++){
 			cov_params_id.push_back(mps->findParPtr(cov_params[i]));
 			double mean = mps->getParPtr(cov_params[i])->mean();	
@@ -2265,7 +2481,7 @@ void fullTimeFit(int step=0){
 	   	}
 	}
     }
-    else for(int n = 0; n < 50; n++){   /// Multiple iterations needed since RooDataSet is not memory-resident 
+    else for(int n = 0; n < 1; n++){   /// Multiple iterations needed since RooDataSet is not memory-resident 
 	
 	RooDataSet* sampleEvents;
 	int N_sample = 200000;
@@ -2765,6 +2981,24 @@ void fullTimeFit(int step=0){
         cout<< "done 2-D scan" << endl;
     }
     
+
+//     if(plotAcceptance){
+    	Neg2LLMultiConstraint gauss_acc_run1_t0(MinuitParameterSet::getDefaultSet(),"_Run1");
+	TH1D* t_acc = t_pdf_Run1_t0.plotSpline();
+	t_acc->Draw("histc");
+
+	for(int i = 0; i < 100; i++){
+		gauss_acc_run1_t0.smearInputValues();
+		TH1D* t_acc_i = t_pdf_Run1_t0.plotSpline();
+		t_acc->SetLineColor(kBlue);
+		t_acc_i->Draw("histcsame");
+	}
+	t_acc->SetLineColor(kRed);
+	t_acc->Draw("histcsame");
+	c->Print("smearedAcc.eps");
+
+//     }
+
     return;
 }
 
@@ -2782,16 +3016,14 @@ void produceMarginalPdfs(){
 
     /// Load files
     // Data
-    int q_OS,f,Ds_ID;
-    Short_t q_SS;
-    double w_OS;
-    Float_t w_SS;
+    Int_t q_OS,f,Ds_ID,q_SS;
+    Double_t w_OS,w_SS;
     double sw;
     int run,year,Ds_finalState,trigger;
     double t,dt;
     
     TChain* tree_norm=new TChain("DecayTree");
-    tree_norm->Add( ((string)InputDir + "Data/norm.root").c_str());
+    tree_norm->Add( ((string)InputDir + "Data/norm_tagged.root").c_str());
     tree_norm->SetBranchStatus("*",0);
     tree_norm->SetBranchStatus("N_Bs_sw",1);
     tree_norm->SetBranchStatus("year",1);
@@ -2803,16 +3035,16 @@ void produceMarginalPdfs(){
     tree_norm->SetBranchStatus("TriggerCat",1);
     tree_norm->SetBranchStatus("Ds_ID",1);
 
-    tree_norm->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
-    tree_norm->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS);
-    tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
-    tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS);
+    tree_norm->SetBranchAddress("OS_Combination_DEC",&q_OS);
+    tree_norm->SetBranchAddress("OS_Combination_PROB",&w_OS);
+    tree_norm->SetBranchAddress("SS_Kaon_DEC",&q_SS);
+    tree_norm->SetBranchAddress("SS_Kaon_PROB",&w_SS);
     tree_norm->SetBranchAddress("N_Bs_sw",&sw);
     tree_norm->SetBranchAddress("year",&year);
     tree_norm->SetBranchAddress("run",&run);
     tree_norm->SetBranchAddress("Ds_finalState",&Ds_finalState);
-    tree_norm->SetBranchAddress("Bs_DTF_TAU",&t);
-    tree_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+    tree_norm->SetBranchAddress("Bs_BsDTF_TAU",&t);
+    tree_norm->SetBranchAddress("Bs_BsDTF_TAUERR",&dt);
     tree_norm->SetBranchAddress("TriggerCat",&trigger);
     tree_norm->SetBranchAddress("Ds_ID",&Ds_ID);
 
@@ -2995,6 +3227,27 @@ void produceMarginalPdfs(){
     out->Write();
 }
 
+
+void test_multiGaussConstraints(){
+
+    FitParameter  offset_sigma_dt_Run2("offset_sigma_dt_Run2",1,0.,0.1);
+    FitParameter  scale_sigma_dt_Run2("scale_sigma_dt_Run2",1,1.2,0.1);
+
+    Neg2LLMultiConstraint gauss_constrains(MinuitParameterSet::getDefaultSet(),"_Run2");
+
+    RooDataSet* data_cov = gauss_constrains.generateToys(100);
+
+    for(int i = 0 ; i < 100; i++){
+					RooArgSet* xvec_cov= (RooArgSet*)data_cov->get(i);
+	
+					double p0 = ((RooRealVar*)xvec_cov->find("offset_sigma_dt_Run2"))->getVal(); 
+					double p1 = ((RooRealVar*)xvec_cov->find("scale_sigma_dt_Run2"))->getVal(); 
+
+					cout << "scaling function : " << p0 << " +/- " << p1 << " * dt "  << endl ;
+   }
+
+}
+
 int main(int argc, char** argv){
 
   time_t startTime = time(0);
@@ -3003,9 +3256,11 @@ int main(int argc, char** argv){
   TH2::SetDefaultSumw2();
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
-  produceMarginalPdfs();
+
+  test_multiGaussConstraints();
+  //produceMarginalPdfs();
   //for(int i = 0; i < 200; i++) fullTimeFit(atoi(argv[1])+i);
-  fullTimeFit(atoi(argv[1]));
+//   fullTimeFit(atoi(argv[1]));
   
 
   cout << "==============================================" << endl;

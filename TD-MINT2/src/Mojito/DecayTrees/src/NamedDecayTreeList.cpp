@@ -327,6 +327,7 @@ int NamedDecayTreeList::add_CPConjugates_forAll(){
 
 int NamedDecayTreeList::makeDecayTreeList(){
   //make3BodyList();
+  makeDplusTo3PiList();
   make3BodyListForRunningWidth();  
   make4BodyList();
   return _trees.size();
@@ -500,7 +501,85 @@ int NamedDecayTreeList::make3BodyListForRunningWidth(){
     return _trees.size();
 }
 
+int NamedDecayTreeList::makeDplusTo3PiList() {
+  DecayTree* dk=0;
 
+    dk = new DecayTree(411);
+    dk->addDgtr(211, 113)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "GS"));  
+    delete dk;
+    
+    dk = new DecayTree(411);
+    dk->addDgtr(211, 999001)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "Bugg"));  
+    delete dk;
+ 
+    dk = new DecayTree(411);
+    dk->addDgtr(211, 9010221)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "Flatte"));  
+    delete dk;
+
+    dk = new DecayTree(411);
+    dk->addDgtr(211, 225)->addDgtr(211,-211);
+    this->add(*dk);
+    delete dk;
+
+
+
+
+    dk = new DecayTree(421);
+    dk->addDgtr(111, 113)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "GS"));  
+    delete dk;
+
+    dk = new DecayTree(421);
+    dk->addDgtr(111, 223)->addDgtr(211,-211);
+    this->add(*dk);
+    delete dk;
+
+    dk = new DecayTree(421);
+    dk->addDgtr(-211, 213)->addDgtr(211,111);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "GS"));  
+    delete dk;
+    
+    dk = new DecayTree(421);
+    dk->addDgtr(211, -213)->addDgtr(-211,111);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "GS"));  
+    delete dk;
+
+    dk = new DecayTree(421);
+    dk->addDgtr(111, 999001)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "Bugg"));  
+    delete dk;
+
+    dk = new DecayTree(421);
+    dk->addDgtr(111, 9981)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "NonRes"));  
+    delete dk;
+ 
+    dk = new DecayTree(421);
+    dk->addDgtr(111, 9010221)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "Flatte"));  
+    delete dk;
+
+    dk = new DecayTree(421);
+    dk->addDgtr(111, 225)->addDgtr(211,-211);
+    this->add(*dk);
+    delete dk;
+
+  // Done
+  return _trees.size();
+
+}
 
 int NamedDecayTreeList::makeB02DDKList(){
     

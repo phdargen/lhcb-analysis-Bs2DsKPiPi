@@ -79,6 +79,7 @@ TTree* tree_res = 0;
 vector<double> FitTimeRes(double min, double max, string binName = "", TString Bs_TAU_Var = "Bs_DTF_TAU", TString dataType = "MC"){
 	
 	/// Options
+        NamedParameter<string> weightVar("weightVar", (string)"weight");
 	NamedParameter<int> updateAnaNote("updateAnaNote", 1);
 	NamedParameter<double> TAUERR_min("TAUERR_min", 0.);		
         NamedParameter<double> TAUERR_max("TAUERR_max", 0.15);
@@ -94,13 +95,13 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
         RooRealVar Bs_TAU(Bs_TAU_Var, Bs_TAU_Var, -20.,20.);
         RooRealVar Bs_TAUERR(Bs_TAU_Var+"ERR", Bs_TAU_Var+"ERR", min, max,"ps");
 	RooRealVar Bs_TRUETAU("Bs_TRUETAU", "Bs_TRUETAU", 0.,20.);
-	RooRealVar weight("weight" , "weight", 0.);
+	RooRealVar weight(((string)weightVar).c_str() , ((string)weightVar).c_str(), 0.);
         RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
         RooRealVar year("year", "year", 0.);	
 
 	RooArgList list =  RooArgList(Bs_TAU,Bs_TAUERR,weight,Ds_finalState,year);
 	if(dataType == "MC")list.add(Bs_TRUETAU);
-	RooDataSet* data = new RooDataSet("data","data",list,Import(*tree_res),WeightVar("weight"));
+	RooDataSet* data = new RooDataSet("data","data",list,Import(*tree_res),WeightVar(((string)weightVar).c_str()));
 
         /// Add residuals to dataset
 	RooFormulaVar* Bs_DeltaTau_func;
@@ -761,7 +762,7 @@ int main(int argc, char** argv){
   	  TTree* tree = (TTree*) file->Get("DecayTree");	
 	  tree->SetBranchStatus("*",0);
        	  tree->SetBranchStatus("*TAU*",1);
-	  tree->SetBranchStatus("weight",1);
+	  tree->SetBranchStatus("weight*",1);
 	  tree->SetBranchStatus("year",1);
 	  tree->SetBranchStatus("*finalState",1);
   	  file_res = new TFile("dummy_res.root","RECREATE");

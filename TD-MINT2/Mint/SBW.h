@@ -28,14 +28,19 @@ class SBW : public BW_BW, virtual public ILineshape{
 
   virtual double GofM() {return mumsWidth();}
   virtual std::complex<double> BreitWigner(){
+
 	  double mass = mumsMass();
   	  double width = mumsWidth();
+
+	  double gamma = sqrt(mass*mass*(mass*mass+width*width));
+  	  double k = mass*width*gamma/sqrt(mass*mass+gamma);
 
           const double m2hh = mumsRecoMass2()/GeV/GeV;
 	  //double p = twoBody_dgtPsq_in_MumsFrame(mumsRecoMass(), daughterPDGMass(0), daughterPDGMass(1));
 	  //if(p <= 0) return 0.;
 
 	  std::complex<double> invBW(mumsRecoMass()-mass, - width/2.);
+  	  //return sqrt(k)/invBW;
   	  return 1.*GeV/invBW;//*pow(pABSq(),GetAlpha());//*(1.+pABSq()/GeV*c1()+pow(pABSq()/GeV,2.)*c2()+pow(pABSq()/GeV,3.)*c3());
   } 
 
