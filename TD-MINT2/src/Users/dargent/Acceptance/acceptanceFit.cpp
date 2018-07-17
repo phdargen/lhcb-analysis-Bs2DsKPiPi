@@ -311,7 +311,7 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	///Fit and Print
 	RooFitResult *myfitresult = totPdf->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
 	myfitresult->Print("v");
-	
+
 	//put coefficients into vector
 	vector<double> myCoeffs,myCoeffsErr;
 	for(int i= 0; i< values.size()+2; i++){
@@ -453,7 +453,17 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 		resultsFile << "c" + anythingToString(i) + "_" + marginalPdfsPrefix << "  " << 2 << "  " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() 
 		<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
 	}
-	
+	//save correlations
+	ofstream correlationFile;
+	correlationFile.open(("Correlations_" + marginalPdfsPrefix + ".txt").c_str(),std::ofstream::trunc);
+	correlationFile << "\"";
+	for(int i= 0; i< myBinning.size(); i++){
+		for(int j= 0; j< myBinning.size(); j++){
+			correlationFile << myfitresult->correlation(("coeff_"+anythingToString(i)).c_str(),("coeff_"+anythingToString(j)).c_str()) << " ";
+		}
+	}
+	correlationFile << "\"";
+
 	return myCoeffsAndErr;
 }
 

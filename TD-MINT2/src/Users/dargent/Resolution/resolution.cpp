@@ -469,7 +469,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
 
         TGraphErrors *ResoRelation_g = new TGraphErrors(nBins, x,y,xerr,yerr);
 	TGraphAsymmErrors *ResoRelation_ga = new TGraphAsymmErrors(nBins, x,y,xerrL,xerrH,yerr,yerr);
-
+	
 	if(updateAnaNote)datafile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ResoTable_"+dataType+".txt",std::ios_base::app);
 	else datafile.open("ResoTable_"+dataType+".txt", std::ios_base::app);		
 	datafile << "\\hline" << "\n";
@@ -543,8 +543,15 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
         leg.SetTextSize(0.05);
         leg.SetTextAlign(12);
 
-	ResoRelation_g->Fit(fitFunc,"R");
+	TFitResultPtr result = ResoRelation_g->Fit(fitFunc,"RS");
 	ResoRelation_g->Fit(fitFunc2,"R");
+
+	//put fitresult in TFitResultPtr to get covariance
+	TMatrixTSym<double> CovMatrix = result->GetCovarianceMatrix();
+	ofstream ResoFitCov;
+	ResoFitCov.open("Resolution_CovarianceMatrix_"+dataType+".txt",std::ofstream::trunc);
+	ResoFitCov << "\"" << CovMatrix(0,0)/(fitFunc->GetParError(0) * fitFunc->GetParError(0)) << " " << CovMatrix(0,1)/(fitFunc->GetParError(1) * fitFunc->GetParError(0)) << " " << CovMatrix(1,0)/(fitFunc->GetParError(1) * fitFunc->GetParError(0)) << " " << CovMatrix(1,1)/(fitFunc->GetParError(1) * fitFunc->GetParError(1)) << " \"";
+	ResoFitCov.close();
 
 	ResoRelation_ga->Draw("AP");
 	fitFunc->Draw("same");
