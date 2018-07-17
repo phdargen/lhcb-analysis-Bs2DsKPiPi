@@ -124,6 +124,9 @@ class FitParameter : public NamedParameterBase, public IMinuitParameter, virtual
 
   void setCurrentValToInit(); // resets only mean value, leaves errors etc alone
   void resetToInit(); // resets all
+  void setInit(double init){
+	_meanInit = init;
+   }
 
   //  virtual bool updateResults();
 
