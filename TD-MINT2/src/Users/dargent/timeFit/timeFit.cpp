@@ -45,6 +45,8 @@
 #include "RooDecay.h"
 #include "RooBDecay.h"
 #include "RooPlot.h"
+#include "TGraphErrors.h"
+#include "TGraphAsymmErrors.h"
 #include "RooEffProd.h"
 #include "RooGenericPdf.h"
 #include "RooGaussModel.h"
@@ -1541,9 +1543,12 @@ void fullTimeFit(int step=0){
 
     //neg2LL_sim.addConstraints(); 
 
-    Neg2LLMultiConstraint gauss_constrains(MinuitParameterSet::getDefaultSet(),"_Run1");
-    //neg2LL_sim.add(&gauss_constrains);
-    gauss_constrains.smearInputValues();
+    Neg2LLMultiConstraint gauss_constrains(MinuitParameterSet::getDefaultSet(),"_Tagging");
+    neg2LL_sim.add(&gauss_constrains);
+
+
+    Neg2LLMultiConstraint gauss_constrains_acc(MinuitParameterSet::getDefaultSet(),"_Acc");
+    gauss_constrains_acc.smearInputValues();
 
     Minimiser mini;
     if(doSimFit)mini.attachFunction(&neg2LL_sim);
@@ -3230,6 +3235,8 @@ void produceMarginalPdfs(){
 
 void test_multiGaussConstraints(){
 
+    //time reso part
+
     FitParameter  offset_sigma_dt_Run2("offset_sigma_dt_Run2",1,0.,0.1);
     FitParameter  scale_sigma_dt_Run2("scale_sigma_dt_Run2",1,1.2,0.1);
 
@@ -3237,14 +3244,88 @@ void test_multiGaussConstraints(){
 
     RooDataSet* data_cov = gauss_constrains.generateToys(100);
 
+    TCanvas* c = new TCanvas();
+    TF1 *nominalFunc = new TF1("nominalFunc", "[0]-1+[1]*x ", 0., 0.15);
+    nominalFunc->SetParameters(0, 0.0097);
+    nominalFunc->SetParameters(1, 0.915);
+    nominalFunc->Draw();
+
     for(int i = 0 ; i < 100; i++){
 					RooArgSet* xvec_cov= (RooArgSet*)data_cov->get(i);
-	
+
 					double p0 = ((RooRealVar*)xvec_cov->find("offset_sigma_dt_Run2"))->getVal(); 
 					double p1 = ((RooRealVar*)xvec_cov->find("scale_sigma_dt_Run2"))->getVal(); 
 
 					cout << "scaling function : " << p0 << " +/- " << p1 << " * dt "  << endl ;
+
+					//plot it 
+					TF1 *fitFunc = new TF1("fitFunc", "[0]-1+[1]*x ", 0., 0.15);
+					fitFunc->SetParameters(0, p0);
+					fitFunc->SetParameters(1, p1);
+					fitFunc->SetLineColor(i);
+					fitFunc->Draw("LSAME");
+
+     }
+
+    TF1 *nominalFunc2 = new TF1("nominalFunc2", "[0]-1+[1]*x ", 0., 0.15);
+    nominalFunc2->SetParameters(0, 0.0097);
+    nominalFunc2->SetParameters(1, 0.915);
+    nominalFunc2->SetLineWidth(2.5);
+    nominalFunc2->Draw("LSAME");
+
+
+    c->Print("ScalingFunctions.eps");
+    c->Close();
+
+
+
+    TCanvas* c_new = new TCanvas();
+
+    //time acceptance part
+
+    FitParameter  c0_Run1_t0("c0_Run1_t0",1,0.,2.);
+    FitParameter  c1_Run1_t0("c1_Run1_t0",1,0.,2.);
+    FitParameter  c2_Run1_t0("c2_Run1_t0",1,0.,2.);
+    FitParameter  c3_Run1_t0("c3_Run1_t0",1,0.,2.);
+
+    Neg2LLMultiConstraint tagging_constrains_Run1_t0(MinuitParameterSet::getDefaultSet(),"_Tagging_Run1_t0");
+
+    RooDataSet* tagging_cov_Run1_t0 = tagging_constrains_Run1_t0.generateToys(100);
+
+    Double_t xAxis[4]  = {0.8, 1.6, 2.5 , 6.5};
+    Double_t yNominal[4] = {5.7696e-01, 7.5715e-01, 8.8174e-01, 1.0844e+00};
+
+   TGraphErrors *NominalSpline = new TGraphErrors(4,xAxis,yNominal);
+   NominalSpline->SetTitle("Spline Coefficients c_{i}");
+   NominalSpline->GetXaxis()->SetTitle("t [ps]");
+   NominalSpline->GetYaxis()->SetTitle("c_{i}");
+   NominalSpline->Draw();
+
+    for(int i = 0 ; i < 100; i++){
+					RooArgSet* xvec_cov_Run1_t0= (RooArgSet*)tagging_cov_Run1_t0->get(i);
+
+                                        double c0 = ((RooRealVar*)xvec_cov_Run1_t0->find("c0_Run1_t0"))->getVal();
+					double c1 = ((RooRealVar*)xvec_cov_Run1_t0->find("c1_Run1_t0"))->getVal();
+                                        double c2 = ((RooRealVar*)xvec_cov_Run1_t0->find("c2_Run1_t0"))->getVal();
+					double c3 = ((RooRealVar*)xvec_cov_Run1_t0->find("c3_Run1_t0"))->getVal();
+
+                                        cout << "spline : c0 = " << c0 << " , c1 = " << c1 << " , c2 = " << c2 << " , c3= " << c3  << endl ;
+
+   					Double_t yAxis[4]  = {c0, c1, c2, c3};
+   					TGraphErrors *gr = new TGraphErrors(4,xAxis,yAxis);
+   					gr->SetMarkerColor(i);
+					gr->SetLineColor(i);
+   					gr->Draw("SAME");
+
    }
+
+   TGraphErrors *NominalSpline2 = new TGraphErrors(4,xAxis,yNominal);
+   NominalSpline2->SetLineWidth(2.5);
+   NominalSpline2->GetXaxis()->SetTitle("t [ps]");
+   NominalSpline2->GetYaxis()->SetTitle("c_{i}");
+   NominalSpline2->Draw("SAME");
+
+   c_new->Print("SplineCoeffs.eps");
 
 }
 

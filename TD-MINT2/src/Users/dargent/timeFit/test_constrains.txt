@@ -1,5 +1,18 @@
 "ConstrainMulti_Run2"			  "offset_sigma_dt_Run2 scale_sigma_dt_Run2 "
-"ConstrainMulti_Run2_corr"		   "1 0 0 1 "
+"ConstrainMulti_Run2_corr"		  "1 -0.949187 -0.949187 1.00028 "
 
-"offset_sigma_dt_Run2"		2	0.0097 0.001
-"scale_sigma_dt_Run2"		2	0.915  0.1
+
+"ConstrainMulti_Tagging_Run1_t0"	  "c0_Run1_t0 c1_Run1_t0 c2_Run1_t0 c3_Run1_t0 "
+
+"ConstrainMulti_Tagging_Run1_t0_corr" 	  "1 0.899898 0.446259 0.129351 0.899898 1 0.271947 0.151494 0.446259 0.271947 1 -0.229785 0.129351 0.151494 -0.229785 1 "
+*"ConstrainMulti_Tagging_Run1_t1_corr" 	  "1 0.923146 0.351348 0.135284 0.923146 1 0.223318 0.147645 0.351348 0.223318 1 -0.221176 0.135284 0.147645 -0.221176 1 "
+*"ConstrainMulti_Tagging_Run2_t0_corr"    "1 0.9037 0.439882 0.121561 0.9037 1 0.272111 0.144321 0.439882 0.272111 1 -0.236659 0.121561 0.144321 -0.236659 1 "
+*"ConstrainMulti_Tagging_Run2_t1_corr"     "1 0.941309 0.300017 0.159578 0.941309 1 0.202452 0.168672 0.300017 0.202452 1 -0.242355 0.159578 0.168672 -0.242355 1 "
+
+"offset_sigma_dt_Run2"		2	0.0097 0.0017
+"scale_sigma_dt_Run2"		2	0.915  0.040
+
+"c0_Run1_t0"			2	5.7696e-01  1.60e-02
+"c1_Run1_t0"			2	7.5715e-01  2.52e-02
+"c2_Run1_t0"			2	8.8174e-01  3.78e-02
+"c3_Run1_t0"			2	1.0844e+00  2.66e-02
