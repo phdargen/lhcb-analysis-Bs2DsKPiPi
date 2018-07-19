@@ -591,34 +591,54 @@ class TimePdfMaster
 	//_sampleGen = 0;
     }
     
+//     RooDataSet* sampleEvents(int N = 10000, int run = -1, int trigger = -1){
+//         if(_sampleGen == 0){
+//     		_protoData = new RooDataSet("protoData","protoData",RooArgSet(*_r_dt,*_r_f,*_r_q_OS,*_r_eta_OS,*_r_q_SS,*_r_eta_SS));
+//     		_protoData_rt = new RooDataSet("protoData_rt","protoData_rt",RooArgSet(*_r_run,*_r_trigger));
+// 		for(int i = 0 ; i < N; i++){
+//  		        _r_dt->setVal(_h_dt->GetRandom());        
+//  		        _r_q_SS->setIndex((int)_h_q_SS->GetBinCenter(_h_q_SS->FindBin(_h_q_SS->GetRandom())));
+//          		_r_q_OS->setIndex((int)_h_q_OS->GetBinCenter(_h_q_OS->FindBin(_h_q_OS->GetRandom())));
+//          		_r_f->setIndex((int)_h_q_f->GetBinCenter(_h_q_f->FindBin(_h_q_f->GetRandom())));
+//          		_r_eta_OS->setVal(_h_eta_OS->GetRandom());
+//          		_r_eta_SS->setVal(_h_eta_SS->GetRandom());
+// 		        _protoData->add(RooArgSet(*_r_dt,*_r_q_OS,*_r_q_SS,*_r_f,*_r_eta_OS,*_r_eta_SS));
+//          		_r_run->setIndex(run);
+//          		_r_trigger->setIndex(trigger);
+// 		        _protoData_rt->add(RooArgSet(*_r_run,*_r_trigger));
+// 		}
+// 		_sampleGen = new RooMCStudy(*_samplingPdf,RooArgSet(*_r_t),ProtoData(*_protoData,kFALSE,kTRUE));
+// 	}
+// 	_sampleGen->generate(1,N,kTRUE);
+// 	RooDataSet* data = (RooDataSet*)_sampleGen->genData(0);
+// 	data->merge(_protoData_rt);
+// 	return data;
+//     }
+
     RooDataSet* sampleEvents(int N = 10000, int run = -1, int trigger = -1){
-	//cout << "Sample " << N << " events" << endl;
-	//_samplingPdf->Print("v");
         if(_sampleGen == 0){
-    		_protoData = new RooDataSet("protoData","protoData",RooArgSet(*_r_dt,*_r_f,*_r_q_OS,*_r_eta_OS,*_r_q_SS,*_r_eta_SS));
+    		_protoData = new RooDataSet("protoData","protoData",RooArgSet(*_r_dt,*_r_eta_OS,*_r_eta_SS));
     		_protoData_rt = new RooDataSet("protoData_rt","protoData_rt",RooArgSet(*_r_run,*_r_trigger));
 		for(int i = 0 ; i < N; i++){
  		        _r_dt->setVal(_h_dt->GetRandom());        
- 		        _r_q_SS->setIndex((int)_h_q_SS->GetBinCenter(_h_q_SS->FindBin(_h_q_SS->GetRandom())));
-         		_r_q_OS->setIndex((int)_h_q_OS->GetBinCenter(_h_q_OS->FindBin(_h_q_OS->GetRandom())));
-         		_r_f->setIndex((int)_h_q_f->GetBinCenter(_h_q_f->FindBin(_h_q_f->GetRandom())));
+ 		        //_r_q_SS->setIndex((int)_h_q_SS->GetBinCenter(_h_q_SS->FindBin(_h_q_SS->GetRandom())));
+         		//_r_q_OS->setIndex((int)_h_q_OS->GetBinCenter(_h_q_OS->FindBin(_h_q_OS->GetRandom())));
+         		//_r_f->setIndex((int)_h_q_f->GetBinCenter(_h_q_f->FindBin(_h_q_f->GetRandom())));
          		_r_eta_OS->setVal(_h_eta_OS->GetRandom());
          		_r_eta_SS->setVal(_h_eta_SS->GetRandom());
-		        _protoData->add(RooArgSet(*_r_dt,*_r_q_OS,*_r_q_SS,*_r_f,*_r_eta_OS,*_r_eta_SS));
+		        _protoData->add(RooArgSet(*_r_dt,*_r_eta_OS,*_r_eta_SS));
          		_r_run->setIndex(run);
          		_r_trigger->setIndex(trigger);
 		        _protoData_rt->add(RooArgSet(*_r_run,*_r_trigger));
 		}
-		_sampleGen = new RooMCStudy(*_samplingPdf,RooArgSet(*_r_t),ProtoData(*_protoData,kFALSE,kTRUE));
+		_sampleGen = new RooMCStudy(*_samplingPdf,RooArgSet(*_r_t,*_r_q_OS,*_r_q_SS,*_r_f),ProtoData(*_protoData,kFALSE,kTRUE));
 	}
 	_sampleGen->generate(1,N,kTRUE);
 	RooDataSet* data = (RooDataSet*)_sampleGen->genData(0);
 	data->merge(_protoData_rt);
-/*	RooDataSet* data = _samplingPdf->generate(RooArgSet(*_r_t),N,ProtoData(*protoData,kFALSE,kTRUE));*/
-// 	RooDataSet* data = _samplingPdf->generate(RooArgSet(*_r_t,*_r_dt,*_r_eta_OS,*_r_eta_SS,*_r_f,*_r_q_OS,*_r_q_SS),N,ProtoData(*protoData,kFALSE,kTRUE));
-	//data->Print("v");
 	return data;
     }
+
 
     void fillProtoData(double dt, int f, int q_OS, double eta_OS, int q_SS, double eta_SS){
         _r_dt->setVal(dt);        
@@ -751,6 +771,10 @@ class TimePdfMaster
 
     std::pair<double, double> getCalibratedMistag_SS(IDalitzEvent& evt,double& avg_eta_ss,double& p0_ss,double& p1_ss,double& delta_p0_ss,double& delta_p1_ss ){
         return _cosh_coeff->calibrate(evt.getValueFromVector(6), avg_eta_ss, p0_ss, p1_ss, delta_p0_ss, delta_p1_ss);
+    }
+
+    std::pair<double, double> getCalibratedMistag(double eta,double avg_eta,double p0,double p1,double delta_p0,double delta_p1 ){
+        return _cosh_coeff->calibrate(eta, avg_eta, p0, p1, delta_p0, delta_p1);
     }
 
     std::pair<double, double> getCalibratedMistag_SS(double& eta_SS){

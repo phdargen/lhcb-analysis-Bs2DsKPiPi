@@ -187,6 +187,9 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("*TAU*",1);
 	tree->SetBranchStatus("*sw",1);
+	tree->SetBranchStatus("weight*",1);
+	//tree->SetBranchStatus("BDT*",1);
+        //tree->SetBranchStatus("*BKG*",1);
 	tree->SetBranchStatus("year",1);
 	tree->SetBranchStatus("*finalState",1);
 	tree->SetBranchStatus("TriggerCat",1);
@@ -199,7 +202,7 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	//Define RooRealVar for observables
 	RooRealVar Bs_TAU(((string)Bs_TAU_Var).c_str(), ((string)Bs_TAU_Var).c_str(), min_TAU, max_TAU, "ps");
 	RooRealVar Bs_TAUERR(((string)Bs_TAU_Var+"ERR").c_str(), ((string)Bs_TAU_Var+"ERR").c_str(), min_TAUERR,max_TAUERR,"ps");
-	RooRealVar N_Bs_sw("N_Bs_sw", "N_Bs_sw", 0.);
+	RooRealVar N_Bs_sw("weight", "weight", 0.);
 	RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
 	RooRealVar year("year", "year", 0.);
 	RooRealVar TriggerCat("TriggerCat", "TriggerCat", 0.);
@@ -311,7 +314,7 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	///Fit and Print
 	RooFitResult *myfitresult = totPdf->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
 	myfitresult->Print("v");
-
+	
 	//put coefficients into vector
 	vector<double> myCoeffs,myCoeffsErr;
 	for(int i= 0; i< values.size()+2; i++){
@@ -453,6 +456,7 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 		resultsFile << "c" + anythingToString(i) + "_" + marginalPdfsPrefix << "  " << 2 << "  " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() 
 		<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
 	}
+
 	//save correlations
 	ofstream correlationFile;
 	correlationFile.open(("Correlations_" + marginalPdfsPrefix + ".txt").c_str(),std::ofstream::trunc);
@@ -464,6 +468,22 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	}
 	correlationFile << "\"";
 
+// 	TFile* output = new TFile("dummy.root","RECREATE");
+// 	TTree* out_tree = tree->CopyTree("");
+// 	double eff_weight,t;
+//         TBranch* b_eff_weight = out_tree->Branch("eff_weight",&eff_weight,"eff_weight/D");
+// 	out_tree->SetBranchAddress("Bs_DTF_TAU",&t);
+// 
+// 	for(int i= 0; i< out_tree->GetEntries();i++){
+// 		out_tree->GetEntry(i);
+// 		Bs_TAU.setVal(t);
+// 		eff_weight = 1./spl->getVal();
+// 		b_eff_weight->Fill();
+// 	}
+// 
+// 	out_tree->Write();
+// 	output->Close();
+	
 	return myCoeffsAndErr;
 }
 
@@ -714,11 +734,12 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
     RooAbsReal::defaultIntegratorConfig()->getConfigSection("RooAdaptiveGaussKronrodIntegrator1D").setRealValue("maxSeg", 1000);
 
     // Fit only signal MC to set reasonable start parameters
-    pdf_signal_mc->fitTo(*data_signal_mc, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
-    pdf_signal_B0->fitTo(*data, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
+    pdf_signal_mc->fitTo(*data_signal_mc, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Extended(kFALSE));
+    pdf_signal_B0->fitTo(*data, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Extended(kFALSE));
     
     // Perform simulataneous fit
-    RooFitResult *myfitresult = simPdf->fitTo(*dataset, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
+    //RooFitResult *myfitresult = simPdf->fitTo(*dataset, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
+    RooFitResult *myfitresult = simPdf->fitTo(*dataset, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Extended(kFALSE));
     myfitresult->Print("v");
     
     /// Plot    
@@ -1618,6 +1639,7 @@ int main(int argc, char** argv){
 
     if(FitSplineNorm){
 	//fitSplineAcc("" , "", "norm");
+	//fitSplineAcc("" , "Run1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
 	fitSplineAcc(" run == 1 && TriggerCat == 0 " , "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
 	fitSplineAcc(" run == 1 && TriggerCat == 1 " , "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
 	fitSplineAcc(" run == 2 && TriggerCat == 0 " , "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
