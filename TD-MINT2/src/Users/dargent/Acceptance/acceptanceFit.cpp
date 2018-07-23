@@ -14,6 +14,8 @@
 #include <TCanvas.h>
 #include <TLorentzVector.h>
 #include <TLatex.h>
+#include <TMatrixDSymfwd.h>
+#include <TDecompChol.h>
 #include <TROOT.h>
 #include <TStyle.h>
 #include <TFitResult.h>
@@ -457,7 +459,7 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 		<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
 	}
 
-	//save correlations
+	//save correlations and cholevsky decomposition of covariance matrix
 	ofstream correlationFile;
 	correlationFile.open(("Correlations_" + marginalPdfsPrefix + ".txt").c_str(),std::ofstream::trunc);
 	correlationFile << "\"";
@@ -467,6 +469,20 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 		}
 	}
 	correlationFile << "\"";
+
+	TMatrixDSym covarianceMatrix = myfitresult->covarianceMatrix();
+	TDecompChol* cholesky_decomp = new TDecompChol(covarianceMatrix);
+	cholesky_decomp->Decompose();
+        TMatrixD cholesky_U = cholesky_decomp->GetU();
+
+	ofstream choleskyFile;
+	choleskyFile.open(("choleskyFile_" + marginalPdfsPrefix + ".txt").c_str(),std::ofstream::trunc);
+	choleskyFile << "\"";
+	choleskyFile << cholesky_U(0,0) << " " << cholesky_U(0,1) << " " << cholesky_U(0,2) << " " << cholesky_U(0,3);
+	choleskyFile << " " << cholesky_U(1,0) << " " << cholesky_U(1,1) << " " << cholesky_U(1,2) << " " << cholesky_U(1,3);
+	choleskyFile << " " << cholesky_U(2,0) << " " << cholesky_U(2,1) << " " << cholesky_U(2,2) << " " << cholesky_U(2,3);
+	choleskyFile << " " << cholesky_U(3,0) << " " << cholesky_U(3,1) << " " << cholesky_U(3,2) << " " << cholesky_U(3,3);
+	choleskyFile << "\"";
 
 // 	TFile* output = new TFile("dummy.root","RECREATE");
 // 	TTree* out_tree = tree->CopyTree("");
