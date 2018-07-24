@@ -520,7 +520,15 @@ public:
                                           _p0_ss, p1_ss, _delta_p0_ss, _delta_p1_ss, 
                                           _avg_eta_ss, _tageff_ss, _tageff_asym_ss, 
                                           _production_asym, _detection_asym,_marginalPdfsPrefix);
-    }    
+
+	_timePdfMaster->setAllFitParameters();
+
+        _timePdfMaster->setCP_coeff(1., 1.,
+                                   _C,-_C,
+                                   _k * _D, _k * _D_bar,
+                                   _k * _S, _k * _S_bar  );  
+    }
+     
 };
 //
 
