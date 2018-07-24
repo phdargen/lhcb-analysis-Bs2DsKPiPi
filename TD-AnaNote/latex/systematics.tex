@@ -71,11 +71,12 @@ This is explicitly done by choosing slightly different knot positions,
 varying the spline coefficients at the nominal positions within their statistical uncertainties and adding/subtracting knots in the range $0.4\ps < t < 11\ps$.
 Additionaly, an adaptive binning scheme is used to determine the knot positions in a way that roughly equal amounts of data is covered between two knots.
 Strictly speaking, the variation of the spline coefficients within their uncertainty gives the statistical uncertainty of the decay-time acceptance parametrization.
-For the presented measurement, this is done using the covariance matrix of coefficients $c_{i}$, generating toy splines with randomized coefficient values $c_{i,toy}$ from this matrix and refitting using the toy spline.  
+For the presented measurement, this is done using the Cholesky decomposition  \cite{Golub:1996:MC:248979} of the covariance matrix of coefficients $c_{i}$, 
+generating toy splines with randomized coefficient values $c_{i,toy}$ from this decomposition and refitting using the toy spline.  
 Furthermore, the fit to the decay-time distribution of signal $\Bs\to\Ds\pion\pion\pion$ candidates, used to determine the spline parametrization, is reiterated with varying fixed/constrained values for $\DGs$.
 
 
-\subsubsection{Spline parametrization}
+\subsubsection{Varition of knot positions}
 The nominal knot positions are changed to be:
 
 \[ k_{alt1}(t) =  [0.5\mbox{ } 1 \mbox{ }1.5 \mbox{ }2 \mbox{ }3 \mbox{ }6 \mbox{ }9.5], 
@@ -83,10 +84,48 @@ The nominal knot positions are changed to be:
 \mbox{ } k_{adaptive}(t) =  [0.7\mbox{ } 1.2\mbox{ } 1.7\mbox{ } 2.2\mbox{ } 6.3] \]
 
 
+\subsubsection{Variation of spline coefficients}
+
+Due to the sizeable correlation of the spline coefficients $c_{i}$ determined in Chapter \ref{sec:timeAcceptance}, 
+the variations of the observables in the amplitude fit when changing one spline coefficient can not be added up in quadrature for all coefficients.
+To simplify the problem, a Cholesky decomposition \cite{Golub:1996:MC:248979} is used to generate a set of uncorrelated vectors from the covariance matrix $A_{cov}$.
+It can be shown that every Hermitian positive-definite matrix, such as $A_{cov}$, has a unique Cholesky decomposition of the form:
+
+\begin{equation}
+A_{cov} = L \cdot L^{T},
+\label{eq:choleskyDecomp}
+\end{equation}
+
+where $L$ is a lower triangular matrix with real and positive diagonal entries and $L^{T}$ denotes the transpose of $L$. \newline
+
+Given the four free spline coefficients which are determined from the fit described in \ref{sec:Acceptance}, $A_{cov}$ is a $4x4$ matrix. Therefore, the lower triangular matrix $L$ is of the form:
+
+\begin{equation}
+L = \begin{pmatrix}
+v_{11} & 0 & 0 & 0 \\
+v_{12} & v_{22} & 0 & 0 \\
+v_{13} & v_{23} & v_{33} & 0\\ 
+v_{14} & v_{24} & v_{34} & v_{44}
+\end{pmatrix},
+\label{eq:choleskyVectors}
+\end{equation}
 
 
+where $v_{ij}$ are real and positive numbers. $L$ contains four row vectors, which are by construction the four decorrelated modes of the covariant matrix $A_{cov}$. 
+From this modes, one can form variations for each of the spline coefficients:
 
-\subsubsection{Decay-time fit to $\Bs\to\Ds\pion\pion\pion$} 
+\begin{equation}
+c_{i} = c_{nom,i} + \Sigma_{j} \left(r_{j} \cdot v_{ij} \right),
+\label{eq:choleskyCoeffs}
+\end{equation}
+
+where $i=1..4$, $c_{i}$ is the i-th generated coefficient of the toy spline, $c_{nom,i}$ is the i-th coefficient determined from the nominal decay-time dependent fit to $\Bs\to\Ds\pion\pion\pion$, 
+$r_{j}$ are normally distributed real random numbers from a distribution of unit width and $v_{ij}$ are the components of $L$ (where $i$ is the row index and $j$ the column index). \newline
+We now generate four sets of 100 toy splines, where one of the four spline coefficients is varied each time using Eq. \ref{eq:choleskyCoeffs}. 
+Thus, the time-dependent amplitude fit is repeated in total 400 times with a generated toy spline and the shift of the mean value of the physics observables over each of the $4\cdot100$ sets is quoted as 
+uncertainty arising from $c_{i=1..4}$. The uncertainties are then added in quadrature to form the overall uncertainty due to the spline coefficients. Table xXx summarizes the results of this study.
+
+\subsubsection{Decay-time fit to $\Bs\to\Ds\kaon\pion\pion$} 
 
 
 
@@ -135,3 +174,7 @@ The fitted calibration curve is shown in blue for both cases.}
 
 
 \subsection{Tagging calibration}
+
+
+
+\subsection{Summary of systematic uncertainties}
