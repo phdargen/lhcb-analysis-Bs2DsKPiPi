@@ -10,7 +10,9 @@
 #include "RooRealVar.h"
 #include "RooRealConstant.h"
 #include "RooDataSet.h"
-
+#include "TDecompChol.h"
+#include <TROOT.h>
+#include "TRandom3.h"
 #include <vector>
 
 using namespace std;
@@ -24,6 +26,7 @@ class Neg2LLMultiConstraint: public Minimisable{
     RooMultiVarGaussian* _gauss_cov;
     TMatrixTSym<double>* _cov;	
     MinuitParameterSet* _mps;
+    TMatrixD* _UT;
 
     public:
         Neg2LLMultiConstraint(MinuitParameterSet* mps=0, string label = "")
@@ -88,8 +91,14 @@ class Neg2LLMultiConstraint: public Minimisable{
 			_x->Print();
 			_mu->Print();
 			_cov->Print();
-
 			_gauss_cov = new RooMultiVarGaussian("gauss_cov","gauss_cov",*_x, *_mu, *_cov);
+
+			TDecompChol tdc(*_cov);
+			tdc.Decompose();
+			TMatrixD U = tdc.GetU();
+			_UT = new TMatrixD(TMatrixD::kTransposed,U);
+			_UT->Print();
+
 	};
                 
         virtual void beginFit(){};
@@ -109,6 +118,10 @@ class Neg2LLMultiConstraint: public Minimisable{
             return getVal();
         }
     
+	int getNumberParams(){
+		return _cov->GetNcols();
+	}
+
 	void smearInputValues(){
 		
 			cout << "Smearing input values " << endl;
@@ -125,10 +138,37 @@ class Neg2LLMultiConstraint: public Minimisable{
 			}
 	}
 
+	double smearInputValuesChol(int index = 0){
+		
+			cout << "Smearing input values for parameter " << index << endl;
+			RooDataSet* data_cov = _gauss_cov->generate(*_x, 1);
+			RooArgList* xvec_cov= (RooArgList*)data_cov->get(0);
+ 
+			double val = 0;
+			for(int i = 0 ; i < _UT->GetNcols(); i++){
+				if(i != index)continue;
+				val = _mps->getParPtr(xvec_cov->at(i)->GetName())->mean();
+				for(int j = 0 ; j < _UT->GetNcols(); j++){
+					// 			cout << UT(i,j) << " " ;
+					// 			if(j == UT.GetNcols()-1) cout << endl;
+					val += gRandom->Gaus(0.,1.) * (*_UT)(i,j);
+				}	
+
+				_mps->getParPtr(xvec_cov->at(i)->GetName())->setCurrentFitVal(val);
+				((FitParameter*)_mps->getParPtr(xvec_cov->at(i)->GetName()))->setInit(val);
+				cout << "Set parameter " << xvec_cov->at(i)->GetName() << " to " << val << endl;
+			}
+			return val;
+	}
+
 	RooDataSet* generateToys(int N = 100){
 			cout << "Smearing input values " << endl;
 			RooDataSet* data_cov = _gauss_cov->generate(*_x, N);
 			return data_cov;
+	}
+
+	TMatrixDSym* getCovMatrix(){
+		return _cov;
 	}
 
 	vector<string> split(string s, string delimiter){

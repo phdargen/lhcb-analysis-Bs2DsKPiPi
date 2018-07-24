@@ -148,8 +148,8 @@ std::string MinuitParameterSet::ntpNames() const{
   for(unsigned int i=0; i < size(); i++){
     if(0 == getParPtr(i)) continue;
     if(0 != getParPtr(i)->iFixInit()) continue;
-    std::string name = "p" + anythingToString(i) + "_" 
-      + prtToNtpName(getParPtr(i)->name());
+    std::string name = //"p" + anythingToString(i) + "_" + 
+	prtToNtpName(getParPtr(i)->name());
     str += (name + "_mean" + ":"); n++;
     str += (name + "_init" + ":"); n++;
     str += (name + "_err:");       n++;

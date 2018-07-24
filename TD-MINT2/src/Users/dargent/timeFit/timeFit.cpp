@@ -101,6 +101,7 @@
 #include "TProfile.h"
 #include "TGraphErrors.h"
 #include "TGraphAsymmErrors.h"
+#include "TDecompChol.h"
 
 using namespace std;
 using namespace RooFit ;
@@ -298,7 +299,7 @@ public:
 	saveEventListToFile(eventList);
     }
 
-    void generateToys(int N = 10000, int run = -1 , int trigger = -1){
+    DalitzEventList generateToys(int N = 10000, int run = -1 , int trigger = -1){
 
 	cout << "Generating " << N << " events" << endl;
 
@@ -323,7 +324,7 @@ public:
 		int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
 		int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ; 	
 	
-		DalitzEvent evt(pat);
+		DalitzEvent evt(pat,gRandom);
 		evt.setValueInVector(0, t_MC);
 		evt.setValueInVector(1, dt_MC);
 		evt.setValueInVector(2, f_MC);
@@ -337,7 +338,8 @@ public:
 		eventList.Add(evt);
 	}
 
-	saveEventListToFile(eventList);
+	return eventList;
+	//saveEventListToFile(eventList);
    }
 
     void saveEventListToFile(DalitzEventList& eventList, string name = "toys.root"){
@@ -346,25 +348,28 @@ public:
 	    TTree* tree = new TTree("DecayTree","DecayTree");
     		
 	    double t,dt;
-	    double Bs_ID,Ds_ID;
+	    int Ds_ID;
 	    int q_OS,q,q_SS;
 	    double eta_OS;
 	    double eta_SS;
-	    double sw;
+	    double sw,w;
 	    int run,trigger;
+	    int year;
 		
 	    double K[4];
 	    double pip[4];
 	    double pim[4];
-	    double Ds_Kp[4],Ds_Km[4],Ds_pim[4];
+	    double Ds[4];
 	    double mB;
 
     	    TBranch* br_mB = tree->Branch( "Bs_DTF_MM", &mB, "Bs_DTF_MM/D" );
+    	    TBranch* br_sw = tree->Branch( "N_Bs_sw", &sw, "N_Bs_sw/D" );
+    	    TBranch* br_w = tree->Branch( "weight", &w, "weight/D" );
 
-    	    TBranch* br_t = tree->Branch( "Bs_DTF_TAU", &t, "Bs_DTF_TAU/D" );
-    	    TBranch* br_dt = tree->Branch( "Bs_DTF_TAUERR", &dt, "Bs_DTF_TAUERR/D" );
+    	    TBranch* br_t = tree->Branch( "Bs_BsDTF_TAU", &t, "Bs_BsDTF_TAU/D" );
+    	    TBranch* br_dt = tree->Branch( "Bs_BsDTF_TAUERR", &dt, "Bs_BsDTF_TAUERR/D" );
 
-	    TBranch* br_Ds_ID = tree->Branch("Ds_ID",&Ds_ID,"Ds_ID/D");
+	    TBranch* br_Ds_ID = tree->Branch("Ds_ID",&Ds_ID,"Ds_ID/I");
 
 	    TBranch* br_q_OS =tree->Branch("OS_Combination_DEC",&q_OS,"OS_Combination_DEC/I");
 	    TBranch* br_eta_OS =  tree->Branch("OS_Combination_PROB",&eta_OS,"OS_Combination_PROB/D");
@@ -372,8 +377,29 @@ public:
 	    TBranch* br_eta_SS = tree->Branch("SS_Kaon_PROB",&eta_SS,"SS_Kaon_PROB/D");
 
 	    TBranch* br_run = tree->Branch("run",&run,"run/I");
+    	    TBranch* br_year = tree->Branch( "year", &year, "year/I" );
 	    TBranch* br_trigger = tree->Branch("TriggerCat",&trigger,"TriggerCat/I");
 	    
+	    TBranch* br_K0 = tree->Branch("BsDTF_Kplus_PX",&K[0],"BsDTF_Kplus_PX/D");
+	    TBranch* br_K1 =tree->Branch("BsDTF_Kplus_PY",&K[1],"BsDTF_Kplus_PY/D");
+	    TBranch* br_K2 =tree->Branch("BsDTF_Kplus_PZ",&K[2],"BsDTF_Kplus_PZ/D");
+	    TBranch* br_K3 =tree->Branch("BsDTF_Kplus_PE",&K[3],"BsDTF_Kplus_PE/D");
+	
+            TBranch* br_pip0 =tree->Branch("BsDTF_piplus_PX",&pip[0],"BsDTF_piplus_PX/D");
+	    TBranch* br_pip1 =tree->Branch("BsDTF_piplus_PY",&pip[1],"BsDTF_piplus_PY/D");
+	    TBranch* br_pip2 =tree->Branch("BsDTF_piplus_PZ",&pip[2],"BsDTF_piplus_PZ/D");
+	    TBranch* br_pip3 =tree->Branch("BsDTF_piplus_PE",&pip[3],"BsDTF_piplus_PE/D");
+	
+	    TBranch* br_pim0 =tree->Branch("BsDTF_piminus_PX",&pim[0],"BsDTF_piminus_PX/D");
+	    TBranch* br_pim1 =tree->Branch("BsDTF_piminus_PY",&pim[1],"BsDTF_piminus_PY/D");
+	    TBranch* br_pim2 =tree->Branch("BsDTF_piminus_PZ",&pim[2],"BsDTF_piminus_PZ/D");
+	    TBranch* br_pim3 =tree->Branch("BsDTF_piminus_PE",&pim[3],"BsDTF_piminus_PE/D");
+	
+	    TBranch* br_Ds0 =tree->Branch("BsDTF_Ds_PX",&Ds[0],"BsDTF_Ds_PX/D");
+	    TBranch* br_Ds1 =tree->Branch("BsDTF_Ds_PY",&Ds[1],"BsDTF_Ds_PY/D");
+	    TBranch* br_Ds2 =tree->Branch("BsDTF_Ds_PZ",&Ds[2],"BsDTF_Ds_PZ/D");
+	    TBranch* br_Ds3 =tree->Branch("BsDTF_Ds_PE",&Ds[3],"BsDTF_Ds_PE/D");
+
 	    for(int i= 0; i < eventList.size(); i++){
 
 		t = eventList[i].getValueFromVector(0);
@@ -388,9 +414,33 @@ public:
 		eta_SS = eventList[i].getValueFromVector(6);
 
 		run = eventList[i].getValueFromVector(7);
+		if(run == 2) year = 16;
+		else year = 12;
 		trigger = eventList[i].getValueFromVector(8);
 
-		mB = eventList[i].getValueFromVector(9);
+		mB = eventList[i].p(0).M(); //eventList[i].getValueFromVector(9);
+		sw = eventList[i].getWeight();
+		w = eventList[i].getWeight();
+
+		Ds[0] = eventList[i].p(1).Px()/MeV;
+		Ds[1] = eventList[i].p(1).Py()/MeV;
+		Ds[2] = eventList[i].p(1).Pz()/MeV;
+		Ds[3] = eventList[i].p(1).E()/MeV;
+
+		K[0] = eventList[i].p(2).Px()/MeV;
+		K[1] = eventList[i].p(2).Py()/MeV;
+		K[2] = eventList[i].p(2).Pz()/MeV;
+		K[3] = eventList[i].p(2).E()/MeV;
+
+		pip[0] = eventList[i].p(3).Px()/MeV;
+		pip[1] = eventList[i].p(3).Py()/MeV;
+		pip[2] = eventList[i].p(3).Pz()/MeV;
+		pip[3] = eventList[i].p(3).E()/MeV;
+
+		pim[0] = eventList[i].p(4).Px()/MeV;
+		pim[1] = eventList[i].p(4).Py()/MeV;
+		pim[2] = eventList[i].p(4).Pz()/MeV;
+		pim[3] = eventList[i].p(4).E()/MeV;
 
 		tree->Fill();
 	     }
@@ -398,49 +448,6 @@ public:
 	     tree->Write();
 	     out->Write();
 	     out->Close();
-
-// 		tree->SetBranchAddress("Bs_DTF_TAU",&t);
-// 		tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
-// 		tree->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
-// 		tree->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&eta_OS);
-// 		tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
-// 		tree->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&eta_SS);
-// 		tree->SetBranchAddress("N_Bs_sw",&sw);
-// 		tree->SetBranchAddress("year",&year);
-// 		tree->SetBranchAddress("Bs_DTF_MM",&mB);
-// 		
-// 		tree->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
-// 		tree->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
-// 		tree->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
-// 		tree->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
-// 		
-// 		tree->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
-// 		tree->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
-// 		tree->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
-// 		tree->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);
-// 		
-// 		tree->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
-// 		tree->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
-// 		tree->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
-// 		tree->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);
-// 		
-// 		tree->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
-// 		tree->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
-// 		tree->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
-// 		tree->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);
-// 		
-// 		tree->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
-// 		tree->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
-// 		tree->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
-// 		tree->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
-// 	
-// 		tree->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
-// 		tree->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
-// 		tree->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
-// 		tree->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
-
-	
-
     }
 
     TH1D* plotSpline() {
@@ -751,7 +758,7 @@ public:
 };
 //
 
-void fullTimeFit(int step=0){
+void fullTimeFit(int step=0, string mode = "fit"){
 
     /// Options
     NamedParameter<int> updateAnaNote("updateAnaNote", 0);
@@ -777,11 +784,14 @@ void fullTimeFit(int step=0){
     NamedParameter<double> min_TAUERR("min_TAUERR", 0.);
     NamedParameter<double> max_TAUERR("max_TAUERR", 0.1);
     NamedParameter<double> w_max("w_max", 0.5);
+    NamedParameter<double> min_year("min_year", 10);
+    NamedParameter<double> max_year("max_year", 20);
 
-    NamedParameter<int>  do2DScan("do2DScan", 0);
     NamedParameter<int>  nBinst("nBinst", 40);
     NamedParameter<int>  nBinsAsym("nBinsAsym", 10);
+    NamedParameter<int>  doPlots("doPlots", 1);
 
+    NamedParameter<int>  do2DScan("do2DScan", 0);
     NamedParameter<int>  doSimFit("doSimFit", 0);
     NamedParameter<int>  doSimFitInBins("doSimFitInBins", 0);
 
@@ -789,8 +799,15 @@ void fullTimeFit(int step=0){
     NamedParameter<int>  doBootstrap("doBootstrap", 0);
     NamedParameter<int>  N_bootstrap("N_bootstrap", 10000);
 
-    NamedParameter<double> min_year("min_year", 10);
-    NamedParameter<double> max_year("max_year", 20);
+    NamedParameter<int>  doToyStudy("doToyStudy", 0);
+    NamedParameter<double> N_scale_toys("N_scale_toys", 1);
+
+    NamedParameter<int>  useGaussConstrainsTagging("useGaussConstrainsTagging", 0);
+
+    NamedParameter<int>  doAccSystematics("doAccSystematics", 0);
+    NamedParameter<int>  useCholDec("useCholDec", 0);
+    NamedParameter<int>  varPerParChol("varPerParChol", 100);
+    int chol_index = step/varPerParChol ;
 
     /// Common fit parameters
     FitParameter  r("r",1,0.,0.1);
@@ -1151,7 +1168,7 @@ void fullTimeFit(int step=0){
     double K[4];
     double pip[4];
     double pim[4];
-    double Ds_Kp[4],Ds_Km[4],Ds_pim[4];
+    double Ds_Kp[4],Ds_Km[4],Ds_pim[4],Ds[4];
     
     TChain* tree_norm;
 
@@ -1194,13 +1211,14 @@ void fullTimeFit(int step=0){
     }
     else {
 	tree_norm=new TChain("DecayTree");
-	tree_norm->Add(((string)InputDir+"Data/"+(string)channel+"_tagged.root").c_str());
+	if(mode == "fit" && doToyStudy == 1)tree_norm->Add(((string)OutputDir+"toys_"+anythingToString((int)seed)+".root").c_str());
+	else tree_norm->Add(((string)InputDir+"Data/"+(string)channel+"_tagged.root").c_str());
 	tree_norm->SetBranchStatus("*",0);
 	tree_norm->SetBranchStatus("N_Bs_sw",1);
 	tree_norm->SetBranchStatus("year",1);
 	tree_norm->SetBranchStatus("*DEC",1);
 	tree_norm->SetBranchStatus("*PROB",1);
-	tree_norm->SetBranchStatus("*OS",1);
+	tree_norm->SetBranchStatus("*OS*",1);
 	tree_norm->SetBranchStatus("*TAU*",1);
 	tree_norm->SetBranchStatus("*ID*",1);
 	tree_norm->SetBranchStatus("weight",1);
@@ -1209,7 +1227,6 @@ void fullTimeFit(int step=0){
 	tree_norm->SetBranchStatus("BsDTF_*P*",1);
 	tree_norm->SetBranchStatus("Bs_DTF_MM",1);
 	
-
 	tree_norm->SetBranchAddress("Bs_DTF_MM",&mB);
 	tree_norm->SetBranchAddress("Bs_BsDTF_TAU",&t);
 	tree_norm->SetBranchAddress("Bs_BsDTF_TAUERR",&dt);
@@ -1221,7 +1238,6 @@ void fullTimeFit(int step=0){
 	tree_norm->SetBranchAddress("N_Bs_sw",&sw);
 	tree_norm->SetBranchAddress("year",&year);
 	tree_norm->SetBranchAddress("run",&run);
-	tree_norm->SetBranchAddress("Ds_finalState",&Ds_finalState);
 	tree_norm->SetBranchAddress("TriggerCat",&trigger);
 	tree_norm->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
 	tree_norm->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
@@ -1235,18 +1251,26 @@ void fullTimeFit(int step=0){
 	tree_norm->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
 	tree_norm->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
 	tree_norm->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);    
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);    
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
+	if(doToyStudy && mode == "fit"){
+		tree_norm->SetBranchAddress("BsDTF_Ds_PX",&Ds[0]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_PY",&Ds[1]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_PZ",&Ds[2]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_PE",&Ds[3]);    
+	}
+	else {
+		tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);    
+		tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
+		tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
+	}
     }
     DalitzEventList eventList,eventList_f,eventList_f_bar;
     DalitzEventList eventList_Run1_t0,eventList_Run1_t1,eventList_Run2_t0,eventList_Run2_t1;
@@ -1289,8 +1313,6 @@ void fullTimeFit(int step=0){
     r_q_SS->defineType("untagged", 0);    
 
     RooDataSet* data = new RooDataSet("data","data",RooArgSet(*r_t,*r_dt,*r_q,*r_mistag,*r_f));
-    RooDataSet* protoData = new RooDataSet("protoData","protoData",RooArgSet(*r_dt,*r_q_OS,*r_q_SS,*r_f,*r_eta_OS,*r_eta_SS));
-    //RooDataSet* protoData = new RooDataSet("protoData","protoData",RooArgSet(*r_dt,*r_eta_OS,*r_eta_SS));
 
     int N_sample = tree_norm->GetEntries();
     if(N_bootstrap == -1)N_bootstrap = N_sample;
@@ -1350,10 +1372,16 @@ void fullTimeFit(int step=0){
 	TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
 	TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
 	TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
-	TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
-	TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
-	TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
-	TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+	TLorentzVector D_p;
+	if(doToyStudy && mode == "fit"){
+		D_p = TLorentzVector(sign*Ds[0],sign*Ds[1],sign*Ds[2],Ds[3]);
+	}
+	else {
+		TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
+		TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
+		TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
+		D_p = D_Kp_p + D_Km_p + D_pim_p;
+	}
 	TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
 	// array of vectors
 	vector<TLorentzVector> vectorOfvectors;
@@ -1382,7 +1410,7 @@ void fullTimeFit(int step=0){
 	if(f < 0)evt = DalitzEvent(pat, vectorOfvectors);
 	else evt = DalitzEvent(pat_CP, vectorOfvectors);
 
-	if(!(evt.phaseSpace() > 0.))continue;
+// 	if(!(evt.phaseSpace() > 0.))continue;
 
         evt.setWeight(sw);
         evt.setValueInVector(0, t);
@@ -1390,7 +1418,7 @@ void fullTimeFit(int step=0){
         if(f<0)evt.setValueInVector(2, 1);
         else if(f > 0)evt.setValueInVector(2, -1);
         else {
-            cout << "ERROR:: Undefined final state";  
+            cout << "ERROR:: Undefined final state " << f << endl;  
             throw "ERROR";
         }
         evt.setValueInVector(3, q_OS);
@@ -1401,15 +1429,6 @@ void fullTimeFit(int step=0){
         evt.setValueInVector(8, trigger);
         evt.setValueInVector(9, mB);
         eventList.Add(evt);
-
-//         r_dt->setVal(dt);        
-//         r_q_SS->setIndex(q_SS);
-//         r_q_OS->setIndex(q_OS);
-//         r_f->setIndex(evt.getValueFromVector(2));
-//         r_eta_OS->setVal(eta_OS);
-//         r_eta_SS->setVal(eta_SS);
-//         r_weight->setVal(sw);       
-//         protoData->add(RooArgSet(*r_dt,*r_q_OS,*r_q_SS,*r_f,*r_weight,*r_eta_OS,*r_eta_SS));
 
         if(evt.getValueFromVector(2) == 1)eventList_f.Add(evt);
         else eventList_f_bar.Add(evt);
@@ -1443,13 +1462,7 @@ void fullTimeFit(int step=0){
 	}
 
     }
-
     
-    /// Generate toys
-    t_pdf_Run1_t0.generateBkgToys(1000,eventList_Run1_t0);
-    throw "";
-
-
     /// Fit with MINT Pdf
     Neg2LL neg2LL(t_pdf, eventList);    
 
@@ -1495,28 +1508,31 @@ void fullTimeFit(int step=0){
     if(eventList_Run2_t0_bin3.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t0_bin3);
     if(eventList_Run2_t1_bin3.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t1_bin3);
 
-    //neg2LL_sim.addConstraints(); 
+    Neg2LLMultiConstraint constrains_tagging_Run1(MinuitParameterSet::getDefaultSet(),"_Tagging_Run1");
+    Neg2LLMultiConstraint constrains_tagging_Run2(MinuitParameterSet::getDefaultSet(),"_Tagging_Run2");
 
-    Neg2LLMultiConstraint gauss_constrains(MinuitParameterSet::getDefaultSet(),"_Run1");
-    //neg2LL_sim.add(&gauss_constrains);
-    gauss_constrains.smearInputValues();
+    if(useGaussConstrainsTagging){
+	    neg2LL_sim.add(&constrains_tagging_Run1);
+    	    neg2LL_sim.add(&constrains_tagging_Run2);
+    }
+
+    Neg2LLMultiConstraint constrains_Acc(MinuitParameterSet::getDefaultSet(),"_Acc");
+    if(doAccSystematics){
+	if(useCholDec){
+		if(chol_index > constrains_Acc.getNumberParams()-1)chol_index = constrains_Acc.getNumberParams()-1;
+		constrains_Acc.smearInputValuesChol(chol_index);
+	}
+	else constrains_Acc.smearInputValues();
+    }
 
     Minimiser mini;
     if(doSimFit)mini.attachFunction(&neg2LL_sim);
     else if(doSimFitInBins)mini.attachFunction(&neg2LL_sim_bins);
     else mini.attachFunction(&neg2LL);
-    mini.doFit();
-    mini.printResultVsInput();
-
-    /// Save pulls
-    gDirectory->cd();
-    TFile* paraFile = new TFile(((string)OutputDir+"pull_"+anythingToString((int)seed)+".root").c_str(), "RECREATE");
-    paraFile->cd();
-    TNtupleD* ntp=0;
-    MinuitParameterSet::getDefaultSet()->fillNtp(paraFile, ntp);
-    ntp->AutoSave();
-    paraFile->Close();
-    delete paraFile;
+    if(mode == "fit"){
+	mini.doFit();
+    	mini.printResultVsInput();
+    }
 
     /// Plot
     TCanvas* c = new TCanvas();
@@ -1670,7 +1686,7 @@ void fullTimeFit(int step=0){
 
         D_comb += pow(1.-2.*w_eff,2)* eventList[i].getWeight();
 
-	double D_tot = (1.-2.*abs(w_eff)) * exp(-pow(t_pdf.getCalibratedResolution(eventList[i].getValueFromVector(1))*dm,2)/2.);
+	double D_tot = 1.;//(1.-2.*abs(w_eff)) * exp(-pow(t_pdf.getCalibratedResolution(eventList[i].getValueFromVector(1))*dm,2)/2.);
         
         if(q1 != 0) N_OS_all += eventList[i].getWeight();
         if(q2 != 0){
@@ -1772,6 +1788,35 @@ void fullTimeFit(int step=0){
     cout << "Combined | " << (N_OS+N_SS+N_OS_SS)/N << " | "<<  (w_OS+w_SS+w_OS_SS)/(N_OS+N_SS+N_OS_SS) << " | " << (N_OS+N_SS+N_OS_SS)/N * D_comb/(N_OS+N_SS+N_OS_SS) << endl << endl ;
 
     MinuitParameterSet* mps = MinuitParameterSet::getDefaultSet();
+
+    /// Generate toys 
+    DalitzEventList toys;
+    if(mode == "gen"){
+	if(doSimFit) {
+		toys.Add(t_pdf_Run1_t0.generateToys(N_scale_toys * N_Run1_t0,1,0));
+		toys.Add(t_pdf_Run1_t1.generateToys(N_scale_toys *N_Run1_t1,1,1));
+		toys.Add(t_pdf_Run2_t0.generateToys(N_scale_toys *N_Run2_t0,2,0));
+		toys.Add(t_pdf_Run2_t1.generateToys(N_scale_toys *N_Run2_t1,2,1));
+	}
+	else toys.Add(t_pdf.generateToys(N_scale_toys *N));
+
+	t_pdf.saveEventListToFile(toys,((string)OutputDir+"toys_"+anythingToString((int)seed)+".root").c_str());
+
+	return;
+    }
+
+    /// Save pulls
+    gDirectory->cd();
+    string paraFileName = (string)OutputDir+"pull_"+anythingToString((int)seed)+".root";
+    if(doAccSystematics && useCholDec)
+	paraFileName = (string)OutputDir+"pull_par"+anythingToString((int)chol_index)+"_"+anythingToString((int)(step - chol_index * varPerParChol))+".root";
+    TFile* paraFile = new TFile( paraFileName.c_str(), "RECREATE");
+    paraFile->cd();
+    TNtupleD* ntp=0;
+    mps->fillNtp(paraFile, ntp);
+    ntp->AutoSave();
+    paraFile->Close();
+    delete paraFile;
 
     /// Create tagging perfromance tables
     if(updateAnaNote){
@@ -2197,7 +2242,37 @@ void fullTimeFit(int step=0){
 
    if(fitGenMC){
 
-	/// Fit with B2DX Pdf
+		/// Fit with B2DX Pdf
+	RooRealVar* r_t = new RooRealVar("t", "t", min_TAU, max_TAU);
+	RooRealVar* r_dt = new RooRealVar("dt", "dt",min_TAUERR, max_TAUERR);
+	RooRealVar* r_eta_OS = new RooRealVar("eta_OS", "eta_OS",0.,0.5);
+	RooRealVar* r_eta_SS = new RooRealVar("eta_SS", "eta_SS",0.,0.5);
+	
+	RooRealVar* r_mistag = new RooRealVar("mistag", "mistag",0., 0.5);
+	
+	RooCategory* r_f = new RooCategory("qf", "qf");
+	r_f->defineType("h+", +1);
+	r_f->defineType("h-", -1);
+	
+	RooCategory* r_q = new RooCategory("qt", "qt");
+	r_q->defineType("B+", +1);
+	r_q->defineType("B-", -1) ;   
+	r_q->defineType("untagged", 0);    
+	
+	RooCategory* r_q_OS = new RooCategory("q_OS", "q_OS");
+	r_q_OS->defineType("B+", +1);
+	r_q_OS->defineType("B-", -1) ;   
+	r_q_OS->defineType("untagged", 0);    
+	
+	RooCategory* r_q_SS = new RooCategory("q_SS", "q_SS");
+	r_q_SS->defineType("B+", +1);
+	r_q_SS->defineType("B-", -1) ;   
+	r_q_SS->defineType("untagged", 0);    
+	
+	RooDataSet* data = new RooDataSet("data","data",RooArgSet(*r_t,*r_dt,*r_q,*r_mistag,*r_f));
+	RooDataSet* protoData = new RooDataSet("protoData","protoData",RooArgSet(*r_dt,*r_q_OS,*r_q_SS,*r_f,*r_eta_OS,*r_eta_SS));
+	//RooDataSet* protoData = new RooDataSet("protoData","protoData",RooArgSet(*r_dt,*r_eta_OS,*r_eta_SS));
+
 	NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
 	vector<double> myBinning = knot_positions.getVector();
 	NamedParameter<double> knot_values("knot_values", 0.38,0.63,0.86,1.05,1.14,1.24,1.22);
@@ -2437,419 +2512,421 @@ void fullTimeFit(int step=0){
 	   	}
 	}
     }
-    else for(int n = 0; n < 1; n++){   /// Multiple iterations needed since RooDataSet is not memory-resident 
-	
-	RooDataSet* sampleEvents;
-	int N_sample = 200000;
-        if(doSimFit) {
-            sampleEvents = t_pdf_Run1_t0.sampleEvents(N_sample * N_Run1_t0/N,1,0);
-            sampleEvents->append(*t_pdf_Run1_t1.sampleEvents(N_sample * N_Run1_t1/N,1,1));
-            sampleEvents->append(*t_pdf_Run2_t0.sampleEvents(N_sample * N_Run2_t0/N,2,0));
-            sampleEvents->append(*t_pdf_Run2_t1.sampleEvents(N_sample * N_Run2_t1/N,2,1));
-        }
-	else  sampleEvents = t_pdf.sampleEvents(200000);
-
-	for(int i = 0; i < sampleEvents->numEntries(); i++){
-
-		RooArgSet* sample_set= (RooArgSet*)sampleEvents->get(i);
-	
-		double t_MC = ((RooRealVar*)sample_set->find("t"))->getVal() ;
-		double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
-		int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
-		int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
-		double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
-		int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ;
-		double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
-		int run_MC = ((RooCategory*)sample_set->find("run"))->getIndex() ;
-		int trigger_MC = ((RooCategory*)sample_set->find("trigger"))->getIndex() ;
-	
-		r_t->setVal(t_MC) ;
-		r_dt->setVal(dt_MC) ;
-		r_f->setIndex(f_MC) ;
-		r_q_OS->setIndex(q_OS_MC) ;
-		r_q_SS->setIndex(q_SS_MC) ;
-		r_eta_OS->setVal(eta_OS_MC) ;
-		r_eta_SS->setVal(eta_SS_MC) ;
-	
-		double weight = 1;
-		N_MC += weight;
-	
-		h_t_fit->Fill(t_MC,weight);
-		h_dt_fit->Fill(dt_MC,weight);
-		if(q_OS_MC != 0)h_eta_OS_fit->Fill(eta_OS_MC,weight);
-		if(q_SS_MC != 0)h_eta_SS_fit->Fill(eta_SS_MC,weight);
+   else if (doPlots){ 
+	for(int n = 0; n < 1; n++){   /// Multiple iterations needed since RooDataSet is not memory-resident 
 		
-		int f_evt = f_MC;
-		int q1 = q_OS_MC;
-		int q2 = q_SS_MC;   
-		int q_eff = 0;
-		double w_eff = 0.5;
+		RooDataSet* sampleEvents;
+		int N_sample = 200000;
+		if(doSimFit) {
+		sampleEvents = t_pdf_Run1_t0.sampleEvents(N_sample * N_Run1_t0/N,1,0);
+		sampleEvents->append(*t_pdf_Run1_t1.sampleEvents(N_sample * N_Run1_t1/N,1,1));
+		sampleEvents->append(*t_pdf_Run2_t0.sampleEvents(N_sample * N_Run2_t0/N,2,0));
+		sampleEvents->append(*t_pdf_Run2_t1.sampleEvents(N_sample * N_Run2_t1/N,2,1));
+		}
+		else  sampleEvents = t_pdf.sampleEvents(200000);
 	
-		h_q_OS_fit->Fill(q1,weight);
-		h_q_SS_fit->Fill(q2,weight);
-		h_f_fit->Fill(f_evt,weight);
+		for(int i = 0; i < sampleEvents->numEntries(); i++){
+	
+			RooArgSet* sample_set= (RooArgSet*)sampleEvents->get(i);
 		
-		std::pair<double, double> calibrated_mistag_os;
-		std::pair<double, double> calibrated_mistag_ss;
-		if(doSimFit){
-			if(run_MC==1){
-				calibrated_mistag_os = t_pdf_Run1_t0.getCalibratedMistag_OS(eta_OS_MC);
-				calibrated_mistag_ss = t_pdf_Run1_t0.getCalibratedMistag_SS(eta_SS_MC);
+			double t_MC = ((RooRealVar*)sample_set->find("t"))->getVal() ;
+			double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
+			int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
+			int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
+			double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
+			int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ;
+			double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
+			int run_MC = ((RooCategory*)sample_set->find("run"))->getIndex() ;
+			int trigger_MC = ((RooCategory*)sample_set->find("trigger"))->getIndex() ;
+		
+			r_t->setVal(t_MC) ;
+			r_dt->setVal(dt_MC) ;
+			r_f->setIndex(f_MC) ;
+			r_q_OS->setIndex(q_OS_MC) ;
+			r_q_SS->setIndex(q_SS_MC) ;
+			r_eta_OS->setVal(eta_OS_MC) ;
+			r_eta_SS->setVal(eta_SS_MC) ;
+		
+			double weight = 1;
+			N_MC += weight;
+		
+			h_t_fit->Fill(t_MC,weight);
+			h_dt_fit->Fill(dt_MC,weight);
+			if(q_OS_MC != 0)h_eta_OS_fit->Fill(eta_OS_MC,weight);
+			if(q_SS_MC != 0)h_eta_SS_fit->Fill(eta_SS_MC,weight);
+			
+			int f_evt = f_MC;
+			int q1 = q_OS_MC;
+			int q2 = q_SS_MC;   
+			int q_eff = 0;
+			double w_eff = 0.5;
+		
+			h_q_OS_fit->Fill(q1,weight);
+			h_q_SS_fit->Fill(q2,weight);
+			h_f_fit->Fill(f_evt,weight);
+			
+			std::pair<double, double> calibrated_mistag_os;
+			std::pair<double, double> calibrated_mistag_ss;
+			if(doSimFit){
+				if(run_MC==1){
+					calibrated_mistag_os = t_pdf_Run1_t0.getCalibratedMistag_OS(eta_OS_MC);
+					calibrated_mistag_ss = t_pdf_Run1_t0.getCalibratedMistag_SS(eta_SS_MC);
+				}
+				else{
+					calibrated_mistag_os = t_pdf_Run2_t0.getCalibratedMistag_OS(eta_OS_MC);
+					calibrated_mistag_ss = t_pdf_Run2_t0.getCalibratedMistag_SS(eta_SS_MC);                
+				}
 			}
 			else{
-				calibrated_mistag_os = t_pdf_Run2_t0.getCalibratedMistag_OS(eta_OS_MC);
-				calibrated_mistag_ss = t_pdf_Run2_t0.getCalibratedMistag_SS(eta_SS_MC);                
+				calibrated_mistag_os = t_pdf.getCalibratedMistag_OS(eta_OS_MC);
+				calibrated_mistag_ss = t_pdf.getCalibratedMistag_SS(eta_SS_MC);        
 			}
-		}
-		else{
-			calibrated_mistag_os = t_pdf.getCalibratedMistag_OS(eta_OS_MC);
-			calibrated_mistag_ss = t_pdf.getCalibratedMistag_SS(eta_SS_MC);        
-		}
-		
-		double p = ( (1.-q1)/2. + q1 * (1.- calibrated_mistag_os.first )) * ( (1.-q2)/2. + q2 * (1.- calibrated_mistag_ss.first ));
-		double p_bar = ( (1.+q1)/2. - q1 * (1.- calibrated_mistag_os.second )) * ( (1.+q2)/2. - q2 * (1.- calibrated_mistag_ss.second ));
-		
-		if( p/(p+p_bar) > 0.5 ){ 
-			q_eff = 1;
-			w_eff = 1-p/(p+p_bar);
-		}
-		else if( p/(p+p_bar) < 0.5 ){
-			q_eff = -1;
-			w_eff = p/(p+p_bar);
-		}
-		
-		if(q1 != 0 && q2 != 0){
-			if(q_eff != 0){
-				N_OS_SS_MC += weight;
-				w_OS_SS_MC += w_eff * weight;
-				D_OS_SS_MC += pow(1.-2.*w_eff,2)* weight;
+			
+			double p = ( (1.-q1)/2. + q1 * (1.- calibrated_mistag_os.first )) * ( (1.-q2)/2. + q2 * (1.- calibrated_mistag_ss.first ));
+			double p_bar = ( (1.+q1)/2. - q1 * (1.- calibrated_mistag_os.second )) * ( (1.+q2)/2. - q2 * (1.- calibrated_mistag_ss.second ));
+			
+			if( p/(p+p_bar) > 0.5 ){ 
+				q_eff = 1;
+				w_eff = 1-p/(p+p_bar);
 			}
-		}
-		else if( q1 != 0){
-			//q_eff = q1;  flip tag ???
-			N_OS_MC +=weight;
-			w_OS_MC += w_eff * weight; 
-			D_OS_MC += pow(1.-2.*w_eff,2)* weight;
-		}
-		else if( q2 != 0){
-			//q_eff = q2;
-			N_SS_MC += weight;
-			w_SS_MC += w_eff * weight; 
-			D_SS_MC += pow(1.-2.*w_eff,2)* weight; 
-		} 
-	
-		D_comb_MC += pow(1.-2.*w_eff,2)* weight;
-		
-		if(q1 != 0) N_OS_all_MC += weight;
-		if(q2 != 0)N_SS_all_MC += weight;
-		
-		if(q1>0){
-				w_OS_all_MC +=  calibrated_mistag_os.first * weight;
-				D_OS_all_MC +=  pow(1.-2.*calibrated_mistag_os.first,2)* weight;
-		} 
-		else if(q1<0){
-				w_OS_all_MC +=  calibrated_mistag_os.second * weight;	
-				D_OS_all_MC +=  pow(1.-2.*calibrated_mistag_os.second,2)* weight;
-		}
-	
-		if(q2>0){
-				w_SS_all_MC +=  calibrated_mistag_ss.first * weight;
-				D_SS_all_MC +=  pow(1.-2.*calibrated_mistag_ss.first,2)* weight;
-		} 
-		else if(q2<0){
-				w_SS_all_MC +=  calibrated_mistag_ss.second * weight;	
-				D_SS_all_MC +=  pow(1.-2.*calibrated_mistag_ss.second,2)* weight;
-		}
-	
-		if((string)channel=="signal"){
-		
-			if(q_eff==-1 && f_evt == 1){
-				h_t_fit_mp->Fill(t_MC,weight);
-				if(w_eff<w_max){
-					h_N_mixed_p_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-					h_N_mixed_p_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+			else if( p/(p+p_bar) < 0.5 ){
+				q_eff = -1;
+				w_eff = p/(p+p_bar);
+			}
+			
+			if(q1 != 0 && q2 != 0){
+				if(q_eff != 0){
+					N_OS_SS_MC += weight;
+					w_OS_SS_MC += w_eff * weight;
+					D_OS_SS_MC += pow(1.-2.*w_eff,2)* weight;
 				}
 			}
-			else if(q_eff==0 && f_evt == 1)h_t_fit_0p->Fill(t_MC,weight);
-			else if(q_eff==1 && f_evt == 1){
-				h_t_fit_pp->Fill(t_MC,weight);
-				if(w_eff<w_max){
-					h_N_unmixed_p_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-					h_N_unmixed_p_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+			else if( q1 != 0){
+				//q_eff = q1;  flip tag ???
+				N_OS_MC +=weight;
+				w_OS_MC += w_eff * weight; 
+				D_OS_MC += pow(1.-2.*w_eff,2)* weight;
+			}
+			else if( q2 != 0){
+				//q_eff = q2;
+				N_SS_MC += weight;
+				w_SS_MC += w_eff * weight; 
+				D_SS_MC += pow(1.-2.*w_eff,2)* weight; 
+			} 
+		
+			D_comb_MC += pow(1.-2.*w_eff,2)* weight;
+			
+			if(q1 != 0) N_OS_all_MC += weight;
+			if(q2 != 0)N_SS_all_MC += weight;
+			
+			if(q1>0){
+					w_OS_all_MC +=  calibrated_mistag_os.first * weight;
+					D_OS_all_MC +=  pow(1.-2.*calibrated_mistag_os.first,2)* weight;
+			} 
+			else if(q1<0){
+					w_OS_all_MC +=  calibrated_mistag_os.second * weight;	
+					D_OS_all_MC +=  pow(1.-2.*calibrated_mistag_os.second,2)* weight;
+			}
+		
+			if(q2>0){
+					w_SS_all_MC +=  calibrated_mistag_ss.first * weight;
+					D_SS_all_MC +=  pow(1.-2.*calibrated_mistag_ss.first,2)* weight;
+			} 
+			else if(q2<0){
+					w_SS_all_MC +=  calibrated_mistag_ss.second * weight;	
+					D_SS_all_MC +=  pow(1.-2.*calibrated_mistag_ss.second,2)* weight;
+			}
+		
+			if((string)channel=="signal"){
+			
+				if(q_eff==-1 && f_evt == 1){
+					h_t_fit_mp->Fill(t_MC,weight);
+					if(w_eff<w_max){
+						h_N_mixed_p_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
+						h_N_mixed_p_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+					}
+				}
+				else if(q_eff==0 && f_evt == 1)h_t_fit_0p->Fill(t_MC,weight);
+				else if(q_eff==1 && f_evt == 1){
+					h_t_fit_pp->Fill(t_MC,weight);
+					if(w_eff<w_max){
+						h_N_unmixed_p_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
+						h_N_unmixed_p_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+					}
+				}
+				else if(q_eff==-1 && f_evt == -1){
+					h_t_fit_mm->Fill(t_MC,weight);
+					if(w_eff<w_max){
+						h_N_unmixed_m_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
+						h_N_unmixed_m_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+					}	
+				}
+				else if(q_eff==0 && f_evt == -1)h_t_fit_0m->Fill(t_MC,weight);
+				else if(q_eff==1 && f_evt == -1){
+					h_t_fit_pm->Fill(t_MC,weight);
+					if(w_eff<w_max){
+						h_N_mixed_m_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
+						h_N_mixed_m_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+					}
 				}
 			}
-			else if(q_eff==-1 && f_evt == -1){
-				h_t_fit_mm->Fill(t_MC,weight);
-				if(w_eff<w_max){
-					h_N_unmixed_m_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-					h_N_unmixed_m_fit_unfolded->Fill(fmod(t_MC,tau),weight);
-				}	
-			}
-			else if(q_eff==0 && f_evt == -1)h_t_fit_0m->Fill(t_MC,weight);
-			else if(q_eff==1 && f_evt == -1){
-				h_t_fit_pm->Fill(t_MC,weight);
-				if(w_eff<w_max){
-					h_N_mixed_m_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-					h_N_mixed_m_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+			else {   
+				if(q_eff == 0)h_t_untagegged_fit->Fill(t_MC,weight);
+				else if(q_eff*f_evt > 0  ){
+					h_t_mixed_fit->Fill(t_MC,weight);
+					if(w_eff<w_max)h_N_mixed_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
 				}
-			}
-		}
-		else {   
-			if(q_eff == 0)h_t_untagegged_fit->Fill(t_MC,weight);
-			else if(q_eff*f_evt > 0  ){
-				h_t_mixed_fit->Fill(t_MC,weight);
-				if(w_eff<w_max)h_N_mixed_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-			}
-			else{ 
-				h_t_unmixed_fit->Fill(t_MC,weight);
-				if(w_eff<w_max)h_N_unmixed_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
+				else{ 
+					h_t_unmixed_fit->Fill(t_MC,weight);
+					if(w_eff<w_max)h_N_unmixed_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
+				}
 			}
 		}
 	}
+	
+	cout << "N_MC = " << N_MC << endl << endl;
+	cout << "N_OS = " << N_OS_all_MC << endl;
+	cout << "N_SS = " << N_SS_all_MC << endl << endl;
+	
+	cout << "eff_OS = " <<(N_OS_all_MC)/N_MC << endl;
+	cout << "eff_SS = " <<(N_SS_all_MC)/N_MC << endl;
+		
+	cout << "Tagging perfromance " << endl << endl;        
+	cout << "Tagger | eff_tag | <w> | e_eff " <<  endl;
+	
+	cout << "OS  | " << (N_OS_MC+N_OS_SS_MC)/N_MC << " | " <<  (w_OS_all_MC)/(N_OS_MC+N_OS_SS_MC) << " | " << D_OS_all_MC/N_MC << endl;
+	cout << "SS  | " << (N_SS_MC+N_OS_SS_MC)/N_MC << " | " <<  (w_SS_all_MC)/(N_SS_MC+N_OS_SS_MC) << " | " << D_SS_all_MC/N_MC << endl << endl;
+	
+	cout << "OS only  | " << N_OS_MC/N_MC << " | " <<  w_OS_MC/N_OS_MC << " | " << N_OS_MC/N_MC * D_OS_MC/N_OS_MC << endl;
+	cout << "SS only  | " << N_SS_MC/N_MC << " | " <<  w_SS_MC/N_SS_MC << " | " << N_SS_MC/N_MC * D_SS_MC/N_SS_MC << endl;
+	cout << "OS+SS    | " << N_OS_SS_MC/N_MC << " | " <<  w_OS_SS_MC/N_OS_SS_MC << " | " << N_OS_SS_MC/N_MC * D_OS_SS_MC/N_OS_SS_MC << endl;
+	cout << "Combined | " << (N_OS_MC+N_SS_MC+N_OS_SS_MC)/N_MC << " | "<<  (w_OS_MC+w_SS_MC+w_OS_SS_MC)/(N_OS_MC+N_SS_MC+N_OS_SS_MC) << " | " << (N_OS_MC+N_SS_MC+N_OS_SS_MC)/N_MC * D_comb_MC/(N_OS_MC+N_SS_MC+N_OS_SS_MC) << endl << endl ;
+	
+	h_t->SetMinimum(0.1);    
+	h_t->SetLineColor(kBlack);
+	h_t->DrawNormalized("e",1);
+		
+	h_t_fit->SetLineColor(kBlue);
+	h_t_fit->SetLineWidth(3);
+	h_t_fit->SetMarkerColor(kBlue); 
+	h_t_fit->DrawNormalized("histcsame",1);
+	c->Print(((string)OutputDir+"h_t.eps").c_str());
+	if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t.pdf").c_str());
+	
+	gPad->SetLogy(1);
+	c->Print(((string)OutputDir+"h_t_log.eps").c_str());
+	if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t_log.pdf").c_str());
+	gPad->SetLogy(0);
+	
+	h_dt->SetMinimum(0);        
+	h_dt->SetLineColor(kBlack);
+	h_dt->DrawNormalized("e1",1);
+	h_dt_fit->SetLineColor(kBlue);
+	h_dt_fit->SetLineWidth(3);
+	h_dt_fit->DrawNormalized("histcsame",1);
+	c->Print(((string)OutputDir+"h_dt.eps").c_str());
+	if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_dt.pdf").c_str());
+	
+	h_eta_OS->SetMinimum(0);        
+	h_eta_OS->SetLineColor(kBlack);
+	h_eta_OS->DrawNormalized("e1",1);
+	h_eta_OS_fit->SetLineColor(kBlue);
+	h_eta_OS_fit->SetLineWidth(3);
+	h_eta_OS_fit->DrawNormalized("histcsame",1);
+	c->Print(((string)OutputDir+"h_eta_OS.eps").c_str());
+	if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_eta_OS.pdf").c_str());
+	
+	h_eta_SS->SetMinimum(0);        
+	h_eta_SS->SetLineColor(kBlack);
+	h_eta_SS->DrawNormalized("e1",1);
+	h_eta_SS_fit->SetLineColor(kBlue);
+	h_eta_SS_fit->SetLineWidth(3);
+	h_eta_SS_fit->DrawNormalized("histcsame",1);
+	c->Print(((string)OutputDir+"h_eta_SS.eps").c_str());
+	if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_eta_SS.pdf").c_str());
+	
+	h_q_OS->SetMinimum(0);        
+	h_q_OS->SetLineColor(kBlack);
+	h_q_OS->DrawNormalized("e1",1);
+	h_q_OS_fit->SetLineColor(kBlue);
+	h_q_OS_fit->SetLineWidth(3);
+	h_q_OS_fit->DrawNormalized("histsame",1);
+	c->Print(((string)OutputDir+"h_q_OS.eps").c_str());
+	if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_q_OS.pdf").c_str());
+	
+	h_q_SS->SetMinimum(0);        
+	h_q_SS->SetLineColor(kBlack);
+	h_q_SS->DrawNormalized("e1",1);
+	h_q_SS_fit->SetLineColor(kBlue);
+	h_q_SS_fit->SetLineWidth(3);
+	h_q_SS_fit->DrawNormalized("histsame",1);
+	c->Print(((string)OutputDir+"h_q_SS.eps").c_str());
+	if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_q_SS.pdf").c_str());
+	
+	h_f->SetMinimum(0);        
+	h_f->SetLineColor(kBlack);
+	h_f->DrawNormalized("e1",1);
+	h_f_fit->SetLineColor(kBlue);
+	h_f_fit->SetLineWidth(3);
+	h_f_fit->DrawNormalized("histsame",1);
+	c->Print(((string)OutputDir+"h_f.eps").c_str());
+	if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_f.pdf").c_str());
+	
+	if((string)channel=="norm"){
+	
+		h_t_mixed->SetMarkerColor(kRed); 
+		h_t_mixed->SetLineColor(kRed);
+		h_t_mixed->DrawNormalized("e",1);
+		
+		h_t_unmixed->SetMarkerColor(kBlue); 
+		h_t_unmixed->SetLineColor(kBlue);
+		h_t_unmixed->DrawNormalized("esame",1);
+		
+		h_t_mixed_fit->SetMarkerColor(kRed); 
+		h_t_mixed_fit->SetLineColor(kRed);
+		h_t_mixed_fit->DrawNormalized("histcsame",1);
+		
+		h_t_unmixed_fit->SetMarkerColor(kBlue); 
+		h_t_unmixed_fit->SetLineColor(kBlue);
+		h_t_unmixed_fit->DrawNormalized("histcsame",1);
+		
+		h_t_untagegged->SetMarkerColor(kGreen); 
+		h_t_untagegged->SetLineColor(kGreen);
+		//h_t_untagegged->DrawNormalized("esame",1);
+		
+		h_t_untagegged_fit->SetMarkerColor(kGreen); 
+		h_t_untagegged_fit->SetLineColor(kGreen);
+		//h_t_untagegged_fit->DrawNormalized("histcsame",1);
+		
+		c->Print(((string)OutputDir+"h_t_mixed.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t_mixed.pdf").c_str());
+	
+		TH1D* h_asym = (TH1D*) h_N_mixed->GetAsymmetry(h_N_unmixed);	
+		h_asym->SetMinimum(-0.25);
+		h_asym->SetMaximum(0.25);
+		TH1D* h_asym_fit = (TH1D*) h_N_mixed_fit->GetAsymmetry(h_N_unmixed_fit);	
+		h_asym_fit->SetLineColor(kRed);
+		h_asym->Draw("e");
+		h_asym_fit->Draw("histcsame");
+		c->Print(((string)OutputDir+"h_asym.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_asym.pdf").c_str());
+	}
+	
+	else{
+	
+		h_t_mp->Scale(1./h_t_mp->Integral());
+		double maxY= h_t_mp->GetMaximum()*1.3;        
+		h_t_mp->SetMinimum(0.);  
+		h_t_mp->SetMaximum(maxY);        
+		h_t_mp->SetMarkerColor(kBlue); 
+		h_t_mp->SetLineColor(kBlue);
+		h_t_mp->DrawNormalized("e",1);
+	
+		h_t_pp->SetMarkerColor(kRed); 
+		h_t_pp->SetLineColor(kRed);
+		h_t_pp->DrawNormalized("esame",1);
+		
+		h_t_fit_mp->SetMarkerColor(kBlue); 
+		h_t_fit_mp->SetLineColor(kBlue);
+		h_t_fit_mp->DrawNormalized("histcsame",1);
+		
+		h_t_fit_pp->SetMarkerColor(kRed); 
+		h_t_fit_pp->SetLineColor(kRed);
+		h_t_fit_pp->DrawNormalized("histcsame",1);
+		
+		c->Print(((string)OutputDir+"h_t_mixed_p.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t_mixed_p.pdf").c_str());
+	
+		h_t_pm->Scale(1./h_t_pm->Integral());
+		h_t_pm->SetMinimum(0.);     
+		h_t_pm->SetMaximum(maxY);        
+		h_t_pm->SetMarkerColor(kBlue); 
+		h_t_pm->SetLineColor(kBlue);
+		h_t_pm->DrawNormalized("e",1);
+		
+		h_t_mm->SetMarkerColor(kRed); 
+		h_t_mm->SetLineColor(kRed);
+		h_t_mm->DrawNormalized("esame",1);
+		
+		h_t_fit_pm->SetMarkerColor(kBlue); 
+		h_t_fit_pm->SetLineColor(kBlue);
+		h_t_fit_pm->DrawNormalized("histcsame",1);
+		
+		h_t_fit_mm->SetMarkerColor(kRed); 
+		h_t_fit_mm->SetLineColor(kRed);
+		h_t_fit_mm->DrawNormalized("histcsame",1);
+		
+		c->Print(((string)OutputDir+"h_t_mixed_m.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t_mixed_m.pdf").c_str());
+	
+		cout << h_N_unmixed_p->GetEntries() << endl;
+		cout << h_N_mixed_p->GetEntries() << endl;
+	
+		TH1D* h_asym_p = (TH1D*) h_N_unmixed_p->GetAsymmetry(h_N_mixed_p);	
+		//h_asym_p->SetMinimum(-20);
+		//h_asym_p->SetMaximum(20);
+		TH1D* h_asym_p_fit = (TH1D*) h_N_unmixed_p_fit->GetAsymmetry(h_N_mixed_p_fit);	
+		h_asym_p_fit->SetLineColor(kRed);
+		h_asym_p->Draw("e");
+		h_asym_p_fit->Draw("histcsame");
+		c->Print(((string)OutputDir+"h_asym_p.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_asym_p.pdf").c_str());
+	
+		TH1D* h_asym_m = (TH1D*) h_N_unmixed_m->GetAsymmetry(h_N_mixed_m);	
+		//h_asym_m->SetMinimum(-20);
+		//h_asym_m->SetMaximum(20);
+		TH1D* h_asym_m_fit = (TH1D*) h_N_unmixed_m_fit->GetAsymmetry(h_N_mixed_m_fit);	
+		h_asym_m_fit->SetLineColor(kRed);
+		h_asym_m->Draw("e");
+		h_asym_m_fit->Draw("histcsame");
+		c->Print(((string)OutputDir+"h_asym_m.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_asym_m.pdf").c_str());
+	
+		h_asym_p->SetMaximum(max(h_asym_p->GetMaximum(),h_asym_m->GetMaximum())*1.25);
+		h_asym_p->SetMarkerColor(kRed);
+		h_asym_p->SetLineColor(kRed);
+		h_asym_p->Draw("e");
+		h_asym_m->SetLineColor(kBlue);
+		h_asym_m->SetMarkerColor(kBlue);
+		h_asym_m->Draw("esame");
+		h_asym_p_fit->SetLineWidth(3);
+		h_asym_m_fit->SetLineWidth(3);
+		h_asym_p_fit->Draw("histcsame");
+		h_asym_m_fit->SetLineColor(kBlue);
+		h_asym_m_fit->Draw("histcsame");
+		c->Print(((string)OutputDir+"h_asym.eps").c_str());	
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_asym.pdf").c_str());
+	
+		TH1D* h_asym_p_fit_unfolded = (TH1D*) h_N_unmixed_p_fit_unfolded->GetAsymmetry(h_N_mixed_p_fit_unfolded);	
+		h_asym_p_fit_unfolded->SetLineWidth(3);
+		h_asym_p_fit_unfolded->SetLineColor(kRed);
+		h_asym_p_fit_unfolded->Draw("histc");
+	
+		TH1D* h_asym_m_fit_unfolded = (TH1D*) h_N_unmixed_m_fit_unfolded->GetAsymmetry(h_N_mixed_m_fit_unfolded);
+		h_asym_m_fit_unfolded->SetLineWidth(3);
+		h_asym_m_fit_unfolded->SetLineColor(kBlue);
+		h_asym_m_fit_unfolded->Draw("histcsame");
+		c->Print(((string)OutputDir+"h_asym_unfolded.eps").c_str());	
+		c->Print(((string)OutputDir+"h_asym_unfolded.pdf").c_str());	
+	
+		TH1D* h_asym_p_unfolded = (TH1D*) h_N_unmixed_p_unfolded->GetAsymmetry(h_N_mixed_p_unfolded);	
+		h_asym_p_unfolded->SetLineWidth(3);
+		h_asym_p_unfolded->SetLineColor(kRed);
+		h_asym_p_unfolded->Draw("e");
+	
+		TH1D* h_asym_m_unfolded = (TH1D*) h_N_unmixed_m_unfolded->GetAsymmetry(h_N_mixed_m_unfolded);
+		h_asym_m_unfolded->SetLineWidth(3);
+		h_asym_m_unfolded->SetLineColor(kBlue);
+		h_asym_m_unfolded->Draw("esame");
+	
+		h_asym_p_fit_unfolded->Draw("histcsame");
+		h_asym_m_fit_unfolded->Draw("histcsame");
+		c->Print(((string)OutputDir+"h_asym_unfolded_fit.eps").c_str());	
+	
+	}
+
     }
-
-    cout << "N_MC = " << N_MC << endl << endl;
-    cout << "N_OS = " << N_OS_all_MC << endl;
-    cout << "N_SS = " << N_SS_all_MC << endl << endl;
-
-    cout << "eff_OS = " <<(N_OS_all_MC)/N_MC << endl;
-    cout << "eff_SS = " <<(N_SS_all_MC)/N_MC << endl;
-        
-    cout << "Tagging perfromance " << endl << endl;        
-    cout << "Tagger | eff_tag | <w> | e_eff " <<  endl;
-
-    cout << "OS  | " << (N_OS_MC+N_OS_SS_MC)/N_MC << " | " <<  (w_OS_all_MC)/(N_OS_MC+N_OS_SS_MC) << " | " << D_OS_all_MC/N_MC << endl;
-    cout << "SS  | " << (N_SS_MC+N_OS_SS_MC)/N_MC << " | " <<  (w_SS_all_MC)/(N_SS_MC+N_OS_SS_MC) << " | " << D_SS_all_MC/N_MC << endl << endl;
-
-    cout << "OS only  | " << N_OS_MC/N_MC << " | " <<  w_OS_MC/N_OS_MC << " | " << N_OS_MC/N_MC * D_OS_MC/N_OS_MC << endl;
-    cout << "SS only  | " << N_SS_MC/N_MC << " | " <<  w_SS_MC/N_SS_MC << " | " << N_SS_MC/N_MC * D_SS_MC/N_SS_MC << endl;
-    cout << "OS+SS    | " << N_OS_SS_MC/N_MC << " | " <<  w_OS_SS_MC/N_OS_SS_MC << " | " << N_OS_SS_MC/N_MC * D_OS_SS_MC/N_OS_SS_MC << endl;
-    cout << "Combined | " << (N_OS_MC+N_SS_MC+N_OS_SS_MC)/N_MC << " | "<<  (w_OS_MC+w_SS_MC+w_OS_SS_MC)/(N_OS_MC+N_SS_MC+N_OS_SS_MC) << " | " << (N_OS_MC+N_SS_MC+N_OS_SS_MC)/N_MC * D_comb_MC/(N_OS_MC+N_SS_MC+N_OS_SS_MC) << endl << endl ;
-
-    h_t->SetMinimum(0.1);    
-    h_t->SetLineColor(kBlack);
-    h_t->DrawNormalized("e",1);
-        
-    h_t_fit->SetLineColor(kBlue);
-    h_t_fit->SetLineWidth(3);
-    h_t_fit->SetMarkerColor(kBlue); 
-    h_t_fit->DrawNormalized("histcsame",1);
-    c->Print(((string)OutputDir+"h_t.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t.pdf").c_str());
-
-    gPad->SetLogy(1);
-    c->Print(((string)OutputDir+"h_t_log.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t_log.pdf").c_str());
-    gPad->SetLogy(0);
-    
-    h_dt->SetMinimum(0);        
-    h_dt->SetLineColor(kBlack);
-    h_dt->DrawNormalized("e1",1);
-    h_dt_fit->SetLineColor(kBlue);
-    h_dt_fit->SetLineWidth(3);
-    h_dt_fit->DrawNormalized("histcsame",1);
-    c->Print(((string)OutputDir+"h_dt.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_dt.pdf").c_str());
-
-    h_eta_OS->SetMinimum(0);        
-    h_eta_OS->SetLineColor(kBlack);
-    h_eta_OS->DrawNormalized("e1",1);
-    h_eta_OS_fit->SetLineColor(kBlue);
-    h_eta_OS_fit->SetLineWidth(3);
-    h_eta_OS_fit->DrawNormalized("histcsame",1);
-    c->Print(((string)OutputDir+"h_eta_OS.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_eta_OS.pdf").c_str());
-    
-    h_eta_SS->SetMinimum(0);        
-    h_eta_SS->SetLineColor(kBlack);
-    h_eta_SS->DrawNormalized("e1",1);
-    h_eta_SS_fit->SetLineColor(kBlue);
-    h_eta_SS_fit->SetLineWidth(3);
-    h_eta_SS_fit->DrawNormalized("histcsame",1);
-    c->Print(((string)OutputDir+"h_eta_SS.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_eta_SS.pdf").c_str());
-
-    h_q_OS->SetMinimum(0);        
-    h_q_OS->SetLineColor(kBlack);
-    h_q_OS->DrawNormalized("e1",1);
-    h_q_OS_fit->SetLineColor(kBlue);
-    h_q_OS_fit->SetLineWidth(3);
-    h_q_OS_fit->DrawNormalized("histsame",1);
-    c->Print(((string)OutputDir+"h_q_OS.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_q_OS.pdf").c_str());
-
-    h_q_SS->SetMinimum(0);        
-    h_q_SS->SetLineColor(kBlack);
-    h_q_SS->DrawNormalized("e1",1);
-    h_q_SS_fit->SetLineColor(kBlue);
-    h_q_SS_fit->SetLineWidth(3);
-    h_q_SS_fit->DrawNormalized("histsame",1);
-    c->Print(((string)OutputDir+"h_q_SS.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_q_SS.pdf").c_str());
-
-    h_f->SetMinimum(0);        
-    h_f->SetLineColor(kBlack);
-    h_f->DrawNormalized("e1",1);
-    h_f_fit->SetLineColor(kBlue);
-    h_f_fit->SetLineWidth(3);
-    h_f_fit->DrawNormalized("histsame",1);
-    c->Print(((string)OutputDir+"h_f.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_f.pdf").c_str());
-
-
-    if((string)channel=="norm"){
-
-        h_t_mixed->SetMarkerColor(kRed); 
-        h_t_mixed->SetLineColor(kRed);
-        h_t_mixed->DrawNormalized("e",1);
-        
-        h_t_unmixed->SetMarkerColor(kBlue); 
-        h_t_unmixed->SetLineColor(kBlue);
-        h_t_unmixed->DrawNormalized("esame",1);
-        
-        h_t_mixed_fit->SetMarkerColor(kRed); 
-        h_t_mixed_fit->SetLineColor(kRed);
-        h_t_mixed_fit->DrawNormalized("histcsame",1);
-        
-        h_t_unmixed_fit->SetMarkerColor(kBlue); 
-        h_t_unmixed_fit->SetLineColor(kBlue);
-        h_t_unmixed_fit->DrawNormalized("histcsame",1);
-        
-        h_t_untagegged->SetMarkerColor(kGreen); 
-        h_t_untagegged->SetLineColor(kGreen);
-        //h_t_untagegged->DrawNormalized("esame",1);
-        
-        h_t_untagegged_fit->SetMarkerColor(kGreen); 
-        h_t_untagegged_fit->SetLineColor(kGreen);
-        //h_t_untagegged_fit->DrawNormalized("histcsame",1);
-        
-        c->Print(((string)OutputDir+"h_t_mixed.eps").c_str());
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t_mixed.pdf").c_str());
-
-	TH1D* h_asym = (TH1D*) h_N_mixed->GetAsymmetry(h_N_unmixed);	
-        h_asym->SetMinimum(-0.25);
-	h_asym->SetMaximum(0.25);
-	TH1D* h_asym_fit = (TH1D*) h_N_mixed_fit->GetAsymmetry(h_N_unmixed_fit);	
-	h_asym_fit->SetLineColor(kRed);
-	h_asym->Draw("e");
-	h_asym_fit->Draw("histcsame");
-        c->Print(((string)OutputDir+"h_asym.eps").c_str());
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_asym.pdf").c_str());
-    }
-
-    else{
-
-        h_t_mp->Scale(1./h_t_mp->Integral());
-        double maxY= h_t_mp->GetMaximum()*1.3;        
-        h_t_mp->SetMinimum(0.);  
-        h_t_mp->SetMaximum(maxY);        
-        h_t_mp->SetMarkerColor(kBlue); 
-        h_t_mp->SetLineColor(kBlue);
-        h_t_mp->DrawNormalized("e",1);
-    
-        h_t_pp->SetMarkerColor(kRed); 
-        h_t_pp->SetLineColor(kRed);
-        h_t_pp->DrawNormalized("esame",1);
-        
-        h_t_fit_mp->SetMarkerColor(kBlue); 
-        h_t_fit_mp->SetLineColor(kBlue);
-        h_t_fit_mp->DrawNormalized("histcsame",1);
-        
-        h_t_fit_pp->SetMarkerColor(kRed); 
-        h_t_fit_pp->SetLineColor(kRed);
-        h_t_fit_pp->DrawNormalized("histcsame",1);
-        
-        c->Print(((string)OutputDir+"h_t_mixed_p.eps").c_str());
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t_mixed_p.pdf").c_str());
-
-        h_t_pm->Scale(1./h_t_pm->Integral());
-        h_t_pm->SetMinimum(0.);     
-        h_t_pm->SetMaximum(maxY);        
-        h_t_pm->SetMarkerColor(kBlue); 
-        h_t_pm->SetLineColor(kBlue);
-        h_t_pm->DrawNormalized("e",1);
-        
-        h_t_mm->SetMarkerColor(kRed); 
-        h_t_mm->SetLineColor(kRed);
-        h_t_mm->DrawNormalized("esame",1);
-        
-        h_t_fit_pm->SetMarkerColor(kBlue); 
-        h_t_fit_pm->SetLineColor(kBlue);
-        h_t_fit_pm->DrawNormalized("histcsame",1);
-        
-        h_t_fit_mm->SetMarkerColor(kRed); 
-        h_t_fit_mm->SetLineColor(kRed);
-        h_t_fit_mm->DrawNormalized("histcsame",1);
-        
-        c->Print(((string)OutputDir+"h_t_mixed_m.eps").c_str());
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t_mixed_m.pdf").c_str());
-
-	cout << h_N_unmixed_p->GetEntries() << endl;
-	cout << h_N_mixed_p->GetEntries() << endl;
-
-	TH1D* h_asym_p = (TH1D*) h_N_unmixed_p->GetAsymmetry(h_N_mixed_p);	
-        //h_asym_p->SetMinimum(-20);
-	//h_asym_p->SetMaximum(20);
-	TH1D* h_asym_p_fit = (TH1D*) h_N_unmixed_p_fit->GetAsymmetry(h_N_mixed_p_fit);	
-	h_asym_p_fit->SetLineColor(kRed);
-	h_asym_p->Draw("e");
-	h_asym_p_fit->Draw("histcsame");
-        c->Print(((string)OutputDir+"h_asym_p.eps").c_str());
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_asym_p.pdf").c_str());
-
-	TH1D* h_asym_m = (TH1D*) h_N_unmixed_m->GetAsymmetry(h_N_mixed_m);	
-        //h_asym_m->SetMinimum(-20);
-	//h_asym_m->SetMaximum(20);
-	TH1D* h_asym_m_fit = (TH1D*) h_N_unmixed_m_fit->GetAsymmetry(h_N_mixed_m_fit);	
-	h_asym_m_fit->SetLineColor(kRed);
-	h_asym_m->Draw("e");
-	h_asym_m_fit->Draw("histcsame");
-        c->Print(((string)OutputDir+"h_asym_m.eps").c_str());
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_asym_m.pdf").c_str());
-
-	h_asym_p->SetMaximum(max(h_asym_p->GetMaximum(),h_asym_m->GetMaximum())*1.25);
-	h_asym_p->SetMarkerColor(kRed);
-	h_asym_p->SetLineColor(kRed);
-	h_asym_p->Draw("e");
-	h_asym_m->SetLineColor(kBlue);
-	h_asym_m->SetMarkerColor(kBlue);
-	h_asym_m->Draw("esame");
-	h_asym_p_fit->SetLineWidth(3);
-	h_asym_m_fit->SetLineWidth(3);
-	h_asym_p_fit->Draw("histcsame");
-	h_asym_m_fit->SetLineColor(kBlue);
- 	h_asym_m_fit->Draw("histcsame");
-        c->Print(((string)OutputDir+"h_asym.eps").c_str());	
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_asym.pdf").c_str());
-
-	TH1D* h_asym_p_fit_unfolded = (TH1D*) h_N_unmixed_p_fit_unfolded->GetAsymmetry(h_N_mixed_p_fit_unfolded);	
-	h_asym_p_fit_unfolded->SetLineWidth(3);
-	h_asym_p_fit_unfolded->SetLineColor(kRed);
- 	h_asym_p_fit_unfolded->Draw("histc");
-
-	TH1D* h_asym_m_fit_unfolded = (TH1D*) h_N_unmixed_m_fit_unfolded->GetAsymmetry(h_N_mixed_m_fit_unfolded);
-	h_asym_m_fit_unfolded->SetLineWidth(3);
-	h_asym_m_fit_unfolded->SetLineColor(kBlue);
- 	h_asym_m_fit_unfolded->Draw("histcsame");
-        c->Print(((string)OutputDir+"h_asym_unfolded.eps").c_str());	
-        c->Print(((string)OutputDir+"h_asym_unfolded.pdf").c_str());	
-
-	TH1D* h_asym_p_unfolded = (TH1D*) h_N_unmixed_p_unfolded->GetAsymmetry(h_N_mixed_p_unfolded);	
-	h_asym_p_unfolded->SetLineWidth(3);
-	h_asym_p_unfolded->SetLineColor(kRed);
- 	h_asym_p_unfolded->Draw("e");
-
-	TH1D* h_asym_m_unfolded = (TH1D*) h_N_unmixed_m_unfolded->GetAsymmetry(h_N_mixed_m_unfolded);
-	h_asym_m_unfolded->SetLineWidth(3);
-	h_asym_m_unfolded->SetLineColor(kBlue);
- 	h_asym_m_unfolded->Draw("esame");
-
- 	h_asym_p_fit_unfolded->Draw("histcsame");
- 	h_asym_m_fit_unfolded->Draw("histcsame");
-        c->Print(((string)OutputDir+"h_asym_unfolded_fit.eps").c_str());	
-
-    }
-    
+	
     if(do2DScan == 1){
         cout << "Now doing 2D scan:" << endl;
         
@@ -2937,22 +3014,20 @@ void fullTimeFit(int step=0){
         cout<< "done 2-D scan" << endl;
     }
     
-
 //     if(plotAcceptance){
-    	Neg2LLMultiConstraint gauss_acc_run1_t0(MinuitParameterSet::getDefaultSet(),"_Run1");
-	TH1D* t_acc = t_pdf_Run1_t0.plotSpline();
-	t_acc->Draw("histc");
-
-	for(int i = 0; i < 100; i++){
-		gauss_acc_run1_t0.smearInputValues();
-		TH1D* t_acc_i = t_pdf_Run1_t0.plotSpline();
-		t_acc->SetLineColor(kBlue);
-		t_acc_i->Draw("histcsame");
-	}
-	t_acc->SetLineColor(kRed);
-	t_acc->Draw("histcsame");
-	c->Print("smearedAcc.eps");
-
+//     	Neg2LLMultiConstraint gauss_acc_run1_t0(MinuitParameterSet::getDefaultSet(),"_Run1");
+// 	TH1D* t_acc = t_pdf_Run1_t0.plotSpline();
+// 	t_acc->Draw("histc");
+// 
+// 	for(int i = 0; i < 100; i++){
+// 		gauss_acc_run1_t0.smearInputValues();
+// 		TH1D* t_acc_i = t_pdf_Run1_t0.plotSpline();
+// 		t_acc->SetLineColor(kBlue);
+// 		t_acc_i->Draw("histcsame");
+// 	}
+// 	t_acc->SetLineColor(kRed);
+// 	t_acc->Draw("histcsame");
+// 	c->Print("smearedAcc.eps");
 //     }
 
     return;
@@ -3196,9 +3271,10 @@ void test_multiGaussConstraints(){
     RooDataSet* data_cov = gauss_constrains.generateToys(100);
 
     TCanvas* c = new TCanvas();
-    TF1 *nominalFunc = new TF1("nominalFunc", "[0]-1+[1]*x ", 0., 0.15);
-    nominalFunc->SetParameters(0, 0.0097);
-    nominalFunc->SetParameters(1, 0.915);
+    TF1 *nominalFunc = new TF1("nominalFunc", "[0]+[1]*x ", 0., 0.15);
+    nominalFunc->SetParameters(0, offset_sigma_dt_Run2);
+    nominalFunc->SetParameters(1, scale_sigma_dt_Run2);
+    nominalFunc->SetLineWidth(2.5);
     nominalFunc->Draw();
 
     for(int i = 0 ; i < 100; i++){
@@ -3210,7 +3286,7 @@ void test_multiGaussConstraints(){
 					cout << "scaling function : " << p0 << " +/- " << p1 << " * dt "  << endl ;
 
 					//plot it 
-					TF1 *fitFunc = new TF1("fitFunc", "[0]-1+[1]*x ", 0., 0.15);
+					TF1 *fitFunc = new TF1("fitFunc", "[0]+[1]*x ", 0., 0.15);
 					fitFunc->SetParameters(0, p0);
 					fitFunc->SetParameters(1, p1);
 					fitFunc->SetLineColor(i);
@@ -3218,16 +3294,9 @@ void test_multiGaussConstraints(){
 
      }
 
-    TF1 *nominalFunc2 = new TF1("nominalFunc2", "[0]-1+[1]*x ", 0., 0.15);
-    nominalFunc2->SetParameters(0, 0.0097);
-    nominalFunc2->SetParameters(1, 0.915);
-    nominalFunc2->SetLineWidth(2.5);
-    nominalFunc2->Draw("LSAME");
-
-
+    nominalFunc->Draw("LSAME");
     c->Print("ScalingFunctions.eps");
     c->Close();
-
 
 
     TCanvas* c_new = new TCanvas();
@@ -3277,6 +3346,61 @@ void test_multiGaussConstraints(){
    NominalSpline2->Draw("SAME");
 
    c_new->Print("SplineCoeffs.eps");
+
+
+
+   TMatrixDSym* cov = tagging_constrains_Run1_t0.getCovMatrix();
+
+   tagging_constrains_Run1_t0.smearInputValuesChol(0);
+   tagging_constrains_Run1_t0.smearInputValuesChol(0);
+   tagging_constrains_Run1_t0.smearInputValuesChol(0);
+   tagging_constrains_Run1_t0.smearInputValuesChol(1);
+   tagging_constrains_Run1_t0.smearInputValuesChol(4);
+
+   throw "";
+
+   TDecompChol tdc(*cov);
+   tdc.Decompose();
+   TMatrixD U = tdc.GetU();
+   TMatrixD UT(TMatrixD::kTransposed,U);
+
+   cov->Print();
+   U.Print();
+   UT.Print();
+
+   int N = 10000;
+   vector< vector<double> > results;
+
+   for(int n = 0 ; n < N; n++){
+	vector<double> v;
+	for(int i = 0 ; i < UT.GetNcols(); i++){
+		double val = 0.;
+		for(int j = 0 ; j < UT.GetNcols(); j++){
+// 			cout << UT(i,j) << " " ;
+// 			if(j == UT.GetNcols()-1) cout << endl;
+ 			val += gRandom->Gaus(0.,1.) * UT(i,j);
+		}	
+		v.push_back(val);
+
+	}
+	results.push_back(v);
+   }
+
+   vector<double> mean(results[0].size(),0.);
+   vector<double> sigma(results[0].size(),0.);
+
+   for(int n = 0 ; n < N; n++){
+	for(int i = 0 ; i < results[0].size(); i++){
+		mean[i] += results[n][i];
+		sigma[i] += pow(results[n][i],2);	
+	}
+   }
+
+   for(int i = 0 ; i < results[0].size(); i++){
+		   cout << "mean = " << mean[i]/N << " pm " << sqrt(sigma[i]/N) << endl;
+   }
+
+
 
 }
 
@@ -3400,10 +3524,10 @@ int main(int argc, char** argv){
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
 
-   test_multiGaussConstraints();
+  //  test_multiGaussConstraints();
   //produceMarginalPdfs();
   //for(int i = 0; i < 200; i++) fullTimeFit(atoi(argv[1])+i);
-//   fullTimeFit(atoi(argv[1]));
+    fullTimeFit(atoi(argv[1]),(string)argv[2]);
 //     animate(atoi(argv[1]));
 
 
