@@ -72,7 +72,8 @@ public :
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Loop();
+   virtual void     Loop(string parName);
+   virtual void     getShift(string parName);
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
 };
@@ -80,14 +81,87 @@ public :
 #endif
 
 #ifdef pull_cxx
+
+
 pull::pull() : fChain(0) 
+{
+/*
+   TChain* chain =  new TChain("MinuitParameterSetNtp");
+
+   chain->Add("signal_toy/pull_par0_*.root"); //1
+   chain->Add("signal_toy/pull_par1_*.root"); //1
+   chain->Add("signal_toy/pull_par2_*.root"); //1
+   chain->Add("signal_toy/pull_par3_*.root"); //1
+
+   tree= (TTree*)  chain;
+   Init(tree);*/
+}
+
+pull::pull_noChol() : fChain(0) 
+{
+   TChain* chain =  new TChain("MinuitParameterSetNtp");
+   chain->Add("signal_toy/pull_1*.root"); //1
+   chain->Add("signal_toy/pull_2*.root"); //1
+   chain->Add("signal_toy/pull_3*.root"); //1
+   chain->Add("signal_toy/pull_4*.root"); //1
+   chain->Add("signal_toy/pull_5*.root"); //1
+   chain->Add("signal_toy/pull_6*.root"); //1
+   chain->Add("signal_toy/pull_7*.root"); //1
+   chain->Add("signal_toy/pull_8*.root"); //1
+   chain->Add("signal_toy/pull_9*.root"); //1
+   tree= (TTree*)  chain;
+   Init(tree);
+
+   Loop("all");
+   getShift("all");
+}
+
+pull::pull_c0() : fChain(0) 
 {
    TChain* chain =  new TChain("MinuitParameterSetNtp");
    chain->Add("signal_toy/pull_par0_*.root"); //1
 
    tree= (TTree*)  chain;
    Init(tree);
-   Loop();
+
+   Loop("c0");
+   getShift("c0");
+}
+
+pull::pull_c1() : fChain(0) 
+{
+   TChain* chain =  new TChain("MinuitParameterSetNtp");
+   chain->Add("signal_toy/pull_par1_*.root"); //1
+
+   tree= (TTree*)  chain;
+   Init(tree);
+
+   Loop("c1");
+   getShift("c1");
+}
+
+pull::pull_c2() : fChain(0) 
+{
+   TChain* chain =  new TChain("MinuitParameterSetNtp");
+   chain->Add("signal_toy/pull_par2_*.root"); //1
+
+   tree= (TTree*)  chain;
+   Init(tree);
+
+   Loop("c2");
+   getShift("c2");
+}
+
+pull::pull_c3() : fChain(0) 
+{
+   TChain* chain =  new TChain("MinuitParameterSetNtp");
+   chain->Add("signal_toy/pull_par3_*.root"); //1
+
+   tree= (TTree*)  chain;
+   Init(tree);
+
+   Loop("c3");
+   getShift("c3");
 }
 
 pull::~pull()

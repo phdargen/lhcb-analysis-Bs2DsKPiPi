@@ -19,10 +19,14 @@ qsub qGen.sh
 qsub qFit.sh
 
 
-# Analyze pulls
+# Analyze pulls and shifts
 
 root -l
 
 .L pull.C
 
 pull p
+
+p.pull_ci() for cholDecomp i, or
+
+p.pull_noChol() 
