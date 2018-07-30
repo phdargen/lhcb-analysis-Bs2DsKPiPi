@@ -970,7 +970,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     FitParameter  c7_Run2_t1("c7_Run2_t1",1,1,0.1);
     FitParameter  c8_Run2_t1("c8_Run2_t1",1,1,0.1);
     FitParameter  c9_Run2_t1("c9_Run2_t1",1,1,0.1);
-    
+
     //FullTimePdf_mod t_pdf(r,delta,gamma,k);
     string marginalPdfsPrefix = "comb";
     if(fitGenMC)marginalPdfsPrefix = "Uniform";
@@ -1162,7 +1162,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
                               production_asym_Run2, detection_asym_Run2, "Run2_t1" );
-    
+  
     /// Load data
     double t,dt,mB;
     int f;
@@ -1525,12 +1525,30 @@ void fullTimeFit(int step=0, string mode = "fit"){
     }
 
     Neg2LLMultiConstraint constrains_Acc(MinuitParameterSet::getDefaultSet(),"_Acc");
+    Neg2LLMultiConstraint constrains_Acc2(MinuitParameterSet::getDefaultSet(),"_Acc2");
+    Neg2LLMultiConstraint constrains_Acc3(MinuitParameterSet::getDefaultSet(),"_Acc3");
+    Neg2LLMultiConstraint constrains_Acc4(MinuitParameterSet::getDefaultSet(),"_Acc4");
     if(doAccSystematics){
 	if(useCholDec){
 		if(chol_index > constrains_Acc.getNumberParams()-1)chol_index = constrains_Acc.getNumberParams()-1;
 		constrains_Acc.smearInputValuesChol(chol_index);
+
+		if(chol_index > constrains_Acc2.getNumberParams()-1)chol_index = constrains_Acc2.getNumberParams()-1;
+		constrains_Acc2.smearInputValuesChol(chol_index);
+
+		if(chol_index > constrains_Acc3.getNumberParams()-1)chol_index = constrains_Acc3.getNumberParams()-1;
+		constrains_Acc3.smearInputValuesChol(chol_index);
+
+		if(chol_index > constrains_Acc4.getNumberParams()-1)chol_index = constrains_Acc4.getNumberParams()-1;
+		constrains_Acc4.smearInputValuesChol(chol_index);
 	}
-	else constrains_Acc.smearInputValues();
+	else
+	{ 
+		constrains_Acc.smearInputValues();
+		constrains_Acc2.smearInputValues();
+		constrains_Acc3.smearInputValues();
+		constrains_Acc4.smearInputValues();
+	}
     }
 
     Minimiser mini;
