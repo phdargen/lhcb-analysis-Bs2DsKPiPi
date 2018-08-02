@@ -138,25 +138,22 @@ class Neg2LLMultiConstraint: public Minimisable{
 			}
 	}
 
-	double smearInputValuesChol(int index = 0){
+	double smearInputValuesChol(int index = 0, int seed = 0){
 		
-			cout << "Smearing input values for parameter " << index << endl;
-			RooDataSet* data_cov = _gauss_cov->generate(*_x, 1);
-			RooArgList* xvec_cov= (RooArgList*)data_cov->get(0);
- 
+			TRandom3 r(seed/_x->getSize() + 1);
+  			cout << "Smearing input values for parameter " << index << " using random seed = " << seed/_x->getSize() + 1 << endl;
+
 			double val = 0;
 			for(int i = 0 ; i < _UT->GetNcols(); i++){
 				if(i != index)continue;
 				val = _mps->getParPtr(xvec_cov->at(i)->GetName())->mean();
 				for(int j = 0 ; j < _UT->GetNcols(); j++){
-					// 			cout << UT(i,j) << " " ;
-					// 			if(j == UT.GetNcols()-1) cout << endl;
-					val += gRandom->Gaus(0.,1.) * (*_UT)(i,j);
+					val += r.Gaus(0.,1.) * (*_UT)(i,j);
+					cout << r.Gaus(0.,1.) << endl;
 				}	
-
-				_mps->getParPtr(xvec_cov->at(i)->GetName())->setCurrentFitVal(val);
-				((FitParameter*)_mps->getParPtr(xvec_cov->at(i)->GetName()))->setInit(val);
-				cout << "Set parameter " << xvec_cov->at(i)->GetName() << " to " << val << endl;
+				_mps->getParPtr(_x->at(i)->GetName())->setCurrentFitVal(val);
+				((FitParameter*)_mps->getParPtr(_x->at(i)->GetName()))->setInit(val);
+ 				cout << "Set parameter " << xvec_cov->at(i)->GetName() << " to " << val << endl;
 			}
 			return val;
 	}

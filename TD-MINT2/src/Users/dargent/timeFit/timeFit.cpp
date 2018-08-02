@@ -772,7 +772,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     NamedParameter<int> updateAnaNote("updateAnaNote", 0);
     TString prefix = "";
     TRandom3 ranLux;
-    NamedParameter<int> RandomSeed("RandomSeed", 0);
+    NamedParameter<int> RandomSeed("RandomSeed", 1);
     int seed = RandomSeed + step;
     ranLux.SetSeed((int)seed);
     gRandom = &ranLux;
@@ -1531,16 +1531,16 @@ void fullTimeFit(int step=0, string mode = "fit"){
     if(doAccSystematics){
 	if(useCholDec){
 		if(chol_index > constrains_Acc.getNumberParams()-1)chol_index = constrains_Acc.getNumberParams()-1;
-		constrains_Acc.smearInputValuesChol(chol_index);
+		constrains_Acc.smearInputValuesChol(chol_index,seed);
 
 		if(chol_index > constrains_Acc2.getNumberParams()-1)chol_index = constrains_Acc2.getNumberParams()-1;
-		constrains_Acc2.smearInputValuesChol(chol_index);
+		constrains_Acc2.smearInputValuesChol(chol_index,seed);
 
 		if(chol_index > constrains_Acc3.getNumberParams()-1)chol_index = constrains_Acc3.getNumberParams()-1;
-		constrains_Acc3.smearInputValuesChol(chol_index);
+		constrains_Acc3.smearInputValuesChol(chol_index,seed);
 
 		if(chol_index > constrains_Acc4.getNumberParams()-1)chol_index = constrains_Acc4.getNumberParams()-1;
-		constrains_Acc4.smearInputValuesChol(chol_index);
+		constrains_Acc4.smearInputValuesChol(chol_index,seed);
 	}
 	else
 	{ 
@@ -3377,13 +3377,17 @@ void test_multiGaussConstraints(){
 
    TMatrixDSym* cov = tagging_constrains_Run1_t0.getCovMatrix();
 
-   tagging_constrains_Run1_t0.smearInputValuesChol(0);
-   tagging_constrains_Run1_t0.smearInputValuesChol(0);
-   tagging_constrains_Run1_t0.smearInputValuesChol(0);
-   tagging_constrains_Run1_t0.smearInputValuesChol(1);
-   tagging_constrains_Run1_t0.smearInputValuesChol(4);
+   tagging_constrains_Run1_t0.smearInputValuesChol(0,0);
+   tagging_constrains_Run1_t0.smearInputValuesChol(0,0);
+   tagging_constrains_Run1_t0.smearInputValuesChol(1,1);
+   tagging_constrains_Run1_t0.smearInputValuesChol(2,2);
+   tagging_constrains_Run1_t0.smearInputValuesChol(3,3);
 
-   throw "";
+   tagging_constrains_Run1_t0.smearInputValuesChol(0,4);
+   tagging_constrains_Run1_t0.smearInputValuesChol(1,5);
+
+
+     throw "";
 
    TDecompChol tdc(*cov);
    tdc.Decompose();
@@ -3399,33 +3403,35 @@ void test_multiGaussConstraints(){
 
    for(int n = 0 ; n < N; n++){
 	vector<double> v;
-	for(int i = 0 ; i < UT.GetNcols(); i++){
-		double val = 0.;
-		for(int j = 0 ; j < UT.GetNcols(); j++){
-// 			cout << UT(i,j) << " " ;
-// 			if(j == UT.GetNcols()-1) cout << endl;
- 			val += gRandom->Gaus(0.,1.) * UT(i,j);
-		}	
-		v.push_back(val);
+	vector<double> r;
 
+	for(int i = 0 ; i < UT.GetNcols(); i++){
+		double val = tagging_constrains_Run1_t0.smearInputValuesChol(i,n);
+		v.push_back(val);
 	}
 	results.push_back(v);
    }
 
    vector<double> mean(results[0].size(),0.);
    vector<double> sigma(results[0].size(),0.);
+   TMatrixD cov_col(results[0].size(),results[0].size());
 
    for(int n = 0 ; n < N; n++){
 	for(int i = 0 ; i < results[0].size(); i++){
 		mean[i] += results[n][i];
 		sigma[i] += pow(results[n][i],2);	
 	}
+	for(int i = 0 ; i < results[0].size(); i++)for(int j = 0 ; j < results[0].size(); j++){
+		cov_col(i,j) += results[n][i]*results[n][j]/N;
+	}
+
    }
 
    for(int i = 0 ; i < results[0].size(); i++){
 		   cout << "mean = " << mean[i]/N << " pm " << sqrt(sigma[i]/N) << endl;
    }
 
+   cov_col.Print();
 
 
 }
@@ -3550,10 +3556,10 @@ int main(int argc, char** argv){
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
 
-  //  test_multiGaussConstraints();
+    test_multiGaussConstraints();
   //produceMarginalPdfs();
   //for(int i = 0; i < 200; i++) fullTimeFit(atoi(argv[1])+i);
-    fullTimeFit(atoi(argv[1]),(string)argv[2]);
+  //  fullTimeFit(atoi(argv[1]),(string)argv[2]);
 //     animate(atoi(argv[1]));
 
 
