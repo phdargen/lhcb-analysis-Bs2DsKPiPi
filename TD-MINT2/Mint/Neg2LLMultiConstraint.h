@@ -140,6 +140,7 @@ class Neg2LLMultiConstraint: public Minimisable{
 
 	double smearInputValuesChol(int index = 0, int seed = 0){
 		
+			// Use the same random seed for each chol index
 			TRandom3 r(seed/_x->getSize() + 1);
   			cout << "Smearing input values for parameter " << index << " using random seed = " << seed/_x->getSize() + 1 << endl;
 
@@ -149,7 +150,6 @@ class Neg2LLMultiConstraint: public Minimisable{
 				val = _mps->getParPtr(xvec_cov->at(i)->GetName())->mean();
 				for(int j = 0 ; j < _UT->GetNcols(); j++){
 					val += r.Gaus(0.,1.) * (*_UT)(i,j);
-					cout << r.Gaus(0.,1.) << endl;
 				}	
 				_mps->getParPtr(_x->at(i)->GetName())->setCurrentFitVal(val);
 				((FitParameter*)_mps->getParPtr(_x->at(i)->GetName()))->setInit(val);
