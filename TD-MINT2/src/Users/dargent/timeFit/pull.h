@@ -43,6 +43,33 @@ public :
    Double_t        S_bar_err;
    Double_t        S_bar_pull;
 
+   Double_t	   delta_pull_C;
+   Double_t        delta_pull_D;
+   Double_t        delta_pull_S;
+   Double_t        delta_pull_D_bar;
+   Double_t        delta_pull_S_bar;
+
+   Double_t	   delta_pull_C0;
+   Double_t        delta_pull_D0;
+   Double_t        delta_pull_S0;
+   Double_t        delta_pull_D_bar0;
+   Double_t        delta_pull_S_bar0;
+   Double_t        delta_pull_C1;
+   Double_t        delta_pull_D1;
+   Double_t        delta_pull_S1;
+   Double_t        delta_pull_D_bar1;
+   Double_t        delta_pull_S_bar1;
+   Double_t        delta_pull_C2;
+   Double_t        delta_pull_D2;
+   Double_t        delta_pull_S2;
+   Double_t        delta_pull_D_bar2;
+   Double_t        delta_pull_S_bar2;
+   Double_t        delta_pull_C3;
+   Double_t        delta_pull_D3;
+   Double_t        delta_pull_S3;
+   Double_t        delta_pull_D_bar3;
+   Double_t        delta_pull_S_bar3;
+
    // List of branches
    TBranch        *b_C_mean;   //!
    TBranch        *b_C_init;   //!
@@ -66,6 +93,33 @@ public :
    TBranch        *b_S_bar_pull;   //!
    TBranch        *b___noname0;   //!
 
+   TBranch	  *b_delta_pull_C;
+   TBranch        *b_delta_pull_D;
+   TBranch        *b_delta_pull_S;
+   TBranch        *b_delta_pull_D_bar;
+   TBranch        *b_delta_pull_S_bar;
+
+   TBranch	  *b_delta_pull_C0;
+   TBranch        *b_delta_pull_D0;
+   TBranch        *b_delta_pull_S0;
+   TBranch        *b_delta_pull_D_bar0;
+   TBranch        *b_delta_pull_S_bar0;
+   TBranch        *b_delta_pull_C1;
+   TBranch        *b_delta_pull_D1;
+   TBranch        *b_delta_pull_S1;
+   TBranch        *b_delta_pull_D_bar1;
+   TBranch        *b_delta_pull_S_bar1;
+   TBranch        *b_delta_pull_C2;
+   TBranch        *b_delta_pull_D2;
+   TBranch        *b_delta_pull_S2;
+   TBranch        *b_delta_pull_D_bar2;
+   TBranch        *b_delta_pull_S_bar2;
+   TBranch        *b_delta_pull_C3;
+   TBranch        *b_delta_pull_D3;
+   TBranch        *b_delta_pull_S3;
+   TBranch        *b_delta_pull_D_bar3;
+   TBranch        *b_delta_pull_S_bar3;
+
    pull();
    virtual ~pull();
    virtual Int_t    Cut(Long64_t entry);
@@ -73,6 +127,7 @@ public :
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
    virtual void     Loop(string parName);
+   virtual void     LoopSyst_noChol(string parName);
    virtual void     getShift(string parName);
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
@@ -97,71 +152,92 @@ pull::pull() : fChain(0)
    Init(tree);*/
 }
 
+pull::pull_Chol() : fChain(0) 
+{
+   TChain* chain =  new TChain("MinuitParameterSetNtp");
+
+   chain->Add("/auto/data/kecke/BsDsKpipi/toys/AccSyst/tdfit_deltaPulls.root"); //1
+
+   tree= (TTree*)  chain;
+   Init(tree);
+
+   LoopSyst("systChol");
+  // getShift("all");
+}
+
+
 pull::pull_noChol() : fChain(0) 
 {
    TChain* chain =  new TChain("MinuitParameterSetNtp");
-   chain->Add("signal_toy/pull_1*.root"); //1
-   chain->Add("signal_toy/pull_2*.root"); //1
-   chain->Add("signal_toy/pull_3*.root"); //1
-   chain->Add("signal_toy/pull_4*.root"); //1
-   chain->Add("signal_toy/pull_5*.root"); //1
-   chain->Add("signal_toy/pull_6*.root"); //1
-   chain->Add("signal_toy/pull_7*.root"); //1
-   chain->Add("signal_toy/pull_8*.root"); //1
-   chain->Add("signal_toy/pull_9*.root"); //1
+
+   chain->Add("/auto/data/kecke/BsDsKpipi/toys/AccSyst/tdfit_deltaPulls_noChol.root"); //1
+
+   tree= (TTree*)  chain;
+   Init(tree);
+
+   LoopSyst_noChol("systNoChol");
+  // getShift("all");
+}
+
+pull::pull_noSyst() : fChain(0) 
+{
+   TChain* chain =  new TChain("MinuitParameterSetNtp");
+
+   chain->Add("/auto/data/kecke/BsDsKpipi/toys/signal_noSyst/pull_*.root"); //1
+
    tree= (TTree*)  chain;
    Init(tree);
 
    Loop("all");
-   getShift("all");
+  // getShift("all");
 }
 
 pull::pull_c0() : fChain(0) 
 {
    TChain* chain =  new TChain("MinuitParameterSetNtp");
-   chain->Add("signal_toy/pull_par0_*.root"); //1
+   chain->Add("signal_toy_fitterValid/pull_par0_*.root"); //1
 
    tree= (TTree*)  chain;
    Init(tree);
 
    Loop("c0");
-   getShift("c0");
+//   getShift("c0");
 }
 
 pull::pull_c1() : fChain(0) 
 {
    TChain* chain =  new TChain("MinuitParameterSetNtp");
-   chain->Add("signal_toy/pull_par1_*.root"); //1
+   chain->Add("signal_toy_fitterValid/pull_par1_*.root"); //1
 
    tree= (TTree*)  chain;
    Init(tree);
 
    Loop("c1");
-   getShift("c1");
+ //  getShift("c1");
 }
 
 pull::pull_c2() : fChain(0) 
 {
    TChain* chain =  new TChain("MinuitParameterSetNtp");
-   chain->Add("signal_toy/pull_par2_*.root"); //1
+   chain->Add("signal_toy_fitterValid/pull_par2_*.root"); //1
 
    tree= (TTree*)  chain;
    Init(tree);
 
    Loop("c2");
-   getShift("c2");
+ //  getShift("c2");
 }
 
 pull::pull_c3() : fChain(0) 
 {
    TChain* chain =  new TChain("MinuitParameterSetNtp");
-   chain->Add("signal_toy/pull_par3_*.root"); //1
+   chain->Add("signal_toy_fitterValid/pull_par3_*.root"); //1
 
    tree= (TTree*)  chain;
    Init(tree);
 
    Loop("c3");
-   getShift("c3");
+ //  getShift("c3");
 }
 
 pull::~pull()
@@ -225,6 +301,35 @@ void pull::Init(TTree *tree)
    fChain->SetBranchAddress("S_bar_init", &S_bar_init, &b_S_bar_init);
    fChain->SetBranchAddress("S_bar_err", &S_bar_err, &b_S_bar_err);
    fChain->SetBranchAddress("S_bar_pull", &S_bar_pull, &b_S_bar_pull);
+
+   fChain->SetBranchAddress("delta_pull_C", &delta_pull_C, &b_delta_pull_C);
+   fChain->SetBranchAddress("delta_pull_D", &delta_pull_D, &b_delta_pull_D);
+   fChain->SetBranchAddress("delta_pull_S", &delta_pull_S, &b_delta_pull_S);
+   fChain->SetBranchAddress("delta_pull_D_bar", &delta_pull_D_bar, &b_delta_pull_D_bar);
+   fChain->SetBranchAddress("delta_pull_S_bar", &delta_pull_S_bar, &b_delta_pull_S_bar);
+
+   fChain->SetBranchAddress("delta_pull_C0", &delta_pull_C0, &b_delta_pull_C0);
+   fChain->SetBranchAddress("delta_pull_D0", &delta_pull_D0, &b_delta_pull_D0);
+   fChain->SetBranchAddress("delta_pull_S0", &delta_pull_S0, &b_delta_pull_S0);
+   fChain->SetBranchAddress("delta_pull_D_bar0", &delta_pull_D_bar0, &b_delta_pull_D_bar0);
+   fChain->SetBranchAddress("delta_pull_S_bar0", &delta_pull_S_bar0, &b_delta_pull_S_bar0);
+   fChain->SetBranchAddress("delta_pull_C1", &delta_pull_C1, &b_delta_pull_C1);
+   fChain->SetBranchAddress("delta_pull_D1", &delta_pull_D1, &b_delta_pull_D1);
+   fChain->SetBranchAddress("delta_pull_S1", &delta_pull_S1, &b_delta_pull_S1);
+   fChain->SetBranchAddress("delta_pull_D_bar1", &delta_pull_D_bar1, &b_delta_pull_D_bar1);
+   fChain->SetBranchAddress("delta_pull_S_bar1", &delta_pull_S_bar1, &b_delta_pull_S_bar1);
+   fChain->SetBranchAddress("delta_pull_C2", &delta_pull_C2, &b_delta_pull_C2);
+   fChain->SetBranchAddress("delta_pull_D2", &delta_pull_D2, &b_delta_pull_D2);
+   fChain->SetBranchAddress("delta_pull_S2", &delta_pull_S2, &b_delta_pull_S2);
+   fChain->SetBranchAddress("delta_pull_D_bar2", &delta_pull_D_bar2, &b_delta_pull_D_bar2);
+   fChain->SetBranchAddress("delta_pull_S_bar2", &delta_pull_S_bar2, &b_delta_pull_S_bar2);
+   fChain->SetBranchAddress("delta_pull_C3", &delta_pull_C3, &b_delta_pull_C3);
+   fChain->SetBranchAddress("delta_pull_D3", &delta_pull_D3, &b_delta_pull_D3);
+   fChain->SetBranchAddress("delta_pull_S3", &delta_pull_S3, &b_delta_pull_S3);
+   fChain->SetBranchAddress("delta_pull_D_bar3", &delta_pull_D_bar3, &b_delta_pull_D_bar3);
+   fChain->SetBranchAddress("delta_pull_S_bar3", &delta_pull_S_bar3, &b_delta_pull_S_bar3);
+
+
    Notify();
 }
 
