@@ -164,6 +164,13 @@ protected:
     
     // Time pdf master
     TimePdfMaster* _timePdfMaster;
+    DalitzEventPattern _pat;
+
+    // Limits
+    NamedParameter<double> _min_TAU;
+    NamedParameter<double> _max_TAU;
+    NamedParameter<double> _min_TAUERR;
+    NamedParameter<double> _max_TAUERR;
     
 public:
     void parametersChanged(){
@@ -271,8 +278,8 @@ public:
         return getVal_noPs(*evt);
     }
 
-    RooDataSet* sampleEvents(int N = 10000, int run = -1 , int trigger = -1){
-	return _timePdfMaster->sampleEvents(N,run,trigger);
+    RooDataSet* sampleEvents(int N = 10000){
+	return _timePdfMaster->sampleEvents(N);
     }
 
     void generateBkgToys(int N, DalitzEventList& eventListData){
@@ -299,15 +306,12 @@ public:
 	saveEventListToFile(eventList);
     }
 
-    DalitzEventList generateToys(int N = 10000, int run = -1 , int trigger = -1){
+    DalitzEventList generateToysRooFit(int N = 10000, int run = -1 , int trigger = -1){
 
 	cout << "Generating " << N << " events" << endl;
-
-        NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
-        DalitzEventPattern pat(EventPattern.getVector());
 	DalitzEventList eventList;
 
-	RooDataSet* sample = sampleEvents(N,run,trigger);
+	RooDataSet* sample = sampleEvents(N);
 	
 	for(int i = 0; i < sample->numEntries(); i++){
 	
@@ -317,14 +321,12 @@ public:
 		double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
 		double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
 		double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
-		int run_MC = ((RooCategory*)sample_set->find("run"))->getIndex() ;
-		int trigger_MC = ((RooCategory*)sample_set->find("trigger"))->getIndex() ;
 
 		int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
 		int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
 		int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ; 	
 	
-		DalitzEvent evt(pat,gRandom);
+		DalitzEvent evt(_pat,gRandom);
 		evt.setValueInVector(0, t_MC);
 		evt.setValueInVector(1, dt_MC);
 		evt.setValueInVector(2, f_MC);
@@ -339,7 +341,67 @@ public:
 	}
 
 	return eventList;
-	//saveEventListToFile(eventList);
+   }
+
+    DalitzEventList generateToys(int N = 10000, int run = -1 , int trigger = -1){
+
+	time_t startTime = time(0);
+
+	cout << "Generating " << N << " events" << endl;
+	DalitzEventList eventList;
+
+	/// Estimate max val
+	vector<double> vals;	
+	for(int i = 0; i < 100000; i++){
+		DalitzEvent evt = generateWeightedEvent();
+		double val = getVal(evt)/_timePdfMaster->get_marginalPdfs_product(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
+		vals.push_back(val);	
+	}
+
+	cout << "Now calculating maximum val " << vals.size() << endl;
+	double amax,pmax;
+	generalisedPareto_estimateMaximum(vals,0.999,amax,pmax);
+	
+	double pdf_max = 1.;
+	if(!TMath::IsNaN(pmax) && pmax > 0 && pmax < 100 * amax)pdf_max = pmax;
+	else if(!TMath::IsNaN(amax))pdf_max = amax;
+	// for safety
+ 	pdf_max *= 1.5;	
+
+	cout << "pdf_max " << pdf_max << endl;
+
+	int N_gen = 0;
+	int N_tot = 0;
+	while(true){
+			DalitzEvent evt = generateWeightedEvent();
+			double pdfVal = getVal(evt)/_timePdfMaster->get_marginalPdfs_product(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
+			
+			const double height = gRandom->Uniform(0,pdf_max);
+			
+			///Safety check on the maxmimum generated height
+			if( pdfVal > pdf_max ){
+				std::cout << "ERROR: PDF above determined maximum." << std::endl;
+				std::cout << pdfVal << " > " << pdf_max << std::endl;
+				pdf_max = pdf_max * 2.;
+			}
+			
+			///Hit-and-miss
+			if( height < pdfVal ) { 
+				evt.setValueInVector(7, run);
+				evt.setValueInVector(8, trigger);
+				eventList.Add(evt);
+				N_gen++;
+				if (0ul == (N_gen % 500ul)) cout << "Generated event " << N_gen << "/" << N << endl;
+			}		
+			N_tot ++;
+			if(N_gen == N)break;
+	}
+
+	cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
+ 	cout << "Generated " << N_gen << " events ! Efficiecy = " << (double)N_gen/(double)N_tot << endl;
+
+	saveEventListToFile(eventList);
+ 	return eventList;
    }
 
     void saveEventListToFile(DalitzEventList& eventList, string name = "toys.root"){
@@ -450,6 +512,48 @@ public:
 	     out->Close();
     }
 
+    DalitzEvent generateWeightedEvent(){
+
+	while(true){
+		double t_MC = gRandom->Exp(_tau);
+                if(t_MC > _max_TAU || t_MC < _min_TAU)continue;
+
+		DalitzEvent evt(_pat,gRandom);
+
+		vector<double> marginal_vals = _timePdfMaster->getRandom_marginalVals();
+		double dt_MC = marginal_vals[0] ;
+		double eta_OS_MC = marginal_vals[1] ;
+		double eta_SS_MC = marginal_vals[2] ;
+
+		int f_MC = (gRandom->Uniform() > 0.5) ? 1 : -1;		
+	
+		// true flavor
+		int q_MC = (gRandom->Uniform() > 0.5) ? 1 : -1;
+
+ 	        int q_SS_MC = (gRandom->Uniform() > 2./3.) ? 0 : q_MC ;
+         	int q_OS_MC = (gRandom->Uniform() > 2./3.) ? 0 : q_MC ;
+ 
+		q_OS_MC = (gRandom->Uniform() < 0.5) ? - q_OS_MC : q_OS_MC;
+		q_SS_MC = (gRandom->Uniform() < 0.5) ? - q_SS_MC : q_SS_MC;
+		
+		eta_OS_MC = (q_OS_MC == 0) ? 0.5 : eta_OS_MC;
+		eta_SS_MC = (q_SS_MC == 0) ? 0.5 : eta_SS_MC;
+
+		if(f_MC<0)evt.CP_conjugateYourself();
+		evt.setValueInVector(0, t_MC);
+		evt.setValueInVector(1, dt_MC);
+		evt.setValueInVector(2, f_MC);
+		evt.setValueInVector(3, q_OS_MC);
+		evt.setValueInVector(4, eta_OS_MC);
+		evt.setValueInVector(5, q_SS_MC);
+		evt.setValueInVector(6, eta_SS_MC);
+
+		evt.setGeneratorPdfRelativeToPhaseSpace(exp(-t_MC/_tau) / ( _tau * ( exp(-_min_TAU/_tau) - exp(-_max_TAU/_tau) )));
+		return evt;
+	}
+    }
+
+
     TH1D* plotSpline() {
 	 return _timePdfMaster->plotSpline();
     }
@@ -507,7 +611,11 @@ public:
     _tageff_asym_ss(tageff_asym_ss),
     _production_asym(production_asym),
     _detection_asym(detection_asym),
-    _marginalPdfsPrefix(marginalPdfsPrefix)
+    _marginalPdfsPrefix(marginalPdfsPrefix),
+    _min_TAU("min_TAU", 0.4),
+    _max_TAU("max_TAU", 10.),
+    _min_TAUERR("min_TAUERR", 0.),
+    _max_TAUERR("max_TAUERR", 0.1)
     {
         _timePdfMaster = new TimePdfMaster(_tau, _dGamma, _dm
                                           ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
@@ -527,6 +635,9 @@ public:
                                    _C,-_C,
                                    _k * _D, _k * _D_bar,
                                    _k * _S, _k * _S_bar  );  
+
+        NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
+        _pat = DalitzEventPattern(EventPattern.getVector());
     }
      
 };
@@ -2542,38 +2653,54 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	for(int n = 0; n < 1; n++){   /// Multiple iterations needed since RooDataSet is not memory-resident 
 		
 		RooDataSet* sampleEvents;
-		int N_sample = 200000;
-		if(doSimFit) {
+		int N_sample = 20000000;
+/*		if(doSimFit) {
 		sampleEvents = t_pdf_Run1_t0.sampleEvents(N_sample * N_Run1_t0/N,1,0);
 		sampleEvents->append(*t_pdf_Run1_t1.sampleEvents(N_sample * N_Run1_t1/N,1,1));
 		sampleEvents->append(*t_pdf_Run2_t0.sampleEvents(N_sample * N_Run2_t0/N,2,0));
 		sampleEvents->append(*t_pdf_Run2_t1.sampleEvents(N_sample * N_Run2_t1/N,2,1));
 		}
-		else  sampleEvents = t_pdf.sampleEvents(200000);
+		else  sampleEvents = t_pdf.sampleEvents(200000);*/
 	
-		for(int i = 0; i < sampleEvents->numEntries(); i++){
+		for(int i = 0; i < N_sample; i++){
 	
-			RooArgSet* sample_set= (RooArgSet*)sampleEvents->get(i);
-		
-			double t_MC = ((RooRealVar*)sample_set->find("t"))->getVal() ;
-			double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
-			int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
-			int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
-			double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
-			int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ;
-			double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
-			int run_MC = ((RooCategory*)sample_set->find("run"))->getIndex() ;
-			int trigger_MC = ((RooCategory*)sample_set->find("trigger"))->getIndex() ;
-		
-			r_t->setVal(t_MC) ;
-			r_dt->setVal(dt_MC) ;
-			r_f->setIndex(f_MC) ;
-			r_q_OS->setIndex(q_OS_MC) ;
-			r_q_SS->setIndex(q_SS_MC) ;
-			r_eta_OS->setVal(eta_OS_MC) ;
-			r_eta_SS->setVal(eta_SS_MC) ;
-		
-			double weight = 1;
+// 			RooArgSet* sample_set= (RooArgSet*)sampleEvents->get(i);
+// 		
+// 			double t_MC = ((RooRealVar*)sample_set->find("t"))->getVal() ;
+// 			double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
+// 			int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
+// 			int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
+// 			double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
+// 			int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ;
+// 			double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
+// 			int run_MC = ((RooCategory*)sample_set->find("run"))->getIndex() ;
+// 			int trigger_MC = ((RooCategory*)sample_set->find("trigger"))->getIndex() ;
+// 		
+// 			r_t->setVal(t_MC) ;
+// 			r_dt->setVal(dt_MC) ;
+// 			r_f->setIndex(f_MC) ;
+// 			r_q_OS->setIndex(q_OS_MC) ;
+// 			r_q_SS->setIndex(q_SS_MC) ;
+// 			r_eta_OS->setVal(eta_OS_MC) ;
+// 			r_eta_SS->setVal(eta_SS_MC) ;
+// 		
+// 			double weight = 1;
+// 	
+
+			DalitzEvent evt = t_pdf_Run1_t0.generateWeightedEvent();
+
+			double t_MC = evt.getValueFromVector(0) ;
+			double dt_MC = evt.getValueFromVector(1) ;
+			int f_MC = evt.getValueFromVector(2) ;
+			int q_OS_MC = evt.getValueFromVector(3) ;
+			double eta_OS_MC = evt.getValueFromVector(4) ;
+			int q_SS_MC = evt.getValueFromVector(5);
+			double eta_SS_MC = evt.getValueFromVector(6);
+			int run_MC = 1 ;
+			int trigger_MC = 0 ;
+
+			double weight = t_pdf_Run1_t0.getVal(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
+
 			N_MC += weight;
 		
 			h_t_fit->Fill(t_MC,weight);
@@ -3437,115 +3564,115 @@ void test_multiGaussConstraints(){
 }
 
 
-void animate(int step=0){
-	TRandom3 ranLux;
-	NamedParameter<int> RandomSeed("RandomSeed", 0);
-	ranLux.SetSeed((int)RandomSeed);
-	gRandom = &ranLux;
-	
-	NamedParameter<string> OutputDir("OutputDir", (std::string) "", (char*) 0);
-	
-	FitParameter  r("r",1,0.,0.1);
-	FitParameter  delta("delta",1,100.,1.);
-	FitParameter  gamma("gamma",1,70,1.);
-	FitParameter  k("k",1,1,1.);
-	
-	FitParameter  C("C",1,0.,0.1);
-	FitParameter  D("D",1,0.,0.1);
-	FitParameter  D_bar("D_bar",1,0.,0.1);
-	FitParameter  S("S",1,0.,0.1);
-	FitParameter  S_bar("S_bar",1,0.,0.1);
-	
-	FitParameter  tau("tau",2,1.509,0.1);
-	FitParameter  dGamma("dGamma",2,0.09,0.1);
-	FitParameter  dm("dm",2,17.757,0.1);
-	
-	FitParameter  scale_mean_dt("scale_mean_dt",1,1,0.1);
-	FitParameter  offset_sigma_dt("offset_sigma_dt",1,0.,0.1);
-	FitParameter  scale_sigma_dt("scale_sigma_dt",1,1.,0.1);
-	FitParameter  scale_sigma_2_dt("scale_sigma_2_dt",1,0.,0.1);
-	FitParameter  p0_os("p0_os",1,0.,0.);
-	FitParameter  p1_os("p1_os",1,1.,0.);
-	FitParameter  delta_p0_os("delta_p0_os",1,0.,0.);
-	FitParameter  delta_p1_os("delta_p1_os",1,0.,0.);
-	FitParameter  avg_eta_os("avg_eta_os",1,0.,0.);
-	FitParameter  tageff_os("tageff_os",1,1.,0.);
-	FitParameter  tageff_asym_os("tageff_asym_os",1,0.,0.);
-	FitParameter  p0_ss("p0_ss",1,0.,0.);
-	FitParameter  p1_ss("p1_ss",1,1.,0.);
-	FitParameter  delta_p0_ss("delta_p0_ss",1,0.,0.);
-	FitParameter  delta_p1_ss("delta_p1_ss",1,0.,0.);
-	FitParameter  avg_eta_ss("avg_eta_ss",1,0.,0.);
-	FitParameter  tageff_ss("tageff_ss",1,1.,0.);
-	FitParameter  tageff_asym_ss("tageff_asym_ss",1,0.,0.);
-	FitParameter  production_asym("production_asym",1,0.,0.);
-	FitParameter  detection_asym("detection_asym",1,0.1,0.);
-	
-	FitParameter  c0("c0",1,1,0.1);
-	FitParameter  c1("c1",1,1,0.1);
-	FitParameter  c2("c2",1,1,0.1);
-	FitParameter  c3("c3",1,1,0.1);
-	FitParameter  c4("c4",1,1,0.1);
-	FitParameter  c5("c5",1,1,0.1);
-	FitParameter  c6("c6",1,1,0.1);
-	FitParameter  c7("c7",1,1,0.1);
-	FitParameter  c8("c8",1,1,0.1);
-	FitParameter  c9("c9",1,1,0.1);
-	
-	FullTimePdf t_pdf(C, D, D_bar, S, S_bar, k,
-			tau, dGamma, dm
-			,offset_sigma_dt, scale_mean_dt, scale_sigma_dt, scale_sigma_2_dt
-			,c0, c1, c2 ,c3, c4, c5
-			,c6, c7, c8, c9,
-			p0_os, p1_os, delta_p0_os, delta_p1_os, 
-			avg_eta_os, tageff_os, tageff_asym_os, 
-			p0_ss, p1_ss, delta_p0_ss, delta_p1_ss, 
-			avg_eta_ss, tageff_ss, tageff_asym_ss, 
-			production_asym, detection_asym, "comb" );
-
-	TH1D* h_N_mixed = new TH1D("h_N_mixed",";t modulo (2#pi/#Deltam_{s}) (ps); A_{mix} ",10,0.,2.*pi/dm);
-	TH1D* h_N_unmixed = (TH1D*) h_N_mixed->Clone("h_N_unmixed");
-	
-	TH1D* h_N_mixed_p = (TH1D*) h_N_mixed->Clone("h_N_mixed_p");
-	TH1D* h_N_unmixed_p = (TH1D*) h_N_mixed->Clone("h_N_unmixed_p");
-	TH1D* h_N_mixed_m = (TH1D*) h_N_mixed->Clone("h_N_mixed_m");
-	TH1D* h_N_unmixed_m = (TH1D*) h_N_mixed->Clone("h_N_unmixed_m");
-
-	t_pdf.generateToys(10000,1,0);
-
-	return ;
-
-	RooDataSet* data = t_pdf.sampleEvents(100000,1,0);
-
-	for(int i = 0; i < data->numEntries(); i++){
-	
-		RooArgSet* sample_set= (RooArgSet*)data->get(i);
-	
-		double t_MC = ((RooRealVar*)sample_set->find("t"))->getVal() ;
-		double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
-		int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
-		int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
-		double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
-		int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ;
-		double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
-	
-		double weight = 1;//getVal(evt)/getSampledPdfVal(evt);
-
-		cout << q_OS_MC << endl;
-		cout << q_SS_MC << endl << endl;
-
-	
-/*		if(q_eff==-1 && f_MC == 1) 
-			h_N_mixed_p->Fill(t_MC,2.*pi/dm),weight);
-		else if(q_eff==1 && f_MC == 1)
-			h_N_unmixed_p->Fill(fmod(t_MC,2.*pi/dm),weight);
-		else if(q_eff==-1 && f_MC == -1) 
-			h_N_unmixed_m->Fill(fmod(t_MC,2.*pi/dm),weight);
-		else if(q_eff==1 && f_MC == -1)
-			h_N_mixed_m->Fill(t_MC,2.*pi/dm),weight);*/
-	}
-	
-}
+// void animate(int step=0){
+// 	TRandom3 ranLux;
+// 	NamedParameter<int> RandomSeed("RandomSeed", 0);
+// 	ranLux.SetSeed((int)RandomSeed);
+// 	gRandom = &ranLux;
+// 	
+// 	NamedParameter<string> OutputDir("OutputDir", (std::string) "", (char*) 0);
+// 	
+// 	FitParameter  r("r",1,0.,0.1);
+// 	FitParameter  delta("delta",1,100.,1.);
+// 	FitParameter  gamma("gamma",1,70,1.);
+// 	FitParameter  k("k",1,1,1.);
+// 	
+// 	FitParameter  C("C",1,0.,0.1);
+// 	FitParameter  D("D",1,0.,0.1);
+// 	FitParameter  D_bar("D_bar",1,0.,0.1);
+// 	FitParameter  S("S",1,0.,0.1);
+// 	FitParameter  S_bar("S_bar",1,0.,0.1);
+// 	
+// 	FitParameter  tau("tau",2,1.509,0.1);
+// 	FitParameter  dGamma("dGamma",2,0.09,0.1);
+// 	FitParameter  dm("dm",2,17.757,0.1);
+// 	
+// 	FitParameter  scale_mean_dt("scale_mean_dt",1,1,0.1);
+// 	FitParameter  offset_sigma_dt("offset_sigma_dt",1,0.,0.1);
+// 	FitParameter  scale_sigma_dt("scale_sigma_dt",1,1.,0.1);
+// 	FitParameter  scale_sigma_2_dt("scale_sigma_2_dt",1,0.,0.1);
+// 	FitParameter  p0_os("p0_os",1,0.,0.);
+// 	FitParameter  p1_os("p1_os",1,1.,0.);
+// 	FitParameter  delta_p0_os("delta_p0_os",1,0.,0.);
+// 	FitParameter  delta_p1_os("delta_p1_os",1,0.,0.);
+// 	FitParameter  avg_eta_os("avg_eta_os",1,0.,0.);
+// 	FitParameter  tageff_os("tageff_os",1,1.,0.);
+// 	FitParameter  tageff_asym_os("tageff_asym_os",1,0.,0.);
+// 	FitParameter  p0_ss("p0_ss",1,0.,0.);
+// 	FitParameter  p1_ss("p1_ss",1,1.,0.);
+// 	FitParameter  delta_p0_ss("delta_p0_ss",1,0.,0.);
+// 	FitParameter  delta_p1_ss("delta_p1_ss",1,0.,0.);
+// 	FitParameter  avg_eta_ss("avg_eta_ss",1,0.,0.);
+// 	FitParameter  tageff_ss("tageff_ss",1,1.,0.);
+// 	FitParameter  tageff_asym_ss("tageff_asym_ss",1,0.,0.);
+// 	FitParameter  production_asym("production_asym",1,0.,0.);
+// 	FitParameter  detection_asym("detection_asym",1,0.1,0.);
+// 	
+// 	FitParameter  c0("c0",1,1,0.1);
+// 	FitParameter  c1("c1",1,1,0.1);
+// 	FitParameter  c2("c2",1,1,0.1);
+// 	FitParameter  c3("c3",1,1,0.1);
+// 	FitParameter  c4("c4",1,1,0.1);
+// 	FitParameter  c5("c5",1,1,0.1);
+// 	FitParameter  c6("c6",1,1,0.1);
+// 	FitParameter  c7("c7",1,1,0.1);
+// 	FitParameter  c8("c8",1,1,0.1);
+// 	FitParameter  c9("c9",1,1,0.1);
+// 	
+// 	FullTimePdf t_pdf(C, D, D_bar, S, S_bar, k,
+// 			tau, dGamma, dm
+// 			,offset_sigma_dt, scale_mean_dt, scale_sigma_dt, scale_sigma_2_dt
+// 			,c0, c1, c2 ,c3, c4, c5
+// 			,c6, c7, c8, c9,
+// 			p0_os, p1_os, delta_p0_os, delta_p1_os, 
+// 			avg_eta_os, tageff_os, tageff_asym_os, 
+// 			p0_ss, p1_ss, delta_p0_ss, delta_p1_ss, 
+// 			avg_eta_ss, tageff_ss, tageff_asym_ss, 
+// 			production_asym, detection_asym, "comb" );
+// 
+// 	TH1D* h_N_mixed = new TH1D("h_N_mixed",";t modulo (2#pi/#Deltam_{s}) (ps); A_{mix} ",10,0.,2.*pi/dm);
+// 	TH1D* h_N_unmixed = (TH1D*) h_N_mixed->Clone("h_N_unmixed");
+// 	
+// 	TH1D* h_N_mixed_p = (TH1D*) h_N_mixed->Clone("h_N_mixed_p");
+// 	TH1D* h_N_unmixed_p = (TH1D*) h_N_mixed->Clone("h_N_unmixed_p");
+// 	TH1D* h_N_mixed_m = (TH1D*) h_N_mixed->Clone("h_N_mixed_m");
+// 	TH1D* h_N_unmixed_m = (TH1D*) h_N_mixed->Clone("h_N_unmixed_m");
+// 
+// 	t_pdf.generateToys(10000,1,0);
+// 
+// 	return ;
+// 
+// 	RooDataSet* data = t_pdf.sampleEvents(100000);
+// 
+// 	for(int i = 0; i < data->numEntries(); i++){
+// 	
+// 		RooArgSet* sample_set= (RooArgSet*)data->get(i);
+// 	
+// 		double t_MC = ((RooRealVar*)sample_set->find("t"))->getVal() ;
+// 		double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
+// 		int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
+// 		int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
+// 		double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
+// 		int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ;
+// 		double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
+// 	
+// 		double weight = 1;//getVal(evt)/getSampledPdfVal(evt);
+// 
+// 		cout << q_OS_MC << endl;
+// 		cout << q_SS_MC << endl << endl;
+// 
+// 	
+// /*		if(q_eff==-1 && f_MC == 1) 
+// 			h_N_mixed_p->Fill(t_MC,2.*pi/dm),weight);
+// 		else if(q_eff==1 && f_MC == 1)
+// 			h_N_unmixed_p->Fill(fmod(t_MC,2.*pi/dm),weight);
+// 		else if(q_eff==-1 && f_MC == -1) 
+// 			h_N_unmixed_m->Fill(fmod(t_MC,2.*pi/dm),weight);
+// 		else if(q_eff==1 && f_MC == -1)
+// 			h_N_mixed_m->Fill(t_MC,2.*pi/dm),weight);*/
+// 	}
+// 	
+// }
 
 int main(int argc, char** argv){
 
@@ -3556,10 +3683,10 @@ int main(int argc, char** argv){
   gROOT->ProcessLine(".x ../lhcbStyle.C");
 
 
-    test_multiGaussConstraints();
+//     test_multiGaussConstraints();
   //produceMarginalPdfs();
   //for(int i = 0; i < 200; i++) fullTimeFit(atoi(argv[1])+i);
-  //  fullTimeFit(atoi(argv[1]),(string)argv[2]);
+      fullTimeFit(atoi(argv[1]),(string)argv[2]);
 //     animate(atoi(argv[1]));
 
 

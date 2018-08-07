@@ -588,7 +588,7 @@ class TimePdfMaster
 				RooArgSet(*_pdf_sigma_t,*_pdf_eta_OS,*_pdf_eta_SS),Conditional(RooArgSet(*_fitPdf_t),RooArgSet(*_r_t,*_r_f,*_r_q_OS,*_r_q_SS)));
 
     	//_protoData = 0; //new RooDataSet("protoData","protoData",RooArgSet(*_r_dt,*_r_f,*_r_q_OS,*_r_eta_OS,*_r_q_SS,*_r_eta_SS));
-	//_sampleGen = 0;
+	_sampleGen = 0;
     }
     
 //     RooDataSet* sampleEvents(int N = 10000, int run = -1, int trigger = -1){
@@ -615,10 +615,11 @@ class TimePdfMaster
 // 	return data;
 //     }
 
-    RooDataSet* sampleEvents(int N = 10000, int run = -1, int trigger = -1){
+    RooDataSet* sampleEvents(int N = 10000){
         if(_sampleGen == 0){
     		_protoData = new RooDataSet("protoData","protoData",RooArgSet(*_r_dt,*_r_eta_OS,*_r_eta_SS));
-    		_protoData_rt = new RooDataSet("protoData_rt","protoData_rt",RooArgSet(*_r_run,*_r_trigger));
+//     		_protoData_rt = new RooDataSet("protoData_rt","protoData_rt",RooArgSet(*_r_run,*_r_trigger));
+		int N_proto = N > 100000 ? N : 100000;
 		for(int i = 0 ; i < N; i++){
  		        _r_dt->setVal(_h_dt->GetRandom());        
  		        //_r_q_SS->setIndex((int)_h_q_SS->GetBinCenter(_h_q_SS->FindBin(_h_q_SS->GetRandom())));
@@ -627,18 +628,26 @@ class TimePdfMaster
          		_r_eta_OS->setVal(_h_eta_OS->GetRandom());
          		_r_eta_SS->setVal(_h_eta_SS->GetRandom());
 		        _protoData->add(RooArgSet(*_r_dt,*_r_eta_OS,*_r_eta_SS));
-         		_r_run->setIndex(run);
-         		_r_trigger->setIndex(trigger);
-		        _protoData_rt->add(RooArgSet(*_r_run,*_r_trigger));
+//          		_r_run->setIndex(run);
+//          		_r_trigger->setIndex(trigger);
+// 		        _protoData_rt->add(RooArgSet(*_r_run,*_r_trigger));
 		}
 		_sampleGen = new RooMCStudy(*_samplingPdf,RooArgSet(*_r_t,*_r_q_OS,*_r_q_SS,*_r_f),ProtoData(*_protoData,kFALSE,kTRUE));
 	}
 	_sampleGen->generate(1,N,kTRUE);
 	RooDataSet* data = (RooDataSet*)_sampleGen->genData(0);
-	data->merge(_protoData_rt);
+// 	RooDataSet* data = new RooDataSet("sampleData","sampleData",(RooDataSet*)_sampleGen->genData(0),RooArgSet(*_r_t,*_r_q_OS,*_r_q_SS,*_r_f));
+// 	data->merge(_protoData_rt);
 	return data;
     }
 
+    vector<double> getRandom_marginalVals(){
+	vector<double> vals;
+	vals.push_back(_h_dt->GetRandom());
+	vals.push_back(_h_eta_OS->GetRandom());
+	vals.push_back(_h_eta_SS->GetRandom());
+	return vals;
+    }
 
     void fillProtoData(double dt, int f, int q_OS, double eta_OS, int q_SS, double eta_SS){
         _r_dt->setVal(dt);        
@@ -863,6 +872,21 @@ class TimePdfMaster
         _r_D_bar->setVal(D_bar);
         _r_S->setVal(S);
         _r_S_bar->setVal(S_bar);
+    }
+
+    vector<double> getCP_coeff(){
+
+	vector<double> vals;
+        vals.push_back(_r_norm->getVal());
+        vals.push_back(_r_norm_bar->getVal());
+        vals.push_back(_r_C->getVal());
+        vals.push_back(_r_C_bar->getVal());
+        vals.push_back(_r_D->getVal());
+        vals.push_back(_r_D_bar->getVal());
+        vals.push_back(_r_S->getVal());
+        vals.push_back(_r_S_bar->getVal());
+	
+	return vals;
     }
     
     void setAllObservablesAndFitParameters(IDalitzEvent& evt){
