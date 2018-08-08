@@ -138,22 +138,22 @@ class Neg2LLMultiConstraint: public Minimisable{
 			}
 	}
 
-	double smearInputValuesChol(int index = 0, int seed = 0){
+	double smearInputValuesChol(int index = 0, int seed = 0, int offset = 1){
 		
 			// Use the same random seed for each chol index
-			TRandom3 r(seed/_x->getSize() + 1);
-  			cout << "Smearing input values for parameter " << index << " using random seed = " << seed/_x->getSize() + 1 << endl;
+			TRandom3 r(seed + offset);
+  			cout << "Smearing input values for parameter " << index << " using random seed = " << seed + offset << endl;
 
 			double val = 0;
 			for(int i = 0 ; i < _UT->GetNcols(); i++){
 				if(i != index)continue;
-				val = _mps->getParPtr(xvec_cov->at(i)->GetName())->mean();
+				val = _mps->getParPtr(_x->at(i)->GetName())->mean();
 				for(int j = 0 ; j < _UT->GetNcols(); j++){
 					val += r.Gaus(0.,1.) * (*_UT)(i,j);
 				}	
 				_mps->getParPtr(_x->at(i)->GetName())->setCurrentFitVal(val);
 				((FitParameter*)_mps->getParPtr(_x->at(i)->GetName()))->setInit(val);
- 				cout << "Set parameter " << xvec_cov->at(i)->GetName() << " to " << val << endl;
+ 				cout << "Set parameter " << _x->at(i)->GetName() << " to " << val << endl;
 			}
 			return val;
 	}
