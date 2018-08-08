@@ -873,7 +873,7 @@ public:
              +  _timePdfMaster->get_cos_term_Val(evt)
              +  _timePdfMaster->get_sinh_term_Val(evt)
              +  _timePdfMaster->get_sin_term_Val(evt)
-             ) ;// * _timePdfMaster->get_marginalPdfs_product(evt); //* _timePdfMaster->get_marginalPdfs_Val(evt);
+             )  * _timePdfMaster->get_marginalPdfs_product(evt); //* _timePdfMaster->get_marginalPdfs_Val(evt);
 
         return val;
     }
@@ -924,6 +924,58 @@ public:
         return val/norm;
     }
     
+
+    inline double getVal_timeIntegrated(IDalitzEvent& evt){
+
+        _timePdfMaster->setAllObservablesToMean(evt);
+                
+        double r = (double)_r; // * sqrt(_intA/_intAbar);
+	double delta_0 = std::arg(_intAAbar)/(2.*pi)*360.;
+	double delta_0_CP = std::arg(_intAAbar_CP)/(2.*pi)*360.;
+
+        const complex<double> phase_diff = polar((double)r,((double) _delta - delta_0 -(double)_gamma)/360.*2*pi);
+        const complex<double> phase_diff_CP = polar((double)r,((double) _delta - delta_0_CP +(double)_gamma)/360.*2*pi);
+
+        complex<double> amp(0,0);
+        complex<double> amp_bar(0,0);
+	double norm_amp = 1.;
+
+        complex<double> amp_CP(0,0);
+        complex<double> amp_bar_CP(0,0);
+        double norm_amp_CP = 1.;
+
+        amp = _amps->ComplexVal_un_normalised_noPs(evt)/sqrt(_intA) ;
+        amp_bar = phase_diff * _amps_bar->ComplexVal_un_normalised_noPs(evt)/sqrt(_intAbar) ;
+        norm_amp = (norm(amp) + norm(amp_bar));
+       
+	DalitzEvent evt_CP(evt);
+        evt_CP.CP_conjugateYourself();
+
+        amp_CP = _amps_CP->ComplexVal_un_normalised_noPs(evt_CP)/sqrt(_intA_CP) ;
+        amp_bar_CP = phase_diff_CP * _amps_bar_CP->ComplexVal_un_normalised_noPs(evt_CP)/sqrt(_intAbar_CP) ;
+        norm_amp_CP = (norm(amp_CP) + norm(amp_bar_CP));
+       
+        // C,Cbar,D,Dbar,S,Sbar
+        _timePdfMaster->setCP_coeff(
+            		norm_amp,
+			norm_amp_CP,
+        		 ( norm(amp) - norm(amp_bar) ) ,
+        		 -( norm(amp_CP) - norm(amp_bar_CP) ),
+        		 -2.* real(amp_bar*conj(amp)) ,
+        		 -2.* real(amp_bar_CP*conj(amp_CP)) ,
+        		 2. * imag(amp_bar*conj(amp)) ,   /// - sign included in DecRateCoeff !!!
+        		 -2. * imag(amp_bar_CP*conj(amp_CP)) /// - sign included in DecRateCoeff !!!
+			);
+        
+        const double val = 
+        (     _timePdfMaster->get_cosh_term_Integral(evt)
+            +  _timePdfMaster->get_cos_term_Integral(evt)
+            +  _timePdfMaster->get_sinh_term_Integral(evt)
+            +  _timePdfMaster->get_sin_term_Integral(evt) );
+
+        return val;
+    }
+
     virtual double getVal_withPs(IDalitzEvent& evt){return getVal(evt);}
     virtual double getVal_noPs(IDalitzEvent& evt){return getVal(evt);}
     
@@ -938,6 +990,60 @@ public:
     virtual double getVal_noPs(IDalitzEvent* evt){
         if(0 == evt) return 0;
         return getVal_noPs(*evt);
+    }
+
+    vector<double> calculateCP_coeff(bool print = true){
+
+	vector<double> result;
+
+        double r = (double)_r; 
+    
+	double delta_0 = std::arg(_intAAbar)/(2.*pi)*360.;
+	double delta_0_CP = std::arg(_intAAbar_CP)/(2.*pi)*360.;
+
+        const complex<double> phase_diff = polar((double)r,((double) _delta - delta_0 -(double)_gamma)/360.*2*pi);
+        const complex<double> phase_diff_CP = polar((double)r,((double) _delta - delta_0_CP +(double)_gamma)/360.*2*pi);
+
+        const complex<double> int_interference =  phase_diff * _intAAbar/sqrt(_intA)/sqrt(_intAbar) ;
+        const complex<double> int_interference_CP = phase_diff_CP * _intAAbar_CP/sqrt(_intA_CP)/sqrt(_intAbar_CP) ;
+
+        result.push_back((1. -  norm(phase_diff))/(1. +  norm(phase_diff)));
+        result.push_back(-(1. -  norm(phase_diff_CP))/(1. +  norm(phase_diff_CP)));
+ 
+        result.push_back((- int_interference.real() )/(1. +  norm(phase_diff)));
+        result.push_back((- int_interference_CP.real() )/(1. +  norm(phase_diff_CP))); 
+
+        result.push_back((int_interference.imag())/(1. +  norm(phase_diff)));
+        result.push_back((- int_interference_CP.imag() )/(1. +  norm(phase_diff_CP)));   
+
+	if(print)cout << "CP coeffs: " << endl << result << endl << endl;
+
+// 	cout << r << endl;
+// 	cout << _delta << endl;
+// 	cout << delta_0 << endl;
+// 	cout << delta_0_CP << endl<< endl ;
+// 
+// 	cout << _intA << endl;
+// 	cout << _intAbar << endl;
+// 	cout << _intAAbar << endl;
+// 	cout << sqrt(norm(_intAAbar))/sqrt(_intA)/sqrt(_intAbar) << endl;
+// 	cout << sqrt(norm(_intAAbar_CP))/sqrt(_intA_CP)/sqrt(_intAbar_CP) << endl<< endl ;
+// 
+// 	cout <<  arg(phase_diff)/(2*pi)*360. << endl;
+// 	cout << arg(phase_diff_CP)/(2*pi)*360. << endl<< endl;
+// 
+// 	cout <<  cos(arg(phase_diff)) << endl;
+// 	cout <<  cos(arg(phase_diff_CP)) << endl;
+// 	cout <<  sin(arg(phase_diff)) << endl;
+// 	cout <<  sin(arg(phase_diff_CP)) << endl<< endl;
+// 
+// 	cout <<  cos(arg(int_interference)) << endl;
+// 	cout <<  cos(arg(int_interference_CP)) << endl;
+// 	cout <<  sin(arg(int_interference)) << endl;
+// 	cout <<  sin(arg(int_interference_CP)) << endl<< endl;
+
+
+	return result;
     }
 
     vector<double> coherenceFactor(bool print = true){
@@ -1054,340 +1160,6 @@ public:
 	saveEventListToFile(eventList);
     }
 
-    DalitzEventList generateToysRooFit(int N = 10000, int run = -1 , int trigger = -1){
-
-	time_t startTime = time(0);
-
-	cout << "Generating " << N << " events" << endl;
-	int N_sample = 1000;//N * 100;
-
-        NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
-        DalitzEventPattern pat(EventPattern.getVector());
-	DalitzEventList eventList;
-
-        vector<int> s234;
-        s234.push_back(2);
-        s234.push_back(3);
-        s234.push_back(4);
-
-        /// Simple amplitude model for importance sampling
-        FitAmpIncoherentSum fasGen((DalitzEventPattern)pat);
-	{
-		DalitzEventList eventListPhsp;
-		eventListPhsp.generatePhaseSpaceEvents(200000,pat);
-		fasGen.normalizeAmps(eventListPhsp);
-	}
-        SignalGenerator sg(pat,&fasGen);
-        fasGen.print();
-
-	/// Estimate max val
-	vector<double> vals;	
-	{	
-		_timePdfMaster->setCP_coeff(1.,1.,0.,0.,0.,0.,0.,0.);
-		RooDataSet* starterSet = sampleEvents(N_sample,run,trigger);
-
-		for(int i = 0; i < starterSet->numEntries(); i++){
-		
-			RooArgSet* sample_set= (RooArgSet*)starterSet->get(i);
-		
-			double t_MC = ((RooRealVar*)sample_set->find("t"))->getVal() ;
-			double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
-			double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
-			double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
-// 			int run_MC = ((RooCategory*)sample_set->find("run"))->getIndex() ;
-// 			int trigger_MC = ((RooCategory*)sample_set->find("trigger"))->getIndex() ;
-		
-			int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
-			int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
-			int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ; 	
-	
-			counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
-			DalitzEvent evt(evtPtr.get());
-	//                 if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
-			
-			if(f_MC<0)evt.CP_conjugateYourself();
-			
-			evt.setValueInVector(0, t_MC);
-			evt.setValueInVector(1, dt_MC);
-			evt.setValueInVector(2, f_MC);
-			evt.setValueInVector(3, q_OS_MC);
-			evt.setValueInVector(4, eta_OS_MC);
-			evt.setValueInVector(5, q_SS_MC);
-			evt.setValueInVector(6, eta_SS_MC);
-	
-			double val = getVal(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
-	
-			_timePdfMaster->setCP_coeff(1.,1.,0.,0.,0.,0.,0.,0.);
-			vals.push_back(val/getSampledPdfVal(evt));
-		}
-	}
-
-	cout << "Now calculating maximum val " << vals.size() << endl;
-	double amax,pmax;
-	generalisedPareto_estimateMaximum(vals,0.999,amax,pmax);
-	
-	double pdf_max = 1.;
-	if(!TMath::IsNaN(pmax))pdf_max = pmax;
-	else if(!TMath::IsNaN(amax))pdf_max = amax;
-
-	// for safety
-	pdf_max = amax;
- 	pdf_max *= 1.5;	
-
-	cout << "pdf_max " << pdf_max << endl;
-
-	int N_gen = 0;
-	int N_tot = 0;
-
-//      _timePdfMaster->setCP_coeff(1.,1.,0.,0.,0.,0.,0.,0.);
-// 	RooDataSet* sample = sampleEvents(N_sample,run,trigger);
-	DalitzEventList eventListGen;
-        sg.FillEventList(eventListGen,N_sample);
-
-	while(true){
-
-    		_timePdfMaster->setCP_coeff(1.,1.,0.,0.,0.,0.,0.,0.);
- 		RooDataSet* sample = sampleEvents(N_sample,run,trigger);
- 		
-		for(int i = 0; i < sample->numEntries(); i++){
-	
-			RooArgSet* sample_set= (RooArgSet*)sample->get(i);
-		
-			double t_MC = ((RooRealVar*)sample_set->find("t"))->getVal() ;
-			double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
-			double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
-			double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
-// 			int run_MC = ((RooCategory*)sample_set->find("run"))->getIndex() ;
-// 			int trigger_MC = ((RooCategory*)sample_set->find("trigger"))->getIndex() ;
-	
-			int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
-			int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
-			int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ; 	
-		
-			counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
-			DalitzEvent evt(evtPtr.get());
-// 			if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
-			
-			if(f_MC<0)evt.CP_conjugateYourself();
-			
-			evt.setValueInVector(0, t_MC);
-			evt.setValueInVector(1, dt_MC);
-			evt.setValueInVector(2, f_MC);
-			evt.setValueInVector(3, q_OS_MC);
-			evt.setValueInVector(4, eta_OS_MC);
-			evt.setValueInVector(5, q_SS_MC);
-			evt.setValueInVector(6, eta_SS_MC);
-			evt.setValueInVector(7, run);
-			evt.setValueInVector(8, trigger);
-	
-			double pdfVal = getVal(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
-			
-        		_timePdfMaster->setCP_coeff(1.,1.,0.,0.,0.,0.,0.,0.);
-			pdfVal /= getSampledPdfVal(evt);
-
-			double maxVal = pdf_max; //* getSampledPdfVal(evt);
-			
-			const double height = gRandom->Uniform(0,maxVal);
-			
-			///Safety check on the maxmimum generated height
-			if( pdfVal > maxVal ){
-				std::cout << "ERROR: PDF above determined maximum." << std::endl;
-				std::cout << pdfVal << " > " << maxVal << std::endl;
-				//exit(1);
-				pdf_max = pdf_max * 2.;
-			}
-			
-			///Hit-and-miss
-			if( height < pdfVal ) { 
-				eventList.Add(evt);
-				N_gen++;
-				if (0ul == (N_gen % 500ul)) cout << "Generated event " << N_gen << "/" << N << endl;
-			}		
-			N_tot ++;
-			if(N_gen == N)break;
- 		}
-		if(N_gen == N)break;
-	}
-
-	cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
- 	cout << "Generated " << N_gen << " events ! Efficiecy = " << (double)N_gen/(double)N_tot << endl;
-
-	saveEventListToFile(eventList);
- 	return eventList;
-   }
-
-    DalitzEventList generateToysFast(int N = 10000, int run = -1 , int trigger = -1){
-
-	time_t startTime = time(0);
-
-	cout << "Generating " << N << " events" << endl;
-	int N_sample = 100000;//N * 100;
-
-        NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
-        DalitzEventPattern pat(EventPattern.getVector());
-	DalitzEventList eventList;
-
-        vector<int> s234;
-        s234.push_back(2);
-        s234.push_back(3);
-        s234.push_back(4);
-
-        /// Simple amplitude model for importance sampling
-// 	IFastAmplitudeIntegrable* fas = _amps->getAmpSum();
-        FitAmpIncoherentSum fasGen((DalitzEventPattern)pat);
-	{
-		DalitzEventList eventListPhsp;
-		eventListPhsp.generatePhaseSpaceEvents(200000,pat);
-		fasGen.normalizeAmps(eventListPhsp);
-	}
-        SignalGenerator sg(pat,&fasGen);
-        fasGen.print();
-//         fas->print();
-
-	DalitzEvent evtTest(pat,gRandom);
-	evtTest.setValueInVector(0, 1);
-	evtTest.setValueInVector(1, 0.03);
-	evtTest.setValueInVector(2, 1);
-	evtTest.setValueInVector(3, 1);
-	evtTest.setValueInVector(4, 0.5);
-	evtTest.setValueInVector(5, 1);
-	evtTest.setValueInVector(6, 0.5);
-
-	getVal(evtTest);
-	vector<double> CP_coeff = _timePdfMaster->getCP_coeff();
-	cout << "CP = " << CP_coeff << endl;
-
-	/// Estimate max val
-	vector<double> vals;	
-	_timePdfMaster->setCP_coeff(CP_coeff[0],CP_coeff[1],CP_coeff[2],CP_coeff[3],CP_coeff[4],CP_coeff[5],CP_coeff[6],CP_coeff[7]);
-	RooDataSet* starterSet = sampleEvents(N_sample,run,trigger);
-	for(int i = 0; i < starterSet->numEntries()/4; i++){
-		
-			RooArgSet* sample_set= (RooArgSet*)starterSet->get(i);
-		
-			double t_MC = ((RooRealVar*)sample_set->find("t"))->getVal() ;
-			double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
-			double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
-			double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
-// 			int run_MC = ((RooCategory*)sample_set->find("run"))->getIndex() ;
-// 			int trigger_MC = ((RooCategory*)sample_set->find("trigger"))->getIndex() ;
-		
-			int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
-			int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
-			int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ; 	
-	
-			counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
-			DalitzEvent evt(evtPtr.get());
-			if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
-			
-			if(f_MC<0)evt.CP_conjugateYourself();
-			
-			evt.setValueInVector(0, t_MC);
-			evt.setValueInVector(1, dt_MC);
-			evt.setValueInVector(2, f_MC);
-			evt.setValueInVector(3, q_OS_MC);
-			evt.setValueInVector(4, eta_OS_MC);
-			evt.setValueInVector(5, q_SS_MC);
-			evt.setValueInVector(6, eta_SS_MC);
-	
-			double val = getVal(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
-	
-			_timePdfMaster->setCP_coeff(CP_coeff[0],CP_coeff[1],CP_coeff[2],CP_coeff[3],CP_coeff[4],CP_coeff[5],CP_coeff[6],CP_coeff[7]);
-			vals.push_back(val/getSampledPdfVal(evt));
-	}
-
-	cout << "Now calculating maximum val " << vals.size() << endl;
-	double amax,pmax;
-	generalisedPareto_estimateMaximum(vals,0.999,amax,pmax);
-	
-	double pdf_max = 1.;
-	if(!TMath::IsNaN(pmax))pdf_max = pmax;
-	else if(!TMath::IsNaN(amax))pdf_max = amax;
-
-	// for safety
-	pdf_max = amax;
- 	pdf_max *= 1.5;	
-
-	cout << "pdf_max " << pdf_max << endl;
-
-	int N_gen = 0;
-	int N_tot = 0;
-
-	//_timePdfMaster->setCP_coeff(CP_coeff[0],CP_coeff[1],CP_coeff[2],CP_coeff[3],CP_coeff[4],CP_coeff[5],CP_coeff[6],CP_coeff[7]);
-	//RooDataSet* sample = sampleEvents(N_sample,run,trigger);
-
-	DalitzEventList eventListGen;
-	while(eventListGen.size()<N_sample){
-			counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
-			DalitzEvent evt(evtPtr.get());
-			if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
-			eventListGen.Add(evt);
-	}
-
-	while(true){
-			RooArgSet* sample_set= (RooArgSet*)starterSet->get(gRandom->Uniform(0,N_sample-1));
-		
-			double t_MC = ((RooRealVar*)sample_set->find("t"))->getVal() ;
-			double dt_MC = ((RooRealVar*)sample_set->find("dt"))->getVal() ;
-			double eta_OS_MC = ((RooRealVar*)sample_set->find("eta_OS"))->getVal() ;
-			double eta_SS_MC = ((RooRealVar*)sample_set->find("eta_SS"))->getVal() ;
-// 			int run_MC = ((RooCategory*)sample_set->find("run"))->getIndex() ;
-// 			int trigger_MC = ((RooCategory*)sample_set->find("trigger"))->getIndex() ;
-	
-			int f_MC = ((RooCategory*)sample_set->find("qf"))->getIndex() ;
-			int q_OS_MC = ((RooCategory*)sample_set->find("q_OS"))->getIndex() ;
-			int q_SS_MC = ((RooCategory*)sample_set->find("q_SS"))->getIndex() ; 	
-		
- 			DalitzEvent evt = eventListGen[gRandom->Uniform(0,N_sample-1)];
-// 			counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
-// 			DalitzEvent evt(evtPtr.get());
-//  			if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
-			
-			if(f_MC<0)evt.CP_conjugateYourself();
-			
-			evt.setValueInVector(0, t_MC);
-			evt.setValueInVector(1, dt_MC);
-			evt.setValueInVector(2, f_MC);
-			evt.setValueInVector(3, q_OS_MC);
-			evt.setValueInVector(4, eta_OS_MC);
-			evt.setValueInVector(5, q_SS_MC);
-			evt.setValueInVector(6, eta_SS_MC);
-			evt.setValueInVector(7, run);
-			evt.setValueInVector(8, trigger);
-	
-			double pdfVal = getVal(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
-			
- 	         	_timePdfMaster->setCP_coeff(CP_coeff[0],CP_coeff[1],CP_coeff[2],CP_coeff[3],CP_coeff[4],CP_coeff[5],CP_coeff[6],CP_coeff[7]);
-			pdfVal /= getSampledPdfVal(evt);
-
-			double maxVal = pdf_max;
-			
-			const double height = gRandom->Uniform(0,maxVal);
-			
-			///Safety check on the maxmimum generated height
-			if( pdfVal > maxVal ){
-				std::cout << "ERROR: PDF above determined maximum." << std::endl;
-				std::cout << pdfVal << " > " << maxVal << std::endl;
-				pdf_max = pdf_max * 2.;
-			}
-			
-			///Hit-and-miss
-			if( height < pdfVal ) { 
-				eventList.Add(evt);
-				N_gen++;
-				if (0ul == (N_gen % 100ul)) cout << "Generated event " << N_gen << "/" << N << endl;
-			}		
-			N_tot ++;
-			if(N_gen == N)break;
-	}
-
-	cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
- 	cout << "Generated " << N_gen << " events ! Efficiecy = " << (double)N_gen/(double)N_tot << endl;
-
-	saveEventListToFile(eventList);
- 	return eventList;
-   }
-
     DalitzEvent generateWeightedEvent(){
 
 	while(true){
@@ -1442,7 +1214,7 @@ public:
 	vector<double> vals;	
 	for(int i = 0; i < 100000; i++){
 		DalitzEvent evt = generateWeightedEvent();
-		double val = getVal(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
+		double val = getVal(evt)/_timePdfMaster->get_marginalPdfs_product(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
 		vals.push_back(val);	
 	}
 
@@ -1462,7 +1234,7 @@ public:
 	int N_tot = 0;
 	while(true){
 			DalitzEvent evt = generateWeightedEvent();
-			double pdfVal = getVal(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
+			double pdfVal = getVal(evt)/_timePdfMaster->get_marginalPdfs_product(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
 			
 			const double height = gRandom->Uniform(0,pdf_max);
 			
@@ -2028,6 +1800,8 @@ void ampFit(int step=0, string mode = "fit"){
     NamedParameter<int>  nBins("nBins", 50);
     NamedParameter<int>  nBinst("nBinst", 50);
     NamedParameter<int>  nBinsAsym("nBinsAsym", 8);
+    NamedParameter<int>  doPlots("doPlots", 1);
+
     NamedParameter<int>  randomizeStartVals("randomizeStartVals", 0);
     NamedParameter<int>  doSimFit("doSimFit", 0);
     NamedParameter<int>  constrainFF("constrainFF", 0);
@@ -2047,7 +1821,7 @@ void ampFit(int step=0, string mode = "fit"){
     NamedParameter<int>  doAccSystematics("doAccSystematics", 0);
     NamedParameter<int>  useCholDec("useCholDec", 0);
     NamedParameter<int>  varPerParChol("varPerParChol", 100);
-    int chol_index = step/varPerParChol ;
+    int chol_index = (step-1)/varPerParChol ;
 
     NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
     TString integratorEventFile = (string) IntegratorEventFile;
@@ -2495,20 +2269,6 @@ void ampFit(int step=0, string mode = "fit"){
     cout << fas_bar_CP.getVal(evt_test) << endl;
     throw "";
     */
-
-//        pdf_Run1_t0.beginFit();
-//        pdf_Run1_t0.generateToys(50000, 1, 0);
-
-//     pdf_Run1_t1.beginFit();
-//     pdf_Run1_t1.generateToys(1000, 1, 1);
-// 
-//     pdf_Run2_t0.beginFit();
-//     pdf_Run2_t0.generateToys(2000, 2, 0);
-// 
-//     pdf_Run2_t1.beginFit();
-//     pdf_Run2_t1.generateToys(2000, 2, 1);
-
-//       throw "";
     
     if(initCPcoeff){
 	CPcoeffLL coeffLL(&pdf,0.741313,-0.741313,0.221461,0.53761,-0.333118,0.00910515,0.01); 
@@ -2530,264 +2290,11 @@ void ampFit(int step=0, string mode = "fit"){
     //integ_tot.doFinalStats(&mini2);
     //throw "";
 
-    /// Make marginal pdfs for MC generation and plotting
-    // values only used for importance sampling:
-    double eff_tag_OS = 0.3852;
-    double eff_tag_SS = 0.6903;
-    if(fitGenMC){
-	eff_tag_OS = 1;
-	eff_tag_SS = 1;
-    }
-    TFile* f_pdfs = new TFile("Mistag_pdfs.root","OPEN");
-    
-    RooRealVar* r_t = new RooRealVar("t", "t",min_TAU, max_TAU);
-    RooRealVar* r_dt = new RooRealVar("dt", "dt",(double)min_TAUERR,(double) max_TAUERR);
-    RooRealVar* r_eta_OS = new RooRealVar("eta_OS", "eta_OS",0.,0.5);
-    RooRealVar* r_eta_SS = new RooRealVar("eta_SS", "eta_SS",0.,0.5);
-    
-    // time
-    TH1D* h_t_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_t_norm_comb")));
-    RooDataHist* r_h_t = new RooDataHist("r_h_t","r_h_t",*r_t,h_t_norm);
-    RooRealVar mean1_t("mean1_t","mean1_t", 1,0.,3.0);
-    RooRealVar mean2_t("mean2_t","mean2_t", 0.,0.,10.0);
-    RooRealVar sigma1_t("sigma1_t","sigma1_t", 1,0.,10.0);
-    RooRealVar sigma2_t("sigma2_t","sigma2_t", 2,0.,20.0);
-    RooRealVar f_t("f_t", "f_t", 0.5, 0., 1.);
-    
-    RooGaussian* gen1_t = new RooGaussian("gen1_t","gen1_t", *r_t, mean1_t,sigma1_t);
-    RooGaussian* gen2_t = new RooGaussian("gen2_t","gen2_t", *r_t, mean2_t,sigma2_t);
-    RooAddPdf* gen_t=new RooAddPdf("gen_dt", "gen_dt", RooArgList(*gen1_t, *gen2_t), RooArgList(f_t));
-    gen_t->fitTo(*r_h_t,Save(kTRUE),SumW2Error(kTRUE));
-    
-    // time error
-    TH1D* h_dt_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_dt_norm_comb")));
-    RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",*r_dt,h_dt_norm);
-    RooRealVar mean1_dt("mean1_dt","mean1_dt", 0.02,0.,1.0);
-    RooRealVar mean2_dt("mean2_dt","mean2_dt", 0.03,0.,1.0);
-    RooRealVar sigma1_dt("sigma1_dt","sigma1_dt", 0.015,0.,1.0);
-    RooRealVar sigma2_dt("sigma2_dt","sigma2_dt", 0.015,0.,1.0);
-    RooRealVar f_dt("f_dt", "f_dt", 0.5, 0., 1.);
-    
-    RooGaussian* gen1_dt = new RooGaussian("gen1_dt","gen1_dt", *r_dt, mean1_dt,sigma1_dt);
-    RooGaussian* gen2_dt = new RooGaussian("gen2_dt","gen2_dt", *r_dt, mean2_dt,sigma2_dt);
-    RooAddPdf* gen_dt=new RooAddPdf("gen_dt", "gen_dt", RooArgList(*gen1_dt, *gen2_dt), RooArgList(f_dt));
-    gen_dt->fitTo(*r_h_dt,Save(kTRUE),SumW2Error(kTRUE));
-    
-    // mistag OS
-    TH1D* h_w_OS_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_w_OS_norm_comb")));
-    RooDataHist* r_h_eta_OS = new RooDataHist("r_eta_OS","r_eta_OS",*r_eta_OS,h_w_OS_norm);
-    RooRealVar mean1_eta_OS("mean1_eta_OS","mean1_eta_OS", 0.02,0.,1.0);
-    RooRealVar mean2_eta_OS("mean2_eta_OS","mean2_eta_OS", 0.04,0.,1.0);
-    RooRealVar sigma1_eta_OS("sigma1_eta_OS","sigma1_eta_OS", 0.015,0.,1.0);
-    RooRealVar sigma2_eta_OS("sigma2_eta_OS","sigma2_eta_OS", 0.015,0.,1.0);
-    RooRealVar f_eta_OS("f_eta_OS", "f_eta_OS", 0.5, 0., 1.);
-    
-    RooGaussian* gen1_eta_OS = new RooGaussian("gen1_eta_OS","gen1_eta_OS", *r_eta_OS, mean1_eta_OS,sigma1_eta_OS);
-    RooGaussian* gen2_eta_OS = new RooGaussian("gen2_eta_OS","gen2_eta_OS", *r_eta_OS, mean2_eta_OS,sigma2_eta_OS);
-    RooAddPdf* gen_eta_OS=new RooAddPdf("gen_eta_OS", "gen_eta_OS", RooArgList(*gen1_eta_OS, *gen2_eta_OS), RooArgList(f_eta_OS));
-    gen_eta_OS->fitTo(*r_h_eta_OS,Save(kTRUE),SumW2Error(kTRUE));
-    
-    // mistag SS
-    TH1D* h_w_SS_norm = new TH1D( *((TH1D*) f_pdfs->Get("h_w_SS_norm_comb")));
-    RooDataHist* r_h_eta_SS = new RooDataHist("r_eta_SS","r_eta_SS",*r_eta_SS,h_w_SS_norm);
-    RooRealVar mean1_eta_SS("mean1_eta_SS","mean1_eta_SS", 0.02,0.,1.0);
-    RooRealVar mean2_eta_SS("mean2_eta_SS","mean2_eta_SS", 0.06,0.,1.0);
-    RooRealVar sigma1_eta_SS("sigma1_eta_SS","sigma1_eta_SS", 0.015,0.,1.0);
-    RooRealVar sigma2_eta_SS("sigma2_eta_SS","sigma2_eta_SS", 0.015,0.,1.0);
-    RooRealVar f_eta_SS("f_eta_SS", "f_eta_SS", 0.5, 0., 1.);
-    
-    RooGaussian* gen1_eta_SS = new RooGaussian("gen1_eta_SS","gen1_eta_SS", *r_eta_SS, mean1_eta_SS,sigma1_eta_SS);
-    RooGaussian* gen2_eta_SS = new RooGaussian("gen2_eta_SS","gen2_eta_SS", *r_eta_SS, mean2_eta_SS,sigma2_eta_SS);
-    RooAddPdf* gen_eta_SS=new RooAddPdf("gen_eta_SS", "gen_eta_SS", RooArgList(*gen1_eta_SS, *gen2_eta_SS), RooArgList(f_eta_SS));
-    gen_eta_SS->fitTo(*r_h_eta_SS,Save(kTRUE),SumW2Error(kTRUE));
-    
-    // plot
-    TCanvas* c= new TCanvas("");
-    RooPlot* frame_t= r_t->frame();
-    r_h_t->plotOn(frame_t,Name("data"),MarkerSize(1));
-    gen_t->plotOn(frame_t,Name("pdf"),LineColor(kBlue),LineWidth(3));
-    frame_t->Draw();
-    c->Print("samplingPdfs/t.eps");
-    
-    RooPlot* frame_dt= r_dt->frame();
-    r_h_dt->plotOn(frame_dt,Name("data"),MarkerSize(1));
-    gen_dt->plotOn(frame_dt,Name("pdf"),LineColor(kBlue),LineWidth(3));
-    frame_dt->Draw();
-    c->Print("samplingPdfs/dt.eps");
-    
-    RooPlot* frame_eta_OS= r_eta_OS->frame();
-    r_h_eta_OS->plotOn(frame_eta_OS,MarkerSize(1));
-    gen_eta_OS->plotOn(frame_eta_OS,LineColor(kBlue),LineWidth(3));
-    frame_eta_OS->Draw();
-    c->Print("samplingPdfs/eta_OS.eps");
-    
-    RooPlot* frame_eta_SS= r_eta_SS->frame();
-    r_h_eta_SS->plotOn(frame_eta_SS,MarkerSize(1));
-    gen_eta_SS->plotOn(frame_eta_SS,LineColor(kBlue),LineWidth(3));
-    frame_eta_SS->Draw();
-    c->Print("samplingPdfs/eta_SS.eps");
-    
-    f_pdfs->Close();
-    
-    /// Read data or generate toys
-    DalitzEventList eventList, eventList_f, eventList_f_bar;
-    DalitzEventList eventList_Run1_t0,eventList_Run1_t1,eventList_Run2_t0,eventList_Run2_t1;
+ 	/// Read data
+    	DalitzEventList eventList, eventList_f, eventList_f_bar;
+    	DalitzEventList eventList_Run1_t0,eventList_Run1_t1,eventList_Run2_t0,eventList_Run2_t1;
 
-    // Generate toys
-    if(generateNew){
-        time_t startTime = time(0);
-        
-        // simple amplitude model for importance sampling
-        FitAmpIncoherentSum fasGen((DalitzEventPattern)pat);
-        fasGen.getVal(eventListPhsp[0]);
-        fasGen.normalizeAmps(eventListPhsp);
-        SignalGenerator sg(pat,&fasGen);
-        fasGen.print();
-        
-        //simple hit and miss
-        for(int i = 0; i < Nevents; i++){
-            while(true){
-                
-                double t_MC = 0.;
-                double gaus_t = ranLux.Uniform();
-                if(gaus_t < f_t.getVal()) {
-                    while(true){
-                        t_MC = ranLux.Gaus(mean1_t.getVal(),sigma1_t.getVal());
-                        if(t_MC < max_TAU && t_MC > min_TAU)break;
-                    }
-                }
-                else {
-                    while(true){
-                        t_MC = ranLux.Gaus(mean2_t.getVal(),sigma2_t.getVal());
-                        if(t_MC < max_TAU && t_MC > min_TAU)break;
-                    }
-                }
-                r_t->setVal(t_MC) ;
-                
-                double dt_MC = 0.;
-                double gaus_f = ranLux.Uniform();
-                if(gaus_f < f_dt.getVal()) {
-                    while(true){
-                        dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
-                        if(dt_MC < max_TAUERR && dt_MC > min_TAUERR)break;
-                    }
-                }
-                else {
-                    while(true){
-                        dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
-                        if(dt_MC < max_TAUERR && dt_MC > min_TAUERR)break;
-                    }
-                }
-                r_dt->setVal(dt_MC) ;
-                
-                
-                double q_rand = ranLux.Uniform();
-                int q_OS_MC = 0;
-                if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
-                if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
-                
-                double eta_OS_MC = 0;
-                if(q_OS_MC == 0)eta_OS_MC = 0.5;
-                else {
-                    double gaus_eta_OS = ranLux.Uniform();
-                    if(gaus_eta_OS < f_eta_OS.getVal()){
-                        while(true){
-                            eta_OS_MC = ranLux.Gaus(mean1_eta_OS.getVal(),sigma1_eta_OS.getVal());
-                            if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
-                        }
-                    }
-                    else{
-                        while(true){
-                            eta_OS_MC = ranLux.Gaus(mean2_eta_OS.getVal(),sigma2_eta_OS.getVal());
-                            if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
-                        }
-                    }
-                }
-                r_eta_OS->setVal(eta_OS_MC) ;
-                
-                q_rand = ranLux.Uniform();
-                int q_SS_MC = 0;
-                if (q_rand < eff_tag_SS/2.  ) q_SS_MC = -1;
-                if (q_rand > (1.-eff_tag_SS/2.) ) q_SS_MC = 1;
-                
-                double eta_SS_MC = 0;
-                if(q_SS_MC == 0)eta_SS_MC = 0.5;
-                else {
-                    double gaus_eta_SS = ranLux.Uniform();
-                    if(gaus_eta_SS < f_eta_SS.getVal()){
-                        while(true){
-                            eta_SS_MC = ranLux.Gaus(mean1_eta_SS.getVal(),sigma1_eta_SS.getVal());
-                            if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
-                        }
-                    }
-                    else{
-                        while(true){
-                            eta_SS_MC = ranLux.Gaus(mean2_eta_SS.getVal(),sigma2_eta_SS.getVal());
-                            if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
-                        }
-                    }
-                }
-                r_eta_SS->setVal(eta_SS_MC) ;
-                
-                q_rand = ranLux.Uniform();
-                int f_MC = 0;
-                if (q_rand > .5) f_MC = -1;
-                else f_MC = 1;
-                
-                counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
-                DalitzEvent evt(evtPtr.get());
-                if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
-                
-                if(f_MC<0){
-                    evt.CP_conjugateYourself();
-                }
-                
-                evt.setValueInVector(0, t_MC);
-                evt.setValueInVector(1, dt_MC);
-                evt.setValueInVector(2, f_MC);
-                evt.setValueInVector(3, q_OS_MC);
-                evt.setValueInVector(4, eta_OS_MC);
-                evt.setValueInVector(5, q_SS_MC);
-                evt.setValueInVector(6, eta_SS_MC);
-                
-                //const double pdfVal = pdf.getValForGeneration(evt);
-                const double pdfVal = pdf.un_normalised_noPs(evt);
-            
-                double maxVal = evt.getGeneratorPdfRelativeToPhaseSpace(); //*exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) )
-                maxVal *= gen_t->getVal(RooArgSet(*r_t))
-                * gen_dt->getVal(RooArgSet(*r_dt)) 
-                *  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) )
-                *  (abs(q_SS_MC)/2. * eff_tag_SS + ( 1. - abs(q_SS_MC)) * (1.-eff_tag_SS) )    
-                *  pdf_max;
-                if(q_OS_MC != 0) maxVal *= gen_eta_OS->getVal(RooArgSet(*r_eta_OS));
-                if(q_SS_MC != 0) maxVal *= gen_eta_SS->getVal(RooArgSet(*r_eta_SS));
-                
-                
-                const double height = ranLux.Uniform(0,maxVal);
-                //Safety check on the maxmimum generated height
-                if( pdfVal > maxVal ){
-                    std::cout << "ERROR: PDF above determined maximum." << std::endl;
-                    std::cout << pdfVal << " > " << maxVal << std::endl;
-                    //exit(1);
-                    pdf_max = pdf_max * 10.;
-                }
-                
-                //Hit-and-miss
-                if( height < pdfVal ){
-                    eventList.Add(evt);
-                    if(f_MC==1)eventList_f.Add(evt);
-                    else eventList_f_bar.Add(evt);
-                    break;
-                }
-            }
-            if (0ul == (i % 500ul)) cout << "Generated " << i << " events" << endl;
-        }
-        cout << " Generated " << Nevents << " Events. Took " << (time(0) - startTime)/60. << " mins "<< endl;
-    }
-    else {
-        
-        /// Load data
-        double t,dt;
+	double t,dt;
         int f;
         double Bs_ID,Ds_ID;
         int q_OS,q_SS;
@@ -2870,7 +2377,7 @@ void ampFit(int step=0, string mode = "fit"){
     	else {
 		tree=new TChain("DecayTree");
 		//tree->Add(((string)InputDir+"Data/old/"+(string)channel+".root").c_str());
-		if(mode == "fit" && doToyStudy == 1)tree->Add(((string)OutputDir+"toys_"+anythingToString((int)seed)+".root").c_str());
+		if(mode != "gen" && doToyStudy == 1)tree->Add(((string)OutputDir+"toys_"+anythingToString((int)seed)+".root").c_str());
 		else tree->Add(((string)InputDir+"Data/"+(string)channel+"_tagged.root").c_str());
 		tree->SetBranchStatus("*",0);
 		tree->SetBranchStatus("N_Bs_sw",1);
@@ -2886,8 +2393,8 @@ void ampFit(int step=0, string mode = "fit"){
 		tree->SetBranchStatus("TriggerCat",1);
 		tree->SetBranchStatus("run",1);
 	
-		tree->SetBranchAddress("Bs_DTF_TAU",&t);
-		tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+		tree->SetBranchAddress("Bs_BsDTF_TAU",&t);
+		tree->SetBranchAddress("Bs_BsDTF_TAUERR",&dt);
 		tree->SetBranchAddress("Ds_ID",&f);
 // 		tree->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
 // 		tree->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&eta_OS);
@@ -2900,7 +2407,6 @@ void ampFit(int step=0, string mode = "fit"){
 		tree->SetBranchAddress("N_Bs_sw",&sw);
 		tree->SetBranchAddress("year",&year);
 		tree->SetBranchAddress("run",&run);
-		tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
 		tree->SetBranchAddress("TriggerCat",&trigger);
 		tree->SetBranchAddress("Bs_DTF_MM",&mB);
 		
@@ -2919,7 +2425,7 @@ void ampFit(int step=0, string mode = "fit"){
 		tree->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
 		tree->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);
 		
-		if(doToyStudy && mode == "fit"){
+		if(doToyStudy && mode != "gen"){
 			tree->SetBranchAddress("BsDTF_Ds_PX",&Ds[0]);
 			tree->SetBranchAddress("BsDTF_Ds_PY",&Ds[1]);
 			tree->SetBranchAddress("BsDTF_Ds_PZ",&Ds[2]);
@@ -2963,10 +2469,16 @@ void ampFit(int step=0, string mode = "fit"){
 		TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
 		TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
 		TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
-		TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
-		TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
-		TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
-		TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+		TLorentzVector D_p;
+		if(doToyStudy && mode == "fit"){
+			D_p = TLorentzVector(sign*Ds[0],sign*Ds[1],sign*Ds[2],Ds[3]);
+		}
+		else {
+			TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
+			TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
+			TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
+			D_p = D_Kp_p + D_Km_p + D_pim_p;
+		}
 		TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
 		// array of vectors
 		vector<TLorentzVector> vectorOfvectors;
@@ -3071,10 +2583,9 @@ void ampFit(int step=0, string mode = "fit"){
 		else if(run == 1 && trigger == 1) eventList_Run1_t1.Add(evt);
 		else if(run == 2 && trigger == 0) eventList_Run2_t0.Add(evt);
 		else if(run == 2 && trigger == 1) eventList_Run2_t1.Add(evt);
-	}
-	cout << endl << "bad events " << badEvents << " ( " << badEvents/(double) N_sample * 100. << " %)" << endl << endl;
-    }        
-
+   	 }
+    	cout << endl << "bad events " << badEvents << " ( " << badEvents/(double) N_sample * 100. << " %)" << endl << endl;
+          
     /// Fit with MINT Pdf
     Neg2LL neg2LL(pdf, eventList);   
 
@@ -3468,14 +2979,14 @@ void ampFit(int step=0, string mode = "fit"){
 	}
 	else toys.Add(pdf.generateToys(N_scale_toys *N));
 
-	pdf.saveEventListToFile(toys,((string)OutputDir+"toys_"+anythingToString((int)seed)+".root").c_str());
+	pdf.saveEventListToFile(toys,((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
 
 	return;
     }
 
     /// Calculate pulls
     gDirectory->cd();
-    TFile* paraFile = new TFile(((string)OutputDir+"pull_"+anythingToString((int)seed)+".root").c_str(), "RECREATE");
+    TFile* paraFile = new TFile(((string)OutputDir+"pull_"+anythingToString((int)step)+".root").c_str(), "RECREATE");
     paraFile->cd();
     TNtupleD* ntp=0;
 
@@ -3537,10 +3048,12 @@ void ampFit(int step=0, string mode = "fit"){
     Sbar_val = k_fit_CP[5];
     pdf.coherenceFactor();
 
+    pdf.calculateCP_coeff();
+
     string outTableName = (string)OutputDir+"FitAmpResults_"+anythingToString((int)seed);
     if(updateAnaNote)outTableName = "../../../../../TD-AnaNote/latex/tables/fullFit/"+(string)OutputDir+"fitFractions";
 
-    pdf.doFinalStatsAndSaveForAmp12(&mini,outTableName,((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
+    if(mode == "fit")pdf.doFinalStatsAndSaveForAmp12(&mini,outTableName,((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
     if(constrainFF)integ_tot.doFinalStats(&mini);
 
     /// Create result tables
@@ -3588,10 +3101,11 @@ void ampFit(int step=0, string mode = "fit"){
 	resultsfile.close();
 
     } 
- 
+
     /// Loop over MC
     DiskResidentEventList eventListMC_rw(pat,("dummy_"+anythingToString(step)+".root").c_str(),"RECREATE");
-    for(int i = 0; i < eventListMC.size(); i++){
+
+    if(doPlots)for(int i = 0; i < eventListMC.size(); i++){
         
 	double t_MC,dt_MC,eta_OS_MC,eta_SS_MC;
 	int q_OS_MC,q_SS_MC,f_MC,trigger_MC,run_MC;
@@ -3604,8 +3118,8 @@ void ampFit(int step=0, string mode = "fit"){
 		
 		double q_rand = ranLux.Uniform();
 		q_OS_MC = 0;
-		if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
-		if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
+		if (q_rand < 1./2.  ) q_OS_MC = -1;
+		if (q_rand > (1.-1./2.) ) q_OS_MC = 1;
 		
 		q_rand = ranLux.Uniform();
 		q_SS_MC = q_OS_MC;
@@ -3620,144 +3134,148 @@ void ampFit(int step=0, string mode = "fit"){
 	}
 	else {
 	
-		t_MC = 0.;
-		double gaus_t = ranLux.Uniform();
-		if(gaus_t < f_t.getVal()) {
-		while(true){
-			t_MC = ranLux.Gaus(mean1_t.getVal(),sigma1_t.getVal());
-			if(t_MC < max_TAU && t_MC > min_TAU)break;
-		}
-		}
-		else {
-		while(true){
-			t_MC = ranLux.Gaus(mean2_t.getVal(),sigma2_t.getVal());
-			if(t_MC < max_TAU && t_MC > min_TAU)break;
-		}
-		}
-		r_t->setVal(t_MC) ;
-		
-		dt_MC = 0.;
-		double gaus_f = ranLux.Uniform();
-		if(gaus_f < f_dt.getVal()) {
-		while(true){
-			dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
-			if(dt_MC < max_TAUERR && dt_MC > min_TAUERR)break;
-		}
-		}
-		else {
-		while(true){
-			dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
-			if(dt_MC < max_TAUERR && dt_MC > min_TAUERR)break;
-		}
-		}
-		r_dt->setVal(dt_MC) ;
-		
-		
-		double q_rand = ranLux.Uniform();
-		q_OS_MC = 0;
-		if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
-		if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
-		
-		eta_OS_MC = 0;
-		if(q_OS_MC == 0)eta_OS_MC = 0.5;
-		else {
-		double gaus_eta_OS = ranLux.Uniform();
-		if(gaus_eta_OS < f_eta_OS.getVal()){
-			while(true){
-			eta_OS_MC = ranLux.Gaus(mean1_eta_OS.getVal(),sigma1_eta_OS.getVal());
-			if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
-			}
-		}
-		else{
-			while(true){
-			eta_OS_MC = ranLux.Gaus(mean2_eta_OS.getVal(),sigma2_eta_OS.getVal());
-			if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
-			}
-		}
-		}
-		r_eta_OS->setVal(eta_OS_MC) ;
-		
-		q_rand = ranLux.Uniform();
-		q_SS_MC = 0;
-		if (q_rand < eff_tag_SS/2.  ) q_SS_MC = -1;
-		if (q_rand > (1.-eff_tag_SS/2.) ) q_SS_MC = 1;
-		
-		eta_SS_MC = 0;
-		if(q_SS_MC == 0)eta_SS_MC = 0.5;
-		else {
-		double gaus_eta_SS = ranLux.Uniform();
-		if(gaus_eta_SS < f_eta_SS.getVal()){
-			while(true){
-			eta_SS_MC = ranLux.Gaus(mean1_eta_SS.getVal(),sigma1_eta_SS.getVal());
-			if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
-			}
-		}
-		else{
-			while(true){
-			eta_SS_MC = ranLux.Gaus(mean2_eta_SS.getVal(),sigma2_eta_SS.getVal());
-			if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
-			}
-		}
-		}
-		r_eta_SS->setVal(eta_SS_MC) ;
-		
-		q_rand = ranLux.Uniform();
-		f_MC = 0;
-		if (q_rand > .5) f_MC = -1;
-		else f_MC = 1;
-	
-		q_rand = ranLux.Uniform();
-		run_MC = 0;
-		if (q_rand > .5) run_MC = 1;
-		else run_MC = 2;
-	
-		q_rand = ranLux.Uniform();
-		trigger_MC = 0;
-		if (q_rand > .5) trigger_MC = 0;
-		else trigger_MC = 1;
+// 		t_MC = 0.;
+// 		double gaus_t = ranLux.Uniform();
+// 		if(gaus_t < f_t.getVal()) {
+// 		while(true){
+// 			t_MC = ranLux.Gaus(mean1_t.getVal(),sigma1_t.getVal());
+// 			if(t_MC < max_TAU && t_MC > min_TAU)break;
+// 		}
+// 		}
+// 		else {
+// 		while(true){
+// 			t_MC = ranLux.Gaus(mean2_t.getVal(),sigma2_t.getVal());
+// 			if(t_MC < max_TAU && t_MC > min_TAU)break;
+// 		}
+// 		}
+// 		r_t->setVal(t_MC) ;
+// 		
+// 		dt_MC = 0.;
+// 		double gaus_f = ranLux.Uniform();
+// 		if(gaus_f < f_dt.getVal()) {
+// 		while(true){
+// 			dt_MC = ranLux.Gaus(mean1_dt.getVal(),sigma1_dt.getVal());
+// 			if(dt_MC < max_TAUERR && dt_MC > min_TAUERR)break;
+// 		}
+// 		}
+// 		else {
+// 		while(true){
+// 			dt_MC = ranLux.Gaus(mean2_dt.getVal(),sigma2_dt.getVal());
+// 			if(dt_MC < max_TAUERR && dt_MC > min_TAUERR)break;
+// 		}
+// 		}
+// 		r_dt->setVal(dt_MC) ;
+// 		
+// 		
+// 		double q_rand = ranLux.Uniform();
+// 		q_OS_MC = 0;
+// 		if (q_rand < eff_tag_OS/2.  ) q_OS_MC = -1;
+// 		if (q_rand > (1.-eff_tag_OS/2.) ) q_OS_MC = 1;
+// 		
+// 		eta_OS_MC = 0;
+// 		if(q_OS_MC == 0)eta_OS_MC = 0.5;
+// 		else {
+// 		double gaus_eta_OS = ranLux.Uniform();
+// 		if(gaus_eta_OS < f_eta_OS.getVal()){
+// 			while(true){
+// 			eta_OS_MC = ranLux.Gaus(mean1_eta_OS.getVal(),sigma1_eta_OS.getVal());
+// 			if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
+// 			}
+// 		}
+// 		else{
+// 			while(true){
+// 			eta_OS_MC = ranLux.Gaus(mean2_eta_OS.getVal(),sigma2_eta_OS.getVal());
+// 			if(eta_OS_MC > 0. && eta_OS_MC < 0.5) break;
+// 			}
+// 		}
+// 		}
+// 		r_eta_OS->setVal(eta_OS_MC) ;
+// 		
+// 		q_rand = ranLux.Uniform();
+// 		q_SS_MC = 0;
+// 		if (q_rand < eff_tag_SS/2.  ) q_SS_MC = -1;
+// 		if (q_rand > (1.-eff_tag_SS/2.) ) q_SS_MC = 1;
+// 		
+// 		eta_SS_MC = 0;
+// 		if(q_SS_MC == 0)eta_SS_MC = 0.5;
+// 		else {
+// 		double gaus_eta_SS = ranLux.Uniform();
+// 		if(gaus_eta_SS < f_eta_SS.getVal()){
+// 			while(true){
+// 			eta_SS_MC = ranLux.Gaus(mean1_eta_SS.getVal(),sigma1_eta_SS.getVal());
+// 			if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
+// 			}
+// 		}
+// 		else{
+// 			while(true){
+// 			eta_SS_MC = ranLux.Gaus(mean2_eta_SS.getVal(),sigma2_eta_SS.getVal());
+// 			if(eta_SS_MC > 0. && eta_SS_MC < 0.5) break;
+// 			}
+// 		}
+// 		}
+// 		r_eta_SS->setVal(eta_SS_MC) ;
+// 		
+// 		q_rand = ranLux.Uniform();
+// 		f_MC = 0;
+// 		if (q_rand > .5) f_MC = -1;
+// 		else f_MC = 1;
+// 	
+// 		q_rand = ranLux.Uniform();
+// 		run_MC = 0;
+// 		if (q_rand > .5) run_MC = 1;
+// 		else run_MC = 2;
+// 	
+// 		q_rand = ranLux.Uniform();
+// 		trigger_MC = 0;
+// 		if (q_rand > .5) trigger_MC = 0;
+// 		else trigger_MC = 1;
 	}
 
         DalitzEvent evt(eventListMC.getEvent(i));
-        if(f_MC<0){
-            evt.CP_conjugateYourself();
-            //evt.P_conjugateYourself();
-        }
-        //if(!(sqrt(evt.sij(s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
-        evt.setValueInVector(0, t_MC);
-        evt.setValueInVector(1, dt_MC);
-        evt.setValueInVector(2, f_MC);
-        evt.setValueInVector(3, q_OS_MC);
-        evt.setValueInVector(4, eta_OS_MC);
-        evt.setValueInVector(5, q_SS_MC);
-        evt.setValueInVector(6, eta_SS_MC);
+
+//         if(f_MC<0){
+//             evt.CP_conjugateYourself();
+//         }
+
+
+	run_MC = 1;
+	trigger_MC = 0;
+
+        evt.setValueInVector(0, tau);
+        evt.setValueInVector(1, tau/100.);
+         evt.setValueInVector(2, 1);
+        evt.setValueInVector(3, 0);
+        evt.setValueInVector(4, 0.5);
+        evt.setValueInVector(5, 0);
+        evt.setValueInVector(6, 0.5);
         if(!fitGenMC)evt.setValueInVector(7, run_MC);
         if(!fitGenMC)evt.setValueInVector(8, trigger_MC);
         
         double pdfVal = 0;
         if(doSimFit) {
-            if(run_MC==1 && trigger_MC == 0) pdfVal = pdf_Run1_t0.getVal(evt) * N_Run1_t0/N;
-            else if(run_MC==1 && trigger_MC == 1) pdfVal = pdf_Run1_t1.getVal(evt) * N_Run1_t1/N;
-            else if(run_MC==2 && trigger_MC == 0) pdfVal = pdf_Run2_t0.getVal(evt) * N_Run2_t0/N;
-            else if(run_MC==2 && trigger_MC == 1) pdfVal = pdf_Run2_t1.getVal(evt) * N_Run2_t1/N;
-        }
-        else pdfVal = pdf.getVal(evt);
+            pdfVal += pdf_Run1_t0.getVal_timeIntegrated(evt) * N_Run1_t0/N;
+    /*        pdfVal += pdf_Run1_t1.getVal_timeIntegrated(evt) * N_Run1_t1/N;
+            pdfVal += pdf_Run2_t0.getVal_timeIntegrated(evt) * N_Run2_t0/N;
+            pdfVal += pdf_Run2_t1.getVal_timeIntegrated(evt) * N_Run2_t1/N;
+    */    }
+        else pdfVal = pdf.getVal_timeIntegrated(evt);
         //const double pdfVal = pdf.getValForGeneration(evt);
         //const double pdfVal = pdf.un_normalised_noPs(evt);
 
         //double weight = pdfVal/exp(-fabs(t_MC)/(tau))*tau*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
         double weight = pdfVal*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
 	if(fitGenMC){
-		weight /=  exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) 
-		*  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) ) ;
+		weight /=  exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) ;
+// 		*  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) ) ;
 	}
 	else {
-		weight /=  //exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) 
+/*		weight /=  //exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) 
 		gen_t->getVal(RooArgSet(*r_t))
 		* gen_dt->getVal(RooArgSet(*r_dt)) 
 		*  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) )
 		*  (abs(q_SS_MC)/2. * eff_tag_SS + ( 1. - abs(q_SS_MC)) * (1.-eff_tag_SS) )    ;
 		if(q_OS_MC != 0) weight /= gen_eta_OS->getVal(RooArgSet(*r_eta_OS));
-		if(q_SS_MC != 0) weight /= gen_eta_SS->getVal(RooArgSet(*r_eta_SS));
+		if(q_SS_MC != 0) weight /= gen_eta_SS->getVal(RooArgSet(*r_eta_SS));*/
 	}
 
         h_t_fit->Fill(t_MC,weight);
@@ -3857,14 +3375,14 @@ void ampFit(int step=0, string mode = "fit"){
 
 	double weight_A = 0;
 	double weight_Abar = 0;
-	if(f_MC>0){
-		weight_A = fas.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
-		weight_Abar = fas_bar.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
-	}
-	else {
-		weight_A = fas_CP.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
-		weight_Abar = fas_bar_CP.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
-	}
+// 	if(f_MC>0){
+// 		weight_A = fas.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
+// 		weight_Abar = fas_bar.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
+// 	}
+// 	else {
+// 		weight_A = fas_CP.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
+// 		weight_Abar = fas_bar_CP.RealVal(evt)*evt.getWeight()/evt.getGeneratorPdfRelativeToPhaseSpace();
+// 	}
 
 	m_Kpipi_fit_A->Fill(sqrt(evt.sij(s234)/(GeV*GeV)),weight_A);
 	m_Kpi_fit_A->Fill(sqrt(evt.s(2,4)/(GeV*GeV)),weight_A);
@@ -3924,609 +3442,609 @@ void ampFit(int step=0, string mode = "fit"){
 	eventListMC_rw.Add(evt);
     }
 
-    /// Plot
-    c->cd();
-    h_t->SetMinimum(0.1);    
-    h_t->SetLineColor(kBlack);
-    h_t->DrawNormalized("e",1);
-        
-    h_t_fit->SetLineColor(kBlue);
-    h_t_fit->SetLineWidth(3);
-    h_t_fit->SetMarkerColor(kBlue); 
-    h_t_fit->DrawNormalized("histcsame",1);
-    c->Print(((string)OutputDir+"h_t.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t.pdf").c_str());
-    gPad->SetLogy(1);
-    c->Print(((string)OutputDir+"h_t_log.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t_log.pdf").c_str());
-    gPad->SetLogy(0);
-    
-    h_dt->SetMinimum(0);        
-    h_dt->SetLineColor(kBlack);
-    h_dt->DrawNormalized("e1",1);
-    h_dt_fit->SetLineColor(kBlue);
-    h_dt_fit->SetLineWidth(3);
-    h_dt_fit->DrawNormalized("histcsame",1);
-    c->Print(((string)OutputDir+"h_dt.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_dt.pdf").c_str());
+    if(doPlots){
+		/// Plot
+		TCanvas* c= new TCanvas("");
+		h_t->SetMinimum(0.1);    
+		h_t->SetLineColor(kBlack);
+		h_t->DrawNormalized("e",1);
+		
+		h_t_fit->SetLineColor(kBlue);
+		h_t_fit->SetLineWidth(3);
+		h_t_fit->SetMarkerColor(kBlue); 
+		h_t_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"h_t.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t.pdf").c_str());
+		gPad->SetLogy(1);
+		c->Print(((string)OutputDir+"h_t_log.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t_log.pdf").c_str());
+		gPad->SetLogy(0);
+		
+		h_dt->SetMinimum(0);        
+		h_dt->SetLineColor(kBlack);
+		h_dt->DrawNormalized("e1",1);
+		h_dt_fit->SetLineColor(kBlue);
+		h_dt_fit->SetLineWidth(3);
+		h_dt_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"h_dt.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_dt.pdf").c_str());
+		
+		h_eta_OS->SetMinimum(0);        
+		h_eta_OS->SetLineColor(kBlack);
+		h_eta_OS->DrawNormalized("e1",1);
+		h_eta_OS_fit->SetLineColor(kBlue);
+		h_eta_OS_fit->SetLineWidth(3);
+		h_eta_OS_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"h_eta_OS.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_eta_OS.pdf").c_str());
+		
+		h_eta_SS->SetMinimum(0);        
+		h_eta_SS->SetLineColor(kBlack);
+		h_eta_SS->DrawNormalized("e1",1);
+		h_eta_SS_fit->SetLineColor(kBlue);
+		h_eta_SS_fit->SetLineWidth(3);
+		h_eta_SS_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"h_eta_SS.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_eta_SS.pdf").c_str());
+		
+		if((string)channel=="norm"){
+			h_t_mixed->SetMarkerColor(kRed); 
+			h_t_mixed->SetLineColor(kRed);
+			h_t_mixed->DrawNormalized("e",1);
+			
+			h_t_unmixed->SetMarkerColor(kBlue); 
+			h_t_unmixed->SetLineColor(kBlue);
+			h_t_unmixed->DrawNormalized("esame",1);
+			
+			h_t_mixed_fit->SetMarkerColor(kRed); 
+			h_t_mixed_fit->SetLineColor(kRed);
+			h_t_mixed_fit->DrawNormalized("histcsame",1);
+			
+			h_t_unmixed_fit->SetMarkerColor(kBlue); 
+			h_t_unmixed_fit->SetLineColor(kBlue);
+			h_t_unmixed_fit->DrawNormalized("histcsame",1);
+			
+			h_t_untagegged->SetMarkerColor(kGreen); 
+			h_t_untagegged->SetLineColor(kGreen);
+			//h_t_untagegged->DrawNormalized("esame",1);
+			
+			h_t_untagegged_fit->SetMarkerColor(kGreen); 
+			h_t_untagegged_fit->SetLineColor(kGreen);
+			//h_t_untagegged_fit->DrawNormalized("histcsame",1);
+			
+			c->Print(((string)OutputDir+"h_t_mixed.eps").c_str());
+			if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t_mixed.pdf").c_str());
+			
+			TH1D* h_asym = (TH1D*) h_N_mixed->GetAsymmetry(h_N_unmixed);	
+			h_asym->SetMinimum(-0.25);
+			h_asym->SetMaximum(0.25);
+			TH1D* h_asym_fit = (TH1D*) h_N_mixed_fit->GetAsymmetry(h_N_unmixed_fit);	
+			h_asym_fit->SetLineColor(kRed);
+			h_asym->Draw("e");
+			h_asym_fit->Draw("histcsame");
+			c->Print(((string)OutputDir+"h_asym.eps").c_str());
+			if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_asym.pdf").c_str());
+		}
+		
+		else{	
+			h_t_mp->Scale(1./h_t_mp->Integral());
+			double maxY= h_t_mp->GetMaximum()*1.3;        
+			h_t_mp->SetMinimum(0.);  
+			h_t_mp->SetMaximum(maxY);        
+			h_t_mp->SetMarkerColor(kBlue); 
+			h_t_mp->SetLineColor(kBlue);
+			h_t_mp->DrawNormalized("e",1);
+			
+			h_t_pp->SetMarkerColor(kRed); 
+			h_t_pp->SetLineColor(kRed);
+			h_t_pp->DrawNormalized("esame",1);
+			
+			h_t_fit_mp->SetMarkerColor(kBlue); 
+			h_t_fit_mp->SetLineColor(kBlue);
+			h_t_fit_mp->DrawNormalized("histcsame",1);
+			
+			h_t_fit_pp->SetMarkerColor(kRed); 
+			h_t_fit_pp->SetLineColor(kRed);
+			h_t_fit_pp->DrawNormalized("histcsame",1);
+			
+			c->Print(((string)OutputDir+"h_t_mixed_p.eps").c_str());
+			if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t_mixed_p.pdf").c_str());
+			
+			h_t_pm->Scale(1./h_t_pm->Integral());
+			h_t_pm->SetMinimum(0.);     
+			h_t_pm->SetMaximum(maxY);        
+			h_t_pm->SetMarkerColor(kBlue); 
+			h_t_pm->SetLineColor(kBlue);
+			h_t_pm->DrawNormalized("e",1);
+			
+			h_t_mm->SetMarkerColor(kRed); 
+			h_t_mm->SetLineColor(kRed);
+			h_t_mm->DrawNormalized("esame",1);
+			
+			h_t_fit_pm->SetMarkerColor(kBlue); 
+			h_t_fit_pm->SetLineColor(kBlue);
+			h_t_fit_pm->DrawNormalized("histcsame",1);
+			
+			h_t_fit_mm->SetMarkerColor(kRed); 
+			h_t_fit_mm->SetLineColor(kRed);
+			h_t_fit_mm->DrawNormalized("histcsame",1);
+			
+			c->Print(((string)OutputDir+"h_t_mixed_m.eps").c_str());
+			if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t_mixed_m.pdf").c_str());
+			
+			cout << h_N_unmixed_p->GetEntries() << endl;
+			cout << h_N_mixed_p->GetEntries() << endl;
+			
+			TH1D* h_asym_p = (TH1D*) h_N_unmixed_p->GetAsymmetry(h_N_mixed_p);	
+			//h_asym_p->SetMinimum(-20);
+			//h_asym_p->SetMaximum(20);
+			TH1D* h_asym_p_fit = (TH1D*) h_N_unmixed_p_fit->GetAsymmetry(h_N_mixed_p_fit);	
+			h_asym_p_fit->SetLineColor(kRed);
+			h_asym_p->Draw("e");
+			h_asym_p_fit->Draw("histcsame");
+			c->Print(((string)OutputDir+"h_asym_p.eps").c_str());
+			if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_asym_p.pdf").c_str());
+			
+			TH1D* h_asym_m = (TH1D*) h_N_unmixed_m->GetAsymmetry(h_N_mixed_m);	
+			//h_asym_m->SetMinimum(-20);
+			//h_asym_m->SetMaximum(20);
+			TH1D* h_asym_m_fit = (TH1D*) h_N_unmixed_m_fit->GetAsymmetry(h_N_mixed_m_fit);	
+			h_asym_m_fit->SetLineColor(kRed);
+			h_asym_m->Draw("e");
+			h_asym_m_fit->Draw("histcsame");
+			c->Print(((string)OutputDir+"h_asym_m.eps").c_str());
+			if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_asym_m.pdf").c_str());
+			
+			h_asym_p->SetMaximum(max(h_asym_p->GetMaximum(),h_asym_m->GetMaximum())*1.25);
+			h_asym_p->SetMarkerColor(kRed);
+			h_asym_p->SetLineColor(kRed);
+			h_asym_p->Draw("e");
+			h_asym_m->SetLineColor(kBlue);
+			h_asym_m->SetMarkerColor(kBlue);
+			h_asym_m->Draw("esame");
+			h_asym_p_fit->SetLineWidth(3);
+			h_asym_m_fit->SetLineWidth(3);
+			h_asym_p_fit->Draw("histcsame");
+			h_asym_m_fit->SetLineColor(kBlue);
+			h_asym_m_fit->Draw("histcsame");
+			c->Print(((string)OutputDir+"h_asym.eps").c_str());	
+			if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_asym.pdf").c_str());
+		}
+	
+		s_Kpipi->SetMinimum(0);
+		s_Kpipi->SetLineColor(kBlack);
+		s_Kpipi->DrawNormalized("e1",1);
+		s_Kpipi_fit->SetLineColor(kBlue);
+		s_Kpipi_fit->SetLineWidth(3);
+		s_Kpipi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"s_Kpipi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Kpipi.pdf").c_str());
+	
+		s_Kpi->SetMinimum(0);
+		s_Kpi->SetLineColor(kBlack);
+		s_Kpi->DrawNormalized("e1",1);
+		s_Kpi_fit->SetLineColor(kBlue);
+		s_Kpi_fit->SetLineWidth(3);
+		s_Kpi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"s_Kpi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Kpi.pdf").c_str());
+	
+		s_pipi->SetMinimum(0);            
+		s_pipi->SetLineColor(kBlack);
+		s_pipi->DrawNormalized("e1",1);
+		s_pipi_fit->SetLineColor(kBlue);
+		s_pipi_fit->SetLineWidth(3);
+		s_pipi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"s_pipi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_pipi.pdf").c_str());
+	
+		s_Dspipi->SetMinimum(0);            
+		s_Dspipi->SetLineColor(kBlack);
+		s_Dspipi->DrawNormalized("e1",1);
+		s_Dspipi_fit->SetLineColor(kBlue);
+		s_Dspipi_fit->SetLineWidth(3);
+		s_Dspipi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"s_Dspipi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Dspipi.pdf").c_str());
+	
+		s_DsK->SetMinimum(0);
+		s_DsK->SetLineColor(kBlack);
+		s_DsK->DrawNormalized("e1",1);
+		s_DsK_fit->SetLineColor(kBlue);
+		s_DsK_fit->SetLineWidth(3);
+		s_DsK_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"s_DsK.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_DsK.pdf").c_str());
+		
+		s_DsKpi->SetMinimum(0);            
+		s_DsKpi->SetLineColor(kBlack);
+		s_DsKpi->DrawNormalized("e1",1);
+		s_DsKpi_fit->SetLineColor(kBlue);
+		s_DsKpi_fit->SetLineWidth(3);
+		s_DsKpi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"s_DsKpi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_DsKpi.pdf").c_str());
+		
+		s_Dspi->SetMinimum(0);
+		s_Dspi->SetLineColor(kBlack);
+		s_Dspi->DrawNormalized("e1",1);
+		s_Dspi_fit->SetLineColor(kBlue);
+		s_Dspi_fit->SetLineWidth(3);
+		s_Dspi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"s_Dspi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Dspi.pdf").c_str());
+		
+		s_Dspim->SetMinimum(0);
+		s_Dspim->SetLineColor(kBlack);
+		s_Dspim->DrawNormalized("e1",1);
+		s_Dspim_fit->SetLineColor(kBlue);
+		s_Dspim_fit->SetLineWidth(3);
+		s_Dspim_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"s_Dspim.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Dspim.pdf").c_str());
+		
+		m_Kpipi->SetMinimum(0);
+		m_Kpipi->SetLineColor(kBlack);
+		m_Kpipi->DrawNormalized("e1",1);
+		m_Kpipi_fit->SetLineColor(kBlue);
+		m_Kpipi_fit->SetLineWidth(3);
+		m_Kpipi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"m_Kpipi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpipi.pdf").c_str());
+	
+		m_Kpi->SetMinimum(0);
+		m_Kpi->SetLineColor(kBlack);
+		m_Kpi->DrawNormalized("e1",1);
+		m_Kpi_fit->SetLineColor(kBlue);
+		m_Kpi_fit->SetLineWidth(3);
+		m_Kpi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"m_Kpi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpi.pdf").c_str());
+	
+		m_pipi->SetMinimum(0);            
+		m_pipi->SetLineColor(kBlack);
+		m_pipi->DrawNormalized("e1",1);
+		m_pipi_fit->SetLineColor(kBlue);
+		m_pipi_fit->SetLineWidth(3);
+		m_pipi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"m_pipi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_pipi.pdf").c_str());
+	
+		m_Dspipi->SetMinimum(0);            
+		m_Dspipi->SetLineColor(kBlack);
+		m_Dspipi->DrawNormalized("e1",1);
+		m_Dspipi_fit->SetLineColor(kBlue);
+		m_Dspipi_fit->SetLineWidth(3);
+		m_Dspipi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"m_Dspipi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspipi.pdf").c_str());
+	
+		m_DsK->SetMinimum(0);
+		m_DsK->SetLineColor(kBlack);
+		m_DsK->DrawNormalized("e1",1);
+		m_DsK_fit->SetLineColor(kBlue);
+		m_DsK_fit->SetLineWidth(3);
+		m_DsK_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"m_DsK.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_DsK.pdf").c_str());
+		
+		m_DsKpi->SetMinimum(0);            
+		m_DsKpi->SetLineColor(kBlack);
+		m_DsKpi->DrawNormalized("e1",1);
+		m_DsKpi_fit->SetLineColor(kBlue);
+		m_DsKpi_fit->SetLineWidth(3);
+		m_DsKpi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"m_DsKpi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_DsKpi.pdf").c_str());
+		
+		m_Dspi->SetMinimum(0);
+		m_Dspi->SetLineColor(kBlack);
+		m_Dspi->DrawNormalized("e1",1);
+		m_Dspi_fit->SetLineColor(kBlue);
+		m_Dspi_fit->SetLineWidth(3);
+		m_Dspi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"m_Dspi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspi.pdf").c_str());
+		
+		m_Dspim->SetMinimum(0);
+		m_Dspim->SetLineColor(kBlack);
+		m_Dspim->DrawNormalized("e1",1);
+		m_Dspim_fit->SetLineColor(kBlue);
+		m_Dspim_fit->SetLineWidth(3);
+		m_Dspim_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"m_Dspim.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspim.pdf").c_str());
+	
+		h_cosTheta_Kpi->SetMinimum(0);
+		h_cosTheta_Kpi->SetLineColor(kBlack);
+		h_cosTheta_Kpi->DrawNormalized("e1",1);
+		h_cosTheta_Kpi_fit->SetLineColor(kBlue);
+		h_cosTheta_Kpi_fit->SetLineWidth(3);
+		h_cosTheta_Kpi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"h_cosTheta_Kpi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Kpi.pdf").c_str());
+	
+		h_cosTheta_Dspi->SetMinimum(0);
+		h_cosTheta_Dspi->SetLineColor(kBlack);
+		h_cosTheta_Dspi->DrawNormalized("e1",1);
+		h_cosTheta_Dspi_fit->SetLineColor(kBlue);
+		h_cosTheta_Dspi_fit->SetLineWidth(3);
+		h_cosTheta_Dspi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"h_cosTheta_Dspi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Dspi.pdf").c_str());
+	
+		h_phi_Kpi_Dspi->SetMinimum(0);
+		h_phi_Kpi_Dspi->SetLineColor(kBlack);
+		h_phi_Kpi_Dspi->DrawNormalized("e1",1);
+		h_phi_Kpi_Dspi_fit->SetLineColor(kBlue);
+		h_phi_Kpi_Dspi_fit->SetLineWidth(3);
+		h_phi_Kpi_Dspi_fit->DrawNormalized("histcsame",1);
+		c->Print(((string)OutputDir+"h_phi_Kpi_Dspi.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_phi_Kpi_Dspi.pdf").c_str());
+		
+	
+		double norm_A = 1./(1.+r_val*r_val); //m_Kpipi_fit_A->Integral()/(m_Kpipi_fit_A->Integral()+m_Kpipi_fit_Abar->Integral());
+		double norm_Abar = r_val*r_val/(1.+r_val*r_val); //r_vm_Kpipi_fit_Abar->Integral()/(m_Kpipi_fit_Abar->Integral()+m_Kpipi_fit_Abar->Integral());
+		cout << "ratio = " << norm_Abar/norm_A << endl;
+	
+		m_Kpipi->SetMinimum(0.01);
+		m_Kpipi->SetLineColor(kBlack);
+		m_Kpipi->DrawNormalized("e1",1);
+		m_Kpipi_fit->SetLineColor(kBlue);
+		m_Kpipi_fit->SetLineWidth(3);
+		m_Kpipi_fit->DrawNormalized("histcsame",1);
+		m_Kpipi_fit_A->SetLineColor(kRed+1);
+		m_Kpipi_fit_A->SetLineWidth(2);
+		m_Kpipi_fit_A->SetFillColor(kRed+1);
+		m_Kpipi_fit_A->SetFillStyle(3353);
+		m_Kpipi_fit_A->DrawNormalized("histcsame",norm_A);
+		m_Kpipi_fit_Abar->SetLineColor(kGreen+3);
+		m_Kpipi_fit_Abar->SetLineWidth(2);
+		m_Kpipi_fit_Abar->SetFillColor(kGreen+3);
+		m_Kpipi_fit_Abar->SetFillStyle(3353);
+		m_Kpipi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
+		c->Print(((string)OutputDir+"m_Kpipi_mod.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpipi_mod.pdf").c_str());
+		gPad->SetLogy(1);
+		c->Print(((string)OutputDir+"m_Kpipi_mod_log.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpipi_mod_log.pdf").c_str());
+		gPad->SetLogy(0);
+	
+		m_Kpi->SetMinimum(0.01);
+		m_Kpi->SetLineColor(kBlack);
+		m_Kpi->DrawNormalized("e1",1);
+		m_Kpi_fit->SetLineColor(kBlue);
+		m_Kpi_fit->SetLineWidth(3);
+		m_Kpi_fit->DrawNormalized("histcsame",1);
+		m_Kpi_fit_A->SetLineColor(kRed+1);
+		m_Kpi_fit_A->SetLineWidth(2);
+		m_Kpi_fit_A->SetFillColor(kRed+1);
+		m_Kpi_fit_A->SetFillStyle(3353);
+		m_Kpi_fit_A->DrawNormalized("histcsame",norm_A);
+		m_Kpi_fit_Abar->SetLineColor(kGreen+3);
+		m_Kpi_fit_Abar->SetLineWidth(2);
+		m_Kpi_fit_Abar->SetFillColor(kGreen+3);
+		m_Kpi_fit_Abar->SetFillStyle(3353);
+		m_Kpi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
+		c->Print(((string)OutputDir+"m_Kpi_mod.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpi_mod.pdf").c_str());
+		gPad->SetLogy(1);
+		c->Print(((string)OutputDir+"m_Kpi_mod_log.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpi_mod_log.pdf").c_str());
+		gPad->SetLogy(0);
+	
+		m_pipi->SetMinimum(0.01);
+		m_pipi->SetLineColor(kBlack);
+		m_pipi->DrawNormalized("e1",1);
+		m_pipi_fit->SetLineColor(kBlue);
+		m_pipi_fit->SetLineWidth(3);
+		m_pipi_fit->DrawNormalized("histcsame",1);
+		m_pipi_fit_A->SetLineColor(kRed+1);
+		m_pipi_fit_A->SetLineWidth(2);
+		m_pipi_fit_A->SetFillColor(kRed+1);
+		m_pipi_fit_A->SetFillStyle(3353);
+		m_pipi_fit_A->DrawNormalized("histcsame",norm_A);
+		m_pipi_fit_Abar->SetLineColor(kGreen+3);
+		m_pipi_fit_Abar->SetLineWidth(2);
+		m_pipi_fit_Abar->SetFillColor(kGreen+3);
+		m_pipi_fit_Abar->SetFillStyle(3353);
+		m_pipi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
+		c->Print(((string)OutputDir+"m_pipi_mod.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_pipi_mod.pdf").c_str());
+		gPad->SetLogy(1);
+		c->Print(((string)OutputDir+"m_pipi_mod_log.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_pipi_mod_log.pdf").c_str());
+		gPad->SetLogy(0);
+	
+		m_Dspipi->SetMinimum(0.01);
+		m_Dspipi->SetLineColor(kBlack);
+		m_Dspipi->DrawNormalized("e1",1);
+		m_Dspipi_fit->SetLineColor(kBlue);
+		m_Dspipi_fit->SetLineWidth(3);
+		m_Dspipi_fit->DrawNormalized("histcsame",1);
+		m_Dspipi_fit_A->SetLineColor(kRed+1);
+		m_Dspipi_fit_A->SetLineWidth(2);
+		m_Dspipi_fit_A->SetFillColor(kRed+1);
+		m_Dspipi_fit_A->SetFillStyle(3353);
+		m_Dspipi_fit_A->DrawNormalized("histcsame",norm_A);
+		m_Dspipi_fit_Abar->SetLineColor(kGreen+3);
+		m_Dspipi_fit_Abar->SetLineWidth(2);
+		m_Dspipi_fit_Abar->SetFillColor(kGreen+3);
+		m_Dspipi_fit_Abar->SetFillStyle(3353);
+		m_Dspipi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
+		c->Print(((string)OutputDir+"m_Dspipi_mod.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspipi_mod.pdf").c_str());
+		gPad->SetLogy(1);
+		c->Print(((string)OutputDir+"m_Dspipi_mod_log.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspipi_mod_log.pdf").c_str());
+		gPad->SetLogy(0);
+	
+		m_Dspi->SetMinimum(0.01);
+		m_Dspi->SetLineColor(kBlack);
+		m_Dspi->DrawNormalized("e1",1);
+		m_Dspi_fit->SetLineColor(kBlue);
+		m_Dspi_fit->SetLineWidth(3);
+		m_Dspi_fit->DrawNormalized("histcsame",1);
+		m_Dspi_fit_A->SetLineColor(kRed+1);
+		m_Dspi_fit_A->SetLineWidth(2);
+		m_Dspi_fit_A->SetFillColor(kRed+1);
+		m_Dspi_fit_A->SetFillStyle(3353);
+		m_Dspi_fit_A->DrawNormalized("histcsame",norm_A);
+		m_Dspi_fit_Abar->SetLineColor(kGreen+3);
+		m_Dspi_fit_Abar->SetLineWidth(2);
+		m_Dspi_fit_Abar->SetFillColor(kGreen+3);
+		m_Dspi_fit_Abar->SetFillStyle(3353);
+		m_Dspi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
+		c->Print(((string)OutputDir+"m_Dspi_mod.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspi_mod.pdf").c_str());
+		gPad->SetLogy(1);
+		c->Print(((string)OutputDir+"m_Dspi_mod_log.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspi_mod_log.pdf").c_str());
+		gPad->SetLogy(0);
+	
+		m_DsK->SetMinimum(0.01);
+		m_DsK->SetLineColor(kBlack);
+		m_DsK->DrawNormalized("e1",1);
+		m_DsK_fit->SetLineColor(kBlue);
+		m_DsK_fit->SetLineWidth(3);
+		m_DsK_fit->DrawNormalized("histcsame",1);
+		m_DsK_fit_A->SetLineColor(kRed+1);
+		m_DsK_fit_A->SetLineWidth(2);
+		m_DsK_fit_A->SetFillColor(kRed+1);
+		m_DsK_fit_A->SetFillStyle(3353);
+		m_DsK_fit_A->DrawNormalized("histcsame",norm_A);
+		m_DsK_fit_Abar->SetLineColor(kGreen+3);
+		m_DsK_fit_Abar->SetLineWidth(2);
+		m_DsK_fit_Abar->SetFillColor(kGreen+3);
+		m_DsK_fit_Abar->SetFillStyle(3353);
+		m_DsK_fit_Abar->DrawNormalized("histcsame",norm_Abar);
+		c->Print(((string)OutputDir+"m_DsK_mod.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_DsK_mod.pdf").c_str());
+		gPad->SetLogy(1);
+		c->Print(((string)OutputDir+"m_DsK_mod_log.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_DsK_mod_log.pdf").c_str());
+		gPad->SetLogy(0);
+	
+		m_DsKpi->SetMinimum(0.01);
+		m_DsKpi->SetLineColor(kBlack);
+		m_DsKpi->DrawNormalized("e1",1);
+		m_DsKpi_fit->SetLineColor(kBlue);
+		m_DsKpi_fit->SetLineWidth(3);
+		m_DsKpi_fit->DrawNormalized("histcsame",1);
+		m_DsKpi_fit_A->SetLineColor(kRed+1);
+		m_DsKpi_fit_A->SetLineWidth(2);
+		m_DsKpi_fit_A->SetFillColor(kRed+1);
+		m_DsKpi_fit_A->SetFillStyle(3353);
+		m_DsKpi_fit_A->DrawNormalized("histcsame",norm_A);
+		m_DsKpi_fit_Abar->SetLineColor(kGreen+3);
+		m_DsKpi_fit_Abar->SetLineWidth(2);
+		m_DsKpi_fit_Abar->SetFillColor(kGreen+3);
+		m_DsKpi_fit_Abar->SetFillStyle(3353);
+		m_DsKpi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
+		c->Print(((string)OutputDir+"m_DsKpi_mod.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_DsKpi_mod.pdf").c_str());
+		gPad->SetLogy(1);
+		c->Print(((string)OutputDir+"m_DsKpi_mod_log.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_DsKpi_mod_log.pdf").c_str());
+		gPad->SetLogy(0);
+	
+		m_Dspim->SetMinimum(0.01);
+		m_Dspim->SetLineColor(kBlack);
+		m_Dspim->DrawNormalized("e1",1);
+		m_Dspim_fit->SetLineColor(kBlue);
+		m_Dspim_fit->SetLineWidth(3);
+		m_Dspim_fit->DrawNormalized("histcsame",1);
+		m_Dspim_fit_A->SetLineColor(kRed+1);
+		m_Dspim_fit_A->SetLineWidth(2);
+		m_Dspim_fit_A->SetFillColor(kRed+1);
+		m_Dspim_fit_A->SetFillStyle(3353);
+		m_Dspim_fit_A->DrawNormalized("histcsame",norm_A);
+		m_Dspim_fit_Abar->SetLineColor(kGreen+3);
+		m_Dspim_fit_Abar->SetLineWidth(2);
+		m_Dspim_fit_Abar->SetFillColor(kGreen+3);
+		m_Dspim_fit_Abar->SetFillStyle(3353);
+		m_Dspim_fit_Abar->DrawNormalized("histcsame",norm_Abar);
+		c->Print(((string)OutputDir+"m_Dspim_mod.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspim_mod.pdf").c_str());
+		gPad->SetLogy(1);
+		c->Print(((string)OutputDir+"m_Dspim_mod_log.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspim_mod_log.pdf").c_str());
+		gPad->SetLogy(0);
+	
+		h_cosTheta_Dspi->SetMinimum(0.01);
+		h_cosTheta_Dspi->SetLineColor(kBlack);
+		h_cosTheta_Dspi->DrawNormalized("e1",1);
+		h_cosTheta_Dspi_fit->SetLineColor(kBlue);
+		h_cosTheta_Dspi_fit->SetLineWidth(3);
+		h_cosTheta_Dspi_fit->DrawNormalized("histcsame",1);
+		h_cosTheta_Dspi_fit_A->SetLineColor(kRed+1);
+		h_cosTheta_Dspi_fit_A->SetLineWidth(2);
+		h_cosTheta_Dspi_fit_A->SetFillColor(kRed+1);
+		h_cosTheta_Dspi_fit_A->SetFillStyle(3353);
+		h_cosTheta_Dspi_fit_A->DrawNormalized("histcsame",norm_A);
+		h_cosTheta_Dspi_fit_Abar->SetLineColor(kGreen+3);
+		h_cosTheta_Dspi_fit_Abar->SetLineWidth(2);
+		h_cosTheta_Dspi_fit_Abar->SetFillColor(kGreen+3);
+		h_cosTheta_Dspi_fit_Abar->SetFillStyle(3353);
+		h_cosTheta_Dspi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
+		c->Print(((string)OutputDir+"h_cosTheta_Dspi_mod.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Dspi_mod.pdf").c_str());
+		gPad->SetLogy(1);
+		c->Print(((string)OutputDir+"h_cosTheta_Dspi_mod_log.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Dspi_mod_log.pdf").c_str());
+		gPad->SetLogy(0);
+	
+		h_cosTheta_Kpi->SetMinimum(0.01);
+		h_cosTheta_Kpi->SetLineColor(kBlack);
+		h_cosTheta_Kpi->DrawNormalized("e1",1);
+		h_cosTheta_Kpi_fit->SetLineColor(kBlue);
+		h_cosTheta_Kpi_fit->SetLineWidth(3);
+		h_cosTheta_Kpi_fit->DrawNormalized("histcsame",1);
+		h_cosTheta_Kpi_fit_A->SetLineColor(kRed+1);
+		h_cosTheta_Kpi_fit_A->SetLineWidth(2);
+		h_cosTheta_Kpi_fit_A->SetFillColor(kRed+1);
+		h_cosTheta_Kpi_fit_A->SetFillStyle(3353);
+		h_cosTheta_Kpi_fit_A->DrawNormalized("histcsame",norm_A);
+		h_cosTheta_Kpi_fit_Abar->SetLineColor(kGreen+3);
+		h_cosTheta_Kpi_fit_Abar->SetLineWidth(2);
+		h_cosTheta_Kpi_fit_Abar->SetFillColor(kGreen+3);
+		h_cosTheta_Kpi_fit_Abar->SetFillStyle(3353);
+		h_cosTheta_Kpi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
+		c->Print(((string)OutputDir+"h_cosTheta_Kpi_mod.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Kpi_mod.pdf").c_str());
+		gPad->SetLogy(1);
+		c->Print(((string)OutputDir+"h_cosTheta_Kpi_mod_log.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Kpi_mod_log.pdf").c_str());
+		gPad->SetLogy(0);
+	
+		h_phi_Kpi_Dspi->SetMinimum(0.01);
+		h_phi_Kpi_Dspi->SetLineColor(kBlack);
+		h_phi_Kpi_Dspi->DrawNormalized("e1",1);
+		h_phi_Kpi_Dspi_fit->SetLineColor(kBlue);
+		h_phi_Kpi_Dspi_fit->SetLineWidth(3);
+		h_phi_Kpi_Dspi_fit->DrawNormalized("histcsame",1);
+		h_phi_Kpi_Dspi_fit_A->SetLineColor(kRed+1);
+		h_phi_Kpi_Dspi_fit_A->SetLineWidth(2);
+		h_phi_Kpi_Dspi_fit_A->SetFillColor(kRed+1);
+		h_phi_Kpi_Dspi_fit_A->SetFillStyle(3353);
+		h_phi_Kpi_Dspi_fit_A->DrawNormalized("histcsame",norm_A);
+		h_phi_Kpi_Dspi_fit_Abar->SetLineColor(kGreen+3);
+		h_phi_Kpi_Dspi_fit_Abar->SetLineWidth(2);
+		h_phi_Kpi_Dspi_fit_Abar->SetFillColor(kGreen+3);
+		h_phi_Kpi_Dspi_fit_Abar->SetFillStyle(3353);
+		h_phi_Kpi_Dspi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
+		c->Print(((string)OutputDir+"h_phi_Kpi_Dspi_mod.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_phi_Kpi_Dspi_mod.pdf").c_str());
+		gPad->SetLogy(1);
+		c->Print(((string)OutputDir+"h_phi_Kpi_Dspi_mod_log.eps").c_str());
+		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_phi_Kpi_Dspi_mod_log.pdf").c_str());
+		gPad->SetLogy(0);
+	
+		chi2_val = getChi2(eventList,eventListMC_rw);
+	 	//chi2_6D_val = getChi2_6D(eventList,eventListMC_rw);
+	}
 
-    h_eta_OS->SetMinimum(0);        
-    h_eta_OS->SetLineColor(kBlack);
-    h_eta_OS->DrawNormalized("e1",1);
-    h_eta_OS_fit->SetLineColor(kBlue);
-    h_eta_OS_fit->SetLineWidth(3);
-    h_eta_OS_fit->DrawNormalized("histcsame",1);
-    c->Print(((string)OutputDir+"h_eta_OS.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_eta_OS.pdf").c_str());
-    
-    h_eta_SS->SetMinimum(0);        
-    h_eta_SS->SetLineColor(kBlack);
-    h_eta_SS->DrawNormalized("e1",1);
-    h_eta_SS_fit->SetLineColor(kBlue);
-    h_eta_SS_fit->SetLineWidth(3);
-    h_eta_SS_fit->DrawNormalized("histcsame",1);
-    c->Print(((string)OutputDir+"h_eta_SS.eps").c_str());
-    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_eta_SS.pdf").c_str());
-
-    if((string)channel=="norm"){
-
-        h_t_mixed->SetMarkerColor(kRed); 
-        h_t_mixed->SetLineColor(kRed);
-        h_t_mixed->DrawNormalized("e",1);
-        
-        h_t_unmixed->SetMarkerColor(kBlue); 
-        h_t_unmixed->SetLineColor(kBlue);
-        h_t_unmixed->DrawNormalized("esame",1);
-        
-        h_t_mixed_fit->SetMarkerColor(kRed); 
-        h_t_mixed_fit->SetLineColor(kRed);
-        h_t_mixed_fit->DrawNormalized("histcsame",1);
-        
-        h_t_unmixed_fit->SetMarkerColor(kBlue); 
-        h_t_unmixed_fit->SetLineColor(kBlue);
-        h_t_unmixed_fit->DrawNormalized("histcsame",1);
-        
-        h_t_untagegged->SetMarkerColor(kGreen); 
-        h_t_untagegged->SetLineColor(kGreen);
-        //h_t_untagegged->DrawNormalized("esame",1);
-        
-        h_t_untagegged_fit->SetMarkerColor(kGreen); 
-        h_t_untagegged_fit->SetLineColor(kGreen);
-        //h_t_untagegged_fit->DrawNormalized("histcsame",1);
-        
-        c->Print(((string)OutputDir+"h_t_mixed.eps").c_str());
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t_mixed.pdf").c_str());
-
-	TH1D* h_asym = (TH1D*) h_N_mixed->GetAsymmetry(h_N_unmixed);	
-        h_asym->SetMinimum(-0.25);
-	h_asym->SetMaximum(0.25);
-	TH1D* h_asym_fit = (TH1D*) h_N_mixed_fit->GetAsymmetry(h_N_unmixed_fit);	
-	h_asym_fit->SetLineColor(kRed);
-	h_asym->Draw("e");
-	h_asym_fit->Draw("histcsame");
-        c->Print(((string)OutputDir+"h_asym.eps").c_str());
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_asym.pdf").c_str());
-    }
-
-    else{
-
-        h_t_mp->Scale(1./h_t_mp->Integral());
-        double maxY= h_t_mp->GetMaximum()*1.3;        
-        h_t_mp->SetMinimum(0.);  
-        h_t_mp->SetMaximum(maxY);        
-        h_t_mp->SetMarkerColor(kBlue); 
-        h_t_mp->SetLineColor(kBlue);
-        h_t_mp->DrawNormalized("e",1);
-    
-        h_t_pp->SetMarkerColor(kRed); 
-        h_t_pp->SetLineColor(kRed);
-        h_t_pp->DrawNormalized("esame",1);
-        
-        h_t_fit_mp->SetMarkerColor(kBlue); 
-        h_t_fit_mp->SetLineColor(kBlue);
-        h_t_fit_mp->DrawNormalized("histcsame",1);
-        
-        h_t_fit_pp->SetMarkerColor(kRed); 
-        h_t_fit_pp->SetLineColor(kRed);
-        h_t_fit_pp->DrawNormalized("histcsame",1);
-        
-        c->Print(((string)OutputDir+"h_t_mixed_p.eps").c_str());
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t_mixed_p.pdf").c_str());
-
-        h_t_pm->Scale(1./h_t_pm->Integral());
-        h_t_pm->SetMinimum(0.);     
-        h_t_pm->SetMaximum(maxY);        
-        h_t_pm->SetMarkerColor(kBlue); 
-        h_t_pm->SetLineColor(kBlue);
-        h_t_pm->DrawNormalized("e",1);
-        
-        h_t_mm->SetMarkerColor(kRed); 
-        h_t_mm->SetLineColor(kRed);
-        h_t_mm->DrawNormalized("esame",1);
-        
-        h_t_fit_pm->SetMarkerColor(kBlue); 
-        h_t_fit_pm->SetLineColor(kBlue);
-        h_t_fit_pm->DrawNormalized("histcsame",1);
-        
-        h_t_fit_mm->SetMarkerColor(kRed); 
-        h_t_fit_mm->SetLineColor(kRed);
-        h_t_fit_mm->DrawNormalized("histcsame",1);
-        
-        c->Print(((string)OutputDir+"h_t_mixed_m.eps").c_str());
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_t_mixed_m.pdf").c_str());
-
-	cout << h_N_unmixed_p->GetEntries() << endl;
-	cout << h_N_mixed_p->GetEntries() << endl;
-
-	TH1D* h_asym_p = (TH1D*) h_N_unmixed_p->GetAsymmetry(h_N_mixed_p);	
-        //h_asym_p->SetMinimum(-20);
-	//h_asym_p->SetMaximum(20);
-	TH1D* h_asym_p_fit = (TH1D*) h_N_unmixed_p_fit->GetAsymmetry(h_N_mixed_p_fit);	
-	h_asym_p_fit->SetLineColor(kRed);
-	h_asym_p->Draw("e");
-	h_asym_p_fit->Draw("histcsame");
-        c->Print(((string)OutputDir+"h_asym_p.eps").c_str());
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_asym_p.pdf").c_str());
-
-	TH1D* h_asym_m = (TH1D*) h_N_unmixed_m->GetAsymmetry(h_N_mixed_m);	
-        //h_asym_m->SetMinimum(-20);
-	//h_asym_m->SetMaximum(20);
-	TH1D* h_asym_m_fit = (TH1D*) h_N_unmixed_m_fit->GetAsymmetry(h_N_mixed_m_fit);	
-	h_asym_m_fit->SetLineColor(kRed);
-	h_asym_m->Draw("e");
-	h_asym_m_fit->Draw("histcsame");
-        c->Print(((string)OutputDir+"h_asym_m.eps").c_str());
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_asym_m.pdf").c_str());
-
-	h_asym_p->SetMaximum(max(h_asym_p->GetMaximum(),h_asym_m->GetMaximum())*1.25);
-	h_asym_p->SetMarkerColor(kRed);
-	h_asym_p->SetLineColor(kRed);
-	h_asym_p->Draw("e");
-	h_asym_m->SetLineColor(kBlue);
-	h_asym_m->SetMarkerColor(kBlue);
-	h_asym_m->Draw("esame");
-	h_asym_p_fit->SetLineWidth(3);
-	h_asym_m_fit->SetLineWidth(3);
-	h_asym_p_fit->Draw("histcsame");
-	h_asym_m_fit->SetLineColor(kBlue);
- 	h_asym_m_fit->Draw("histcsame");
-        c->Print(((string)OutputDir+"h_asym.eps").c_str());	
-        if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_asym.pdf").c_str());
-    }
-    
-            s_Kpipi->SetMinimum(0);
-            s_Kpipi->SetLineColor(kBlack);
-            s_Kpipi->DrawNormalized("e1",1);
-            s_Kpipi_fit->SetLineColor(kBlue);
-            s_Kpipi_fit->SetLineWidth(3);
-            s_Kpipi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_Kpipi.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Kpipi.pdf").c_str());
-
-            s_Kpi->SetMinimum(0);
-            s_Kpi->SetLineColor(kBlack);
-            s_Kpi->DrawNormalized("e1",1);
-            s_Kpi_fit->SetLineColor(kBlue);
-            s_Kpi_fit->SetLineWidth(3);
-            s_Kpi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_Kpi.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Kpi.pdf").c_str());
-
-	    s_pipi->SetMinimum(0);            
-            s_pipi->SetLineColor(kBlack);
-            s_pipi->DrawNormalized("e1",1);
-            s_pipi_fit->SetLineColor(kBlue);
-            s_pipi_fit->SetLineWidth(3);
-            s_pipi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_pipi.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_pipi.pdf").c_str());
-
-	    s_Dspipi->SetMinimum(0);            
-            s_Dspipi->SetLineColor(kBlack);
-            s_Dspipi->DrawNormalized("e1",1);
-            s_Dspipi_fit->SetLineColor(kBlue);
-            s_Dspipi_fit->SetLineWidth(3);
-            s_Dspipi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_Dspipi.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Dspipi.pdf").c_str());
-
-	    s_DsK->SetMinimum(0);
-            s_DsK->SetLineColor(kBlack);
-            s_DsK->DrawNormalized("e1",1);
-            s_DsK_fit->SetLineColor(kBlue);
-            s_DsK_fit->SetLineWidth(3);
-            s_DsK_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_DsK.eps").c_str());
-	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_DsK.pdf").c_str());
-	    
-	    s_DsKpi->SetMinimum(0);            
-            s_DsKpi->SetLineColor(kBlack);
-            s_DsKpi->DrawNormalized("e1",1);
-            s_DsKpi_fit->SetLineColor(kBlue);
-            s_DsKpi_fit->SetLineWidth(3);
-            s_DsKpi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_DsKpi.eps").c_str());
-	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_DsKpi.pdf").c_str());
-	    
-	    s_Dspi->SetMinimum(0);
-            s_Dspi->SetLineColor(kBlack);
-            s_Dspi->DrawNormalized("e1",1);
-            s_Dspi_fit->SetLineColor(kBlue);
-            s_Dspi_fit->SetLineWidth(3);
-            s_Dspi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_Dspi.eps").c_str());
-	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Dspi.pdf").c_str());
-	    
-	    s_Dspim->SetMinimum(0);
-            s_Dspim->SetLineColor(kBlack);
-            s_Dspim->DrawNormalized("e1",1);
-            s_Dspim_fit->SetLineColor(kBlue);
-            s_Dspim_fit->SetLineWidth(3);
-            s_Dspim_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"s_Dspim.eps").c_str());
-	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"s_Dspim.pdf").c_str());
-	    
-            m_Kpipi->SetMinimum(0);
-            m_Kpipi->SetLineColor(kBlack);
-            m_Kpipi->DrawNormalized("e1",1);
-            m_Kpipi_fit->SetLineColor(kBlue);
-            m_Kpipi_fit->SetLineWidth(3);
-            m_Kpipi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"m_Kpipi.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpipi.pdf").c_str());
-
-            m_Kpi->SetMinimum(0);
-            m_Kpi->SetLineColor(kBlack);
-            m_Kpi->DrawNormalized("e1",1);
-            m_Kpi_fit->SetLineColor(kBlue);
-            m_Kpi_fit->SetLineWidth(3);
-            m_Kpi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"m_Kpi.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpi.pdf").c_str());
-
-	    m_pipi->SetMinimum(0);            
-            m_pipi->SetLineColor(kBlack);
-            m_pipi->DrawNormalized("e1",1);
-            m_pipi_fit->SetLineColor(kBlue);
-            m_pipi_fit->SetLineWidth(3);
-            m_pipi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"m_pipi.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_pipi.pdf").c_str());
-
-	    m_Dspipi->SetMinimum(0);            
-            m_Dspipi->SetLineColor(kBlack);
-            m_Dspipi->DrawNormalized("e1",1);
-            m_Dspipi_fit->SetLineColor(kBlue);
-            m_Dspipi_fit->SetLineWidth(3);
-            m_Dspipi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"m_Dspipi.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspipi.pdf").c_str());
-
-	    m_DsK->SetMinimum(0);
-            m_DsK->SetLineColor(kBlack);
-            m_DsK->DrawNormalized("e1",1);
-            m_DsK_fit->SetLineColor(kBlue);
-            m_DsK_fit->SetLineWidth(3);
-            m_DsK_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"m_DsK.eps").c_str());
-	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_DsK.pdf").c_str());
-	    
-	    m_DsKpi->SetMinimum(0);            
-            m_DsKpi->SetLineColor(kBlack);
-            m_DsKpi->DrawNormalized("e1",1);
-            m_DsKpi_fit->SetLineColor(kBlue);
-            m_DsKpi_fit->SetLineWidth(3);
-            m_DsKpi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"m_DsKpi.eps").c_str());
-	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_DsKpi.pdf").c_str());
-	    
-	    m_Dspi->SetMinimum(0);
-            m_Dspi->SetLineColor(kBlack);
-            m_Dspi->DrawNormalized("e1",1);
-            m_Dspi_fit->SetLineColor(kBlue);
-            m_Dspi_fit->SetLineWidth(3);
-            m_Dspi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"m_Dspi.eps").c_str());
-	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspi.pdf").c_str());
-	    
-	    m_Dspim->SetMinimum(0);
-            m_Dspim->SetLineColor(kBlack);
-            m_Dspim->DrawNormalized("e1",1);
-            m_Dspim_fit->SetLineColor(kBlue);
-            m_Dspim_fit->SetLineWidth(3);
-            m_Dspim_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"m_Dspim.eps").c_str());
-	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspim.pdf").c_str());
-
-	    h_cosTheta_Kpi->SetMinimum(0);
-            h_cosTheta_Kpi->SetLineColor(kBlack);
-            h_cosTheta_Kpi->DrawNormalized("e1",1);
-            h_cosTheta_Kpi_fit->SetLineColor(kBlue);
-            h_cosTheta_Kpi_fit->SetLineWidth(3);
-            h_cosTheta_Kpi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"h_cosTheta_Kpi.eps").c_str());
-	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Kpi.pdf").c_str());
-
-	    h_cosTheta_Dspi->SetMinimum(0);
-            h_cosTheta_Dspi->SetLineColor(kBlack);
-            h_cosTheta_Dspi->DrawNormalized("e1",1);
-            h_cosTheta_Dspi_fit->SetLineColor(kBlue);
-            h_cosTheta_Dspi_fit->SetLineWidth(3);
-            h_cosTheta_Dspi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"h_cosTheta_Dspi.eps").c_str());
-	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Dspi.pdf").c_str());
-
-	    h_phi_Kpi_Dspi->SetMinimum(0);
-            h_phi_Kpi_Dspi->SetLineColor(kBlack);
-            h_phi_Kpi_Dspi->DrawNormalized("e1",1);
-            h_phi_Kpi_Dspi_fit->SetLineColor(kBlue);
-            h_phi_Kpi_Dspi_fit->SetLineWidth(3);
-            h_phi_Kpi_Dspi_fit->DrawNormalized("histcsame",1);
-            c->Print(((string)OutputDir+"h_phi_Kpi_Dspi.eps").c_str());
-	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_phi_Kpi_Dspi.pdf").c_str());
-	    
-
-	    double norm_A = 1./(1.+r_val*r_val); //m_Kpipi_fit_A->Integral()/(m_Kpipi_fit_A->Integral()+m_Kpipi_fit_Abar->Integral());
-	    double norm_Abar = r_val*r_val/(1.+r_val*r_val); //r_vm_Kpipi_fit_Abar->Integral()/(m_Kpipi_fit_Abar->Integral()+m_Kpipi_fit_Abar->Integral());
-	    cout << "ratio = " << norm_Abar/norm_A << endl;
-
-            m_Kpipi->SetMinimum(0.01);
-            m_Kpipi->SetLineColor(kBlack);
-            m_Kpipi->DrawNormalized("e1",1);
-            m_Kpipi_fit->SetLineColor(kBlue);
-            m_Kpipi_fit->SetLineWidth(3);
-            m_Kpipi_fit->DrawNormalized("histcsame",1);
-            m_Kpipi_fit_A->SetLineColor(kRed+1);
-            m_Kpipi_fit_A->SetLineWidth(2);
-            m_Kpipi_fit_A->SetFillColor(kRed+1);
-            m_Kpipi_fit_A->SetFillStyle(3353);
-            m_Kpipi_fit_A->DrawNormalized("histcsame",norm_A);
-            m_Kpipi_fit_Abar->SetLineColor(kGreen+3);
-            m_Kpipi_fit_Abar->SetLineWidth(2);
-            m_Kpipi_fit_Abar->SetFillColor(kGreen+3);
-            m_Kpipi_fit_Abar->SetFillStyle(3353);
-            m_Kpipi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
-            c->Print(((string)OutputDir+"m_Kpipi_mod.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpipi_mod.pdf").c_str());
-	    gPad->SetLogy(1);
-            c->Print(((string)OutputDir+"m_Kpipi_mod_log.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpipi_mod_log.pdf").c_str());
-            gPad->SetLogy(0);
-
-            m_Kpi->SetMinimum(0.01);
-            m_Kpi->SetLineColor(kBlack);
-            m_Kpi->DrawNormalized("e1",1);
-            m_Kpi_fit->SetLineColor(kBlue);
-            m_Kpi_fit->SetLineWidth(3);
-            m_Kpi_fit->DrawNormalized("histcsame",1);
-            m_Kpi_fit_A->SetLineColor(kRed+1);
-            m_Kpi_fit_A->SetLineWidth(2);
-            m_Kpi_fit_A->SetFillColor(kRed+1);
-            m_Kpi_fit_A->SetFillStyle(3353);
-            m_Kpi_fit_A->DrawNormalized("histcsame",norm_A);
-            m_Kpi_fit_Abar->SetLineColor(kGreen+3);
-            m_Kpi_fit_Abar->SetLineWidth(2);
-            m_Kpi_fit_Abar->SetFillColor(kGreen+3);
-            m_Kpi_fit_Abar->SetFillStyle(3353);
-            m_Kpi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
-            c->Print(((string)OutputDir+"m_Kpi_mod.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpi_mod.pdf").c_str());
-	    gPad->SetLogy(1);
-            c->Print(((string)OutputDir+"m_Kpi_mod_log.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Kpi_mod_log.pdf").c_str());
-            gPad->SetLogy(0);
-
-            m_pipi->SetMinimum(0.01);
-            m_pipi->SetLineColor(kBlack);
-            m_pipi->DrawNormalized("e1",1);
-            m_pipi_fit->SetLineColor(kBlue);
-            m_pipi_fit->SetLineWidth(3);
-            m_pipi_fit->DrawNormalized("histcsame",1);
-            m_pipi_fit_A->SetLineColor(kRed+1);
-            m_pipi_fit_A->SetLineWidth(2);
-            m_pipi_fit_A->SetFillColor(kRed+1);
-            m_pipi_fit_A->SetFillStyle(3353);
-            m_pipi_fit_A->DrawNormalized("histcsame",norm_A);
-            m_pipi_fit_Abar->SetLineColor(kGreen+3);
-            m_pipi_fit_Abar->SetLineWidth(2);
-            m_pipi_fit_Abar->SetFillColor(kGreen+3);
-            m_pipi_fit_Abar->SetFillStyle(3353);
-            m_pipi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
-            c->Print(((string)OutputDir+"m_pipi_mod.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_pipi_mod.pdf").c_str());
-	    gPad->SetLogy(1);
-            c->Print(((string)OutputDir+"m_pipi_mod_log.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_pipi_mod_log.pdf").c_str());
-            gPad->SetLogy(0);
-
-            m_Dspipi->SetMinimum(0.01);
-            m_Dspipi->SetLineColor(kBlack);
-            m_Dspipi->DrawNormalized("e1",1);
-            m_Dspipi_fit->SetLineColor(kBlue);
-            m_Dspipi_fit->SetLineWidth(3);
-            m_Dspipi_fit->DrawNormalized("histcsame",1);
-            m_Dspipi_fit_A->SetLineColor(kRed+1);
-            m_Dspipi_fit_A->SetLineWidth(2);
-            m_Dspipi_fit_A->SetFillColor(kRed+1);
-            m_Dspipi_fit_A->SetFillStyle(3353);
-            m_Dspipi_fit_A->DrawNormalized("histcsame",norm_A);
-            m_Dspipi_fit_Abar->SetLineColor(kGreen+3);
-            m_Dspipi_fit_Abar->SetLineWidth(2);
-            m_Dspipi_fit_Abar->SetFillColor(kGreen+3);
-            m_Dspipi_fit_Abar->SetFillStyle(3353);
-            m_Dspipi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
-            c->Print(((string)OutputDir+"m_Dspipi_mod.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspipi_mod.pdf").c_str());
-	    gPad->SetLogy(1);
-            c->Print(((string)OutputDir+"m_Dspipi_mod_log.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspipi_mod_log.pdf").c_str());
-            gPad->SetLogy(0);
-
-            m_Dspi->SetMinimum(0.01);
-            m_Dspi->SetLineColor(kBlack);
-            m_Dspi->DrawNormalized("e1",1);
-            m_Dspi_fit->SetLineColor(kBlue);
-            m_Dspi_fit->SetLineWidth(3);
-            m_Dspi_fit->DrawNormalized("histcsame",1);
-            m_Dspi_fit_A->SetLineColor(kRed+1);
-            m_Dspi_fit_A->SetLineWidth(2);
-            m_Dspi_fit_A->SetFillColor(kRed+1);
-            m_Dspi_fit_A->SetFillStyle(3353);
-            m_Dspi_fit_A->DrawNormalized("histcsame",norm_A);
-            m_Dspi_fit_Abar->SetLineColor(kGreen+3);
-            m_Dspi_fit_Abar->SetLineWidth(2);
-            m_Dspi_fit_Abar->SetFillColor(kGreen+3);
-            m_Dspi_fit_Abar->SetFillStyle(3353);
-            m_Dspi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
-            c->Print(((string)OutputDir+"m_Dspi_mod.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspi_mod.pdf").c_str());
-	    gPad->SetLogy(1);
-            c->Print(((string)OutputDir+"m_Dspi_mod_log.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspi_mod_log.pdf").c_str());
-            gPad->SetLogy(0);
-
-            m_DsK->SetMinimum(0.01);
-            m_DsK->SetLineColor(kBlack);
-            m_DsK->DrawNormalized("e1",1);
-            m_DsK_fit->SetLineColor(kBlue);
-            m_DsK_fit->SetLineWidth(3);
-            m_DsK_fit->DrawNormalized("histcsame",1);
-            m_DsK_fit_A->SetLineColor(kRed+1);
-            m_DsK_fit_A->SetLineWidth(2);
-            m_DsK_fit_A->SetFillColor(kRed+1);
-            m_DsK_fit_A->SetFillStyle(3353);
-            m_DsK_fit_A->DrawNormalized("histcsame",norm_A);
-            m_DsK_fit_Abar->SetLineColor(kGreen+3);
-            m_DsK_fit_Abar->SetLineWidth(2);
-            m_DsK_fit_Abar->SetFillColor(kGreen+3);
-            m_DsK_fit_Abar->SetFillStyle(3353);
-            m_DsK_fit_Abar->DrawNormalized("histcsame",norm_Abar);
-            c->Print(((string)OutputDir+"m_DsK_mod.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_DsK_mod.pdf").c_str());
-	    gPad->SetLogy(1);
-            c->Print(((string)OutputDir+"m_DsK_mod_log.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_DsK_mod_log.pdf").c_str());
-            gPad->SetLogy(0);
-
-            m_DsKpi->SetMinimum(0.01);
-            m_DsKpi->SetLineColor(kBlack);
-            m_DsKpi->DrawNormalized("e1",1);
-            m_DsKpi_fit->SetLineColor(kBlue);
-            m_DsKpi_fit->SetLineWidth(3);
-            m_DsKpi_fit->DrawNormalized("histcsame",1);
-            m_DsKpi_fit_A->SetLineColor(kRed+1);
-            m_DsKpi_fit_A->SetLineWidth(2);
-            m_DsKpi_fit_A->SetFillColor(kRed+1);
-            m_DsKpi_fit_A->SetFillStyle(3353);
-            m_DsKpi_fit_A->DrawNormalized("histcsame",norm_A);
-            m_DsKpi_fit_Abar->SetLineColor(kGreen+3);
-            m_DsKpi_fit_Abar->SetLineWidth(2);
-            m_DsKpi_fit_Abar->SetFillColor(kGreen+3);
-            m_DsKpi_fit_Abar->SetFillStyle(3353);
-            m_DsKpi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
-            c->Print(((string)OutputDir+"m_DsKpi_mod.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_DsKpi_mod.pdf").c_str());
-	    gPad->SetLogy(1);
-            c->Print(((string)OutputDir+"m_DsKpi_mod_log.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_DsKpi_mod_log.pdf").c_str());
-            gPad->SetLogy(0);
-
-            m_Dspim->SetMinimum(0.01);
-            m_Dspim->SetLineColor(kBlack);
-            m_Dspim->DrawNormalized("e1",1);
-            m_Dspim_fit->SetLineColor(kBlue);
-            m_Dspim_fit->SetLineWidth(3);
-            m_Dspim_fit->DrawNormalized("histcsame",1);
-            m_Dspim_fit_A->SetLineColor(kRed+1);
-            m_Dspim_fit_A->SetLineWidth(2);
-            m_Dspim_fit_A->SetFillColor(kRed+1);
-            m_Dspim_fit_A->SetFillStyle(3353);
-            m_Dspim_fit_A->DrawNormalized("histcsame",norm_A);
-            m_Dspim_fit_Abar->SetLineColor(kGreen+3);
-            m_Dspim_fit_Abar->SetLineWidth(2);
-            m_Dspim_fit_Abar->SetFillColor(kGreen+3);
-            m_Dspim_fit_Abar->SetFillStyle(3353);
-            m_Dspim_fit_Abar->DrawNormalized("histcsame",norm_Abar);
-            c->Print(((string)OutputDir+"m_Dspim_mod.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspim_mod.pdf").c_str());
-	    gPad->SetLogy(1);
-            c->Print(((string)OutputDir+"m_Dspim_mod_log.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"m_Dspim_mod_log.pdf").c_str());
-            gPad->SetLogy(0);
-
-            h_cosTheta_Dspi->SetMinimum(0.01);
-            h_cosTheta_Dspi->SetLineColor(kBlack);
-            h_cosTheta_Dspi->DrawNormalized("e1",1);
-            h_cosTheta_Dspi_fit->SetLineColor(kBlue);
-            h_cosTheta_Dspi_fit->SetLineWidth(3);
-            h_cosTheta_Dspi_fit->DrawNormalized("histcsame",1);
-            h_cosTheta_Dspi_fit_A->SetLineColor(kRed+1);
-            h_cosTheta_Dspi_fit_A->SetLineWidth(2);
-            h_cosTheta_Dspi_fit_A->SetFillColor(kRed+1);
-            h_cosTheta_Dspi_fit_A->SetFillStyle(3353);
-            h_cosTheta_Dspi_fit_A->DrawNormalized("histcsame",norm_A);
-            h_cosTheta_Dspi_fit_Abar->SetLineColor(kGreen+3);
-            h_cosTheta_Dspi_fit_Abar->SetLineWidth(2);
-            h_cosTheta_Dspi_fit_Abar->SetFillColor(kGreen+3);
-            h_cosTheta_Dspi_fit_Abar->SetFillStyle(3353);
-            h_cosTheta_Dspi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
-            c->Print(((string)OutputDir+"h_cosTheta_Dspi_mod.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Dspi_mod.pdf").c_str());
-	    gPad->SetLogy(1);
-            c->Print(((string)OutputDir+"h_cosTheta_Dspi_mod_log.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Dspi_mod_log.pdf").c_str());
-            gPad->SetLogy(0);
-
-            h_cosTheta_Kpi->SetMinimum(0.01);
-            h_cosTheta_Kpi->SetLineColor(kBlack);
-            h_cosTheta_Kpi->DrawNormalized("e1",1);
-            h_cosTheta_Kpi_fit->SetLineColor(kBlue);
-            h_cosTheta_Kpi_fit->SetLineWidth(3);
-            h_cosTheta_Kpi_fit->DrawNormalized("histcsame",1);
-            h_cosTheta_Kpi_fit_A->SetLineColor(kRed+1);
-            h_cosTheta_Kpi_fit_A->SetLineWidth(2);
-            h_cosTheta_Kpi_fit_A->SetFillColor(kRed+1);
-            h_cosTheta_Kpi_fit_A->SetFillStyle(3353);
-            h_cosTheta_Kpi_fit_A->DrawNormalized("histcsame",norm_A);
-            h_cosTheta_Kpi_fit_Abar->SetLineColor(kGreen+3);
-            h_cosTheta_Kpi_fit_Abar->SetLineWidth(2);
-            h_cosTheta_Kpi_fit_Abar->SetFillColor(kGreen+3);
-            h_cosTheta_Kpi_fit_Abar->SetFillStyle(3353);
-            h_cosTheta_Kpi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
-            c->Print(((string)OutputDir+"h_cosTheta_Kpi_mod.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Kpi_mod.pdf").c_str());
-	    gPad->SetLogy(1);
-            c->Print(((string)OutputDir+"h_cosTheta_Kpi_mod_log.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_cosTheta_Kpi_mod_log.pdf").c_str());
-            gPad->SetLogy(0);
-
-            h_phi_Kpi_Dspi->SetMinimum(0.01);
-            h_phi_Kpi_Dspi->SetLineColor(kBlack);
-            h_phi_Kpi_Dspi->DrawNormalized("e1",1);
-            h_phi_Kpi_Dspi_fit->SetLineColor(kBlue);
-            h_phi_Kpi_Dspi_fit->SetLineWidth(3);
-            h_phi_Kpi_Dspi_fit->DrawNormalized("histcsame",1);
-            h_phi_Kpi_Dspi_fit_A->SetLineColor(kRed+1);
-            h_phi_Kpi_Dspi_fit_A->SetLineWidth(2);
-            h_phi_Kpi_Dspi_fit_A->SetFillColor(kRed+1);
-            h_phi_Kpi_Dspi_fit_A->SetFillStyle(3353);
-            h_phi_Kpi_Dspi_fit_A->DrawNormalized("histcsame",norm_A);
-            h_phi_Kpi_Dspi_fit_Abar->SetLineColor(kGreen+3);
-            h_phi_Kpi_Dspi_fit_Abar->SetLineWidth(2);
-            h_phi_Kpi_Dspi_fit_Abar->SetFillColor(kGreen+3);
-            h_phi_Kpi_Dspi_fit_Abar->SetFillStyle(3353);
-            h_phi_Kpi_Dspi_fit_Abar->DrawNormalized("histcsame",norm_Abar);
-            c->Print(((string)OutputDir+"h_phi_Kpi_Dspi_mod.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_phi_Kpi_Dspi_mod.pdf").c_str());
-	    gPad->SetLogy(1);
-            c->Print(((string)OutputDir+"h_phi_Kpi_Dspi_mod_log.eps").c_str());
-            if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_phi_Kpi_Dspi_mod_log.pdf").c_str());
-            gPad->SetLogy(0);
-
-	    chi2_val = getChi2(eventList,eventListMC_rw);
-	    //chi2_6D_val = getChi2_6D(eventList,eventListMC_rw);
-
-	    if(useLASSO){
+	if(useLASSO){
 		paraFile->cd();
 
 		Double_t x[1],y[1];
@@ -4587,6 +4105,7 @@ void ampFit(int step=0, string mode = "fit"){
 		}
 
 		for(int i = 0; i < thresholds.size() ; i++){
+
 			y[0]=lasso.numberOfFitFractionsLargerThanThreshold(thresholds[i]);
 			TGraph* r = new TGraph(1,x,y);
 			r->SetName( ("r_A_"+anythingToString((int) (thresholds[i]*1000))).c_str());
@@ -4673,14 +4192,14 @@ void ampFit(int step=0, string mode = "fit"){
 	
 		// fill tree
 		pull_tree->Fill();
-		paraFile->cd();
-		pull_tree->SetDirectory(paraFile);
-		pull_tree->Write();
-		paraFile->Close();
-		delete paraFile;
 	}
+	paraFile->cd();
+	pull_tree->SetDirectory(paraFile);
+	pull_tree->Write();
+	paraFile->Close();
+	delete paraFile;
 
-    if(do2DScan == 1){
+    	if(do2DScan == 1){
         cout << "Now doing 2D scan:" << endl;
         
         Neg2LL fcn(pdf, eventList_f);    
@@ -4766,7 +4285,6 @@ void ampFit(int step=0, string mode = "fit"){
         
         cout<< "done 2-D scan" << endl;
     }
-
     
     return;
 }

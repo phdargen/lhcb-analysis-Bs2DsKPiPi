@@ -813,6 +813,16 @@ class TimePdfMaster
        _r_eta_SS->setVal(eta_SS);
     }
     
+   void setAllObservablesToMean(IDalitzEvent& evt){
+       _r_t->setVal(_tau);
+       _r_dt->setVal(_h_dt->GetMean());
+       _r_f->setIndex((int)evt.getValueFromVector(2));
+       _r_q_OS->setIndex((int)evt.getValueFromVector(3));
+       _r_eta_OS->setVal(_h_eta_OS->GetMean());
+       _r_q_SS->setIndex((int)evt.getValueFromVector(5));
+       _r_eta_SS->setVal(_h_eta_SS->GetMean());
+    }
+
     void setCP_coeff(double norm, double norm_bar,double C,double C_bar,double D,double D_bar,double S,double S_bar ){
         _r_norm->setVal(norm);
         _r_norm_bar->setVal(norm_bar);
