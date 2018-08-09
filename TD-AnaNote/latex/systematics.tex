@@ -1,6 +1,7 @@
 \section{Systematic uncertainties}
 \label{sec:Systematics}
 
+
 This section covers all relevant systematic uncertainties on the measured observables.
 In particular, the model dependent description of the invariant $\Bs$ mass spectrum, the parametrization of the time acceptance using cubic splines, 
 as well as the scaling of the time resolution and tagging calibration are potential sources of systematic errors. 
@@ -123,11 +124,9 @@ where $i=1..4$, $c_{i}$ is the i-th generated coefficient of the toy spline, $c_
 $r_{j}$ are normally distributed real random numbers from a distribution of unit width and $v_{ij}$ are the components of $L$ (where $i$ is the row index and $j$ the column index). \newline
 We now generate four sets of 100 toy splines, where one of the four spline coefficients is varied each time using Eq. \ref{eq:choleskyCoeffs}. 
 Thus, the time-dependent amplitude fit is repeated in total 400 times with a generated toy spline and the shift of the mean value of the physics observables over each of the $4\cdot100$ sets is quoted as 
-uncertainty arising from $c_{i=1..4}$. The uncertainties are then added in quadrature to form the overall uncertainty due to the spline coefficients. Table xXx summarizes the results of this study.
+uncertainty arising from $c_{i=1..4}$. The uncertainties are then added in quadrature to form the overall uncertainty due to the spline coefficients. Table \ref{table:Pulls_tDFit_noChol} summarizes the results of this study.
 
-\subsubsection{Decay-time fit to $\Bs\to\Ds\kaon\pion\pion$} 
-
-
+\input{tables/Acceptance/Syst/PullFile_systNoChol.tex}
 
 
 \subsection{Decay-time resolution}
