@@ -129,6 +129,8 @@ public :
    virtual void     Loop(string parName);
    virtual void     LoopSyst_noChol(string parName);
    virtual void     getShift(string parName);
+   virtual void     makeDeltaPulls_Col();
+   virtual void     makeDeltaPulls_noCol();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
 };
@@ -137,26 +139,33 @@ public :
 
 #ifdef pull_cxx
 
-
-pull::pull() : fChain(0) 
+pull::pull() : fChain(0)
 {
-/*
+
+
+}	
+
+
+pull::pull_DsK_noChol() : fChain(0) 
+{
+
    TChain* chain =  new TChain("MinuitParameterSetNtp");
 
-   chain->Add("signal_toy/pull_par0_*.root"); //1
-   chain->Add("signal_toy/pull_par1_*.root"); //1
-   chain->Add("signal_toy/pull_par2_*.root"); //1
-   chain->Add("signal_toy/pull_par3_*.root"); //1
+   chain->Add("signal_toy_noChol/pull_*.root"); //1
 
    tree= (TTree*)  chain;
-   Init(tree);*/
+   Init(tree);
+
+   Loop("noChol");
 }
 
 pull::pull_Chol() : fChain(0) 
 {
+    makeDeltaPulls_Col();
+
    TChain* chain =  new TChain("MinuitParameterSetNtp");
 
-   chain->Add("/auto/data/kecke/BsDsKpipi/toys/AccSyst/tdfit_deltaPulls.root"); //1
+   chain->Add("tdfit_deltaPulls_Chol.root"); //1
 
    tree= (TTree*)  chain;
    Init(tree);
@@ -168,9 +177,11 @@ pull::pull_Chol() : fChain(0)
 
 pull::pull_noChol() : fChain(0) 
 {
+    makeDeltaPulls_noCol();
+
    TChain* chain =  new TChain("MinuitParameterSetNtp");
 
-   chain->Add("/auto/data/kecke/BsDsKpipi/toys/AccSyst/tdfit_deltaPulls_noChol.root"); //1
+   chain->Add("tdfit_deltaPulls_noChol.root"); //1
 
    tree= (TTree*)  chain;
    Init(tree);

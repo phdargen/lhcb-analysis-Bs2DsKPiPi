@@ -27,6 +27,6 @@ root -l
 
 pull p
 
-p.pull_ci() for cholDecomp i, or
+p.pull_Col() for cholDecomp, or
 
 p.pull_noChol() 
