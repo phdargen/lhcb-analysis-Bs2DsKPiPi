@@ -816,10 +816,10 @@ class TimePdfMaster
    void setAllObservablesToMean(IDalitzEvent& evt){
        _r_t->setVal(_tau);
        _r_dt->setVal(_h_dt->GetMean());
-       _r_f->setIndex((int)evt.getValueFromVector(2));
-       _r_q_OS->setIndex((int)evt.getValueFromVector(3));
+       _r_f->setIndex(1);
+       _r_q_OS->setIndex(0);
        _r_eta_OS->setVal(_h_eta_OS->GetMean());
-       _r_q_SS->setIndex((int)evt.getValueFromVector(5));
+       _r_q_SS->setIndex(0);
        _r_eta_SS->setVal(_h_eta_SS->GetMean());
     }
 
