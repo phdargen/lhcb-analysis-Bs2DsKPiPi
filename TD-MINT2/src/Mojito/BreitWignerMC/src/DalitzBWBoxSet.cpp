@@ -624,7 +624,7 @@ counted_ptr<DalitzEvent> DalitzBWBoxSet::phaseSpaceEvent(){
 }
 
 counted_ptr<DalitzEvent> DalitzBWBoxSet::tryEventForOwner(){
-  bool dbThis=false;
+//   bool dbThis=false;
   if(this->empty()){
     cout << "DalitzBWBoxSet::tryEventForOwner ERROR: "
 	 << " you called me, but there are no boxes"
@@ -636,35 +636,35 @@ counted_ptr<DalitzEvent> DalitzBWBoxSet::tryEventForOwner(){
   counted_ptr<DalitzEvent> evtPtr(0);
   if(_rnd->Rndm() < pick_ps_prob()){
     evtPtr = phaseSpaceEvent();
-    if(dbThis){
+/*    if(dbThis){
       cout << "picked phaseSpace " << endl;
-    }
+    }*/
   }else{
     int vol = pickRandomVolume();
     evtPtr = ((*this)[vol].tryEventForOwner());
-    if(dbThis){
+/*    if(dbThis){
       cout << "picked volume number: " << vol << endl;
-    }
+    }*/
   }
-  if(dbThis && 0 != evtPtr){
+/*  if(dbThis && 0 != evtPtr){
     cout << "weight in DalitzBWBoxSet::tryEventForOwner() "
 	 << evtPtr->getWeight() << endl;
-  }
+  }*/
   if(0 != evtPtr){
-    if(dbThis) {
+/*    if(dbThis) {
       cout << "DalitzBWBoxSet::tryEventForOwner() calling:"
 	   << " setGeneratorPdfRelativeToPhaseSpace(genValueNoPs(*evtPtr))"
 	   << endl;
-    }
+    }*/
     evtPtr->setGeneratorPdfRelativeToPhaseSpace(genValueNoPs(*evtPtr));
-    if(dbThis) cout <<  " .. done that." << endl;
+//     if(dbThis) cout <<  " .. done that." << endl;
   }
-  if(dbThis){
+/*  if(dbThis){
     cout << " DalitzBWBoxSet::tryEventForOwner(): Returning " << evtPtr << endl;
     if(0 != evtPtr){
       cout << " ... with weight " << evtPtr->getWeight() << endl;
     }
-  }
+  }*/
   return evtPtr;
 }
 counted_ptr<DalitzEvent> DalitzBWBoxSet::makeEventForOwner(){
@@ -672,22 +672,22 @@ counted_ptr<DalitzEvent> DalitzBWBoxSet::makeEventForOwner(){
   return makeEventForOwner(NTries);
 }
 counted_ptr<DalitzEvent> DalitzBWBoxSet::makeEventForOwner(int& NTries){
-  bool dbThis=false;
+//   bool dbThis=false;
   static unsigned int Ncalls=0;
-  static unsigned int printEveryNthCall = 1000;
+  static unsigned int printEveryNthCall = 10000;
 
   Ncalls++;
-  bool printThis = Ncalls < 3 || (0 == Ncalls%printEveryNthCall) || dbThis;
+  bool printThis = Ncalls < 3 || (0 == Ncalls%printEveryNthCall);
   
   NTries = 0;
   if(! _ready) getReady();
   if(_maxWeightEstimate < 0) findMax();
-  if(dbThis) cout << "makeEventForOwner found max" << endl;
+//   if(dbThis) cout << "makeEventForOwner found max" << endl;
   if(_eventPtrList.size() > 0){
-    if(dbThis) cout << "popping Event" << endl;
+//     if(dbThis) cout << "popping Event" << endl;
     return popEventFromList();
   }
-  if(dbThis) cout << "making new event" << endl;
+//   if(dbThis) cout << "making new event" << endl;
   counted_ptr<DalitzEvent> evtPtr(0);
   
   int counter=0;
@@ -762,19 +762,19 @@ counted_ptr<DalitzEvent> DalitzBWBoxSet::makeWeightedEventForOwner(){
   return makeWeightedEventForOwner(NTries);
 }
 counted_ptr<DalitzEvent> DalitzBWBoxSet::makeWeightedEventForOwner(int& NTries){
-  bool dbThis=false;
+//   bool dbThis=false;
   counted_ptr<DalitzEvent> ptr(makeWeightedApproxEventForOwner(NTries));
   if(! ptr) return ptr;
   double w = ptr->getWeight();
-  if(dbThis) cout << "phase space weight " << w << endl;
+//   if(dbThis) cout << "phase space weight " << w << endl;
 
   double full = fullPdf(*ptr);
   double gen  = genValueNoPs(*ptr);
-  if(dbThis) cout << ", full weight " << w 
-		  << " * " << full << " / " << gen << " = ";
+//   if(dbThis) cout << ", full weight " << w 
+// 		  << " * " << full << " / " << gen << " = ";
 
   w *= full/gen;
-  if(dbThis) cout << w << endl;
+//   if(dbThis) cout << w << endl;
 
   ptr->setWeight(w);
   ptr->setGeneratorPdfRelativeToPhaseSpace(full);

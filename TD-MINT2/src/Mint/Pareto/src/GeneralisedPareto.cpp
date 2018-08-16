@@ -164,7 +164,7 @@ double MINT::generalisedPareto_estimateMaximum(std::vector<double> input_a
   Minimiser mini(&ll);
   mini.doFit();
   xi = ll.getXi();
-  sg = ll.getSigma();
+  sg = fabs(ll.getSigma());
   cout << "xi, sg after fit: xi = " << xi << ", sg = " << sg << endl;
 
   double limity = -9999;
@@ -193,6 +193,8 @@ double MINT::generalisedPareto_estimateMaximum(std::vector<double> input_a
 	 << ": Something clearly went wrong"
 	 << "\n Estimated upper limit smaller than actual upper limit:"
 	 << " actual: " << maxVal << ", estimated " << limit << endl;
+    actualMax = maxVal;
+    paretoMax = maxVal;
     return maxVal;
   }
   actualMax = maxVal;

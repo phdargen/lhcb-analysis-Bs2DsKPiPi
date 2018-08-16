@@ -13,9 +13,17 @@ FromFileGenerator::FromFileGenerator(const std::string& fname
   , _listExhausted(false)
   , _listIndex(0)
   , _gen(0)
+  , _doBootstrap("FromFileGenerator::doBootstrap",0)
 {
   cout << "FromFileGenerator::FromFileGenerator(" << fname << ")" << endl;
   std::cout << "Got Intergrator events " << _dL.size() << std::endl;
+
+   if(_doBootstrap){
+	while( _bootstrap_indices.size() < _dL.size() )_bootstrap_indices.push_back(TMath::Nint(gRandom->Uniform(0,_dL.size()-1)));
+	sort(_bootstrap_indices.begin(), _bootstrap_indices.end());
+	rotate(_bootstrap_indices.begin(),_bootstrap_indices.begin() + TMath::Nint(gRandom->Uniform(0,_dL.size()-1)), _bootstrap_indices.end());
+   }
+
 }
 FromFileGenerator::FromFileGenerator(const std::string& fname
 				     , IEventGenerator<IDalitzEvent>* 
@@ -29,12 +37,19 @@ FromFileGenerator::FromFileGenerator(const std::string& fname
   , _listExhausted(false)
   , _listIndex(0)
   , _gen(addThisWhenFileEmpty)
+  , _doBootstrap("FromFileGenerator::doBootstrap",0)
 {
   cout << " FromFileGenerator::FromFileGenerator(" << fname
        << ", " << addThisWhenFileEmpty
        << ", " << opt << ")" << endl;
 
   std::cout << "Got Intergrator events " << _dL.size() << std::endl;
+
+   if(_doBootstrap){
+	while( _bootstrap_indices.size() < _dL.size() )_bootstrap_indices.push_back(TMath::Nint(gRandom->Uniform(0,_dL.size()-1)));
+	sort(_bootstrap_indices.begin(), _bootstrap_indices.end());
+	rotate(_bootstrap_indices.begin(),_bootstrap_indices.begin() + TMath::Nint(gRandom->Uniform(0,_dL.size()-1)), _bootstrap_indices.end());
+   }
 }
 
 counted_ptr<IDalitzEvent> FromFileGenerator::newEventFromGenerator(){
@@ -64,7 +79,10 @@ counted_ptr<IDalitzEvent> FromFileGenerator::newDalitzEvent(){
   if(_listExhausted) return newEventFromGenerator();
   if(_listIndex < _dL.size()){
     
-    counted_ptr<DalitzEvent> evtPtr(new DalitzEvent(_dL.getEvent(_listIndex)));
+    int index = _listIndex;
+    if(_doBootstrap) index = _bootstrap_indices[_listIndex];
+
+    counted_ptr<DalitzEvent> evtPtr(new DalitzEvent(_dL.getEvent(index)));
     if(mothers3MomentumIsSet() && 0 != evtPtr){
       evtPtr->setMothers3Momentum(mothers3Momentum());
     }

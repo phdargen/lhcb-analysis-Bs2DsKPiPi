@@ -22,7 +22,8 @@ class DalitzEventPattern : public MINT::PolymorphVector<DecayTreeItem>{
   }
   DalitzEventPattern(int pdg_ids[], int arrayDimension );
   // note: arrayDimension = num mums (=1) + num daughters.
-  DalitzEventPattern(PolymorphVector<int> pdg_ids);
+  
+  DalitzEventPattern( MINT::PolymorphVector<int> pdg_ids);
   DalitzEventPattern(const std::vector<int>& pdg_ids);
   DalitzEventPattern(const std::vector<DecayTreeItem>& yetAnother);
   DalitzEventPattern(const MINT::PolymorphVector<DecayTreeItem>& yetAnother);

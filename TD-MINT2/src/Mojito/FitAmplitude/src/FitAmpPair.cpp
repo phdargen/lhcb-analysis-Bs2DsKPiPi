@@ -344,7 +344,7 @@ double FitAmpPair::add(IDalitzEvent& evt
 		       , double weight
 		       , double efficiency
 		       ){
-  bool dbThis=false;
+//   bool dbThis=false;
   
   _Nevents++;
   
@@ -363,11 +363,11 @@ double FitAmpPair::add(IDalitzEvent& evt
   
   _weightSum += w;// / ps;
   
-  if(dbThis){
-    cout << " FitAmpPair::add, for pair "
-	 << fitAmp1().name() << " / " << fitAmp2().name()
-	 << endl;
-  }
+//   if(dbThis){
+//     cout << " FitAmpPair::add, for pair "
+// 	 << fitAmp1().name() << " / " << fitAmp2().name()
+// 	 << endl;
+//   }
 
   complex<double> c=ampValue(evt) * efficiency * w;
   _lastEntry = c;
@@ -375,11 +375,11 @@ double FitAmpPair::add(IDalitzEvent& evt
 
   if(slow() && 0.0 != c) this->addToHistograms(&evt, c);
 
-  if(dbThis){
-    cout << "\t c = " << c
-	 << " _sum " << _sum
-	 << endl;
-  }
+//   if(dbThis){
+//     cout << "\t c = " << c
+// 	 << " _sum " << _sum
+// 	 << endl;
+//   }
   complex<double> csq(c.real()*c.real(), c.imag()*c.imag());
   _sumsq += csq;
 
@@ -390,9 +390,8 @@ double FitAmpPair::reAdd(IDalitzEvent& evt
 		       , double weight
 		       , double efficiency
 		       ){
-  bool dbThis=false;
+//   bool dbThis=false;
   
-
   _Nevents++;
   
   double ps = evt.phaseSpace();
@@ -410,11 +409,11 @@ double FitAmpPair::reAdd(IDalitzEvent& evt
   
   _weightSum += w;// / ps;
   
-  if(dbThis){
-    cout << " FitAmpPair::add, for pair "
-	 << fitAmp1().name() << " / " << fitAmp2().name()
-	 << endl;
-  }
+//   if(dbThis){
+//     cout << " FitAmpPair::add, for pair "
+// 	 << fitAmp1().name() << " / " << fitAmp2().name()
+// 	 << endl;
+//   }
 
   complex<double> c=ampValue(evt) * efficiency * w;
   _lastEntry = c;
@@ -422,11 +421,12 @@ double FitAmpPair::reAdd(IDalitzEvent& evt
 
   if(slow() && 0.0 != c) this->addToHistograms(&evt, c);
 
-  if(dbThis){
-    cout << "\t c = " << c
-	 << " _sum " << _sum
-	 << endl;
-  }
+//   if(dbThis){
+//     cout << "\t c = " << c
+// 	 << " _sum " << _sum
+// 	 << endl;
+//   }
+
   complex<double> csq(c.real()*c.real(), c.imag()*c.imag());
   _sumsq += csq;
 
@@ -445,12 +445,12 @@ complex<double> FitAmpPair::lastEntry() const{
 }
 
 std::complex<double> FitAmpPair::valNoFitPars() const{
-  bool dbThis=false;
+/*  bool dbThis=false;
   if(dbThis){
     cout << " FitAmpPair::sumWithoutFitPars for pair "
 	 << fitAmp1().name() << " / " << fitAmp2().name()
 	 << endl;
-  }
+  }*/
   double dN = (double) _Nevents;
   std::complex<double> total = ((std::complex<double>)oneOrTwo()) * _sum;
   std::complex<double> returnVal;
@@ -463,14 +463,14 @@ std::complex<double> FitAmpPair::valNoFitPars() const{
     returnVal = total/dN;
   }
 
-  if(dbThis){
+/*  if(dbThis){
     cout << "\t returning " << returnVal << endl;
     cout << "\t   = Real( " << oneOrTwo()
 	 << " * " << _sum
 	 << " / " << _Nevents
 	 << " )"
 	 << endl;
-  }  
+  }*/  
   return returnVal;
 }
 double FitAmpPair::integral() const{

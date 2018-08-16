@@ -180,23 +180,21 @@ std::complex<double> FitAmpSum::getVal(IDalitzEvent* evt){
 }
 
 std::complex<double> FitAmpSum::getVal(IDalitzEvent& evt){
-  double dbThis=false;
+  //double dbThis=false;
 
   std::complex<double> sum(0);
-  if(0 == size()) createAllAmps(evt.eventPattern());
+  //if(0 == size()) createAllAmps(evt.eventPattern());
   for(unsigned int i=0; i< this->size(); i++){
-    if(dbThis) cout << "FitAmpSum::getVal: " << i << endl;
-    if(! this->getAmpPtr(i)->isZero()){
-      sum += this->getAmpPtr(i)->getVal(evt);
+    //if(dbThis) cout << "FitAmpSum::getVal: " << i << endl;
+    sum = (! this->getAmpPtr(i)->isZero()) ? sum + this->getAmpPtr(i)->getVal(evt) : sum;
       //cout << sum << "," << endl;
-    }
   }
-  if(dbThis){
-    cout << "sum= " << sum << endl;
-    cout << "efficiency(evt) " << efficiency(evt) << endl;
-  }
+//   if(dbThis){
+//     cout << "sum= " << sum << endl;
+//     cout << "efficiency(evt) " << efficiency(evt) << endl;
+//   }
   std::complex<double> result(sqrt(fabs(efficiency(evt)))*sum);
-  if(dbThis) cout << "result " << result << endl;
+//   if(dbThis) cout << "result " << result << endl;
   /* 
   double resultSq = norm(result);
   bool invalid = (! isfinite(resultSq)) || std::isnan(resultSq);

@@ -151,6 +151,7 @@ public:
         
         //const double t = (double) evt.getValueFromVector(0);
         //if(t < _min_TAU || t > _max_TAU )return 0.;
+
         _timePdfMaster->setAllObservablesAndFitParameters(evt);
         
         // C,Cbar,D,Dbar,S,Sbar
@@ -170,7 +171,7 @@ public:
          +  _timePdfMaster->get_cos_term_Val(evt)
          +  _timePdfMaster->get_sinh_term_Val(evt)
          +  _timePdfMaster->get_sin_term_Val(evt)
-         ) * _timePdfMaster->get_marginalPdfs_product(evt);
+         );// * _timePdfMaster->get_marginalPdfs_product(evt);
         
         return val;
     }
@@ -188,6 +189,30 @@ public:
         return val/norm;
     }
     
+    double getNorm(IDalitzEvent& evt){
+
+        _timePdfMaster->setAllObservablesAndFitParameters(evt);
+        
+        // C,Cbar,D,Dbar,S,Sbar
+        _timePdfMaster->setCP_coeff(1.,
+				   1.,
+                                   _C,
+                                   -_C,
+                                   _k * _D,
+                                   _k * _D_bar,
+                                   _k * _S,
+                                   _k * _S_bar
+                                   );
+
+        double norm =
+        _timePdfMaster->get_cosh_term_Integral(evt)
+        +  _timePdfMaster->get_cos_term_Integral(evt)
+        +  _timePdfMaster->get_sinh_term_Integral(evt)
+        +  _timePdfMaster->get_sin_term_Integral(evt);
+        
+        return norm;
+    }
+
  inline double getSampledPdfVal(IDalitzEvent& evt){
 	return _timePdfMaster->getSamplingPdfVal(evt);
     }
@@ -319,7 +344,7 @@ public:
 	vector<double> vals;	
 	for(int i = 0; i < 100000; i++){
 		DalitzEvent evt = generateWeightedEvent();
-		double val = getVal(evt)/_timePdfMaster->get_marginalPdfs_product(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
+		double val = getVal(evt)/evt.getGeneratorPdfRelativeToPhaseSpace(); //_timePdfMaster->get_marginalPdfs_product(evt);
 		vals.push_back(val);	
 	}
 
@@ -339,7 +364,7 @@ public:
 	int N_tot = 0;
 	while(true){
 			DalitzEvent evt = generateWeightedEvent();
-			double pdfVal = getVal(evt)/_timePdfMaster->get_marginalPdfs_product(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
+			double pdfVal = getVal(evt)/evt.getGeneratorPdfRelativeToPhaseSpace(); // /_timePdfMaster->get_marginalPdfs_product(evt);
 			
 			const double height = gRandom->Uniform(0,pdf_max);
 			
@@ -365,7 +390,7 @@ public:
 	cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
  	cout << "Generated " << N_gen << " events ! Efficiecy = " << (double)N_gen/(double)N_tot << endl;
 
-	saveEventListToFile(eventList);
+// 	saveEventListToFile(eventList);
  	return eventList;
    }
 

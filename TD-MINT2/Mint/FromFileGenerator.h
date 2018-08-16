@@ -5,13 +5,11 @@
 
 #include "Mint/IEventGenerator.h"
 #include "Mint/IDalitzEvent.h"
-
 #include "Mint/BaseGenerator.h"
-
 #include "Mint/DalitzEvent.h"
 #include "Mint/DiskResidentEventList.h"
-
 #include "Mint/counted_ptr.h"
+#include "Mint/NamedParameter.h"
 
 #include <string>
 
@@ -24,6 +22,8 @@ class FromFileGenerator
   bool _listExhausted;
   unsigned int _listIndex;
   MINT::IEventGenerator<IDalitzEvent>* _gen;
+  MINT::NamedParameter<int> _doBootstrap;
+  std::vector<int> _bootstrap_indices;
 
   virtual MINT::counted_ptr<IDalitzEvent> newEventFromGenerator();
  public:

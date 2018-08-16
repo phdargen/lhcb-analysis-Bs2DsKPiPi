@@ -407,24 +407,24 @@ std::complex<double> Amplitude::getNewVal(IDalitzEvent& evt){
 
   //if(! evt.eventPattern().compatibleWithFinalState(getTreePattern())) return 0;
 
-  if(dbThis) cout << "num permutations: " << evt.numPermutations() << endl;
+//   if(dbThis) cout << "num permutations: " << evt.numPermutations() << endl;
   for(int i=0; i < evt.numPermutations(); i++){
     evt.setPermutationIndex(i);
     complex<double> thisVal= getOnePermutationsVal(evt);
     
-    if(dbThis){
+/*    if(dbThis){
       cout << " permutation " << i
 	   << " makes event look like this: ";
       evt.print();
       cout << "\n gets thisVal " << thisVal << endl;
-    }
+    }*/
     
     sum += thisVal;
   }
   evt.setPermutationIndex(0);
   sum /= sqrt((double) evt.numPermutations());
 
-  if(dbThis) cout << "returning " << sum << endl;
+//   if(dbThis) cout << "returning " << sum << endl;
   /*
   if(dbThis && abs(sum) > sqrt((double) 1000)){
     cout << " Amplitude : " << (*this)

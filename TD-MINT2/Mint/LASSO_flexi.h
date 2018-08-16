@@ -19,7 +19,7 @@ namespace MINT{
     public:
         LASSO_flexi(DalitzPdfBaseFlexiFastInteg* pdf, double lambda = 1.)
         : _pdf(pdf), _lambda(lambda) {
-            _pdf->redoIntegrator();
+//             _pdf->redoIntegrator();
         };
         
         virtual void beginFit(){

@@ -85,29 +85,29 @@ bool SignalGenerator::makeBoxes(){
 }
 
 counted_ptr<IDalitzEvent> SignalGenerator::tryDalitzEvent(){
-  bool dbThis=false;
+//   bool dbThis=false;
   if(0 == _boxes) makeBoxes();
   if(_unWeighted){
     counted_ptr<IDalitzEvent> evtPtr(_boxes->newUnweightedEvent());
     if(0 != evtPtr) evtPtr->setMothers3Momentum(mothers3Momentum());
-    if(dbThis && 0 != evtPtr){
+/*    if(dbThis && 0 != evtPtr){
       cout << "SignalGenerator::tryDalitzEvent(): made un-weighted event "
 	   << "with weight " << evtPtr->getWeight() << endl;
-    }
+    }*/
     return evtPtr;
   }else{
     counted_ptr<IDalitzEvent> evtPtr(_boxes->newEvent());
     if(0 != evtPtr) evtPtr->setMothers3Momentum(mothers3Momentum());
-    if(dbThis && 0 != evtPtr){
-      cout << "SignalGenerator::tryDalitzEvent(): made weighted event "
-	   << "with weight " << evtPtr->getWeight() << endl;
-    }
+//     if(dbThis && 0 != evtPtr){
+//       cout << "SignalGenerator::tryDalitzEvent(): made weighted event "
+// 	   << "with weight " << evtPtr->getWeight() << endl;
+//     }
     return evtPtr;
   }
 }
 
 counted_ptr<IDalitzEvent> SignalGenerator::newDalitzEvent(){
-  bool dbThis=false;
+//   bool dbThis=false;
   counted_ptr<IDalitzEvent> evtPtr(0);
   int counter(0);
   int largeNumber(1000000);
@@ -116,10 +116,10 @@ counted_ptr<IDalitzEvent> SignalGenerator::newDalitzEvent(){
     evtPtr = tryDalitzEvent();
   }while(0 == evtPtr &&  counter++ < largeNumber);
   if(saveEvents()) _evtList->Add(evtPtr);
-  if(dbThis){
+/*  if(dbThis){
     cout << "SignalGenerator::newDalitzEvent:"
 	 << " just generated this event:\n" << *evtPtr << endl;
-  }
+  }*/
   return evtPtr;
 }
 
