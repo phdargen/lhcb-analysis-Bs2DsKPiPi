@@ -771,30 +771,6 @@ void fullTimeFit(int step=0, string mode = "fit"){
 // 	tree_norm->SetBranchAddress("D_sminus_TRUEID",&Ds_ID);
 	tree_norm->SetBranchAddress("D_splus_TRUEID",&Ds_ID);
 	tree_norm->SetBranchAddress("B_s0_TRUEID",&Bs_ID);
-// 	tree_norm->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
-// 	tree_norm->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
-// 	tree_norm->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
-// 	tree_norm->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
-// 	tree_norm->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
-// 	tree_norm->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
-// 	tree_norm->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
-// 	tree_norm->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);    
-// 	tree_norm->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
-// 	tree_norm->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
-// 	tree_norm->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
-// 	tree_norm->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);    
-// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
-// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
-// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
-// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);    
-// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
-// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
-// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
-// 	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
-// 	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
-// 	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
-// 	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
-// 	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
     }
     else {
 	tree_norm=new TChain("DecayTree");
@@ -1049,55 +1025,6 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	}
 
     }
-
-//         // check norm 
-//         double sum1 = 0.;
-//         for (int i=0; i < 1000000; i++) {
-// 
-// 		DalitzEvent evt(pat,gRandom);
-// 
-// 		int f_MC = (gRandom->Uniform() > 0.5) ? 1 : -1;		
-// 		int q_MC = (gRandom->Uniform() > 0.5) ? 1 : -1;
-//  	        int q_SS_MC = (gRandom->Uniform() > 2./3.) ? 0 : q_MC ;
-//          	int q_OS_MC = (gRandom->Uniform() > 2./3.) ? 0 : q_MC ; 
-// 		q_OS_MC = (gRandom->Uniform() < 0.5) ? - q_OS_MC : q_OS_MC;
-// 		q_SS_MC = (gRandom->Uniform() < 0.5) ? - q_SS_MC : q_SS_MC;
-// 
-// 		evt.setValueInVector(0, gRandom->Uniform(min_TAU,max_TAU));
-// 		evt.setValueInVector(1, 0.0);
-// 		evt.setValueInVector(2, f_MC);
-// 		evt.setValueInVector(3, q_OS_MC);
-// 		evt.setValueInVector(4, 0.4);
-// 		evt.setValueInVector(5, q_SS_MC);
-// 		evt.setValueInVector(6, 0.4);
-// 
-// 	        sum1 += t_pdf_Run1_t0.un_normalised(evt);
-//         }
-//         cout << "norm = " <<  sum1/1000000. * 18. * (max_TAU-min_TAU) << endl;
-// 
-// 
-// 		DalitzEvent evt(pat,gRandom);
-// 
-// 		int f_MC = (gRandom->Uniform() > 0.5) ? 1 : -1;		
-// 		int q_MC = (gRandom->Uniform() > 0.5) ? 1 : -1;
-//  	        int q_SS_MC = (gRandom->Uniform() > 2./3.) ? 0 : q_MC ;
-//          	int q_OS_MC = (gRandom->Uniform() > 2./3.) ? 0 : q_MC ; 
-// 		q_OS_MC = (gRandom->Uniform() < 0.5) ? - q_OS_MC : q_OS_MC;
-// 		q_SS_MC = (gRandom->Uniform() < 0.5) ? - q_SS_MC : q_SS_MC;
-// 
-// 		evt.setValueInVector(0, gRandom->Uniform(min_TAU,max_TAU));
-// 		evt.setValueInVector(1, 0.0);
-// 		evt.setValueInVector(2, f_MC);
-// 		evt.setValueInVector(3, q_OS_MC);
-// 		evt.setValueInVector(4, 0.4);
-// 		evt.setValueInVector(5, q_SS_MC);
-// 		evt.setValueInVector(6, 0.4);
-// 
-// 	        cout << "norm = " <<  t_pdf_Run1_t0.getNorm(evt) << endl << endl;
-// 
-// 	throw "";
-
-
     
     /// Fit with MINT Pdf
     Neg2LL neg2LL(t_pdf, eventList);    
@@ -1279,7 +1206,6 @@ void fullTimeFit(int step=0, string mode = "fit"){
         h_q_OS->Fill(q1,eventList[i].getWeight());
         h_q_SS->Fill(q2,eventList[i].getWeight());
         h_f->Fill(f_evt,eventList[i].getWeight());
-
 
         if(run_evt==1 && trigger_evt == 0)N_Run1_t0 += eventList[i].getWeight();
         else if(run_evt==1 && trigger_evt == 1)N_Run1_t1 += eventList[i].getWeight();
@@ -2256,7 +2182,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			} 
 		
 			D_comb_MC += pow(1.-2.*w_eff,2)* weight;
-			
+			double D_tot = 1.;//(1.-2.*abs(w_eff)) * exp(-pow(t_pdf.getCalibratedResolution(evt.getValueFromVector(1))*dm,2)/2.);
+
 			if(q1 != 0) N_OS_all_MC += weight;
 			if(q2 != 0)N_SS_all_MC += weight;
 			
@@ -2443,8 +2370,10 @@ void fullTimeFit(int step=0, string mode = "fit"){
 		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t_mixed.pdf").c_str());
 	
 		TH1D* h_asym = (TH1D*) h_N_mixed->GetAsymmetry(h_N_unmixed);	
-		h_asym->SetMinimum(-0.25);
-		h_asym->SetMaximum(0.25);
+		double max_asym = max(h_asym->GetMaximum(),fabs(h_asym->GetMinimum())) *1.25;
+		h_asym->SetMaximum(max_asym);
+		h_asym->SetMinimum(-max_asym);
+
 		TH1D* h_asym_fit = (TH1D*) h_N_mixed_fit->GetAsymmetry(h_N_unmixed_fit);	
 		h_asym_fit->SetLineColor(kRed);
 		h_asym->Draw("e");
@@ -2523,7 +2452,9 @@ void fullTimeFit(int step=0, string mode = "fit"){
 		c->Print(((string)OutputDir+"h_asym_m.eps").c_str());
 		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_asym_m.pdf").c_str());
 	
-		h_asym_p->SetMaximum(max(h_asym_p->GetMaximum(),h_asym_m->GetMaximum())*1.25);
+		double max_asym = max(max(h_asym_p->GetMaximum(),h_asym_m->GetMaximum()),fabs(min(h_asym_p->GetMinimum(),h_asym_m->GetMinimum()))) *1.25;
+		h_asym_p->SetMaximum(max_asym);
+		h_asym_p->SetMinimum(-max_asym);	
 		h_asym_p->SetMarkerColor(kRed);
 		h_asym_p->SetLineColor(kRed);
 		h_asym_p->Draw("e");
