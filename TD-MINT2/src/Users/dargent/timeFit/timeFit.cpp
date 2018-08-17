@@ -1049,6 +1049,55 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	}
 
     }
+
+//         // check norm 
+//         double sum1 = 0.;
+//         for (int i=0; i < 1000000; i++) {
+// 
+// 		DalitzEvent evt(pat,gRandom);
+// 
+// 		int f_MC = (gRandom->Uniform() > 0.5) ? 1 : -1;		
+// 		int q_MC = (gRandom->Uniform() > 0.5) ? 1 : -1;
+//  	        int q_SS_MC = (gRandom->Uniform() > 2./3.) ? 0 : q_MC ;
+//          	int q_OS_MC = (gRandom->Uniform() > 2./3.) ? 0 : q_MC ; 
+// 		q_OS_MC = (gRandom->Uniform() < 0.5) ? - q_OS_MC : q_OS_MC;
+// 		q_SS_MC = (gRandom->Uniform() < 0.5) ? - q_SS_MC : q_SS_MC;
+// 
+// 		evt.setValueInVector(0, gRandom->Uniform(min_TAU,max_TAU));
+// 		evt.setValueInVector(1, 0.0);
+// 		evt.setValueInVector(2, f_MC);
+// 		evt.setValueInVector(3, q_OS_MC);
+// 		evt.setValueInVector(4, 0.4);
+// 		evt.setValueInVector(5, q_SS_MC);
+// 		evt.setValueInVector(6, 0.4);
+// 
+// 	        sum1 += t_pdf_Run1_t0.un_normalised(evt);
+//         }
+//         cout << "norm = " <<  sum1/1000000. * 18. * (max_TAU-min_TAU) << endl;
+// 
+// 
+// 		DalitzEvent evt(pat,gRandom);
+// 
+// 		int f_MC = (gRandom->Uniform() > 0.5) ? 1 : -1;		
+// 		int q_MC = (gRandom->Uniform() > 0.5) ? 1 : -1;
+//  	        int q_SS_MC = (gRandom->Uniform() > 2./3.) ? 0 : q_MC ;
+//          	int q_OS_MC = (gRandom->Uniform() > 2./3.) ? 0 : q_MC ; 
+// 		q_OS_MC = (gRandom->Uniform() < 0.5) ? - q_OS_MC : q_OS_MC;
+// 		q_SS_MC = (gRandom->Uniform() < 0.5) ? - q_SS_MC : q_SS_MC;
+// 
+// 		evt.setValueInVector(0, gRandom->Uniform(min_TAU,max_TAU));
+// 		evt.setValueInVector(1, 0.0);
+// 		evt.setValueInVector(2, f_MC);
+// 		evt.setValueInVector(3, q_OS_MC);
+// 		evt.setValueInVector(4, 0.4);
+// 		evt.setValueInVector(5, q_SS_MC);
+// 		evt.setValueInVector(6, 0.4);
+// 
+// 	        cout << "norm = " <<  t_pdf_Run1_t0.getNorm(evt) << endl << endl;
+// 
+// 	throw "";
+
+
     
     /// Fit with MINT Pdf
     Neg2LL neg2LL(t_pdf, eventList);    
