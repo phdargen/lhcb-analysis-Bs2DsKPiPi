@@ -18,7 +18,7 @@ using namespace MINT;
 //const char MinuitParameterSet::ntpNameChars[] = { 'p', 'm', 's', '_', '_', '_', '_', 'a', 'b', 'c', 'c', 'e', 'f', 'g', 'h', 'i', 'j', '\0' };
 
 const char MinuitParameterSet::prtNameChars[] = { '+', '-', '*', '>', ',', '(', ')', '[', ']', '\0'};
-const char MinuitParameterSet::ntpNameChars[] = { '#', '~', 's', '_', '_', '_', '_', '_', '_', '\0'};
+const char MinuitParameterSet::ntpNameChars[] = { 'p', 'm', 's', '_', '_', '_', '_', '_', '_', '\0'};
 
 MinuitParameterSet* MinuitParameterSet::_defaultMinuitParameterSet=0;
 MinuitParameterSet* MinuitParameterSet::getDefaultSet(){
@@ -150,11 +150,11 @@ std::string MinuitParameterSet::ntpNames() const{
     if(0 != getParPtr(i)->iFixInit()) continue;
     std::string name = //"p" + anythingToString(i) + "_" + 
 	prtToNtpName(getParPtr(i)->name());
+    if(str != "") str += ":";
     str += (name + "_mean" + ":"); n++;
     str += (name + "_init" + ":"); n++;
     str += (name + "_err:");       n++;
     str += (name + "_pull");       n++;
-    if(i != size()-1) str += ":";
   }
   if(dbThis){
     cout << "MinuitParameterSet::ntpNames():"

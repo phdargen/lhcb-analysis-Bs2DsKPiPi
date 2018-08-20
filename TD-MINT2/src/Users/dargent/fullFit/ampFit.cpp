@@ -971,7 +971,6 @@ public:
         return val/norm;
     }
     
-
     inline double getVal_timeIntegrated(IDalitzEvent& evt){
 
         _timePdfMaster->setAllObservablesToMean(evt);
@@ -1196,7 +1195,7 @@ public:
 
 	cout << "Generating " << N << " events" << endl;
 	DalitzEventList eventList;
-	if(_fasGen){
+	if(_fasGen==0){
 		        /// Simple amplitude model for importance sampling
    		        NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
         		DalitzEventPattern pat(EventPattern.getVector());
@@ -1465,7 +1464,11 @@ public:
     _min_TAU("min_TAU", 0.4),
     _max_TAU("max_TAU", 10.),
     _min_TAUERR("min_TAUERR", 0.),
-    _max_TAUERR("max_TAUERR", 0.1)
+    _max_TAUERR("max_TAUERR", 0.1),
+    _fasGen(0),
+    _sg(0),
+    _fasGen_CP(0),
+    _sg_CP(0)
     {
 		        _timePdfMaster = new TimePdfMaster(_tau, _dGamma, _dm
                                           ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
@@ -1982,7 +1985,7 @@ void ampFit(int step=0, string mode = "fit"){
     counted_ptr<IReturnComplex> abar_NS_rho = new AmpRatio(abar_NS_rho_re,abar_NS_rho_im);
 
     AddScaledAmpsToList(fas_tmp, fas, "K(1)(1270)+",a_K1_1270);
-//     AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+",a_Ks_1410,abar_Ks_1410);
+    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+",a_Ks_1410,abar_Ks_1410);
     AddScaledAmpsToList(fas_tmp, fas, "NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)",a_NS_Ks);
     AddScaledAmpsToList(fas_tmp, fas, fas_bar, "NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)",a_NS_rho,abar_NS_rho);
 
@@ -2904,18 +2907,15 @@ void ampFit(int step=0, string mode = "fit"){
     if(doSimFit)n2ll = neg2LL_sim.getVal();
     else n2ll = neg2LL.getVal();
 
-    for(unsigned int i=0; i < MinuitParameterSet::getDefaultSet()->size(); i++){
-        if(0 == MinuitParameterSet::getDefaultSet()->getParPtr(i)) continue;
-        if(A_is_in_B("r",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))r_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
-        if(A_is_in_B("delta",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))delta_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
-        if(A_is_in_B("gamma",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))gamma_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
+    r_val = (double)r;
+    delta_val = (double)delta;
+    gamma_val = (double)gamma;
 
-        if(A_is_in_B("xp",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))xp_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
-        if(A_is_in_B("xm",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))xm_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
-        if(A_is_in_B("yp",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))yp_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
-        if(A_is_in_B("ym",MinuitParameterSet::getDefaultSet()->getParPtr(i)->name()))ym_val = MinuitParameterSet::getDefaultSet()->getParPtr(i)->mean();
-    }
-   
+    xp_val = (double)xp;
+    yp_val = (double)yp;
+    xm_val = (double)xm;
+    ym_val = (double)ym;
+
     string outTableName = (string)OutputDir+"FitAmpResults_"+anythingToString((int)seed);
     if(updateAnaNote)outTableName = "../../../../../TD-AnaNote/latex/tables/fullFit/"+(string)OutputDir+"fitFractions";
 
@@ -3813,7 +3813,7 @@ void ampFit(int step=0, string mode = "fit"){
 	c->Print(((string)OutputDir+"h_phi_Kpi_Dspi.eps").c_str());
 	if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/fullFit/"+(string)OutputDir +"h_phi_Kpi_Dspi.pdf").c_str());
 
-	r_val = (double)r ;	
+	//r_val = (double)r ;	
 	double norm_A = 1./(1.+r_val*r_val); 
 // 		m_Kpipi_fit_A->Integral()/(m_Kpipi_fit_A->Integral()+m_Kpipi_fit_Abar->Integral());
 	double norm_Abar = r_val*r_val/(1.+r_val*r_val); 		 
@@ -4222,11 +4222,11 @@ void ampFit(int step=0, string mode = "fit"){
 		chi2->GetYaxis()->SetTitle("#Chi^{2}/Bin");
 		chi2->Draw("A*");
 		chi2->Write();
-	
-		// fill tree
-		pull_tree->Fill();
 	}
+
+	// fill tree
 	paraFile->cd();
+	pull_tree->Fill();
 	pull_tree->SetDirectory(paraFile);
 	pull_tree->Write();
 	paraFile->Close();
