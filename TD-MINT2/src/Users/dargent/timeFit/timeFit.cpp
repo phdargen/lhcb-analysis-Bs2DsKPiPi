@@ -1385,8 +1385,10 @@ void fullTimeFit(int step=0, string mode = "fit"){
     /// Save pulls
     gDirectory->cd();
     string paraFileName = (string)OutputDir+"pull_"+anythingToString((int)step)+".root";
-    if(doAccSystematics && useCholDec)
-	paraFileName = (string)OutputDir+"pull_par"+anythingToString((int)chol_index)+"_"+anythingToString((int)(step - chol_index * varPerParChol))+".root";
+    if(doAccSystematics) paraFileName = (string)OutputDir+"pullAcc_"+anythingToString((int)step)+".root";
+    if(doAccSystematics && useCholDec) paraFileName = (string)OutputDir+"pullAccChol_"+anythingToString((int)step)+".root";
+	//paraFileName = (string)OutputDir+"pullAccChol_par"+anythingToString((int)chol_index)+"_"+anythingToString((int)(step - chol_index * varPerParChol))+".root";
+
     TFile* paraFile = new TFile( paraFileName.c_str(), "RECREATE");
     paraFile->cd();
     TNtupleD* ntp=0;

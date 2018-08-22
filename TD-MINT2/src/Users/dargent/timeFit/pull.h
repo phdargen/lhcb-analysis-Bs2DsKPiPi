@@ -35,6 +35,7 @@ public :
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
    
+   TMatrixD getStatCov(TString label = "");
    TMatrixD getCov(TString label = "");
    TMatrixD getDeltaCov(TString refFileName,TString label = "");
    TMatrixD getDeltaCovChol(TString refFileName,TString label,int varPerParChol);
