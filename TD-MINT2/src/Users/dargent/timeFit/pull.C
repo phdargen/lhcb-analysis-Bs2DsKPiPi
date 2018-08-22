@@ -26,48 +26,7 @@ TMatrixD pull::getStatCov(TString label){
             throw "ERROR";
     }
     int N = fChain->GetEntries();
-    
-    vector<TH1D*> h_pulls;
-    for(int i = 0 ; i < _paraNames.size(); i++) 
-        h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 40, -5.,5.));
-    
-    for(int n=0; n <N ;n++) {
-        fChain->GetEntry(n);  
-        for (int i = 0 ; i < _paraNames.size(); i++){
-            h_pulls[i]->Fill(*_pulls[i]);
-        }
-    }
-    
-    TCanvas* c = new TCanvas();
-    TF1 *gaussian = new TF1("gaussian","gaus",-3.,3.);
-    gaussian->SetParameters(1.,0.,1.);
-    gaussian->SetParLimits(1,-1., 1.);
-    gaussian->SetParLimits(2, 0., 2.);
-    gaussian->SetLineColor(kRed);
-        
-    ofstream SummaryFile;
-    SummaryFile.open("pull_results/pull_table"+label+".tex",std::ofstream::trunc);
-    SummaryFile << "\\begin{tabular}{l  c  c}" << "\n";
-    SummaryFile << "\\hline" << "\n";
-    SummaryFile << "Parameter & $\\mu$ of pull distribution & $\\sigma$ of pull distribution \\\\" << "\n";
-    SummaryFile << "\\hline" << "\n";
-    SummaryFile << "\\hline" << "\n";
-    
-    vector<double> fit_means,fit_sigmas;
-    for(int i = 0 ; i < _paraNames.size(); i++) {
-        h_pulls[i]->Fit(gaussian);
-        fit_means.push_back(gaussian->GetParameter(1));
-        fit_sigmas.push_back(gaussian->GetParameter(2));
-
-        SummaryFile << std::fixed << std::setprecision(2) << latexName(_paraNames[i]) << " & " << gaussian->GetParameter(1) << " $\\pm$ " << gaussian->GetParError(1) <<" & " << gaussian->GetParameter(2) << " $\\pm$ " <<  gaussian->GetParError(2) << " \\\\" << "\n";
-        h_pulls[i]->Draw("");
-        gaussian->Draw("SAME");
-        c->Print("pull_results/pull_"+ _paraNames[i] + label + ".eps");
-    }
-    
-    SummaryFile << "\\hline" << "\n";
-    SummaryFile << "\\end{tabular}" << "\n";
-    
+           
     TMatrixD cov(_paraNames.size(),_paraNames.size());
     for (int n=0; n <N ;n++) {
         fChain->GetEntry(n);  
@@ -115,18 +74,35 @@ TMatrixD pull::getCov(TString label){
         }
     }
     
+    TCanvas* c = new TCanvas();
     TF1 *gaussian = new TF1("gaussian","gaus",-3.,3.);
     gaussian->SetParameters(1.,0.,1.);
     gaussian->SetParLimits(1,-1., 1.);
     gaussian->SetParLimits(2, 0., 2.);
     gaussian->SetLineColor(kRed);
-
-    vector<double> fit_means,fit_sigmas;    
-    for (int i = 0 ; i < _paraNames.size(); i++) {
+        
+    ofstream SummaryFile;
+    SummaryFile.open("pull_results/pull_table"+label+".tex",std::ofstream::trunc);
+    SummaryFile << "\\begin{tabular}{l  c  c}" << "\n";
+    SummaryFile << "\\hline" << "\n";
+    SummaryFile << "Parameter & $\\mu$ of pull distribution & $\\sigma$ of pull distribution \\\\" << "\n";
+    SummaryFile << "\\hline" << "\n";
+    SummaryFile << "\\hline" << "\n";
+    
+    vector<double> fit_means,fit_sigmas;
+    for(int i = 0 ; i < _paraNames.size(); i++) {
         h_pulls[i]->Fit(gaussian);
         fit_means.push_back(gaussian->GetParameter(1));
-        fit_sigmas.push_back(gaussian->GetParameter(2));        
+        fit_sigmas.push_back(gaussian->GetParameter(2));
+
+        SummaryFile << std::fixed << std::setprecision(2) << latexName(_paraNames[i]) << " & " << gaussian->GetParameter(1) << " $\\pm$ " << gaussian->GetParError(1) <<" & " << gaussian->GetParameter(2) << " $\\pm$ " <<  gaussian->GetParError(2) << " \\\\" << "\n";
+        h_pulls[i]->Draw("");
+        gaussian->Draw("SAME");
+        c->Print("pull_results/pull_"+ _paraNames[i] + label + ".eps");
     }
+    
+    SummaryFile << "\\hline" << "\n";
+    SummaryFile << "\\end{tabular}" << "\n";
 
     TMatrixD cov_prime(cov);
     for (int i = 0 ; i < _paraNames.size(); i++)
