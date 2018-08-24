@@ -910,7 +910,7 @@ vector< vector<double> > fitNorm(){
         RooRealVar pi_plus1_PIDK("pi_plus1_PIDK", "pi_plus1_PIDK", 0.);              
         RooRealVar pi_plus2_PIDK("pi_plus2_PIDK", "pi_plus2_PIDK", 0.);              
 
-	RooArgList list =  RooArgList(DTF_Bs_M,Ds_finalState_mod,year,run,TriggerCat,pi_plus1_PIDK,pi_plus2_PIDK);
+	RooArgList list =  RooArgList(DTF_Bs_M,Ds_finalState_mod,year,run,TriggerCat);
 	if(!fitPreselected)list.add(BDTG);	
 	RooDataSet*  data;
 	if(!fitPreselected)data = new RooDataSet("data","data",tree,list, ((string)cut_BDT).c_str() );
@@ -1786,15 +1786,13 @@ void fitSignal(){
 	tree->SetBranchStatus("run",1);
 
         RooRealVar DTF_Bs_M("Bs_DTF_MM", "m(D_{s}^{-}K^{+}#pi^{+}#pi^{-})", min_MM, max_MM,"MeV/c^{2}");
-        RooRealVar BDTG_response("BDTG", "BDTG", -1.,1.);        
+        RooRealVar BDTG_response("BDTG", "BDTG", 0.);        
         RooRealVar K_plus_PIDK("K_plus_PIDK", "K_plus_PIDK", 0.);        
         RooRealVar pi_plus_PIDK("pi_plus_PIDK", "pi_plus_PIDK", 0.);        
         RooRealVar pi_minus_PIDK("pi_minus_PIDK", "pi_minus_PIDK", 0.);        
 
-	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState_mod,year,TriggerCat,run,pi_minus_PIDK);
-	RooDataSet*  data = new RooDataSet("data","data",tree,list,((string)cut_BDT + " && pi_minus_PIDK < 0").c_str() );	
-	cout << data->numEntries() << endl;
-
+	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState_mod,year,TriggerCat,run);
+	RooDataSet*  data = new RooDataSet("data","data",tree,list,((string)cut_BDT).c_str() );	
 
 	/// Fit normalization mode first
 	vector< vector <double> > norm_paramSet = fitNorm();

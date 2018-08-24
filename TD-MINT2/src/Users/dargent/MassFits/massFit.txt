@@ -5,7 +5,7 @@
 "max_MM"	5700.
 "cut_BDT_MC" 	0.3
 *"cut_BDT" 	"BDTG > 0.3"
-"cut_BDT" 	"(run ==1 && TriggerCat == 0 && BDTG > 0.45) || (run ==1 && TriggerCat == 1 && BDTG > 0.50) || (run ==2 && TriggerCat == 0 && BDTG > 0.35) || (run ==2 && TriggerCat == 1 && BDTG > 0.50)"
+"cut_BDT" 	"( (run ==1 && TriggerCat == 0 && BDTG > 0.45) || (run ==1 && TriggerCat == 1 && BDTG > 0.50) || (run ==2 && TriggerCat == 0 && BDTG > 0.35) || (run ==2 && TriggerCat == 1 && BDTG > 0.50) )"
 "optimizeBDT"		0
 
 "numCPU"	 10
@@ -22,7 +22,7 @@
 "altPartBkg"     0
 "useB0"     	 1	
 "fixSignalShapeFromMC"	 0
-"outFileNameNorm"	"/auto/data/kecke/BsDspipipi_test.root"
+"outFileNameNorm"	"BsDspipipi_test.root"
 
 * Signal fit:
 "fixMisIDyields"	1
