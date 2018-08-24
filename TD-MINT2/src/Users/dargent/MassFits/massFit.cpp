@@ -760,6 +760,9 @@ vector<double> fitSignalShape(TString channel = "signal"){
 
 vector<double> fitPartRecoBkgShapeHILLHORN(){
 
+	NamedParameter<double> min_MM("min_MM",5100.);
+	NamedParameter<double> max_MM("max_MM",5700.);
+
         RooRealVar Bs_MM("Bs_DTF_MM", "m(D_{s}*K#pi#pi)", 5000., 5350.,"MeV/c^{2}");
 
 	///define shape of Bs->Ds*pipipi BG as RooHILL and RooHORN
@@ -772,15 +775,13 @@ vector<double> fitPartRecoBkgShapeHILLHORN(){
 	RooRealVar shift("shift","shift", 1.,0.,500.);
 	RooRealVar sigma_HILL("sigma_HILL", "sigma_HILL", 25.9,0.,100.);
 	RooRealVar sigma_HORNS("sigma_HORNS", "sigma_HORNS", 25.9,0.,100.);
-	//RooRealVar ratio_sigma("ratio_sigma", "ratio_sigma", 1.,0.,50.);
 	RooRealVar ratio_sigma("ratio_sigma", "ratio_sigma", 4.81);
-	//RooRealVar fraction_sigma("fraction_sigma", "fraction_sigma", 0.5,0.,1.);
 	RooRealVar fraction_sigma("fraction_sigma", "fraction_sigma", 1);
 
 	RooRealVar f_1("f_{1}", "fraction1", 0.405, 0., 1.);
 
 	RooHILLdini RooHILLBkgShape("RooHILLBkgShape", "RooHILLBkgShape", Bs_MM, a, b, csi, shift, sigma_HILL, ratio_sigma, fraction_sigma );
-	RooHORNSdini RooHORNSBkgShape("RooHORNSBkgShape", "RooHORNSBkgShape", Bs_MM, a_HORNS, b_HORNS, csi_HORNS, shift, sigma_HORNS, ratio_sigma, fraction_sigma );
+	RooHORNSdini RooHORNSBkgShape("RooHORNSBkgShape", "RooHORNSBkgShape", Bs_MM, a, b, csi_HORNS, shift, sigma_HORNS, ratio_sigma, fraction_sigma );
 	RooAddPdf* pdf = new RooAddPdf("pdf", "pdf", RooArgList(RooHILLBkgShape, RooHORNSBkgShape), RooArgList(f_1),kTRUE);
 
 	
@@ -810,6 +811,10 @@ vector<double> fitPartRecoBkgShapeHILLHORN(){
 	frame_m->Draw();
 	c1->Print("eps/BkgShape/Bs2Dsstartpipipi_HORNHILL.eps");
 
+	Bs_MM.setRange("signal_range",min_MM,max_MM);
+	double eff_signal_range = pdf->createIntegral(Bs_MM,NormSet(Bs_MM),Range("signal_range"))->getVal();
+	cout << "eff_signal_range" << eff_signal_range << endl;
+
 	/// Return fit parameters
 	vector<double> params;
 	params.push_back(a.getVal());
@@ -823,6 +828,8 @@ vector<double> fitPartRecoBkgShapeHILLHORN(){
 	params.push_back(b_HORNS.getVal());
 	params.push_back(csi_HORNS.getVal());
 	params.push_back(sigma_HORNS.getVal());
+	params.push_back(f_1.getVal());
+	params.push_back(eff_signal_range);
 
 	file->Close();
 	
@@ -833,6 +840,7 @@ vector< vector<double> > fitNorm(){
 
 	/// Options
 	NamedParameter<int> fixExpBkgFromSidebands("fixExpBkgFromSidebands", 0);
+	NamedParameter<int> useExpBkgShape("useExpBkgShape", 0);
         NamedParameter<int> ignorePartRecoBkg("ignorePartRecoBkg", 0);
 	NamedParameter<int> numCPU("numCPU", 6);
 	NamedParameter<int> sWeight("sWeightNorm", 0);
@@ -881,6 +889,7 @@ vector< vector<double> > fitNorm(){
 		chain->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_12.root");
 		chain->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_15.root");
 		chain->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_16.root");
+		chain->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_17.root");
 		tree = (TTree*) chain;
 	}
 	else{
@@ -929,10 +938,6 @@ vector< vector<double> > fitNorm(){
 	RooJohnsonSU signal_B0("signal_B0","signal_B0",DTF_Bs_M, mean_B0,sigma,alpha,beta);
 
 	/// Combinatorial bkg pdf
-// 	RooRealVar exp_par("exp_par","#lambda",-1.6508e-03,-10.,0.);	
-// 	RooExponential bkg_exp("bkg_exp","exponential bkg",DTF_Bs_M,exp_par);
-// 	bkg_exp.fitTo(*data,Save(kTRUE),Range(5600.,5800.));
-
 	RooRealVar exp_par1("exp_par1","exp_par1",-1.6508e-03,-10.,10.);	
 	RooRealVar exp_par("exp_par","exp_par",0.);	
 	RooExponential bkg_exp1("bkg_exp1","bkg_exp1",DTF_Bs_M,exp_par);
@@ -941,6 +946,13 @@ vector< vector<double> > fitNorm(){
 
 	RooChebychev bkg_exp2("bkg_exp2","bkg_exp2",DTF_Bs_M,RooArgList(exp_par2,exp_par3));
 	RooRealVar f_bkg_exp("f_bkg_exp", "f_bkg_exp", 0.);
+
+	/// use only expo Bkg for Systematics
+	if(useExpBkgShape){
+		 f_bkg_exp.setVal(1);
+		 f_bkg_exp.setConstant();
+	}
+
 	RooAddPdf bkg_exp("bkg_exp", "bkg_exp", RooArgList(bkg_exp1, bkg_exp2), RooArgList(f_bkg_exp));
 
 	/// Part. reco bkg
@@ -951,12 +963,12 @@ vector< vector<double> > fitNorm(){
 	RooRealVar mean3("mean3","mu", bkg_partReco_params[2]);
 	RooRealVar sigmaL1("sigmaL1", "sigmaL1",  bkg_partReco_params[3]);
 	RooRealVar sigmaR1("sigmaR1", "sigmaR1",  bkg_partReco_params[4]);
-	RooRealVar sigmaL2("sigmaL2", "sigmaL2",  bkg_partReco_params[5]);//, bkg_partReco_params[5]*0.,bkg_partReco_params[5]*5);
-	RooRealVar sigmaR2("sigmaR2", "sigmaR2",  bkg_partReco_params[6]);//, bkg_partReco_params[6]*0.,bkg_partReco_params[6]*2.);
-	RooRealVar sigmaL3("sigmaL3", "sigmaL3",  bkg_partReco_params[7]);//,bkg_partReco_params[7]*0.5,bkg_partReco_params[7]*2.);
-	RooRealVar sigmaR3("sigmaR3", "sigmaR3",  bkg_partReco_params[8]);// ,bkg_partReco_params[8]*0.5,bkg_partReco_params[8]*2.);
-	RooRealVar f_1("f_1", "f_1", bkg_partReco_params[9]);//,0,1);
-	RooRealVar f_2("f_2", "f_2", bkg_partReco_params[10]);//,0,1);
+	RooRealVar sigmaL2("sigmaL2", "sigmaL2",  bkg_partReco_params[5]);
+	RooRealVar sigmaR2("sigmaR2", "sigmaR2",  bkg_partReco_params[6]);
+	RooRealVar sigmaL3("sigmaL3", "sigmaL3",  bkg_partReco_params[7]);
+	RooRealVar sigmaR3("sigmaR3", "sigmaR3",  bkg_partReco_params[8]);
+	RooRealVar f_1("f_1", "f_1", bkg_partReco_params[9]);
+	RooRealVar f_2("f_2", "f_2", bkg_partReco_params[10]);
 
 	RooRealVar scale_mean_partReco("scale_mean_partReco", "scale_mean_partReco", 1.);
 	RooRealVar scale_sigma_partReco("scale_sigma_partReco", "scale_sigma_partReco", 1.,0.5,2.);
@@ -978,10 +990,11 @@ vector< vector<double> > fitNorm(){
 	///alternative modelling using RooHILLdini & RooHORNSdini 
 	if(altPartBkg) bkg_partReco_params = fitPartRecoBkgShapeHILLHORN();
 
+	RooRealVar scale_csi_partReco("scale_csi_partReco", "scale_csi_partReco", 1.,0.5,2.);
+	RooRealVar scale_a_partReco("scale_a_partReco", "scale_a_partReco", 1.,0.5,2.);
+
 	RooRealVar a("a","a", bkg_partReco_params[0]);
 	RooRealVar b("b","b", bkg_partReco_params[1]);
-	RooRealVar a_HORNS("a_HORNS","a_HORNS", bkg_partReco_params[7]);
-	RooRealVar b_HORNS("b_HORNS","b_HORNS", bkg_partReco_params[8]);
 	RooRealVar csi("csi","csi", bkg_partReco_params[2]);
 	RooRealVar csi_HORNS("csi_HORNS","csi_HORNS", bkg_partReco_params[9]);
 	RooRealVar shift("shift","shift", bkg_partReco_params[3]);
@@ -989,10 +1002,17 @@ vector< vector<double> > fitNorm(){
 	RooRealVar sigma_HORNS("sigma_HORNS", "sigma_HORNS", bkg_partReco_params[10]);
 	RooRealVar ratio_sigma("ratio_sigma", "ratio_sigma",bkg_partReco_params[5]);
 	RooRealVar fraction_sigma("fraction_sigma", "fraction_sigma", bkg_partReco_params[6]);
+	RooRealVar f_1_altBkg("f_1_altBkg", "f_1_altBkg", bkg_partReco_params[11]);
 
-	RooHILLdini RooHILLBkgShape("RooHILLBkgShape", "RooHILLBkgShape", DTF_Bs_M, a, b, csi, shift, sigma_HILL, ratio_sigma, fraction_sigma );
-	RooHORNSdini RooHORNSBkgShape("RooHORNSBkgShape", "RooHORNSBkgShape", DTF_Bs_M, a_HORNS, b_HORNS, csi_HORNS, shift, sigma_HORNS, ratio_sigma, fraction_sigma );
-	RooAddPdf* bkg_partReco_alt2= new RooAddPdf("bkg_partReco_alt2", "bkg_partReco_alt2", RooArgList(RooHILLBkgShape, RooHORNSBkgShape), RooArgList(f_1),kTRUE);
+	RooFormulaVar sigma_HILL_scaled("sigma_HILL_scaled", "@0 * @1", RooArgSet(scale_sigma_partReco,sigma_HILL));
+	RooFormulaVar sigma_HORNS_scaled("sigma_HORNS_scaled", "@0 * @1",RooArgSet(scale_sigma_partReco,sigma_HORNS));
+	RooFormulaVar csi_scaled("csi_HILL_scaled", "@0 * @1", RooArgSet(scale_csi_partReco,csi));
+	RooFormulaVar csi_HORNS_scaled("csi_HORNS_scaled", "@0 * @1",RooArgSet(scale_csi_partReco,csi_HORNS));
+	RooFormulaVar a_scaled("a_scaled","@0 * @1", RooArgSet(scale_a_partReco,a));
+
+	RooHILLdini RooHILLBkgShape("RooHILLBkgShape", "RooHILLBkgShape", DTF_Bs_M, a_scaled, b, csi_scaled, shift, sigma_HILL_scaled, ratio_sigma, fraction_sigma );
+	RooHORNSdini RooHORNSBkgShape("RooHORNSBkgShape", "RooHORNSBkgShape", DTF_Bs_M, a_scaled, b, csi_HORNS_scaled, shift, sigma_HORNS_scaled, ratio_sigma, fraction_sigma );
+	RooAddPdf* bkg_partReco_alt2= new RooAddPdf("bkg_partReco_alt2", "bkg_partReco_alt2", RooArgList(RooHILLBkgShape, RooHORNSBkgShape), RooArgList(f_1_altBkg),kTRUE);
 	
 	/// used Part.reco bkg
 	RooAddPdf* bkg_partReco;
@@ -1585,18 +1605,35 @@ vector< vector<double> > fitNorm(){
 	signal_params.push_back(beta.getVal());
 
 	vector<double> partReco_params;
-	partReco_params.push_back(mean1.getVal());
-	partReco_params.push_back(mean2.getVal());
-	partReco_params.push_back(mean3.getVal());
-	partReco_params.push_back(sigmaL1.getVal());
-	partReco_params.push_back(sigmaR1.getVal());
-	partReco_params.push_back(sigmaL2.getVal());
-	partReco_params.push_back(sigmaR2.getVal());
-	partReco_params.push_back(sigmaL3.getVal());
-	partReco_params.push_back(sigmaR3.getVal());
-	partReco_params.push_back(f_1.getVal());
-	partReco_params.push_back(f_2.getVal());
-	partReco_params.push_back(bkg_partReco_params[11]);
+
+	if(!altPartBkg){
+		partReco_params.push_back(mean1.getVal());
+		partReco_params.push_back(mean2.getVal());
+		partReco_params.push_back(mean3.getVal());
+		partReco_params.push_back(sigmaL1.getVal());
+		partReco_params.push_back(sigmaR1.getVal());
+		partReco_params.push_back(sigmaL2.getVal());
+		partReco_params.push_back(sigmaR2_scaled.getVal());
+		partReco_params.push_back(sigmaL3.getVal());
+		partReco_params.push_back(sigmaR3_scaled.getVal());
+		partReco_params.push_back(f_1.getVal());
+		partReco_params.push_back(f_2.getVal());
+		partReco_params.push_back(bkg_partReco_params[11]);
+	}
+
+	if(altPartBkg){
+		partReco_params.push_back(a_scaled.getVal());
+		partReco_params.push_back(b.getVal());
+		partReco_params.push_back(csi_scaled.getVal());
+		partReco_params.push_back(shift.getVal());
+		partReco_params.push_back(sigma_HILL_scaled.getVal());
+		partReco_params.push_back(ratio_sigma.getVal());
+		partReco_params.push_back(fraction_sigma.getVal());
+		partReco_params.push_back(csi_HORNS_scaled.getVal());
+		partReco_params.push_back(sigma_HORNS_scaled.getVal());
+		partReco_params.push_back(f_1_altBkg.getVal());
+		partReco_params.push_back(bkg_partReco_params[12]);
+	}
 
 	vector< vector <double> > return_vec;
 	return_vec.push_back(signal_yields);
@@ -1694,6 +1731,8 @@ vector< vector<double> > fitNorm(){
 void fitSignal(){
 
 	///Options
+	NamedParameter<int> useExpBkgShape("useExpBkgShape", 0);
+        NamedParameter<int> altPartBkg("altPartBkg", 0);
 	NamedParameter<int> numCPU("numCPU", 6);
 	NamedParameter<int> sWeight("sWeightSignal", 0);
 	NamedParameter<int> nBins("nBins", 80);
@@ -1747,13 +1786,15 @@ void fitSignal(){
 	tree->SetBranchStatus("run",1);
 
         RooRealVar DTF_Bs_M("Bs_DTF_MM", "m(D_{s}^{-}K^{+}#pi^{+}#pi^{-})", min_MM, max_MM,"MeV/c^{2}");
-        RooRealVar BDTG_response("BDTG", "BDTG", 0.);        
+        RooRealVar BDTG_response("BDTG", "BDTG", -1.,1.);        
         RooRealVar K_plus_PIDK("K_plus_PIDK", "K_plus_PIDK", 0.);        
         RooRealVar pi_plus_PIDK("pi_plus_PIDK", "pi_plus_PIDK", 0.);        
         RooRealVar pi_minus_PIDK("pi_minus_PIDK", "pi_minus_PIDK", 0.);        
 
 	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState_mod,year,TriggerCat,run,pi_minus_PIDK);
 	RooDataSet*  data = new RooDataSet("data","data",tree,list,((string)cut_BDT + " && pi_minus_PIDK < 0").c_str() );	
+	cout << data->numEntries() << endl;
+
 
 	/// Fit normalization mode first
 	vector< vector <double> > norm_paramSet = fitNorm();
@@ -1789,11 +1830,24 @@ void fitSignal(){
 
 	RooChebychev bkg_exp2("bkg_exp2","bkg_exp2",DTF_Bs_M,RooArgList(exp_par2,exp_par3));
 	RooRealVar f_bkg_exp("f_bkg_exp", "f_bkg_exp", 0.);
+
+	/// use only expo Bkg for Systematics
+	if(useExpBkgShape){
+		 f_bkg_exp.setVal(1);
+		 f_bkg_exp.setConstant();
+	}
+
 	RooAddPdf bkg_exp("bkg_exp", "bkg_exp", RooArgList(bkg_exp1, bkg_exp2), RooArgList(f_bkg_exp));
 	//if(!constrainCombBkgFromSS)bkg_exp.fitTo(*data,Save(kTRUE),Range(5500.,5700.));
 
 	/// Part. reco bkg
 	vector<double> bkg_partReco_params = norm_paramSet[3];
+
+	RooRealVar partReco_f("partReco_f", "partReco_f", 0.9,0,1);
+	double eff_bkg_partReco_inSigRange = 0.;
+
+
+	/// default parametrization
 	RooRealVar mean1("mean1","mean1", bkg_partReco_params[0]);
 	RooRealVar mean2("mean2","mean2", bkg_partReco_params[1]);
 	RooRealVar mean3("mean3","mean3", bkg_partReco_params[2]);
@@ -1808,8 +1862,9 @@ void fitSignal(){
 	RooRealVar sigmaR3("sigmaR3", "sigmaR3",  bkg_partReco_params[8]);
 	RooRealVar f_1("f_1", "f_1", bkg_partReco_params[9]);
 	RooRealVar f_2("f_2", "f_2", bkg_partReco_params[10]);
-	double eff_bkg_partReco_inSigRange = bkg_partReco_params[11];
+	if(!altPartBkg) eff_bkg_partReco_inSigRange = bkg_partReco_params[11];
 
+	
 	RooBifurGauss BifGauss1_Bs("BifGauss1_Bs","BifGauss1_Bs", DTF_Bs_M, mean1, sigmaL1,sigmaR1);
 	RooBifurGauss BifGauss2_Bs("BifGauss2_Bs","BifGauss2_Bs", DTF_Bs_M, mean2, sigmaL2,sigmaR2);
 	RooBifurGauss BifGauss3_Bs("BifGauss3_Bs","BifGauss3_Bs", DTF_Bs_M, mean3, sigmaL3,sigmaR3);
@@ -1820,8 +1875,35 @@ void fitSignal(){
 	RooBifurGauss BifGauss3_B0("BifGauss3_B0","BifGauss3_B0", DTF_Bs_M, mean3Shifted, sigmaL3,sigmaR3);
 	RooAddPdf bkg_partReco_B0("bkg_partReco_B0", "bkg_partReco_B0", RooArgList(BifGauss1_B0, BifGauss2_B0, BifGauss3_B0), RooArgList(f_1,f_2));
 
-	RooRealVar partReco_f("partReco_f", "partReco_f", 0.9,0,1);
-	RooAddPdf bkg_partReco("bkg_partReco", "bkg_partReco", RooArgList(bkg_partReco_Bs, bkg_partReco_B0), RooArgList(partReco_f));
+
+	/// alternative part. reco bkg for systematics
+	RooRealVar a("a","a", bkg_partReco_params[0]);
+	RooRealVar b("b","b", bkg_partReco_params[1]);
+	RooRealVar aShifted("aShifted","aShifted", a.getVal() - 87.33);
+	RooRealVar bShifted("bShifted","bShifted", b.getVal() - 87.33);
+	RooRealVar csi("csi","csi", bkg_partReco_params[2]);
+	RooRealVar csi_HORNS("csi_HORNS","csi_HORNS", bkg_partReco_params[7]);
+	RooRealVar shift("shift","shift", bkg_partReco_params[3]);
+	RooRealVar sigma_HILL("sigma_HILL", "sigma_HILL", bkg_partReco_params[4]);
+	RooRealVar sigma_HORNS("sigma_HORNS", "sigma_HORNS", bkg_partReco_params[8]);
+	RooRealVar ratio_sigma("ratio_sigma", "ratio_sigma",bkg_partReco_params[5]);
+	RooRealVar fraction_sigma("fraction_sigma", "fraction_sigma", bkg_partReco_params[6]);
+	RooRealVar f_1_altBkg("f_1_altBkg", "f_1_altBkg", bkg_partReco_params[9]);
+	if(altPartBkg) eff_bkg_partReco_inSigRange = bkg_partReco_params[10];
+
+	RooHILLdini RooHILLBkgShape("RooHILLBkgShape", "RooHILLBkgShape", DTF_Bs_M, a, b, csi, shift, sigma_HILL, ratio_sigma, fraction_sigma );
+	RooHORNSdini RooHORNSBkgShape("RooHORNSBkgShape", "RooHORNSBkgShape", DTF_Bs_M, a, b, csi_HORNS, shift, sigma_HORNS, ratio_sigma, fraction_sigma );
+	RooAddPdf bkg_partRecoHillHorn_Bs("bkg_partRecoHillHorn_Bs", "bkg_partRecoHillHorn_Bs", RooArgList(RooHILLBkgShape, RooHORNSBkgShape), RooArgList(f_1_altBkg),kTRUE);
+
+	RooHILLdini RooHILLBkgShape_B0("RooHILLBkgShape_B0", "RooHILLBkgShape_B0", DTF_Bs_M, aShifted, bShifted, csi, shift, sigma_HILL, ratio_sigma, fraction_sigma );
+	RooHORNSdini RooHORNSBkgShape_B0("RooHORNSBkgShape_B0", "RooHORNSBkgShape_B0", DTF_Bs_M, aShifted, bShifted, csi_HORNS, shift, sigma_HORNS, ratio_sigma, fraction_sigma );
+	RooAddPdf bkg_partRecoHillHorn_B0("bkg_partRecoHillHorn_B0", "bkg_partRecoHillHorn_B0", RooArgList(RooHILLBkgShape_B0, RooHORNSBkgShape_B0), RooArgList(f_1_altBkg),kTRUE);
+
+
+	RooAddPdf* bkg_partReco;
+	if(!altPartBkg) bkg_partReco = new RooAddPdf("bkg_partReco", "bkg_partReco", RooArgList(bkg_partReco_Bs, bkg_partReco_B0), RooArgList(partReco_f));
+	else bkg_partReco = new RooAddPdf("bkg_partReco", "bkg_partReco", RooArgList(bkg_partRecoHillHorn_Bs, bkg_partRecoHillHorn_B0), RooArgList(partReco_f));
+
 
 	/// MisID bkg
 	double fake_prob_Ds = prepareMisIdBkgShape("Ds3pi");
@@ -1869,7 +1951,7 @@ void fitSignal(){
 	RooRealVar n_partReco_bkg("n_partReco_bkg", "n_partReco_bkg", data->numEntries()/6., 100., data->numEntries());
 	RooRealVar n_misID_bkg("n_misID_bkg", "n_misID_bkg", data->numEntries()*0.01, 0., data->numEntries()*0.25);
 
-	RooAddPdf pdf("pdf", "pdf", RooArgList(signal, signal_B0, bkg_exp, bkg_partReco, bkg_misID), RooArgList(n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg));
+	RooAddPdf pdf("pdf", "pdf", RooArgList(signal, signal_B0, bkg_exp, *bkg_partReco, bkg_misID), RooArgList(n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg));
 
 	/// Generate simultaneous pdf out of prototype pdf 
   	RooSimPdfBuilder* mgr = new RooSimPdfBuilder(pdf) ;
@@ -2280,7 +2362,7 @@ void fitSignal(){
 		tree->SetBranchStatus("*",1);
 		tree->SetBranchStatus("weight",0);
 
-		out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && " + (string)cut_BDT ).c_str() );
+		out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && " + (string)cut_BDT + " && pi_minus_PIDK < 0").c_str());
     		b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
     		b_w = out_tree->Branch("weight", &sw_B0, "weight/D");
 

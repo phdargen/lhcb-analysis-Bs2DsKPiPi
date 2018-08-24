@@ -1,25 +1,28 @@
 * general options
-"channel"	"Signal"
+"channel"	"Norm"
 "nBins"		100
 "min_MM"	5200.
 "max_MM"	5700.
 "cut_BDT_MC" 	0.3
 *"cut_BDT" 	"BDTG > 0.3"
-"cut_BDT" 	"(run ==1 && TriggerCat == 0 && BDTG > 0.45) || (run ==1 && TriggerCat == 1 && BDTG > 0.45) || (run ==2 && TriggerCat == 0 && BDTG > 0.35) || (run ==2 && TriggerCat == 1 && BDTG > 0.45)"
+"cut_BDT" 	"(run ==1 && TriggerCat == 0 && BDTG > 0.45) || (run ==1 && TriggerCat == 1 && BDTG > 0.50) || (run ==2 && TriggerCat == 0 && BDTG > 0.35) || (run ==2 && TriggerCat == 1 && BDTG > 0.50)"
 "optimizeBDT"		0
 
 "numCPU"	 10
 "newTable"	0
-"updateAnaNotePlots"  1
+"updateAnaNotePlots"  0
 "useTriggerCat"		1
+
+* for Systematics
+"useExpBkgShape"	0
 
 * Norm fit :
 "fixExpBkgFromSidebands"	 0
-"sWeightNorm"	 0
+"sWeightNorm"	 1
 "altPartBkg"     0
 "useB0"     	 1	
 "fixSignalShapeFromMC"	 0
-*"outFileNameNorm"	"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"outFileNameNorm"	"/auto/data/kecke/BsDspipipi_test.root"
 
 * Signal fit:
 "fixMisIDyields"	1
@@ -28,6 +31,7 @@
 "constrainCombBkgFromSS"	0
 
 "sWeightSignal"	 	0
+"outFileNameSignal"	"/auto/data/kecke/Bs2DsKpipi_test.root"
 *"inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/BDT/Data/signal.root"
 
 * MC fit:
