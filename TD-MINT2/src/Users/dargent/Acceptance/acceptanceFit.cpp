@@ -61,6 +61,7 @@
 #include "RooKeysPdf.h"
 #include "RooBDecay.h"
 #include "RooProdPdf.h"
+#include "RooMultiVarGaussian.h"
 #ifndef __CINT__
 #include "RooGlobalFunc.h"
 #endif
@@ -80,10 +81,15 @@ using namespace MINT;
 
 /// HFLAV summer 17 values
 double tau = 1.509;
-double dgamma = 0.09; 
+double sigma_tau = 0.004;
+double Gamma = 0.6629;
+double sigma_Gamma = 0.0018;
+double dgamma = -0.088; 
+double sigma_dgamma = 0.006;
 double deltaMs = 17.757;
 
-double tau_B0 = 1.518;
+double tau_B0 = 1.520;
+double sigma_tau_B0 = 0.004;
 double dgamma_B0 = 0.0; 
 double deltaMd = 0.0;
 
@@ -292,8 +298,21 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
         RooFormulaVar dt_scaled( "dt_scaled","dt_scaled", "@0+@1*@2",RooArgList(trm_offset,trm_scale,Bs_TAUERR));
         RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *spl, RooRealConstant::value(0.), dt_scaled, trm_mean, RooRealConstant::value(1.) );
 	
-	RooBDecay* timePdf = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, RooRealConstant::value(tau),
-			RooRealConstant::value(dgamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
+	RooRealVar Gamma("Gamma","Gamma",0.6643);
+	RooRealVar DeltaGamma("DeltaGamma","DeltaGamma",-0.083);
+        RooFormulaVar Tau( "Tau","Tau", "1./@0",RooArgList(Gamma));
+
+	TMatrixDSym cov(2);
+	cov[0][0] = pow(0.0020,2) ;
+	cov[0][1] = -0.239 * 0.0020 * 0.006 ;
+ 	cov[1][0] = -0.239 * 0.0020 * 0.006 ;
+	cov[1][1] = pow(0.006,2) ;
+
+	RooMultiVarGaussian* gauss_cov = new RooMultiVarGaussian("gauss_cov","gauss_cov",RooArgList(Gamma,DeltaGamma), RooArgList(RooRealConstant::value(0.6643),RooRealConstant::value(-0.083)), cov);
+
+
+	RooBDecay* timePdf = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, Tau, DeltaGamma,
+			RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
 			RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMs),
 			trm, RooBDecay::SingleSided);
 	
@@ -314,9 +333,11 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	RooProdPdf* totPdf= new RooProdPdf("totPdf","totPdf",RooArgSet(*pdf_sigma_t),Conditional(RooArgSet(*timePdf),RooArgSet(Bs_TAU)));
         
 	///Fit and Print
-	RooFitResult *myfitresult = totPdf->fitTo(*dataset, Save(1), Optimize(2), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
+	///Fit and Print
+// 	RooFitResult *myfitresult = totPdf->fitTo(*dataset, Save(1), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU),ExternalConstraints(*gauss_cov));
+	RooFitResult *myfitresult = totPdf->fitTo(*dataset, Save(1), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
 	myfitresult->Print("v");
-	
+
 	//put coefficients into vector
 	vector<double> myCoeffs,myCoeffsErr;
 	for(int i= 0; i< values.size()+2; i++){
@@ -459,7 +480,7 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 		<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
 	}
 
-	//save correlations and cholevsky decomposition of covariance matrix
+	//save correlations 
 	ofstream correlationFile;
 	correlationFile.open(("Correlations_" + marginalPdfsPrefix + ".txt").c_str(),std::ofstream::trunc);
 	correlationFile << "\"";
@@ -469,41 +490,11 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 		}
 	}
 	correlationFile << "\"";
-
-	TMatrixDSym covarianceMatrix = myfitresult->covarianceMatrix();
-	TDecompChol* cholesky_decomp = new TDecompChol(covarianceMatrix);
-	cholesky_decomp->Decompose();
-        TMatrixD cholesky_U = cholesky_decomp->GetU();
-
-	ofstream choleskyFile;
-	choleskyFile.open(("choleskyFile_" + marginalPdfsPrefix + ".txt").c_str(),std::ofstream::trunc);
-	choleskyFile << "\"";
-	choleskyFile << cholesky_U(0,0) << " " << cholesky_U(0,1) << " " << cholesky_U(0,2) << " " << cholesky_U(0,3);
-	choleskyFile << " " << cholesky_U(1,0) << " " << cholesky_U(1,1) << " " << cholesky_U(1,2) << " " << cholesky_U(1,3);
-	choleskyFile << " " << cholesky_U(2,0) << " " << cholesky_U(2,1) << " " << cholesky_U(2,2) << " " << cholesky_U(2,3);
-	choleskyFile << " " << cholesky_U(3,0) << " " << cholesky_U(3,1) << " " << cholesky_U(3,2) << " " << cholesky_U(3,3);
-	choleskyFile << "\"";
-
-// 	TFile* output = new TFile("dummy.root","RECREATE");
-// 	TTree* out_tree = tree->CopyTree("");
-// 	double eff_weight,t;
-//         TBranch* b_eff_weight = out_tree->Branch("eff_weight",&eff_weight,"eff_weight/D");
-// 	out_tree->SetBranchAddress("Bs_DTF_TAU",&t);
-// 
-// 	for(int i= 0; i< out_tree->GetEntries();i++){
-// 		out_tree->GetEntry(i);
-// 		Bs_TAU.setVal(t);
-// 		eff_weight = 1./spl->getVal();
-// 		b_eff_weight->Fill();
-// 	}
-// 
-// 	out_tree->Write();
-// 	output->Close();
 	
 	return myCoeffsAndErr;
 }
 
-void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfsPrefix, double offset_dt, double scale_dt , double offset_dt_MC, double scale_dt_MC ){
+RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfsPrefix, double offset_dt, double scale_dt , double offset_dt_MC, double scale_dt_MC, double Tau, double DeltaGamma, bool plot = true ){
     
     // Options
     NamedParameter<string> BinningName("BinningName",(string)"default");
@@ -699,8 +690,8 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
                                         RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMd),
                                         trm_signal_B0, RooBDecay::SingleSided);
                                         
-    RooBDecay* time_pdf_norm = new RooBDecay("time_pdf_norm", "time_pdf_norm", Bs_TAU, RooRealConstant::value(tau),
-                                        RooRealConstant::value(dgamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
+    RooBDecay* time_pdf_norm = new RooBDecay("time_pdf_norm", "time_pdf_norm", Bs_TAU, RooRealConstant::value(Tau),
+                                        RooRealConstant::value(DeltaGamma), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
                                         RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMs),
                                         trm_norm, RooBDecay::SingleSided);
                                         
@@ -758,6 +749,8 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
     RooFitResult *myfitresult = simPdf->fitTo(*dataset, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Extended(kFALSE));
     myfitresult->Print("v");
     
+    if(!plot)return myfitresult;
+
     /// Plot    
     vector<TString> decays;
     decays.push_back("signal_mc");
@@ -810,7 +803,7 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
         frame_m->GetYaxis()->SetTitleOffset(0.95);
                 
 	if(decays[i]=="signal_B0" && !fitB0){
-        	data->plotOn(frame_m, Binning(nBins/2), Name("data_"+decays[i]));
+        	data->plotOn(frame_m, Binning(nBins/3), Name("data_"+decays[i]));
 		pdf_signal_B0->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]));
 	}
 	else{
@@ -965,6 +958,7 @@ void fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfs
 	<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
     }
 
+    return myfitresult;
 }
 
 void compareAcceptance(){
@@ -1297,16 +1291,14 @@ void produceMarginalPdfs(){
 
     /// Load files
     // Data
-    int q_OS;
-    Short_t q_SS;
-    double w_OS;
-    Float_t w_SS;
+    Int_t q_OS,f,Ds_ID,q_SS;
+    Double_t w_OS,w_SS;
     double sw;
     int run,year,Ds_finalState,trigger;
     double t,dt;
     
     TChain* tree_norm=new TChain("DecayTree");
-    tree_norm->Add( ((string)InputDir + "Data/norm.root").c_str());
+    tree_norm->Add( ((string)InputDir + "Data/norm_tagged.root").c_str());
     tree_norm->SetBranchStatus("*",0);
     tree_norm->SetBranchStatus("N_Bs_sw",1);
     tree_norm->SetBranchStatus("year",1);
@@ -1316,22 +1308,24 @@ void produceMarginalPdfs(){
     tree_norm->SetBranchStatus("*TAU*",1);
     tree_norm->SetBranchStatus("run",1);
     tree_norm->SetBranchStatus("TriggerCat",1);
-    
-    tree_norm->SetBranchAddress("Bs_"+prefix+"TAGDECISION_OS",&q_OS);
-    tree_norm->SetBranchAddress("Bs_"+prefix+"TAGOMEGA_OS",&w_OS);
-    tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_DEC",&q_SS);
-    tree_norm->SetBranchAddress("Bs_"+prefix+"SS_nnetKaon_PROB",&w_SS);
+    tree_norm->SetBranchStatus("Ds_ID",1);
+
+    tree_norm->SetBranchAddress("OS_Combination_DEC",&q_OS);
+    tree_norm->SetBranchAddress("OS_Combination_PROB",&w_OS);
+    tree_norm->SetBranchAddress("SS_Kaon_DEC",&q_SS);
+    tree_norm->SetBranchAddress("SS_Kaon_PROB",&w_SS);
     tree_norm->SetBranchAddress("N_Bs_sw",&sw);
     tree_norm->SetBranchAddress("year",&year);
     tree_norm->SetBranchAddress("run",&run);
     tree_norm->SetBranchAddress("Ds_finalState",&Ds_finalState);
-    tree_norm->SetBranchAddress("Bs_DTF_TAU",&t);
-    tree_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+    tree_norm->SetBranchAddress("Bs_BsDTF_TAU",&t);
+    tree_norm->SetBranchAddress("Bs_BsDTF_TAUERR",&dt);
     tree_norm->SetBranchAddress("TriggerCat",&trigger);
-    
+    tree_norm->SetBranchAddress("Ds_ID",&Ds_ID);
+
     ///Make histograms
     int bins = 60;
-    TH1D* h_w_OS_norm = new TH1D("h_w_OS_norm","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm = new TH1D("h_w_OS_norm_comb","; #eta_{OS}",bins,0,0.5);
     TH1D* h_w_OS_norm_Run1 = new TH1D("h_w_OS_norm_Run1","; #eta_{OS}",bins,0,0.5);
     TH1D* h_w_OS_norm_Run2 = new TH1D("h_w_OS_norm_Run2","; #eta_{OS}",bins,0,0.5);
     TH1D* h_w_OS_norm_Run1_t0 = new TH1D("h_w_OS_norm_Run1_t0","; #eta_{OS}",bins,0,0.5);
@@ -1339,7 +1333,7 @@ void produceMarginalPdfs(){
     TH1D* h_w_OS_norm_Run1_t1 = new TH1D("h_w_OS_norm_Run1_t1","; #eta_{OS}",bins,0,0.5);
     TH1D* h_w_OS_norm_Run2_t1 = new TH1D("h_w_OS_norm_Run2_t1","; #eta_{OS}",bins,0,0.5);
     
-    TH1D* h_w_SS_norm = new TH1D("h_w_SS_norm","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm = new TH1D("h_w_SS_norm_comb","; #eta_{SS}",bins,0,0.5);
     TH1D* h_w_SS_norm_Run1 = new TH1D("h_w_SS_norm_Run1","; #eta_{SS}",bins,0,0.5);
     TH1D* h_w_SS_norm_Run2 = new TH1D("h_w_SS_norm_Run2","; #eta_{SS}",bins,0,0.5);
     TH1D* h_w_SS_norm_Run1_t0 = new TH1D("h_w_SS_norm_Run1_t0","; #eta_{SS}",bins,0,0.5);
@@ -1347,7 +1341,7 @@ void produceMarginalPdfs(){
     TH1D* h_w_SS_norm_Run1_t1 = new TH1D("h_w_SS_norm_Run1_t1","; #eta_{SS}",bins,0,0.5);
     TH1D* h_w_SS_norm_Run2_t1 = new TH1D("h_w_SS_norm_Run2_t1","; #eta_{SS}",bins,0,0.5);
     
-    TH1D* h_q_OS_norm = new TH1D("h_q_OS_norm","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm = new TH1D("h_q_OS_norm_comb","; q_{OS}",3,-1.5,1.5);
     TH1D* h_q_OS_norm_Run1 = new TH1D("h_q_OS_norm_Run1","; q_{OS}",3,-1.5,1.5);
     TH1D* h_q_OS_norm_Run2 = new TH1D("h_q_OS_norm_Run2","; q_{OS}",3,-1.5,1.5);
     TH1D* h_q_OS_norm_Run1_t0 = new TH1D("h_q_OS_norm_Run1_t0","; q_{OS}",3,-1.5,1.5);
@@ -1355,19 +1349,27 @@ void produceMarginalPdfs(){
     TH1D* h_q_OS_norm_Run1_t1 = new TH1D("h_q_OS_norm_Run1_t1","; q_{OS}",3,-1.5,1.5);
     TH1D* h_q_OS_norm_Run2_t1 = new TH1D("h_q_OS_norm_Run2_t1","; q_{OS}",3,-1.5,1.5);
     
-    TH1D* h_q_SS_norm = new TH1D("h_q_SS_norm","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm = new TH1D("h_q_SS_norm_comb","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm_Run1 = new TH1D("h_q_SS_norm_Run1","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm_Run2 = new TH1D("h_q_SS_norm_Run2","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm_Run1_t0 = new TH1D("h_q_SS_norm_Run1_t0","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm_Run2_t0 = new TH1D("h_q_SS_norm_Run2_t0","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm_Run1_t1 = new TH1D("h_q_SS_norm_Run1_t1","; q_{SS}",3,-1.5,1.5);
     TH1D* h_q_SS_norm_Run2_t1 = new TH1D("h_q_SS_norm_Run2_t1","; q_{SS}",3,-1.5,1.5);
+
+    TH1D* h_q_f_norm = new TH1D("h_q_f_norm_comb","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run1 = new TH1D("h_q_f_norm_Run1","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run2 = new TH1D("h_q_f_norm_Run2","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run1_t0 = new TH1D("h_q_f_norm_Run1_t0","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run2_t0 = new TH1D("h_q_f_norm_Run2_t0","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run1_t1 = new TH1D("h_q_f_norm_Run1_t1","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run2_t1 = new TH1D("h_q_f_norm_Run2_t1","; q_{f}",2,-2,2);
     
-    TH1D* h_t_norm = new TH1D("h_t_norm",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
+    TH1D* h_t_norm = new TH1D("h_t_norm_comb",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
     TH1D* h_t_norm_Run1 = new TH1D("h_t_norm_Run1",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
     TH1D* h_t_norm_Run2 = new TH1D("h_t_norm_Run2",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
 
-    TH1D* h_dt_norm = new TH1D("h_dt_norm",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm = new TH1D("h_dt_norm_comb",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
     TH1D* h_dt_norm_Run1 = new TH1D("h_dt_norm_Run1",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
     TH1D* h_dt_norm_Run2 = new TH1D("h_dt_norm_Run2",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
     TH1D* h_dt_norm_Run1_t0 = new TH1D("h_dt_norm_Run1_t0",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
@@ -1380,11 +1382,14 @@ void produceMarginalPdfs(){
     {    
         tree_norm->GetEntry(i);
         if(year < min_year || year > max_year) continue;
-        
+	if(Ds_ID>0)f = -1;
+	else f = 1;
+
         h_t_norm->Fill(t,sw);
         h_dt_norm->Fill(dt,sw);
         h_q_OS_norm->Fill((double)q_OS,sw);
         h_q_SS_norm->Fill((double)q_SS,sw);
+        h_q_f_norm->Fill((double)f,sw);
         if(q_OS != 0)h_w_OS_norm->Fill(w_OS,sw);
         if(q_SS != 0)h_w_SS_norm->Fill(w_SS,sw);
             
@@ -1393,12 +1398,14 @@ void produceMarginalPdfs(){
             h_dt_norm_Run1->Fill(dt,sw);
             h_q_OS_norm_Run1->Fill((double)q_OS,sw);
             h_q_SS_norm_Run1->Fill((double)q_SS,sw);
+	    h_q_f_norm_Run1->Fill((double)f,sw);
             if(q_OS != 0)h_w_OS_norm_Run1->Fill(w_OS,sw);
             if(q_SS != 0)h_w_SS_norm_Run1->Fill(w_SS,sw);
 	    if(trigger == 0){
 		h_dt_norm_Run1_t0->Fill(dt,sw);
             	h_q_OS_norm_Run1_t0->Fill((double)q_OS,sw);
             	h_q_SS_norm_Run1_t0->Fill((double)q_SS,sw);
+        	h_q_f_norm_Run1_t0->Fill((double)f,sw);
 	        if(q_OS != 0)h_w_OS_norm_Run1_t0->Fill(w_OS,sw);
                 if(q_SS != 0)h_w_SS_norm_Run1_t0->Fill(w_SS,sw);
 	    }
@@ -1406,6 +1413,7 @@ void produceMarginalPdfs(){
 		h_dt_norm_Run1_t1->Fill(dt,sw);
             	h_q_OS_norm_Run1_t1->Fill((double)q_OS,sw);
             	h_q_SS_norm_Run1_t1->Fill((double)q_SS,sw);
+       		h_q_f_norm_Run1_t1->Fill((double)f,sw);
 	        if(q_OS != 0)h_w_OS_norm_Run1_t1->Fill(w_OS,sw);
                 if(q_SS != 0)h_w_SS_norm_Run1_t1->Fill(w_SS,sw);
 	    }
@@ -1415,12 +1423,14 @@ void produceMarginalPdfs(){
             h_dt_norm_Run2->Fill(dt,sw);
             h_q_OS_norm_Run2->Fill((double)q_OS,sw);
             h_q_SS_norm_Run2->Fill((double)q_SS,sw);
+       	    h_q_f_norm_Run2->Fill((double)f,sw);
             if(q_OS != 0)h_w_OS_norm_Run2->Fill(w_OS,sw);
             if(q_SS != 0)h_w_SS_norm_Run2->Fill(w_SS,sw);
 	    if(trigger == 0){
 		h_dt_norm_Run2_t0->Fill(dt,sw);
             	h_q_OS_norm_Run2_t0->Fill((double)q_OS,sw);
             	h_q_SS_norm_Run2_t0->Fill((double)q_SS,sw);
+        	h_q_f_norm_Run2_t0->Fill((double)f,sw);
 	        if(q_OS != 0)h_w_OS_norm_Run2_t0->Fill(w_OS,sw);
                 if(q_SS != 0)h_w_SS_norm_Run2_t0->Fill(w_SS,sw);
 	    }
@@ -1428,6 +1438,7 @@ void produceMarginalPdfs(){
 		h_dt_norm_Run2_t1->Fill(dt,sw);
             	h_q_OS_norm_Run2_t1->Fill((double)q_OS,sw);
             	h_q_SS_norm_Run2_t1->Fill((double)q_SS,sw);
+        	h_q_f_norm_Run2_t1->Fill((double)f,sw);
 	        if(q_OS != 0)h_w_OS_norm_Run2_t1->Fill(w_OS,sw);
                 if(q_SS != 0)h_w_SS_norm_Run2_t1->Fill(w_SS,sw);
 	    }
@@ -1442,44 +1453,51 @@ void produceMarginalPdfs(){
     h_w_OS_norm->Write();
     h_q_SS_norm->Write();
     h_w_SS_norm->Write();
-    
+    h_q_f_norm->Write();
+
     h_t_norm_Run1->Write();
     h_dt_norm_Run1->Write();
     h_q_OS_norm_Run1->Write();
     h_w_OS_norm_Run1->Write();
     h_q_SS_norm_Run1->Write();
     h_w_SS_norm_Run1->Write();
+    h_q_f_norm_Run1->Write();
 
     h_dt_norm_Run1_t0->Write();
     h_q_OS_norm_Run1_t0->Write();
     h_w_OS_norm_Run1_t0->Write();
     h_q_SS_norm_Run1_t0->Write();
     h_w_SS_norm_Run1_t0->Write();
-   
+    h_q_f_norm_Run1_t0->Write();
+
     h_dt_norm_Run1_t1->Write();
     h_q_OS_norm_Run1_t1->Write();
     h_w_OS_norm_Run1_t1->Write();
     h_q_SS_norm_Run1_t1->Write();
     h_w_SS_norm_Run1_t1->Write();
-       
+    h_q_f_norm_Run1_t1->Write();
+
     h_t_norm_Run2->Write();
     h_dt_norm_Run2->Write();
     h_q_OS_norm_Run2->Write();
     h_w_OS_norm_Run2->Write();
     h_q_SS_norm_Run2->Write();
     h_w_SS_norm_Run2->Write();
+    h_q_f_norm_Run2->Write();
 
     h_dt_norm_Run2_t0->Write();
     h_q_OS_norm_Run2_t0->Write();
     h_w_OS_norm_Run2_t0->Write();
     h_q_SS_norm_Run2_t0->Write();
     h_w_SS_norm_Run2_t0->Write();
+    h_q_f_norm_Run2_t0->Write();
 
     h_dt_norm_Run2_t1->Write();
     h_q_OS_norm_Run2_t1->Write();
     h_w_OS_norm_Run2_t1->Write();
     h_q_SS_norm_Run2_t1->Write();
     h_w_SS_norm_Run2_t1->Write();
+    h_q_f_norm_Run2_t1->Write();
 
     out->Write();
 }
@@ -1615,6 +1633,7 @@ void checkPV(){
     
 }
 
+
 int main(int argc, char** argv){
     
     time_t startTime = time(0);
@@ -1625,6 +1644,7 @@ int main(int argc, char** argv){
     NamedParameter<int> CompareAcceptance("CompareAcceptance", 1);
     NamedParameter<int> FitSplineAccRatio("FitSplineAccRatio", 1);
     NamedParameter<int> FitSplineNorm("FitSplineNorm", 1);
+    NamedParameter<int> doSystematics("doSystematics", 0);
 
     NamedParameter<double> offset_sigma_dt("offset_sigma_dt", 0.0);
     NamedParameter<double> scale_sigma_dt("scale_sigma_dt", 1.2);
@@ -1641,26 +1661,151 @@ int main(int argc, char** argv){
     NamedParameter<double> offset_sigma_dt_Run2_MC("offset_sigma_dt_Run2_MC", 0.0);
     NamedParameter<double> scale_sigma_dt_Run2_MC("scale_sigma_dt_Run2_MC", 1.);
 
+    NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
+
     //checkPV(); 
     produceMarginalPdfs();
     if(CompareAcceptance)compareAcceptance();
 
     if(FitSplineAccRatio){
-	//fitSplineAccRatio("", "", "", "combined",(double) offset_sigma_dt, (double) scale_sigma_dt, (double) offset_sigma_dt, (double) scale_sigma_dt);
-	//fitSplineAccRatio(" run == 1 && TriggerCat == 0 " , "run == 1 && TriggerCat == 0", "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, (double) offset_sigma_dt_Run1_MC, (double) scale_sigma_dt_Run1_MC);
-	//fitSplineAccRatio(" run == 1 && TriggerCat == 1 " , "run == 1 && TriggerCat == 1", "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, (double) offset_sigma_dt_Run1_MC, (double) scale_sigma_dt_Run1_MC);
-	fitSplineAccRatio(" run == 2 && TriggerCat == 0 ","", "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC);
-	fitSplineAccRatio(" run == 2 && TriggerCat == 1 ","","Run2_t1",(double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC);
+
+	vector<string> dataCuts,mcCuts,marginalPdfs;
+	dataCuts.push_back(" run == 1 && TriggerCat == 0 ");
+	mcCuts.push_back(" run == 1 && TriggerCat == 0 ");
+	marginalPdfs.push_back("Run1_t0");
+
+	dataCuts.push_back(" run == 1 && TriggerCat == 1 ");
+	mcCuts.push_back(" run == 1 && TriggerCat == 1 ");
+	marginalPdfs.push_back("Run1_t1");
+
+	dataCuts.push_back(" run == 2 && TriggerCat == 0 ");
+	mcCuts.push_back("");
+	marginalPdfs.push_back("Run2_t0");
+
+	dataCuts.push_back(" run == 2 && TriggerCat == 1 ");
+	mcCuts.push_back("");
+	marginalPdfs.push_back("Run2_t1");
+
+	vector<TMatrixDSym*> cors_fit;
+	vector< vector<double>  > cors_Gamma;
+	vector< vector<double>  > cors_deltaGamma;
+
+	for(int opt = 0 ; opt < dataCuts.size(); opt++){
+		/// Baseline fit	
+		RooFitResult* result = fitSplineAccRatio(dataCuts[opt],mcCuts[opt], marginalPdfs[opt], (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC,1./Gamma,dgamma);
+	
+		TMatrixDSym cor(knot_positions.getVector().size());
+		vector<double> vals,errs;
+	
+		for(int i = 0; i < knot_positions.getVector().size(); i++){
+			vals.push_back( ((RooRealVar*)result->floatParsFinal().find(("coeff_"+anythingToString(i)).c_str()))->getVal());
+			errs.push_back( ((RooRealVar*)result->floatParsFinal().find(("coeff_"+anythingToString(i)).c_str()))->getError());
+			for(int j = 0; j < knot_positions.getVector().size(); j++){
+				cor[i][j] = result->correlation(("coeff_"+anythingToString(i)).c_str(),("coeff_"+anythingToString(j)).c_str());
+			}
+		}
+		cors_fit.push_back(new TMatrixDSym(cor));
+	
+		/// Gamma +/- 1 sigma fits
+		vector<double> vals_sigma_Gamma_p,vals_sigma_Gamma_m;
+	
+		if(doSystematics)result = fitSplineAccRatio(dataCuts[opt],mcCuts[opt], marginalPdfs[opt], (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC,1./(Gamma+sigma_Gamma),dgamma,false);
+	
+		for(int i = 0; i < knot_positions.getVector().size(); i++)
+			vals_sigma_Gamma_p.push_back( ((RooRealVar*)result->floatParsFinal().find(("coeff_"+anythingToString(i)).c_str()))->getVal());
+		
+	
+	
+		if(doSystematics)result = fitSplineAccRatio(dataCuts[opt],mcCuts[opt], marginalPdfs[opt], (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC,1./(Gamma-sigma_Gamma),dgamma,false);
+	
+		for(int i = 0; i < knot_positions.getVector().size(); i++)
+			vals_sigma_Gamma_m.push_back( ((RooRealVar*)result->floatParsFinal().find(("coeff_"+anythingToString(i)).c_str()))->getVal());
+		
+	
+		/// deltaGamma +/- 1 sigma fits
+		vector<double> vals_sigma_deltaGamma_p,vals_sigma_deltaGamma_m;
+	
+		if(doSystematics)result = fitSplineAccRatio(dataCuts[opt],mcCuts[opt], marginalPdfs[opt], (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC,1./Gamma,dgamma+sigma_dgamma,false);
+	
+		for(int i = 0; i < knot_positions.getVector().size(); i++)
+			vals_sigma_deltaGamma_p.push_back( ((RooRealVar*)result->floatParsFinal().find(("coeff_"+anythingToString(i)).c_str()))->getVal());
+		
+	
+	
+		if(doSystematics)result = fitSplineAccRatio(dataCuts[opt],mcCuts[opt], marginalPdfs[opt], (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, (double) offset_sigma_dt_Run2_MC, (double) scale_sigma_dt_Run2_MC,1./Gamma,dgamma-sigma_dgamma,false);
+	
+		for(int i = 0; i < knot_positions.getVector().size(); i++)
+			vals_sigma_deltaGamma_m.push_back( ((RooRealVar*)result->floatParsFinal().find(("coeff_"+anythingToString(i)).c_str()))->getVal());
+	
+
+		/// Calculate correlation
+		vector<double> cor_Gamma;
+		for(int i = 0; i < vals.size(); i++)cor_Gamma.push_back((vals_sigma_Gamma_p[i]-vals_sigma_Gamma_m[i])/(2.*errs[i]));
+		cors_Gamma.push_back(cor_Gamma);
+
+		vector<double> cor_deltaGamma;
+		for(int i = 0; i < vals.size(); i++)cor_deltaGamma.push_back((vals_sigma_deltaGamma_p[i]-vals_sigma_deltaGamma_m[i])/(2.*errs[i]));
+		cors_deltaGamma.push_back(cor_deltaGamma);
+
+		cor.Print();
+		cout << cor_Gamma << endl;
+		cout << cor_deltaGamma << endl << endl;	
+	}
+		
+	TMatrixDSym cor(knot_positions.getVector().size()*dataCuts.size()+2);
+	cor[0][0] = 1.;
+	cor[1][1] = 1.;
+	cor[0][1] = 0.11; /// sign ???
+	cor[1][0] = 0.11;
+
+	for(int opt = 0 ; opt < dataCuts.size(); opt++){ 
+			for(int i = 2+opt*knot_positions.getVector().size(); i < 2+(opt+1)*knot_positions.getVector().size(); i++){
+				cor[0][i] = cors_Gamma[opt][i-(2+opt*knot_positions.getVector().size())];
+				cor[1][i] = cors_deltaGamma[opt][i-(2+opt*knot_positions.getVector().size())];
+				cor[i][0] = cors_Gamma[opt][i-(2+opt*knot_positions.getVector().size())];
+				cor[i][1] = cors_deltaGamma[opt][i-(2+opt*knot_positions.getVector().size())];
+			}
+	}
+
+	for(int opt = 0 ; opt < dataCuts.size(); opt++)
+			for(int i = 2+opt*knot_positions.getVector().size(); i < 2+(opt+1)*knot_positions.getVector().size(); i++)
+				for(int j = 2+opt*knot_positions.getVector().size(); j < 2+(opt+1)*knot_positions.getVector().size(); j++)
+					cor[i][j] = (*cors_fit[opt])[i-(2+opt*knot_positions.getVector().size())][j-(2+opt*knot_positions.getVector().size())];
+
+	cor.Print();	
+
+	/// Save correlations
+	if(doSystematics){ 
+		ofstream correlationFile;
+		correlationFile.open("Correlations.txt",std::ofstream::trunc);
+		correlationFile << "\"" << "ConstrainMulti_Acc" << "\"" << "     " << "\"" << "Gamma dGamma ";
+		for(int opt = 0 ; opt < dataCuts.size(); opt++)	
+			for(int i = 0; i < knot_positions.getVector().size(); i++)
+				correlationFile << "c" << i << "_" + marginalPdfs[opt] << " ";
+	
+		correlationFile << "\"";
+		correlationFile<< "\n";
+		correlationFile<< "\n";
+		correlationFile << "\"" << "ConstrainMulti_Acc_corr" << "\"" << "     " << "\"" ;
+		for(int i= 0; i< cor.GetNcols(); i++){
+			for(int j= 0; j< cor.GetNcols(); j++){
+				correlationFile << cor[i][j] << " ";
+			}
+		}
+		correlationFile << "\"";
+	}
+
     }
 
     if(FitSplineNorm){
-	//fitSplineAcc("" , "", "norm");
-	//fitSplineAcc("" , "Run1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
-	fitSplineAcc(" run == 1 && TriggerCat == 0 " , "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
-	fitSplineAcc(" run == 1 && TriggerCat == 1 " , "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
-	fitSplineAcc(" run == 2 && TriggerCat == 0 " , "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
-	fitSplineAcc(" run == 2 && TriggerCat == 1 " , "Run2_t1", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
+	fitSplineAcc("" , "comb", 0.01 , 1.);
+// 	fitSplineAcc(" run == 2" , "Run2", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
+// 	fitSplineAcc(" run == 1 && TriggerCat == 0 " , "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
+// 	fitSplineAcc(" run == 1 && TriggerCat == 1 " , "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
+// 	fitSplineAcc(" run == 2 && TriggerCat == 0 " , "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
+// 	fitSplineAcc(" run == 2 && TriggerCat == 1 " , "Run2_t1", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
     }
+
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
     cout << "==============================================" << endl;
