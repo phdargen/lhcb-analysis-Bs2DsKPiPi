@@ -87,7 +87,7 @@ protected:
     const FitParameter& _S_bar;
     const FitParameter& _k;
    
-    const MINT::FitParameter& _tau;
+    const MINT::FitParameter& _Gamma;
     const MINT::FitParameter& _dGamma;
     const MINT::FitParameter& _dm;
     
@@ -505,7 +505,7 @@ public:
     DalitzEvent generateWeightedEvent(){
 
 	while(true){
-		double t_MC = gRandom->Exp(_tau);
+		double t_MC = gRandom->Exp(1./_Gamma);
                 if(t_MC > _max_TAU || t_MC < _min_TAU)continue;
 
 		DalitzEvent evt(_pat,gRandom);
@@ -538,7 +538,7 @@ public:
 		evt.setValueInVector(5, q_SS_MC);
 		evt.setValueInVector(6, eta_SS_MC);
 
-		evt.setGeneratorPdfRelativeToPhaseSpace(exp(-t_MC/_tau) / ( _tau * ( exp(-_min_TAU/_tau) - exp(-_max_TAU/_tau) )));
+		evt.setGeneratorPdfRelativeToPhaseSpace(_Gamma * exp(-t_MC*_Gamma) / ( ( exp(-_min_TAU*_Gamma) - exp(-_max_TAU * _Gamma) )));
 		return evt;
 	}
     }
@@ -549,7 +549,7 @@ public:
     
     FullTimePdf(const MINT::FitParameter& C, const MINT::FitParameter& D, const MINT::FitParameter& D_bar,
                 const MINT::FitParameter& S, const MINT::FitParameter& S_bar, const MINT::FitParameter& k,
-                const MINT::FitParameter& tau, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
+                const MINT::FitParameter& Gamma, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
                 ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
                 ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
                 ,const MINT::FitParameter& c3, const MINT::FitParameter& c4, const MINT::FitParameter& c5
@@ -567,7 +567,7 @@ public:
     _S(S),
     _S_bar(S_bar),
     _k(k),
-    _tau(tau),
+    _Gamma(Gamma),
     _dGamma(dGamma),
     _dm(dm),
     _offset_sigma_dt(offset_sigma_dt),    
@@ -606,7 +606,7 @@ public:
     _min_TAUERR("min_TAUERR", 0.),
     _max_TAUERR("max_TAUERR", 0.1)
     {
-        _timePdfMaster = new TimePdfMaster(_tau, _dGamma, _dm
+        _timePdfMaster = new TimePdfMaster(_Gamma, _dGamma, _dm
                                           ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                           ,_c0, _c1, _c2
                                           ,_c3, _c4, _c5

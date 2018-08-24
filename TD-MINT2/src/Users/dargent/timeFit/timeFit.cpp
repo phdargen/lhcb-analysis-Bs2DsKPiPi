@@ -110,241 +110,6 @@ using namespace RooFit ;
 //using namespace RooStats;
 using namespace MINT;
 
-
-// Full DsK like time PDF in terms of r,gamma,delta with additional coherence factor 
-class FullTimePdf_mod : public MINT::PdfBase<IDalitzEvent>
-{
-protected:
-    // Fit parameters
-    const FitParameter& _r;
-    const FitParameter& _delta;
-    const FitParameter& _gamma;
-    const FitParameter& _k;
-    
-    const MINT::FitParameter& _tau;
-    const MINT::FitParameter& _dGamma;
-    const MINT::FitParameter& _dm;
-    
-    const MINT::FitParameter& _offset_sigma_dt;    
-    const MINT::FitParameter& _scale_mean_dt;
-    const MINT::FitParameter& _scale_sigma_dt;
-    const MINT::FitParameter& _scale_sigma_2_dt;
-
-    const MINT::FitParameter& _c0;
-    const MINT::FitParameter& _c1;
-    const MINT::FitParameter& _c2;
-    const MINT::FitParameter& _c3;
-    const MINT::FitParameter& _c4;
-    const MINT::FitParameter& _c5;
-    const MINT::FitParameter& _c6;
-    const MINT::FitParameter& _c7;
-    const MINT::FitParameter& _c8;
-    const MINT::FitParameter& _c9;
-    
-    const MINT::FitParameter& _p0_os;
-    const MINT::FitParameter& _p1_os;
-    const MINT::FitParameter& _delta_p0_os;
-    const MINT::FitParameter& _delta_p1_os;
-    const MINT::FitParameter& _avg_eta_os;
-    const MINT::FitParameter& _tageff_os;
-    const MINT::FitParameter& _tageff_asym_os;
-    
-    const MINT::FitParameter& _p0_ss;
-    const MINT::FitParameter& _p1_ss;
-    const MINT::FitParameter& _delta_p0_ss;
-    const MINT::FitParameter& _delta_p1_ss;
-    const MINT::FitParameter& _avg_eta_ss;
-    const MINT::FitParameter& _tageff_ss;
-    const MINT::FitParameter& _tageff_asym_ss;
-    
-    const MINT::FitParameter& _production_asym;
-    const MINT::FitParameter& _detection_asym;
-        
-    string _marginalPdfsPrefix;
-    
-    // Time pdf master
-    TimePdfMaster* _timePdfMaster;    
-    
-public:
-    void parametersChanged(){
-    }
-    void beginFit(){
-        _timePdfMaster->listFitParDependencies();
-    }
-    void endFit(){
-    }
-    
-    inline double un_normalised(IDalitzEvent& evt){
-        
-        //const double t = (double) evt.getValueFromVector(0);
-        //if(t < _min_TAU || t > _max_TAU )return 0.;
-        _timePdfMaster->setAllObservablesAndFitParameters(evt);
-        
-        // C,Cbar,D,Dbar,S,Sbar
-        _timePdfMaster->setCP_coeff(
-	    1.,
-	    1.,
-            (1.-_r*_r)/(1.+_r*_r),
-           -(1.-_r*_r)/(1.+_r*_r),
-            (-2.*_r * _k * cos( (_delta-_gamma)/360.*2*pi ))/(1.+_r*_r),
-            (-2.*_r * _k * cos((_delta+_gamma)/360.*2*pi ))/(1.+_r*_r),
-            (2.*_r * _k * sin((_delta-_gamma)/360.*2*pi))/(1.+_r*_r),
-            (-2.*_r * _k * sin((_delta+_gamma)/360.*2*pi))/(1.+_r*_r)
-        );
-        
-        double val = 
-            (
-                _timePdfMaster->get_cosh_term_Val(evt)
-             +  _timePdfMaster->get_cos_term_Val(evt)
-             +  _timePdfMaster->get_sinh_term_Val(evt)
-             +  _timePdfMaster->get_sin_term_Val(evt)
-             ) * _timePdfMaster->get_marginalPdfs_Val(evt);
-        
-        return val;
-    }
-    
- inline double getValForGeneration(IDalitzEvent& evt){
-
-        const double t = (double) evt.getValueFromVector(0);
-        //if(t < _min_TAU || t > _max_TAU )return 0.;
-        _timePdfMaster->setAllObservablesAndFitParameters(evt);
-        
-        // C,Cbar,D,Dbar,S,Sbar
-        _timePdfMaster->setCP_coeff(
-	    1.,
-	    1.,
-            (1.-_r*_r)/(1.+_r*_r),
-           -(1.-_r*_r)/(1.+_r*_r),
-            (-2.*_r * _k * cos( (_delta-_gamma)/360.*2*pi ))/(1.+_r*_r),
-            (-2.*_r * _k * cos((_delta+_gamma)/360.*2*pi ))/(1.+_r*_r),
-            (2.*_r * _k * sin((_delta-_gamma)/360.*2*pi))/(1.+_r*_r),
-            (-2.*_r * _k * sin((_delta+_gamma)/360.*2*pi))/(1.+_r*_r)
-        );
-        
-        const double tau = _timePdfMaster->get_tau_Val();
-        const double dGamma = _timePdfMaster->get_dGamma_Val();
-        const double dm = _timePdfMaster->get_dm_Val();
-
-        const double val =  exp(-fabs(t)/tau) *
-        ( _timePdfMaster->get_cosh_coeff_Val(evt) *cosh(dGamma/2.*t)
-         +  _timePdfMaster->get_cos_coeff_Val(evt) *cos(dm*t)
-         +  _timePdfMaster->get_sinh_coeff_Val(evt) *sinh(dGamma/2.*t)
-         +  _timePdfMaster->get_sin_coeff_Val(evt) *sin(dm*t)
-         )
-        * _timePdfMaster->get_spline_Val(evt)
-        * _timePdfMaster->get_marginalPdfs_Val(evt);
-
-        return val;
-    }
-
-    virtual double getVal(IDalitzEvent& evt){
-        
-        double val = un_normalised(evt);
-        
-        double norm =
-               _timePdfMaster->get_cosh_term_Integral(evt)
-            +  _timePdfMaster->get_cos_term_Integral(evt)
-            +  _timePdfMaster->get_sinh_term_Integral(evt)
-            +  _timePdfMaster->get_sin_term_Integral(evt);
-        
-        return val/norm;
-    }
-    
-    std::pair<double, double> getCalibratedMistag_OS(IDalitzEvent& evt){
-        return _timePdfMaster->getCalibratedMistag_OS(evt);
-    }
-    
-    std::pair<double, double> getCalibratedMistag_SS(IDalitzEvent& evt){
-        return _timePdfMaster->getCalibratedMistag_SS(evt);
-    }
-
-    double getCalibratedResolution(double dt){
-        return _timePdfMaster->getCalibratedResolution(dt);
-    }
-      
-    virtual double getVal_withPs(IDalitzEvent& evt){return getVal(evt);}
-    virtual double getVal_noPs(IDalitzEvent& evt){return getVal(evt);}
-    
-    virtual double getVal(IDalitzEvent* evt){
-        if(0 == evt) return 0;
-        return getVal(*evt);
-    }
-    virtual double getVal_withPs(IDalitzEvent* evt){
-        if(0 == evt) return 0;
-        return getVal_withPs(*evt);
-    }
-    virtual double getVal_noPs(IDalitzEvent* evt){
-        if(0 == evt) return 0;
-        return getVal_noPs(*evt);
-    }
-    
-    FullTimePdf_mod( const MINT::FitParameter& r, const MINT::FitParameter& delta, const MINT::FitParameter& gamma, const MINT::FitParameter& k,
-                    const MINT::FitParameter& tau, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
-                    ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
-                    ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
-                    ,const MINT::FitParameter& c3, const MINT::FitParameter& c4, const MINT::FitParameter& c5
-                    ,const MINT::FitParameter& c6, const MINT::FitParameter& c7, const MINT::FitParameter& c8
-                    ,const MINT::FitParameter& c9,
-                    const MINT::FitParameter& p0_os, const MINT::FitParameter& p1_os, const MINT::FitParameter& delta_p0_os, const MINT::FitParameter& delta_p1_os, 
-                    const MINT::FitParameter& avg_eta_os, const MINT::FitParameter& tageff_os, const MINT::FitParameter& tageff_asym_os, 
-                    const MINT::FitParameter& p0_ss, const MINT::FitParameter& p1_ss, const MINT::FitParameter& delta_p0_ss, const MINT::FitParameter& delta_p1_ss, 
-                    const MINT::FitParameter& avg_eta_ss, const MINT::FitParameter& tageff_ss, const MINT::FitParameter& tageff_asym_ss, 
-                    const MINT::FitParameter& production_asym, const MINT::FitParameter& detection_asym, string marginalPdfsPrefix
-                    ):
-            _r(r),
-            _delta(delta),
-            _gamma(gamma),
-            _k(k),
-            _tau(tau),
-            _dGamma(dGamma),
-            _dm(dm),
-            _offset_sigma_dt(offset_sigma_dt),    
-            _scale_mean_dt(scale_mean_dt),
-            _scale_sigma_dt(scale_sigma_dt),
-            _scale_sigma_2_dt(scale_sigma_2_dt),
-            _c0(c0),
-            _c1(c1),
-            _c2(c2),
-            _c3(c3),
-            _c4(c4),
-            _c5(c5),
-            _c6(c6),
-            _c7(c7),
-            _c8(c8),
-            _c9(c9),
-            _p0_os(p0_os),
-            _p1_os(p1_os),
-            _delta_p0_os(delta_p0_os),
-            _delta_p1_os(delta_p1_os),
-            _avg_eta_os(avg_eta_os),
-            _tageff_os(tageff_os),
-            _tageff_asym_os(tageff_asym_os),
-            _p0_ss(p0_ss),
-            _p1_ss(p1_ss),
-            _delta_p0_ss(delta_p0_ss),
-            _delta_p1_ss(delta_p1_ss),
-            _avg_eta_ss(avg_eta_ss),
-            _tageff_ss(tageff_ss),
-            _tageff_asym_ss(tageff_asym_ss),
-            _production_asym(production_asym),
-            _detection_asym(detection_asym),    
-            _marginalPdfsPrefix(marginalPdfsPrefix)
-    {
-            _timePdfMaster = new TimePdfMaster(_tau, _dGamma, _dm
-                                                   ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
-                                                   ,_c0, _c1, _c2
-                                                   ,_c3, _c4, _c5
-                                                   ,_c6, _c7, _c8
-                                                   ,_c9,
-                                                   _p0_os, _p1_os, _delta_p0_os, _delta_p1_os, 
-                                                   _avg_eta_os, _tageff_os, _tageff_asym_os, 
-                                                   _p0_ss, p1_ss, _delta_p0_ss, _delta_p1_ss, 
-                                                   _avg_eta_ss, _tageff_ss, _tageff_asym_ss, 
-                                                   _production_asym, _detection_asym,_marginalPdfsPrefix);
-    }    
-};
-//
-
 void fullTimeFit(int step=0, string mode = "fit"){
 
     /// Options
@@ -389,6 +154,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     NamedParameter<int>  doToyStudy("doToyStudy", 0);
     NamedParameter<double> N_scale_toys("N_scale_toys", 1);
 
+    NamedParameter<int>  useGaussConstrainsLifetime("useGaussConstrainsLifetime", 0);
     NamedParameter<int>  useGaussConstrainsTagging("useGaussConstrainsTagging", 0);
 
     NamedParameter<int>  doAccSystematics("doAccSystematics", 0);
@@ -426,8 +192,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
     FitParameter  S_3("S_3",1,0.,0.1);
     FitParameter  S_bar_3("S_bar_3",1,0.,0.1);
     
-    FitParameter  tau("tau",2,1.509,0.1);
-    FitParameter  dGamma("dGamma",2,0.09,0.1);
+    FitParameter  Gamma("Gamma",2,0.6629,0.0018);
+    FitParameter  dGamma("dGamma",2,-0.088,0.006);
     FitParameter  dm("dm",2,17.757,0.1);
     
     FitParameter  scale_mean_dt("scale_mean_dt",1,1,0.1);
@@ -554,7 +320,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     string marginalPdfsPrefix = "comb";
     if(fitGenMC)marginalPdfsPrefix = "Uniform";
     FullTimePdf t_pdf(C, D, D_bar, S, S_bar, k,
-                      tau, dGamma, dm
+                      Gamma, dGamma, dm
                       ,offset_sigma_dt, scale_mean_dt, scale_sigma_dt, scale_sigma_2_dt
                       ,c0, c1, c2 ,c3, c4, c5
                       ,c6, c7, c8, c9,
@@ -566,7 +332,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 
     /// Simultaneous pdfs
     FullTimePdf t_pdf_Run1_t0(C, D, D_bar, S, S_bar, k,
-                      tau, dGamma, dm
+                      Gamma, dGamma, dm
                       ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
                       ,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
@@ -577,7 +343,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                       production_asym_Run1, detection_asym_Run1, "Run1_t0" );
     
     FullTimePdf t_pdf_Run1_t1(C, D, D_bar, S, S_bar, k,
-                              tau, dGamma, dm
+                              Gamma, dGamma, dm
                               ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                               ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
                               ,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
@@ -588,7 +354,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run1, detection_asym_Run1, "Run1_t1" );
     
     FullTimePdf t_pdf_Run2_t0(C, D, D_bar, S, S_bar, k,
-                              tau, dGamma, dm
+                              Gamma, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
                               ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
@@ -599,7 +365,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run2, detection_asym_Run2, "Run2_t0" );
     
     FullTimePdf t_pdf_Run2_t1(C, D, D_bar, S, S_bar, k,
-                              tau, dGamma, dm
+                              Gamma, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
                               ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
@@ -611,7 +377,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     
     //phasespace bins
     FullTimePdf t_pdf_Run1_t0_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
-                      tau, dGamma, dm
+                      Gamma, dGamma, dm
                       ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
                       ,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
@@ -622,7 +388,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                       production_asym_Run1, detection_asym_Run1, "Run1_t0" );
     
     FullTimePdf t_pdf_Run1_t1_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
-                              tau, dGamma, dm
+                              Gamma, dGamma, dm
                               ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                               ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
                               ,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
@@ -633,7 +399,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run1, detection_asym_Run1, "Run1_t0" );
     
     FullTimePdf t_pdf_Run2_t0_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
-                              tau, dGamma, dm
+                              Gamma, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
                               ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
@@ -644,7 +410,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run2, detection_asym_Run2, "Run2_t0" );
     
     FullTimePdf t_pdf_Run2_t1_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
-                              tau, dGamma, dm
+                              Gamma, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
                               ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
@@ -655,7 +421,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run2, detection_asym_Run2, "Run2_t1" );
     
     FullTimePdf t_pdf_Run1_t0_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
-                      tau, dGamma, dm
+                      Gamma, dGamma, dm
                       ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
                       ,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
@@ -666,7 +432,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                       production_asym_Run1, detection_asym_Run1, "Run1_t0" );
     
     FullTimePdf t_pdf_Run1_t1_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
-                              tau, dGamma, dm
+                              Gamma, dGamma, dm
                               ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                               ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
                               ,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
@@ -677,7 +443,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run1, detection_asym_Run1, "Run1_t1" );
     
     FullTimePdf t_pdf_Run2_t0_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
-                              tau, dGamma, dm
+                              Gamma, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
                               ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
@@ -688,7 +454,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run2, detection_asym_Run2, "Run2_t0" );
     
     FullTimePdf t_pdf_Run2_t1_bin2(C_2, D_2, D_bar_2, S_2, S_bar_2, k,
-                              tau, dGamma, dm
+                              Gamma, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
                               ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
@@ -699,7 +465,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run2, detection_asym_Run2, "Run2_t1" );
     
     FullTimePdf t_pdf_Run1_t0_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
-                      tau, dGamma, dm
+                      Gamma, dGamma, dm
                       ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
                       ,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
@@ -710,7 +476,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                       production_asym_Run1, detection_asym_Run1, "Run1_t0" );
     
     FullTimePdf t_pdf_Run1_t1_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
-                              tau, dGamma, dm
+                              Gamma, dGamma, dm
                               ,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                               ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
                               ,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
@@ -721,7 +487,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run1, detection_asym_Run1, "Run1_t1" );
     
     FullTimePdf t_pdf_Run2_t0_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
-                              tau, dGamma, dm
+                              Gamma, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
                               ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
@@ -732,7 +498,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run2, detection_asym_Run2, "Run2_t0" );
     
     FullTimePdf t_pdf_Run2_t1_bin3(C_3, D_3, D_bar_3, S_3, S_bar_3, k,
-                              tau, dGamma, dm
+                              Gamma, dGamma, dm
                               ,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                               ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
                               ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
@@ -1071,9 +837,12 @@ void fullTimeFit(int step=0, string mode = "fit"){
     if(eventList_Run2_t0_bin3.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t0_bin3);
     if(eventList_Run2_t1_bin3.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t1_bin3);
 
+    Neg2LLMultiConstraint constrains_lifetime(MinuitParameterSet::getDefaultSet(),"_Lifetime");
+    if(useGaussConstrainsLifetime){
+	    neg2LL_sim.add(&constrains_lifetime);
+    }
     Neg2LLMultiConstraint constrains_tagging_Run1(MinuitParameterSet::getDefaultSet(),"_Tagging_Run1");
     Neg2LLMultiConstraint constrains_tagging_Run2(MinuitParameterSet::getDefaultSet(),"_Tagging_Run2");
-
     if(useGaussConstrainsTagging){
 	    neg2LL_sim.add(&constrains_tagging_Run1);
     	    neg2LL_sim.add(&constrains_tagging_Run2);
@@ -1507,7 +1276,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	for(int p = 0 ; p < prefix.size(); p++){
 
 		vector<string> cov_params;
-    		if(!mps->getParPtr("tau")->iFixInit())cov_params.push_back("tau");
+    		if(!mps->getParPtr("Gamma")->iFixInit())cov_params.push_back("Gamma");
     		if(!mps->getParPtr("dGamma")->iFixInit())cov_params.push_back("dGamma");
     		if(!mps->getParPtr("dm")->iFixInit())cov_params.push_back("dm");
 
@@ -1868,7 +1637,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	RooCubicSplineFun* spline = new RooCubicSplineFun("splinePdf", "splinePdf", *r_t, myBinning, tacc_list);        
 	RooGaussEfficiencyModel* sample_efficiency = new RooGaussEfficiencyModel("sample_efficiency", "sample_efficiency", *r_t, *spline, RooRealConstant::value(0.),*r_dt, RooRealConstant::value(0.),RooRealConstant::value(1.));
 			
-	RooRealVar r_tau("tau", "decay time", tau);    
+	RooRealVar r_tau("tau", "decay time", 1./Gamma);    
 	RooRealVar r_dgamma("dgamma", "dgamma", dGamma);
 	RooRealVar r_dm("dm", "dm", dm);
 
@@ -1979,7 +1748,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 
 	for(int i = 0; i < 100000; i++){
 		
-		double t_MC = ranLux.Exp(tau);
+		double t_MC = ranLux.Exp(1./Gamma);
 		if(t_MC > max_TAU && t_MC < min_TAU)continue;
 	
 		double dt_MC = 0.04;
@@ -2014,7 +1783,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 		double pdfVal = t_pdf.getVal(evt);
 	
 		double weight = pdfVal;
-		weight /=  exp(-t_MC/tau) / ( tau * ( exp(-min_TAU/tau) - exp(-max_TAU/tau) ) ) ;
+		weight /=  exp(-t_MC*Gamma) / ( 1./Gamma * ( exp(-min_TAU*Gamma) - exp(-max_TAU*Gamma) ) ) ;
 		//*  (abs(q_OS_MC)/2. * eff_tag_OS + ( 1. - abs(q_OS_MC)) * (1.-eff_tag_OS) ) ;
 	
 		h_t_fit->Fill(t_MC,weight);
@@ -2051,7 +1820,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			h_t_fit_mp->Fill(evt.getValueFromVector(0),weight);
 			if(w_eff<w_max){
 			h_N_mixed_p_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
-			h_N_mixed_p_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),tau),weight);
+			h_N_mixed_p_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),1./Gamma),weight);
 			}
 		}
 		else if(q_eff==0 && f_evt == 1)h_t_fit_0p->Fill(evt.getValueFromVector(0),weight);
@@ -2059,14 +1828,14 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			h_t_fit_pp->Fill(evt.getValueFromVector(0),weight);
 			if(w_eff<w_max){
 				h_N_unmixed_p_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
-				h_N_unmixed_p_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),tau),weight);
+				h_N_unmixed_p_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),1./Gamma),weight);
 			}
 		}
 		else if(q_eff==-1 && f_evt == -1){
 			h_t_fit_mm->Fill(evt.getValueFromVector(0),weight);
 			if(w_eff<w_max){
 			h_N_unmixed_m_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
-			h_N_unmixed_m_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),tau),weight);
+			h_N_unmixed_m_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),1./Gamma),weight);
 			}	
 		}
 		else if(q_eff==0 && f_evt == -1)h_t_fit_0m->Fill(evt.getValueFromVector(0),weight);
@@ -2074,7 +1843,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			h_t_fit_pm->Fill(evt.getValueFromVector(0),weight);
 			if(w_eff<w_max){
 			h_N_mixed_m_fit->Fill(fmod(evt.getValueFromVector(0),2.*pi/dm),weight);
-			h_N_mixed_m_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),tau),weight);
+			h_N_mixed_m_fit_unfolded->Fill(fmod(evt.getValueFromVector(0),1./Gamma),weight);
 			}
 		}
 		}
@@ -2213,7 +1982,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 					h_t_fit_mp->Fill(t_MC,weight);
 					if(w_eff<w_max){
 						h_N_mixed_p_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-						h_N_mixed_p_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+						h_N_mixed_p_fit_unfolded->Fill(fmod(t_MC,1./Gamma),weight);
 					}
 				}
 				else if(q_eff==0 && f_evt == 1)h_t_fit_0p->Fill(t_MC,weight);
@@ -2221,14 +1990,14 @@ void fullTimeFit(int step=0, string mode = "fit"){
 					h_t_fit_pp->Fill(t_MC,weight);
 					if(w_eff<w_max){
 						h_N_unmixed_p_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-						h_N_unmixed_p_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+						h_N_unmixed_p_fit_unfolded->Fill(fmod(t_MC,1./Gamma),weight);
 					}
 				}
 				else if(q_eff==-1 && f_evt == -1){
 					h_t_fit_mm->Fill(t_MC,weight);
 					if(w_eff<w_max){
 						h_N_unmixed_m_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-						h_N_unmixed_m_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+						h_N_unmixed_m_fit_unfolded->Fill(fmod(t_MC,1./Gamma),weight);
 					}	
 				}
 				else if(q_eff==0 && f_evt == -1)h_t_fit_0m->Fill(t_MC,weight);
@@ -2236,7 +2005,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 					h_t_fit_pm->Fill(t_MC,weight);
 					if(w_eff<w_max){
 						h_N_mixed_m_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-						h_N_mixed_m_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+						h_N_mixed_m_fit_unfolded->Fill(fmod(t_MC,1./Gamma),weight);
 					}
 				}
 			}

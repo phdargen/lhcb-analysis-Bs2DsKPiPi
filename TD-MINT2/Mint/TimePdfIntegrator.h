@@ -27,7 +27,7 @@ class TimePdfIntegrator
  protected:
     int _basisType;
     RooGaussEfficiencyModel* _efficiency;
-    MINT::FitParRef _tau,_dGamma,_dm;
+    MINT::FitParRef _Gamma,_dGamma,_dm;
     
     MINT::FitParRef _offset_sigma_dt;
     MINT::FitParRef _scale_mean_dt;
@@ -48,7 +48,7 @@ class TimePdfIntegrator
  public:
   TimePdfIntegrator( int basisType
                      ,RooGaussEfficiencyModel* efficiency
-                     ,const MINT::FitParameter& tau, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
+                     ,const MINT::FitParameter& Gamma, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
                      ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt
 		     ,const MINT::FitParameter& scale_sigma_dt,const MINT::FitParameter& scale_sigma_2_dt
                      ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
@@ -59,7 +59,7 @@ class TimePdfIntegrator
                         FitParDependent(daddy)
                        ,_basisType(basisType)
                        ,_efficiency(efficiency)
-                       ,_tau(tau,this),_dGamma(dGamma,this),_dm(dm,this)
+                       ,_Gamma(Gamma,this),_dGamma(dGamma,this),_dm(dm,this)
                        ,_offset_sigma_dt(offset_sigma_dt,this),_scale_mean_dt(scale_mean_dt,this)
 		       ,_scale_sigma_dt(scale_sigma_dt,this),_scale_sigma_2_dt(scale_sigma_2_dt,this)
                        ,_c0(c0,this),_c1(c1,this),_c2(c2,this)
@@ -76,7 +76,7 @@ class TimePdfIntegrator
 
   virtual std::complex<double> getNewVal(IDalitzEvent& evt){
       //return std::complex<double>(_tau,_dGamma);
-       return std::complex<double>(_efficiency->evaluate(_basisType,_tau,_dm,_dGamma),_efficiency->analyticalIntegral(_basisType,_tau,_dm,_dGamma));
+       return std::complex<double>(_efficiency->evaluate(_basisType,1./_Gamma,_dm,_dGamma),_efficiency->analyticalIntegral(_basisType,1./_Gamma,_dm,_dGamma));
   }
 
   virtual std::complex<double> ComplexVal(IDalitzEvent& evt){

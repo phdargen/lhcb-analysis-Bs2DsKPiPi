@@ -751,7 +751,7 @@ protected:
     const MINT::FitParameter& _xp;
     const MINT::FitParameter& _yp;
 
-    const MINT::FitParameter& _tau;
+    const MINT::FitParameter& _Gamma;
     const MINT::FitParameter& _dGamma;
     const MINT::FitParameter& _dm;
     
@@ -1145,7 +1145,7 @@ public:
     DalitzEvent generateWeightedEvent(){
 
 	while(true){
-		double t_MC = gRandom->Exp(_tau);
+		double t_MC = gRandom->Exp(1./_Gamma);
                 if(t_MC > _max_TAU || t_MC < _min_TAU)continue;
 
 		int f_MC = (gRandom->Uniform() > 0.5) ? 1 : -1;		
@@ -1184,7 +1184,7 @@ public:
 		evt.setValueInVector(5, q_SS_MC);
 		evt.setValueInVector(6, eta_SS_MC);
 
-		evt.setGeneratorPdfRelativeToPhaseSpace(evt.getGeneratorPdfRelativeToPhaseSpace() * (exp(-t_MC/_tau) / ( _tau * ( exp(-_min_TAU/_tau) - exp(-_max_TAU/_tau) ))));
+		evt.setGeneratorPdfRelativeToPhaseSpace(_Gamma * evt.getGeneratorPdfRelativeToPhaseSpace() * (exp(-t_MC*_Gamma) / ( ( exp(-_min_TAU*_Gamma) - exp(-_max_TAU*_Gamma) ))));
 		return evt;
 	}
     }
@@ -1408,7 +1408,7 @@ public:
 		AmpsPdfFlexiFast* ampsSum, AmpsPdfFlexiFast* ampsSum_CP, 
                 const MINT::FitParameter& r,const MINT::FitParameter& delta,const MINT::FitParameter& gamma,
                 const MINT::FitParameter& xm,const MINT::FitParameter& ym,const MINT::FitParameter& xp,const MINT::FitParameter& yp,
-		const MINT::FitParameter& tau, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
+		const MINT::FitParameter& Gamma, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
                 ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt 
 		,const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
                 ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
@@ -1425,7 +1425,7 @@ public:
     _intA(-1),_intAbar(-1),_intAAbar(-1),_intA_CP(-1),_intAbar_CP(-1),_intAAbar_CP(-1),
     _r(r),_delta(delta),_gamma(gamma),
     _xm(xm),_ym(ym),_xp(xp),_yp(yp),
-    _tau(tau),
+    _Gamma(Gamma),
     _dGamma(dGamma),
     _dm(dm),
     _offset_sigma_dt(offset_sigma_dt),    
@@ -1470,7 +1470,7 @@ public:
     _fasGen_CP(0),
     _sg_CP(0)
     {
-		        _timePdfMaster = new TimePdfMaster(_tau, _dGamma, _dm
+		        _timePdfMaster = new TimePdfMaster(_Gamma, _dGamma, _dm
                                           ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                           ,_c0, _c1, _c2
                                           ,_c3, _c4, _c5
@@ -2078,8 +2078,8 @@ void ampFit(int step=0, string mode = "fit"){
     FitParameter xp("xp",1,0,0.01);
     FitParameter yp("yp",1,0,0.01); 
 
-    FitParameter  tau("tau",2,1.509,0.1);
-    FitParameter  dGamma("dGamma",2,0.09,0.1);
+    FitParameter  Gamma("Gamma",2,0.6629,0.0018);
+    FitParameter  dGamma("dGamma",2,-0.088,0.006);
     FitParameter  dm("dm",2,17.757,0.1);
     
     FitParameter  scale_mean_dt("scale_mean_dt",1,1,0.1);
@@ -2208,7 +2208,7 @@ void ampFit(int step=0, string mode = "fit"){
     FullAmpsPdfFlexiFastCPV pdf(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP
 		      ,r,delta,gamma
 		      , xm, ym, xp, yp
-		      ,tau, dGamma, dm
+		      ,Gamma, dGamma, dm
                       ,offset_sigma_dt, scale_mean_dt, scale_sigma_dt, scale_sigma_2_dt
                       ,c0, c1, c2 ,c3, c4, c5
                       ,c6, c7, c8, c9,
@@ -2221,7 +2221,7 @@ void ampFit(int step=0, string mode = "fit"){
     // Simultaneous pdfs
     FullAmpsPdfFlexiFastCPV pdf_Run1_t0(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP
 		      ,r,delta,gamma, xm, ym, xp, yp,
-		      tau, dGamma, dm,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
+		      Gamma, dGamma, dm,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
                       ,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
                       p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -2232,7 +2232,7 @@ void ampFit(int step=0, string mode = "fit"){
 
     FullAmpsPdfFlexiFastCPV pdf_Run1_t1(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP
 		      ,r,delta,gamma, xm, ym, xp, yp,
-		      tau, dGamma, dm,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
+		      Gamma, dGamma, dm,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
                       ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
                       ,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
                       p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -2243,7 +2243,7 @@ void ampFit(int step=0, string mode = "fit"){
 
     FullAmpsPdfFlexiFastCPV pdf_Run2_t0(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP
 		      ,r,delta,gamma, xm, ym, xp, yp,
-		      tau, dGamma, dm,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
+		      Gamma, dGamma, dm,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                       ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
                       ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
                       p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -2254,7 +2254,7 @@ void ampFit(int step=0, string mode = "fit"){
 
     FullAmpsPdfFlexiFastCPV pdf_Run2_t1(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP
 		      ,r,delta,gamma, xm, ym, xp, yp,
-		      tau, dGamma, dm,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
+		      Gamma, dGamma, dm,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
                       ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
                       ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
                       p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -3211,7 +3211,7 @@ void ampFit(int step=0, string mode = "fit"){
 	FitParameter  k("k",1,1.,0.1);
 	
 	FullTimePdf t_pdf(C, D, D_bar, S, S_bar, k,
-			tau, dGamma, dm
+			Gamma, dGamma, dm
 			,offset_sigma_dt, scale_mean_dt, scale_sigma_dt, scale_sigma_2_dt
 			,c0, c1, c2 ,c3, c4, c5
 			,c6, c7, c8, c9,
@@ -3222,7 +3222,7 @@ void ampFit(int step=0, string mode = "fit"){
 			production_asym, detection_asym, marginalPdfsPrefix );
 	
 	FullTimePdf t_pdf_Run1_t0(C, D, D_bar, S, S_bar, k,
-			tau, dGamma, dm
+			Gamma, dGamma, dm
 			,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
 			,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
 			,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
@@ -3233,7 +3233,7 @@ void ampFit(int step=0, string mode = "fit"){
 			production_asym_Run1, detection_asym_Run1, "Run1_t0" );
 	
 	FullTimePdf t_pdf_Run1_t1(C, D, D_bar, S, S_bar, k,
-				tau, dGamma, dm
+				Gamma, dGamma, dm
 				,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
 				,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
 				,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
@@ -3244,7 +3244,7 @@ void ampFit(int step=0, string mode = "fit"){
 				production_asym_Run1, detection_asym_Run1, "Run1_t1" );
 	
 	FullTimePdf t_pdf_Run2_t0(C, D, D_bar, S, S_bar, k,
-				tau, dGamma, dm
+				Gamma, dGamma, dm
 				,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
 				,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
 				,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
@@ -3255,7 +3255,7 @@ void ampFit(int step=0, string mode = "fit"){
 				production_asym_Run2, detection_asym_Run2, "Run2_t0" );
 	
 	FullTimePdf t_pdf_Run2_t1(C, D, D_bar, S, S_bar, k,
-				tau, dGamma, dm
+				Gamma, dGamma, dm
 				,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
 				,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
 				,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
@@ -3386,7 +3386,7 @@ void ampFit(int step=0, string mode = "fit"){
 					h_t_fit_mp->Fill(t_MC,weight);
 					if(w_eff<w_max){
 						h_N_mixed_p_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-						h_N_mixed_p_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+						h_N_mixed_p_fit_unfolded->Fill(fmod(t_MC,1./Gamma),weight);
 					}
 				}
 				else if(q_eff==0 && f_evt == 1)h_t_fit_0p->Fill(t_MC,weight);
@@ -3394,14 +3394,14 @@ void ampFit(int step=0, string mode = "fit"){
 					h_t_fit_pp->Fill(t_MC,weight);
 					if(w_eff<w_max){
 						h_N_unmixed_p_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-						h_N_unmixed_p_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+						h_N_unmixed_p_fit_unfolded->Fill(fmod(t_MC,1./Gamma),weight);
 					}
 				}
 				else if(q_eff==-1 && f_evt == -1){
 					h_t_fit_mm->Fill(t_MC,weight);
 					if(w_eff<w_max){
 						h_N_unmixed_m_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-						h_N_unmixed_m_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+						h_N_unmixed_m_fit_unfolded->Fill(fmod(t_MC,1./Gamma),weight);
 					}	
 				}
 				else if(q_eff==0 && f_evt == -1)h_t_fit_0m->Fill(t_MC,weight);
@@ -3409,7 +3409,7 @@ void ampFit(int step=0, string mode = "fit"){
 					h_t_fit_pm->Fill(t_MC,weight);
 					if(w_eff<w_max){
 						h_N_mixed_m_fit->Fill(fmod(t_MC,2.*pi/dm),weight);
-						h_N_mixed_m_fit_unfolded->Fill(fmod(t_MC,tau),weight);
+						h_N_mixed_m_fit_unfolded->Fill(fmod(t_MC,1./Gamma),weight);
 					}
 				}
 			}

@@ -54,7 +54,7 @@ class TimePdfMaster
  protected:
     
     // Fit parameters
-    const MINT::FitParameter& _tau;
+    const MINT::FitParameter& _Gamma;
     const MINT::FitParameter& _dGamma;
     const MINT::FitParameter& _dm;
     
@@ -208,7 +208,7 @@ class TimePdfMaster
     RooMCStudy* _sampleGen;
 
  public:
-    TimePdfMaster(const MINT::FitParameter& tau, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
+    TimePdfMaster(const MINT::FitParameter& Gamma, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
                   ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
                   ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
                   ,const MINT::FitParameter& c3, const MINT::FitParameter& c4, const MINT::FitParameter& c5
@@ -219,7 +219,7 @@ class TimePdfMaster
                   const MINT::FitParameter& p0_ss, const MINT::FitParameter& p1_ss, const MINT::FitParameter& delta_p0_ss, const MINT::FitParameter& delta_p1_ss, 
                   const MINT::FitParameter& avg_eta_ss, const MINT::FitParameter& tageff_ss, const MINT::FitParameter& tageff_asym_ss, 
                   const MINT::FitParameter& production_asym, const MINT::FitParameter& detection_asym, string marginalPdfsPrefix ): 
-        _tau(tau),
+        _Gamma(Gamma),
         _dGamma(dGamma),
         _dm(dm),
         _offset_sigma_dt(offset_sigma_dt),    
@@ -286,7 +286,7 @@ class TimePdfMaster
         _r_trigger->defineType("t1", 1);
 
         // Fit parameters
-        _r_tau = new RooRealVar("tau", "tau",_tau);
+        _r_tau = new RooRealVar("tau", "tau",1./_Gamma);
         _r_dGamma = new RooRealVar("dGamma", "dGamma",_dGamma);
         _r_dm = new RooRealVar("dm", "dm",_dm);
         
@@ -481,28 +481,28 @@ class TimePdfMaster
         
         /// Time pdf integrators
         _cosh_term = new TimePdfIntegrator(coshBasis,_efficiency,
-                                           _tau,_dGamma,_dm,
+                                           _Gamma,_dGamma,_dm,
                                            _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                            ,_c0, _c1, _c2
                                            ,_c3, _c4, _c5
                                            ,_c6, _c7, _c8
                                            ,_c9);
         _cos_term = new TimePdfIntegrator(cosBasis,_efficiency,
-                                          _tau,_dGamma,_dm,
+                                          _Gamma,_dGamma,_dm,
                                           _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                           ,_c0, _c1, _c2
                                           ,_c3, _c4, _c5
                                           ,_c6, _c7, _c8
                                           ,_c9);
         _sinh_term = new TimePdfIntegrator(sinhBasis,_efficiency,
-                                           _tau,_dGamma,_dm,
+                                           _Gamma,_dGamma,_dm,
                                            _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                            ,_c0, _c1, _c2
                                            ,_c3, _c4, _c5
                                            ,_c6, _c7, _c8
                                            ,_c9);
         _sin_term = new TimePdfIntegrator(sinBasis,_efficiency,
-                                          _tau,_dGamma,_dm,
+                                          _Gamma,_dGamma,_dm,
                                           _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
                                           ,_c0, _c1, _c2
                                           ,_c3, _c4, _c5
@@ -701,7 +701,7 @@ class TimePdfMaster
     }
     
     double get_tau_Val(){
-        return (double)_tau;
+        return (double) 1./_Gamma;
     }
     
     double get_dm_Val(){
@@ -757,7 +757,7 @@ class TimePdfMaster
    }
    
    void setAllFitParameters(){       
-       _r_tau->setVal(_tau);
+       _r_tau->setVal(1./_Gamma);
        _r_dGamma->setVal(_dGamma);
        _r_dm->setVal(_dm);
        
@@ -814,8 +814,8 @@ class TimePdfMaster
     }
     
    void setAllObservablesToMean(IDalitzEvent& evt){
-       _r_t->setVal(_tau);
-       if((string)_marginalPdfsPrefix == "Uniform")_r_dt->setVal(_tau/100.);
+       _r_t->setVal(1./_Gamma);
+       if((string)_marginalPdfsPrefix == "Uniform")_r_dt->setVal(1./_Gamma/100.);
        else _r_dt->setVal(_h_dt->GetMean());
        _r_f->setIndex(1);
        _r_q_OS->setIndex(0);
