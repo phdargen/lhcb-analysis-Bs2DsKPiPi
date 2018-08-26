@@ -15,6 +15,10 @@
 #include <TTree.h>
 #include <TMatrixD.h>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+
 using namespace std;
 
 class pull {
@@ -40,6 +44,8 @@ public :
    TMatrixD getDeltaCov(TString refFileName,TString label = "");
    TMatrixD getDeltaCovChol(TString refFileName,TString label,int varPerParChol);
     
+   TMatrixD 	combineCov_maxVal(vector<TMatrixD*> vec);
+
    TString latexName(TString s); 
     
    virtual Bool_t   Notify();
@@ -55,7 +61,18 @@ pull::pull(vector<TString> paraNames, TString fileName):
 {
     TChain* chain =  new TChain("MinuitParameterSetNtp");
     chain->Add(_fileName); 
-    Init((TTree*)chain);
+
+    int N = chain->GetEntries();
+    TChain* chain2 =  new TChain("MinuitParameterSetNtp");
+    if(N>1)for(int i = 1; i <= N; i++){
+	stringstream index;
+	index << i;
+	TString file = fileName;
+	chain2->Add(file.ReplaceAll("*",index.str())); 
+    }   
+    else chain2->Add(_fileName); 
+
+    Init((TTree*)chain2);
 }	
 
 pull::~pull()

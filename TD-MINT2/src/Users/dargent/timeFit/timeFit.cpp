@@ -114,7 +114,6 @@ void fullTimeFit(int step=0, string mode = "fit"){
 
     /// Options
     NamedParameter<int> updateAnaNote("updateAnaNote", 0);
-    TString prefix = "";
     TRandom3 ranLux;
     NamedParameter<int> RandomSeed("RandomSeed", 0);
     int seed = RandomSeed + step;
@@ -154,13 +153,15 @@ void fullTimeFit(int step=0, string mode = "fit"){
     NamedParameter<int>  doToyStudy("doToyStudy", 0);
     NamedParameter<double> N_scale_toys("N_scale_toys", 1);
 
-    NamedParameter<int>  useGaussConstrainsLifetime("useGaussConstrainsLifetime", 0);
     NamedParameter<int>  useGaussConstrainsTagging("useGaussConstrainsTagging", 0);
 
     NamedParameter<int>  doAccSystematics("doAccSystematics", 0);
     NamedParameter<int>  useCholDec("useCholDec", 0);
     NamedParameter<int>  varPerParChol("varPerParChol", 100);
     int chol_index = (step-1)/varPerParChol ;
+
+    NamedParameter<string> doSystematic("doSystematic", (std::string) "", (char*) 0);
+
 
     /// Common fit parameters
     FitParameter  r("r",1,0.,0.1);
@@ -837,21 +838,14 @@ void fullTimeFit(int step=0, string mode = "fit"){
     if(eventList_Run2_t0_bin3.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t0_bin3);
     if(eventList_Run2_t1_bin3.size()>0)neg2LL_sim_bins.add(&neg2LL_Run2_t1_bin3);
 
-    Neg2LLMultiConstraint constrains_lifetime(MinuitParameterSet::getDefaultSet(),"_Lifetime");
-    if(useGaussConstrainsLifetime){
-	    neg2LL_sim.add(&constrains_lifetime);
-    }
-    Neg2LLMultiConstraint constrains_tagging_Run1(MinuitParameterSet::getDefaultSet(),"_Tagging_Run1");
-    Neg2LLMultiConstraint constrains_tagging_Run2(MinuitParameterSet::getDefaultSet(),"_Tagging_Run2");
-    if(useGaussConstrainsTagging){
-	    neg2LL_sim.add(&constrains_tagging_Run1);
-    	    neg2LL_sim.add(&constrains_tagging_Run2);
-    }
+     Neg2LLMultiConstraint constrains_tagging_Run1(MinuitParameterSet::getDefaultSet(),"_Tagging_Run1");
+     Neg2LLMultiConstraint constrains_tagging_Run2(MinuitParameterSet::getDefaultSet(),"_Tagging_Run2");
+     if(useGaussConstrainsTagging){
+ 	    neg2LL_sim.add(&constrains_tagging_Run1);
+ 	    neg2LL_sim.add(&constrains_tagging_Run2);
+     }
 
     Neg2LLMultiConstraint constrains_Acc(MinuitParameterSet::getDefaultSet(),"_Acc");
-    Neg2LLMultiConstraint constrains_Acc2(MinuitParameterSet::getDefaultSet(),"_Acc2");
-    Neg2LLMultiConstraint constrains_Acc3(MinuitParameterSet::getDefaultSet(),"_Acc3");
-    Neg2LLMultiConstraint constrains_Acc4(MinuitParameterSet::getDefaultSet(),"_Acc4");
     if(doAccSystematics && mode == "fit"){
 	if(useCholDec){
 		if(chol_index > constrains_Acc.getNumberParams()-1){
@@ -859,18 +853,16 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			throw "ERROR";
 		}
 		constrains_Acc.smearInputValuesChol(chol_index,(step-1) - chol_index * varPerParChol, 1);
-		constrains_Acc2.smearInputValuesChol(chol_index,(step-1) - chol_index * varPerParChol, 1+varPerParChol);
-		constrains_Acc3.smearInputValuesChol(chol_index,(step-1) - chol_index * varPerParChol, 1+2*varPerParChol);
-		constrains_Acc4.smearInputValuesChol(chol_index,(step-1) - chol_index * varPerParChol, 1+3*varPerParChol);
 	}
 	else
 	{ 
 		constrains_Acc.smearInputValues();
-		constrains_Acc2.smearInputValues();
-		constrains_Acc3.smearInputValues();
-		constrains_Acc4.smearInputValues();
 	}
     }
+
+    Neg2LLMultiConstraint constrains_sys(MinuitParameterSet::getDefaultSet(),("_" + (string)doSystematic).c_str());
+    if(doSystematic.size() > 0 && mode == "fit")constrains_sys.smearInputValues();
+
 
     Minimiser mini;
     if(doSimFit)mini.attachFunction(&neg2LL_sim);
@@ -1151,12 +1143,57 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	return;
     }
 
+    /// Save results 
+    TMatrixTSym<double> cov_full = mini.covMatrixFull();     
+    //cov_full.Print();
+	
+    ofstream fitResults;
+    fitResults.open(((string)OutputDir+"FitResults.txt").c_str(),std::ofstream::trunc);
+
+    vector<string> prefix;
+    if(doSimFit){
+		prefix.push_back("_Run1");
+    		prefix.push_back("_Run2");
+    }
+    else prefix.push_back("");
+
+    for(int p = 0 ; p < prefix.size(); p++){
+	
+	fitResults << "\"" << "ConstrainMulti_Tagging" << prefix[p] << "\"" << "     " << "\"" ;
+	for(int i = 0 ; i < mps->size(); i++){	
+		if(mps->getParPtr(i)->iFixInit() == 0 && A_is_in_B(prefix[p],mps->getParPtr(i)->name()))
+			fitResults << mps->getParPtr(i)->name() << " ";
+	}	
+	fitResults << "\"";
+	fitResults<< "\n";
+	fitResults<< "\n";
+	fitResults << "\"" << "ConstrainMulti_Tagging" << prefix[p] << "_corr" << "\"" << "     " << "\"" ;
+	for(int i= 0; i< cov_full.GetNcols(); i++){
+			if(!(mps->getParPtr(i)->iFixInit() == 0 && A_is_in_B(prefix[p],mps->getParPtr(i)->name())))continue;
+			for(int j= i; j< cov_full.GetNcols(); j++){
+				if(!(mps->getParPtr(j)->iFixInit() == 0 && A_is_in_B(prefix[p],mps->getParPtr(j)->name())))continue;
+				if(i == j) fitResults << 1. << " " ;
+				else if(cov_full[i][i] == 0. || cov_full[j][j] == 0.) fitResults << 0. << " " ;
+				//else if(cov_full[i][j]/sqrt(cov_full[i][i])/sqrt(cov_full[j][j]) < 0.00001) fitResults << 0. << " " ; 
+				else fitResults << (cov_full[i][j]/sqrt(cov_full[i][i])/sqrt(cov_full[j][j])) << " ";
+			}
+	}
+	fitResults << "\"";
+	fitResults<< "\n";
+	fitResults<< "\n";
+    }
+
+     for(int i = 0 ; i < mps->size(); i++)	    
+		fitResults << "\"" << mps->getParPtr(i)->name() << "\"" << "    " << mps->getParPtr(i)->iFixInit() << "    " << mps->getParPtr(i)->mean() << "    " << mps->getParPtr(i)->err() <<  "\n";
+     fitResults.close();
+
+    
     /// Save pulls
     gDirectory->cd();
     string paraFileName = (string)OutputDir+"pull_"+anythingToString((int)step)+".root";
     if(doAccSystematics) paraFileName = (string)OutputDir+"pullAcc_"+anythingToString((int)step)+".root";
     if(doAccSystematics && useCholDec) paraFileName = (string)OutputDir+"pullAccChol_"+anythingToString((int)step)+".root";
-	//paraFileName = (string)OutputDir+"pullAccChol_par"+anythingToString((int)chol_index)+"_"+anythingToString((int)(step - chol_index * varPerParChol))+".root";
+    if(doSystematic.size() > 0)paraFileName = (string)OutputDir+"pull_"+ (string)doSystematic+ "_" + anythingToString((int)step)+".root";
 
     TFile* paraFile = new TFile( paraFileName.c_str(), "RECREATE");
     paraFile->cd();
@@ -1263,16 +1300,6 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	resultsfile << "\\end{table}";	
 	resultsfile.close();
 
-        TMatrixTSym<double> cov_full = mini.covMatrixFull();     
-        //cov_full.Print();
-
-	vector<string> prefix;
-	if(doSimFit){
-		prefix.push_back("_Run1");
-    		prefix.push_back("_Run2");
-    	}
-	else prefix.push_back("");
-
 	for(int p = 0 ; p < prefix.size(); p++){
 
 		vector<string> cov_params;
@@ -1280,27 +1307,27 @@ void fullTimeFit(int step=0, string mode = "fit"){
     		if(!mps->getParPtr("dGamma")->iFixInit())cov_params.push_back("dGamma");
     		if(!mps->getParPtr("dm")->iFixInit())cov_params.push_back("dm");
 
-    		if(!mps->getParPtr("offset_sigma_dt"+prefix[p])->iFixInit())cov_params.push_back("offset_sigma_dt"+prefix[p]);
-    		if(!mps->getParPtr("scale_sigma_dt"+prefix[p])->iFixInit())cov_params.push_back("scale_sigma_dt"+prefix[p]);
+//     		if(!mps->getParPtr("offset_sigma_dt"+prefix[p])->iFixInit())cov_params.push_back("offset_sigma_dt"+prefix[p]);
+//     		if(!mps->getParPtr("scale_sigma_dt"+prefix[p])->iFixInit())cov_params.push_back("scale_sigma_dt"+prefix[p]);
 
 		if(!mps->getParPtr("p0_os"+prefix[p])->iFixInit())cov_params.push_back("p0_os"+prefix[p]);
     		if(!mps->getParPtr("p1_os"+prefix[p])->iFixInit())cov_params.push_back("p1_os"+prefix[p]);
     		if(!mps->getParPtr("delta_p0_os"+prefix[p])->iFixInit())cov_params.push_back("delta_p0_os"+prefix[p]);
     		if(!mps->getParPtr("delta_p1_os"+prefix[p])->iFixInit())cov_params.push_back("delta_p1_os"+prefix[p]);
-    		if(!mps->getParPtr("avg_eta_os"+prefix[p])->iFixInit())cov_params.push_back("avg_eta_os"+prefix[p]);
-    		//if(!mps->getParPtr("tageff_os"+prefix[p])->iFixInit())cov_params.push_back("tageff_os"+prefix[p]);
+//     		if(!mps->getParPtr("avg_eta_os"+prefix[p])->iFixInit())cov_params.push_back("avg_eta_os"+prefix[p]);
+    		if(!mps->getParPtr("tageff_os"+prefix[p])->iFixInit())cov_params.push_back("tageff_os"+prefix[p]);
     		//if(!mps->getParPtr("tageff_asym_os"+prefix[p])->iFixInit())cov_params.push_back("tageff_asym_os"+prefix[p]);
 
 		if(!mps->getParPtr("p0_ss"+prefix[p])->iFixInit())cov_params.push_back("p0_ss"+prefix[p]);
     		if(!mps->getParPtr("p1_ss"+prefix[p])->iFixInit())cov_params.push_back("p1_ss"+prefix[p]);
     		if(!mps->getParPtr("delta_p0_ss"+prefix[p])->iFixInit())cov_params.push_back("delta_p0_ss"+prefix[p]);
     		if(!mps->getParPtr("delta_p1_ss"+prefix[p])->iFixInit())cov_params.push_back("delta_p1_ss"+prefix[p]);
-    		if(!mps->getParPtr("avg_eta_ss"+prefix[p])->iFixInit())cov_params.push_back("avg_eta_ss"+prefix[p]);
-    		//if(!mps->getParPtr("tageff_ss"+prefix[p])->iFixInit())cov_params.push_back("tageff_ss"+prefix[p]);
+//     		if(!mps->getParPtr("avg_eta_ss"+prefix[p])->iFixInit())cov_params.push_back("avg_eta_ss"+prefix[p]);
+    		if(!mps->getParPtr("tageff_ss"+prefix[p])->iFixInit())cov_params.push_back("tageff_ss"+prefix[p]);
     		//if(!mps->getParPtr("tageff_asym_ss"+prefix[p])->iFixInit())cov_params.push_back("tageff_asym_ss"+prefix[p]);
 
-    		if(!mps->getParPtr("production_asym"+prefix[p])->iFixInit())cov_params.push_back("production_asym"+prefix[p]);
-    		if(!mps->getParPtr("detection_asym"+prefix[p])->iFixInit())cov_params.push_back("detection_asym"+prefix[p]);
+//     		if(!mps->getParPtr("production_asym"+prefix[p])->iFixInit())cov_params.push_back("production_asym"+prefix[p]);
+//     		if(!mps->getParPtr("detection_asym"+prefix[p])->iFixInit())cov_params.push_back("detection_asym"+prefix[p]);
 
 		vector<int> cov_params_id;
 		RooArgList xvec, mu;
@@ -1326,7 +1353,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			mu.Print();
 			RooMultiVarGaussian gauss_cov("gauss_cov","gauss_cov",xvec, mu, cov);
 	
-			const int N_toys_cov = 500; 
+			const int N_toys_cov = 10000; 
 			RooDataSet* data_cov = gauss_cov.generate(xvec, N_toys_cov);
 	
 			double N_tot = 0;

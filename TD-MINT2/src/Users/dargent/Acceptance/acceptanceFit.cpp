@@ -333,7 +333,6 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	RooProdPdf* totPdf= new RooProdPdf("totPdf","totPdf",RooArgSet(*pdf_sigma_t),Conditional(RooArgSet(*timePdf),RooArgSet(Bs_TAU)));
         
 	///Fit and Print
-	///Fit and Print
 // 	RooFitResult *myfitresult = totPdf->fitTo(*dataset, Save(1), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU),ExternalConstraints(*gauss_cov));
 	RooFitResult *myfitresult = totPdf->fitTo(*dataset, Save(1), Strategy(2), Verbose(kFALSE), SumW2Error(kTRUE), Extended(kFALSE), Offset(kTRUE),NumCPU(numCPU));
 	myfitresult->Print("v");
@@ -480,17 +479,6 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 		<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
 	}
 
-	//save correlations 
-	ofstream correlationFile;
-	correlationFile.open(("Correlations_" + marginalPdfsPrefix + ".txt").c_str(),std::ofstream::trunc);
-	correlationFile << "\"";
-	for(int i= 0; i< myBinning.size(); i++){
-		for(int j= 0; j< myBinning.size(); j++){
-			correlationFile << myfitresult->correlation(("coeff_"+anythingToString(i)).c_str(),("coeff_"+anythingToString(j)).c_str()) << " ";
-		}
-	}
-	correlationFile << "\"";
-	
 	return myCoeffsAndErr;
 }
 
@@ -1641,6 +1629,7 @@ int main(int argc, char** argv){
     TH2::SetDefaultSumw2();
     gROOT->ProcessLine(".x ../lhcbStyle.C");
     
+    NamedParameter<string> BinningName("BinningName",(string)"default");
     NamedParameter<int> CompareAcceptance("CompareAcceptance", 1);
     NamedParameter<int> FitSplineAccRatio("FitSplineAccRatio", 1);
     NamedParameter<int> FitSplineNorm("FitSplineNorm", 1);
@@ -1777,7 +1766,7 @@ int main(int argc, char** argv){
 	/// Save correlations
 	if(doSystematics){ 
 		ofstream correlationFile;
-		correlationFile.open("Correlations.txt",std::ofstream::trunc);
+		correlationFile.open(("Correlations_"+ (string)BinningName+".txt").c_str(),std::ofstream::trunc);
 		correlationFile << "\"" << "ConstrainMulti_Acc" << "\"" << "     " << "\"" << "Gamma dGamma ";
 		for(int opt = 0 ; opt < dataCuts.size(); opt++)	
 			for(int i = 0; i < knot_positions.getVector().size(); i++)
@@ -1788,7 +1777,7 @@ int main(int argc, char** argv){
 		correlationFile<< "\n";
 		correlationFile << "\"" << "ConstrainMulti_Acc_corr" << "\"" << "     " << "\"" ;
 		for(int i= 0; i< cor.GetNcols(); i++){
-			for(int j= 0; j< cor.GetNcols(); j++){
+			for(int j= i; j< cor.GetNcols(); j++){
 				correlationFile << cor[i][j] << " ";
 			}
 		}
@@ -1798,12 +1787,12 @@ int main(int argc, char** argv){
     }
 
     if(FitSplineNorm){
-	fitSplineAcc("" , "comb", 0.01 , 1.);
+// 	fitSplineAcc("" , "comb", 0.01 , 1.);
 // 	fitSplineAcc(" run == 2" , "Run2", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
-// 	fitSplineAcc(" run == 1 && TriggerCat == 0 " , "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
-// 	fitSplineAcc(" run == 1 && TriggerCat == 1 " , "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
-// 	fitSplineAcc(" run == 2 && TriggerCat == 0 " , "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
-// 	fitSplineAcc(" run == 2 && TriggerCat == 1 " , "Run2_t1", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
+	fitSplineAcc(" run == 1 && TriggerCat == 0 " , "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
+	fitSplineAcc(" run == 1 && TriggerCat == 1 " , "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
+	fitSplineAcc(" run == 2 && TriggerCat == 0 " , "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
+	fitSplineAcc(" run == 2 && TriggerCat == 1 " , "Run2_t1", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
     }
 
     cout << "==============================================" << endl;

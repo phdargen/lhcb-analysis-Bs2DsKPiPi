@@ -35,18 +35,33 @@ class Neg2LLMultiConstraint: public Minimisable{
 			/// Parameters to constrain
 			NamedParameter<string> constrain(("ConstrainMulti"+label).c_str(), (string)"" );
 			string constrain_s = constrain;			
+			cout << constrain_s << endl;
 			vector<string> constrain_v = split(constrain_s, " ");
+			cout << constrain_v << endl;
 
 			/// Cov. matrix			
-			NamedParameter<string> corr(("ConstrainMulti"+label+"_corr").c_str(),(string)"");
+			NamedParameter<string> corr(("ConstrainMulti"+label+"_corr").c_str(),(string)"", (char*) 0);
 			string corr_s = corr;			
+			cout << corr_s << endl;
 			vector<double> corr_v = splitValues(corr_s, " ");
-			double* corr_a = &corr_v[0];
-			TMatrixDSym cov(constrain_v.size(),corr_a);
-			//cov.Print();
+			cout << corr_v << endl;
+
+			TMatrixDSym cov(constrain_v.size());
+			int index = 0;
+			for(int i=0; i < cov.GetNcols(); i++){
+				for(int j=i; j < cov.GetNcols(); j++){    
+					cov(i,j) = corr_v[index];
+					cov(j,i) = corr_v[index];
+					index++;
+				}
+			}
+
+			//double* corr_a = &corr_v[0];
+			//TMatrixDSym cov(constrain_v.size(),corr_a);
+			cov.Print();
 
 			/// Sanity checks
-			if(constrain_v.size() != sqrt(corr_v.size())) { 
+			if(constrain_v.size() * (constrain_v.size()+1)/2 != corr_v.size()) { 
 				cout << "ERROR in Neg2LLMultiConstraint::Inconsistent number of parameters and cov. matrix" << endl;
 				throw "ERROR";			
 			}

@@ -19,6 +19,24 @@ TString pull::latexName(TString s){
     return "$" + s + "$";
 }
 
+TMatrixD pull::combineCov_maxVal(vector<TMatrixD*> vec){
+
+	TMatrixD m(*vec[0]);
+
+	for (int i = 0 ; i <  m.GetNcols(); i++) {
+		for (int j = 0 ; j < m.GetNcols(); j++) {
+			double max = 0.;
+			for(int n = 0; n < vec.size(); n++){
+				 if(abs((*vec[n])(i,j)) > abs(max)) max = (*vec[n])(i,j);
+			}
+			m(i,j) = max; 
+		}
+	}
+
+	return m;
+}
+
+
 TMatrixD pull::getStatCov(TString label){
     
     if(fChain == 0){
@@ -114,11 +132,24 @@ TMatrixD pull::getCov(TString label){
 
 TMatrixD pull::getDeltaCov(TString refFileName,TString label){
     
+    int N = fChain->GetEntries();
+
     TChain* chain =  new TChain("MinuitParameterSetNtp");
-    chain->Add(refFileName); 
-    
+    if(N>1)for(int i = 1; i <= N; i++){
+	stringstream index;
+	index << i;
+	TString file = refFileName;
+	chain->Add(file.ReplaceAll("*",index.str())); 
+    }    
+    else chain->Add(refFileName); 
+
     if(fChain == 0 || chain == 0){
         cout << "ERROR:: No file found" << endl;
+        throw "ERROR";
+    }
+
+    if(N > chain->GetEntries()){
+        cout << "ERROR:: Inconsistent number of entries" << endl;
         throw "ERROR";
     }
     
@@ -146,15 +177,33 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
     } 
     
     TMatrixD cov(_paraNames.size(),_paraNames.size());
-    int N = fChain->GetEntries();
-    if(N != chain->GetEntries()){
-        cout << "ERROR:: Inconsistent number of entries" << endl;
-        throw "ERROR";
+
+    if(N == 1){
+        fChain->GetEntry(0); 
+        chain->GetEntry(0); 
+        for (int i = 0 ; i < _paraNames.size(); i++) 
+            for (int j = 0 ; j < _paraNames.size(); j++) {
+                if(i==j)cov[i][j] = pow((*_means[i] - *means[i]),2);
+                else cov[i][j] = 0.;
+            }
+        return cov;
     }
+
+    double max = 0.;
+
+    for (int n=0; n <N ;n++) {
+        fChain->GetEntry(n);  
+        chain->GetEntry(n);
+        for (int i = 0 ; i < _paraNames.size(); i++){
+	   double val = (*_means[i]-*means[i])/(*errs[i]);
+           if(abs(val) > max) max = abs(val);
+	}
+    }
+    max *= 1.1;
     
     vector<TH1D*> h_pulls;
     for (int i = 0 ; i < _paraNames.size(); i++) 
-        h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 40, -1.,1.));
+        h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 20, -max,max));
     
     for (int n=0; n <N ;n++) {
         fChain->GetEntry(n);  
