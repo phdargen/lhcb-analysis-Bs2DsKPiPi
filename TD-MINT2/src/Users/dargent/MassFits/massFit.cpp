@@ -1334,6 +1334,7 @@ vector< vector<double> > fitNorm(){
 		output = new TFile(((string)outFileName).c_str(),"RECREATE");
 		tree->SetBranchStatus("*",1);
 		tree->SetBranchStatus("weight",0);
+		tree->SetBranchStatus("N_Bs_sw",0);
 
 		if(fitPreselected)out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) ).c_str() );
 		else out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && " + (string)cut_BDT).c_str() );
@@ -1961,7 +1962,7 @@ void fitSignal(){
 	if(useTriggerCat){
 		config->setStringValue("pdf", "run            : scale_mean "
 					"run,TriggerCat :	scale_sigma "
-					"Ds_finalState_mod :  exp_par2, exp_par3 "  
+					"Ds_finalState_mod :  exp_par "  
 					"run,Ds_finalState_mod,TriggerCat : n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg, misID_f") ; 
 	}
 	else {
@@ -2359,8 +2360,9 @@ void fitSignal(){
 		output = new TFile(((string)outFileName).c_str(),"RECREATE");
 		tree->SetBranchStatus("*",1);
 		tree->SetBranchStatus("weight",0);
+		tree->SetBranchStatus("N_Bs_sw",0);
 
-		out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && " + (string)cut_BDT + " && pi_minus_PIDK < 0").c_str());
+		out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && " + (string)cut_BDT).c_str());
     		b_sw = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
     		b_w = out_tree->Branch("weight", &sw_B0, "weight/D");
 

@@ -1,5 +1,5 @@
 * general options
-"channel"	"Norm"
+"channel"	"Signal"
 "nBins"		100
 "min_MM"	5200.
 "max_MM"	5700.
@@ -18,7 +18,7 @@
 
 * Norm fit :
 "fixExpBkgFromSidebands"	 0
-"sWeightNorm"	 1
+"sWeightNorm"	 0
 "altPartBkg"     0
 "useB0"     	 1	
 "fixSignalShapeFromMC"	 0
@@ -30,9 +30,9 @@
 "useNormSignalShape"	1
 "constrainCombBkgFromSS"	0
 
-"sWeightSignal"	 	0
-"outFileNameSignal"	"/auto/data/kecke/Bs2DsKpipi_test.root"
-*"inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/BDT/Data/signal.root"
+"sWeightSignal"	 	1
+"outFileNameSignal"	"Bs2DsKpipi_test2.root"
+"inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/Final/Data/signal_tagged.root"
 
 * MC fit:
 "sWeightMC"	0
