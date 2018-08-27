@@ -130,6 +130,13 @@ int main(int argc, char** argv){
     covs.push_back(new TMatrixD(cov_asym));
 
 
+    /// bkg systematics 
+    pull p_bkg_a(paraNames,"signal_sys_bkg_a/pull__1.root");
+    TMatrixD* cov_bkg_a = new TMatrixD(p_bkg_a.getDeltaCov("signal/pull_1.root","bkg_a"));
+    cov_bkg_a->Print();
+    covs.push_back(cov_bkg_a);
+
+
     /// Total systematics table   
     vector<string> sysNames;
     sysNames.push_back("Fit bias");
@@ -137,6 +144,7 @@ int main(int argc, char** argv){
     sysNames.push_back("Resolution");
     sysNames.push_back("$\\Delta m_{s}$");
     sysNames.push_back("Asymmetries");
+    sysNames.push_back("Background");
  
     ofstream SummaryFile;
     //SummaryFile.open("pull_results/sys_summary_table.tex",std::ofstream::trunc);

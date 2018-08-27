@@ -1,12 +1,12 @@
 "RandomSeed"		0
 "Event Pattern"         531 -431 321 211 -211
 
-"InputFileName"	 "/auto/data/dargent/BsDsKpipi/Final/signal_tagged.root"
-"OutputDir"	"signal/"
+"InputFileName"	"../MassFits/Bs2DsKpipi_test.root"
+"OutputDir"	"signal_sys_bkg_a/"
 "channel"	"signal"
 
-"doPlots"	 1
-"updateAnaNote"		 1
+"doPlots"	 0
+"updateAnaNote"		 0
 
 "nBinst" 	40
 "nBinsAsym"	 8

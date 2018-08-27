@@ -28,9 +28,9 @@
 "useCholDec"		 1
 "varPerParChol"		100
 
-*"doSystematic"		"dm"
-*"ConstrainMulti_dms"     "dm "
-*"ConstrainMulti_dms_corr"     "1 "
+"doSystematic"		"dm"
+"ConstrainMulti_dm"     "dm "
+"ConstrainMulti_dm_corr"     "1 "
 
 *"doSystematic"		"production_asym_Run1"
 *"ConstrainMulti_production_asym_Run1"     "production_asym_Run1 "

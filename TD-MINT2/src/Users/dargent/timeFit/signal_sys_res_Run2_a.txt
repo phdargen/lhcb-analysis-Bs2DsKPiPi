@@ -2,11 +2,11 @@
 "Event Pattern"         531 -431 321 211 -211
 
 "InputFileName"	 "/auto/data/dargent/BsDsKpipi/Final/signal_tagged.root"
-"OutputDir"	"signal/"
+"OutputDir"	"signal_sys_res_Run2_a/"
 "channel"	"signal"
 
-"doPlots"	 1
-"updateAnaNote"		 1
+"doPlots"	 0
+"updateAnaNote"		 0
 
 "nBinst" 	40
 "nBinsAsym"	 8
@@ -26,9 +26,9 @@
 
 ** name		Fix?	init	step	min	max
 
-"Gamma"		2	0.6629 	0.0018	0.0	2.0
-"dGamma" 	2 	-0.088 	0.006	0.0	0.0
-"dm" 		2 	17.757  0.021	0.0	0.0
+"Gamma"		1	0.6629 	0.0018	0.0	2.0
+"dGamma" 	1 	-0.088 	0.006	0.0	0.0
+"dm" 		1 	17.757  0.021	0.0	0.0
 
 "C"	0	0.75	0.05	0	2	
 "D"	0	-0.31	0.05	-2	2
@@ -42,7 +42,6 @@
 "S_Blind"	4	-1   1
 "S_bar_Blind"	5	-1   1
 "k" 	1	1.	0.05	0.	1.
-***
 
 knot_positions 0.8 1.6 2.5 6.5 
 c0_Run1_t0  1  0.563896  0.0156214
@@ -67,36 +66,12 @@ c3_Run2_t1  1  1.06446  0.0205617
 
 
 ***
-"p0_os_Run1"    0   0.397398    0.00969409
-"p1_os_Run1"    0    0.895493    0.0852892
-"delta_p0_os_Run1"    2    0.0294626    0.0104767
-"delta_p1_os_Run1"    2    0.0149661    0.0936451
+
 "avg_eta_os_Run1"    2    0.356747    0
-"tageff_os_Run1"    0    0.477392    0.00366241
-"tageff_asym_os_Run1"    2    0    0
-"p0_ss_Run1"    0    0.444258    0.00801601
-"p1_ss_Run1"    0    0.951345    0.110851
-"delta_p0_ss_Run1"    2    -0.018648    0.0088224
-"delta_p1_ss_Run1"    2    0.0648605    0.124364
 "avg_eta_ss_Run1"    2    0.430647    0
-"tageff_ss_Run1"    0    0.684152    0.00340845
-"tageff_asym_ss_Run1"    2    0    0
 
-"p0_os_Run2"    0    0.367591    0.00713118
-"p1_os_Run2"    0    0.866677    0.0636764
-"delta_p0_os_Run2"    2    0.011821    0.00845752
-"delta_p1_os_Run2"    2    0.0274802    0.0763576
 "avg_eta_os_Run2"    2    0.337847    0
-"tageff_os_Run2"    0    0.368447    0.00247828
-"tageff_asym_os_Run2"    2    0    0
-"p0_ss_Run2"    0    0.43337    0.00524488
-"p1_ss_Run2"    0    0.798898    0.0548957
-"delta_p0_ss_Run2"    2    -0.0179237    0.00619568
-"delta_p1_ss_Run2"    2    0.0196302    0.066483
 "avg_eta_ss_Run2"    2    0.404377    0
-"tageff_ss_Run2"    0    0.695995    0.00236321
-"tageff_asym_ss_Run2"    2    0    0
-
 
 "offset_sigma_dt_Run1"	2	0.0103 0.001
 "scale_sigma_dt_Run1"	2	1.28 0.001
@@ -111,10 +86,38 @@ c3_Run2_t1  1  1.06446  0.0205617
 "detection_asym_Run2"	2	0.01 0.001
 
 
+
+
 "ConstrainMulti_Tagging_Run1"     "p0_os_Run1 p1_os_Run1 tageff_os_Run1 p0_ss_Run1 p1_ss_Run1 tageff_ss_Run1 "
 
-"ConstrainMulti_Tagging_Run1_corr"     "1 0.0619449 3.56451e-09 -0.0606465 0.0553159 3.07425e-09 1 4.25336e-10 0.00413121 -0.0872366 -1.37478e-09 1 -3.33719e-09 -2.45895e-09 -1.50034e-09 1 0.0451437 -2.17319e-09 1 7.11622e-10 1 "
+"ConstrainMulti_Tagging_Run1_corr"     "1 0.0619451 1.0064e-09 -0.0606465 0.055316 1.5425e-09 1 -1.41156e-09 0.00413128 -0.0872366 2.11239e-09 1 -2.09663e-09 -4.06819e-10 1.00023e-09 1 0.0451438 1.42178e-09 1 -2.41626e-11 1 "
 
 "ConstrainMulti_Tagging_Run2"     "p0_os_Run2 p1_os_Run2 tageff_os_Run2 p0_ss_Run2 p1_ss_Run2 tageff_ss_Run2 "
 
-"ConstrainMulti_Tagging_Run2_corr"     "1 0.0645484 7.02621e-09 -0.0160539 0.0284919 2.18567e-08 1 -9.1706e-09 -0.00206847 -0.00881022 1.98965e-08 1 -1.00533e-08 -9.64395e-09 7.75166e-09 1 0.0722799 -8.46498e-09 1 -1.16091e-09 1 "
+"ConstrainMulti_Tagging_Run2_corr"     "1 0.0624776 9.30167e-09 -0.00713513 0.0160505 7.98053e-09 1 8.12233e-09 -0.00776396 -0.00192098 9.55995e-09 1 -3.23558e-09 -1.28043e-08 -7.0015e-09 1 0.067051 -7.51262e-09 1 -9.6246e-09 1 "
+
+"p0_os_Run1"    0    0.397922    0.00970665
+"p1_os_Run1"    0    0.895264    0.085268
+"delta_p0_os_Run1"    2    0    0
+"delta_p1_os_Run1"    2    0    0
+"tageff_os_Run1"    0    0.477393    0.00366241
+"tageff_asym_os_Run1"    2    0    0
+"p0_ss_Run1"    0    0.444114    0.00801794
+"p1_ss_Run1"    0    0.947015    0.110737
+"delta_p0_ss_Run1"    2    0    0
+"delta_p1_ss_Run1"    2    0    0
+"tageff_ss_Run1"    0    0.684152    0.00340845
+"tageff_asym_ss_Run1"    2    0    0
+"p0_os_Run2"    0    0.377835    0.00665606
+"p1_os_Run2"    0    0.805365    0.0598624
+"delta_p0_os_Run2"    2    0    0
+"delta_p1_os_Run2"    2    0    0
+"tageff_os_Run2"    0    0.368447    0.00247828
+"tageff_asym_os_Run2"    2    0    0
+"p0_ss_Run2"    0    0.437473    0.00491332
+"p1_ss_Run2"    0    0.750788    0.0516581
+"delta_p0_ss_Run2"    2    0    0
+"delta_p1_ss_Run2"    2    0    0
+"tageff_ss_Run2"    0    0.695996    0.0023632
+"tageff_asym_ss_Run2"    2    0    0
+"production_asym_Run2"    2    0    0

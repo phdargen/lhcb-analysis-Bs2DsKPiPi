@@ -125,7 +125,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     DalitzEventPattern pat(EventPattern.getVector());
     DalitzEventPattern pat_CP = pat.makeCPConjugate();
 
-    NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
+    NamedParameter<string> InputFileName("InputFileName", (std::string) "/auto/data/dargent/BsDsKpipi/Final/signal_tagged.root", (char*) 0);
     NamedParameter<string> InputGenMCFile("InputGenMCFile", (std::string) "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/GenLevMC/Gen_DsK.root", (char*) 0);
     NamedParameter<string> channel("channel", (std::string) "norm", (char*) 0);
     NamedParameter<string> OutputDir("OutputDir", (std::string) "", (char*) 0);
@@ -542,7 +542,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     else {
 	tree_norm=new TChain("DecayTree");
 	if(mode == "fit" && doToyStudy == 1)tree_norm->Add(((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
-	else tree_norm->Add(((string)InputDir+"Data/"+(string)channel+"_tagged.root").c_str());
+	else tree_norm->Add(((string)InputFileName).c_str());
 	tree_norm->SetBranchStatus("*",0);
 	tree_norm->SetBranchStatus("N_Bs_sw",1);
 	tree_norm->SetBranchStatus("year",1);

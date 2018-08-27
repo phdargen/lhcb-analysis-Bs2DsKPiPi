@@ -32,9 +32,9 @@
 *"ConstrainMulti_dms"     "dm "
 *"ConstrainMulti_dms_corr"     "1 "
 
-*"doSystematic"		"production_asym_Run1"
-*"ConstrainMulti_production_asym_Run1"     "production_asym_Run1 "
-*"ConstrainMulti_production_asym_Run1_corr"     "1 "
+"doSystematic"		"production_asym_Run1"
+"ConstrainMulti_production_asym_Run1"     "production_asym_Run1 "
+"ConstrainMulti_production_asym_Run1_corr"     "1 "
 
 *"doSystematic"		"production_asym_Run2"
 *"ConstrainMulti_production_asym_Run2"     "production_asym_Run2 "
