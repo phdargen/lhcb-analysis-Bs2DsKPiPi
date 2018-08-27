@@ -190,7 +190,6 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
     }
 
     double max = 0.;
-
     for (int n=0; n <N ;n++) {
         fChain->GetEntry(n);  
         chain->GetEntry(n);
@@ -203,7 +202,7 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
     
     vector<TH1D*> h_pulls;
     for (int i = 0 ; i < _paraNames.size(); i++) 
-        h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 20, -max,max));
+        h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 25, -max,max));
     
     for (int n=0; n <N ;n++) {
         fChain->GetEntry(n);  
@@ -246,7 +245,7 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
         chain->GetEntry(n);
         for (int i = 0 ; i < _paraNames.size(); i++)
             for (int j = 0 ; j < _paraNames.size(); j++) 
-                cov[i][j] += (*_means[i] - fit_means[i]) * (*_means[j] - fit_means[j])/(N-1.);
+                cov[i][j] += (*_means[i] - *means[i]) * (*_means[j] - *means[j])/(N-1.);
     }
     
     TMatrixD cov_prime(cov);
@@ -254,16 +253,29 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
         for (int j = 0 ; j < _paraNames.size(); j++) 
             cov_prime[i][j] = cov[i][j]/sqrt(cov[i][i])/sqrt(cov[j][j])*sqrt(pow(fit_means[i],2)+pow(fit_sigmas[i],2))*sqrt(pow(fit_means[j],2)+pow(fit_sigmas[j],2));
     
-    return cov_prime;
+    return cov;
 }
 
 TMatrixD pull::getDeltaCovChol(TString refFileName,TString label,int varPerParChol){
     
+    int N = fChain->GetEntries();
+
     TChain* chain =  new TChain("MinuitParameterSetNtp");
-    chain->Add(refFileName); 
-    
+    if(N>1)for(int i = 1; i <= N; i++){
+	stringstream index;
+	index << i;
+	TString file = refFileName;
+	chain->Add(file.ReplaceAll("*",index.str())); 
+    }    
+    else chain->Add(refFileName); 
+
     if(fChain == 0 || chain == 0){
         cout << "ERROR:: No file found" << endl;
+        throw "ERROR";
+    }
+
+    if(N > chain->GetEntries()){
+        cout << "ERROR:: Inconsistent number of entries" << endl;
         throw "ERROR";
     }
     
@@ -290,12 +302,6 @@ TMatrixD pull::getDeltaCovChol(TString refFileName,TString label,int varPerParCh
         chain->SetBranchAddress(_paraNames[i]+"_pull", pull);
     } 
     
-    int N = fChain->GetEntries();
-    if(N != chain->GetEntries()){
-        cout << "ERROR:: Inconsistent number of entries" << endl;
-        throw "ERROR";
-    }
-
     int N_chol = N/varPerParChol;
     
     TMatrixD cov_tot(_paraNames.size(),_paraNames.size());
@@ -352,7 +358,7 @@ TMatrixD pull::getDeltaCovChol(TString refFileName,TString label,int varPerParCh
             chain->GetEntry(n);
             for (int i = 0 ; i < _paraNames.size(); i++)
                 for (int j = 0 ; j < _paraNames.size(); j++) 
-                    cov[i][j] += (*_means[i] - fit_means[i]) * (*_means[j] - fit_means[j])/(N-1.);
+                    cov[i][j] += (*_means[i] - *means[i]) * (*_means[j] - *means[j])/(N-1.);
         }
         
         TMatrixD cov_prime(cov);
@@ -360,7 +366,7 @@ TMatrixD pull::getDeltaCovChol(TString refFileName,TString label,int varPerParCh
             for (int j = 0 ; j < _paraNames.size(); j++) 
                 cov_prime[i][j] = cov[i][j]/sqrt(cov[i][i])/sqrt(cov[j][j])*sqrt(pow(fit_means[i],2)+pow(fit_sigmas[i],2))*sqrt(pow(fit_means[j],2)+pow(fit_sigmas[j],2));
         
-        cov_tot += cov_prime;
+        cov_tot += cov;
     }    
         
     return cov_tot;

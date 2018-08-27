@@ -861,7 +861,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     }
 
     Neg2LLMultiConstraint constrains_sys(MinuitParameterSet::getDefaultSet(),("_" + (string)doSystematic).c_str());
-    if(doSystematic.size() > 0 && mode == "fit")constrains_sys.smearInputValues();
+    if((string)doSystematic != "" && mode == "fit")constrains_sys.smearInputValues();
 
 
     Minimiser mini;
@@ -1190,10 +1190,11 @@ void fullTimeFit(int step=0, string mode = "fit"){
     
     /// Save pulls
     gDirectory->cd();
-    string paraFileName = (string)OutputDir+"pull_"+anythingToString((int)step)+".root";
+    string paraFileName = (string)OutputDir+"pull_"+ (string)doSystematic+ "_" + anythingToString((int)step)+".root";
     if(doAccSystematics) paraFileName = (string)OutputDir+"pullAcc_"+anythingToString((int)step)+".root";
     if(doAccSystematics && useCholDec) paraFileName = (string)OutputDir+"pullAccChol_"+anythingToString((int)step)+".root";
-    if(doSystematic.size() > 0)paraFileName = (string)OutputDir+"pull_"+ (string)doSystematic+ "_" + anythingToString((int)step)+".root";
+    cout << paraFileName << endl;
+
 
     TFile* paraFile = new TFile( paraFileName.c_str(), "RECREATE");
     paraFile->cd();
@@ -1353,7 +1354,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			mu.Print();
 			RooMultiVarGaussian gauss_cov("gauss_cov","gauss_cov",xvec, mu, cov);
 	
-			const int N_toys_cov = 10000; 
+			const int N_toys_cov = 500; 
 			RooDataSet* data_cov = gauss_cov.generate(xvec, N_toys_cov);
 	
 			double N_tot = 0;

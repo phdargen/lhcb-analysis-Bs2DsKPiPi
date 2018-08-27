@@ -33,15 +33,15 @@ int main(int argc, char** argv){
     vector<TMatrixD*> covs;
 
     /// Stat cov from toys
-    pull p_stat(paraNames,"signal_toy6/pull__*.root");
+    pull p_stat(paraNames,"signal_toy7/pull__*.root");
     TMatrixD* cov_stat = new TMatrixD(p_stat.getStatCov());
     cov_stat->Print();
 
     /// Fit bias from toys
-     pull p(paraNames,"signal_toy6/pull__*.root");
-//     TMatrixD* cov = new TMatrixD(p.getCov());
-//     cov->Print();
-//     covs.push_back(cov);
+     pull p(paraNames,"signal_toy7/pull__*.root");
+     TMatrixD* cov = new TMatrixD(p.getCov());
+     cov->Print();
+     covs.push_back(cov);
 
     /// Systematics from data fits
     vector<TString> fileNames;
@@ -64,40 +64,10 @@ int main(int argc, char** argv){
     //covs.push_back(cov_acc);
 
     /// Acc systematics (with cholesky)
-//     pull p_acc_chol(paraNames,"signal_toy5/pullAccChol_*.root");
-//     TMatrixD* cov_acc_chol = new TMatrixD(p_acc_chol.getDeltaCovChol("signal_toy5/pull_*.root","_accChol",100));
-//     cov_acc_chol->Print();
-    //covs.push_back(cov_acc_chol);
-
-    /// dms systematics 
-    pull p_dm(paraNames,"signal_toy6/pull_dm_*.root");
-    TMatrixD* cov_dm = new TMatrixD(p_dm.getDeltaCov("signal_toy6/pull__*.root","_dm"));
-    cov_dm->Print();
-    covs.push_back(cov_dm);
-
-    /// asymmetry systematics
-    pull p_production_asym_Run1(paraNames,"signal_toy6/pull_production_asym_Run1_*.root");
-    TMatrixD* cov_production_asym_Run1 = new TMatrixD(p_production_asym_Run1.getDeltaCov("signal_toy6/pull__*.root","_production_asym_Run1"));
-    cov_production_asym_Run1->Print();
-
-    pull p_production_asym_Run2(paraNames,"signal_toy6/pull_production_asym_Run2_*.root");
-    TMatrixD* cov_production_asym_Run2 = new TMatrixD(p_production_asym_Run2.getDeltaCov("signal_toy6/pull__*.root","_production_asym_Run2"));
-    cov_production_asym_Run2->Print();
-
-    pull p_detection_asym_Run1(paraNames,"signal_toy6/pull_detection_asym_Run1_*.root");
-    TMatrixD* cov_detection_asym_Run1 = new TMatrixD(p_detection_asym_Run1.getDeltaCov("signal_toy6/pull__*.root","_detection_asym_Run1"));
-    cov_detection_asym_Run1->Print();
-
-    pull p_detection_asym_Run2(paraNames,"signal_toy6/pull_detection_asym_Run2_*.root");
-    TMatrixD* cov_detection_asym_Run2 = new TMatrixD(p_detection_asym_Run2.getDeltaCov("signal_toy6/pull__*.root","_detection_asym_Run2"));
-    cov_detection_asym_Run2->Print();
-
-    TMatrixD cov_asym(*cov_production_asym_Run1);
-    cov_asym +=  *cov_production_asym_Run2 ;
-    cov_asym +=  *cov_detection_asym_Run1 ;
-    cov_asym +=   *cov_detection_asym_Run2;
-
-    covs.push_back(new TMatrixD(cov_asym));
+    pull p_acc_chol(paraNames,"signal_toy7/pullAccChol_*.root");
+    TMatrixD* cov_acc_chol = new TMatrixD(p_acc_chol.getDeltaCovChol("signal_toy7/pull__*.root","_accChol",100));
+    cov_acc_chol->Print();
+    covs.push_back(cov_acc_chol);
 
     /// resolution systematics 
     pull p_res_Run1_a(paraNames,"signal_sys_res_Run1_a/pull__1.root");
@@ -129,6 +99,36 @@ int main(int argc, char** argv){
     covs.push_back(new TMatrixD(cov_res));
 
 
+    /// dms systematics 
+    pull p_dm(paraNames,"signal_toy6/pull_dm_*.root");
+    TMatrixD* cov_dm = new TMatrixD(p_dm.getDeltaCov("signal_toy6/pull__*.root","_dm"));
+    cov_dm->Print();
+    covs.push_back(cov_dm);
+
+    /// asymmetry systematics
+    pull p_production_asym_Run1(paraNames,"signal_toy6/pull_production_asym_Run1_*.root");
+    TMatrixD* cov_production_asym_Run1 = new TMatrixD(p_production_asym_Run1.getDeltaCov("signal_toy6/pull__*.root","_production_asym_Run1"));
+    cov_production_asym_Run1->Print();
+
+    pull p_production_asym_Run2(paraNames,"signal_toy6/pull_production_asym_Run2_*.root");
+    TMatrixD* cov_production_asym_Run2 = new TMatrixD(p_production_asym_Run2.getDeltaCov("signal_toy6/pull__*.root","_production_asym_Run2"));
+    cov_production_asym_Run2->Print();
+
+    pull p_detection_asym_Run1(paraNames,"signal_toy6/pull_detection_asym_Run1_*.root");
+    TMatrixD* cov_detection_asym_Run1 = new TMatrixD(p_detection_asym_Run1.getDeltaCov("signal_toy6/pull__*.root","_detection_asym_Run1"));
+    cov_detection_asym_Run1->Print();
+
+    pull p_detection_asym_Run2(paraNames,"signal_toy6/pull_detection_asym_Run2_*.root");
+    TMatrixD* cov_detection_asym_Run2 = new TMatrixD(p_detection_asym_Run2.getDeltaCov("signal_toy6/pull__*.root","_detection_asym_Run2"));
+    cov_detection_asym_Run2->Print();
+
+    TMatrixD cov_asym(*cov_production_asym_Run1);
+    cov_asym +=  *cov_production_asym_Run2 ;
+    cov_asym +=  *cov_detection_asym_Run1 ;
+    cov_asym +=   *cov_detection_asym_Run2;
+
+    covs.push_back(new TMatrixD(cov_asym));
+
 
     /// Total systematics table   
     vector<string> sysNames;
@@ -139,7 +139,8 @@ int main(int argc, char** argv){
     sysNames.push_back("Asymmetries");
  
     ofstream SummaryFile;
-    SummaryFile.open("pull_results/summary_table.tex",std::ofstream::trunc);
+    //SummaryFile.open("pull_results/sys_summary_table.tex",std::ofstream::trunc);
+    SummaryFile.open("../../../../../TD-AnaNote/latex/tables/timeFit/signal/sys_summary_table.tex",std::ofstream::trunc);
 
     SummaryFile << "\\begin{tabular}{l " ;
     for(int i =0 ; i <covs.size() ; i++) SummaryFile << " c " ;
@@ -167,7 +168,8 @@ int main(int argc, char** argv){
 
     /// Total systematics table in terms of sigma_stat   
     ofstream SummaryFile2;
-    SummaryFile2.open("pull_results/summary_table2.tex",std::ofstream::trunc);
+    //SummaryFile2.open("pull_results/sys_summary_table2.tex",std::ofstream::trunc);
+    SummaryFile2.open("../../../../../TD-AnaNote/latex/tables/timeFit/signal/sys_summary_table2.tex",std::ofstream::trunc);
 
     SummaryFile2 << "\\begin{tabular}{l " ;
     for(int i =0 ; i <covs.size() ; i++) SummaryFile2 << " c " ;
