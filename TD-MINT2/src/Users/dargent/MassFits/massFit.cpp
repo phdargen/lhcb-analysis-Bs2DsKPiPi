@@ -212,6 +212,280 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi"){
 	return fake_prob;
 }
 
+double prepareMisIdBkgShape_inverted(TString channel = "Dstar3pi"){
+
+	NamedParameter<double> min_MM("min_MM",5100.);
+	NamedParameter<double> max_MM("max_MM",5700.);
+
+	TString fileName = "/auto/data/dargent/BsDsKpipi/Preselected/MC/";
+	if(channel == "Dstar3pi")fileName += "norm_Ds2KKpi_12_Dstar_bkg.root";
+	else if(channel == "Ds3pi")fileName += "norm_Ds2KKpi_bkg.root";
+	else {
+		cout << "ERROR::No channel specified" << endl;
+		throw "ERROR";
+	}
+	TString calib_fileName = fileName;
+	calib_fileName.ReplaceAll("bkg.root","bkg_PIDK_10.root");
+	TString out_fileName;
+	if(channel == "Dstar3pi") out_fileName = "norm_Ds2KKpi_12_Dstar_bkg_inverted.root";
+	if(channel == "Ds3pi") out_fileName = "norm_Ds2KKpi_bkg_inverted.root";
+
+	/// Load file
+	TFile* calib_file = new TFile(calib_fileName);
+	TTree* calib_tree = (TTree*) calib_file->Get("CalibTool_PIDCalibTree");
+	float pi_plus1_PIDCalibEff,pi_plus2_PIDCalibEff;
+	calib_tree->SetBranchAddress("pi_plus1_PIDCalibEff",&pi_plus1_PIDCalibEff);
+	calib_tree->SetBranchAddress("pi_plus2_PIDCalibEff",&pi_plus2_PIDCalibEff);
+
+	TFile* file = new TFile(fileName);
+	TTree* tree = (TTree*) file->Get("DecayTree");
+	
+	TFile* out_file = new TFile(out_fileName,"RECREATE");
+	TTree* new_tree = tree->CopyTree("3000 <= pi_plus1_P && 100000 > pi_plus1_P && 1.5 <= pi_plus1_ETA && 5 > pi_plus1_ETA && 3000 <= pi_plus2_P && 100000 > pi_plus2_P && 1.5 <= pi_plus2_ETA && 5 > pi_plus2_ETA");
+	double fake_Bs_MM,EventWeight,fake_m_Kpipi,fake_m_Kpi,fake_m_pipi;
+	TBranch* b_fake_Bs_MM = new_tree->Branch("fake_Bs_MM", &fake_Bs_MM, "fake_Bs_MM/D");
+	TBranch* b_fake_m_Kpipi = new_tree->Branch("fake_m_Kpipi", &fake_m_Kpipi, "fake_m_Kpipi/D");
+	TBranch* b_fake_m_Kpi = new_tree->Branch("fake_m_Kpi", &fake_m_Kpi, "fake_m_Kpi/D");
+	TBranch* b_fake_m_pipi = new_tree->Branch("fake_m_pipi", &fake_m_pipi, "fake_m_pipi/D");
+	TBranch* b_weight = new_tree->Branch("EventWeight", &EventWeight, "EventWeight/D");
+
+	double Ds_PE,Ds_PX,Ds_PY,Ds_PZ,Bs_MM;
+	double pi_plus1_PX,pi_plus1_PY,pi_plus1_PZ;
+	double pi_plus2_PX,pi_plus2_PY,pi_plus2_PZ;
+	double pi_minus_PX,pi_minus_PY,pi_minus_PZ;
+
+        new_tree->SetBranchAddress("Bs_MM", &Bs_MM);
+        new_tree->SetBranchAddress("Ds_PE", &Ds_PE);
+        new_tree->SetBranchAddress("Ds_PX", &Ds_PX);
+        new_tree->SetBranchAddress("Ds_PY", &Ds_PY);
+        new_tree->SetBranchAddress("Ds_PZ", &Ds_PZ);
+        new_tree->SetBranchAddress("pi_plus1_PX", &pi_plus1_PX);
+        new_tree->SetBranchAddress("pi_plus1_PY", &pi_plus1_PY);
+        new_tree->SetBranchAddress("pi_plus1_PZ", &pi_plus1_PZ);
+        new_tree->SetBranchAddress("pi_plus2_PX", &pi_plus2_PX);
+        new_tree->SetBranchAddress("pi_plus2_PY", &pi_plus2_PY);
+        new_tree->SetBranchAddress("pi_plus2_PZ", &pi_plus2_PZ);
+        new_tree->SetBranchAddress("pi_minus_PX", &pi_minus_PX);
+        new_tree->SetBranchAddress("pi_minus_PY", &pi_minus_PY);
+        new_tree->SetBranchAddress("pi_minus_PZ", &pi_minus_PZ);
+
+	int Ds_finalState;
+	new_tree->SetBranchAddress("Ds_finalState", &Ds_finalState);
+
+	if(calib_tree->GetEntries() != new_tree->GetEntries()){
+		cout << "Error:: Event numbers don't match !" << endl;
+		throw "ERROR";
+	}
+
+	double eff = 0;
+	double eff_0 = 0;
+	double eff_1 = 0;
+	double eff_2 = 0;
+	int n_0 = 0;
+	int n_1 = 0;
+	int n_2 = 0;
+	TLorentzVector Ds;
+	TLorentzVector pi_plus2;
+	TLorentzVector pi_plus1;
+	TLorentzVector pi_minus;
+	for(int i= 0; i<new_tree->GetEntries();i++){
+		calib_tree->GetEntry(i);
+		new_tree->GetEntry(i);
+		
+		Ds.SetPxPyPzE(Ds_PX,Ds_PY,Ds_PZ,Ds_PE);
+       		pi_minus.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ,massPion);
+		if(pi_plus1_PIDCalibEff > pi_plus2_PIDCalibEff){
+			    pi_plus1.SetXYZM(pi_plus1_PX,pi_plus1_PY,pi_plus1_PZ,massPion);
+      			    pi_plus2.SetXYZM(pi_plus2_PX,pi_plus2_PY,pi_plus2_PZ,massKaon);
+			    fake_m_Kpi =  (pi_minus + pi_plus1).M() ;
+			    fake_m_pipi =  (pi_minus + pi_plus2).M() ;
+		}
+		else {
+			    pi_plus1.SetXYZM(pi_plus1_PX,pi_plus1_PY,pi_plus1_PZ,massKaon);
+      			    pi_plus2.SetXYZM(pi_plus2_PX,pi_plus2_PY,pi_plus2_PZ,massPion);
+			    fake_m_pipi =  (pi_minus + pi_plus1).M() ;
+			    fake_m_Kpi =  (pi_minus + pi_plus2).M() ;
+		}
+
+		fake_Bs_MM = (Ds + pi_minus + pi_plus1 + pi_plus2).M() ;
+		fake_m_Kpipi =  (pi_minus + pi_plus1 + pi_plus2).M() ;
+		
+		EventWeight = min(pi_plus1_PIDCalibEff,pi_plus2_PIDCalibEff);
+
+		if(Ds_finalState == 0) n_0 ++;
+		else if(Ds_finalState == 1) n_1 ++;
+		else if(Ds_finalState == 2) n_2 ++;
+
+		if(fake_m_Kpipi < 1950. && fake_m_Kpi < 1200. && fake_m_pipi < 1200.) { 
+			if(fake_Bs_MM > min_MM && fake_Bs_MM < max_MM){
+				eff += EventWeight;
+				if(Ds_finalState == 0) eff_0 += EventWeight;
+				if(Ds_finalState == 1) eff_1 += EventWeight;
+				if(Ds_finalState == 2) eff_2 += EventWeight;
+			}
+		}
+		else fake_Bs_MM = -999;
+
+		b_weight->Fill();
+		b_fake_Bs_MM->Fill();
+		b_fake_m_Kpipi->Fill();
+		b_fake_m_Kpi->Fill();
+		b_fake_m_pipi->Fill();
+	}
+
+	double fake_prob = eff/calib_tree->GetEntries();
+	cout << "Fake prob. for " << channel << " = " << fake_prob * 100. << " % " << endl;
+	cout << "Now for different Ds final states :" << endl;
+	cout << eff_0/n_0 * 100. << " % " << endl;
+	cout << eff_1/n_1 * 100. << " % " << endl;
+	cout << eff_2/n_2 * 100. << " % " << endl;
+
+	new_tree->Write();
+	out_file->Close();
+
+	return fake_prob;
+}
+
+double prepareMisIdBkgShape_random(TString channel = "Dstar3pi"){
+
+	NamedParameter<double> min_MM("min_MM",5100.);
+	NamedParameter<double> max_MM("max_MM",5700.);
+
+	TRandom3* randomNumber = new TRandom3();
+
+	TString fileName = "/auto/data/dargent/BsDsKpipi/Preselected/MC/";
+	if(channel == "Dstar3pi")fileName += "norm_Ds2KKpi_12_Dstar_bkg.root";
+	else if(channel == "Ds3pi")fileName += "norm_Ds2KKpi_bkg.root";
+	else {
+		cout << "ERROR::No channel specified" << endl;
+		throw "ERROR";
+	}
+	TString calib_fileName = fileName;
+	calib_fileName.ReplaceAll("bkg.root","bkg_PIDK_10.root");
+	TString out_fileName = fileName;
+	if(channel == "Dstar3pi") out_fileName = "norm_Ds2KKpi_12_Dstar_bkg_random.root";
+	if(channel == "Ds3pi") out_fileName = "norm_Ds2KKpi_bkg_random.root";
+
+	/// Load file
+	TFile* calib_file = new TFile(calib_fileName);
+	TTree* calib_tree = (TTree*) calib_file->Get("CalibTool_PIDCalibTree");
+	float pi_plus1_PIDCalibEff,pi_plus2_PIDCalibEff;
+	calib_tree->SetBranchAddress("pi_plus1_PIDCalibEff",&pi_plus1_PIDCalibEff);
+	calib_tree->SetBranchAddress("pi_plus2_PIDCalibEff",&pi_plus2_PIDCalibEff);
+
+	TFile* file = new TFile(fileName);
+	TTree* tree = (TTree*) file->Get("DecayTree");
+	
+	TFile* out_file = new TFile(out_fileName,"RECREATE");
+	TTree* new_tree = tree->CopyTree("3000 <= pi_plus1_P && 100000 > pi_plus1_P && 1.5 <= pi_plus1_ETA && 5 > pi_plus1_ETA && 3000 <= pi_plus2_P && 100000 > pi_plus2_P && 1.5 <= pi_plus2_ETA && 5 > pi_plus2_ETA");
+	double fake_Bs_MM,EventWeight,fake_m_Kpipi,fake_m_Kpi,fake_m_pipi;
+	TBranch* b_fake_Bs_MM = new_tree->Branch("fake_Bs_MM", &fake_Bs_MM, "fake_Bs_MM/D");
+	TBranch* b_fake_m_Kpipi = new_tree->Branch("fake_m_Kpipi", &fake_m_Kpipi, "fake_m_Kpipi/D");
+	TBranch* b_fake_m_Kpi = new_tree->Branch("fake_m_Kpi", &fake_m_Kpi, "fake_m_Kpi/D");
+	TBranch* b_fake_m_pipi = new_tree->Branch("fake_m_pipi", &fake_m_pipi, "fake_m_pipi/D");
+	TBranch* b_weight = new_tree->Branch("EventWeight", &EventWeight, "EventWeight/D");
+
+	double Ds_PE,Ds_PX,Ds_PY,Ds_PZ,Bs_MM;
+	double pi_plus1_PX,pi_plus1_PY,pi_plus1_PZ;
+	double pi_plus2_PX,pi_plus2_PY,pi_plus2_PZ;
+	double pi_minus_PX,pi_minus_PY,pi_minus_PZ;
+
+        new_tree->SetBranchAddress("Bs_MM", &Bs_MM);
+        new_tree->SetBranchAddress("Ds_PE", &Ds_PE);
+        new_tree->SetBranchAddress("Ds_PX", &Ds_PX);
+        new_tree->SetBranchAddress("Ds_PY", &Ds_PY);
+        new_tree->SetBranchAddress("Ds_PZ", &Ds_PZ);
+        new_tree->SetBranchAddress("pi_plus1_PX", &pi_plus1_PX);
+        new_tree->SetBranchAddress("pi_plus1_PY", &pi_plus1_PY);
+        new_tree->SetBranchAddress("pi_plus1_PZ", &pi_plus1_PZ);
+        new_tree->SetBranchAddress("pi_plus2_PX", &pi_plus2_PX);
+        new_tree->SetBranchAddress("pi_plus2_PY", &pi_plus2_PY);
+        new_tree->SetBranchAddress("pi_plus2_PZ", &pi_plus2_PZ);
+        new_tree->SetBranchAddress("pi_minus_PX", &pi_minus_PX);
+        new_tree->SetBranchAddress("pi_minus_PY", &pi_minus_PY);
+        new_tree->SetBranchAddress("pi_minus_PZ", &pi_minus_PZ);
+
+	int Ds_finalState;
+	new_tree->SetBranchAddress("Ds_finalState", &Ds_finalState);
+
+	if(calib_tree->GetEntries() != new_tree->GetEntries()){
+		cout << "Error:: Event numbers don't match !" << endl;
+		throw "ERROR";
+	}
+
+	double seed = 0;
+	double eff = 0;
+	double eff_0 = 0;
+	double eff_1 = 0;
+	double eff_2 = 0;
+	int n_0 = 0;
+	int n_1 = 0;
+	int n_2 = 0;
+	TLorentzVector Ds;
+	TLorentzVector pi_plus2;
+	TLorentzVector pi_plus1;
+	TLorentzVector pi_minus;
+	for(int i= 0; i<new_tree->GetEntries();i++){
+		calib_tree->GetEntry(i);
+		new_tree->GetEntry(i);
+		seed = randomNumber->Uniform(-1., 1.);
+		
+		Ds.SetPxPyPzE(Ds_PX,Ds_PY,Ds_PZ,Ds_PE);
+       		pi_minus.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ,massPion);
+
+		if(seed > 0.){
+			    pi_plus1.SetXYZM(pi_plus1_PX,pi_plus1_PY,pi_plus1_PZ,massKaon);
+      			    pi_plus2.SetXYZM(pi_plus2_PX,pi_plus2_PY,pi_plus2_PZ,massPion);
+			    fake_m_Kpi =  (pi_minus + pi_plus1).M() ;
+			    fake_m_pipi =  (pi_minus + pi_plus2).M() ;
+		}
+		else {
+			    pi_plus1.SetXYZM(pi_plus1_PX,pi_plus1_PY,pi_plus1_PZ,massPion);
+      			    pi_plus2.SetXYZM(pi_plus2_PX,pi_plus2_PY,pi_plus2_PZ,massKaon);
+			    fake_m_pipi =  (pi_minus + pi_plus1).M() ;
+			    fake_m_Kpi =  (pi_minus + pi_plus2).M() ;
+		}
+
+		fake_Bs_MM = (Ds + pi_minus + pi_plus1 + pi_plus2).M() ;
+		fake_m_Kpipi =  (pi_minus + pi_plus1 + pi_plus2).M() ;
+		
+		if(seed > 0.)EventWeight = pi_plus1_PIDCalibEff;
+		else EventWeight = pi_plus2_PIDCalibEff;
+
+		if(Ds_finalState == 0) n_0 ++;
+		else if(Ds_finalState == 1) n_1 ++;
+		else if(Ds_finalState == 2) n_2 ++;
+
+		if(fake_m_Kpipi < 1950. && fake_m_Kpi < 1200. && fake_m_pipi < 1200.) { 
+			if(fake_Bs_MM > min_MM && fake_Bs_MM < max_MM){
+				eff += EventWeight;
+				if(Ds_finalState == 0) eff_0 += EventWeight;
+				if(Ds_finalState == 1) eff_1 += EventWeight;
+				if(Ds_finalState == 2) eff_2 += EventWeight;
+			}
+		}
+		else fake_Bs_MM = -999;
+
+		b_weight->Fill();
+		b_fake_Bs_MM->Fill();
+		b_fake_m_Kpipi->Fill();
+		b_fake_m_Kpi->Fill();
+		b_fake_m_pipi->Fill();
+	}
+
+	double fake_prob = eff/calib_tree->GetEntries();
+	cout << "Fake prob. for " << channel << " = " << fake_prob * 100. << " % " << endl;
+	cout << "Now for different Ds final states :" << endl;
+	cout << eff_0/n_0 * 100. << " % " << endl;
+	cout << eff_1/n_1 * 100. << " % " << endl;
+	cout << eff_2/n_2 * 100. << " % " << endl;
+
+	new_tree->Write();
+	out_file->Close();
+
+	return fake_prob;
+}
+
 vector<double> fitPartRecoBkgShape(){
 
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
@@ -295,6 +569,9 @@ vector<double> fitPartRecoBkgShape(){
 vector<double> fitMisIdBkgShape_Ds3pi(){
 
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
+	NamedParameter<int> inverted_misID("inverted_misID", 0);
+	NamedParameter<int> random_misID("random_misID", 0);
+
 	/// Define shape of Bs->Ds(*)pipipi BG as 2 crystal balls
 	RooRealVar Bs_Mass("fake_Bs_MM", "m(D_{s}^{-} #pi_{K}^{+}#pi^{+}#pi^{-})", 5300., 6000.,"MeV/c^{2}");
 	RooRealVar EventWeight("EventWeight", "EventWeight", 0.);
@@ -321,8 +598,20 @@ vector<double> fitMisIdBkgShape_Ds3pi(){
 	RooAbsPdf* pdf=new RooAddPdf("BkgShape", "BkgShape", RooArgList(CB1, CB2), RooArgList(f_1));
 	
 	///Load file
-	TFile* file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_Ds2KKpi_bkg.root");
-	TTree* tree = (TTree*) file->Get("DecayTree");
+	TFile* file;
+	TTree* tree;
+	if((inverted_misID == 0) && (random_misID == 0)){
+		file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_Ds2KKpi_bkg.root");
+		tree = (TTree*) file->Get("DecayTree");
+	}
+	if(inverted_misID == 1){
+		file = new TFile("norm_Ds2KKpi_bkg_inverted.root");
+		tree = (TTree*) file->Get("DecayTree");
+	}
+	if(random_misID == 1){
+		file = new TFile("norm_Ds2KKpi_bkg_random.root");
+		tree = (TTree*) file->Get("DecayTree");
+	}
 	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("EventWeight",1);
 	tree->SetBranchStatus("*Bs_MM",1);
@@ -396,6 +685,9 @@ vector<double> fitMisIdBkgShape_Ds3pi(){
 vector<double> fitMisIdBkgShape_Dsstar3pi(){
 
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
+	NamedParameter<int> inverted_misID("inverted_misID", 0);
+	NamedParameter<int> random_misID("random_misID", 0);
+
 	/// Define shape of Bs->Ds(*)pipipi BG as 2 crystal balls
 	RooRealVar Bs_Mass("fake_Bs_MM", "m(D_{s}^{-} #pi_{K}^{+}#pi^{+}#pi^{-})", 4900., 6200.,"MeV/c^{2}");
 	RooRealVar EventWeight("EventWeight","EventWeight", 0.);
@@ -421,8 +713,20 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(){
 	RooAbsPdf* pdf=new RooAddPdf("BkgShape", "BkgShape", RooArgList(CB1, CB2), RooArgList(f_1));
 	
 	/// Load file
-	TFile* file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_Ds2KKpi_12_Dstar_bkg.root");
-	TTree* tree = (TTree*) file->Get("DecayTree");
+	TFile* file;
+	TTree* tree;
+	if((inverted_misID == 0) && (random_misID == 0)){
+		file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_Ds2KKpi_12_Dstar_bkg.root");
+		tree = (TTree*) file->Get("DecayTree");
+	}
+	if(inverted_misID == 1){
+		file = new TFile("norm_Ds2KKpi_12_Dstar_bkg_inverted.root");
+		tree = (TTree*) file->Get("DecayTree");
+	}
+	if(random_misID == 1){
+		file = new TFile("norm_Ds2KKpi_12_Dstar_bkg_random.root");
+		tree = (TTree*) file->Get("DecayTree");
+	}
 	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("EventWeight",1);
 	tree->SetBranchStatus("fake_Bs_MM",1);
@@ -758,6 +1062,284 @@ vector<double> fitSignalShape(TString channel = "signal"){
 	return params;
 }
 
+vector<double> fitSignalShape_DCB(TString channel = "signal"){
+
+        /// Options
+	NamedParameter<double> cut_BDT("cut_BDT_MC",0.);
+        NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
+	NamedParameter<int> fitPreselected("fitPreselected", 0);
+	NamedParameter<int> sWeight("sWeightMC", 0);
+	double min_MM = 5320. ;
+	double max_MM = 5420. ;
+
+	/// Load file
+	TString inFileName = "/auto/data/dargent/BsDsKpipi/BDT/MC/"+channel+".root";
+	TChain* tree = new TChain("DecayTree");	
+	if(fitPreselected) {
+		tree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/"+channel+"_Ds2*_11.root");
+		tree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/"+channel+"_Ds2*_12.root");
+	}
+	else tree->Add(inFileName);
+
+	if(!sWeight){
+		tree->SetBranchStatus("*",0);
+		tree->SetBranchStatus("Bs_BKGCAT",1);
+		tree->SetBranchStatus("Bs_TRUEID",1);
+		tree->SetBranchStatus("Bs_DTF_MM",1);
+		if(!fitPreselected)tree->SetBranchStatus("BDTG_response",1);
+		tree->SetBranchStatus("Ds_finalState",1);
+	}
+	tree->SetBranchStatus("weight",0);
+
+	TFile* output;
+	if(!sWeight || fitPreselected) output = new TFile("dummy.root","RECREATE");
+	else output = new TFile(inFileName.ReplaceAll("/BDT/","/Final/"),"RECREATE");
+
+	TTree* out_tree;
+	if(fitPreselected)out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) ).c_str() );
+	else out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) + " && BDTG_response > " + anythingToString((double)cut_BDT) ).c_str() );
+
+	int bkgCAT,BKGCAT,Bs_TRUEID;
+	double sw;
+        TBranch* b_bkgCAT = out_tree->Branch("bkgCAT",&bkgCAT,"bkgCAT/I");
+	out_tree->SetBranchAddress("Bs_BKGCAT",&BKGCAT);
+	out_tree->SetBranchAddress("Bs_TRUEID",&Bs_TRUEID);
+    	TBranch* b_w = out_tree->Branch("weight", &sw, "weight/D");
+
+	for(int i= 0; i< out_tree->GetEntries();i++){
+		out_tree->GetEntry(i);
+		if(BKGCAT == 20 )bkgCAT= 0;
+		//else if(BKGCAT == 60 || ( BKGCAT == 50 && abs(Bs_TRUEID) == 531) )bkgCAT= 1;
+		else bkgCAT= 1;
+		b_bkgCAT->Fill();
+	}
+
+	TString channelString;
+        if(channel == "norm") channelString = "m(D_{s}#pi#pi#pi)" ;
+        if(channel == "signal") channelString = "m(D_{s}K#pi#pi)" ;
+
+	RooRealVar DTF_Bs_M("Bs_DTF_MM", channelString, min_MM, max_MM,"MeV/c^{2}");
+	RooCategory Bs_BKGCAT("bkgCAT","bkgCAT");
+	Bs_BKGCAT.defineType("signal",0);
+	Bs_BKGCAT.defineType("ghost",1);
+
+	RooArgList list =  RooArgList(DTF_Bs_M,Bs_BKGCAT);
+        RooDataSet* data = new RooDataSet("data","data",list,Import(*out_tree));
+	
+	/// Signal pdf
+	RooRealVar mean("mean", "mean", 5366.89,5350.,5390.); 
+	RooRealVar sigma("sigma", "sigma", 20.,0.,80.);
+
+	RooRealVar gamma("gamma", "gamma", -0.5,-5,5.); 
+	RooRealVar delta("delta", "delta", 0.5,-5,5.); 
+
+	RooRealVar a1_Sig("a1_Sig","a1_Sig", -2.1977e+00,-10.,0.);
+	RooRealVar n1_Sig("n1_Sig","n1_Sig", 3.1187e+00,0.,100.);
+	RooRealVar a2_Sig("a2_Sig","a2_Sig", 1.9229e+00, 0.,10.);
+	RooRealVar n2_Sig("n2_Sig","n2_Sig", 9.0758e-01, 0., 100.);
+	RooRealVar f_CB_Sig("f_CB_Sig","f_CB_Sig",5.5008e-01, 0., 1.);
+	RooCBShape CB1_Sig("CB1_Sig", "CB1_Sig", DTF_Bs_M, mean, sigma, a1_Sig, n1_Sig);
+	RooCBShape CB2_Sig("CB2_Sig", "CB2_Sig", DTF_Bs_M, mean, sigma, a2_Sig, n2_Sig);
+	RooAddPdf* signal = new RooAddPdf("signal", "signal", RooArgList(CB1_Sig,CB2_Sig),RooArgList(f_CB_Sig));
+ 
+
+	RooRealVar mean_ghost("mean_ghost", "mean_ghost", 5366.89,5350.,5390.); 
+	RooRealVar sigma_ghost("sigma_ghost", "sigma_ghost", 20.,0.,80.); 
+	RooRealVar gamma_ghost("gamma_ghost", "gamma_ghost", -0.5,-5,5.); 
+	RooRealVar delta_ghost("delta_ghost", "delta_ghost", 0.5,-5,5.); 
+	RooJohnsonSU* signal_ghost= new RooJohnsonSU("signal","signal_ghost",DTF_Bs_M, mean,sigma_ghost,gamma,delta);
+
+	/// Bkg pdf
+	RooRealVar c0_ghost("c0_ghost", "c0_ghost", .0,-10,10); 
+	RooRealVar c1_ghost("c1_ghost", "c1_ghost", .0,-10,10); 
+	RooRealVar c2_ghost("c2_ghost", "c2_ghost", .0,-10,10); 
+	RooChebychev* bkg_ghost= new RooChebychev("bkg_ghost","bkg_ghost",DTF_Bs_M, RooArgList(c0_ghost));
+
+	/// Total pdf
+	RooRealVar n_sig("n_sig", "n_sig", data->numEntries()*0.9, 0., data->numEntries());
+	RooRealVar n_sig_ghost("n_sig_ghost", "n_sig_ghost", data->numEntries()*0.5, 0., data->numEntries());
+	RooRealVar n_bkg_ghost("n_bkg_ghost", "n_bkg_ghost", data->numEntries()/10., 0., data->numEntries());
+
+	RooAddPdf* pdf_signal = new RooAddPdf("pdf_signal", "pdf_signal", RooArgList(*signal), RooArgList(n_sig));
+	RooAddPdf* pdf_ghost = new RooAddPdf("pdf_ghost", "pdf_ghost", RooArgList(*signal_ghost, *bkg_ghost), RooArgList(n_sig_ghost, n_bkg_ghost));
+
+	RooSimultaneous* simPdf = new RooSimultaneous("simPdf","simPdf",Bs_BKGCAT);
+	simPdf->addPdf(*pdf_signal,"signal");
+	simPdf->addPdf(*pdf_ghost,"ghost");
+
+	/// Fit
+	RooFitResult* result = simPdf->fitTo(*data,Save(kTRUE),NumCPU(3),Extended(kTRUE));
+	result->Print();
+
+	if(sWeight){
+		/// Calculate ghost weights
+		RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"bkgCAT==bkgCAT::ghost");
+		SPlot sPlot("sPlot","sPlot",*data_slice,pdf_ghost,RooArgList(n_sig_ghost,n_bkg_ghost)); 
+	
+		int n_ij = 0;  /// labels entry number of data slice
+		for(int n = 0; n < out_tree->GetEntries(); n++){
+			b_bkgCAT->GetEntry(n);
+			if(bkgCAT == 1){
+				sw = sPlot.GetSWeight(n_ij,"n_sig_ghost_sw");
+				n_ij++;
+			}
+			else sw = 1.;
+			b_w->Fill();
+		}
+	}
+	/// Plotting
+	TCanvas* c = new TCanvas();
+
+	RooPlot* frame= DTF_Bs_M.frame();
+	frame->SetTitle("");
+ 	data->plotOn(frame,Name("data"),Binning(50),Cut("bkgCAT==bkgCAT::signal"));
+	simPdf->plotOn(frame,Name("signal"),ProjWData(Bs_BKGCAT,*data),Slice(Bs_BKGCAT,"signal"));
+	frame->Draw();
+	c->Print("eps/SignalShape/"+channel+"_DCB_MC.eps");
+
+        RooPlot* frame2= DTF_Bs_M.frame();
+ 	data->plotOn(frame2,Name("data"),Binning(50),Cut("bkgCAT==bkgCAT::ghost"));
+ 	simPdf->plotOn(frame2,Name("signal"),Slice(Bs_BKGCAT,"ghost"),ProjWData(Bs_BKGCAT,*data));
+	simPdf->plotOn(frame2,Name("bkg"),ProjWData(Bs_BKGCAT,*data),Slice(Bs_BKGCAT,"ghost"),LineColor(kRed),LineStyle(kDashed),Components("bkg_ghost"));
+	frame2->Draw();
+	c->Print("eps/SignalShape/"+channel+"_DCB_MC_ghost.eps");
+
+	TCanvas* canvas = new TCanvas();
+        canvas->SetTopMargin(0.05);
+        canvas->SetBottomMargin(0.05);
+        
+        double max = 5.0 ;
+        double min = -5.0 ;
+        double rangeX = max-min;
+        double zero = max/rangeX;
+        
+        TGraph* graph = new TGraph(2);
+        graph->SetMaximum(max);
+        graph->SetMinimum(min);
+        graph->SetPoint(1,min_MM,0);
+        graph->SetPoint(2,max_MM,0);
+        
+        TGraph* graph2 = new TGraph(2);
+        graph2->SetMaximum(max);
+        graph2->SetMinimum(min);
+        graph2->SetPoint(1,min_MM,-3);
+        graph2->SetPoint(2,max_MM,-3);
+        graph2->SetLineColor(kRed);
+        
+        TGraph* graph3 = new TGraph(2);
+        graph3->SetMaximum(max);
+        graph3->SetMinimum(min);
+        graph3->SetPoint(1,min_MM,3);
+        graph3->SetPoint(2,max_MM,3);
+        graph3->SetLineColor(kRed);
+       
+        TPad* pad1 = new TPad("upperPad", "upperPad", .0, .3, 1.0, 1.0);
+        pad1->SetBorderMode(0);
+        pad1->SetBorderSize(-1);
+        pad1->SetBottomMargin(0.);
+        pad1->Draw();
+        pad1->cd();
+        frame->GetYaxis()->SetRangeUser(0.01,frame->GetMaximum()*1.);
+        frame->Draw();
+        
+        canvas->cd();
+        TPad* pad2 = new TPad("lowerPad", "lowerPad", .0, .005, 1.0, .3);
+        pad2->SetBorderMode(0);
+        pad2->SetBorderSize(-1);
+        pad2->SetFillStyle(0);
+        pad2->SetTopMargin(0.);
+        pad2->SetBottomMargin(0.35);
+        pad2->Draw();
+        pad2->cd();
+        
+        RooPlot* frame_p = DTF_Bs_M.frame();
+	frame_p->SetTitle("");
+        frame_p->GetYaxis()->SetNdivisions(5);
+        frame_p->GetYaxis()->SetLabelSize(0.12);
+        frame_p->GetXaxis()->SetLabelSize(0.12);
+        frame_p->GetXaxis()->SetTitleOffset(0.75);
+        frame_p->GetXaxis()->SetTitleSize(0.2);
+        frame_p->GetXaxis()->SetTitle( channelString + "[MeV/c^{2}]");
+        
+        RooHist* hpull  = frame->pullHist("data","signal");
+	hpull->SetTitle("");
+        frame_p->addPlotable(hpull,"BX");
+        frame_p->GetYaxis()->SetRangeUser(min,max);
+        
+        frame_p->Draw();
+        graph->Draw("same");
+        graph2->Draw("same");
+        graph3->Draw("same");
+        
+        pad2->Update();
+        canvas->Update();
+        canvas->SaveAs("eps/SignalShape/"+channel+"_DCB_MC_pull.eps");
+	if(updateAnaNotePlots && !fitPreselected) canvas->Print("../../../../../TD-AnaNote/latex/figs/MassFit/"+channel+"MC_pull.pdf");
+
+	TCanvas* canvas_ghost = new TCanvas();
+        canvas_ghost->SetTopMargin(0.05);
+        canvas_ghost->SetBottomMargin(0.05);
+
+        TPad* pad1_ghost = new TPad("upperPad", "upperPad", .0, .3, 1.0, 1.0);
+        pad1_ghost->SetBorderMode(0);
+        pad1_ghost->SetBorderSize(-1);
+        pad1_ghost->SetBottomMargin(0.);
+        pad1_ghost->Draw();
+        pad1_ghost->cd();
+        frame2->GetYaxis()->SetRangeUser(0.01,frame2->GetMaximum()*1.);
+        frame2->Draw();
+        
+        canvas_ghost->cd();
+        TPad* pad2_ghost = new TPad("lowerPad", "lowerPad", .0, .005, 1.0, .3);
+        pad2_ghost->SetBorderMode(0);
+        pad2_ghost->SetBorderSize(-1);
+        pad2_ghost->SetFillStyle(0);
+        pad2_ghost->SetTopMargin(0.);
+        pad2_ghost->SetBottomMargin(0.35);
+        pad2_ghost->Draw();
+        pad2_ghost->cd();
+        
+        RooPlot* frame_p_ghost = DTF_Bs_M.frame();
+	frame_p_ghost->SetTitle("");
+        frame_p_ghost->GetYaxis()->SetNdivisions(5);
+        frame_p_ghost->GetYaxis()->SetLabelSize(0.12);
+        frame_p_ghost->GetXaxis()->SetLabelSize(0.12);
+        frame_p_ghost->GetXaxis()->SetTitleOffset(0.75);
+        frame_p_ghost->GetXaxis()->SetTitleSize(0.2);
+        frame_p_ghost->GetXaxis()->SetTitle( channelString + "[MeV/c^{2}]");
+        
+        RooHist* hpull_ghost  = frame2->pullHist("data","signal");
+	hpull_ghost->SetTitle("");
+        frame_p_ghost->addPlotable(hpull_ghost,"BX");
+        frame_p_ghost->GetYaxis()->SetRangeUser(min,max);
+        
+        frame_p_ghost->Draw();
+        graph->Draw("same");
+        graph2->Draw("same");
+        graph3->Draw("same");
+        
+        pad2_ghost->Update();
+        canvas_ghost->Update();
+        canvas_ghost->SaveAs("eps/SignalShape/"+channel+"_DCB_MC_ghost_pull.eps");
+	if(updateAnaNotePlots && !fitPreselected) canvas_ghost->Print("../../../../../TD-AnaNote/latex/figs/MassFit/"+channel+"MC_ghost_pull.pdf");
+
+	/// Return fit params
+	vector<double> params;
+	params.push_back(mean.getVal());
+	params.push_back(sigma.getVal());
+	params.push_back(a1_Sig.getVal());
+	params.push_back(n1_Sig.getVal());
+	params.push_back(a2_Sig.getVal());
+	params.push_back(n2_Sig.getVal());
+	params.push_back(f_CB_Sig.getVal());
+
+	cout << endl << "Fraction of signal classified as ghosts = " << n_sig_ghost.getVal()/(n_sig.getVal()+n_sig_ghost.getVal()) << endl;
+
+	out_tree->Write();
+	output->Close();
+	return params;
+}
+
 vector<double> fitPartRecoBkgShapeHILLHORN(){
 
 	NamedParameter<double> min_MM("min_MM",5100.);
@@ -1079,10 +1661,10 @@ vector< vector<double> > fitNorm(){
 			/// Get data slice
 			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j] + " && TriggerCat == TriggerCat::" + str_trigger[k]);
 			/// Fit
-			//bkg_exp.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
+			//bkg_exp1.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
 			/// Fix parameters
-			//((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setVal(exp_par.getVal());
-			//if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setConstant();
+			//((RooRealVar*) fitParams->find("exp_par1_"+ str_Ds[j]))->setVal(exp_par1.getVal());
+			//if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par1_"+ str_Ds[j]))->setConstant();
 	
 			/// Set start values for yields
 			((RooRealVar*) fitParams->find("n_sig_{"+str_run[i] + ";" + str_Ds[j] + ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/2.);
@@ -1098,12 +1680,12 @@ vector< vector<double> > fitNorm(){
 			/// Get data slice
 			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"year==year::" + str_year[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j]);
 			/// Fit
-			bkg_exp.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
+			bkg_exp1.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
 			/// Fix parameters
 			//((RooRealVar*) fitParams->find("exp_par_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setVal(exp_par.getVal());
 			//if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setConstant();
-			((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setVal(exp_par.getVal());
-			if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setConstant();
+			((RooRealVar*) fitParams->find("exp_par1_"+ str_Ds[j]))->setVal(exp_par1.getVal());
+			if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par1_"+ str_Ds[j]))->setConstant();
 	
 			/// Set start values for yields
 			((RooRealVar*) fitParams->find("n_sig_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setVal(data_slice->numEntries()/2.);
@@ -1732,6 +2314,10 @@ vector< vector<double> > fitNorm(){
 void fitSignal(){
 
 	///Options
+	NamedParameter<int> useCBSignal("useCBSignal", 0);
+	NamedParameter<int> inverted_misID("inverted_misID", 0);
+	NamedParameter<int> random_misID("random_misID", 0);
+	NamedParameter<int> fixExpBkgFromSidebands("fixExpBkgFromSidebands", 0);
 	NamedParameter<int> useExpBkgShape("useExpBkgShape", 0);
         NamedParameter<int> altPartBkg("altPartBkg", 0);
 	NamedParameter<int> numCPU("numCPU", 6);
@@ -1752,6 +2338,8 @@ void fitSignal(){
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 	NamedParameter<string> inFileName("inFileNameSignal",(string)"/auto/data/dargent/BsDsKpipi/BDT/Data/signal.root");
 	NamedParameter<string> outFileName("outFileNameSignal",(string)"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
+
+	NamedParameter<double> scale_misIDyield("scale_misIDyield", 1.);
 
 	///define categories
 	RooCategory year("year","year") ;
@@ -1809,7 +2397,7 @@ void fitSignal(){
 	RooRealVar alpha("alpha", "alpha", sig_params[2],-1,1); 
 	RooRealVar beta("beta", "beta", sig_params[3]); 
 
-	RooJohnsonSU signal("signal","signal",DTF_Bs_M, mean,sigma,alpha,beta);
+	RooJohnsonSU signal_RJ("signal_RJ","signal_RJ",DTF_Bs_M, mean,sigma,alpha,beta);
 
 	/// B0 pdf
 	RooFormulaVar mean_B0("mean_B0","@0 - @1", RooArgSet(mean,RooConst(87.33))); 
@@ -1819,6 +2407,32 @@ void fitSignal(){
 	RooRealVar beta_B0("beta_B0", "beta_B0", sig_params[3]); 
 
 	RooJohnsonSU signal_B0("signal_B0","signal_B0",DTF_Bs_M, mean_B0,sigma_B0,alpha,beta);
+
+
+	///Signal Pdf for Systematics
+	vector<double> sig_params_DCB = fitSignalShape_DCB("signal");
+
+	RooRealVar meanBs1("meanBs1","meanBs1", sig_params_DCB[0]);
+	RooRealVar sigmaBs1("sigmaBs1","sigmaBs1",sig_params_DCB[1]);
+	RooRealVar a1_Sig("a1_Sig","a1_Sig", sig_params_DCB[2]);
+	RooRealVar n1_Sig("n1_Sig","n1_Sig", sig_params_DCB[3]);
+	RooRealVar a2_Sig("a2_Sig","a2_Sig", sig_params_DCB[4]);
+	RooRealVar n2_Sig("n2_Sig","n2_Sig", sig_params_DCB[5]);
+	RooRealVar f_CB_Sig("f_CB_Sig","f_CB_Sig",sig_params_DCB[6]);
+	RooFormulaVar meanBs1_scaled("meanBs1_scaled","@0 * @1", RooArgSet(scale_mean,meanBs1)); 
+	RooFormulaVar sigmaBs1_scaled("sigmaBs1_scaled","@0 * @1", RooArgSet(scale_sigma,sigmaBs1)); 
+	RooCBShape CB1_Sig("CB1_Sig", "CB1_Sig", DTF_Bs_M, meanBs1_scaled, sigmaBs1_scaled, a1_Sig, n1_Sig);
+	RooCBShape CB2_Sig("CB2_Sig", "CB2_Sig", DTF_Bs_M, meanBs1_scaled, sigmaBs1_scaled, a2_Sig, n2_Sig);
+	RooAddPdf DoubleCBBs("DoubleCBBs", "DoubleCBBs", RooArgList(CB1_Sig,CB2_Sig),RooArgList(f_CB_Sig));
+
+
+	///Build Signal Part of Pdf
+	RooRealVar f_signal("f_signal", "f_signal", 0);
+	if(!useCBSignal) f_signal.setVal(1);
+	else f_signal.setVal(0);
+
+	f_signal.setConstant();
+	RooAddPdf signal("signal","signal", RooArgList(signal_RJ, DoubleCBBs), RooArgList(f_signal));
 
 	/// Combinatorial bkg pdf
 	RooRealVar exp_par1("exp_par1","exp_par1",-1.6508e-03,-10.,10.);	
@@ -1905,8 +2519,22 @@ void fitSignal(){
 
 
 	/// MisID bkg
-	double fake_prob_Ds = prepareMisIdBkgShape("Ds3pi");
-	double fake_prob_Dstar = prepareMisIdBkgShape("Dstar3pi");
+	double fake_prob_Ds = 0;
+	double fake_prob_Dstar = 0;
+
+	if((inverted_misID == 0) && (random_misID == 0)){
+		fake_prob_Ds = prepareMisIdBkgShape("Ds3pi");
+        	fake_prob_Dstar = prepareMisIdBkgShape("Dstar3pi");
+	}
+	if(inverted_misID == 1){
+		fake_prob_Ds = prepareMisIdBkgShape_inverted("Ds3pi");
+       		fake_prob_Dstar = prepareMisIdBkgShape_inverted("Dstar3pi");
+	}
+	if(random_misID == 1){
+		fake_prob_Ds = prepareMisIdBkgShape_random("Ds3pi");
+       		fake_prob_Dstar = prepareMisIdBkgShape_random("Dstar3pi");
+	}
+
 	vector<double> bkg_misID_Ds3pi_params = fitMisIdBkgShape_Ds3pi();
 	
 	RooRealVar misID_Ds3pi_mean1("misID_Ds3pi_mean1","misID_Ds3pi_mean1", bkg_misID_Ds3pi_params[0]);//,bkg_misID_Ds3pi_params[0]-50,bkg_misID_Ds3pi_params[0]+50);
@@ -2017,7 +2645,7 @@ void fitSignal(){
 
 	if(useTriggerCat){
 		for(int i=0; i<str_run.size(); i++) for(int j=0; j<str_Ds.size(); j++) for(int k=0; k<str_trigger.size(); k++){
-			double val = fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]/eff_bkg_partReco_inSigRange   ;
+			double val = scale_misIDyield * (fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]/eff_bkg_partReco_inSigRange)   ;
 			((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(val);
 			if(fixMisIDyields)((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setConstant();
 			else ((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setRange(val * 0.5 , val * 3.);
@@ -2032,13 +2660,19 @@ void fitSignal(){
 			((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
 			((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setRange(data_slice->numEntries()*0.03,data_slice->numEntries()*0.3);
 			((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
+
+
+			///Fix bkg from sidebands
+			//bkg_exp1.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
+			/// Fix parameters
+			//if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setConstant();
 	
 			counter++;
 		}
 	}
 	else {
 		for(int i=0; i<str_year.size(); i++) for(int j=0; j<str_Ds.size(); j++){
-			double val = fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]/eff_bkg_partReco_inSigRange   ;
+			double val = scale_misIDyield * (fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]/eff_bkg_partReco_inSigRange)   ;
 			((RooRealVar*) fitParams->find("n_misID_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setVal(val);
 			if(fixMisIDyields)((RooRealVar*) fitParams->find("n_misID_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setConstant();
 			else ((RooRealVar*) fitParams->find("n_misID_bkg_{"+str_year[i] + ";" + str_Ds[j] + "}"))->setRange(val * 0. , val * 2.);
@@ -2078,12 +2712,15 @@ void fitSignal(){
 			/// Get data slice
 			RooDataSet* data_slice = new RooDataSet("data_SS_slice","data_SS_slice",data_SS,list,"Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j]);
 			/// Fit
-			bkg_exp.fitTo(*data_slice,Save(kTRUE));
+			bkg_exp1.fitTo(*data_slice,Save(kTRUE));
 			/// Constrain parameters
-			((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setVal(exp_par.getVal());
+			((RooRealVar*) fitParams->find("exp_par1_"+ str_Ds[j]))->setVal(exp_par1.getVal());
 			//((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setConstant();
-			RooGaussian* constr = new RooGaussian("constr_"+str_Ds[j],"constr_"+str_Ds[j],*((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j])),RooRealConstant::value(exp_par.getVal()),RooRealConstant::value(exp_par.getError()));
-			constr_set.add(*constr);
+
+			((RooRealVar*) fitParams->find("exp_par1_"+ str_Ds[j]))->setConstant();
+
+			//RooGaussian* constr = new RooGaussian("constr_"+str_Ds[j],"constr_"+str_Ds[j],*((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j])),RooRealConstant::value(exp_par.getVal()),RooRealConstant::value(exp_par.getError()));
+			//constr_set.add(*constr);
 			/// Plot
 			TCanvas* c = new TCanvas();
 			RooPlot* frame= DTF_Bs_M.frame();
@@ -2094,13 +2731,13 @@ void fitSignal(){
 			c->Print("eps/comb_"+str_Ds[j]+".eps");
 		}
 	}
-	RooProdPdf* constr_exp; 
-	if(constrainCombBkgFromSS) constr_exp = new RooProdPdf("constr_exp","constr_exp",constr_set);
+	//RooProdPdf* constr_exp; 
+	//if(constrainCombBkgFromSS) constr_exp = new RooProdPdf("constr_exp","constr_exp",constr_set);
 
 	/// Perform fit
 	RooFitResult* result;
-	if(constrainCombBkgFromSS)result = simPdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),NumCPU(numCPU),ExternalConstraints(*constr_exp));
-	else result = simPdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),NumCPU(numCPU));
+	//if(constrainCombBkgFromSS)result = simPdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),NumCPU(numCPU),ExternalConstraints(*constr_exp));
+	/*else*/ result = simPdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),NumCPU(numCPU));
 	cout << "result is --------------- "<<endl;
 	result->Print("v");
 
@@ -3144,7 +3781,6 @@ int main(int argc, char** argv){
     	cout << "please specify 'Signal' or 'Norm' in options file" << endl;
 	cout << "*********************************************************" << endl;
     }
-    
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;
     cout << "==============================================" << endl;

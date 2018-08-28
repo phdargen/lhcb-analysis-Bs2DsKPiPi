@@ -14,12 +14,18 @@
 "useTriggerCat"		1
 
 * for Systematics
+"useCBSignal"        	0
 "useExpBkgShape"	0
+"inverted_misID"	0
+"random_misID"		0
+*Scale factor for misID yield in signal fit
+"scale_misIDyield"	1
+
 
 * Norm fit :
 "fixExpBkgFromSidebands"	 0
 "sWeightNorm"	 0
-"altPartBkg"     0
+"altPartBkg"     1
 "useB0"     	 1	
 "fixSignalShapeFromMC"	 0
 "outFileNameNorm"	"BsDspipipi_test.root"
@@ -31,7 +37,7 @@
 "constrainCombBkgFromSS"	0
 
 "sWeightSignal"	 	1
-"outFileNameSignal"	"Bs2DsKpipi_test2.root"
+"outFileNameSignal"	"/auto/data/kecke/Bs2DsKpipi_altPartRecoBkg.root"
 "inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/Final/Data/signal_tagged.root"
 
 * MC fit:
