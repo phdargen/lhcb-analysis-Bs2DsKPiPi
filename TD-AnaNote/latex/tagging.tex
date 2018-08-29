@@ -27,7 +27,7 @@ This means that the statistical precision, with which these coefficients can be 
 \label{eq: taggingEfficiency}
 \epsilon_{eff} = \epsilon_{tag}(1 - 2\omega)^{2},
 \end{equation}
-where $epsilon_{tag}$ is the fraction of events that have a tagging decision. 
+where $\epsilon_{tag}$ is the fraction of events that have a tagging decision. 
 The flavour tagging algorithms are optimized for highest $\epsilon_{eff}$ on data, using the $\Bs\to\Dsm\pip$ and $\Bu\to\jpsi\Kp$ samples. \newline
 Utilizing flavour-specific final states, the predicted mistag $\eta$ of each tagger has to be calibrated to match the observed mistag $\omega$ on the data sample. 
 For the calibration, a linear model of the form
@@ -35,7 +35,7 @@ For the calibration, a linear model of the form
 \label{eq: mistagCalibration}
 \omega(\eta) = p_{o} + p_{1} \cdot (\eta - < \eta >), 
 \end{equation}  
-where the values of $p_{0}$ and $p_{1}$ are determined using the $\Bs\to\Ds\pion\pion\pion$ normalization mode and $<\eta>$ is the average estimated mistag probability $<\eta> = \Sigma_{i=1}^{N_{cand}}(\eta_{i}) / N_{cand}$.
+where the values of $p_{0}$ and $p_{1}$ are determined using the $\Bs\to\Ds\pion\pion\pion$ normalization mode and $<\eta>$ is the average estimated mistag probability $<\eta> = \Sigma_{i=1}^{N_{cand}}(\eta_{i}) / N_{cand}$ is used.
 Following this model, a perfectly calibrated tagger would lead to $\omega(\eta) = \eta$ and one would expect $p_{1} = 1$ and $p_{0} = <\eta>$.
 Due to the different interaction cross-sections of oppositely charged particles, the tagging calibration parameters depend on the initial state flavour of the $\Bs$. 
 Therefore, the flavour asymmetry parameters $\Delta p_{0}$, $\Delta p_{1}$ and $\Delta\epsilon_{tag}$ are introduced. 
@@ -52,8 +52,9 @@ Section \ref{subsec: TaggingComparison} shows the compatibility of both samples.
 \subsection{OS tagging calibration}
 \label{subsec: OScalibration}
 The responses of the OS electron, muon, neural net kaon and the secondary vertex charge taggers are combined for the mistag calibration. 
-Figure \ref{fig:OSdistribution} shows the distribution of the predicted OS mistag for signal candidates from $\Bs\to\Ds\pion\pion\pion$. 
-The extracted calibration parameters and tagging asymmetries are summarized in Table \ref{table: OScalibration} and the measured tagging power for the OS combination is $\epsilon_{eff,OS} = 4.81 \%$.
+The distributions of the predicted OS mistag for signal candidates from $\Bs\to\Ds\pion\pion\pion$ is shown in (Run 1) Figure \ref{fig:OSdistribution_Run1} and (Run 2) Figure \ref{fig:OSdistribution_Run2}.  
+%The extracted calibration parameters and tagging asymmetries are summarized in Table \ref{table: OScalibration} and 
+The measured tagging power for the OS combination is $\epsilon_{eff,OS} = 4.81 \%$.
 
 
 \begin{figure}[h]
@@ -63,8 +64,9 @@ The extracted calibration parameters and tagging asymmetries are summarized in T
 
 \includegraphics[height=!,width=0.4\textwidth]{figs/Tagging/Run1/OS_nnetKaon_Calibration.pdf}
 \includegraphics[height=!,width=0.4\textwidth]{figs/Tagging/Run1/VtxCharge_Calibration.pdf}
-\caption{}
-\label{fig:}
+\caption{Predicted versus measured mistag probability for the (top left) OS muon, (top right) OS electron, (bottom left) OS kaon and (bottom right) OS vertex charge tagger for Run 1. 
+A linear fit, including the $1\sigma$ and $2\sigma$ error bands is overlaid for each tagger.}
+\label{fig:OSdistribution_Run1}
 \end{figure}
 
 \begin{figure}[h]
@@ -74,8 +76,9 @@ The extracted calibration parameters and tagging asymmetries are summarized in T
 
 \includegraphics[height=!,width=0.4\textwidth]{figs/Tagging/Run2/OS_nnetKaon_Calibration.pdf}
 \includegraphics[height=!,width=0.4\textwidth]{figs/Tagging/Run2/VtxCharge_Calibration.pdf}
-\caption{}
-\label{fig:}
+\caption{Predicted versus measured mistag probability for the (top left) OS muon, (top right) OS electron, (bottom left) OS kaon and (bottom right) OS vertex charge tagger for Run 2. 
+A linear fit, including the $1\sigma$ and $2\sigma$ error bands is overlaid for each tagger.}
+\label{fig:OSdistribution_Run2}
 \end{figure}
 
 %\input{tables/Tagging/Run1/EspressoPerformanceTable.tex}
@@ -100,9 +103,20 @@ The extracted calibration parameters and tagging asymmetries are summarized in T
 
 \subsection{SS tagging calibration}
 \label{subsec: SScalibration}
-The SS neural net kaon tagger can be calibrated using the flavour-specific $\Bs\to\Ds\pion\pion\pion$ decay. It's development, performance and calibration is described in detail in \cite{Aaij:2016psi}. 
+The SS neural net kaon tagger can be calibrated using the flavour-specific $\Bs\to\Ds\pion\pion\pion$ decay. Its development, performance and calibration is described in detail in \cite{Aaij:2016psi}. 
 Figure \ref{fig:SSdistribution} shows the distribution of the predicted mistag of the neural net kaon tagger. 
 The extracted calibration parameters and tagging asymmetries are summarized in Table \ref{table: SScalibration} and the measured tagging power for this algorithm is $\epsilon_{eff,SS} = 3.22  \%$.
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.4\textwidth]{figs/Tagging/Run1/SS_nnetKaon_Calibration.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/Tagging/Run2/SS_nnetKaon_Calibration.pdf}
+\caption{Predicted versus measured mistag probability for the SS neural net kaon tagger for (left) Run 1 and (right) Run 2. 
+A linear fit, including the $1\sigma$ and $2\sigma$ error bands is overlaid for both distributions.}
+\label{fig:SSdistribution}
+\end{figure}
+
 
 \begin{table}[h]
 \centering
@@ -126,7 +140,7 @@ $p_{0}$ & $p_{1}$ & $<\eta>$ & $\epsilon_{tag}$ & $\Delta p_{o}$ & $\Delta p_{1}
 To justify the usage of the tagging calibration, obtained using the $\Bs\to\Ds\pion\pion\pion$ sample, for our signal decay, the performance of the taggers in the two decay channels needs to be compatible. 
 This is verified using both, simulated signal samples of both decays and sweighted data, 
 to compare the similarity of the mistag probabilities, tagging decisions and kinematic observables that are correlated with the tagging response, on simulation and data.  \newline
-The distributions of the predicted mistag probability $\eta$ for the OS combination and the SS kaon tagger are shown in Fig. \ref{fig:w_MC_comparison} (simulation) and Fig. \ref{fig:w_data_comparison} (data).
+The data distributions of the predicted mistag probability $\eta$ for the OS combination and the SS kaon tagger are shown  Fig. \ref{fig:w_data_comparison}.
  
 
 %\begin{figure}[h]
@@ -145,7 +159,7 @@ for signal candidates in the $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\p
 \end{figure}
 
 Both, data and simulated samples, show good agreement between the signal and normalization channel. 
-Compatibility is also seen in Fig. \ref{fig:tagDec_data_comparison}, which shows the comparison of the tagging decision distributions of the OS and SS tagger for sweighted data. 
+%Compatibility is also seen in Fig. \ref{fig:tagDec_data_comparison}, which shows the comparison of the tagging decision distributions of the OS and SS tagger for sweighted data. 
 
 %\begin{figure}[h]
 %\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/qOS.pdf}
@@ -167,8 +181,8 @@ Compatibility is also seen in Fig. \ref{fig:tagDec_data_comparison}, which shows
 %\label{fig:kinematics_data_comparison}
 %\end{figure}
 
-Fig. \ref{fig:kinematics_data_comparison} shows the signal data distributions of the transverse $\Bs$ momentum $\pt$, the pseudorapidity $\eta$ of the signal candidate and the number of reconstructed tracks per event.
-Sufficient agreement is observed.
+%Fig. \ref{fig:kinematics_data_comparison} shows the signal data distributions of the transverse $\Bs$ momentum $\pt$, the pseudorapidity $\eta$ of the signal candidate and the number of reconstructed tracks per event.
+%Sufficient agreement is observed.
 
 %\begin{figure}[h]
 %\includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/Bs_Pt_comparison.pdf}
@@ -191,13 +205,13 @@ Sufficient agreement is observed.
 %\end{figure}
 
 To justify the portability of the flavour tagging calibration obtained from $\Bs\to\Ds\pion\pion\pion$ to the $\Bs\to\Ds\kaon\pion\pion$ channel, 
-besides the good agreement of the distributions shown above, the dependence of the measured mistag $\omega$ on the predicted mistag $\eta$ has to be compatible in both channel.
+besides the good agreement of the distributions shown above, the dependence of the measured mistag $\omega$ on the predicted mistag $\eta$ has to be compatible in both channels.
 This dependence is shown in Fig. \ref{fig:etavsW_mc_comparison} for simulated signal events of both channels, where good agreement is observed. 
 
 \begin{figure}[h]
 \includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/OS_combination_MCcomparison.pdf}
 \includegraphics[height=7.cm,width=0.49\textwidth]{figs/Tagging/SS_nnetKaon_MCcomparison.pdf}
-\caption{Dependence of the observed mistag $\omega$ on the predicted mistag $\eta$ for the (left) OS combination and ther (right) SS kaon tagger, 
+\caption{Dependence of the observed mistag $\omega$ on the predicted mistag $\eta$ for the (left) OS combination and the (right) SS kaon tagger, 
 found in the simulated $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\pion\pion\pion$ (red) signal samples.}
 \label{fig:etavsW_mc_comparison}
 \end{figure}
@@ -209,10 +223,11 @@ found in the simulated $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\pion\pi
 In the time- and ampitude-dependent fit to $\Bs\to\Ds\kaon\pion\pion$ data, the obtained tagging responses of the OS and SS tagger will be combined after the calibration described in the previous sections is applied.
 Events that aquire a mistag probability greater than 0.5 after the calibration will have their tagging decision flipped. For events where only one of the two taggers fired, the combination of the tagging decision is trivial.
 In those events where both taggers made a decision, we use the standard combination of taggers \cite{LHCb-PAPER-2011-027} provided by the flavour tagging group. 
-In the nominal fit, the calibrated mistags $\omega$ are combined event by event for the OS and SS tager, thus adding one variable to observable to the fit procedure. 
+In the nominal fit, the calibrated mistags $\omega$ are combined event by event for the OS and SS tager, thus adding one observable to the fit procedure. 
 This ensures that the uncertainties of the OS and SS tagging calibration parameters are propagated properly to the combined tagging response for each event. \newline
-The taggging performance for the combined tagger in the categories SS tagged only, OS tagged only and SS+OS tagged, are shown in Tab. \ref{tab: TaggingPerformanceTab} for the signal and normalization channel.
-The distribution of the observed mistag $\omega$ as a function of the combined mistag probability $\eta$ for $\Bs\to\Ds\pion\pion\pion$ decays is shown in Fig. \ref{fig:TaggingCombinationCalibration}.
+The taggging performance for the combined tagger in the categories SS tagged only, 
+OS tagged only and SS+OS tagged, are shown in (Run 1) Tab. \ref{table:tagging_Run1} and (Run 2) Tab. \ref{table:tagging_Run1}.
+%The distribution of the observed mistag $\omega$ as a function of the combined mistag probability $\eta$ for $\Bs\to\Ds\pion\pion\pion$ decays is shown in Fig. \ref{fig:TaggingCombinationCalibration}.
 
 
 %\begin{figure}[h]

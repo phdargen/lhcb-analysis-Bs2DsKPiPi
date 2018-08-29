@@ -557,9 +557,9 @@ The spin factors for all decay topologies considered in this analysis are explic
 
 The amplitude fit is performed by using the amplitude analysis tool \textsf{MINT2}.
 It was previously applied to analyze $D^0 \to 4 \pi$ and $D^0 \to KK\pi\pi$ decays \cite{dArgent:2017gzv}
-which have an identical general spin structure (\ie scalar to four scalar decay) then $B_s \to D_s K \pi\pi$ decays. 
+which have an identical general spin structure (\ie scalar to four scalar decay) to $B_s \to D_s K \pi\pi$ decays. 
 In the course of the $D^0 \to hhhh$ analysis, the implementation of the amplitudes were extensively cross-checked against 
-other available tool such as \textsf{qft++} \cite{Williams:2008wu}, \textsf{AmpGen} \cite{Aaij:2017kbo} and were possible \textsf{EVTGEN} \cite{Lange:2001uf}.
+other available tools such as \textsf{qft++} \cite{Williams:2008wu}, \textsf{AmpGen} \cite{Aaij:2017kbo} and where possible \textsf{EVTGEN} \cite{Lange:2001uf}.
 Since no additional line shapes or spin factors are needed for this analysis, we consider the amplitude calculation as fully validated.
 
 This does, however, not apply to the full time-dependent amplitude pdf which is newly implemented for this analysis.
@@ -599,13 +599,15 @@ Note though that some parts of the \textsf{B2DX} fitter have been taken over to 
 \clearpage
 \begin{figure}[h]
 	\centering
-		\includegraphics[width=0.32\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_t.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_t_mixed_m.pdf} 	
-		\includegraphics[width=0.32\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_t_mixed_p.pdf} 
+		\includegraphics[width=0.49\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_t.pdf} 
+		%\includegraphics[width=0.32\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_t_mixed_m.pdf} 	
+		%\includegraphics[width=0.32\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_t_mixed_p.pdf} 
 		
-		\includegraphics[width=0.32\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_asym.pdf} 
+		\includegraphics[width=0.49\textwidth, height = !]{figs/timeFit/signal_DsKpipi_CPV_MC/h_asym.pdf} 
 		
-		\caption{Time distribution of $B_s \to D_s K \pi\pi$ events generated with \textsf{EVTGEN} (points with error bars) and \textsf{MINT2} fit projections (blue solid line).} 	
+		\caption{Left: Time distribution of $B_s \to D_s K \pi\pi$ events generated with \textsf{EVTGEN} (points with error bars) and \textsf{MINT2} fit projections (solid line). 
+                  Right: Time-dependent asymmetry between mixed and unmixed events over one mixing period $2\pi/\dms$ for both final state charge configurations ($D^{\pm}_{s}K^{\mp}\pi\pi$) in red \& blue. 
+                  The points are generated using \textsf{EVTGEN} and the \textsf{MINT2} fit projections are overlaid.}
 		\label{fig:FitGenMC}	
 \end{figure}	
 

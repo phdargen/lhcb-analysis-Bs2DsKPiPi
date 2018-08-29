@@ -3,8 +3,8 @@
 \section{Data samples and event selection}
 \label{sec:Selection}
 
-%Throughout the note, we abbreviate $\Bs\to\Ds X_{s}(\to\kaon\pion\pion)$ and $\Bs\to\Ds X_{d}(\to\pion\pion\pion)$. 
-%, identifying $X_{s}\to\kaon\pion\pion$ and $X_{d}\to\pion\pion\pion$ as the various resonances through which the decays proceed. 
+Throughout the note, we abbreviate $\Bs\to\Ds X_{s}(\to\kaon\pion\pion)$ and $\Bs\to\Ds X_{d}(\to\pion\pion\pion)$, 
+identifying $X_{s}\to\kaon\pion\pion$ and $X_{d}\to\pion\pion\pion$ as the various resonances through which the decays proceed. 
 
 \subsection{Stripping and Trigger selection}
 
@@ -29,7 +29,7 @@ More details on the used HLT lines are given in Appendix \ref{sec:StripAndTrigge
 Due to a residual kinematic dependence on whether the event is triggered by \textsf{L0Hadron} or not and on the data taking condition,
 the analysis is performed in four disjoint categories: 
 $[\text{Run-I,}\textsf{L0-TOS}]$, $[\text{Run-I,}\textsf{L0-TIS}]$, $ [\text{Run-II,}\textsf{L0-TOS}]$ and $ [\text{Run-II,}\textsf{L0-TIS}]$,
-where for simplicity we denote $\textsf{L0-TOS}$ as $\textsf{L0Hadron-TOS}$ and $\textsf{L0-TIS} $ as $ (\textsf{L0Global-TIS} \text{ and not } \textsf{L0Hadron-TOS}$).
+where for simplicity we denote  $\textsf{L0Hadron-TOS}$ as $\textsf{L0-TOS}$ and $ (\textsf{L0Global-TIS} \text{ and not } \textsf{L0Hadron-TOS})$ as $\textsf{L0-TIS}$.
  
 
 
@@ -73,7 +73,7 @@ For the $\kaon\kaon\pion$  final state we make use of the well known resonance s
 the decay proceeds either via the narrow $\phiz$ resonance, the broader $\Kstarz$ resonance or (predominantly) non-resonant.
 Within the $\phiz$ resonance region the sample is already sufficiently clean after the stripping so that we do not impose additional criteria on the $D_s$ daughters.
 For the $\Kstarz$ and non-resonant regions consecutively tighter requirements on the particle identification and the $D_s$ flight-distance are applied. 
-We apply global requirements for the other final states.
+We apply global requirements for the other final states. All cuts are summarized in Table \ref{table:selDs}.
 
 
 %Depending on the decay process being resonant or not, we apply additional PID requirements on this final state:
@@ -95,13 +95,13 @@ We apply global requirements for the other final states.
  \subsubsection{Phase space region}
  \label{ssec:phasespace}
 
-Due to the comparable low masses of the final state particles  with respect to the $B_s$ mass,
+Due to the comparably low masses of the final state particles  with respect to the $B_s$ mass,
 there is, in contrast to for example b-hadron to charmonia or charm decays, a huge phase-space available for the $\Bs\to\Ds\kaon\pion\pion$ decay.
 For the invariant mass of the $K\pi\pi$ subsystem it extends up to $3.4 \gev$.
-It has however been observed that the decay proceeds predominantly through the low lying axial vector states $K(1270)$ and $K(1400)$, while
+It has however been observed that the decay proceeds predominantly through the low lying axial vector states $K_{1}(1270)$ and $K_{1}(1400)$, while
 the combinatorial background is concentrated at high $K\pi\pi$ invariant masses ($m(K\pi\pi) > 2000 \mev$).
-Moreover, the strange hadron spectrum above $2\gev$ is poorly understood experimentally such that an reliable extraction of the strong phase motion in that region is not possible.
-We consequently choose the considered phase space region to be $m(K\pi\pi) < 1950 \mev$, which is right below the charm-strange threshold ($\Bs\to\Dsp\Dsm$).
+Moreover, the strange hadron spectrum above $2\gev$ is poorly understood experimentally such that a reliable extraction of the strong phase motion in that region is not possible.
+We consequently choose to limit the considered phase space region to $m(K\pi\pi) < 1950 \mev$, which is right below the charm-strange threshold ($\Bs\to\Dsp\Dsm$).
  
  \clearpage
 \subsubsection{Physics background vetoes}
@@ -116,12 +116,12 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 	\item $\Dm \to\Kp\pim\pim$: \\
 	Possible with $\pim\rightarrow\Km$ misidentification, vetoed by requiring 
 	$m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 40$ MeV 
-	or the $\Km$ has to fulfill more stringent PID criteria depending on the resonant region.
+	or the $\Km$ has to fulfill more stringent PID criteria depending on the resonant region (see Table  \ref{table:selDs}).
 	
 	\item $\Lambda_c^- \to \Kp \bar p \pim $:  \\
 	Possible with $\bar p \rightarrow\Km$ misidentification, vetoed by requiring
 	$m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 40$ MeV
-	or the $\Km$ has to fulfill more stringent PID criteria depending on the resonant region.
+	or the $\Km$ has to fulfill more stringent PID criteria depending on the resonant region (see Table  \ref{table:selDs}).
 	
 	\item $\Dz\to\kaon\kaon$: \\
 	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\kaon\pion$ decay, vetoed by requiring $m(\kaon\kaon) < 1840 \mev$. 
@@ -172,7 +172,7 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 
 \end{enumerate}
 The effects of these veto cuts are illustrated in Figs.~\ref{fig:vetoD},\ref{fig:vetoLambda} and \ref{fig:vetoD0}.
-To reduce cross-feed from our calibration channel into the signal channel and vice-versa we require tight PID cuts on the ambiguous bachelor kaon/pion. 
+To reduce cross-feed from our calibration channel into the signal channel and vice-versa we require tight PID cuts on the ambiguous bachelor kaon (PIDK(K) $>$ 10)/pion (PIDK(K) $<$ 0). 
 In addition, we veto $\Bs\to\Dsm\Dsp$ decays which is illustrated in Fig.~\ref{fig:vetoDs}.
  \clearpage
 \begin{enumerate}
