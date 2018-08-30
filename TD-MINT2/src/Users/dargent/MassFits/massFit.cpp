@@ -1421,6 +1421,7 @@ vector<double> fitPartRecoBkgShapeHILLHORN(){
 vector< vector<double> > fitNorm(){
 
 	/// Options
+	NamedParameter<int> useCBSignal("useCBSignal", 0);
 	NamedParameter<int> fixExpBkgFromSidebands("fixExpBkgFromSidebands", 0);
 	NamedParameter<int> useExpBkgShape("useExpBkgShape", 0);
         NamedParameter<int> ignorePartRecoBkg("ignorePartRecoBkg", 0);
@@ -1512,7 +1513,33 @@ vector< vector<double> > fitNorm(){
 		alpha.setConstant();
 		beta.setConstant();
 	} 
-	RooJohnsonSU signal("signal","signal",DTF_Bs_M, mean,sigma,alpha,beta);
+	RooJohnsonSU signal_RJ("signal_RJ","signal_RJ",DTF_Bs_M, mean,sigma,alpha,beta);
+
+	///Signal Pdf for Systematics
+	vector<double> sig_params_DCB = fitSignalShape_DCB("signal");
+
+	RooRealVar meanBs1("meanBs1","meanBs1", sig_params_DCB[0]);
+	RooRealVar sigmaBs1("sigmaBs1","sigmaBs1",sig_params_DCB[1]);
+	RooRealVar a1_Sig("a1_Sig","a1_Sig", sig_params_DCB[2]);
+	RooRealVar n1_Sig("n1_Sig","n1_Sig", sig_params_DCB[3]);
+	RooRealVar a2_Sig("a2_Sig","a2_Sig", sig_params_DCB[4]);
+	RooRealVar n2_Sig("n2_Sig","n2_Sig", sig_params_DCB[5]);
+	RooRealVar f_CB_Sig("f_CB_Sig","f_CB_Sig",sig_params_DCB[6]);
+	RooFormulaVar meanBs1_scaled("meanBs1_scaled","@0 * @1", RooArgSet(scale_mean,meanBs1)); 
+	RooFormulaVar sigmaBs1_scaled("sigmaBs1_scaled","@0 * @1", RooArgSet(scale_sigma,sigmaBs1)); 
+	RooCBShape CB1_Sig("CB1_Sig", "CB1_Sig", DTF_Bs_M, meanBs1_scaled, sigmaBs1_scaled, a1_Sig, n1_Sig);
+	RooCBShape CB2_Sig("CB2_Sig", "CB2_Sig", DTF_Bs_M, meanBs1_scaled, sigmaBs1_scaled, a2_Sig, n2_Sig);
+	RooAddPdf DoubleCBBs("DoubleCBBs", "DoubleCBBs", RooArgList(CB1_Sig,CB2_Sig),RooArgList(f_CB_Sig));
+
+
+	///Build Signal Part of Pdf
+	RooRealVar f_signal("f_signal", "f_signal", 0);
+	if(!useCBSignal) f_signal.setVal(1);
+	else f_signal.setVal(0);
+
+	f_signal.setConstant();
+	RooAddPdf signal("signal","signal", RooArgList(signal_RJ, DoubleCBBs), RooArgList(f_signal));
+
 
 	/// add B⁰ -> D_s 3pi
 	RooRealVar mean_MC_B0("mean_MC_B0", " #mu MC_B0", (sig_params[0] - 87.42)); 
@@ -1522,12 +1549,12 @@ vector< vector<double> > fitNorm(){
 	/// Combinatorial bkg pdf
 	RooRealVar exp_par1("exp_par1","exp_par1",-1.6508e-03,-10.,10.);	
 	RooRealVar exp_par("exp_par","exp_par",0.);	
-	RooExponential bkg_exp1("bkg_exp1","bkg_exp1",DTF_Bs_M,exp_par);
+	RooExponential bkg_exp1("bkg_exp1","bkg_exp1",DTF_Bs_M,exp_par1);
 	RooRealVar exp_par2("exp_par2","exp_par2",0,-10.,10.);	
 	RooRealVar exp_par3("exp_par3","exp_par3",0,-10.,10.);	
 
 	RooChebychev bkg_exp2("bkg_exp2","bkg_exp2",DTF_Bs_M,RooArgList(exp_par2,exp_par3));
-	RooRealVar f_bkg_exp("f_bkg_exp", "f_bkg_exp", 0.);
+	RooRealVar f_bkg_exp("f_bkg_exp", "f_bkg_exp", 0);
 
 	/// use only expo Bkg for Systematics
 	if(useExpBkgShape){
@@ -1633,21 +1660,21 @@ vector< vector<double> > fitNorm(){
 
 	if(useTriggerCat){
 		if (useB0 == 0) config->setStringValue("pdf", "run            : scale_sigma, scale_mean "
-					"Ds_finalState_mod :  exp_par "  
+					"Ds_finalState_mod :  exp_par1 "  
 					"run,Ds_finalState_mod,TriggerCat : n_sig, n_exp_bkg, n_partReco_bkg") ;  
 	
 		if (useB0 == 1) config->setStringValue("pdf", "run            : scale_mean "
 					"run,TriggerCat :	scale_sigma "
-					"Ds_finalState_mod :  exp_par "  
+					"Ds_finalState_mod :  exp_par1 "  
 					"run,Ds_finalState_mod,TriggerCat : n_sig, n_exp_bkg, n_partReco_bkg, n_sig_B0") ; 
 	}
 	else {
 		if (useB0 == 0) config->setStringValue("pdf", "year            : scale_sigma, scale_mean "
-					"Ds_finalState :  exp_par "  
+					"Ds_finalState :  exp_par1 "  
 					"year,Ds_finalState_mod : n_sig, n_exp_bkg, n_partReco_bkg") ;  
 	
 		if (useB0 == 1) config->setStringValue("pdf", "year            : scale_sigma, scale_mean "
-					"Ds_finalState_mod :  exp_par "  
+					"Ds_finalState_mod :  exp_par1 "  
 					"year,Ds_finalState : n_sig, n_exp_bkg, n_partReco_bkg, n_sig_B0") ; 
 	}
 	
@@ -1661,10 +1688,10 @@ vector< vector<double> > fitNorm(){
 			/// Get data slice
 			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j] + " && TriggerCat == TriggerCat::" + str_trigger[k]);
 			/// Fit
-			//bkg_exp1.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
+			if(fixExpBkgFromSidebands)bkg_exp1.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
 			/// Fix parameters
-			//((RooRealVar*) fitParams->find("exp_par1_"+ str_Ds[j]))->setVal(exp_par1.getVal());
-			//if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par1_"+ str_Ds[j]))->setConstant();
+			if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par1_"+ str_Ds[j]))->setVal(exp_par1.getVal());
+			if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par1_"+ str_Ds[j]))->setConstant();
 	
 			/// Set start values for yields
 			((RooRealVar*) fitParams->find("n_sig_{"+str_run[i] + ";" + str_Ds[j] + ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/2.);
