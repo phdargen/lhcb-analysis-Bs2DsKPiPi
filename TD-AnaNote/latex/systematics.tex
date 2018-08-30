@@ -19,12 +19,12 @@ The difference in yields could result in shifted values for the measured observa
 The Johnson's SU function which is used as nominal signal model is replaced by a double Crystal Ball \cite{CB}. 
 The crystal ball model is given by a gaussian core with an exponential tail on one side. 
 Choosing a double Crystal Ball allows for asymmetric tails in a slightly different way compared to the Johnson's SU function. 
-Table xXx summarizes the observed differences in signal and background yields.
+%Table xXx summarizes the observed differences in signal and background yields.
 
 \subsubsection{Background model}
 
 For the description of the partially reconstructed background, 
-a combination of the RooHILLdini and RooHORNsdini model [REF HERE] is used instead of the nominal model of three bifurcated gaussians. 
+a combination of the RooHILLdini and RooHORNsdini model \cite{Hill:2253246} is used instead of the nominal model of three bifurcated gaussians. 
 The HORNSdini model is used to describe the $\Bs\to\Ds^{*}[\to\Ds(\piz)] X_{s/d}$ decay, where the brackets around the $\piz$ indicate that it is missed in the reconstruction. 
 The $\Ds^{*}\to\Ds\piz$ decay is a Vector $\to$ Scalar-Scalar ($1^{-}\to 0^{-}0^{-}$) transition. 
 Using the helicity of the $\Ds$, one can show that this results in a double-peak structure in the reconstructed $\Bs$ mass. 
@@ -50,17 +50,49 @@ HILL(m_{\Bs}) = \begin{cases} -(m_{\Bs} - a)(m_{\Bs} - b),& \mbox{for } a < m_{\
  \end{equation}
 
 This shape is convoluted with the same gaussian resolution function used for the HORNSdini model.
-The resulting differences in yields is shown in Table xXx. \newline
+%The resulting differences in yields is shown in Table xXx. \newline
 
 
 To study systematic uncertainties originating from the description of the combinatorial background, the nominal second order polynomial is replaced by an exponential function. 
-The changes in signal and background yields after refitting with this alternative shape are shown in Table xXx. \newline
+%The changes in signal and background yields after refitting with this alternative shape are shown in Table xXx. \newline
+
+\subsubsection{Description of misidentified background}
+
+The fixed shape and yield of the mis-ID background in the $m(\Ds\kaon\pion\pion)$ spectrum is another source of systematic uncertainty.
+To evaluate this possible source arising from the description of the single mis-ID of $\Bs\to\Ds^{(*)}\pion_{\kaon}\pion\pion$ candidates, we vary the yield of this component as follows:
+
+\begin{itemize}
+ 
+\item We fix the yield of the mis-ID components to zero.
+
+\item We double the yield of the mis-ID components.
+
+\item We quadruple the yield of the mis-ID components.
+
+\end{itemize}
+
+For the shape of the mis-ID background, 
+the nominal approach is to use a simulated sample of $\Bs\to\Ds^{-}\pip\pim\pip$ or $\Bs\to\Ds^{*-}\pip\pim\pip$ 
+decays and flip the mass hypothesis of the $\pip$ with the higher misidentification probability (see Sec. \ref{sec:massFits}). 
+The resulting $m(\Ds^{(*)}\pion_{\kaon}\pion\pion)$ distribution is then modelled and the shape obtainted from the fit is used in the nominal mass fit to signal. This approach is modified as follows:
+
+\begin{itemize}
+
+\item We flip the mass hypothesis of the $\pip$ candidate with the lower probability of beeing misidentified. 
+
+\item We randomly flip the mass hypothesis of a $\pip$ candidate.
+
+\end{itemize}
+
+For the five variations of the misidentified background component, new signal sWeights are generated and the time dependent fit is reiterated. 
+
 
 \subsubsection{Systematic effect on observables}
 
 The shift of the central values of the observables in the full fit when using sWeights obtained from a combination of alternative models, 
 as well as using only one alternative model for the signal/comb.background/part.reco.background and keeping the nominal model for the other parts,
-is shown in Table yYy. We conservatively choose the biggest variation as systematic uncertainty from the modelling of the invariant $\Bs$ mass spectrum.
+is shown in Table \ref{tab:SystSummary}. 
+%We conservatively choose the biggest variation as systematic uncertainty from the modelling of the invariant $\Bs$ mass spectrum.
 
 
 
@@ -84,6 +116,7 @@ The nominal knot positions are changed to be:
 \mbox{ } k_{alt2}(t) =  [0.5 \mbox{ } 1\mbox{ }  1.5 \mbox{ } 2 \mbox{ } 3\mbox{ }  9\mbox{ } 11],  
 \mbox{ } k_{adaptive}(t) =  [0.7\mbox{ } 1.2\mbox{ } 1.7\mbox{ } 2.2\mbox{ } 6.3] \]
 
+The variation of knot positions is found to give a neglectable effect when compared to the variation of spline coefficients.
 
 \subsubsection{Variation of spline coefficients}
 
@@ -124,9 +157,9 @@ where $i=1..4$, $c_{i}$ is the i-th generated coefficient of the toy spline, $c_
 $r_{j}$ are normally distributed real random numbers from a distribution of unit width and $v_{ij}$ are the components of $L$ (where $i$ is the row index and $j$ the column index). \newline
 We now generate four sets of 100 toy splines, where one of the four spline coefficients is varied each time using Eq. \ref{eq:choleskyCoeffs}. 
 Thus, the time-dependent amplitude fit is repeated in total 400 times with a generated toy spline and the shift of the mean value of the physics observables over each of the $4\cdot100$ sets is quoted as 
-uncertainty arising from $c_{i=1..4}$. The uncertainties are then added in quadrature to form the overall uncertainty due to the spline coefficients. Table \ref{table:Pulls_tDFit_noChol} summarizes the results of this study.
+uncertainty arising from $c_{i=1..4}$. The uncertainties are then added in quadrature to form the overall uncertainty due to the spline coefficients. %Table \ref{table:Pulls_tDFit_noChol} summarizes the results of this study.
 
-\input{tables/Acceptance/Syst/PullFile_systNoChol.tex}
+%\input{tables/Acceptance/Syst/PullFile_systNoChol.tex}
 
 
 \subsection{Decay-time resolution}
@@ -157,23 +190,42 @@ The widths of the single Gaussians from the fits performed with the two methods 
 \label{eq:ResoSyst2}
 \end{equation}
 
-The scaling functions are shown in Fig. \ref{fig:SystscaleFactor} and the systematic uncertainty to the CP-observables is summarized in Table yYy.
+The scaling functions are shown in Fig. \ref{fig:SystscaleFactor} and the systematic uncertainty to the CP-observables is summarized in Table \ref{tab:SystSummary} .
 
 
-    
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ScaleFactor_Data_coreGauss.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ScaleFactor_Data_singleGauss.pdf}
-\caption{The measured resolution $\sigma_{eff}$ as function of the per-event decay time error estimate $\sigma_t$ for fake $B_s$ candidates (Run-II data) 
-when (left) only using the narrow gaussian width of the double gaussian fit model or (right) when determining the resolution using a single gaussian model.
-The fitted calibration curve is shown in blue for both cases.}
+\includegraphics[height=!,width=0.66\textwidth]{figs/Resolution/ResoSyst.pdf}
+\caption{The measured resolution scaling function of the per-event decay time error estimate $\sigma_t$ for fake $B_s$ candidates (Run-II data) 
+for (black line) the nominal scaling, (blue line) only using the narrow gaussian width of the double gaussian fit model or (red line) when determining the resolution using a single gaussian model.}
 \label{fig:SystscaleFactor}
 \end{figure}
 
 
+%\begin{figure}[h]
+%\centering
+%\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ScaleFactor_Data_coreGauss.pdf}
+%\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ScaleFactor_Data_singleGauss.pdf}
+%\caption{The measured resolution $\sigma_{eff}$ as function of the per-event decay time error estimate $\sigma_t$ for fake $B_s$ candidates (Run-II data) 
+%when (left) only using the narrow gaussian width of the double gaussian fit model or (right) when determining the resolution using a single gaussian model.
+%The fitted calibration curve is shown in blue for both cases.}
+%\label{fig:SystscaleFactor}
+%\end{figure}
+
+
 \subsection{Tagging calibration}
 
-
+Systematic uncertainties arise from the statistical precision of the tagging parameters determined from the calibration, discussed in Sec. \ref{sec:Tagging}.
+These uncertanties are accounted for by the inclusion of Gaussian constrains in the nominal fit. 
+The width of the respective constrain for the tagging parameter $p_{i}$  is chosen to be $\Delta p_{i}$. 
+In this way, the systematic uncertainty due to the tagging calibration is included in the statistical uncertainty of the time dependent fit.  
 
 \subsection{Summary of systematic uncertainties}
+
+All contributing systematic uncertanties are summarized in Table \ref{tab:SystSummary}. 
+The individual uncertainties are summed in quadrature to arive at the total systematic uncertainty for the respective CP observable.
+Their total magnitude ranges from (30-40)$\%$ of the statistical uncertainty of the fit.
+
+
+\input{tables/timeFit/signal/sys_summary_table.tex}
+
