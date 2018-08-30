@@ -173,7 +173,7 @@ TH1D* createBinning(){
 	return h;
 }
 
-vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefix = "", double offset_dt = 0. , double scale_dt = 1.2){
+vector< TGraph* > fitSplineAcc(string CutString, string marginalPdfsPrefix = "", double offset_dt = 0. , double scale_dt = 1.2){
 
 	// Options
     	NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
@@ -202,10 +202,10 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	tree->SetBranchStatus("*finalState",1);
 	tree->SetBranchStatus("TriggerCat",1);
 	tree->SetBranchStatus("run",1);
-    	tree->SetBranchStatus("Bs_L0Global_TIS",1);
-   	tree->SetBranchStatus("Bs_*_TOS",1);
-   	tree->SetBranchStatus("*PT",1);
-    	tree->SetBranchStatus("m_*",1);
+//     	tree->SetBranchStatus("Bs_L0Global_TIS",1);
+//    	tree->SetBranchStatus("Bs_*_TOS",1);
+//    	tree->SetBranchStatus("*PT",1);
+//     	tree->SetBranchStatus("m_*",1);
 
 	//Define RooRealVar for observables
 	RooRealVar Bs_TAU(((string)Bs_TAU_Var).c_str(), ((string)Bs_TAU_Var).c_str(), min_TAU, max_TAU, "ps");
@@ -242,9 +242,9 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	RooArgList observables3(Bs_Hlt2Topo2BodyDecision_TOS, Bs_Hlt2Topo3BodyDecision_TOS, Bs_Hlt2Topo4BodyDecision_TOS, Bs_Hlt2Topo2BodyBBDTDecision_TOS, Bs_Hlt2Topo3BodyBBDTDecision_TOS, Bs_Hlt2Topo4BodyBBDTDecision_TOS,Bs_Hlt2IncPhiDecision_TOS,Bs_Hlt2PhiIncPhiDecision_TOS);
 	RooArgList observables4(m_Kpipi,DsDaughters_min_PT,XsDaughters_min_PT);
 	
-	observables.add(observables2);
-	observables.add(observables3);
-	observables.add(observables4);
+// 	observables.add(observables2);
+// 	observables.add(observables3);
+// 	observables.add(observables4);
 
 	RooDataSet* dataset = new RooDataSet("dataset","dataset", observables, Import(*tree), WeightVar(N_Bs_sw.GetName()), Cut(CutString.c_str()));
 	
@@ -298,9 +298,9 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
         RooFormulaVar dt_scaled( "dt_scaled","dt_scaled", "@0+@1*@2",RooArgList(trm_offset,trm_scale,Bs_TAUERR));
         RooGaussEfficiencyModel trm("resmodel", "resmodel", Bs_TAU, *spl, RooRealConstant::value(0.), dt_scaled, trm_mean, RooRealConstant::value(1.) );
 	
-	RooRealVar Gamma("Gamma","Gamma",0.6643);
-	RooRealVar DeltaGamma("DeltaGamma","DeltaGamma",-0.083);
-        RooFormulaVar Tau( "Tau","Tau", "1./@0",RooArgList(Gamma));
+	RooRealVar GammaVal("Gamma","Gamma",Gamma);
+	RooRealVar DeltaGamma("DeltaGamma","DeltaGamma",dgamma);
+        RooFormulaVar Tau( "Tau","Tau", "1./@0",RooArgList(GammaVal));
 
 	TMatrixDSym cov(2);
 	cov[0][0] = pow(0.0020,2) ;
@@ -308,7 +308,7 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
  	cov[1][0] = -0.239 * 0.0020 * 0.006 ;
 	cov[1][1] = pow(0.006,2) ;
 
-	RooMultiVarGaussian* gauss_cov = new RooMultiVarGaussian("gauss_cov","gauss_cov",RooArgList(Gamma,DeltaGamma), RooArgList(RooRealConstant::value(0.6643),RooRealConstant::value(-0.083)), cov);
+	RooMultiVarGaussian* gauss_cov = new RooMultiVarGaussian("gauss_cov","gauss_cov",RooArgList(GammaVal,DeltaGamma), RooArgList(RooRealConstant::value(Gamma),RooRealConstant::value(dgamma)), cov);
 
 
 	RooBDecay* timePdf = new RooBDecay("Bdecay", "Bdecay", Bs_TAU, Tau, DeltaGamma,
@@ -343,21 +343,8 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 		myCoeffs.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal());
        		myCoeffsErr.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError());
 	}
-
-
-        // Plot acceptance
-        TH1F *h_spline = new TH1F("", "", 100, min_TAU, max_TAU);
-        for (int i = 1; i<=h_spline->GetNbinsX(); i++) {
-            Bs_TAU.setVal(h_spline->GetXaxis()->GetBinCenter(i));
-            h_spline->SetBinContent(i,spl->getVal());
-        }
         
-        TCanvas* c = new TCanvas();
-        h_spline->SetLineColor(kRed);
-        h_spline->Draw("histc");
-        c->Print("spline.eps");
-        c->Print("spline.pdf");
-        
+/*
 	/// Plot
 	TCanvas* canvas = new TCanvas();
 	canvas->cd();
@@ -380,7 +367,7 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	dataset->plotOn(frame_m, Binning(nBins), Name("data"));
 	totPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf"));
 	//totPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf"),ProjWData(Bs_TAUERR,*dataset));
-	spl->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline"));
+	spl->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline"),VisualizeError(*myfitresult));
 	
 	leg.AddEntry(frame_m->findObject("data"),"LHCb data","ep");
 	leg.AddEntry(frame_m->findObject("pdf"),"Fit","l");
@@ -463,10 +450,6 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 	cout << "chi2 = " << chi2 << endl;
 	cout << "used datasets:     "<< CutString.c_str() << endl;
 	    
-   	vector< vector<double> > myCoeffsAndErr;
-    	myCoeffsAndErr.push_back(myCoeffs);
-    	myCoeffsAndErr.push_back(myCoeffsErr);    
-
 	ofstream resultsFile;
 	resultsFile.open(("results_norm_" + marginalPdfsPrefix + "_" + (string)BinningName+ ".txt").c_str(),std::ofstream::trunc);
 	resultsFile << "knot_positions " ;
@@ -478,8 +461,135 @@ vector< vector<double> > fitSplineAcc(string CutString, string marginalPdfsPrefi
 		resultsFile << "c" + anythingToString(i) + "_" + marginalPdfsPrefix << "  " << 2 << "  " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() 
 		<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
 	}
+*/
 
-	return myCoeffsAndErr;
+   	vector< vector<double> > myCoeffsAndErr;
+    	myCoeffsAndErr.push_back(myCoeffs);
+    	myCoeffsAndErr.push_back(myCoeffsErr);    
+
+        // Plot acceptance
+        TH1F *h_spline = new TH1F("", "", 100, min_TAU, max_TAU);
+        for (int i = 1; i<=h_spline->GetNbinsX(); i++) {
+            Bs_TAU.setVal(h_spline->GetXaxis()->GetBinCenter(i));
+            h_spline->SetBinContent(i,spl->getVal());
+        }
+        
+        TCanvas* c = new TCanvas();
+	c->cd();
+        h_spline->SetLineColor(kRed);
+        h_spline->Draw("histc");
+        c->Print("spline.eps");
+        c->Print("spline.pdf");
+
+
+	TMatrixDSym covM = myfitresult->covarianceMatrix();
+	covM.Print();
+
+	    int nbins = myBinning.size()+2;
+            double x[nbins]; 
+            double xerr[nbins]; 
+            double y[nbins]; 
+            double yerr[nbins]; 
+            
+            for (int i= 0; i < nbins; i++) {
+                
+                if(i==0) x[0] = min_TAU;
+                else if(i==nbins-1) x[nbins-1] = max_TAU;
+                else x[i] = myBinning[i-1];
+                
+                xerr[i] = 0;        
+                y[i] = myCoeffsAndErr[0][i];
+                yerr[i] = myCoeffsAndErr[1][i];
+            }
+            
+            TGraphErrors *KnotsVsCoeffs = new TGraphErrors(nbins, x,y,xerr,yerr);
+            //KnotsVsCoeffs->SetMinimum(0.3 );
+            //KnotsVsCoeffs->SetMaximum(1.5 );
+            KnotsVsCoeffs->SetTitle("; t(B_{s}) [ps]; v_{i}");
+
+            KnotsVsCoeffs->Draw("AP");
+
+
+	    Bs_TAU.setVal(x[nbins-2]);
+	    double y_fit_norm = spl->getVal();
+
+	    nbins *= 100;
+
+            double x_fit[nbins]; 
+            double xerr_fit[nbins]; 
+            double y_fit[nbins]; 
+            double yerr_fit_h[nbins]; 
+            double yerr_fit_l[nbins]; 
+           
+            for (int i= 0; i < nbins; i++) {
+                
+                x_fit[i] = min_TAU + (max_TAU - min_TAU)/(double)(nbins-1.) * (double)i;
+                xerr_fit[i] = 0;        
+
+	        Bs_TAU.setVal(x_fit[i]);
+		y_fit[i] = spl->getVal() - y_fit_norm +1.;
+            }
+            
+        int nIter = 100000;
+	vector< TH1D* > randomHists;
+	for (int i= 0; i < nbins; i++) randomHists.push_back(new TH1D("","",nIter,-1,1));
+
+	for(int n=0 ; n < nIter; n++){
+
+	    RooArgList randomPars = myfitresult->randomizePars();
+	    for (int i= 0; i < myBinning.size(); i++)
+		((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->setVal(((RooRealVar*)randomPars.at(i))->getVal());
+
+	    for (int i= 0; i < nbins; i++) {
+			Bs_TAU.setVal(x_fit[i]);
+			randomHists[i]->Fill(spl->getVal() - y_fit_norm +1. - y_fit[i]);
+	    }
+	}
+	
+	for (int i= 0; i < nbins; i++) {
+		double* integral = randomHists[i]->GetIntegral();
+		for(int n= 0; n < randomHists[i]->GetNbinsX();n++){
+			if(integral[n] > (0.5-0.341)) { 
+				yerr_fit_l[i] = abs(randomHists[i]->GetBinCenter(n));
+				break;
+			}
+		}
+		for(int n= 0; n < randomHists[i]->GetNbinsX();n++){
+			if(integral[n] > 1.-(0.5-0.341)) { 
+				yerr_fit_h[i] = abs(randomHists[i]->GetBinCenter(n));
+				break;
+			}
+		}
+	}
+
+
+	TGraphAsymmErrors *KnotsVsCoeffs_fit = new TGraphAsymmErrors(nbins, x_fit,y_fit,xerr_fit,xerr_fit,yerr_fit_l,yerr_fit_h);
+	KnotsVsCoeffs_fit->SetMarkerColor(kRed);
+	KnotsVsCoeffs_fit->SetLineColor(kRed);
+	KnotsVsCoeffs_fit->SetFillColor(kRed);
+	KnotsVsCoeffs_fit->SetFillStyle(3001);
+	KnotsVsCoeffs_fit->Draw("3SAME");
+
+	TGraph *KnotsVsCoeffs_fit2 = new TGraph(nbins, x_fit,y_fit);
+	KnotsVsCoeffs_fit2->SetMarkerColor(kRed);
+	KnotsVsCoeffs_fit2->SetLineColor(kRed);
+	KnotsVsCoeffs_fit2->SetLineWidth(5);
+//             KnotsVsCoeffs_fit->SetFillColor(kRed+1);
+//             KnotsVsCoeffs_fit->SetFillStyle(3001);
+	KnotsVsCoeffs_fit2->Draw("LSAME");
+
+
+	c->Print("Plot/timeAcc_test.eps");
+	c->Print("Plot/timeAcc_test.pdf");
+	c->Print("Plot/timeAcc_test.png");
+
+	
+	vector< TGraph* > ret_vec;
+	ret_vec.push_back(KnotsVsCoeffs);
+	ret_vec.push_back(KnotsVsCoeffs_fit2);
+	ret_vec.push_back(KnotsVsCoeffs_fit);
+
+	return ret_vec;
 }
 
 RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string marginalPdfsPrefix, double offset_dt, double scale_dt , double offset_dt_MC, double scale_dt_MC, double Tau, double DeltaGamma, bool plot = true ){
@@ -972,295 +1082,149 @@ void compareAcceptance(){
     legend_year.push_back("Year 12");
     legend_year.push_back("Year 15");
     legend_year.push_back("Year 16");
+
+
+    vector<TString> cuts_year_t0;
+    cuts_year_t0.push_back("(year == 11)&& TriggerCat == 0");
+    cuts_year_t0.push_back("(year == 12)&& TriggerCat == 0");
+    cuts_year_t0.push_back("(year == 15)&& TriggerCat == 0");
+    cuts_year_t0.push_back("(year == 16) && TriggerCat == 0 ");  
+
+    vector<TString> cuts_year_t1;
+    cuts_year_t1.push_back("(year == 11)&& TriggerCat == 1");
+    cuts_year_t1.push_back("(year == 12)&& TriggerCat == 1");
+    cuts_year_t1.push_back("(year == 15)&& TriggerCat == 1");
+    cuts_year_t1.push_back("(year == 16) && TriggerCat == 1 ");  
     
-    vector<TString> legend_year_2;
-    legend_year_2.push_back("Others");
-    legend_year_2.push_back("Others");
-    legend_year_2.push_back("Others");
-    legend_year_2.push_back("Others");
-    
+
     // Compare different Ds final states
     vector<TString> cuts_Ds;
     cuts_Ds.push_back("(Ds_finalState == 0)");
     cuts_Ds.push_back("(Ds_finalState == 1)");
     cuts_Ds.push_back("(Ds_finalState == 2)");
     cuts_Ds.push_back("(Ds_finalState == 3)");    
-    
+    cuts_Ds.push_back("(Ds_finalState == 4)");    
+
     vector<TString> legend_Ds;
     legend_Ds.push_back("D_{s}^{-} #rightarrow #phi^{0}(1020) #pi^{-}"); 
     legend_Ds.push_back("D_{s}^{-} #rightarrow K^{*0}(892) K^{-}"); 
     legend_Ds.push_back("D_{s}^{-} #rightarrow (K^{+} K^{-} #pi^{-})_{NR}"); 
     legend_Ds.push_back("D_{s}^{-} #rightarrow #pi^{+} #pi^{-} #pi^{-}"); 
-    
-    vector<TString> legend_Ds_2 = legend_year_2;
+    legend_Ds.push_back("D_{s}^{-} #rightarrow K^{-} #pi^{+} #pi^{-}"); 
 
-    // Compare different Ds final states (low/high stat channels)
+
     vector<TString> cuts_Ds_mod;
-    cuts_Ds_mod.push_back("(Ds_finalState == 0) && Ds_finalState != 2 && Ds_finalState != 3");
-    cuts_Ds_mod.push_back("(Ds_finalState == 2) && Ds_finalState != 0 && Ds_finalState != 1");
+    cuts_Ds_mod.push_back("(Ds_finalState < 3)");
+    cuts_Ds_mod.push_back("(Ds_finalState == 3)");    
+    cuts_Ds_mod.push_back("(Ds_finalState == 4)");    
 
     vector<TString> legend_Ds_mod;
-    legend_Ds_mod.push_back("D_{s}^{-} #rightarrow #phi^{0}(1020) #pi^{-}"); 
-    legend_Ds_mod.push_back("D_{s}^{-} #rightarrow (K^{+} K^{-} #pi^{-})_{NR}"); 
-     
-    vector<TString> legend_Ds_mod_2;
-    legend_Ds_mod_2.push_back("D_{s}^{-} #rightarrow K^{*0}(892) K^{-}"); 
-    legend_Ds_mod_2.push_back("D_{s}^{-} #rightarrow #pi^{+} #pi^{-} #pi^{-}"); 
-   
-    //
-    vector<TString> cuts_Ds_mod2;
-    cuts_Ds_mod2.push_back("(Ds_finalState == 0) && Ds_finalState != 2 && Ds_finalState != 1");
-    cuts_Ds_mod2.push_back("(Ds_finalState == 1) && Ds_finalState != 0 && Ds_finalState != 3");
-
-    vector<TString> legend_Ds_mod2;
-    legend_Ds_mod2.push_back("D_{s}^{-} #rightarrow #phi^{0}(1020) #pi^{-}"); 
-    legend_Ds_mod2.push_back("D_{s}^{-} #rightarrow K^{*0}(892) K^{-}"); 
-     
-    vector<TString> legend_Ds_mod2_2;
-    legend_Ds_mod2_2.push_back("D_{s}^{-} #rightarrow #pi^{+} #pi^{-} #pi^{-}"); 
-    legend_Ds_mod2_2.push_back("D_{s}^{-} #rightarrow (K^{+} K^{-} #pi^{-})_{NR}"); 
+    legend_Ds_mod.push_back("D_{s}^{-} #rightarrow (K^{+} K^{-} #pi^{-})"); 
+    legend_Ds_mod.push_back("D_{s}^{-} #rightarrow #pi^{+} #pi^{-} #pi^{-}"); 
+    legend_Ds_mod.push_back("D_{s}^{-} #rightarrow K^{-} #pi^{+} #pi^{-}"); 
     
-    //
-    vector<TString> cuts_Ds_mod3;
-    cuts_Ds_mod3.push_back("(Ds_finalState == 3)");   
-    //cuts_Ds_mod3.push_back("(Ds_finalState == 0) && Ds_finalState != 1 && Ds_finalState != 3");
-    //cuts_Ds_mod3.push_back("(Ds_finalState == 0) && Ds_finalState != 2 && Ds_finalState != 3");
-    //cuts_Ds_mod3.push_back("(Ds_finalState == 1) && Ds_finalState != 0 && Ds_finalState != 3");
-
-    vector<TString> legend_Ds_mod3;
-    legend_Ds_mod3.push_back("D_{s}^{-} #rightarrow #pi^{+} #pi^{-} #pi^{-}"); 
-    //legend_Ds_mod3.push_back("D_{s}^{-} #rightarrow #phi^{0}(1020) #pi^{-}"); 
-    //legend_Ds_mod3.push_back("D_{s}^{-} #rightarrow #phi^{0}(1020) #pi^{-}"); 
-    //legend_Ds_mod3.push_back("D_{s}^{-} #rightarrow K^{*0}(892) K^{-}"); 
-    
-    vector<TString> legend_Ds_mod3_2;
-    legend_Ds_mod3_2.push_back("D_{s}^{-} #rightarrow K^{+} K^{-} #pi^{-}"); 
-    //legend_Ds_mod3_2.push_back("D_{s}^{-} #rightarrow K^{*0}(892) K^{-}"); 
-    //legend_Ds_mod3_2.push_back("D_{s}^{-} #rightarrow (K^{+} K^{-} #pi^{-})_{NR}"); 
-    //legend_Ds_mod3_2.push_back("D_{s}^{-} #rightarrow (K^{+} K^{-} #pi^{-})_{NR}"); 
 
     // Compare different runs
     vector<TString> cuts_run;
-    cuts_run.push_back("(year == 11 || year == 12) ");
+    cuts_run.push_back("( run ==1 ) ");
+    cuts_run.push_back("( run ==2 ) ");
     
     vector<TString> legend_run;
-    legend_run.push_back("Run 1");
+    legend_run.push_back("Run-I");
+    legend_run.push_back("Run-II");
     
-    vector<TString> legend_run_2;
-    legend_run_2.push_back("Run 2");
-    
-    // Compare different years per run 
-    vector<TString> cuts_run_year;
-    cuts_run_year.push_back("(year == 11) && year != 15 && year != 16 ");
-    cuts_run_year.push_back("(year == 15) && year != 11 && year != 12 ");
-    
-    vector<TString> legend_run_year;
-    legend_run_year.push_back("Year 11");
-    legend_run_year.push_back("Year 15");
-    
-    vector<TString> legend_run_year_2;
-    legend_run_year_2.push_back("Year 12");
-    legend_run_year_2.push_back("Year 16");
-    
+
     // Compare different triggers
     vector<TString> cuts_trigger;
     cuts_trigger.push_back("(TriggerCat == 0)");
-    //cuts_trigger.push_back("(Bs_L0Global_TIS == 1) && run ==1 ");
-    //cuts_trigger.push_back("(Bs_L0HadronDecision_TOS == 1) && run ==1");
-    //cuts_trigger.push_back("Bs_L0Global_TIS == 1 && (Bs_L0Global_TIS == 1 && Bs_L0HadronDecision_TOS == 1)");
-    //cuts_trigger.push_back("Bs_L0HadronDecision_TOS == 1 && (Bs_L0Global_TIS == 1 && Bs_L0HadronDecision_TOS == 1)");
-    //cuts_trigger.push_back("(Bs_Hlt1TrackMVADecision_TOS == 1) && run == 2");
-    
-    //cuts_trigger.push_back("(Bs_Hlt2Topo2BodyDecision_TOS == 1) && run == 2");
-    //cuts_trigger.push_back("(Bs_Hlt2Topo3BodyDecision_TOS == 1) && run == 2");
-    //cuts_trigger.push_back("(Bs_Hlt2Topo4BodyDecision_TOS == 1) && run == 2");
-    //cuts_trigger.push_back("(Bs_Hlt2PhiIncPhiDecision_TOS == 1) && run == 2");
-
-    //cuts_trigger.push_back("(Bs_Hlt2Topo2BodyBBDTDecision_TOS == 1) && run == 1");
-    //cuts_trigger.push_back("(Bs_Hlt2Topo3BodyBBDTDecision_TOS == 1) && run == 1");
-    //cuts_trigger.push_back("(Bs_Hlt2Topo4BodyBBDTDecision_TOS == 1) && run == 1");
-    //cuts_trigger.push_back("(Bs_Hlt2IncPhiDecision_TOS == 1) && run == 1");
+    cuts_trigger.push_back("(TriggerCat == 1)");
     
     vector<TString> legend_trigger;
-    legend_trigger.push_back("LO_Global_TIS");
-    //legend_trigger.push_back("LO_Global_TIS");
-    legend_trigger.push_back("LO_Hadron_TOS");
-    legend_trigger.push_back("Bs_Hlt1TrackMVADecision_TOS");
-    legend_trigger.push_back("Bs_Hlt2Topo2BodyDecision_TOS");
-    legend_trigger.push_back("Bs_Hlt2Topo3BodyDecision_TOS");
-    legend_trigger.push_back("Bs_Hlt2Topo4BodyDecision_TOS");
-    legend_trigger.push_back("Bs_Hlt2PhiIncPhiDecision_TOS");
-    legend_trigger.push_back("Bs_Hlt2Topo2BodyBBDTDecision_TOS");
-    legend_trigger.push_back("Bs_Hlt2Topo3BodyBBDTDecision_TOS");
-    legend_trigger.push_back("Bs_Hlt2Topo4BodyBBDTDecision_TOS");
-    legend_trigger.push_back("Bs_Hlt2IncPhiDecision_TOS");
-
-    vector<TString> legend_trigger_2;
-    legend_trigger_2.push_back("LO_Hadron_TOS");
-    //legend_trigger_2.push_back("LO_Hadron_TOS");
-    legend_trigger_2.push_back("LO_Global_TIS");
-    legend_trigger_2.push_back("Others");
-    legend_trigger_2.push_back("Others");
-    legend_trigger_2.push_back("Others");
-    legend_trigger_2.push_back("Others");
-    legend_trigger_2.push_back("Others");
-    legend_trigger_2.push_back("Others");
-    legend_trigger_2.push_back("Others");
-    legend_trigger_2.push_back("Others");
-    legend_trigger_2.push_back("Others");
+    legend_trigger.push_back("LO-TOS");
+    legend_trigger.push_back("LO-TIS");
 
 
     /// Combine cuts into vector to iterate over
     vector< vector<TString> > cut_set;    
-    //cut_set.push_back(cuts_year);    
-    //cut_set.push_back(cuts_Ds);
-    //cut_set.push_back(cuts_Ds_mod);
-    //cut_set.push_back(cuts_Ds_mod2);
-    //cut_set.push_back(cuts_Ds_mod3);
-    //cut_set.push_back(cuts_run);    
-    //cut_set.push_back(cuts_run_year);    
+//     cut_set.push_back(cuts_year);
+//     cut_set.push_back(cuts_year_t0);
+//     cut_set.push_back(cuts_year_t1);    
+//      cut_set.push_back(cuts_Ds);
+    cut_set.push_back(cuts_Ds_mod);
+    cut_set.push_back(cuts_run);    
     cut_set.push_back(cuts_trigger);    
     
     vector< vector<TString> > legend_title_set;
-    //legend_title_set.push_back(legend_year);
-    //legend_title_set.push_back(legend_Ds);
-    //legend_title_set.push_back(legend_Ds_mod);
-    //legend_title_set.push_back(legend_Ds_mod2);
-    //legend_title_set.push_back(legend_Ds_mod3);
-    //legend_title_set.push_back(legend_run);
-    //legend_title_set.push_back(legend_run_year);
+//     legend_title_set.push_back(legend_year);
+//      legend_title_set.push_back(legend_year);
+//      legend_title_set.push_back(legend_year);
+//     legend_title_set.push_back(legend_Ds);
+    legend_title_set.push_back(legend_Ds_mod);
+    legend_title_set.push_back(legend_run);
     legend_title_set.push_back(legend_trigger);
         
-    vector< vector<TString> > legend_title_set_2;
-    //legend_title_set_2.push_back(legend_year_2);
-    //legend_title_set_2.push_back(legend_Ds_2);
-    //legend_title_set_2.push_back(legend_Ds_mod_2);
-    //legend_title_set_2.push_back(legend_Ds_mod2_2);
-    //legend_title_set_2.push_back(legend_Ds_mod3_2);
-    //legend_title_set_2.push_back(legend_run_2);
-    //legend_title_set_2.push_back(legend_run_year_2);
-    legend_title_set_2.push_back(legend_trigger_2);
-
     vector<TString> plot_titles;
-    //plot_titles.push_back("year");
-    //plot_titles.push_back("DsFinalState");
-    //plot_titles.push_back("DsFinalState_mod");
-    //plot_titles.push_back("DsFinalState_mod2");
-    //plot_titles.push_back("DsFinalState_mod3");
-    //plot_titles.push_back("run");
-    //plot_titles.push_back("run_year");
+//      plot_titles.push_back("year");
+//     plot_titles.push_back("year_t0");
+//      plot_titles.push_back("year_t1");
+//     plot_titles.push_back("DsFinalState");
+    plot_titles.push_back("DsFinalState_mod");
+    plot_titles.push_back("run");
     plot_titles.push_back("trigger");    
 
     for (int a = 0; a < cut_set.size(); a++) {
         
-        TCanvas* c = new TCanvas();
-        TCanvas *combinedCanvas = new TCanvas();
-        
+        TCanvas* c = new TCanvas();    
+	c->cd();    
         vector<TString> cuts = cut_set[a];
         
-        if(cuts.size()==2)combinedCanvas->Divide(2,1);
-        else if(cuts.size()==3)combinedCanvas->Divide(3,1);
-        else if(cuts.size()==4)combinedCanvas->Divide(2,2);
-        
+    	TLegend* leg = new TLegend(0.6,0.7,0.9,0.9,"");
+        leg->SetLineStyle(0);
+	leg->SetLineColor(0);
+	leg->SetFillColor(0);
+	leg->SetTextFont(22);
+	leg->SetTextColor(1);
+	leg->SetTextSize(0.045);
+	leg->SetTextAlign(12);
+
+	vector< vector< TGraph* > > myGraphs_vec;
         for (int n = 0; n < cuts.size(); n++) {
             
-            vector< vector<double> > myCoeffsAndErr = fitSplineAcc((string)cuts[n]);
-            vector< vector<double> > myCoeffsAndErr_reversed = fitSplineAcc((string)(cuts[n].ReplaceAll("(","!(")));
+            vector< TGraph* > myGraphs = fitSplineAcc((string)cuts[n],"comb",0.,1.);
+	    myGraphs_vec.push_back(myGraphs);
+	    c->cd();                          
             
-            double x[nBins]; 
-            double xerr[nBins]; 
-            double y[nBins]; 
-            double yerr[nBins]; 
-            double y_reversed[nBins]; 
-            double yerr_reversed[nBins]; 
-            
-            double chi2 = 0;
-            
-            for (int i= 0; i < nBins; i++) {
-                
-                if(i==0) x[0] = min_TAU;
-                else if(i==nBins-1) x[nBins-1] = max_TAU;
-                else x[i] = myBinning[i-1];
-                
-                xerr[i] = 0;        
-                y[i] = myCoeffsAndErr[0][i];
-                yerr[i] = myCoeffsAndErr[1][i];
-                
-                y_reversed[i] = myCoeffsAndErr_reversed[0][i];
-                yerr_reversed[i] = myCoeffsAndErr_reversed[1][i];
-                
-                if(i < nBins - 2)chi2 += pow(y[i]-y_reversed[i],2)/(pow(yerr[i],2)+pow(yerr_reversed[i],2));
-            }
-            
-            chi2 = chi2/((double)nBins-2.);
-            
-            TGraphErrors *KnotsVsCoeffs = new TGraphErrors(nBins, x,y,xerr,yerr);
-            KnotsVsCoeffs->SetMinimum(0.3 );
-            KnotsVsCoeffs->SetMaximum(1.5 );
-            KnotsVsCoeffs->SetTitle("; t(B_{s}) [ps]; v_{i}");
-            
-            TGraphErrors *KnotsVsCoeffs_reversed = new TGraphErrors(nBins, x,y_reversed,xerr,yerr_reversed);
-            KnotsVsCoeffs_reversed->SetMarkerColor(kRed+1);
-            KnotsVsCoeffs_reversed->SetLineColor(kRed+1);
-            KnotsVsCoeffs_reversed->SetFillColor(kRed+1);
-            KnotsVsCoeffs_reversed->SetFillStyle(3001);
-            
-            TLegend* leg = new TLegend(0.6,0.7,0.9,0.9,"");
-            leg->SetLineStyle(0);
-            leg->SetLineColor(0);
-            leg->SetFillColor(0);
-            leg->SetTextFont(22);
-            leg->SetTextColor(1);
-            leg->SetTextSize(0.05);
-            leg->SetTextAlign(12);
-            
-            if(cuts.size()>1)combinedCanvas->cd(n+1);
-            else combinedCanvas->cd();
-            KnotsVsCoeffs->Draw("AP");
-            KnotsVsCoeffs_reversed->Draw("PSAME");
-            
-            leg->AddEntry(KnotsVsCoeffs,legend_title_set[a][n],"ep");
-            leg->AddEntry(KnotsVsCoeffs_reversed,legend_title_set_2[a][n],"ep");
-            
-            stringstream ss ;
-            TString leg_chi2 = "#chi^{2} = ";
-            ss << std::fixed << std::setprecision(2) << chi2 ;
-            leg_chi2 += ss.str();    
-            leg->AddEntry((TObject*)0, leg_chi2, "");
-            
-            leg->Draw();
-            
-            if(n == 0){
-                KnotsVsCoeffs->SetMarkerColor(kBlack);
-                KnotsVsCoeffs->SetLineColor(kBlack);
-            }
-            else if(n == 1){
-                KnotsVsCoeffs->SetMarkerColor(kBlue);        
-                KnotsVsCoeffs->SetLineColor(kBlue);        
-            }
-            else if(n == 2){
-                KnotsVsCoeffs->SetMarkerColor(kGreen+3);
-                KnotsVsCoeffs->SetLineColor(kGreen+3);
-            }
-            else if(n == 3){
-                KnotsVsCoeffs->SetMarkerColor(kMagenta+3);
-                KnotsVsCoeffs->SetLineColor(kMagenta+3);
-            }
-            else if(n == 4){
-                KnotsVsCoeffs->SetMarkerColor(kGray);
-                KnotsVsCoeffs->SetLineColor(kGray);
-            }
-            c->cd();
-            if(n==0)KnotsVsCoeffs->Draw("AP");
-            else KnotsVsCoeffs->Draw("PSAME");
-            
+	    int color = kRed;
+	    if(n == 1) color = kBlue;
+	    if(n == 2) color = kGreen;
+	    if(n == 3) color = kMagenta;
+	    if(n == 4) color = kGray;
+
+	    myGraphs[0]->SetMinimum(0.);
+	    myGraphs[0]->SetMaximum(2.);
+            myGraphs[0]->SetMarkerColor(color+2);
+            myGraphs[0]->SetLineColor(color+2);
+            if(n==0)myGraphs[0]->Draw("AP");
+	    else myGraphs[0]->Draw("PSAME");
+
+            myGraphs[2]->SetMarkerColor(color);
+            myGraphs[2]->SetLineColor(color);
+            myGraphs[2]->SetFillColor(color);
+            myGraphs[2]->SetFillStyle(1001);
+	    myGraphs[2]->Draw("3SAME");
+
+            myGraphs[1]->SetMarkerColor(color);
+            myGraphs[1]->SetLineColor(color);
+            myGraphs[1]->SetLineWidth(5);
+	    myGraphs[1]->Draw("LSAME");
+
+            leg->AddEntry(myGraphs[1],legend_title_set[a][n],"ep");                
         }
-        
+	for (int n = 0; n < cuts.size(); n++)myGraphs_vec[n][0]->Draw("PSAME");       
+
+        leg->Draw();
         c->Print("Plot/timeAcc_comparison_by_"+plot_titles[a]+"_"+(string)BinningName+ ".eps");
-        //if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/Acceptance/timeAcc_comparison_by_"+plot_titles[a]+"_"+(string)BinningName+ ".pdf");
-        
-        combinedCanvas->Print("Plot/timeAcc_combined_by_"+plot_titles[a]+"_"+(string)BinningName+ ".eps");
-        if(updateAnaNote)combinedCanvas->Print("../../../../../TD-AnaNote/latex/figs/Acceptance/"+(string)BinningName+"/timeAcc_combined_by_"+plot_titles[a]+".pdf");
+        if(updateAnaNote)c->Print("../../../../../TD-AnaNote/latex/figs/Acceptance/timeAcc_comparison_by_"+plot_titles[a]+"_"+(string)BinningName+ ".pdf");
     }
 
 }
@@ -1653,7 +1617,7 @@ int main(int argc, char** argv){
     NamedParameter<double> knot_positions("knot_positions", 0.5, 1., 1.5, 2., 3., 6., 9.5);
 
     //checkPV(); 
-    produceMarginalPdfs();
+//     produceMarginalPdfs();
     if(CompareAcceptance)compareAcceptance();
 
     if(FitSplineAccRatio){
@@ -1790,9 +1754,9 @@ int main(int argc, char** argv){
 // 	fitSplineAcc("" , "comb", 0.01 , 1.);
 // 	fitSplineAcc(" run == 2" , "Run2", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
 	fitSplineAcc(" run == 1 && TriggerCat == 0 " , "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
-	fitSplineAcc(" run == 1 && TriggerCat == 1 " , "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
+/*	fitSplineAcc(" run == 1 && TriggerCat == 1 " , "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
 	fitSplineAcc(" run == 2 && TriggerCat == 0 " , "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
-	fitSplineAcc(" run == 2 && TriggerCat == 1 " , "Run2_t1", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
+	fitSplineAcc(" run == 2 && TriggerCat == 1 " , "Run2_t1", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);*/
     }
 
     cout << "==============================================" << endl;

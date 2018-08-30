@@ -1910,8 +1910,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			double eta_OS_MC = evt.getValueFromVector(4) ;
 			int q_SS_MC = evt.getValueFromVector(5);
 			double eta_SS_MC = evt.getValueFromVector(6);
-			int run_MC = 1 ;
-			int trigger_MC = 0 ;
+			int run_MC = evt.getValueFromVector(7) ;
+			int trigger_MC = evt.getValueFromVector(8) ;
 
 			double weight = 1; //t_pdf_Run1_t0.getVal(evt)/evt.getGeneratorPdfRelativeToPhaseSpace();
 			N_MC += weight;

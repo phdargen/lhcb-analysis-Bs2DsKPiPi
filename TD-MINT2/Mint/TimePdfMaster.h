@@ -817,7 +817,7 @@ class TimePdfMaster
        _r_t->setVal(1./_Gamma);
        if((string)_marginalPdfsPrefix == "Uniform")_r_dt->setVal(1./_Gamma/100.);
        else _r_dt->setVal(_h_dt->GetMean());
-       _r_f->setIndex(1);
+       _r_f->setIndex((int)evt.getValueFromVector(2));
        _r_q_OS->setIndex(0);
        if((string)_marginalPdfsPrefix == "Uniform")_r_eta_OS->setVal(0.);
        else _r_eta_OS->setVal(_h_eta_OS->GetMean());

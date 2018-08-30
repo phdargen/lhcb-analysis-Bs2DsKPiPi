@@ -337,10 +337,31 @@ int ampFit(int step=0){
     NamedParameter<double>  lambda("lambda", 1.);
     NamedParameter<int>  doBootstrap("doBootstrap", 0);
     NamedParameter<int>  N_bootstrap("N_bootstrap", 10000);
+    NamedParameter<int>  doPlots("doPlots", 0);
     
     NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
     DalitzEventPattern pat(EventPattern.getVector());
     cout << " got event pattern: " << pat << endl;
+	
+    vector<int> s123;
+    s123.push_back(1);
+    s123.push_back(2);
+    s123.push_back(3);
+	
+    vector<int> s234;
+    s234.push_back(2);
+    s234.push_back(3);
+    s234.push_back(4);
+	
+    vector<int> s134;
+    s134.push_back(1);
+    s134.push_back(3);
+    s134.push_back(4);
+	
+    vector<int> s124;
+    s124.push_back(1);
+    s124.push_back(2);
+    s124.push_back(4);
             
     FitAmpSum fas_tmp(pat);
     FitAmpIncoherentSum fasBkg(pat);
@@ -517,6 +538,8 @@ int ampFit(int step=0){
 			badEvents++;
 			continue;
 		}
+
+// 		if(sqrt(evt.sij(s234)/(GeV*GeV))<1) continue;
 		
 		evt.setWeight(sw);
 		eventList.Add(evt);	
@@ -526,15 +549,17 @@ int ampFit(int step=0){
     
         DalitzHistoSet datH = eventList.weightedHistoSet();
         
-        AmpsPdfFlexiFast ampsSig(pat, &fas, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
+        AmpsPdfFlexiFast* ampsSig;
+	if(useLASSO) ampsSig = new AmpsPdfFlexiFast(pat, &fas_tmp, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
+	else ampsSig = new AmpsPdfFlexiFast(pat, &fas, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
         AmpsPdfFlexiFast ampsBkg(pat, &fasBkg, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
-        DalitzSumPdf amps(sigfraction,ampsSig,ampsBkg);
+        DalitzSumPdf amps(sigfraction,*ampsSig,ampsBkg);
         
         Neg2LL neg2ll(amps, eventList);
         
         double stepSize = 1;
         lambda = lambda + (step-1) * stepSize;
-        LASSO_flexi lasso(&ampsSig,lambda);
+        LASSO_flexi lasso(ampsSig,lambda);
         Neg2LLSum fcn(&neg2ll,&lasso);
         fcn.addConstraints(); 
         
@@ -545,15 +570,19 @@ int ampFit(int step=0){
         
         mini.printResultVsInput();
         
-	if(useLASSO)ampsSig.doFinalStats(&mini);
+	if(useLASSO)ampsSig->doFinalStats(&mini);
 	else {
 		string outTableName = (string)OutputDir+"FitAmpResults.tex";
         	if(updateAnaNote)outTableName = "../../../../../TD-AnaNote/latex/tables/lassoFit/"+(string)OutputDir+"fitFractions.tex";
-        	ampsSig.doFinalStatsAndSave(&mini,outTableName,((string)OutputDir+"FitAmpResults.root").c_str());
+        	ampsSig->doFinalStatsAndSave(&mini,outTableName,((string)OutputDir+"FitAmpResults.root").c_str());
         }
                 
         if(useLASSO){
             
+	    double N_sig = 0;
+            for (int i=0; i<eventList.size(); i++) N_sig += eventList[i].getWeight();
+
+
             TFile* out_LASSO = new TFile(((string)OutputDir+"LASSO_"+anythingToString(step)+".root").c_str(),"RECREATE");
             Double_t x[1],y[1];
             vector<double> thresholds;
@@ -572,7 +601,7 @@ int ampFit(int step=0){
             
             x[0]=lambda;
             for(int i = 0; i < thresholds.size() ; i++){
-                y[0]=neg2ll.getVal() + 4. * lasso.numberOfFitFractionsLargerThanThreshold(thresholds[i]);
+                y[0]=neg2ll.getVal() + 2. * lasso.numberOfFitFractionsLargerThanThreshold(thresholds[i]);
                 TGraph* aic = new TGraph(1,x,y);
                 aic->SetName( ("AIC_"+anythingToString((int) (thresholds[i]*1000))).c_str());
                 aic->SetTitle("");
@@ -584,7 +613,7 @@ int ampFit(int step=0){
             }
             
             for(int i = 0; i < thresholds.size() ; i++){
-                y[0]=neg2ll.getVal() + 2. * lasso.numberOfFitFractionsLargerThanThreshold(thresholds[i]) * log(eventList.size()*sigfraction);
+                y[0]=neg2ll.getVal() +  lasso.numberOfFitFractionsLargerThanThreshold(thresholds[i]) * log(N_sig);
                 TGraph* bic = new TGraph(1,x,y);
                 bic->SetName( ("BIC_"+anythingToString((int) (thresholds[i]*1000))).c_str());
                 bic->SetTitle("");
@@ -675,36 +704,16 @@ int ampFit(int step=0){
             out_LASSO->Close(); 
         }
         
-        else{
+        if(doPlots){
         
             cout << "Now plotting:" << endl;
             
-            DalitzHistoSet fitH = ampsSig.histoSet();
-            datH.drawWithFitNorm(fitH, ((string)OutputDir+(string)"datFit_l_"+anythingToString(step)+"_").c_str(),"eps");
-            std::vector<DalitzHistoSet> EachAmpsHistos = ampsSig.GetEachAmpsHistograms();
-            datH.drawWithFitAndEachAmps(datH, fitH, EachAmpsHistos, ((string)OutputDir+(string)"WithAmps").c_str(), "eps");
-            
+//             DalitzHistoSet fitH = ampsSig.histoSet();
+//             datH.drawWithFitNorm(fitH, ((string)OutputDir+(string)"datFit_l_"+anythingToString(step)+"_").c_str(),"eps");
+//             std::vector<DalitzHistoSet> EachAmpsHistos = ampsSig.GetEachAmpsHistograms();
+//             datH.drawWithFitAndEachAmps(datH, fitH, EachAmpsHistos, ((string)OutputDir+(string)"WithAmps").c_str(), "eps");
+
             int nBins = 50;
-            vector<int> s123;
-            s123.push_back(1);
-            s123.push_back(2);
-            s123.push_back(3);
-            
-            vector<int> s234;
-            s234.push_back(2);
-            s234.push_back(3);
-            s234.push_back(4);
-            
-            vector<int> s134;
-            s134.push_back(1);
-            s134.push_back(3);
-            s134.push_back(4);
-            
-            vector<int> s124;
-            s124.push_back(1);
-            s124.push_back(2);
-            s124.push_back(4);
-            
 	    TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,1,4);
 	    TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.3,1.6);
 	    TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,1.6);
@@ -868,7 +877,7 @@ int ampFit(int step=0){
                                 
                 //counted_ptr<IDalitzEvent> evtPtr(sg.newEvent());
                 //DalitzEvent evt(evtPtr.get());
-                double weight = ampsSig.un_normalised_noPs(eventListMC[i])*eventListMC[i].getWeight()/eventListMC[i].getGeneratorPdfRelativeToPhaseSpace();
+                double weight = ampsSig->un_normalised_noPs(eventListMC[i])*eventListMC[i].getWeight()/eventListMC[i].getGeneratorPdfRelativeToPhaseSpace();
                 s_Kpipi_fit->Fill(eventListMC[i].sij(s234)/(GeV*GeV),weight);
                 s_Kpi_fit->Fill(eventListMC[i].s(2,4)/(GeV*GeV),weight);
                 s_pipi_fit->Fill(eventListMC[i].s(3,4)/(GeV*GeV),weight);

@@ -1,10 +1,10 @@
 * options for acceptance 
 "Bs_TAU_Var"		"Bs_BsDTF_TAU"
 
-"CompareAcceptance"	0
-"FitSplineAccRatio"	1
+"CompareAcceptance"	1
+"FitSplineAccRatio"	0
 "FitSplineNorm"		0
-"doSystematics"		1
+"doSystematics"		0
 
 "updateAnaNote"		1
 
