@@ -193,8 +193,8 @@ public:
     
     complex<double> ComplexVal(){
 
-//        std::complex<double> result= polar((double) ( _re ),(double) (_im/360.*2.*pi ) ); 
-        std::complex<double> result(_re,static_cast<double>(_f) * _im); 
+        std::complex<double> result= polar((double) ( _re ),(double) (_im/360.*2.*pi ) ); 
+//        std::complex<double> result(_re,static_cast<double>(_f) * _im); 
         return result;
     }
 };
@@ -1494,6 +1494,65 @@ public:
     }
 };
 
+
+// Bkg PDF
+class FullAmpsPdfFlexiFastBkg : 
+	public MINT::PdfBase<IDalitzEvent>, virtual public IDalitzPdf{
+    
+protected:
+    AmpsPdfFlexiFast* _amps;
+    AmpsPdfFlexiFast* _amps_CP;
+
+public:
+    void parametersChanged(){
+        _amps->parametersChanged();
+        _amps_CP->parametersChanged();
+    }
+    void beginFit(){
+        _amps->beginFit();
+        _amps_CP->beginFit();
+    }
+    void endFit(){
+        _amps->endFit();
+        _amps_CP->endFit();
+    }
+    
+    inline double un_normalised_noPs(IDalitzEvent& evt){
+        const double f = (double) evt.getValueFromVector(2);
+        if(f>0) return _amps->un_normalised_noPs(evt);
+	else return _amps_CP->un_normalised_noPs(evt);
+    }
+    
+    virtual double getVal(IDalitzEvent& evt){
+        const double f = (double) evt.getValueFromVector(2);
+        if(f>0) return _amps->getVal(evt);
+	else return _amps_CP->getVal(evt);
+    }
+    
+    virtual double getVal_withPs(IDalitzEvent& evt){return getVal(evt);}
+    virtual double getVal_noPs(IDalitzEvent& evt){return getVal(evt);}
+    
+    virtual double getVal(IDalitzEvent* evt){
+        if(0 == evt) return 0;
+        return getVal(*evt);
+    }
+    virtual double getVal_withPs(IDalitzEvent* evt){
+        if(0 == evt) return 0;
+        return getVal_withPs(*evt);
+    }
+    virtual double getVal_noPs(IDalitzEvent* evt){
+        if(0 == evt) return 0;
+        return getVal_noPs(*evt);
+    }
+
+    virtual DalitzHistoSet histoSet(){return _amps->histoSet();}
+
+    FullAmpsPdfFlexiFastBkg(AmpsPdfFlexiFast* amps, AmpsPdfFlexiFast* amps_CP ):
+    _amps(amps),_amps_CP(amps_CP)
+    { ;  }
+};
+
+
 class CPcoeffLL : public Minimisable{
   FullAmpsPdfFlexiFastCPV* _pdf;
   vector<double> coeff;
@@ -1868,7 +1927,7 @@ void ampFit(int step=0, string mode = "fit"){
     FitAmpSum fas_tmp((DalitzEventPattern)pat);
     //if(randomizeStartVals)fas_tmp.randomizeStartVals(seed);
     //if(randomizeStartVals)fas_tmp.randomizePhaseStartVals(seed);
-    FitAmpIncoherentSum fasBkg(pat);
+    FitAmpIncoherentSum fasBkg(pat,"","Bkg_");
 
     /// Normalize amps
     {
@@ -1882,62 +1941,62 @@ void ampFit(int step=0, string mode = "fit"){
     }
     
     ///Choose reference amp
-    counted_ptr<FitAmpList> List_1 = fas_tmp.GetCloneOfSubsetSameFitParameters("K(1)(1400)+");
+    counted_ptr<FitAmpList> List_1 = fas_tmp.GetCloneOfSubsetSameFitParameters("K(1)(1270)+");
     FitAmpSum fas(*List_1);
     FitAmpSum fas_bar(*List_1);
     
     /// Define relative decay modes    
-   // A
-    FitParameter a_K1_1270_re("a_K1_1270_Re",1,1,0.01);
-    FitParameter a_K1_1270_im("a_K1_1270_Im",1,0,0.01); 
-    counted_ptr<IReturnComplex> a_K1_1270 = new AmpRatio(a_K1_1270_re,a_K1_1270_im);
+    // A
+    FitParameter a_K1_1400_Amp("a_K1_1400_Amp",1,1,0.01);
+    FitParameter a_K1_1400_Phase("a_K1_1400_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> a_K1_1400 = new AmpRatio(a_K1_1400_Amp,a_K1_1400_Phase);
 
-    FitParameter a_Ks_1410_re("a_Ks_1410_Re",1,1,0.01);
-    FitParameter a_Ks_1410_im("a_Ks_1410_Im",1,0,0.01); 
-    counted_ptr<IReturnComplex> a_Ks_1410 = new AmpRatio(a_Ks_1410_re,a_Ks_1410_im);
+    FitParameter a_Ks_1410_Amp("a_Ks_1410_Amp",1,1,0.01);
+    FitParameter a_Ks_1410_Phase("a_Ks_1410_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> a_Ks_1410 = new AmpRatio(a_Ks_1410_Amp,a_Ks_1410_Phase);
 
-    FitParameter a_K_1460_re("a_K_1460_Re",1,1,0.01);
-    FitParameter a_K_1460_im("a_K_1460_Im",1,0,0.01); 
-    counted_ptr<IReturnComplex> a_K_1460 = new AmpRatio(a_K_1460_re,a_K_1460_im);
+    FitParameter a_K_1460_Amp("a_K_1460_Amp",1,1,0.01);
+    FitParameter a_K_1460_Phase("a_K_1460_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> a_K_1460 = new AmpRatio(a_K_1460_Amp,a_K_1460_Phase);
 
-    FitParameter a_NS_Ks_re("a_NS_Ks_Re",1,1,0.01);
-    FitParameter a_NS_Ks_im("a_NS_Ks_Im",1,0,0.01); 
-    counted_ptr<IReturnComplex> a_NS_Ks = new AmpRatio(a_NS_Ks_re,a_NS_Ks_im);
+    FitParameter a_NS_Ks_Amp("a_NS_Ks_Amp",1,1,0.01);
+    FitParameter a_NS_Ks_Phase("a_NS_Ks_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> a_NS_Ks = new AmpRatio(a_NS_Ks_Amp,a_NS_Ks_Phase);
 
-    FitParameter a_NS_sigma_re("a_NS_sigma_Re",1,1,0.01);
-    FitParameter a_NS_sigma_im("a_NS_sigma_Im",1,0,0.01); 
-    counted_ptr<IReturnComplex> a_NS_sigma = new AmpRatio(a_NS_sigma_re,a_NS_sigma_im);
+    FitParameter a_NS_sigma_Amp("a_NS_sigma_Amp",1,1,0.01);
+    FitParameter a_NS_sigma_Phase("a_NS_sigma_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> a_NS_sigma = new AmpRatio(a_NS_sigma_Amp,a_NS_sigma_Phase);
 
-    FitParameter a_NS_rho_re("a_NS_rho_Re",1,1,0.01);
-    FitParameter a_NS_rho_im("a_NS_rho_Im",1,0,0.01); 
-    counted_ptr<IReturnComplex> a_NS_rho = new AmpRatio(a_NS_rho_re,a_NS_rho_im);
+    FitParameter a_NS_rho_Amp("a_NS_rho_Amp",1,1,0.01);
+    FitParameter a_NS_rho_Phase("a_NS_rho_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> a_NS_rho = new AmpRatio(a_NS_rho_Amp,a_NS_rho_Phase);
 
     // Abar
-    FitParameter abar_K1_1270_re("abar_K1_1270_Re",1,1,0.01);
-    FitParameter abar_K1_1270_im("abar_K1_1270_Im",1,0,0.01); 
-    counted_ptr<IReturnComplex> abar_K1_1270 = new AmpRatio(abar_K1_1270_re,abar_K1_1270_im);
+    FitParameter abar_K1_1400_Amp("abar_K1_1400_Amp",1,1,0.01);
+    FitParameter abar_K1_1400_Phase("abar_K1_1400_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> abar_K1_1400 = new AmpRatio(abar_K1_1400_Amp,abar_K1_1400_Phase);
 
-    FitParameter abar_Ks_1410_re("abar_Ks_1410_Re",1,1,0.01);
-    FitParameter abar_Ks_1410_im("abar_Ks_1410_Im",1,0,0.01); 
-    counted_ptr<IReturnComplex> abar_Ks_1410 = new AmpRatio(abar_Ks_1410_re,abar_Ks_1410_im);
+    FitParameter abar_Ks_1410_Amp("abar_Ks_1410_Amp",1,1,0.01);
+    FitParameter abar_Ks_1410_Phase("abar_Ks_1410_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> abar_Ks_1410 = new AmpRatio(abar_Ks_1410_Amp,abar_Ks_1410_Phase);
 
-    FitParameter abar_K_1460_re("abar_K_1460_Re",1,1,0.01);
-    FitParameter abar_K_1460_im("abar_K_1460_Im",1,0,0.01); 
-    counted_ptr<IReturnComplex> abar_K_1460 = new AmpRatio(abar_K_1460_re,abar_K_1460_im);
+    FitParameter abar_K_1460_Amp("abar_K_1460_Amp",1,1,0.01);
+    FitParameter abar_K_1460_Phase("abar_K_1460_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> abar_K_1460 = new AmpRatio(abar_K_1460_Amp,abar_K_1460_Phase);
 
-    FitParameter abar_NS_Ks_re("abar_NS_Ks_Re",1,1,0.01);
-    FitParameter abar_NS_Ks_im("abar_NS_Ks_Im",1,0,0.01); 
-    counted_ptr<IReturnComplex> abar_NS_Ks = new AmpRatio(abar_NS_Ks_re,abar_NS_Ks_im);
+    FitParameter abar_NS_Ks_Amp("abar_NS_Ks_Amp",1,1,0.01);
+    FitParameter abar_NS_Ks_Phase("abar_NS_Ks_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> abar_NS_Ks = new AmpRatio(abar_NS_Ks_Amp,abar_NS_Ks_Phase);
 
-    FitParameter abar_NS_sigma_re("abar_NS_sigma_Re",1,1,0.01);
-    FitParameter abar_NS_sigma_im("abar_NS_sigma_Im",1,0,0.01); 
-    counted_ptr<IReturnComplex> abar_NS_sigma = new AmpRatio(abar_NS_sigma_re,abar_NS_sigma_im);
+    FitParameter abar_NS_sigma_Amp("abar_NS_sigma_Amp",1,1,0.01);
+    FitParameter abar_NS_sigma_Phase("abar_NS_sigma_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> abar_NS_sigma = new AmpRatio(abar_NS_sigma_Amp,abar_NS_sigma_Phase);
 
-    FitParameter abar_NS_rho_re("abar_NS_rho_Re",1,1,0.01);
-    FitParameter abar_NS_rho_im("abar_NS_rho_Im",1,0,0.01); 
-    counted_ptr<IReturnComplex> abar_NS_rho = new AmpRatio(abar_NS_rho_re,abar_NS_rho_im);
+    FitParameter abar_NS_rho_Amp("abar_NS_rho_Amp",1,1,0.01);
+    FitParameter abar_NS_rho_Phase("abar_NS_rho_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> abar_NS_rho = new AmpRatio(abar_NS_rho_Amp,abar_NS_rho_Phase);
 
-    // Randomize start vals
+    /// Randomize start vals
     MinuitParameterSet* mps = MinuitParameterSet::getDefaultSet();
     if(randomizeStartVals){
 
@@ -1952,11 +2011,11 @@ void ampFit(int step=0, string mode = "fit"){
     } 
 
     /// Add amps
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar,"K(1)(1270)+",a_K1_1270,abar_K1_1270);
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar, "K*(1410)+",a_Ks_1410,abar_Ks_1410);
-    AddScaledAmpsToList(fas_tmp, fas, fas_bar,"K(1460)+",a_K_1460,abar_K_1460);
+    AddScaledAmpsToList(fas_tmp, fas, fas_bar,"K(1)(1400)+",a_K1_1400,abar_K1_1400);
+    AddScaledAmpsToList(fas_tmp, fas, "K*(1410)+",a_Ks_1410);
+    AddScaledAmpsToList(fas_tmp, fas_bar,"K(1460)+",abar_K_1460);
     AddScaledAmpsToList(fas_tmp, fas,fas_bar,"NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)",a_NS_Ks,abar_NS_Ks);
-    AddScaledAmpsToList(fas_tmp, fas,fas_bar,"NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)",a_NS_rho,abar_NS_rho);
+    AddScaledAmpsToList(fas_tmp, fas_bar,"NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)",abar_NS_rho);
    
     fas.print();
     fas_bar.print();
@@ -1998,9 +2057,9 @@ void ampFit(int step=0, string mode = "fit"){
     /// Bkg
     FitParameter sigfraction("SigFraction",1,0.999999,0.01);
     AmpsPdfFlexiFast ampsBkg(pat, &fasBkg, 0, integPrecision*10,integMethod, (std::string) integratorEventFile);
-    AmpsPdfFlexiFast ampsBkg_CP(pat, &fasBkg_CP, 0, integPrecision*10,integMethod, (std::string) integratorEventFile_CP);
+    AmpsPdfFlexiFast ampsBkg_CP(pat_CP, &fasBkg_CP, 0, integPrecision*10,integMethod, (std::string) integratorEventFile_CP);
+    FullAmpsPdfFlexiFastBkg pdf_bkg(&ampsBkg,&ampsBkg_CP);
 
-      
     /// Fit parameters
     FitParameter  r("r",1,0.,0.1);
     FitParameter  delta("delta",1,100.,1.);
@@ -2010,6 +2069,37 @@ void ampFit(int step=0, string mode = "fit"){
     FitParameter ym("ym",1,0,0.01); 
     FitParameter xp("xp",1,0,0.01);
     FitParameter yp("yp",1,0,0.01); 
+
+    /// Set blinded fit parameters to true values for toy generation
+    if(mode == "gen"){
+	double real_val = (double)r + r.blinding();
+	r.setCurrentFitVal(real_val);
+	r.setInit(real_val);
+
+	real_val = (double)delta + delta.blinding();
+	delta.setCurrentFitVal(real_val);
+	delta.setInit(real_val);
+
+	real_val = (double)gamma + gamma.blinding();
+	gamma.setCurrentFitVal(real_val);
+	gamma.setInit(real_val);
+
+	real_val = (double)xm + xm.blinding();
+	xm.setCurrentFitVal(real_val);
+	xm.setInit(real_val);
+
+	real_val = (double)ym + ym.blinding();
+	ym.setCurrentFitVal(real_val);
+	ym.setInit(real_val);
+
+	real_val = (double)xp + xp.blinding();
+	xp.setCurrentFitVal(real_val);
+	xp.setInit(real_val);
+
+	real_val = (double)yp + yp.blinding();
+	yp.setCurrentFitVal(real_val);
+	yp.setInit(real_val);
+    }
 
     FitParameter  Gamma("Gamma",2,0.6629,0.0018);
     FitParameter  dGamma("dGamma",2,-0.088,0.006);
@@ -2495,10 +2585,10 @@ void ampFit(int step=0, string mode = "fit"){
 
 
     /// Total model
-    SumPdf<IDalitzEvent> tot_pdf_Run1_t0(sigfraction,pdf_Run1_t0,ampsBkg);
-    SumPdf<IDalitzEvent> tot_pdf_Run1_t1(sigfraction,pdf_Run1_t1,ampsBkg);
-    SumPdf<IDalitzEvent> tot_pdf_Run2_t0(sigfraction,pdf_Run2_t0,ampsBkg);
-    SumPdf<IDalitzEvent> tot_pdf_Run2_t1(sigfraction,pdf_Run2_t1,ampsBkg);
+    SumPdf<IDalitzEvent> tot_pdf_Run1_t0(sigfraction,pdf_Run1_t0,pdf_bkg);
+    SumPdf<IDalitzEvent> tot_pdf_Run1_t1(sigfraction,pdf_Run1_t1,pdf_bkg);
+    SumPdf<IDalitzEvent> tot_pdf_Run2_t0(sigfraction,pdf_Run2_t0,pdf_bkg);
+    SumPdf<IDalitzEvent> tot_pdf_Run2_t1(sigfraction,pdf_Run2_t1,pdf_bkg);
 
     /// Likelihood
     Neg2LL neg2LL(pdf, eventList);   
@@ -2567,6 +2657,10 @@ void ampFit(int step=0, string mode = "fit"){
     if(mode == "fit"){
 	mini.doFit();
     	mini.printResultVsInput();
+// 	mini.CallMigrad();
+//     	mini.printResultVsInput();
+// 	mini.CallImprove();
+//     	mini.printResultVsInput();
     }
  
     /// Data histograms

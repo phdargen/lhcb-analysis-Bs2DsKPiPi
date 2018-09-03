@@ -5,6 +5,7 @@
 #include "TFile.h"
 #include "TNtupleD.h"
 #include "Mint/Utils.h"
+#include "Mint/FitParameter.h"
 
 #include <algorithm>
 #include <iostream>
@@ -180,12 +181,12 @@ void MinuitParameterSet::fillNtp(TFile*& ntpFile, TNtupleD*& ntp) const{
   for(unsigned int i=0; i < size(); i++){
     if(0 == getParPtr(i)) continue;
     if(0 != getParPtr(i)->iFixInit()) continue;
-    array[n++] = getParPtr(i)->mean();
+    array[n++] = ((FitParameter*)getParPtr(i))->blindedMean();
     array[n++] = getParPtr(i)->meanInit();
     array[n++] = getParPtr(i)->err();
     Double_t pull=-9999.0;
     if(getParPtr(i)->err() > 0){
-      pull = (getParPtr(i)->mean() - getParPtr(i)->meanInit())/getParPtr(i)->err();
+      pull = (((FitParameter*)getParPtr(i))->blindedMean() - getParPtr(i)->meanInit())/getParPtr(i)->err();
     }
     array[n++] = pull;
   }

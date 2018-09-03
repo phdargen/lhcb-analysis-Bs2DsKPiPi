@@ -399,7 +399,7 @@ std::complex<double> Amplitude::getVal(IDalitzEvent* evt){
 }
 
 std::complex<double> Amplitude::getNewVal(IDalitzEvent& evt){
-  bool dbThis=false;
+  //bool dbThis=false;
 
   //initialiseIfNeeded(evt.eventPattern());
   CheckAndMatchPattern(evt);
@@ -410,7 +410,7 @@ std::complex<double> Amplitude::getNewVal(IDalitzEvent& evt){
 //   if(dbThis) cout << "num permutations: " << evt.numPermutations() << endl;
   for(int i=0; i < evt.numPermutations(); i++){
     evt.setPermutationIndex(i);
-    complex<double> thisVal= getOnePermutationsVal(evt);
+    //complex<double> thisVal= getOnePermutationsVal(evt);
     
 /*    if(dbThis){
       cout << " permutation " << i
@@ -419,7 +419,7 @@ std::complex<double> Amplitude::getNewVal(IDalitzEvent& evt){
       cout << "\n gets thisVal " << thisVal << endl;
     }*/
     
-    sum += thisVal;
+    sum += getOnePermutationsVal(evt);
   }
   evt.setPermutationIndex(0);
   sum /= sqrt((double) evt.numPermutations());

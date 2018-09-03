@@ -357,7 +357,7 @@ void FitParameter::printVal(std::ostream& os) const{
 void FitParameter::printResultVsInput(std::ostream& os) const{
 
   double pull = -9999;
-  if(err() != 0) pull = (mean() - meanInit() )/err();
+  if(err() != 0) pull = (blindedMean() - meanInit() )/err();
 
 
   os << "\"" <<  name() << "\""

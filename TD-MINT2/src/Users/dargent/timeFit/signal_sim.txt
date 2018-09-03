@@ -1,7 +1,7 @@
 "RandomSeed"		0
 "Event Pattern"         531 -431 321 211 -211
 
-"InputFileName"	 "/auto/data/dargent/BsDsKpipi/Final/signal_tagged.root"
+"InputFileName"	 "/auto/data/dargent/BsDsKpipi/Final/Data/signal_tagged.root"
 "OutputDir"	"signal/"
 "channel"	"signal"
 
@@ -19,24 +19,22 @@
 *"min_year" 	11
 *"max_year" 	11
 
-"doSimFit"	1
-
-"useGaussConstrainsTagging"	 1
-
+"doSimFit"			 1
+"useGaussConstrainsTagging"	 0
+"randomizeStartVals"		 0
 
 ** name		Fix?	init	step	min	max
-
 "Gamma"		2	0.6629 	0.0018	0.0	2.0
 "dGamma" 	2 	-0.088 	0.006	0.0	0.0
 "dm" 		2 	17.757  0.021	0.0	0.0
 
-"C"	0	0.75	0.05	0	2	
-"D"	0	-0.31	0.05	-2	2
-"D_bar"	0	-0.10	0.05	-2	2
-"S"	0	-0.56	0.05	-2	2
-"S_bar" 0	-0.64	0.05	-2	2
+"C"	0	0.5	0.05		
+"D"	0	0.	0.05	
+"D_bar"	0	0.	0.05	
+"S"	0	0.	0.05	
+"S_bar" 0	0.	0.05	
 
-"C_Blind"	1	-1   1
+"C_Blind"	1	-0.5   0.5
 "D_Blind"	2	-1   1
 "D_bar_Blind"	3	-1   1
 "S_Blind"	4	-1   1
@@ -67,34 +65,34 @@ c3_Run2_t1  1  1.06446  0.0205617
 
 
 ***
-"p0_os_Run1"    0   0.397398    0.00969409
-"p1_os_Run1"    0    0.895493    0.0852892
+"p0_os_Run1"    2   0.397398    0.00969409
+"p1_os_Run1"    2    0.895493    0.0852892
 "delta_p0_os_Run1"    2    0.0294626    0.0104767
 "delta_p1_os_Run1"    2    0.0149661    0.0936451
 "avg_eta_os_Run1"    2    0.356747    0
-"tageff_os_Run1"    0    0.477392    0.00366241
+"tageff_os_Run1"    2    0.477392    0.00366241
 "tageff_asym_os_Run1"    2    0    0
-"p0_ss_Run1"    0    0.444258    0.00801601
-"p1_ss_Run1"    0    0.951345    0.110851
+"p0_ss_Run1"    2    0.444258    0.00801601
+"p1_ss_Run1"    2    0.951345    0.110851
 "delta_p0_ss_Run1"    2    -0.018648    0.0088224
 "delta_p1_ss_Run1"    2    0.0648605    0.124364
 "avg_eta_ss_Run1"    2    0.430647    0
-"tageff_ss_Run1"    0    0.684152    0.00340845
+"tageff_ss_Run1"    2    0.684152    0.00340845
 "tageff_asym_ss_Run1"    2    0    0
 
-"p0_os_Run2"    0    0.367591    0.00713118
-"p1_os_Run2"    0    0.866677    0.0636764
+"p0_os_Run2"    2    0.367591    0.00713118
+"p1_os_Run2"    2    0.866677    0.0636764
 "delta_p0_os_Run2"    2    0.011821    0.00845752
 "delta_p1_os_Run2"    2    0.0274802    0.0763576
 "avg_eta_os_Run2"    2    0.337847    0
-"tageff_os_Run2"    0    0.368447    0.00247828
+"tageff_os_Run2"    2    0.368447    0.00247828
 "tageff_asym_os_Run2"    2    0    0
-"p0_ss_Run2"    0    0.43337    0.00524488
-"p1_ss_Run2"    0    0.798898    0.0548957
+"p0_ss_Run2"    2    0.43337    0.00524488
+"p1_ss_Run2"    2    0.798898    0.0548957
 "delta_p0_ss_Run2"    2    -0.0179237    0.00619568
 "delta_p1_ss_Run2"    2    0.0196302    0.066483
 "avg_eta_ss_Run2"    2    0.404377    0
-"tageff_ss_Run2"    0    0.695995    0.00236321
+"tageff_ss_Run2"    2    0.695995    0.00236321
 "tageff_asym_ss_Run2"    2    0    0
 
 

@@ -1126,6 +1126,16 @@ int NamedDecayTreeList::makeDsKpipiList() {
     this->add(AmpInitialiser(*dk, "Lass"));
     this->add(*dk);
     delete dk;
+
+    dk = new DecayTree(531);
+    dk->addDgtr(-431, 10323)->addDgtr(211, 999041)->addDgtr(321,-211);
+    this->add(*dk);
+    delete dk;
+
+    dk = new DecayTree(531);
+    dk->addDgtr(-431, 10323)->addDgtr(211, 9981)->addDgtr(321,-211);
+    this->add(*dk);
+    delete dk;
     
     // B->Ds K1(1400); K1->K*(892) pi; K*->K pi
     dk = new DecayTree(531);
@@ -1172,6 +1182,14 @@ int NamedDecayTreeList::makeDsKpipiList() {
     this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     delete dk;
+
+    dk = new DecayTree(531);
+    dk->addDgtr(-431, 100323)->addDgtr(321, 100113)->addDgtr(211,-211);
+    this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
+    this->add(*dk);
+    delete dk;
+
     
     // B->Ds K2*(1430); K2->K*(892) pi; K*->K pi
     dk = new DecayTree(531);
@@ -1451,6 +1469,7 @@ int NamedDecayTreeList::makeDsKpipiList() {
     dk->addDgtr(9981)->addDgtr(211, -431);
     dk->addDgtr(10311)->addDgtr(321, -211);
     add(*dk);
+    this->add(AmpInitialiser(*dk,"Lass"));
     this->add(AmpInitialiser(*dk,"NonRes"));
     this->add(AmpInitialiser(*dk,"NonResPow"));
     this->add(AmpInitialiser(*dk,"NonResExp"));

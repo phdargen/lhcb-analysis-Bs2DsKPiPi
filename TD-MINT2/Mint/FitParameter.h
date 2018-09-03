@@ -52,7 +52,6 @@ class FitParameter : public NamedParameterBase, public IMinuitParameter, virtual
  
   double _blinding;
   bool setupBlinding();
-  virtual double blinding() const{return _blinding;}
 
   static const char* _initString;
 
@@ -78,6 +77,9 @@ class FitParameter : public NamedParameterBase, public IMinuitParameter, virtual
   enum FIX_OR_WHAT{FIT=0, HIDE=1, FIX=2};// possible fix options
 
   static const char* getInitString();
+  virtual double blinding() const{return _blinding;}
+
+  void invertBlinding() { _blinding = - _blinding;} 
 
   FitParameter(const std::string& name
 	       , const char* fname=0

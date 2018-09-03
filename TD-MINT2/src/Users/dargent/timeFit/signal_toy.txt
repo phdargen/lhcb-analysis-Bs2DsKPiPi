@@ -1,7 +1,7 @@
 "RandomSeed"		0
 "Event Pattern"         531 -431 321 211 -211
 
-*"InputDir"	"../Files/"
+"InputFileName"	 "/auto/data/dargent/BsDsKpipi/Final/Data/signal_tagged.root"
 "OutputDir"	"signal_toy6/"
 "channel"	"signal"
 "updateAnaNote"		 0
@@ -54,11 +54,17 @@
 
 ** name		Fix?	init	step	min	max
 
-"C"	0	0.75	0.05	0	2	
-"D"	0	-0.31	0.05	-2	2
-"D_bar"	0	-0.10	0.05	-2	2
-"S"	0	-0.56	0.05	-2	2
-"S_bar" 0	-0.64	0.05	-2	2
+"C"	0	0.548594	0.05	0	2	
+"D"	0	0.155437	0.05	-2	2
+"D_bar"	0	0.315333	0.05	-2	2
+"S"	0	-0.0560879	0.05	-2	2
+"S_bar" 0	0.253414	0.05	-2	2
+
+"C_Blind"	1	-0.5   0.5
+"D_Blind"	2	-1   1
+"D_bar_Blind"	3	-1   1
+"S_Blind"	4	-1   1
+"S_bar_Blind"	5	-1   1
 
 "Gamma"		2	0.6629 	0.0018	0.0	2.0
 "dGamma" 	2 	-0.088 	0.006	0.0	0.0

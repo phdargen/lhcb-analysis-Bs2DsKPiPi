@@ -161,6 +161,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     int chol_index = (step-1)/varPerParChol ;
 
     NamedParameter<string> doSystematic("doSystematic", (std::string) "", (char*) 0);
+    NamedParameter<int>  randomizeStartVals("randomizeStartVals", 0);
 
 
     /// Common fit parameters
@@ -508,7 +509,54 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
                               production_asym_Run2, detection_asym_Run2, "Run2_t1" );
-  
+
+    /// Randomize start vals
+    MinuitParameterSet* mps = MinuitParameterSet::getDefaultSet();
+    if(randomizeStartVals){
+	double val = gRandom->Uniform(0,1);
+	mps->getParPtr("C")->setCurrentFitVal(val);
+	((FitParameter*)mps->getParPtr("C"))->setInit(val);	
+
+	val = gRandom->Uniform(-1,1);
+	mps->getParPtr("D")->setCurrentFitVal(val);
+	((FitParameter*)mps->getParPtr("D"))->setInit(val);	
+
+	val = gRandom->Uniform(-1,1);
+	mps->getParPtr("D_bar")->setCurrentFitVal(val);
+	((FitParameter*)mps->getParPtr("D_bar"))->setInit(val);	
+
+	val = gRandom->Uniform(-1,1);
+	mps->getParPtr("S")->setCurrentFitVal(val);
+	((FitParameter*)mps->getParPtr("S"))->setInit(val);	
+
+	val = gRandom->Uniform(-1,1);
+	mps->getParPtr("S_bar")->setCurrentFitVal(val);
+	((FitParameter*)mps->getParPtr("S_bar"))->setInit(val);	
+    }
+
+    /// Set blinded fit parameters to true values for toy generation
+    if(mode == "gen"){
+	double real_val = (double)C + C.blinding();
+	C.setCurrentFitVal(real_val);
+	C.setInit(real_val);
+
+	real_val = (double)D + D.blinding();
+	D.setCurrentFitVal(real_val);
+	D.setInit(real_val);
+
+	real_val = (double)D_bar + D_bar.blinding();
+	D_bar.setCurrentFitVal(real_val);
+	D_bar.setInit(real_val);
+
+	real_val = (double)S + S.blinding();
+	S.setCurrentFitVal(real_val);
+	S.setInit(real_val);
+
+	real_val = (double)S_bar + S_bar.blinding();
+	S_bar.setCurrentFitVal(real_val);
+	S_bar.setInit(real_val);
+    }
+
     /// Load data
     double t,dt,mB;
     int f;
@@ -1124,8 +1172,6 @@ void fullTimeFit(int step=0, string mode = "fit"){
     cout << "SS only  | " << N_SS/N << " | " <<  w_SS/N_SS << " | " << N_SS/N * D_SS/N_SS << endl;
     cout << "OS+SS    | " << N_OS_SS/N << " | " <<  w_OS_SS/N_OS_SS << " | " << N_OS_SS/N * D_OS_SS/N_OS_SS << endl;
     cout << "Combined | " << (N_OS+N_SS+N_OS_SS)/N << " | "<<  (w_OS+w_SS+w_OS_SS)/(N_OS+N_SS+N_OS_SS) << " | " << (N_OS+N_SS+N_OS_SS)/N * D_comb/(N_OS+N_SS+N_OS_SS) << endl << endl ;
-
-    MinuitParameterSet* mps = MinuitParameterSet::getDefaultSet();
 
     /// Generate toys 
     DalitzEventList toys;

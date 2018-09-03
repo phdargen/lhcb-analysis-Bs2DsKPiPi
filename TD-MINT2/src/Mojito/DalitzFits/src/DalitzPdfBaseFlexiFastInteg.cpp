@@ -208,13 +208,13 @@ double DalitzPdfBaseFlexiFastInteg::phaseSpace(IDalitzEvent& evt){
   return evt.phaseSpace();
 }
 double DalitzPdfBaseFlexiFastInteg::getVal(IDalitzEvent& evt){
-  if(_pat.empty()) _pat = evt.eventPattern();
+  //if(_pat.empty()) _pat = evt.eventPattern();
   if(_integrating) return getVal_withPs(evt);
   else return getVal_noPs(evt);
 }
 double DalitzPdfBaseFlexiFastInteg::getVal_noPs(IDalitzEvent& evt){
-  bool dbThis = false;
-  static double maxVal=0;
+  //bool dbThis = false;
+  //static double maxVal=0;
   if(_pat.empty()) _pat = evt.eventPattern();
 
   if(_integrating){
@@ -230,7 +230,7 @@ double DalitzPdfBaseFlexiFastInteg::getVal_noPs(IDalitzEvent& evt){
     }
 
     double num = un_normalised_noPs(evt);
-    if(dbThis){
+    /*if(dbThis){
       double val=num/_norm;
       if(fabs(val) > maxVal){
 	maxVal=fabs(val);
@@ -243,7 +243,7 @@ double DalitzPdfBaseFlexiFastInteg::getVal_noPs(IDalitzEvent& evt){
 	  cout << "for event: "; evt.print(); cout << endl;
 	}
       }
-    }
+    }*/
 
     /*
     cout << "\n DalitzPdfBaseFlexiFastInteg::getVal_noPs():"
