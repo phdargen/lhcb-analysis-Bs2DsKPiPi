@@ -1439,6 +1439,7 @@ vector< vector<double> > fitNorm(){
 	NamedParameter<int> useB0("useB0", 0);
 	NamedParameter<int> useTriggerCat("useTriggerCat", 1);
 	NamedParameter<int> fitPreselected("fitPreselected", 0);
+	NamedParameter<int> useCommonCombBkg("useCommonCombBkg", 1);
 
 	/// Define categories
 	RooCategory year("year","year") ;
@@ -1547,21 +1548,55 @@ vector< vector<double> > fitNorm(){
 	RooJohnsonSU signal_B0("signal_B0","signal_B0",DTF_Bs_M, mean_B0,sigma,alpha,beta);
 
 	/// Combinatorial bkg pdf
+	RooRealVar exp_par("exp_par","exp_par",-1.6508e-03,-10.,10.);
 	RooRealVar exp_par1("exp_par1","exp_par1",-1.6508e-03,-10.,10.);	
-	RooRealVar exp_par("exp_par","exp_par",0.);	
-	RooExponential bkg_exp1("bkg_exp1","bkg_exp1",DTF_Bs_M,exp_par1);
 	RooRealVar exp_par2("exp_par2","exp_par2",0,-10.,10.);	
-	RooRealVar exp_par3("exp_par3","exp_par3",0,-10.,10.);	
-
-	RooChebychev bkg_exp2("bkg_exp2","bkg_exp2",DTF_Bs_M,RooArgList(exp_par2,exp_par3));
 	RooRealVar f_bkg_exp("f_bkg_exp", "f_bkg_exp", 0);
 
-	/// use only expo Bkg for Systematics
+	RooArgList exp_par_set;
+	RooArgList cheb_par_set;
+
+	// use exp bkg
 	if(useExpBkgShape){
 		 f_bkg_exp.setVal(1);
 		 f_bkg_exp.setConstant();
+		// same shape for all Ds modes	
+		if(useCommonCombBkg){ 
+			exp_par_set.add(exp_par1);
+			cheb_par_set.add(exp_par);
+			cheb_par_set.add(exp_par2);
+			exp_par.setConstant();
+			exp_par2.setConstant();
+		}
+		else {
+			exp_par_set.add(exp_par);
+			cheb_par_set.add(exp_par1);
+			cheb_par_set.add(exp_par2);
+			exp_par1.setConstant();
+			exp_par2.setConstant();
+		}
 	}
-
+	// cheb polynomials
+	else {
+		f_bkg_exp.setVal(0);
+		f_bkg_exp.setConstant();	
+		if(useCommonCombBkg){ 
+			exp_par_set.add(exp_par);
+			cheb_par_set.add(exp_par1);
+			cheb_par_set.add(exp_par2);
+			exp_par.setConstant();
+		}
+		// same shape for all Ds modes	
+		else {
+			exp_par_set.add(exp_par1);
+			cheb_par_set.add(exp_par);
+			cheb_par_set.add(exp_par2);
+			exp_par1.setConstant();
+		}
+	}	
+	
+	RooExponential bkg_exp1("bkg_exp1","bkg_exp1",DTF_Bs_M,*((RooRealVar*)exp_par_set.at(0)));
+	RooChebychev bkg_exp2("bkg_exp2","bkg_exp2",DTF_Bs_M,cheb_par_set);
 	RooAddPdf bkg_exp("bkg_exp", "bkg_exp", RooArgList(bkg_exp1, bkg_exp2), RooArgList(f_bkg_exp));
 
 	/// Part. reco bkg
@@ -1660,21 +1695,21 @@ vector< vector<double> > fitNorm(){
 
 	if(useTriggerCat){
 		if (useB0 == 0) config->setStringValue("pdf", "run            : scale_sigma, scale_mean "
-					"Ds_finalState_mod :  exp_par1 "  
+					"Ds_finalState_mod :  exp_par "  
 					"run,Ds_finalState_mod,TriggerCat : n_sig, n_exp_bkg, n_partReco_bkg") ;  
 	
 		if (useB0 == 1) config->setStringValue("pdf", "run            : scale_mean "
 					"run,TriggerCat :	scale_sigma "
-					"Ds_finalState_mod :  exp_par1 "  
+					"Ds_finalState_mod :  exp_par "  
 					"run,Ds_finalState_mod,TriggerCat : n_sig, n_exp_bkg, n_partReco_bkg, n_sig_B0") ; 
 	}
 	else {
 		if (useB0 == 0) config->setStringValue("pdf", "year            : scale_sigma, scale_mean "
-					"Ds_finalState :  exp_par1 "  
+					"Ds_finalState :  exp_par "  
 					"year,Ds_finalState_mod : n_sig, n_exp_bkg, n_partReco_bkg") ;  
 	
 		if (useB0 == 1) config->setStringValue("pdf", "year            : scale_sigma, scale_mean "
-					"Ds_finalState_mod :  exp_par1 "  
+					"Ds_finalState_mod :  exp_par "  
 					"year,Ds_finalState : n_sig, n_exp_bkg, n_partReco_bkg, n_sig_B0") ; 
 	}
 	
@@ -2346,6 +2381,7 @@ void fitSignal(){
 	NamedParameter<int> random_misID("random_misID", 0);
 	NamedParameter<int> fixExpBkgFromSidebands("fixExpBkgFromSidebands", 0);
 	NamedParameter<int> useExpBkgShape("useExpBkgShape", 0);
+	NamedParameter<int> useCommonCombBkg("useCommonCombBkg", 1);
         NamedParameter<int> altPartBkg("altPartBkg", 0);
 	NamedParameter<int> numCPU("numCPU", 6);
 	NamedParameter<int> sWeight("sWeightSignal", 0);
@@ -2365,7 +2401,6 @@ void fitSignal(){
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 	NamedParameter<string> inFileName("inFileNameSignal",(string)"/auto/data/dargent/BsDsKpipi/BDT/Data/signal.root");
 	NamedParameter<string> outFileName("outFileNameSignal",(string)"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
-
 	NamedParameter<double> scale_misIDyield("scale_misIDyield", 1.);
 
 	///define categories
@@ -2462,23 +2497,57 @@ void fitSignal(){
 	RooAddPdf signal("signal","signal", RooArgList(signal_RJ, DoubleCBBs), RooArgList(f_signal));
 
 	/// Combinatorial bkg pdf
+	RooRealVar exp_par("exp_par","exp_par",-1.6508e-03,-10.,10.);
 	RooRealVar exp_par1("exp_par1","exp_par1",-1.6508e-03,-10.,10.);	
-	RooRealVar exp_par("exp_par","exp_par",0.);	
-	RooExponential bkg_exp1("bkg_exp1","bkg_exp1",DTF_Bs_M,exp_par);
 	RooRealVar exp_par2("exp_par2","exp_par2",0,-10.,10.);	
-	RooRealVar exp_par3("exp_par3","exp_par3",0,-1,1);	
+	RooRealVar f_bkg_exp("f_bkg_exp", "f_bkg_exp", 0);
 
-	RooChebychev bkg_exp2("bkg_exp2","bkg_exp2",DTF_Bs_M,RooArgList(exp_par2,exp_par3));
-	RooRealVar f_bkg_exp("f_bkg_exp", "f_bkg_exp", 0.);
+	RooArgList exp_par_set;
+	RooArgList cheb_par_set;
 
-	/// use only expo Bkg for Systematics
+	// use exp bkg
 	if(useExpBkgShape){
 		 f_bkg_exp.setVal(1);
 		 f_bkg_exp.setConstant();
+		// same shape for all Ds modes	
+		if(useCommonCombBkg){ 
+			exp_par_set.add(exp_par1);
+			cheb_par_set.add(exp_par);
+			cheb_par_set.add(exp_par2);
+			exp_par.setConstant();
+			exp_par2.setConstant();
+		}
+		else {
+			exp_par_set.add(exp_par);
+			cheb_par_set.add(exp_par1);
+			cheb_par_set.add(exp_par2);
+			exp_par1.setConstant();
+			exp_par2.setConstant();
+		}
 	}
-
+	// cheb polynomials
+	else {
+		f_bkg_exp.setVal(0);
+		f_bkg_exp.setConstant();	
+		if(useCommonCombBkg){ 
+			exp_par_set.add(exp_par);
+			cheb_par_set.add(exp_par1);
+			cheb_par_set.add(exp_par2);
+			exp_par.setConstant();
+		}
+		// same shape for all Ds modes	
+		else {
+			exp_par_set.add(exp_par1);
+			cheb_par_set.add(exp_par);
+			cheb_par_set.add(exp_par2);
+			exp_par1.setConstant();
+		}
+	}	
+	
+	RooExponential bkg_exp1("bkg_exp1","bkg_exp1",DTF_Bs_M,*((RooRealVar*)exp_par_set.at(0)));
+	RooChebychev bkg_exp2("bkg_exp2","bkg_exp2",DTF_Bs_M,cheb_par_set);
 	RooAddPdf bkg_exp("bkg_exp", "bkg_exp", RooArgList(bkg_exp1, bkg_exp2), RooArgList(f_bkg_exp));
-	//if(!constrainCombBkgFromSS)bkg_exp.fitTo(*data,Save(kTRUE),Range(5500.,5700.));
+
 
 	/// Part. reco bkg
 	vector<double> bkg_partReco_params = norm_paramSet[3];
