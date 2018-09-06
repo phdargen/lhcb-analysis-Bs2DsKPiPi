@@ -1160,7 +1160,7 @@ public:
 		else evtPtr = _sg_CP->newEvent();
 
 		DalitzEvent evt(evtPtr.get());
-                if(!(sqrt(evt.sij(_s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2))continue;
+                if(!((sqrt(evt.sij(_s234)/(GeV*GeV)) < 1.95 && sqrt(evt.s(2,4)/(GeV*GeV)) < 1.2 && sqrt(evt.s(3,4)/(GeV*GeV)) < 1.2)))continue;
 
 		vector<double> marginal_vals = _timePdfMaster->getRandom_marginalVals();
 		double dt_MC = marginal_vals[0] ;
@@ -1385,9 +1385,9 @@ public:
 		pim[2] = eventList[i].p(4).Pz()/MeV;
 		pim[3] = eventList[i].p(4).E()/MeV;
 
-		m_Kpipi = eventList[i].sij(_s234);        
-		m_Kpi = eventList[i].s(2,4);        
-		m_pipi = eventList[i].s(3,4);        
+		m_Kpipi = sqrt(eventList[i].sij(_s234))/GeV;        
+		m_Kpi = sqrt(eventList[i].s(2,4))/GeV;        
+		m_pipi = sqrt(eventList[i].s(3,4))/GeV;        
 
 		tree->Fill();
 	     }
@@ -1849,7 +1849,7 @@ void ampFit(int step=0, string mode = "fit"){
     DalitzEventPattern pat(EventPattern.getVector());
     DalitzEventPattern pat_CP = pat.makeCPConjugate();
 
-    NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
+    NamedParameter<string> InputFileName("InputFileName", (std::string) "/auto/data/dargent/BsDsKpipi/Final/signal_tagged.root", (char*) 0);
     NamedParameter<string> InputGenMCFile("InputGenMCFile", (std::string) "/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_DsKpipi_CPV.root", (char*) 0);
     NamedParameter<string> channel("channel", (std::string) "norm", (char*) 0);
     NamedParameter<string> OutputDir("OutputDir", (std::string) "", (char*) 0);
@@ -1888,7 +1888,9 @@ void ampFit(int step=0, string mode = "fit"){
     NamedParameter<int>  varPerParChol("varPerParChol", 100);
     int chol_index = (step-1)/varPerParChol ;
 
+    NamedParameter<int>  doRadiusBWSystematic("doRadiusBWSystematic", 0);
     NamedParameter<string> doSystematic("doSystematic", (std::string) "", (char*) 0);
+    NamedParameter<string> addAmpName("addAmpName", (std::string) "", (char*) 0);
 
     NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
     TString integratorEventFile = (string) IntegratorEventFile;
@@ -1971,6 +1973,10 @@ void ampFit(int step=0, string mode = "fit"){
     FitParameter a_NS_rho_Phase("a_NS_rho_Phase",1,0,0.01); 
     counted_ptr<IReturnComplex> a_NS_rho = new AmpRatio(a_NS_rho_Amp,a_NS_rho_Phase);
 
+    FitParameter a_sys_Amp("a_sys_Amp",1,1,0.01);
+    FitParameter a_sys_Phase("a_sys_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> a_sys = new AmpRatio(a_sys_Amp,a_sys_Phase);
+
     // Abar
     FitParameter abar_K1_1400_Amp("abar_K1_1400_Amp",1,1,0.01);
     FitParameter abar_K1_1400_Phase("abar_K1_1400_Phase",1,0,0.01); 
@@ -1996,6 +2002,10 @@ void ampFit(int step=0, string mode = "fit"){
     FitParameter abar_NS_rho_Phase("abar_NS_rho_Phase",1,0,0.01); 
     counted_ptr<IReturnComplex> abar_NS_rho = new AmpRatio(abar_NS_rho_Amp,abar_NS_rho_Phase);
 
+    FitParameter abar_sys_Amp("abar_sys_Amp",1,1,0.01);
+    FitParameter abar_sys_Phase("abar_sys_Phase",1,0,0.01); 
+    counted_ptr<IReturnComplex> abar_sys = new AmpRatio(abar_sys_Amp,abar_sys_Phase);
+
     /// Randomize start vals
     MinuitParameterSet* mps = MinuitParameterSet::getDefaultSet();
     if(randomizeStartVals){
@@ -2010,12 +2020,28 @@ void ampFit(int step=0, string mode = "fit"){
 	}
     } 
 
-    /// Add amps
+    /// Add amps to A and Abar
     AddScaledAmpsToList(fas_tmp, fas, fas_bar,"K(1)(1400)+",a_K1_1400,abar_K1_1400);
-    AddScaledAmpsToList(fas_tmp, fas, "K*(1410)+",a_Ks_1410);
-    AddScaledAmpsToList(fas_tmp, fas_bar,"K(1460)+",abar_K_1460);
-    AddScaledAmpsToList(fas_tmp, fas,fas_bar,"NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)",a_NS_Ks,abar_NS_Ks);
-    AddScaledAmpsToList(fas_tmp, fas_bar,"NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)",abar_NS_rho);
+    
+    if(a_Ks_1410_Amp.iFixInit() != 1 && abar_Ks_1410_Amp.iFixInit() != 1)AddScaledAmpsToList(fas_tmp, fas, fas_bar,"K*(1410)+",a_Ks_1410,abar_Ks_1410);
+    else if(a_Ks_1410_Amp.iFixInit() != 1 && abar_Ks_1410_Amp.iFixInit() == 1)AddScaledAmpsToList(fas_tmp, fas,"K*(1410)+",a_Ks_1410);
+    else if(a_Ks_1410_Amp.iFixInit() == 1 && abar_Ks_1410_Amp.iFixInit() != 1)AddScaledAmpsToList(fas_tmp, fas_bar,"K*(1410)+",abar_Ks_1410);
+    
+    if(a_K_1460_Amp.iFixInit() != 1 && abar_K_1460_Amp.iFixInit() != 1)AddScaledAmpsToList(fas_tmp, fas, fas_bar,"K(1460)+",a_K_1460,abar_K_1460);
+    else if(a_K_1460_Amp.iFixInit() != 1 && abar_K_1460_Amp.iFixInit() == 1)AddScaledAmpsToList(fas_tmp, fas,"K(1460)+",a_K_1460);
+    else if(a_K_1460_Amp.iFixInit() == 1 && abar_K_1460_Amp.iFixInit() != 1)AddScaledAmpsToList(fas_tmp,fas_bar,"K(1460)+",abar_K_1460);
+    
+    if(a_NS_Ks_Amp.iFixInit() != 1 && abar_NS_Ks_Amp.iFixInit() != 1)AddScaledAmpsToList(fas_tmp, fas, fas_bar,"(->Ds-,pi+),K*(892)0(->K+,pi-)",a_NS_Ks,abar_NS_Ks);
+    else if(a_NS_Ks_Amp.iFixInit() != 1 && abar_NS_Ks_Amp.iFixInit() == 1)AddScaledAmpsToList(fas_tmp, fas,"(->Ds-,pi+),K*(892)0(->K+,pi-)",a_NS_Ks);
+    else if(a_NS_Ks_Amp.iFixInit() == 1 && abar_NS_Ks_Amp.iFixInit() != 1)AddScaledAmpsToList(fas_tmp, fas_bar,"(->Ds-,pi+),K*(892)0(->K+,pi-)",abar_NS_Ks);
+    
+    if(a_NS_rho_Amp.iFixInit() != 1 && abar_NS_rho_Amp.iFixInit() != 1)AddScaledAmpsToList(fas_tmp, fas, fas_bar,"(->Ds-,K+),rho(770)0(->pi+,pi-)",a_NS_rho,abar_NS_rho);
+    else if(a_NS_rho_Amp.iFixInit() != 1 && abar_NS_rho_Amp.iFixInit() == 1)AddScaledAmpsToList(fas_tmp, fas,"(->Ds-,K+),rho(770)0(->pi+,pi-)",a_NS_rho);
+    else if(a_NS_rho_Amp.iFixInit() == 1 && abar_NS_rho_Amp.iFixInit() != 1)AddScaledAmpsToList(fas_tmp, fas_bar,"(->Ds-,K+),rho(770)0(->pi+,pi-)",abar_NS_rho);
+
+    if(a_sys_Amp.iFixInit() != 1 && abar_sys_Amp.iFixInit() != 1)AddScaledAmpsToList(fas_tmp, fas, fas_bar,(string) addAmpName,a_sys,abar_sys);
+    else if(a_sys_Amp.iFixInit() != 1 && abar_sys_Amp.iFixInit() == 1)AddScaledAmpsToList(fas_tmp, fas,(string) addAmpName,a_sys);
+    else if(a_sys_Amp.iFixInit() == 1 && abar_sys_Amp.iFixInit() != 1)AddScaledAmpsToList(fas_tmp, fas_bar,(string) addAmpName,abar_sys);
    
     fas.print();
     fas_bar.print();
@@ -2385,9 +2411,8 @@ void ampFit(int step=0, string mode = "fit"){
     	}
     	else {
 		tree=new TChain("DecayTree");
-// 		tree->Add(((string)InputDir+"Data/old/"+(string)channel+".root").c_str());
-		if(mode != "gen" && doToyStudy == 1)tree->Add(((string)OutputDir+"toys_"+anythingToString((int)seed)+".root").c_str());
-		else tree->Add(((string)InputDir+"Data/"+(string)channel+"_tagged.root").c_str());
+		if(mode == "fit" && doToyStudy == 1)tree->Add(((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
+		else tree->Add(((string)InputFileName).c_str());
 		tree->SetBranchStatus("*",0);
 		tree->SetBranchStatus("N_Bs_sw",1);
 		tree->SetBranchStatus("year",1);
@@ -2630,6 +2655,13 @@ void ampFit(int step=0, string mode = "fit"){
 
     Neg2LLMultiConstraint constrains_sys(MinuitParameterSet::getDefaultSet(),("_" + (string)doSystematic).c_str());
     if((string)doSystematic != "" && mode == "fit")constrains_sys.smearInputValues();
+
+    if(doRadiusBWSystematic && mode == "fit"){
+				double val = gRandom->Uniform(0.,0.003);
+				mps->getParPtr("BW_radius")->setCurrentFitVal(val);
+				((FitParameter*)mps->getParPtr("BW_radius"))->setInit(val);
+				cout << "Set parameter " << "BW_radius" << " to " << val << endl;  
+    }
 
     /// LASSO
     double stepSize = 1;
@@ -2980,21 +3012,25 @@ void ampFit(int step=0, string mode = "fit"){
     if(doSimFit)n2ll = neg2LL_sim.getVal();
     else n2ll = neg2LL.getVal();
 
-    r_val = (double)r;
-    delta_val = (double)delta;
-    gamma_val = (double)gamma;
+    r_val = r.blindedMean();
+    delta_val = delta.blindedMean();
+    gamma_val = gamma.blindedMean();
 
-    xp_val = (double)xp;
-    yp_val = (double)yp;
-    xm_val = (double)xm;
-    ym_val = (double)ym;
+    xp_val = xp.blindedMean();
+    yp_val = yp.blindedMean();
+    xm_val = xm.blindedMean();
+    ym_val = ym.blindedMean();
 
-    string outTableName = (string)OutputDir+"FitAmpResults_"+anythingToString((int)seed);
+    string outTableName = (string)OutputDir+"FitAmpResults_"+anythingToString((int)step);
     if(updateAnaNote)outTableName = "../../../../../TD-AnaNote/latex/tables/fullFit/"+(string)OutputDir+"fitFractions";
+
+    string fractionFileName = (string)OutputDir+"fitFractions_"+ (string)doSystematic+ "_" + anythingToString((int)step);
+    if(doAccSystematics) fractionFileName = (string)OutputDir+"fitFractionsAcc_"+anythingToString((int)step);
+    if(doAccSystematics && useCholDec) fractionFileName = (string)OutputDir+"fitFractionsChol_"+anythingToString((int)step);
 
     vector<double> CP_coeff;
     if(mode == "fit"){
-	pdf.doFinalStatsAndSaveForAmp12(&mini,outTableName,((string)OutputDir+"fitFractions_"+anythingToString((int)seed)).c_str());
+	pdf.doFinalStatsAndSaveForAmp12(&mini,outTableName,fractionFileName);
 	CP_coeff = pdf.calculateCP_coeff();
 	C_val = CP_coeff[0];
 	Cbar_val = CP_coeff[1];
@@ -3007,7 +3043,7 @@ void ampFit(int step=0, string mode = "fit"){
 
     /// Create result tables
     if(updateAnaNote){
-
+	/*
 	ofstream resultsfile;
 	resultsfile.open(("../../../../../TD-AnaNote/latex/tables/fullFit/"+(string)OutputDir+"result.tex").c_str(),std::ofstream::trunc);
 	resultsfile << "\\begin{table}[h]" << "\n";
@@ -3048,7 +3084,7 @@ void ampFit(int step=0, string mode = "fit"){
 	resultsfile << "\\label{table:fullFit_" << (string) channel << "}" << "\n";
 	resultsfile << "\\end{table}";	
 	resultsfile.close();
-
+	*/
     } 
 
     /// Loop over MC

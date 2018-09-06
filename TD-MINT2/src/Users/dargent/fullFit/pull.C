@@ -13,79 +13,81 @@
 
 using namespace std;
 
+
 TString pull::latexName(TString s){
     if(s == "D_bar") return "$\\bar{D}$";
     if(s == "S_bar") return "$\\bar{S}$";
+    if(s == "delta") return "$\\delta$";
+    if(s == "gamma") return "$\\gamma - 2 \\beta_{s}$";
 
-    if(s == "p0_os_Run1") return "$p_{0}^{OS} \\, \\text{Run-I}$";
-    if(s == "p1_os_Run1") return "$p_{1}^{OS} \\, \\text{Run-I}$";
-    if(s == "delta_p0_os_Run1") return "$\\Delta p_{0}^{OS} \\, \\text{Run-I}$";
-    if(s == "delta_p1_os_Run1") return "$\\Delta p_{1}^{OS} \\, \\text{Run-I}$";
-    if(s == "tageff_os_Run1") return "$\\epsilon_{\\text{tag}}^{OS} \\, \\text{Run-I}$";
-    if(s == "tageff_asym_os_Run1") return "$\\Delta \\epsilon_{\\text{tag}}^{OS} \\, \\text{Run-I}$";
+    if(s == "mass_K_1__1400_p") return "$m_{K_1(1400)} $";
+    if(s == "width_K_1__1400_p") return "$\\Gamma_{K_1(1400)}$";
+    if(s == "mass_Ks_1410_p") return "$m_{K^{*}(1410)}$";
+    if(s == "width_Ks_1410_p") return "$\\Gamma_{K^{*}(1410)}$";
 
-    if(s == "p0_ss_Run1") return "$p_{0}^{SS} \\, \\text{Run-I}$";
-    if(s == "p1_ss_Run1") return "$p_{1}^{SS} \\, \\text{Run-I}$";
-    if(s == "delta_p0_ss_Run1") return "$\\Delta p_{0}^{SS} \\, \\text{Run-I}$";
-    if(s == "delta_p1_ss_Run1") return "$\\Delta p_{1}^{SS} \\, \\text{Run-I}$";
-    if(s == "tageff_ss_Run1") return "$\\epsilon_{\\text{tag}}^{SS} \\, \\text{Run-I}$";
-    if(s == "tageff_asym_ss_Run1") return "$\\Delta \\epsilon_{\\text{tag}}^{SS} \\, \\text{Run-I}$";
+    if(s == "Bs0toK_1__1270_p_toKs_892_0_toKp_pim__pip__Dsm_Amp") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}(892) \\, \\pi ) \\, \\text{Mag}$";
+    if(s == "Bs0toK_1__1270_p_toKs_892_0_toKp_pim__pip__Dsm_Phase") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}(892) \\, \\pi ) \\, \\text{Phase}$";
+    if(s == "Bs0toK_1__1270_p_toK_0_s_1430_0_toKp_pim__pip__Dsm_Amp") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}_{0}(1430) \\, \\pi ) \\, \\text{Mag} $";
+    if(s == "Bs0toK_1__1270_p_toK_0_s_1430_0_toKp_pim__pip__Dsm_Phase") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}_{0}(1430) \\, \\pi ) \\, \\text{Phase} $";
 
-    if(s == "p0_os_Run2") return "$p_{0}^{OS} \\, \\text{Run-II}$";
-    if(s == "p1_os_Run2") return "$p_{1}^{OS} \\, \\text{Run-II}$";
-    if(s == "delta_p0_os_Run2") return "$\\Delta p_{0}^{OS} \\, \\text{Run-II}$";
-    if(s == "delta_p1_os_Run2") return "$\\Delta p_{1}^{OS} \\, \\text{Run-II}$";
-    if(s == "tageff_os_Run2") return "$\\epsilon_{\\text{tag}}^{OS} \\, \\text{Run-II}$";
-    if(s == "tageff_asym_os_Run2") return "$\\Delta \\epsilon_{\\text{tag}}^{OS} \\, \\text{Run-II}$";
+    if(s == "a_K1_1400_Amp") return "$B_s \\to D_s \\, ( K_1(1400) \\to K^{*}(892) \\, \\pi ) \\, \\text{Mag} (b \\to c)$";
+    if(s == "a_K1_1400_Phase") return "$B_s \\to D_s \\, ( K_1(1400) \\to K^{*}(892) \\, \\pi ) \\, \\text{Phase} (b \\to c)$";
+    if(s == "abar_K1_1400_Amp") return "$B_s \\to D_s \\, ( K_1(1400) \\to K^{*}(892) \\, \\pi ) \\, \\text{Mag} (b \\to u)$";
+    if(s == "abar_K1_1400_Phase") return "$B_s \\to D_s \\, ( K_1(1400) \\to K^{*}(892) \\, \\pi ) \\, \\text{Phase} (b \\to u)$";
 
-    if(s == "p0_ss_Run2") return "$p_{0}^{SS} \\, \\text{Run-II}$";
-    if(s == "p1_ss_Run2") return "$p_{1}^{SS} \\, \\text{Run-II}$";
-    if(s == "delta_p0_ss_Run2") return "$\\Delta p_{0}^{SS} \\, \\text{Run-II}$";
-    if(s == "delta_p1_ss_Run2") return "$\\Delta p_{1}^{SS} \\, \\text{Run-II}$";
-    if(s == "tageff_ss_Run2") return "$\\epsilon_{\\text{tag}}^{SS} \\, \\text{Run-II}$";
-    if(s == "tageff_asym_ss_Run2") return "$\\Delta \\epsilon_{\\text{tag}}^{SS} \\, \\text{Run-II}$";
+    if(s == "a_Ks_1410_Amp") return "$B_s \\to D_s \\, ( K^{*}(1410) \\to K^{*}(892) \\, \\pi ) \\, \\text{Mag} (b \\to c)$";
+    if(s == "a_Ks_1410_Phase") return "$B_s \\to D_s \\, ( K^{*}(1410) \\to K^{*}(892) \\, \\pi ) \\, \\text{Phase} (b \\to c)$";
+    if(s == "Bs0toKs_1410_p_torho_770_0_topip_pim__Kp__Dsm_Amp") return "$B_s \\to D_s \\, ( K^{*}(1410) \\to K \\, \\rho(770) ) \\, \\text{Mag}$";
+    if(s == "Bs0toKs_1410_p_torho_770_0_topip_pim__Kp__Dsm_Phase") return "$B_s \\to D_s \\, ( K^{*}(1410) \\to K \\, \\rho(770) ) \\, \\text{Phase}$";
 
-    if(s == "production_asym_Run2") return "$A_{P} \\, \\text{Run-II}$";
+    if(s == "abar_K_1460_Amp") return "$B_s \\to D_s \\, ( K(1460) \\to K^{*}(892) \\, \\pi ) \\, \\text{Mag} (b \\to u)$";
+    if(s == "abar_K_1460_Phase") return "$B_s \\to D_s \\, ( K(1460) \\to K^{*}(892) \\, \\pi ) \\, \\text{Phase} (b \\to u)$";
 
-    if(s == "dm") return "$\\Delta m_{s}$";
+    if(s == "a_NS_Ks_Amp") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892) \\, \\text{Mag} (b \\to c)$";
+    if(s == "a_NS_Ks_Phase") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892) \\, \\text{Phase} (b \\to c)$";
+    if(s == "abar_NS_Ks_Amp") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892) \\, \\text{Mag} (b \\to u)$";
+    if(s == "abar_NS_Ks_Phase") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892) \\, \\text{Phase} (b \\to u)$";
+
+    if(s == "abar_NS_rho_Amp") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\rho(770) \\, \\text{Mag} (b \\to u)$";
+    if(s == "abar_NS_rho_Phase") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\rho(770) \\, \\text{Phase} (b \\to u)$";
+
+
+    if(s == "Bs0_K_1__1270_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "Bs0_K_1__1270_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K \\, \\rho(770) )$";
+    if(s == "Bs0_K_1__1270_p__K_0_s_1430_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}_{0}(1430) \\, \\pi )$";
+    if(s == "Bs0_K_1__1400_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1400) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "Bs0_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
+    if(s == "Bs0_Ks_1410_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K^{*}(1410) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "Bs0_Ks_1410_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K^{*}(1410) \\to K \\, \\rho(770) )$";
+    if(s == "Bs0_K_1460_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K(1460) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "Bs0_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
 
     return "$" + s + "$";
 }
 
-
 TString pull::latexNameMod(TString s){
-    if(s == "p0_os_Run1") return "$p_{0}^{OS}$";
-    if(s == "p1_os_Run1") return "$p_{1}^{OS}$";
-    if(s == "delta_p0_os_Run1") return "$\\Delta p_{0}^{OS}$";
-    if(s == "delta_p1_os_Run1") return "$\\Delta p_{1}^{OS}$";
-    if(s == "tageff_os_Run1") return "$\\epsilon_{\\text{tag}}^{OS} \\, [\\%]$";
-    if(s == "tageff_asym_os_Run1") return "$\\Delta \\epsilon_{\\text{tag}}^{OS} \\, [\\%]$";
 
-    if(s == "p0_ss_Run1") return "$p_{0}^{SS}$";
-    if(s == "p1_ss_Run1") return "$p_{1}^{SS}$";
-    if(s == "delta_p0_ss_Run1") return "$\\Delta p_{0}^{SS}$";
-    if(s == "delta_p1_ss_Run1") return "$\\Delta p_{1}^{SS}$";
-    if(s == "tageff_ss_Run1") return "$\\epsilon_{\\text{tag}}^{SS} \\, [\\%]$";
-    if(s == "tageff_asym_ss_Run1") return "$\\Delta \\epsilon_{\\text{tag}}^{SS} \\, [\\%]$";
+    if(s == "Bs0toK_1__1270_p_toKs_892_0_toKp_pim__pip__Dsm_Amp") return "$\\phantom{B_s \\to D_s \\, (} K_1(1270) \\to K^{*}(892) \\, \\pi \\phantom{)} $";
+    if(s == "Bs0toK_1__1270_p_toK_0_s_1430_0_toKp_pim__pip__Dsm_Amp") return "$\\phantom{B_s \\to D_s \\, (} K_1(1270) \\to K^{*}_{0}(1430) \\, \\pi \\phantom{)} $";
+    if(s == "a_K1_1400_Amp") return "$B_s \\to D_s \\, ( K_1(1400) \\to K^{*}(892) \\, \\pi ) $";
+    if(s == "a_Ks_1410_Amp") return "$B_s \\to D_s \\, ( K^{*}(1410) \\to K^{*}(892) \\, \\pi ) $";
+    if(s == "Bs0toKs_1410_p_torho_770_0_topip_pim__Kp__Dsm_Amp") return "$\\phantom{B_s \\to D_s \\, (} K^{*}(1410) \\to K \\, \\rho(770) \\phantom{)} $";
+    if(s == "abar_K_1460_Amp") return "$B_s \\to D_s \\, ( K(1460) \\to K^{*}(892) \\, \\pi ) $";
+    if(s == "a_NS_Ks_Amp") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892) $";
+    if(s == "abar_NS_Ks_Amp") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892) $";
+    if(s == "abar_NS_rho_Amp") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\rho(770) $";
 
-    if(s == "p0_os_Run2") return "$p_{0}^{OS}$";
-    if(s == "p1_os_Run2") return "$p_{1}^{OS}$";
-    if(s == "delta_p0_os_Run2") return "$\\Delta p_{0}^{OS}$";
-    if(s == "delta_p1_os_Run2") return "$\\Delta p_{1}^{OS}$";
-    if(s == "tageff_os_Run2") return "$\\epsilon_{\\text{tag}}^{OS} \\, [\\%]$";
-    if(s == "tageff_asym_os_Run2") return "$\\Delta \\epsilon_{\\text{tag}}^{OS} \\, [\\%]$";
+    if(s == "delta") return "$\\delta \\, [\\degrees]$";
+    if(s == "gamma") return "$\\gamma - 2 \\beta_{s} \\, [\\degrees]$";
 
-    if(s == "p0_ss_Run2") return "$p_{0}^{SS}$";
-    if(s == "p1_ss_Run2") return "$p_{1}^{SS}$";
-    if(s == "delta_p0_ss_Run2") return "$\\Delta p_{0}^{SS}$";
-    if(s == "delta_p1_ss_Run2") return "$\\Delta p_{1}^{SS}$";
-    if(s == "tageff_ss_Run2") return "$\\epsilon_{\\text{tag}}^{SS} \\, [\\%]$";
-    if(s == "tageff_asym_ss_Run2") return "$\\Delta \\epsilon_{\\text{tag}}^{SS}  \\, [\\%]$";
-    if(s == "production_asym_Run2") return "$A_{P} \\, [\\%]$";
+    if(s == "mass_K_1__1400_p") return "$m_{K_1(1400)} \\, [\\text{MeV}]$";
+    if(s == "width_K_1__1400_p") return "$\\Gamma_{K_1(1400)} \\, [\\text{MeV}]$";
+    if(s == "mass_Ks_1410_p") return "$m_{K^{*}(1410)} \\, [\\text{MeV}]$";
+    if(s == "width_Ks_1410_p") return "$\\Gamma_{K^{*}(1410)} \\, [\\text{MeV}]$";
 
-    return latexName(s);
+
+    else return latexName(s);
 }
-
 
 TMatrixD pull::combineCov_maxVal(vector<TMatrixD*> vec){
 
@@ -104,6 +106,21 @@ TMatrixD pull::combineCov_maxVal(vector<TMatrixD*> vec){
 	return m;
 }
 
+vector<double> pull::sampleMean(vector< vector<double> > vec_vals){
+
+	vector<double> means;
+
+	for(int i=0; i < vec_vals[0].size(); i++){
+			double sum = 0.;
+			for(int n = 0; n < vec_vals.size(); n++){
+				sum += vec_vals[n][i];
+			}
+			means.push_back(sum/vec_vals.size());		
+	}
+	return means;
+}
+
+
 TMatrixD pull::sampleVariance(vector< vector<double> > vec_vals){
 
 	TMatrixD m(vec_vals[0].size(),vec_vals[0].size());
@@ -119,6 +136,63 @@ TMatrixD pull::sampleVariance(vector< vector<double> > vec_vals){
 	}
 
 	return m;
+}
+
+vector<double> pull::sampleMean(){
+
+   if(fChain == 0){
+            cout << "ERROR:: No file found" << endl;
+            throw "ERROR";
+   }
+   int N = fChain->GetEntries();
+
+   vector<double> sum(_paraNames.size(),0.);
+   vector<double> sum_square(_paraNames.size(),0.);
+
+   vector<double> var(_paraNames.size(),0.);
+ 
+   for (int n=0; n <N ;n++) {
+        fChain->GetEntry(n);  
+	for (int i = 0 ; i < _paraNames.size(); i++) {
+			sum[i] += *_means[i];
+			sum_square[i] += pow(*_means[i],2);	
+	}
+    }
+
+    for (int i = 0 ; i < _paraNames.size(); i++) {
+		var[i] = sum[i]/(double)N;
+    }
+
+    return var;
+}
+
+
+vector<double> pull::sampleSigma(){
+
+    if(fChain == 0){
+            cout << "ERROR:: No file found" << endl;
+            throw "ERROR";
+    }
+    int N = fChain->GetEntries();
+
+   vector<double> sum(_paraNames.size(),0.);
+   vector<double> sum_square(_paraNames.size(),0.);
+
+   vector<double> var(_paraNames.size(),0.);
+ 
+   for (int n=0; n <N ;n++) {
+        fChain->GetEntry(n);  
+	for (int i = 0 ; i < _paraNames.size(); i++) {
+			sum[i] += *_means[i];
+			sum_square[i] += pow(*_means[i],2);	
+	}
+    }
+
+    for (int i = 0 ; i < _paraNames.size(); i++) {
+		var[i] = sqrt((sum_square[i] - pow(sum[i],2)/(double)N)/((double)N-.1));
+    }
+
+    return var;
 }
 
 
@@ -192,7 +266,7 @@ TMatrixD pull::getCov(TString label){
     
     vector<TH1D*> h_pulls;
     for (int i = 0 ; i < _paraNames.size(); i++) 
-        h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 40, -5.,5.));
+        h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 25, -3.,3.));
     
     for (int n=0; n <N ;n++) {
         fChain->GetEntry(n);  
@@ -246,12 +320,24 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
     
     int N = fChain->GetEntries();
 
-    TChain* chain =  new TChain("MinuitParameterSetNtp");
+    TChain* chain =  new TChain(_treeName);
+    if(_removeBar)refFileName.ReplaceAll("_Bar","");
+    TString lastFile;
+
     if(N>1)for(int i = 1; i <= N; i++){
 	stringstream index;
 	index << i;
 	TString file = refFileName;
-	chain->Add(file.ReplaceAll("*",index.str())); 
+	file.ReplaceAll("*",index.str()); 
+
+	if(std::ifstream(((string)file).c_str()).good()){ 
+		chain->Add(file);
+		lastFile = file;
+	}
+	else {
+		chain->Add(lastFile);
+		_skip.push_back(i);
+	} 
     }    
     else chain->Add(refFileName); 
 
@@ -273,6 +359,10 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
     for (int i = 0 ; i < _paraNames.size(); i++) {
         double * mean = new double[1];
         means.push_back(mean);
+	if(_fraction){
+		chain->SetBranchAddress(_paraNames[i], mean);
+		continue;
+	}
         chain->SetBranchAddress(_paraNames[i]+"_mean", mean);
         
         double * init = new double[1];
@@ -301,20 +391,20 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
         return cov;
     }
 
-    double max = 0.;
-    for (int n=0; n <N ;n++) {
-        fChain->GetEntry(n);  
-        chain->GetEntry(n);
-        for (int i = 0 ; i < _paraNames.size(); i++){
-	   double val = (*_means[i]-*means[i])/(*errs[i]);
-           if(abs(val) > max) max = abs(val);
+    if(_fraction){
+	for (int n=0; n <N ;n++) {
+		fChain->GetEntry(n);  
+		chain->GetEntry(n);
+		for (int i = 0 ; i < _paraNames.size(); i++)
+		for (int j = 0 ; j < _paraNames.size(); j++) 
+			cov[i][j] += (*_means[i] - *means[i]) * (*_means[j] - *means[j])/(N-1.);
 	}
+	return cov;
     }
-    max *= 1.1;
     
     vector<TH1D*> h_pulls;
     for (int i = 0 ; i < _paraNames.size(); i++) 
-        h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 25, -max,max));
+        h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 40, -1,-1));
     
     for (int n=0; n <N ;n++) {
         fChain->GetEntry(n);  
@@ -371,13 +461,23 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
 TMatrixD pull::getDeltaCovChol(TString refFileName,TString label,int varPerParChol){
     
     int N = fChain->GetEntries();
+    TChain* chain =  new TChain(_treeName);
+    TString lastFile;
 
-    TChain* chain =  new TChain("MinuitParameterSetNtp");
     if(N>1)for(int i = 1; i <= N; i++){
 	stringstream index;
 	index << i;
 	TString file = refFileName;
-	chain->Add(file.ReplaceAll("*",index.str())); 
+	file.ReplaceAll("*",index.str()); 
+
+	if(std::ifstream(((string)file).c_str()).good()){ 
+		chain->Add(file);
+		lastFile = file;
+	}
+	else {
+		chain->Add(lastFile);
+		_skip.push_back(i);
+	} 
     }    
     else chain->Add(refFileName); 
 
@@ -388,6 +488,7 @@ TMatrixD pull::getDeltaCovChol(TString refFileName,TString label,int varPerParCh
 
     if(N > chain->GetEntries()){
         cout << "ERROR:: Inconsistent number of entries" << endl;
+	cout << N << " > " <<  chain->GetEntries() << endl ;
         throw "ERROR";
     }
     
@@ -415,20 +516,40 @@ TMatrixD pull::getDeltaCovChol(TString refFileName,TString label,int varPerParCh
     } 
     
     int N_chol = N/varPerParChol;
-    
     TMatrixD cov_tot(_paraNames.size(),_paraNames.size());
 
+   if(_fraction){
+	TMatrixD cov(_paraNames.size(),_paraNames.size());	
+	for(int ic = 0 ; ic < N_chol; ic ++ ){
+		for (int n= ic*varPerParChol; n < (ic+1)*varPerParChol ;n++) {
+			vector<int>::iterator it = find(_skip.begin(),_skip.end(),n);
+			if(it != _skip.end())continue;
+		
+			fChain->GetEntry(n);  
+			chain->GetEntry(n);
+			for (int i = 0 ; i < _paraNames.size(); i++)
+				for (int j = 0 ; j < _paraNames.size(); j++) 
+					cov[i][j] += (*_means[i] - *means[i]) * (*_means[j] - *means[j])/(N-1.);
+		}
+	}
+	return cov;
+    }
+   
     for(int ic = 0 ; ic < N_chol; ic ++ ){
     
         TMatrixD cov(_paraNames.size(),_paraNames.size());
 
         vector<TH1D*> h_pulls;
         for (int i = 0 ; i < _paraNames.size(); i++) 
-            h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 40, -1.,1.));
+            h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 40, -1,1));
         
         for (int n= ic*varPerParChol; n < (ic+1)*varPerParChol ;n++) {
+	    vector<int>::iterator it = find(_skip.begin(),_skip.end(),n);
+	    if(it != _skip.end())continue;
+
             fChain->GetEntry(n);  
             chain->GetEntry(n);
+
             for (int i = 0 ; i < _paraNames.size(); i++)
                 h_pulls[i]->Fill((*_means[i]-*means[i])/(*errs[i]));
         }
@@ -466,6 +587,9 @@ TMatrixD pull::getDeltaCovChol(TString refFileName,TString label,int varPerParCh
         SummaryFile << "\\end{tabular}" << "\n";
         
         for (int n= ic*varPerParChol; n < (ic+1)*varPerParChol ;n++) {
+	    vector<int>::iterator it = find(_skip.begin(),_skip.end(),n);
+	    if(it != _skip.end())continue;
+
             fChain->GetEntry(n);  
             chain->GetEntry(n);
             for (int i = 0 ; i < _paraNames.size(); i++)
@@ -480,6 +604,6 @@ TMatrixD pull::getDeltaCovChol(TString refFileName,TString label,int varPerParCh
         
         cov_tot += cov_prime;
     }    
-        
+       
     return cov_tot;
 }

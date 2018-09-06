@@ -26,13 +26,19 @@ public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
    vector<TString> _paraNames; 
-   TString _fileName;    
+   TString _fileName;
+   TString _treeName;    
+   bool	_fraction;
+   bool	_removeBar;
+   int _nFiles;
+
    vector<double*> _means;
    vector<double*> _inits;
    vector<double*> _errs;
    vector<double*> _pulls;
-    
-   pull(vector<TString> paraNames, TString fileName);
+   vector<int> _skip;    
+
+   pull(vector<TString> paraNames, TString fileName, TString treeName = "MinuitParameterSetNtp", bool fraction = false, bool removeBar = false, int nFiles = -1);
    virtual ~pull();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
@@ -47,6 +53,11 @@ public :
    TMatrixD getDeltaCovChol(TString refFileName,TString label,int varPerParChol);
     
    TMatrixD 	combineCov_maxVal(vector<TMatrixD*> vec);
+
+   vector<double> sampleMean();
+   vector<double> sampleSigma();
+
+   vector<double> sampleMean(vector< vector<double> > vec_vals);
    TMatrixD     sampleVariance(vector< vector<double> > vec_vals);
 
    TString latexName(TString s); 
@@ -60,21 +71,36 @@ public :
 
 #ifdef pull_cxx
 
-pull::pull(vector<TString> paraNames, TString fileName):
-    fChain(0), _paraNames(paraNames), _fileName(fileName)
+pull::pull(vector<TString> paraNames, TString fileName, TString treeName, bool fraction, bool removeBar, int nFiles):
+    fChain(0), _paraNames(paraNames), _fileName(fileName), _treeName(treeName), _fraction(fraction), _removeBar(removeBar), _nFiles(nFiles)
 {
-    TChain* chain =  new TChain("MinuitParameterSetNtp");
-    chain->Add(_fileName); 
 
-    int N = chain->GetEntries();
-    TChain* chain2 =  new TChain("MinuitParameterSetNtp");
+    int N = _nFiles;
+    if(_nFiles < 0){
+	TChain* chain =  new TChain(treeName);
+    	chain->Add(_fileName); 
+    	N = chain->GetEntries();
+    }
+    if(removeBar)fileName.ReplaceAll("_Bar","");
+
+    TChain* chain2 =  new TChain(treeName);
+    TString lastFile;
+
     if(N>1)for(int i = 1; i <= N; i++){
 	stringstream index;
 	index << i;
 	TString file = fileName;
-	chain2->Add(file.ReplaceAll("*",index.str())); 
+	file.ReplaceAll("*",index.str());
+	if(std::ifstream(((string)file).c_str()).good()){ 
+		chain2->Add(file);
+		lastFile = file;
+	}
+	else {
+		chain2->Add(lastFile);
+		_skip.push_back(i);
+	} 
     }   
-    else chain2->Add(_fileName); 
+    else chain2->Add(fileName); 
 
     Init((TTree*)chain2);
 }	
@@ -115,6 +141,10 @@ void pull::Init(TTree *tree)
     for (int i = 0 ; i < _paraNames.size(); i++) {
         double * mean = new double[1];
         _means.push_back(mean);
+	if(_fraction){
+		fChain->SetBranchAddress(_paraNames[i], mean);
+		continue;
+	}
         fChain->SetBranchAddress(_paraNames[i]+"_mean", mean);
 
         double * init = new double[1];
