@@ -465,7 +465,7 @@ void norm() {
     sysNames.push_back("Asymmetries");
     sysNames.push_back("Background");
     sysNames.push_back("Mult.-Cand.");
-    sysNames.push_back("Mom. & Length-Scale");
+    sysNames.push_back("Mom./z-Scale");
 
     ofstream SummaryFile;
     SummaryFile.open("../../../../../TD-AnaNote/latex/tables/timeFit/norm_taggingCalib/sys_summary_table.tex",std::ofstream::trunc);
