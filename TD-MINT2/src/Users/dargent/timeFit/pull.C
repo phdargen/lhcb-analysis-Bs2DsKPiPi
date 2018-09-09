@@ -83,6 +83,8 @@ TString pull::latexNameMod(TString s){
     if(s == "tageff_asym_ss_Run2") return "$\\Delta \\epsilon_{\\text{tag}}^{SS}  \\, [\\%]$";
     if(s == "production_asym_Run2") return "$A_{P} \\, [\\%]$";
 
+    if(s == "dm") return "$\\Delta m_{s}$ \\, [\\text{ps}^{-1}]";
+
     return latexName(s);
 }
 
