@@ -30,18 +30,27 @@ Due to the fact that the $\Bs\to\Ds\pion\pion\pion$ decay is flavour specific, t
 Note that in this case, the dependence on the coherence factor $\kappa$ is dropped and the same relation as found for $\Bs\to\Ds\pion$ decays is recovered. 
 Therefore, the only free fit parameter left is $\dms$. The data distribution with the overlaid fit is shown in Fig. \ref{fig:tFitNorm}.
 
+\clearpage
 \begin{figure}[h]
 	\centering
 		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t.pdf} 
 		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t_mixed.pdf} 
 		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_asym.pdf} 		
-		\caption{Top left: Flavour averaged decay time distribution of $\Bs\to\Ds\pion\pion\pion$ candidates with the averaged fit overlaid. 
+		\caption{\small Top left: Flavour averaged decay time distribution of $\Bs\to\Ds\pion\pion\pion$ candidates with the averaged fit overlaid. 
 Top right: Tagged decay time distribution of mixed (red) and unmixed (blue) signal candidates with the fit described in the text overlaid. 
-Bottom: Time-dependent asymmetry $A_{mix}$ between mixed and unmixed $\Bs$ candidates in bins of $t/(2\pi\dms)$. A fit to this distribution using a $cos(t\cdot\dms)$ function is overlaid.} 		
+Bottom: Time-dependent asymmetry $A_{mix}$ between mixed and unmixed $\Bs$ candidates in bins of $t/(2\pi\dms)$.} 		
 		\label{fig:tFitNorm}
 \end{figure}	
 
-\input{tables/timeFit/norm_taggingCalib/result.tex}
+\begin{table}[h]
+\centering
+%\small
+\caption{Parameters determined from a fit to the $B_s \to D_s \pi \pi\pi$ decay-time distribution. The uncertainties are statistical and systematic, respectively.}
+%\resizebox{\linewidth}{!}{
+	\renewcommand{\arraystretch}{1.25}
+	\input{tables/timeFit/norm_taggingCalib/result_table.tex}
+%}
+\end{table}
 
 \clearpage
 \subsection{sFit to $\Bs\to\Ds\kaon\pion\pion$ data}
@@ -63,9 +72,6 @@ Note that the integration over the available phase space $x$ gives rise to the c
 All input parameters from the tagging, time acceptance and resolution are fixed in the fit. The CP coefficients, as well as $\kappa$, are therefore the only parameters left floating. 
 The data distribution and the overlaid fit is shown in Fig. \ref{fig:tFitSig}.
 
-
-\input{tables/timeFit/signal/result.tex}
-
 \begin{figure}[h]
 	\centering
 		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal/h_t.pdf} 
@@ -74,26 +80,34 @@ The data distribution and the overlaid fit is shown in Fig. \ref{fig:tFitSig}.
 		\label{fig:tFitSig}
 \end{figure}	
 
+\begin{table}[h]
+\centering
+\caption{CP coefficients determined from a fit to the $B_s \to D_s K \pi\pi$ decay-time distribution. The uncertainties are statistical and systematic, respectively.}
+%\resizebox{\linewidth}{!}{
+	\renewcommand{\arraystretch}{1.5}
+	\input{tables/timeFit/signal/result_table.tex}
+%}
+\end{table}
 
-\subsection{\textsf{sFit} model validation using toy studies}
-The fit model and procedure is validated using pseudo experiments. 1000 toys are generated using the model described in Eq. \ref{eq:TPDF_full} and \ref{eq:PDF_intX}. 
-Each pseudo experiment is generated with the same amount of signal events found in the Run I + 2015/2016 data samples.  
-Figure \ref{fig:ToyPulls_tdfit} shows the pull distributions for all CP coefficients, where every pull P of a parameter x is given as $P = \frac{x_{gen} - x_{fit}}{\Delta x}$.
-
-
-\begin{figure}[h]
-\includegraphics[height=!,width=0.49\textwidth]{figs/plots_toy/studies_timeFit/pull_C_all_Gaussfit.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/plots_toy/studies_timeFit/pull_D_all_Gaussfit.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/plots_toy/studies_timeFit/pull_S_all_Gaussfit.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/plots_toy/studies_timeFit/pull_D_bar_all_Gaussfit.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/plots_toy/studies_timeFit/pull_S_bar_all_Gaussfit.pdf}
-\caption{Pull distributions from toy studies for the time-dependent fit, done with 1000 pseudo experiments.}
-\label{fig:ToyPulls_tdfit}
-\end{figure}
-
-
-\input{tables/Toys/PullFile_all.tex}
-
-
-Table \ref{table:Pulls_tDFit} summarizes the means $\mu$ and widths $\sigma$ of these pull distributions.
+%\subsection{\textsf{sFit} model validation using toy studies}
+%The fit model and procedure is validated using pseudo experiments. 1000 toys are generated using the model described in Eq. \ref{eq:TPDF_full} and \ref{eq:PDF_intX}. 
+%Each pseudo experiment is generated with the same amount of signal events found in the Run I + 2015/2016 data samples.  
+%Figure \ref{fig:ToyPulls_tdfit} shows the pull distributions for all CP coefficients, where every pull P of a parameter x is given as $P = \frac{x_{gen} - x_{fit}}{\Delta x}$.
+%
+%
+%\begin{figure}[h]
+%\includegraphics[height=!,width=0.49\textwidth]{figs/plots_toy/studies_timeFit/pull_C_all_Gaussfit.pdf}
+%\includegraphics[height=!,width=0.49\textwidth]{figs/plots_toy/studies_timeFit/pull_D_all_Gaussfit.pdf}
+%\includegraphics[height=!,width=0.49\textwidth]{figs/plots_toy/studies_timeFit/pull_S_all_Gaussfit.pdf}
+%\includegraphics[height=!,width=0.49\textwidth]{figs/plots_toy/studies_timeFit/pull_D_bar_all_Gaussfit.pdf}
+%\includegraphics[height=!,width=0.49\textwidth]{figs/plots_toy/studies_timeFit/pull_S_bar_all_Gaussfit.pdf}
+%\caption{Pull distributions from toy studies for the time-dependent fit, done with 1000 pseudo experiments.}
+%\label{fig:ToyPulls_tdfit}
+%\end{figure}
+%
+%
+%\input{tables/Toys/PullFile_all.tex}
+%
+%
+%Table \ref{table:Pulls_tDFit} summarizes the means $\mu$ and widths $\sigma$ of these pull distributions.
 

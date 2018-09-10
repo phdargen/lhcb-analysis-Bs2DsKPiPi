@@ -18,7 +18,7 @@ Moreover, the efficiency is expected to depend on the kinematics which would lea
 if candidates with \textsf{BKGCAT}$=60$ would be removed. \\
 We therefore include \textsf{BKGCAT}$=60$ and statistically subtract the ghost background by using the \textsf{sPlot} technique.
 The \textsf{sWeights} are calculated from a fit to the reconstructed $B_s$ mass.  
-The signal contribution is modeled as described in Sec.~\ref{subsec:signalmodel} and the background with a polynomial.
+The signal contribution is modeled as described in Sec.~\ref{subsec:signalModel} and the background with a polynomial.
 The fit is performed simultaneously in two categories; the first includes events with \textsf{BKGCAT} = 20 or 50 and
 the second events with \textsf{BKGCAT}  = 60.
 To account for the different mass resolution we use a different $\sigma$ for each category,
@@ -45,84 +45,86 @@ classified with \textsf{BKGCAT} = 20 or 50 (left) and \textsf{BKGCAT} = 60 (righ
 \label{fig:}
 \end{figure}
 
-\clearpage
-\subsubsection{PID efficiencies}
-
-\begin{figure}[h]
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_K_plus_PIDK.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_pi_plus_PIDK.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_pi_minus_PIDK.pdf}
-
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_K_plus_fromDs_PIDK.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_K_minus_fromDs_PIDK.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_pi_minus_fromDs_PIDK.pdf}
-\caption{}
-\label{fig:}
-\end{figure}
-
-\begin{figure}[h]
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_Bs_DTF_TAU.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_Kpipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_Dspipi.pdf}
-
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_Kpi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_pipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_Dspi.pdf}
-\caption{}
-\label{fig:}
-\end{figure}
-
-
-\clearpage
-\subsubsection{BDT efficiencies}
-
-\begin{figure}[h]
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_Bs_DTF_TAU.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_Kpipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_Dspipi.pdf}
-
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_Kpi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_pipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_Dspi.pdf}
-\caption{}
-\label{fig:}
-\end{figure}
-
-
-\begin{figure}[h]
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_Bs_DTF_TAU.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_Kpipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_Dspipi.pdf}
-
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_Kpi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_pipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_Dspi.pdf}
-\caption{}
-\label{fig:}
-\end{figure}
-
-
-\clearpage
-\subsubsection{Tracking efficiencies}
+%\clearpage
+%\subsubsection{PID efficiencies}
+%
+%\begin{figure}[h]
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_K_plus_PIDK.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_pi_plus_PIDK.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_pi_minus_PIDK.pdf}
+%
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_K_plus_fromDs_PIDK.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_K_minus_fromDs_PIDK.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/PID_Ds2KKpi_1_pi_minus_fromDs_PIDK.pdf}
+%\caption{}
+%\label{fig:}
+%\end{figure}
+%
+%\begin{figure}[h]
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_Bs_DTF_TAU.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_Kpipi.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_Dspipi.pdf}
+%
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_Kpi.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_pipi.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_pid/eff_PID_Ds2KKpi_1_m_Dspi.pdf}
+%\caption{}
+%\label{fig:}
+%\end{figure}
+%
+%
+%\clearpage
+%\subsubsection{BDT efficiencies}
+%
+%\begin{figure}[h]
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_Bs_DTF_TAU.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_Kpipi.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_Dspipi.pdf}
+%
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_Kpi.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_pipi.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt/eff_Ds2KKpi_1_m_Dspi.pdf}
+%\caption{}
+%\label{fig:}
+%\end{figure}
+%
+%
+%\begin{figure}[h]
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_Bs_DTF_TAU.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_Kpipi.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_Dspipi.pdf}
+%
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_Kpi.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_pipi.pdf}
+%\includegraphics[height=!,width=0.32\textwidth]{figs/dataVsMC/signal_bdt_scan/eff_Ds2KKpi_1_m_Dspi.pdf}
+%\caption{}
+%\label{fig:}
+%\end{figure}
+%
+%
+%\clearpage
+%\subsubsection{Tracking efficiencies}
 
 \clearpage
 
 \subsection{Decay-time acceptance}
 \label{sec:timeAcceptance}
 The decay-time distribution of the $\Bs$ mesons is sculpted due to the geometry of the LHCb detector and the applied selection cuts, which are described in Section \ref{sec:Selection}.
-In particular, any requirement on the flight distance (FD), the impact parameter (IP) or the direction angle (DIRA) of the $\Bs$ mesons, as well as the direct cut on the lifetime, will lead to a decay-time dependent efficiency $a(t)$. This efficiency will distort the theoretically expected, time-dependent decay rate
+In particular, any requirement on the flight distance, the impact parameter or the direction angle (DIRA) of the $\Bs$ mesons, as well as the direct cut on the proper-time, will lead to a decay-time dependent efficiency $\epsilon(t)$. 
 
-\begin{equation}
-\frac{\Gamma(t)^{observed}}{dt} = \frac{\Gamma(t)^{theory}}{dt} \cdot a(t),
-\label{eq:DecRateAcc}
-\end{equation} 
+%This efficiency will distort the theoretically expected, time-dependent decay rate
+%\begin{equation}
+%\frac{\Gamma(t)^{observed}}{dt} = \frac{\Gamma(t)^{theory}}{dt} \cdot \epsilon(t),
+%\label{eq:DecRateAcc}
+%\end{equation} 
+%and has to be modelled correctly, in order to describe the observed decay rate. 
 
-and has to be modelled correctly, in order to describe the observed decay rate. We use our control channel for this measurement, because for $\Bs\to\Ds\kaon\pion\pion$ decays the decay-time acceptance is correlated with the CP-observables which we aim to measure. Therefore, floating the CP-observables and the acceptance shape at the same time is not possible. 
+We use our control channel for this measurement, because for $\Bs\to\Ds\kaon\pion\pion$ decays the decay-time acceptance is correlated with the \CP-observables which we aim to measure. Therefore, floating the \CP-observables and the acceptance shape at the same time is not possible. 
 Hence, a fit to the decay-time distribution of $\Bs\to\Ds\pion\pion\pion$ candidates is performed and the obtained acceptance shape is corrected by the difference in shape found for the $\Bs\to\Ds\kaon\pion\pion$ and $\Bs\to\Ds\pion\pion\pion$ MC. \newline
 A PDF of the form
 
 \begin{equation}
-\mathcal{P}(t^{'},\vec{\lambda}) = \left[ (e^{\Gamma_{s}t}\cdot cosh(\frac{\Delta\Gamma_{s}t}{2}) \times \mathcal{R}(t - t^{'})\right] \cdot \epsilon(t^{'}, \vec{\lambda}),
+\mathcal{P}(t) = \left[ e^{\Gamma_{s}t}\cdot \text{cosh}\left(\frac{\Delta\Gamma_{s} \, t^\prime}{2}\right) \times \mathcal{R}(t - t^{'})\right] \cdot \epsilon(t),
 \label{eq:AccPDF}
 \end{equation}
 
@@ -156,15 +158,19 @@ To investigate possible deviations, the full selected $\Bs\to\Ds\pion\pion\pion$
 For each subsample, the fit procedure described at the beginning of this chapter, using the pdf given by Eq. \ref{eq:AccPDF}, is repeated and the obtained values for the spline coefficients  $v_{i}$ are compared.
 Figure \ref{fig:AccCompDs} shows the comparison of the obtained spline coefficients for the different $\Ds$ final states.
 
+%\begin{figure}[h]
+%\includegraphics[height=!,width=\textwidth]{figs/Acceptance/adaptive_N4/timeAcc_combined_by_DsFinalState.pdf}
+%\caption{Comparison of the spline coefficients obtained from time-dependent fits to the $\Bs\to\Ds\pion\pion\pion$ subsamples of different $\Ds$ final states. 
+%The comparison of one particular $\Ds$ state against all other states is shown.}
+%\label{fig:AccCompDs}
+%\end{figure}
+
 \begin{figure}[h]
-\includegraphics[height=!,width=\textwidth]{figs/Acceptance/adaptive_N4/timeAcc_combined_by_DsFinalState.pdf}
-\caption{Comparison of the spline coefficients obtained from time-dependent fits to the $\Bs\to\Ds\pion\pion\pion$ subsamples of different $\Ds$ final states. 
-The comparison of one particular $\Ds$ state against all other states is shown.}
-\label{fig:AccCompDs}
-\end{figure}
-\begin{figure}[h]
-\includegraphics[height=6.5cm,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAcc_combined_by_run.pdf}
-\includegraphics[height=6.5cm,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAcc_combined_by_trigger.pdf}
+\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/timeAcc_comparison_by_year_t1_adaptive_N4.pdf}
+\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/timeAcc_comparison_by_run_adaptive_N4.pdf}
+
+\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/timeAcc_comparison_by_DsFinalState_mod_adaptive_N4.pdf}
+\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/timeAcc_comparison_by_trigger_adaptive_N4.pdf}
 \caption{Comparison of the spline coefficients obtained from time-dependent fits to the $\Bs\to\Ds\pion\pion\pion$ subsamples of (left) the different runs and (right) L0 trigger categories.}
 \label{fig:AccCompRunTrig}
 \end{figure}
@@ -238,3 +244,69 @@ The fit parameters obtained from the described fits to data and simulation are s
 \clearpage
 \subsection{Phasespace acceptance}
 \label{sec:phasespaceAcceptance}
+
+\pretextcomment{Disclaimer: ...}
+
+In general, the signal PDF for events tagged as $\Dz \to h^+ h^- \pip \pim$ is given by
+\begin{equation}
+	\mathcal P_{\rm Sig}(\phsPoint) %= \frac{ \vert \mathcal M(X) \vert^{2} \, \phi_{4}(X) }{\int  \vert \mathcal M(X) \vert^{2} \, \phi_{4}(X) \, \text{d}X} 
+	=  
+	\frac{ [(1-w)\left\vert   A_{\Dz}(\phsPoint) \right\vert^{2} + w \, \left\vert    A_{\Dzb}(\phsPoint) \right\vert^{2} ]\,\epsilon_{\rm Sig}(\phsPoint) \, \phsd(\phsPoint) }
+	{\int [\left\vert  A_{\Dz}(\phsPoint) \right\vert^{2} + \left\vert    A_{\Dzb}(\phsPoint) \right\vert^{2} ]\, \epsilon_{\rm Sig}(\phsPoint) \, \text{d}\Phi_{4} } , 
+\label{eq:sigPDF}
+\end{equation}
+where
+$\epsilon_{\rm Sig}(\phsPoint)$ is the phase-space efficiency. 
+
+
+Note that the efficiency in the numerator appears as an additive constant in the $\log {\cal L}$ that does not depend on any fit parameters such that it can be ignored.
+However, the efficiency function still enters via the normalization integrals. 
+These normalization terms are determined numerically by a MC integration technique.
+For this purpose, we use simulated events generated according to a preliminary model, pass them 
+through the full detector simulation and apply the same selection criteria as for data 
+in order to perform the MC integrals.
+For example, the first integral in \eqnPRDref{eq:sigPDF} can be approximated as 
+\begin{equation}
+	\int \left\vert   A_{\Dz}(\phsPoint) \right\vert^{2} \, \epsilon_{\rm Sig}(\phsPoint) \, \text{d}\Phi_{4}   \approx 
+	\frac{1}{N_{\rm MC}} \, \sum_{k}^{N_{\rm MC}}    \frac{\left\vert   A_{\Dz}(\bold{x_{k}}) \right\vert^{2}}
+	{\left\vert A_{\Dz}^{\prime}(\bold{x_{k}}) \right\vert^{2}}
+\end{equation}
+where $A_{\Dz}^{\prime}$ labels the preliminary amplitude model and
+$x_{k}$ is the $k$-th MC event. As a result, the efficiency can be included in the amplitude fit without explicitly modeling it.
+For $\Dz \to \pi^+ \pi^- \pip \pim$, we use a sample of $N_{\rm MC}  = 600 000$  MC events to 
+ensure that the uncertainty on the integral is less than $0.5 \%$.
+
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.8\textwidth]{figs/AcceptancePhspBDT/variables_id_c1.pdf}
+\caption{}
+\label{fig:}
+\end{figure}
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.49\textwidth]{figs/AcceptancePhspBDT/BDTG.pdf}
+\includegraphics[height=!,width=0.49\textwidth]{figs/AcceptancePhspBDT/eff.pdf}
+\caption{}
+\label{fig:}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_Kpipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_Kpi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_pipi.pdf}
+
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_Dspipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_Dspi.pdf}
+
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_cosTheta_Kpi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_cosTheta_Dspi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_phi_Kpi_Dspi.pdf}
+
+\caption{}
+\label{fig:}
+\end{figure}

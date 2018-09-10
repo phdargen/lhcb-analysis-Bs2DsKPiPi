@@ -30,14 +30,6 @@
 \input{usefulCommands}
 \input{preamble}
 
-\newcommand{\Nsignal}{\ensuremath{7536}}
-% \newcommand{\oldcomment}[1]{{\color{red}\{#1\}}}
-%\usepackage[draft, textwidth=1.75cm]{todonotes} % added by PN on 24 Feb 2017 to better deal with tracking comments within the paper
-\newcommand{\comment}[1]{\todo[color=green!40, size=\tiny, fancyline]{#1}}
-\newcommand{\pretextcomment}[1]{\todo[color=green!40, inline, nolist]{#1}}
-\setlength{\marginparwidth}{2.25cm} % currently needed to get todos to look right
-\reversemarginpar % currently needed to get todos to show up in the left margin instead of the right margin
-
 \usepackage{pifont}
 \definecolor{darkgreen}{rgb}{0.0,0.5,0.0}
 \definecolor{darkred}{rgb}{0.5,0.0,0.0}
@@ -52,19 +44,32 @@
 \makeatletter \@addtoreset{table}{section} \makeatother
 
 \usepackage{longtable} % only for template; not usually to be used in PAPERs
-%\usepackage[labelfont=bf]{caption}
+\usepackage[labelfont=bf]{caption}
 
-\usepackage{tikz}
-  \usetikzlibrary{shapes,calc,intersections,arrows.meta}
-  \usetikzlibrary{patterns,circuits.ee.IEC}
-\usepackage{tkz-euclide}
-\usetkzobj{all}
+%\usepackage{tikz}
+%  \usetikzlibrary{shapes}
+%  \usetikzlibrary{patterns,circuits.ee.IEC}
+%\usepackage{tkz-euclide}
+%\usetkzobj{all}
+
+%\usetikzlibrary{external}
+%\tikzexternalize
+%\tikzexternalize[prefix=./]
 
 \usepackage{booktabs}
 \usepackage[nottoc]{tocbibind}
 \usepackage{cite}
 \usepackage{subcaption}
 
+\usepackage{multirow}
+\usepackage{rotating}
+
+\usepackage[draft, textwidth=1.75cm]{todonotes} % added by PN on 24 Feb 2017 to better deal with tracking comments within the paper
+%\usepackage[disable]{todonotes} % this hides all comments when TeXing the paper
+\newcommand{\comment}[1]{\todo[color=blue!40, size=\tiny, fancyline]{#1}}
+\newcommand{\pretextcomment}[1]{\todo[color=blue!40, inline, nolist]{#1}}
+\setlength{\marginparwidth}{2.25cm} % currently needed to get todos to look right
+\reversemarginpar 
 \begin{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -112,8 +117,8 @@
 \clearpage
 \input{introduction}
 
-%\clearpage
-\input{sensitivity}
+\clearpage
+\input{formalism}
 
 \clearpage
 \input{selection}

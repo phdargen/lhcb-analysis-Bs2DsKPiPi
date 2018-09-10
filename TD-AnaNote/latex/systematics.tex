@@ -1,3 +1,4 @@
+% !TEX root = main.tex
 \section{Systematic uncertainties}
 \label{sec:Systematics}
 
@@ -216,16 +217,43 @@ for (black line) the nominal scaling, (blue line) only using the narrow gaussian
 \subsection{Tagging calibration}
 
 Systematic uncertainties arise from the statistical precision of the tagging parameters determined from the calibration, discussed in Sec. \ref{sec:Tagging}.
-These uncertanties are accounted for by the inclusion of Gaussian constrains in the nominal fit. 
+These uncertainties are accounted for by the inclusion of Gaussian constrains in the nominal fit. 
 The width of the respective constrain for the tagging parameter $p_{i}$  is chosen to be $\Delta p_{i}$. 
 In this way, the systematic uncertainty due to the tagging calibration is included in the statistical uncertainty of the time dependent fit.  
 
 \subsection{Summary of systematic uncertainties}
 
-All contributing systematic uncertanties are summarized in Table \ref{tab:SystSummary}. 
-The individual uncertainties are summed in quadrature to arive at the total systematic uncertainty for the respective CP observable.
+All contributing systematic uncertainties are summarized in Table \ref{tab:SystSummary}. 
+The individual uncertainties are summed in quadrature to arrive at the total systematic uncertainty for the respective CP observable.
 Their total magnitude ranges from (30-40)$\%$ of the statistical uncertainty of the fit.
 
 
-\input{tables/timeFit/signal/sys_summary_table.tex}
+\clearpage
+
+\begin{table}[h]
+\centering
+\caption{Systematic uncertainties on the fit parameters of the phase-space integrated fit to $B_s \to D_s K\pi \pi$ data in units of statistical standard deviations.}
+\resizebox{\linewidth}{!}{
+	\renewcommand{\arraystretch}{1.5}
+	\input{tables/timeFit/signal/sys_summary_table2.tex}
+}
+\end{table}
+
+\begin{sidewaystable}[h]
+\centering
+\caption{Systematic uncertainties on the fit parameters of the fit to $B_s \to D_s \pi \pi \pi$ data in units of statistical standard deviations.}
+\resizebox{0.75\linewidth}{!}{
+	\renewcommand{\arraystretch}{1.5}
+	\input{tables/timeFit/norm_taggingCalib/sys_summary_table2.tex}
+}
+\end{sidewaystable}
+
+\begin{sidewaystable}[h]
+\centering
+\caption{Systematic uncertainties on the fit parameters of the full time-dependent amplitude fit to $B_s \to D_s K\pi \pi$ data in units of statistical standard deviations.}
+\resizebox{\linewidth}{!}{
+	\renewcommand{\arraystretch}{1.5}
+	\input{tables/fullFit/signal/sys_summary_table2.tex}
+}
+\end{sidewaystable}
 
