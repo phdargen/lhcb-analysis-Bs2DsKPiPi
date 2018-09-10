@@ -422,31 +422,31 @@ void reweightGen(){
     tree_MINT->SetBranchAddress( "phi_Kpi_Dspi", &phi_Kpi_Dspi );
     tree_MINT->SetBranchAddress("BDTG",&BDTG);
 
-    TH1D* h_Kpipi= new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",40,1100,2000);
+    TH1D* h_Kpipi= new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,1100,2000);
     TH1D* h_Kpipi_gen= new TH1D("","",40,1100,2000);
     TH1D* h_Kpipi_gen_rw= new TH1D("","",40,1100,2000);
     TH1D* h_Kpipi_MINT= new TH1D("","",40,1100,2000);
     TH1D* h_Kpipi_MINT_rw= new TH1D("","",40,1100,2000);
 
-    TH1D* h_Kpi= new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",40,600,1200);
+    TH1D* h_Kpi= new TH1D("",";#left[m(K^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,600,1200);
     TH1D* h_Kpi_gen= new TH1D("","",40,600,1200);
     TH1D* h_Kpi_gen_rw= new TH1D("","",40,600,1200);
     TH1D* h_Kpi_MINT= new TH1D("","",40,600,1200);
     TH1D* h_Kpi_MINT_rw= new TH1D("","",40,600,1200);
 
-    TH1D* h_pipi= new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",40,200,1200);
+    TH1D* h_pipi= new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,200,1200);
     TH1D* h_pipi_gen= new TH1D("","",40,200,1200);
     TH1D* h_pipi_gen_rw= new TH1D("","",40,200,1200);
     TH1D* h_pipi_MINT= new TH1D("","",40,200,1200);
     TH1D* h_pipi_MINT_rw= new TH1D("","",40,200,1200);
 
-    TH1D* h_Dspi= new TH1D("","",40,1900,5000);
+    TH1D* h_Dspi= new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (MeV);Events (norm.) ",40,1900,5000);
     TH1D* h_Dspi_gen= new TH1D("","",40,1900,5000);
     TH1D* h_Dspi_gen_rw= new TH1D("","",40,1900,5000);
-    TH1D* h_Dspi_MINT= new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",40,1900,5000);
+    TH1D* h_Dspi_MINT= new TH1D("","",40,1900,5000);
     TH1D* h_Dspi_MINT_rw= new TH1D("","",40,1900,5000);
 
-    TH1D* h_Dspipi= new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",40,2400,5100);
+    TH1D* h_Dspipi= new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,2400,5100);
     TH1D* h_Dspipi_gen= new TH1D("","",40,2400,5100);
     TH1D* h_Dspipi_gen_rw= new TH1D("","",40,2400,5100);
     TH1D* h_Dspipi_MINT= new TH1D("","",40,2400,5100);
@@ -470,9 +470,9 @@ void reweightGen(){
     TH1D* h_phi_Kpi_Dspi_MINT= new TH1D("","",40,-3.141,3.141);
     TH1D* h_phi_Kpi_Dspi_MINT_rw= new TH1D("","",40,-3.141,3.141);
 
-    TH1D* bdt_gen= new TH1D("","",50,-0.8,0.4);
-    TH1D* bdt_sel= new TH1D("","",50,-0.8,0.4);
-    TH1D* bdt_MINT= new TH1D("","",50,-0.8,0.4);
+    TH1D* bdt_gen= new TH1D("","; BTDG; Efficiency (norm.)",50,-0.65,0.25);
+    TH1D* bdt_sel= new TH1D("","; BTDG; Events (norm.)",50,-0.65,0.25);
+    TH1D* bdt_MINT= new TH1D("","",50,-0.65,0.25);
 
     for(int i=0; i< tree_gen->GetEntries(); i++)
     {	
@@ -496,10 +496,11 @@ void reweightGen(){
     	
     TH1D *h_weight = (TH1D*)bdt_gen->Clone();
     h_weight->Divide(bdt_sel,bdt_gen);
-    
+    h_weight->Scale(1./h_weight->Integral());
     TCanvas* c = new TCanvas();
     h_weight->Draw();
     c->Print("eff.eps");
+    c->Print("eff.pdf");
 
     for(int i=0; i< tree_gen->GetEntries(); i++)
     {	
@@ -567,15 +568,17 @@ void reweightGen(){
         eventList_rw_CP.Add(evt);
     }
     
-    eventList_rw.saveAsNtuple("SignalIntegrationEvents_AccBDT.root");
-    eventList_rw_CP.saveAsNtuple("SignalIntegrationEvents_AccBDT_CP.root");
+    eventList_rw.saveAsNtuple("SignalIntegrationEvents_AccBDT2.root");
+    eventList_rw_CP.saveAsNtuple("SignalIntegrationEvents_AccBDT_CP2.root");
 
-    bdt_gen->DrawNormalized("",1);
-    bdt_sel->SetLineColor(kRed);
-    bdt_sel->DrawNormalized("histsame",1);
-    bdt_MINT->SetLineColor(kBlue);
+    bdt_sel->SetLineColor(kBlue);
+    bdt_sel->DrawNormalized("hist",1);
+    bdt_gen->SetLineColor(kRed);
+    bdt_gen->SetMarkerColor(kRed);
+    bdt_gen->DrawNormalized("same",1);
     //bdt_MINT->DrawNormalized("histsame",1);
     c->Print("BDTG.eps");
+    c->Print("BDTG.pdf");
 
     h_Kpipi->DrawNormalized("",1);
     h_Kpipi_gen->SetLineColor(kRed);
@@ -583,6 +586,7 @@ void reweightGen(){
     h_Kpipi_gen_rw->SetLineColor(kBlue);
     h_Kpipi_gen_rw->DrawNormalized("histsame",1);
     c->Print("h_Kpipi.eps");
+    c->Print("h_Kpipi.pdf");
 
     TH1D* h_Kpipi_eff = (TH1D*)h_Kpipi->Clone();
     h_Kpipi_eff->Divide(h_Kpipi,h_Kpipi_gen);
@@ -593,6 +597,7 @@ void reweightGen(){
     h_Kpipi_MINT_eff->SetLineColor(kBlue);
     h_Kpipi_MINT_eff->DrawNormalized("histsame",1);
     c->Print("eff_Kpipi.eps");
+    c->Print("eff_Kpipi.pdf");
 
     h_Kpi->DrawNormalized("",1);
     h_Kpi_gen->SetLineColor(kRed);
@@ -600,6 +605,7 @@ void reweightGen(){
     h_Kpi_gen_rw->SetLineColor(kBlue);
     h_Kpi_gen_rw->DrawNormalized("histsame",1);
     c->Print("h_Kpi.eps");
+    c->Print("h_Kpi.pdf");
 
     TH1D* h_Kpi_eff = (TH1D*)h_Kpi->Clone();
     h_Kpi_eff->Divide(h_Kpi,h_Kpi_gen);
@@ -610,6 +616,7 @@ void reweightGen(){
     h_Kpi_MINT_eff->SetLineColor(kBlue);
     h_Kpi_MINT_eff->DrawNormalized("histsame",1);
     c->Print("eff_Kpi.eps");
+    c->Print("eff_Kpi.pdf");
 
     h_pipi->DrawNormalized("",1);
     h_pipi_gen->SetLineColor(kRed);
@@ -617,6 +624,7 @@ void reweightGen(){
     h_pipi_gen_rw->SetLineColor(kBlue);
     h_pipi_gen_rw->DrawNormalized("histsame",1);
     c->Print("h_pipi.eps");
+    c->Print("h_pipi.pdf");
 
     TH1D* h_pipi_eff = (TH1D*)h_pipi->Clone();
     h_pipi_eff->Divide(h_pipi,h_pipi_gen);
@@ -627,6 +635,7 @@ void reweightGen(){
     h_pipi_MINT_eff->SetLineColor(kBlue);
     h_pipi_MINT_eff->DrawNormalized("histsame",1);
     c->Print("eff_pipi.eps");
+    c->Print("eff_pipi.pdf");
 
     h_Dspi->DrawNormalized("",1);
     h_Dspi_gen->SetLineColor(kRed);
@@ -634,6 +643,7 @@ void reweightGen(){
     h_Dspi_gen_rw->SetLineColor(kBlue);
     h_Dspi_gen_rw->DrawNormalized("histsame",1);
     c->Print("h_Dspi.eps");
+    c->Print("h_Dspi.pdf");
 
     TH1D* h_Dspi_eff = (TH1D*)h_Dspi->Clone();
     h_Dspi_eff->Divide(h_Dspi,h_Dspi_gen);
@@ -644,6 +654,7 @@ void reweightGen(){
     h_Dspi_MINT_eff->SetLineColor(kBlue);
     h_Dspi_MINT_eff->DrawNormalized("histsame",1);
     c->Print("eff_Dspi.eps");
+    c->Print("eff_Dspi.pdf");
 
     h_Dspipi->DrawNormalized("",1);
     h_Dspipi_gen->SetLineColor(kRed);
@@ -651,6 +662,7 @@ void reweightGen(){
     h_Dspipi_gen_rw->SetLineColor(kBlue);
     h_Dspipi_gen_rw->DrawNormalized("histsame",1);
     c->Print("h_Dspipi.eps");
+    c->Print("h_Dspipi.pdf");
 
     TH1D* h_Dspipi_eff = (TH1D*)h_Dspipi->Clone();
     h_Dspipi_eff->Divide(h_Dspipi,h_Dspipi_gen);
@@ -661,6 +673,7 @@ void reweightGen(){
     h_Dspipi_MINT_eff->SetLineColor(kBlue);
     h_Dspipi_MINT_eff->DrawNormalized("histsame",1);
     c->Print("eff_Dspipi.eps");
+    c->Print("eff_Dspipi.pdf");
 
     h_cosTheta_Kpi->DrawNormalized("",1);
     h_cosTheta_Kpi_gen->SetLineColor(kRed);
@@ -668,6 +681,7 @@ void reweightGen(){
     h_cosTheta_Kpi_gen_rw->SetLineColor(kBlue);
     h_cosTheta_Kpi_gen_rw->DrawNormalized("histsame",1);
     c->Print("h_cosTheta_Kpi.eps");
+    c->Print("h_cosTheta_Kpi.pdf");
 
     TH1D* h_cosTheta_Kpi_eff = (TH1D*)h_cosTheta_Kpi->Clone();
     h_cosTheta_Kpi_eff->Divide(h_cosTheta_Kpi,h_cosTheta_Kpi_gen);
@@ -678,6 +692,7 @@ void reweightGen(){
     h_cosTheta_Kpi_MINT_eff->SetLineColor(kBlue);
     h_cosTheta_Kpi_MINT_eff->DrawNormalized("histsame",1);
     c->Print("eff_cosTheta_Kpi.eps");
+    c->Print("eff_cosTheta_Kpi.pdf");
 
     h_cosTheta_Dspi->DrawNormalized("",1);
     h_cosTheta_Dspi_gen->SetLineColor(kRed);
@@ -685,6 +700,7 @@ void reweightGen(){
     h_cosTheta_Dspi_gen_rw->SetLineColor(kBlue);
     h_cosTheta_Dspi_gen_rw->DrawNormalized("histsame",1);
     c->Print("h_cosTheta_Dspi.eps");
+    c->Print("h_cosTheta_Dspi.pdf");
 
     TH1D* h_cosTheta_Dspi_eff = (TH1D*)h_cosTheta_Dspi->Clone();
     h_cosTheta_Dspi_eff->Divide(h_cosTheta_Dspi,h_cosTheta_Dspi_gen);
@@ -695,6 +711,7 @@ void reweightGen(){
     h_cosTheta_Dspi_MINT_eff->SetLineColor(kBlue);
     h_cosTheta_Dspi_MINT_eff->DrawNormalized("histsame",1);
     c->Print("eff_cosTheta_Dspi.eps");
+    c->Print("eff_cosTheta_Dspi.pdf");
 
     h_phi_Kpi_Dspi->DrawNormalized("",1);
     h_phi_Kpi_Dspi_gen->SetLineColor(kRed);
@@ -702,6 +719,7 @@ void reweightGen(){
     h_phi_Kpi_Dspi_gen_rw->SetLineColor(kBlue);
     h_phi_Kpi_Dspi_gen_rw->DrawNormalized("histsame",1);
     c->Print("h_phi_Kpi_Dspi.eps");
+    c->Print("h_phi_Kpi_Dspi.pdf");
 
     TH1D* h_phi_Kpi_Dspi_eff = (TH1D*)h_phi_Kpi_Dspi->Clone();
     h_phi_Kpi_Dspi_eff->Divide(h_phi_Kpi_Dspi,h_phi_Kpi_Dspi_gen);
@@ -712,6 +730,7 @@ void reweightGen(){
     h_phi_Kpi_Dspi_MINT_eff->SetLineColor(kBlue);
     h_phi_Kpi_Dspi_MINT_eff->DrawNormalized("histsame",1);
     c->Print("eff_phi_Kpi_Dspi.eps");
+    c->Print("eff_phi_Kpi_Dspi.pdf");
 }
 
 int main(int argc, char** argv){
