@@ -30,7 +30,7 @@ is given by:
 \begin{split}
 \label{eq:PDF_full}
 %	P(x,t,q_t,q_f) &\propto  [
-	\frac{\Gamma(x,t,q,f)}{ e^{- \Gamma_s t} \, \text{d}t \, \text{d}\Phi_4} &\propto  
+	\frac{ \text{d}\Gamma(\phsPoint,t,q,f)}{ e^{- \Gamma_s t} \, \text{d}t \, \text{d}\Phi_4} &\propto  
 	 \left( \vert \mathcal A^c_{f}(\phsPoint) \vert^2 + \vert \mathcal A^u_{f}(\phsPoint) \vert^2 \right) \, \text{cosh} \left( \frac{\Delta \Gamma_s \, t}{2}\right) \\
 	 & + q \, f \,  \left( \vert \mathcal A^c_{f}(\phsPoint) \vert^2 - \vert \mathcal A^u_{f}(\phsPoint)  \vert^2 \right) \, \text{cos} \left(\Delta m_s \, t \right)  \\
 	 & -2 \text{Re}\left( \mathcal A^c_{f}(\phsPoint)^{*}  \, \mathcal A^u_{f}(\phsPoint)  \, e^{-i f (\gamma - 2\beta_s)}  \right) \, \text{sinh} \left( \frac{\Delta \Gamma_s \, t}{2}\right)  \\
@@ -72,18 +72,18 @@ represents a unique set of kinematic conditions within the five-dimensional phas
 %The remaining  five independent degrees of freedom unambiguously determine the kinematics of the decay.
 Convenient choices for the kinematic observables
 include the invariant mass combinations of the final state particles%, with four-momenta $p_{i}$,
-\begin{align}
-	\nonumber
-	m^{2}_{ij} &= (p_{i}+p_{j})^{2} , \\
-	m^{2}_{ijk} &= (p_{i}+p_{j}+p_{k})^{2} \, 
-\end{align}
+%\begin{align}
+%	\nonumber
+%	m^{2}_{ij} &= (p_{i}+p_{j})^{2} , \\
+%	m^{2}_{ijk} &= (p_{i}+p_{j}+p_{k})^{2} \, 
+%\end{align}
 or acoplanarity and helicity angles. % \cite{Beneke:2006hg,Aaij:2015kba}.
-It is however important
-to take into account that, while $m^2_{12}, m^2_{23}$ are sufficient
-to fully describe a three-body decay, the obvious extension to
-four-body decays with $m^{2}_{ij}, m^{2}_{ijk}$ requires additional
-care, as these variables alone are insufficient to describe the parity-odd
-moments possible in four-body kinematics.
+%It is however important
+%to take into account that, while $m^2_{12}, m^2_{23}$ are sufficient
+%to fully describe a three-body decay, the obvious extension to
+%four-body decays with $m^{2}_{ij}, m^{2}_{ijk}$ requires additional
+%care, as these variables alone are insufficient to describe the parity-odd
+%moments possible in four-body kinematics.
 In practice, we do not need to choose a particular five-dimensional
 basis, but use the full four-vectors of the decay in our
 analysis. 
@@ -97,6 +97,7 @@ function is not flat in the usual kinematic variables.
 Therefore, an analytic expression for \phsd\ is
 taken from Ref.~\cite{kinematics}.
 
+\clearpage
 Assuming there is no direct \CP violation in the $B_s$ decay implies for the $\CP$ conjugate transition amplitudes:
 \begin{align}
 \mathcal A(\bar B_s^0 \to \bar f) &=  \mathcal A^c_{\bar f}(\phsPoint) = \mathcal A^c_f(\phsPointCP)  \\       
@@ -118,7 +119,7 @@ For a model-independent measurement, the differential decay rate can be integrat
 \begin{align}
 \label{eq:PDF_intX}
 	\nonumber
-	\int \frac{\Gamma(x,t,q,f)}{e^{- \Gamma_s t} \, \text{d}t \,  \text{d}\Phi_4}  \, \text{d}\Phi_4 &\propto    
+	\int \frac{\text{d}\Gamma(x,t,q,f)}{e^{- \Gamma_s t} \, \text{d}t \,  \text{d}\Phi_4}  \, \text{d}\Phi_4 &\propto    
 	\, \text{cosh} \left( \frac{\Delta \Gamma_s \, t}{2}\right) 
 	  + q \, f \, C \, \text{cos} \left( \Delta m_s \, t \right)   \\
 	 & +  D_{f} \, \text{sinh} \left( \frac{\Delta \Gamma_s \, t}{2}\right)  
@@ -479,7 +480,7 @@ For the differential decay rate follows:
 \begin{equation}
 \begin{split}
 \label{eq:PDF_full2}
-	\frac{\Gamma(x,t,q,f)}{ e^{- \Gamma_s t} \, \text{d}t \, \text{d}\Phi_4} &\propto  
+	\frac{\text{d}\Gamma(\phsPoint,t,q,f)}{ e^{- \Gamma_s t} \, \text{d}t \, \text{d}\Phi_4} &\propto  
 	 \left( \vert \mathcal A^c_{f}(\phsPoint) \vert^2 + r^2 \, \vert \mathcal A^u_{f}(\phsPoint) \vert^2 \right) \, \text{cosh} \left( \frac{\Delta \Gamma_s \, t}{2}\right) \\
 	 & + q \, f \,  \left( \vert \mathcal A^c_{f}(\phsPoint) \vert^2 - r^2 \, \vert \mathcal A^u_{f}(\phsPoint)  \vert^2 \right) \, \text{cos} \left(\Delta m_s \, t \right)  \\
 	 & -2 \, r \text{Re}\left( \mathcal A^c_{f}(\phsPoint)^{*}  \, \mathcal A^u_{f}(\phsPoint)  \, e^{i \delta - i f (\gamma - 2\beta_s)}  \right) \, \text{sinh} \left( \frac{\Delta \Gamma_s \, t}{2}\right)  \\

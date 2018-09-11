@@ -323,7 +323,48 @@ The fits are performed in bins of the decay time error $\sigma_{t}$, where an ad
 
 
 \clearpage
-\clearpage\section{Spin Amplitudes} 
+\section{Comparison of time-acceptance in subsamples} 
+\label{a:timeAcc}
+
+Figure \ref{fig:AccComp} shows the spline coefficients obtained by fitting the decay-time distribution of $\Bs\to\Ds\pion\pion\pion$ data candidates
+in different subsamples.
+Sufficient agreement is observed within a given data-taking period, while the acceptance shapes for Run-I and Run-II data differ significantly.
+The fitted splines for the different $D_s$ final states are in a good agreement.
+The largest deviations are observed between the different \textsf{L0} categories.
+
+%It is possible that the decay-time dependent efficiency deviates in different subsamples of our data 
+%such as the year of data-taking, the various $\Ds$ final states or the ways an event is triggered at the \textsf{L0} stage.
+%
+%To investigate possible deviations, the $\Bs\to\Ds\pion\pion\pion$ sample 
+%is split into subsamples according to the categories mentioned above (run, $\Ds$ state, L0 trigger). 
+%For each subsample, the fit procedure described at the beginning of this chapter, using the pdf given by Eq. \ref{eq:AccPDF}, is repeated and the obtained values for the spline coefficients  $v_{i}$ are compared.
+%Figure \ref{fig:AccComp} shows the comparison of the obtained spline coefficients for the different $\Ds$ final states.
+%Investigating the obtained spline coefficients from different $\Ds$ final states, 
+%good agreement is observed between all four channels and no need to distinguish between different final states in the time-dependent amplitude fit is found. \newline
+%The comparison between spline coefficients for the different runs and L0 trigger categories is shown in Figure \ref{fig:AccCompRunTrig}.
+%
+%Significant deviations between spline coefficients obtained from the two different runs and L0 trigger categories can be observed. 
+%The deviations are most pronounced in the $(0-5) \ps$ region, where the majority of statistics is found. 
+%Therefore, the time-dependent efficiency has to be treated separately for the runs and L0 categories. 
+%This is achieved by implementing a simultaneous fit, where the acceptance description is allowed to vary in the subsamples.   
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/timeAcc_comparison_by_year_t1_adaptive_N4.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/timeAcc_comparison_by_run_adaptive_N4.pdf}
+
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/timeAcc_comparison_by_DsFinalState_mod_adaptive_N4.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/timeAcc_comparison_by_trigger_adaptive_N4.pdf}
+\caption{Comparison of the spline coefficients (point with error bars) obtained from time-dependent fits to the $\Bs\to\Ds\pion\pion\pion$ decay-time for different subsamples:
+(up-left) different years of data-taking; (up-right) different data-taking periods;
+(down-left) different $D_s$ final states; (down-right) different trigger categories. 
+The interpolated splines are overlaid.}
+\label{fig:AccComp}
+\end{figure}
+
+\clearpage
+\section{Spin Amplitudes} 
 \label{a:sf}
 
 The spin factors used for $B \to P_1 \, P_2 \, P_3 \, P_4$ decays are given in Table \ref{tab:Sf}.
@@ -401,7 +442,7 @@ The various decay channels considered in the model building are listed in Table 
 %\renewcommand{\thetable}{C.\arabic{table}}
 
 \begin{table}[h]
-  \footnotesize
+  \small
   \centering
   \caption{Decays considered in the LASSO model building. \label{tab:components}}
            \begin{tabular} {@{\hspace{0.5cm}}l@{\hspace{0.25cm}}}

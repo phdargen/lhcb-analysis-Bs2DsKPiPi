@@ -37,11 +37,11 @@ while only $20 \%$ of the events classified with \textsf{BKGCAT}$=60$ are indeed
 \includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signalMC_pull.pdf}
 \includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signalMC_ghost_pull.pdf}
 
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/normMC_pull.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/normMC_ghost_pull.pdf}
+%\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/normMC_pull.pdf}
+%\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/normMC_ghost_pull.pdf}
 
-\caption{The reconstructed $B_s$ mass distribution for simulated $B_s \to D_s K \pi \pi$ (top) and $B_s \to D_s \pi \pi \pi$ (bottom) decays 
-classified with \textsf{BKGCAT} = 20 or 50 (left) and \textsf{BKGCAT} = 60 (right) after the full selection. }
+\caption{The reconstructed $B_s$ mass distribution for simulated $B_s \to D_s K \pi \pi$  %(top) and $B_s \to D_s \pi \pi \pi$ (bottom) 
+decays classified with \textsf{BKGCAT} = 20 or 50 (left) and \textsf{BKGCAT} = 60 (right) after the full selection. }
 \label{fig:}
 \end{figure}
 
@@ -111,7 +111,6 @@ classified with \textsf{BKGCAT} = 20 or 50 (left) and \textsf{BKGCAT} = 60 (righ
 \label{sec:timeAcceptance}
 The decay-time distribution of the $\Bs$ mesons is sculpted due to the geometry of the LHCb detector and the applied selection cuts, which are described in Section \ref{sec:Selection}.
 In particular, any requirement on the flight distance, the impact parameter or the direction angle (DIRA) of the $\Bs$ mesons, as well as the direct cut on the proper-time, will lead to a decay-time dependent efficiency $\epsilon(t)$. 
-
 %This efficiency will distort the theoretically expected, time-dependent decay rate
 %\begin{equation}
 %\frac{\Gamma(t)^{observed}}{dt} = \frac{\Gamma(t)^{theory}}{dt} \cdot \epsilon(t),
@@ -119,179 +118,208 @@ In particular, any requirement on the flight distance, the impact parameter or t
 %\end{equation} 
 %and has to be modelled correctly, in order to describe the observed decay rate. 
 
-We use our control channel for this measurement, because for $\Bs\to\Ds\kaon\pion\pion$ decays the decay-time acceptance is correlated with the \CP-observables which we aim to measure. Therefore, floating the \CP-observables and the acceptance shape at the same time is not possible. 
-Hence, a fit to the decay-time distribution of $\Bs\to\Ds\pion\pion\pion$ candidates is performed and the obtained acceptance shape is corrected by the difference in shape found for the $\Bs\to\Ds\kaon\pion\pion$ and $\Bs\to\Ds\pion\pion\pion$ MC. \newline
-A PDF of the form
-
+We use a combination of control channels to derive the acceptance function $\epsilon(t)$, because for $\Bs\to\Ds\kaon\pion\pion$ decays the decay-time acceptance is strongly correlated with the \CP-observables which we aim to measure. Therefore, extracting the \CP-observables and the acceptance shape at the same time is not possible. 
+A fit to the decay-time distribution of $\Bs\to\Ds\pion\pion\pion$ candidates is performed and the obtained acceptance shape is corrected for the small difference 
+observed between the $\Bs\to\Ds\kaon\pion\pion$ and $\Bs\to\Ds\pion\pion\pion$ MC samples. 
+In addition, we include the control channel $\Bd\to\Ds\kaon\pion\pion$ to increase the statistical precision.
+A simultaneous fit to the four datasets ($\Bs\to\Ds\pion\pion\pion$ data, $\Bd\to\Ds\kaon\pion\pion$ data, $\Bs\to\Ds\kaon\pion\pion$ MC and $\Bs\to\Ds\pion\pion\pion$ MC)
+is performed to allow for a straightforward propagation of uncertainties.
+In each case, a PDF of the following form 
 \begin{equation}
-\mathcal{P}(t) = \left[ e^{\Gamma_{s}t}\cdot \text{cosh}\left(\frac{\Delta\Gamma_{s} \, t^\prime}{2}\right) \times \mathcal{R}(t - t^{'})\right] \cdot \epsilon(t),
+\mathcal{P}(t,\delta t) = \left[ e^{-\Gamma \, t}\cdot \text{cosh}\left(\frac{\Delta\Gamma \, t^\prime}{2}\right) \otimes \mathcal{R}(t - t^{'}, \delta t)\right] \cdot \epsilon(t),
 \label{eq:AccPDF}
 \end{equation}
-
-is fit to the decay time distribution of $\Bs\to\Ds\pion\pion\pion$ candidates in data. 
-Since the fit is performed untagged, the PDF shown in Eq. \ref{eq:AccPDF} contains no terms proportional to $\dms$. 
-The values for $\Gamma_{s}$ and $\Delta\Gamma_{s}$ are fixed to the latest HFAG results \cite{HFAG}. 
-The decay-time acceptance $\epsilon(t^{'}, \vec{\lambda})$ is modelled using the sum of cubic polynomials $v_{i}(t)$, so called Splines \cite{Karbach:2014qba}. 
-The polynomials are parametrised by so-called knots which determine their boundaries. Knots can be set across the fitted distribution to account for local changes in the acceptance shape.
-Using more knots is equivalent to using more base splines which are defined on a smaller sub-range. 
-In total, $n+2$ base splines $v_{i}(t)$ are needed to describe an acceptance shape which is parametrised using $n$ knots.\newline
-For fits shown in the following, the knots have been placed at $t = [0.5, 1.0, 1.5, 2.0, 3.0, 9.5] ps$. To accommodate these 6 knot positions, 8 basic splines $v_{i}$, $i = [1,...,8]$ are used.
-Since a rapid change of the decay time acceptance at low decay times due to the turn-on effect generated by the lifetime and other selection cuts is expected, more knots are placed in that regime.
-At higher decay times we expect linear behavior, with a possible small effect due to the VELO reconstruction. Therefore fewer knots are used. 
-Furthermore, $v_{7}$ is fixed to 1 in order to normalize the overall acceptance function. To stabilise the last spline, $v_{8}$ is fixed by a linear extrapolation from the two previous splines:
-
+is used to describe the decay-time distribution. 
+For real data, the values for $\Gamma_{s,d}$ and $\Delta\Gamma_{s,d}$ are fixed to the latest HFAG results \cite{HFAG},
+while for simulated data, the generated values are used.
+A  single Gaussian resolution function $\mathcal{R}(t - t^{'}, \delta t)$ is used where the decay-time error estimate is scaled with the respective calibration functions determined in
+Sec.~\ref{sec:Resolution}.
+Each decay-time acceptance $\epsilon(t)$ is modeled
+using cubic splines, allowing for the analytical computation of the decay-time integrals appearing in the PDF \cite{Karbach:2014qba}.
+The splines are parametrized by so-called knots ($t_0,t_1,\dots,t_N$) which determine their boundaries. 
+Two knots are located by default at the lower and upper edge of the interval allowed for the decay time, the remaining ones are chosen 
+such that there is an approximately equal amount of data in-between two consecutive knots.
+In the basis of cubic b-splines, $b_i(t)$, the acceptance is then constructed as:
+\begin{equation}   
+	\epsilon(t) = \sum_{i=0}^N v_i \, b_i(t)   
+	\label{eq:Spline}
+\end{equation}
+where the spline coefficients $v_i$ are determined from the fit.
+% using the sum of cubic polynomials $v_{i}(t)$, so called Splines \cite{Karbach:2014qba}. 
+%Knots can be set across the fitted distribution to account for local changes in the acceptance shape.
+%Using more knots is equivalent to using more base splines which are defined on a smaller sub-range. 
+%In total, $n+2$ base splines $v_{i}(t)$ are needed to describe an acceptance shape which is parametrized using $n$ knots.
+%For fits shown in the following, the knots have been placed at $t = [0.5, 1.0, 1.5, 2.0, 3.0, 9.5] ps$. 
+%To accommodate these 6 knot positions, 8 basic splines $v_{i}$, $i = [1,...,8]$ are used.
+%Since a rapid change of the decay time acceptance at low decay times due to the turn-on effect generated by the lifetime and other selection cuts is expected, more knots are placed in that regime.
+%At higher decay times we expect linear behavior, with a possible small effect due to the VELO reconstruction. Therefore fewer knots are used. 
+We fix coefficient $v_{N-1}$ to unity in order to normalize the overall acceptance function. 
+To stabilize the upper decay-time acceptance, $v_{N}$ is fixed by a linear extrapolation from the two previous coefficients:
 \begin{equation}   
 v_{N} = v_{N-1} + \frac{v_{N-2} - v_{N-1}}{t_{N-2} - t_{N-1}} \cdot (t_{N} - t_{N-1}).
 \label{eq:SplineExtra}
 \end{equation}
-
-Here, $N=8$ and $t_{N-1}$ corresponds to the knot position associated with $v_{N-1}$. 
-
-\clearpage
-
-\subsubsection{Comparison of acceptance in subsamples}
-\label{subsec: AccComparison}
-
-It is possible that the decay-time dependent efficiency deviates in different subsamples of our data. 
-In particular, the acceptance could differentiate in subsamples with different final state kinematics, such as the run I \& run II sample, the various $\Ds$ final states and the ways an event is triggered at the L0 stage.
-To investigate possible deviations, the full selected $\Bs\to\Ds\pion\pion\pion$ sample is split into subsamples according to the categories mentioned above (run, $\Ds$ state, L0 trigger). 
-For each subsample, the fit procedure described at the beginning of this chapter, using the pdf given by Eq. \ref{eq:AccPDF}, is repeated and the obtained values for the spline coefficients  $v_{i}$ are compared.
-Figure \ref{fig:AccCompDs} shows the comparison of the obtained spline coefficients for the different $\Ds$ final states.
-
-%\begin{figure}[h]
-%\includegraphics[height=!,width=\textwidth]{figs/Acceptance/adaptive_N4/timeAcc_combined_by_DsFinalState.pdf}
-%\caption{Comparison of the spline coefficients obtained from time-dependent fits to the $\Bs\to\Ds\pion\pion\pion$ subsamples of different $\Ds$ final states. 
-%The comparison of one particular $\Ds$ state against all other states is shown.}
-%\label{fig:AccCompDs}
-%\end{figure}
-
-\begin{figure}[h]
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/timeAcc_comparison_by_year_t1_adaptive_N4.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/timeAcc_comparison_by_run_adaptive_N4.pdf}
-
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/timeAcc_comparison_by_DsFinalState_mod_adaptive_N4.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/timeAcc_comparison_by_trigger_adaptive_N4.pdf}
-\caption{Comparison of the spline coefficients obtained from time-dependent fits to the $\Bs\to\Ds\pion\pion\pion$ subsamples of (left) the different runs and (right) L0 trigger categories.}
-\label{fig:AccCompRunTrig}
-\end{figure}
-
-Investigating the obtained spline coefficients from different $\Ds$ final states, 
-good agreement is observed between all four channels and no need to distinguish between different final states in the time-dependent amplitude fit is found. \newline
-The comparison between spline coefficients for the different runs and L0 trigger categories is shown in Figure \ref{fig:AccCompRunTrig}.
-
-Significant deviations between spline coefficients obtained from the two different runs and L0 trigger categories can be observed. 
-The deviations are most pronounced in the $(0-5) \ps$ region, where the majority of statistics is found. 
-Therefore, the time-dependent efficiency has to be treated separately for the runs and L0 categories. 
-This is achieved by implementing a simultaneous fit, where the acceptance description is allowed to vary in the subsamples.   
-
-
+It was found that at least $N=6$ knots are necessary for a sufficient fit quality.
 
 \clearpage
-\subsubsection{Results}
+Three distinct splines are used in the following combinations to describe the acceptances for thefour datasets:
+\begin{itemize}
+	\item $\Bs \to D_sK\pi\pi$ MC:   $\epsilon^{MC}_{D_sK\pi\pi}(t)$ 
+	\item $\Bs \to D_s\pi\pi\pi$ MC:   $\epsilon^{MC}_{D_s\pi\pi\pi}(t) = R(t) \cdot \epsilon^{MC}_{D_sK\pi\pi}(t)$ 
+	\item $\Bs \to D_s\pi\pi\pi$ data:   $\epsilon^{Data}_{D_s\pi\pi\pi}(t) = R(t) \cdot \epsilon^{Data}_{D_sK\pi\pi}(t)$ 
+	\item $\Bd \to D_sK\pi\pi$ data:   $\epsilon^{Data}_{D_sK\pi\pi}(t)$    
+\end{itemize}
+where $\epsilon^{MC}_{D_sK\pi\pi}(t)$ represents the acceptance in $\Bs \to D_sK\pi\pi$ MC, 
+$R(t)$ represents  the ratio of acceptances in $\Bs \to D_s\pi\pi\pi$ and $\Bs \to D_sK\pi\pi$ MC
+and the final acceptance in $\Bs \to D_sK\pi\pi$ data
+is represented by $\epsilon^{Data}_{D_sK\pi\pi}(t)$.
 
-The nominal fit to $\Bs\to\Ds\pion\pion\pion$ data using this configuration is shown in Figure \ref{fig:accFit}. 
-Note that the normalization of the splines in the following figures is not in scale.
-The fit parameters obtained from the described fits to data and simulation are summarised in Table \ref{table:splines}.
-%
-%\begin{figure}[h]
-%\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_combined.pdf}
-%\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_combined.pdf}
-%\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_combined.pdf}
-%\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_combined.pdf}
-%\caption{The red line shows the spline function describing the acceptance and the blue line depicts the total fit function.}
-%\label{fig:accFit}
-%\end{figure}
-%\input{tables/Acceptance/adaptive_N4/splineCoeffs_combined.tex}
-
-\clearpage
+The acceptances are determined separately for each data-taking period
+and each trigger category as discussed in more detail in Appendix \ref{a:timeAcc}.
+The fit results are shown in Figs.~\ref{fig:accFit} to \ref{fig:accFit4} and the 
+fitted parameters are summarized in Tables~\ref{table:splines} to \ref{table:splines4}.
+\newline
+\\
+\pretextcomment{As currently there are no Run-II MC samples available, we use the Run-I MC samples also for the Run-II fits.
+An alternative approach would be to fit only the $\Bd \to D_sK\pi\pi$ data sample in order to remove the MC dependency. 
+The final strategy will be fixed, depending on the MC availability, during the review.
+ }
+ 
+ 
+\begin{table}[h]
+\centering
+\scriptsize
+\caption{Time acceptance parameters for events in category [\textsf{Run-I},\textsf{L0-TOS}].}
 \input{tables/Acceptance/adaptive_N4/splineCoeffs_Run1_t0.tex}
+\label{table:splines}
+\caption{Time acceptance parameters for events in category [\textsf{Run-I},\textsf{L0-TIS}].}
 \input{tables/Acceptance/adaptive_N4/splineCoeffs_Run1_t1.tex}
+\caption{Time acceptance parameters for events in category [\textsf{Run-II},\textsf{L0-TOS}].}
 \input{tables/Acceptance/adaptive_N4/splineCoeffs_Run2_t0.tex}
+\caption{Time acceptance parameters for events in category [\textsf{Run-II},\textsf{L0-TIS}].}
 \input{tables/Acceptance/adaptive_N4/splineCoeffs_Run2_t1.tex}
+\label{table:splines4}
+\end{table}
 
 \clearpage
 \begin{figure}[h]
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t0.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t0.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run1_t0.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run1_t0.pdf}
-\caption{}
-\label{fig:}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t1.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t1.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run1_t1.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run1_t1.pdf}
-\caption{}
-\label{fig:}
+\centering
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t0.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t0.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run1_t0.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run1_t0.pdf}
+\caption{
+\footnotesize Decay-time fit projections for 
+$\Bs\to\Ds\pion\pion\pion$ data (up-left), $\Bs\to\Ds\pion\pion\pion$ MC (up-right), $\Bd\to\Ds\kaon\pion\pion$ data (down-left) 
+and $\Bs\to\Ds\kaon\pion\pion$ MC (down-right)  
+in category [\textsf{Run-I},\textsf{L0-TOS}]. \\
+The respective acceptance function is overlaid in an arbitrary scale.
+ }
+\label{fig:accFit}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run1_t1.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run1_t1.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run1_t1.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run1_t1.pdf}
+\caption{
+\footnotesize Decay-time fit projections for 
+$\Bs\to\Ds\pion\pion\pion$ data (up-left), $\Bs\to\Ds\pion\pion\pion$ MC (up-right), $\Bd\to\Ds\kaon\pion\pion$ data (down-left) 
+and $\Bs\to\Ds\kaon\pion\pion$ MC (down-right)  
+in category [\textsf{Run-I},\textsf{L0-TIS}]. \\
+The respective acceptance function is overlaid in an arbitrary scale.
+ }\label{fig:accFit2}
 \end{figure}
 
 \clearpage
 \begin{figure}[h]
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2_t0.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run2_t0.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run2_t0.pdf}
-\caption{}
-\label{fig:}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t1.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2_t1.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run2_t1.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run2_t1.pdf}
-\caption{}
-\label{fig:}
+\centering
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2_t0.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run2_t0.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run2_t0.pdf}
+\caption{
+\footnotesize Decay-time fit projections for 
+$\Bs\to\Ds\pion\pion\pion$ data (up-left), $\Bs\to\Ds\pion\pion\pion$ MC (up-right), $\Bd\to\Ds\kaon\pion\pion$ data (down-left) 
+and $\Bs\to\Ds\kaon\pion\pion$ MC (down-right)  
+in category [\textsf{Run-II},\textsf{L0-TOS}]. \\
+The respective acceptance function is overlaid in an arbitrary scale.
+ }\label{fig:accFit3}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t1.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_mc_Run2_t1.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_B0_Run2_t1.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run2_t1.pdf}
+\caption{
+\footnotesize Decay-time fit projections for 
+$\Bs\to\Ds\pion\pion\pion$ data (up-left), $\Bs\to\Ds\pion\pion\pion$ MC (up-right), $\Bd\to\Ds\kaon\pion\pion$ data (down-left) 
+and $\Bs\to\Ds\kaon\pion\pion$ MC (down-right)  
+in category [\textsf{Run-II},\textsf{L0-TIS}]. \\
+The respective acceptance function is overlaid in an arbitrary scale.
+ }\label{fig:accFit4}
 \end{figure}
 
 \clearpage
-\subsection{Phasespace acceptance}
+\subsection{Phase space acceptance}
 \label{sec:phasespaceAcceptance}
 
-\pretextcomment{Disclaimer: ...}
-
-In general, the signal PDF for events tagged as $\Dz \to h^+ h^- \pip \pim$ is given by
+The signal PDF used for the full time-dependent amplitude fit can be written in terms of the differential decay rate from Equation~\ref{eq:PDF_full2} as
 \begin{equation}
-	\mathcal P_{\rm Sig}(\phsPoint) %= \frac{ \vert \mathcal M(X) \vert^{2} \, \phi_{4}(X) }{\int  \vert \mathcal M(X) \vert^{2} \, \phi_{4}(X) \, \text{d}X} 
-	=  
-	\frac{ [(1-w)\left\vert   A_{\Dz}(\phsPoint) \right\vert^{2} + w \, \left\vert    A_{\Dzb}(\phsPoint) \right\vert^{2} ]\,\epsilon_{\rm Sig}(\phsPoint) \, \phsd(\phsPoint) }
-	{\int [\left\vert  A_{\Dz}(\phsPoint) \right\vert^{2} + \left\vert    A_{\Dzb}(\phsPoint) \right\vert^{2} ]\, \epsilon_{\rm Sig}(\phsPoint) \, \text{d}\Phi_{4} } , 
-\label{eq:sigPDF}
+	\mathcal P(\phsPoint,t,g,f) = 
+	\frac{ \left( \frac{\text{d}\Gamma(\phsPoint,t,q,f)}{\text{d}t \, \text{d}\Phi_4} \right) \cdot \epsilon(\phsPoint) \cdot \epsilon(t) }{\int \sum_{q,f} \left( \frac{\text{d}\Gamma(\phsPoint,t,q,f)}{\text{d}t \, \text{d}\Phi_4} \right) \cdot \epsilon(\phsPoint) \cdot \epsilon(t) \, \text{d}t \, \text{d}\Phi_{4}  }  
 \end{equation}
-where
-$\epsilon_{\rm Sig}(\phsPoint)$ is the phase-space efficiency. 
-
-
+where $\epsilon(\phsPoint)$ is the phase-space efficiency. 
 Note that the efficiency in the numerator appears as an additive constant in the $\log {\cal L}$ that does not depend on any fit parameters such that it can be ignored.
 However, the efficiency function still enters via the normalization integrals. 
-These normalization terms are determined numerically by a MC integration technique.
-For this purpose, we use simulated events generated according to a preliminary model, pass them 
+In contrast to the time integrals which can be performed analytically as discussed in Sec.~\ref{sec:timeAcceptance},
+the phase-space integrals are determined numerically.
+For this purpose, we use simulated events generated with \textsf{EVTGEN}, pass them 
 through the full detector simulation and apply the same selection criteria as for data 
 in order to perform the MC integrals.
-For example, the first integral in \eqnPRDref{eq:sigPDF} can be approximated as 
+As an example, the integral of the total $b \to c$ amplitude squared can be approximated as 
 \begin{equation}
-	\int \left\vert   A_{\Dz}(\phsPoint) \right\vert^{2} \, \epsilon_{\rm Sig}(\phsPoint) \, \text{d}\Phi_{4}   \approx 
-	\frac{1}{N_{\rm MC}} \, \sum_{k}^{N_{\rm MC}}    \frac{\left\vert   A_{\Dz}(\bold{x_{k}}) \right\vert^{2}}
-	{\left\vert A_{\Dz}^{\prime}(\bold{x_{k}}) \right\vert^{2}}
+	\label{eq:pdfPhspAcc}
+	\int \left\vert   \mathcal A^c_{f}(\phsPoint) \right\vert^{2} \, \epsilon(\phsPoint) \, \text{d}\Phi_{4}   \approx 
+	\frac{1}{N_{\rm MC}} \, \sum_{k}^{N_{\rm MC}}    \frac{\left\vert   \mathcal A^c_{f}(\bold{x_{k}}) \right\vert^{2}}
+	{\left\vert A^{\prime}(\bold{x_{k}}) \right\vert^{2}}
 \end{equation}
-where $A_{\Dz}^{\prime}$ labels the preliminary amplitude model and
-$x_{k}$ is the $k$-th MC event. As a result, the efficiency can be included in the amplitude fit without explicitly modeling it.
-For $\Dz \to \pi^+ \pi^- \pip \pim$, we use a sample of $N_{\rm MC}  = 600 000$  MC events to 
-ensure that the uncertainty on the integral is less than $0.5 \%$.
+where $A^{\prime}$ labels the amplitude model used for the generation and
+$x_{k}$ is the $k$-th MC event. As a result, the phase-space efficiency can be included in the  fit without explicitly modeling it.
+%For $\Dz \to \pi^+ \pi^- \pip \pim$, we use a sample of $N_{\rm MC}  = 600 000$  MC events to 
+%ensure that the uncertainty on the integral is less than $0.5 \%$.
+\newline
+\\
+\pretextcomment{Disclaimer: 
+At the moment there is only a small Run-I MC sample available where a DecFile (EventType: ) 
+was used from which we were not able to reproduce the generator pdf $A^{\prime}$.
+We can therefore not follow our preferred procedure described above. 
+An alternative, provisionally method is briefly described in the following.
+ }
 
+\clearpage 
+\noindent We use a BDTG to map the five-dimensional phase space to an one-dimensional distribution \cite{PhysRevLett.121.091801}.
+The BDTG is trained to learn the differences between the selected MC and a generator level MC sample.
+As discriminating variables, five invariant mass combinations are used as shown in Fig.~\ref{fig:varPhspBDT}.
+Based on the classifier output distributions, shown in Fig.~\ref{fig:PhspBDT}, an efficiency as function of the BDTG response is derived.
 
+A large toy MC sample is generated (500 k events) according to a preliminary amplitude model $A^{\prime}(\phsPoint)$
+and for each event a weight, depending on the BDTG response, is assigned
+to account for the efficiency variation across phase space.
+This reweighted toy MC sample is then effectively distributed as $A^{\prime}(\phsPoint) \cdot \epsilon(\phsPoint)$ and can be used to calculate the normalization integrals in Equation~\ref{eq:pdfPhspAcc}.
+Figure \ref{fig:PhspBDTeff} compares the phase space efficiency obtained from the reweigted toy MC sample with the 'true' efficiency 
+given by the ratio of selected and generated MC events. 
+A fairly good agreement is observed in all dimensions.
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.8\textwidth]{figs/AcceptancePhspBDT/variables_id_c1.pdf}
-\caption{}
-\label{fig:}
+\includegraphics[height=!,width=0.9\textwidth]{figs/AcceptancePhspBDT/variables_id_c1.pdf}
+\caption{Discriminating variables used to train the BDTG. The selected MC sample is shown in blue and the generator MC sample in red.}
+\label{fig:varPhspBDT}
 \end{figure}
-
-
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.49\textwidth]{figs/AcceptancePhspBDT/BDTG.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/AcceptancePhspBDT/eff.pdf}
-\caption{}
-\label{fig:}
+\includegraphics[height=!,width=0.4\textwidth]{figs/AcceptancePhspBDT/BDTG.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/AcceptancePhspBDT/eff.pdf}
+\caption{Left: Output distributions of the BDTG for the simulated MC sample (blue) and the generator level sample (red).
+Right: Phase space efficiency as function of the BDTG response computed as the ratio of selected and generated decays.}
+\label{fig:PhspBDT}
 \end{figure}
 
 \begin{figure}[h]
@@ -307,6 +335,8 @@ ensure that the uncertainty on the integral is less than $0.5 \%$.
 \includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_cosTheta_Dspi.pdf}
 \includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_phi_Kpi_Dspi.pdf}
 
-\caption{}
-\label{fig:}
+\caption{Efficiency variation as a function of the phase-space variables obtained from the ratio of selected and generated MC events (data points) 
+and efficiency obtained from a reweigted toy MC sample (blue).
+}
+\label{fig:PhspBDTeff}
 \end{figure}
