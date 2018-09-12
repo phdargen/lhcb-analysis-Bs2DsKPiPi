@@ -2,89 +2,102 @@
 \section{Decay-time fit}
 \label{sec:timeFit}
 
-This section covers the phase space integrated, time-dependent fit to $\Bs\to\Ds\hadron\pion\pion$ data.
+This section covers the (phase space integrated) decay-time fits to $\Bs\to\Ds\hadron\pion\pion$ data.
 We use the \textsf{sFit} technique \cite{Pivk:2004ty} to statistically subtract the background, leaving only the signal PDF to describe the decay-time. 
 The \textsf{sWeights} are calculated based on the fit to the reconstructed $B_s$ mass distribution described in Sec.~\ref{sec:massFits}.
-As additional input to the fit, the tagging information (Sec. \ref{sec:Tagging}), 
-as well as the decay time acceptance (Sec. \ref{sec:Acceptance}) and resolution (Sec. \ref{sec:Resolution}) is used and fixed to the values obtained by the dedicated studies. 
-Taking all inputs into account, the final time dependent fit PDF is given by
+The signal PDF is conditional on the tagging decisions $q_i$, the mistag estimates $\eta_i$ ($i=$OS,SS) and the decay-time error $\delta t$:
 \begin{equation}
 \label{eq:TPDF_full}
-\mathcal{P}(t,\delta t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS}) \propto \left[ p(t^{'},\delta t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})  \otimes \mathcal{R}(t - t^{'},\delta t) \right] \cdot \epsilon(t)
+\mathcal{P}(t \vert\delta t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS}) \propto \left[ p(t^{'} \vert q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})  \otimes \mathcal{R}(t - t^{'},\delta t) \right] \cdot \epsilon(t)
 \end{equation}
-where $\int P(x,t,q_t,q_f) \text d$ is the PDF given by Eq. \ref{eq:PDF_intX}, $\epsilon(t)$ is the efficiency due to the time acceptance effects and $\mathcal{R}(t - t^{'})$ is the Gaussian time resolution function. 
+where $p(t \vert q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})$ is given by Equation \ref{eq:PDF_intX} taking the tagging dilution into account.
+The decay-time acceptance $\epsilon(t)$ (Sec.~\ref{sec:Acceptance}) and the Gaussian time-resolution function $\mathcal{R}(t - t^{'},\delta t)$ (Sec.~\ref{sec:Resolution}) are fixed to the values obtained by the dedicated studies. 
+We fix the values of $\Gs$ and $\DGs$ to the latest HFAG results \cite{HFAG}.
 
-
+The  unbinned maximum likelihood fits are performed simultaneously in four categories: 
+[Run-I,\textsf{L0-TOS}],[Run-I,\textsf{L0-TIS}],[Run-II,\textsf{L0-TOS}] and [Run-II,\textsf{L0-TIS}].
 
 \subsection{Fit to $\Bs\to\Ds\pion\pion\pion$ data}  
+\label{ssec:timeNormFit}
 
-In the fit, the values of $\Gs$ and $\DGs$ are fixed to the latest PDG report \cite{PDG2016}. All tagging parameters are fixed to the central values found in the tagging calibration, described in Sec. \ref{sec:Tagging}.
-Due to the fact that the $\Bs\to\Ds\pion\pion\pion$ decay is flavour specific, the CP-coefficients can be fixed to $C=1$ and $D_{f} = D_{\bar{f}} = S_{f} = S_{\bar{f}} = 0$, reducing Eq. \ref{eq:PDF_intX} to
-
-\begin{equation}
-\int P(x,t,q_t,q_f) \text d x = [\text{cosh} \left( \frac{\Delta \Gamma \, t}{2}\right) + q_t q_f \, \text{cos} \left( m_s \, t \right)] e^{- \Gamma t}.
-\end{equation}
-
-Note that in this case, the dependence on the coherence factor $\kappa$ is dropped and the same relation as found for $\Bs\to\Ds\pion$ decays is recovered. 
-Therefore, the only free fit parameter left is $\dms$. The data distribution with the overlaid fit is shown in Fig. \ref{fig:tFitNorm}.
-
-\clearpage
-\begin{figure}[h]
-	\centering
-		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t.pdf} 
-		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t_mixed.pdf} 
-		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_asym.pdf} 		
-		\caption{\small Top left: Flavour averaged decay time distribution of $\Bs\to\Ds\pion\pion\pion$ candidates with the averaged fit overlaid. 
-Top right: Tagged decay time distribution of mixed (red) and unmixed (blue) signal candidates with the fit described in the text overlaid. 
-Bottom: Time-dependent asymmetry $A_{mix}$ between mixed and unmixed $\Bs$ candidates in bins of $t/(2\pi\dms)$.} 		
-		\label{fig:tFitNorm}
-\end{figure}	
+Since the decay $\Bs\to\Ds\pion\pion\pion$ is flavour specific, the \CP coefficients can be fixed to $C=1$ and $D_{f} = D_{\bar{f}} = S_{f} = S_{\bar{f}} = 0$.
+The fit determines the calibration parameters for the OS-Combo and SS-Kaon taggers, the $\Bs$ production asymmetry for Run-II data as well as the mixing frequency $\dms$. 
+Table \ref{tab:normFitResults} summarizes the fitted parameters. 
+The \textsf{sWeighted} decay-time distribution and  the
+time-dependent asymmetry $A_{mix}$ between mixed and unmixed $\Bs$ candidates
+are shown in Fig.~\ref{fig:tFitNorm} along with the fit projections.
 
 \begin{table}[h]
 \centering
-%\small
-\caption{Parameters determined from a fit to the $B_s \to D_s \pi \pi\pi$ decay-time distribution. The uncertainties are statistical and systematic, respectively.}
+\footnotesize
+\caption{\small Parameters determined from a fit to the $B_s \to D_s \pi \pi\pi$ decay-time distribution. The uncertainties are statistical and systematic, respectively.}
 %\resizebox{\linewidth}{!}{
 	\renewcommand{\arraystretch}{1.25}
 	\input{tables/timeFit/norm_taggingCalib/result_table.tex}
 %}
+\label{tab:normFitResults}
 \end{table}
-
 \clearpage
-\subsection{sFit to $\Bs\to\Ds\kaon\pion\pion$ data}
-The time-dependent fit to the sWeighted sample of $\Bs\to\Ds\kaon\pion\pion$ signal candidates is performed simultaneously in the four bins defined in Sec. \ref{subsec: AccComparison}, 
-spliting the data into Run I \& II and trigger category 0 (L0Hadron TOS) \& 1 (L0Hadron TIS). 
-In these four bins, the respective description of the decay-time acceptance (Sec. \ref{sec:Acceptance}) is used as an input. 
-As further input the decay-time resolution scaling relation, found separately for Run I \& II in Sec. \ref{sec:Resolution}, is used in the simultaneous fit. 
-The full fit model is given in Eq. \ref{eq:TPDF_full}, where $\int P(x,t,q_t,q_f)$ is: 
-
-\begin{equation} 
-           \int P(x,t,q_t,q_f) \text d x \propto    [
-        \, \text{cosh} \left( \frac{\Delta \Gamma \, t}{2}\right) 
-          + q_t q_f \, C \, \text{cos} \left( m_s \, t \right)  
-          + \kappa \, D_{q_f} \, \text{sinh} \left( \frac{\Delta \Gamma \, t}{2}\right)  
-          - q_t \, \kappa \, S_{q_f}\, \text{sin} \left( m_s \, t \right)  ]  e^{- \Gamma t}.
-\end{equation}
-
-Note that the integration over the available phase space $x$ gives rise to the coherence factor $\kappa$, which dilutes the sensitivity to the CP coefficients $D$ \& $S$ and with that, also to the CKM phase $\gamma$. 
-All input parameters from the tagging, time acceptance and resolution are fixed in the fit. The CP coefficients, as well as $\kappa$, are therefore the only parameters left floating. 
-The data distribution and the overlaid fit is shown in Fig. \ref{fig:tFitSig}.
 
 \begin{figure}[h]
 	\centering
-		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal/h_t.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t_log.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t_mixed.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_asym.pdf} 		
+		\caption{
+		\footnotesize Top: Flavour averaged decay time distribution of $\Bs\to\Ds\pion\pion\pion$ candidates. 
+Bottom-left: Tagged decay time distribution of mixed (red) and unmixed (blue) signal candidates. 
+Bottom-right: Time-dependent asymmetry $A_{mix}$ between mixed and unmixed $\Bs$ candidates folded into one oscillation period.} 		
+		\label{fig:tFitNorm}
+\end{figure}	
+
+%\clearpage
+\subsection{sFit to $\Bs\to\Ds\kaon\pion\pion$ data}
+%The time-dependent fit to the sWeighted sample of $\Bs\to\Ds\kaon\pion\pion$ signal candidates is performed simultaneously in the four bins defined in Sec. \ref{subsec: AccComparison}, 
+%spliting the data into Run I \& II and trigger category 0 (L0Hadron TOS) \& 1 (L0Hadron TIS). 
+%In these four bins, the respective description of the decay-time acceptance (Sec. \ref{sec:Acceptance}) is used as an input. 
+%As further input the decay-time resolution scaling relation, found separately for Run I \& II in Sec. \ref{sec:Resolution}, is used in the simultaneous fit. 
+%The full fit model is given in Eq. \ref{eq:TPDF_full}, where $\int P(x,t,q_t,q_f)$ is: 
+%
+%\begin{equation} 
+%           \int P(x,t,q_t,q_f) \text d x \propto    [
+%        \, \text{cosh} \left( \frac{\Delta \Gamma \, t}{2}\right) 
+%          + q_t q_f \, C \, \text{cos} \left( m_s \, t \right)  
+%          + \kappa \, D_{q_f} \, \text{sinh} \left( \frac{\Delta \Gamma \, t}{2}\right)  
+%          - q_t \, \kappa \, S_{q_f}\, \text{sin} \left( m_s \, t \right)  ]  e^{- \Gamma t}.
+%\end{equation}
+%
+%Note that the integration over the available phase space $x$ gives rise to the coherence factor $\kappa$, which dilutes the sensitivity to the CP coefficients $D$ \& $S$ and with that, also to the CKM phase $\gamma$. 
+%All input parameters from the tagging, time acceptance and resolution are fixed in the fit. The CP coefficients, as well as $\kappa$, are therefore the only parameters left floating. 
+
+The measured \CP coefficients $C,D_{f},D_{\bar{f}},S_{f} $ and $S_{\bar{f}}$ extracted from a 
+fit to the $B_s \to D_s K \pi\pi$ decay-time distribution are reported in Table \ref{tab:sigFitResults}.
+The fit projection is shown in Fig.~\ref{fig:tFitSig}.
+We included Gaussian-constrains for the tagging calibration parameters with the central values and uncertainties determined in Sec.~\ref{ssec:timeNormFit}.
+\newline
+\\
+\pretextcomment{
+Currently the mixing frequency is fixed to the HFAG value. 
+We intend to update the fit after unblinding our result from the $\Bs\to\Ds\pion\pion\pion$ fit since our precision is significantly higher.
+}
+\begin{figure}[h]
+	\centering
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal/h_t.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal/h_t_log.pdf} 
 %		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal/h_asym.pdf} 		
-		\caption{Tagged and sWeighted decay-time distribution of $\Bs\to\Ds\kaon\pion\pion$ signal candidates. The fit described in the text is overlaid.} 
+		\caption{Decay-time distribution of $\Bs\to\Ds\kaon\pion\pion$ signal candidates with the fit projection overlaid.} 
 		\label{fig:tFitSig}
 \end{figure}	
 
 \begin{table}[h]
 \centering
-\caption{CP coefficients determined from a fit to the $B_s \to D_s K \pi\pi$ decay-time distribution. The uncertainties are statistical and systematic, respectively.}
+\caption{\CP coefficients determined from a fit to the $B_s \to D_s K \pi\pi$ decay-time distribution. The uncertainties are statistical and systematic, respectively.}
 %\resizebox{\linewidth}{!}{
 	\renewcommand{\arraystretch}{1.5}
 	\input{tables/timeFit/signal/result_table.tex}
 %}
+\label{tab:sigFitResults}
 \end{table}
 
 %\subsection{\textsf{sFit} model validation using toy studies}
