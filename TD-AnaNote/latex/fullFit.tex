@@ -2,6 +2,17 @@
 \section{Time-dependent amplitude fit}
 \label{sec:fullFit}
 
+The signal PDF used for the full time-dependent fit is defined as
+\begin{equation}
+\label{eq:ampPDF_full}
+\mathcal{P}(\phsPoint, t \vert\delta t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS}) \propto \left[ p(\phsPoint, t^{'} \vert q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})  \otimes \mathcal{R}(t - t^{'},\delta t) \right] \cdot \epsilon(t)
+\end{equation}
+where $p(\phsPoint, t \vert q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})$ is given the differential decay rate in Equation \ref{eq:PDF_full2} taking the tagging dilution into account.
+The phase space efficiency $\epsilon(\phsPoint)$ is only included in the normalization of $\mathcal{P}(\phsPoint, t \vert\delta t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})$
+as discussed in Sec~\ref{sec:phasespaceAcceptance}. 
+The model selection of the amplitude components is described in the following Section.
+The remaining fitting strategy is exactly the same as for the decay-time fits, see Sec.~\ref{sec:timeFit}.
+
 \subsection{Signal Model Construction}
 \label{sec:LASSO}
 
@@ -61,8 +72,6 @@ are considered further for step two of the model selection.
 The selected amplitudes and their fractions are summarized in Table \ref{tab:lassoFit}.
 The fit projections are shown in Fig.~\ref{fig:lassoFit}.
 
-\clearpage
-
 In Stage 2, the LASSO procedure is again performed by fitting the full time-dependent amplitude PDF.
 The components selected by Stage 1 are included for both $b\to c$ and $b\to u$ transitions and the likelihood is extended as follows:
 \begin{equation}
@@ -70,7 +79,7 @@ The components selected by Stage 1 are included for both $b\to c$ and $b\to u$ t
 \end{equation}
 Figure \ref{fig:BIC}(right) shows a plot of the complexity factor
 $\lambda$, against the resulting BIC values. 
-The final set of amplitudes is selected using the optimal value of $\lambda=28$, and is henceforth called the LASSO model.
+The final set of $b\to c$ and $b\to u$ amplitudes is selected using the optimal value of $\lambda=28$, and is henceforth called the LASSO model.
 
 \begin{figure}[b]
   \centering
@@ -105,7 +114,7 @@ The final set of amplitudes is selected using the optimal value of $\lambda=28$,
 		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_cosTheta_Dspi_mod.pdf} 
 		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_phi_Kpi_Dspi_mod.pdf} 
 
-		\caption{} 		
+		\caption{\small Projections of the fit result to the time-integrated and flavour averaged phase-space distribution of $B_s \to D_s K \pi \pi$  decays. } 		
 				\label{fig:lassoFit}
 
 	\centering
@@ -122,49 +131,37 @@ The final set of amplitudes is selected using the optimal value of $\lambda=28$,
 		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_cosTheta_Dspi_mod_log.pdf} 
 		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_phi_Kpi_Dspi_mod_log.pdf} 
 
-		\caption{} 		
+		\caption{\small Projections of the fit result to the time-integrated and flavour averaged phase-space distribution of $B_s \to D_s K \pi \pi$  decays in logarithmic scale.} 		
 		\label{fig:lassoFit2}
 \end{figure}
 
 \clearpage
 \subsection{Results}
 
-Table \ref{tab:lassoModel} 
-lists the real and imaginary part of the complex amplitude coefficients $a_{i}$, 
-obtained by fitting the LASSO model to the data,
-along with the corresponding fit fractions. 
-%The letters in square brackets refer to the relative orbital angular momentum of the decay products. 
-%If no angular momentum is specified, the lowest angular momentum state consistent with angular momentum conservation and, where appropriate, parity conservation is used.
-%In order to provide implementation-independent measurements in addition to the complex coefficients $a_i$, we define two quantities. 
-The fit fractions
+Table \ref{tab:fullResult} 
+lists the modulus and phases of the complex amplitude coefficients $a^c_{i}$ and $a^u_{i}$, 
+obtained by fitting the LASSO model to the data.
+The corresponding fit fractions for the $b\to c$ and $b\to u$ amplitudes are individually normalized
 \begin{equation}
 \label{eq:DefineFitFractions}
-	F_{i} \equiv \frac{\int \left\vert   a_{i} \, A_{i}(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4} }
-	{\int \left\vert  \mathcal A(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4}}, 
+	F^{c,u}_{i} \equiv \frac{\int \left\vert   a_{i}^{c,u} \, A_{i}(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4} }
+	{\int \left\vert  \mathcal A_f^{c,u}(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4}}  
 \end{equation}
-which are a measure of the relative strength between the different transitions. 
-%Secondly, the interference fractions are given by
-%\begin{equation}
-%\label{eq:DefineInterferenceFractions}
-%	I_{ij} \equiv \frac{\int  2\,\Re[a_{i}a^*_{j} \, A_{i}(\phsPoint) A^*_{j}(\phsPoint) ] \, \text{d}\Phi_{4} }
-%	{\int \left\vert  A_{\Dz}(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4}} ,
-%\end{equation}
-%which measures the interference effects between amplitude pairs. Constructive interference leads to $I_{ij} > 0$, while destructive interference leads to $I_{ij} < 0$. Note that $\sum_i F_{i} + \sum_{j<k} I_{j,k} = 1$.
-%The interference fractions are given in Appendix~\ref{a:interference}. 
+and shown in Table \ref{tab:fullFractions}.
+In addition to the amplitude coefficients, the amplitude ratio and the strong and weak phase differences between the $b\to c$ and $b\to u$ decays are determined.
+Moreover, the masses and widths of the $K_1(1400)$ and $K^{*}(1410)$ resonances are fitted.
 
-Figure \ref{fig:baselineFit} shows the distributions of 
+Figure \ref{fig:fullFit} shows the distributions of 
 selected phase space observables, which demonstrate 
 reasonable agreement between data and the fit model. 
-We also project into the transversity basis to demonstrate good description of the overall angular structure in
-Fig.~\ref{fig:baselineFit2}: 
+We also project into the transversity basis to demonstrate good description of the overall angular structure.
 The acoplanarity angle 
 ${\chi}$, is the angle between the two decay planes formed by 
-the $\pi^+\pi^-$ combination with minimum invariant mass, ${\rm min}[m(\pi^+\pi^-)]$,  
-and the remaining $\pip \pim$ combination
-in the $D$ rest frame; boosting into the rest frames of the two-body systems defining these decay planes,
+the $K^+\pi^-$ system and the $D_s^- \pip$ system
+in the $B_s$ rest frame; boosting into the rest frames of the two-body systems defining these decay planes,
 the two helicity variables 
 are defined as the cosine of the angle, ${\theta}$, 
-of each \pip\ momentum with the $D$ flight direction.
+of the $K^+$ or $D_S^-$ momentum with the $B_s$ flight direction.
 
 In order to quantify the quality of the fit in the five-dimensional phase space,
 a \chisq value is determined by binning the data;
@@ -185,6 +182,24 @@ For the LASSO model, this
 amounts to $\chisq/\nu = 1.40$ %with $\nu = 221$,
 indicating a decent fit quality.
 
+\begin{table}[h]
+\centering
+\caption{
+\small
+Modulus and phases of the amplitudes contributing to $b \to c$ and $b \to u$ decays.
+In case of multiple decay modes of three-body resonances, the amplitude coefficients are defined relative to the one listed first.
+Additional fit parameters are listed below.
+The first quoted uncertainty is statistical, while the second arises from systematic sources. 
+The third uncertainty arises from the alternative models considered.
+}
+\resizebox{\linewidth}{!}{
+	\renewcommand{\arraystretch}{1.5}
+	\input{tables/fullFit/signal/result_table.tex}
+}
+\label{tab:fullResult}
+\end{table}
+
+\clearpage
 
 \begin{figure}[h]
 	\centering
@@ -211,26 +226,9 @@ indicating a decent fit quality.
 %		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_cosTheta_Dspi_mod.pdf} 
 %		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_phi_Kpi_Dspi_mod.pdf} 
 
-		\caption{} 		
+		\caption{Projections of the full time-dependent amplitude fit.} 		
+		\label{fig:fullFit}
 \end{figure}	
-
-
-\begin{table}[h]
-\centering
-\caption{
-\small
-Modulus and phases of the amplitudes contributing to $b \to c$ and $b \to u$ decays.
-In case of multiple decay modes of three-body resonances, the amplitude coefficients are defined relative to the one listed first.
-Additional fit parameters are listed below.
-The first quoted uncertainty is statistical, while the second arises from systematic sources. 
-The third uncertainty arises from the alternative models considered.
-}
-\resizebox{\linewidth}{!}{
-	\renewcommand{\arraystretch}{1.5}
-	\input{tables/fullFit/signal/result_table.tex}
-}
-\end{table}
-
 \begin{table}[h]
 \centering
 \caption{
@@ -240,5 +238,7 @@ Fit fractions of the amplitudes contributing to $b \to c$ and $b \to u$ decays.
 	\renewcommand{\arraystretch}{1.5}
 	\input{tables/fullFit/signal/fraction_table.tex}
 %}
+\label{tab:fullFractions}
 \end{table}
+
 
