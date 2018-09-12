@@ -1,84 +1,93 @@
 % !TEX root = main.tex
-\section{Time dependent amplitude fit}
+\section{Time-dependent amplitude fit}
 \label{sec:fullFit}
-
 
 \subsection{Signal Model Construction}
 \label{sec:LASSO}
 
 The light meson spectrum comprises multiple resonances which are expected to contribute to $B_s \to D_s K \pi \pi$  decays as intermediate states. 
-Apart from clear contributions coming from resonances such as $K_{1}(1270)$, $K_{1}(1400)$ $\rho(770)$ and $K^*(892)^0$, 
+Apart from clear contributions coming from resonances such as $K_{1}(1270)$, $K_{1}(1400)$, $\rho(770)$ and $K^*(892)^0$, 
 the remaining structure is impossible to infer due to
 the cornucopia of broad, overlapping and interfering resonances 
 within the phase space boundary.
-The complete list of considered amplitudes can be found in Appendix \ref{a:decays}.
+We follow the \textsf{LASSO} \cite{Tibshirani94regressionshrinkage,Guegan:2015mea} approach 
+to limit the model complexity in two steps.
 
-To build the amplitude model, one could successively add amplitudes on top of one another until a reasonable agreement between data and fit was achieved.
-However, this step-wise approach is not particularly suitable for amplitude analyses as discussed in Ref.~\cite{Guegan:2015mea}.
-%In practice, this sum has to be truncated at some point.
-%It is clear that adding more fit parameters will 
-%describe our data better
-%but including too many degrees of freedom leads to overfitting,
-%\ie reduces predictive power and
-Instead, we include the whole pool of amplitudes in the first instance and use the 
-Least Absolute Shrinkage and Selection Operator~\cite{Tibshirani94regressionshrinkage,Guegan:2015mea} (LASSO) approach to limit the model complexity.
-%, as proposed in Ref.~\cite{Guegan:2015mea}. 
-% in the context of amplitude analyses.
-In this method, the event likelihood is extended by a penalty term
+First, we fit the time-integrated and flavour averaged phase-space distribution of $B_s \to D_s K \pi \pi$  decays.
+In this case, a single total amplitude can be used:
 \begin{equation}
-	-2 \, \log \mathcal L \to -2 \, \log \mathcal L + \lambda \, \sum_{i} \sqrt{ \int \vert a_{i} \, A_{i}(\phsPoint) \vert^{2} \, \text{d}\Phi_{4}  },
+\mathcal A_f^{eff}(\phsPoint) = \sum_i a^{eff}_i  A_i(\phsPoint)
 \end{equation}
-which 
-%regularizes the amplitude coefficients.
-%The imposed constraint on the 
-%which limits the model complexity. 
-% penalizing the absolute values of the
-%coecients introduces shrinkage towards zero
-%This constrained optimization 
-shrinks the amplitude coefficients
-%estimated parameters 
-towards zero.
+which effectively describes the incoherent superposition of the $b\to c$ and $b\to u$ amplitudes:
+\begin{equation}
+	\mathcal  \vert A_f^{eff}(\phsPoint)  \vert^{2} = \mathcal  \vert A_f^c(\phsPoint)  \vert^{2} +  \mathcal  \vert A_f^u(\phsPoint)   \vert^{2}   .
+\end{equation}
+This significantly simplifies the fitting procedure and allows us 
+to include the whole pool of considered intermediate state amplitudes $A_i$ which can be found in Appendix \ref{a:decays}.
+% allows us to identify the contributing resonances 
+%To build the amplitude model, one could successively add amplitudes on top of one another until a reasonable agreement between data and fit was achieved.
+%However, this step-wise approach is not particularly suitable for amplitude analyses as discussed in Ref.~\cite{Guegan:2015mea}.
+%Instead, we include the whole pool of amplitudes in the first instance and use the 
+%Least Absolute Shrinkage and Selection Operator~\cite{Tibshirani94regressionshrinkage,Guegan:2015mea} (LASSO) approach to limit the model complexity.
+The LASSO penalty term added to the likelihood function
+\begin{equation}
+	-2 \, \log \mathcal L \to -2 \, \log \mathcal L + \lambda \, \sum_{i} \sqrt{ \int \vert a^{eff}_i  A_i(\phsPoint) \vert^{2} \, \text{d}\Phi_{4}  },
+\end{equation}
+shrinks the amplitude coefficients towards zero.
 The amount of shrinkage is controlled by the parameter $\lambda$, to be tuned on data.
 Higher values for $\lambda$ encourage sparse models, \ie models with only a few non-zero amplitude coefficients.
-%Scanning over possible $\lambda$ values results in a ensemble of models with different 
 The optimal value for $\lambda$ is found by minimizing the Bayesian information criteria~\cite{BIC} (BIC),
 \begin{equation}
 	\text{BIC}(\lambda) = - 2 \, \log \mathcal L + r  \, \log N_{\rm Sig},
 \end{equation}
 where $N_{\rm Sig}$ is the number of signal events and $r$ is the number of amplitudes with a decay fraction above 
 a certain threshold.
-In this way, the optimal $\lambda$ balances
-the fit quality ($- 2 \, \log  \mathcal L$) against the model complexity.
-The LASSO penalty term is only used to select the model. 
-Afterwards, this term must be discarded in the final amplitude fit with the selected model, otherwise the parameter uncertainties would be biased. 
-
-The set of amplitudes is selected using the optimal value of $\lambda=28$, and is henceforth called the LASSO model; 
-Figure \ref{fig:BIC}(a) shows the distribution of BIC values obtained by scanning over $\lambda$
+The fit fractions are defined as
+\begin{equation}
+\label{eq:DefineFitFractions}
+	F_{i} \equiv \frac{\int \left\vert   a^{eff}_{i} \, A_{i}(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4} }
+	{\int \left\vert  \mathcal A_f^{eff}(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4}}, 
+\end{equation}
+and are a measure of the relative strength between the different transitions. 
+%In this way, the optimal $\lambda$ balances
+%the fit quality ($- 2 \, \log  \mathcal L$) against the model complexity.
+%The LASSO penalty term is only used to select the model. 
+%Afterwards, this term must be discarded in the final amplitude fit with the selected model, otherwise the parameter uncertainties would be biased. 
+%The set of amplitudes is selected using the optimal value of $\lambda=28$, and is henceforth called the LASSO model; 
+Figure \ref{fig:BIC}(left) shows the distribution of BIC values obtained by scanning over $\lambda$
 where we choose the decay fraction threshold to be $0.5 \%$.
-%In addition, we repeated the model selection procedure under multiple different conditions:
-%\begin{enumerate}
-%	\item The fit fraction threshold for inclusion in the final model was varied within the interval $[0.05, 5] \%$.
-%		The set of selected amplitudes is stable for thresholds between $0.1\%$ and $1\%$. 
-%		Other choices result in marginally different models containing one component more or less.
-%	\item Instead of BIC, the Akaike information criteria ($\text{AIC}(\lambda) = -2 \, \log  \mathcal L + 2 \, r$ \cite{AIC}) was used to optimize $\lambda$.
-%		For a given threshold, the AIC method tends to prefer %slightly 
-%		lower $\lambda$ values.
-%		However, the set of models obtained varying the threshold within the interval $[0.05, 5] \%$
-%		is identical to the BIC method. 
-%	\item The amplitudes selected under nominal conditions were excluded one-by-one from the set of all amplitudes considered.  
-%\end{enumerate}
-%From that we obtained a set of alternative models shown in Appendix~\ref{a:alternative}.
+At the optimal value of $\lambda=50$, the set of amplitudes with a decay fraction above the threshold 
+are considered further for step two of the model selection.
+The selected amplitudes and their fractions are summarized in Table \ref{tab:lassoFit}.
+The fit projections are shown in Fig.~\ref{fig:lassoFit}.
+
+\clearpage
+
+In Stage 2, the LASSO procedure is again performed by fitting the full time-dependent amplitude PDF.
+The components selected by Stage 1 are included for both $b\to c$ and $b\to u$ transitions and the likelihood is extended as follows:
+\begin{equation}
+	-2 \, \log \mathcal L \to -2 \, \log \mathcal L + \lambda \, \sum_{i} \sqrt{ \int \vert a^{c}_i  A_i(\phsPoint) \vert^{2} \, \text{d}\Phi_{4}  }  + \lambda \, \sum_{i} \sqrt{ \int \vert a^{u}_i  A_i(\phsPoint) \vert^{2} \, \text{d}\Phi_{4}  } 
+\end{equation}
+Figure \ref{fig:BIC}(right) shows a plot of the complexity factor
+$\lambda$, against the resulting BIC values. 
+The final set of amplitudes is selected using the optimal value of $\lambda=28$, and is henceforth called the LASSO model.
 
 \begin{figure}[b]
   \centering
   \includegraphics[width=0.45\textwidth, height=!]{figs/lassoFit/Lasso_BIC.pdf} 
   \includegraphics[width=0.45\linewidth, height=!]{figs/fullFit/ReLasso_BIC.pdf}
-  \caption{Difference in the BIC value from its minimum as function of the LASSO parameter $\lambda$ for $\Dz \to \fourpi$ (a) and Stage 1 $\Dz \to \KKpipi$ (b).}
+  \caption{Difference in the BIC value from its minimum as function of the LASSO parameter $\lambda$ for step 1 (left) and step 2 (right) of the model selection.}
   \label{fig:BIC}
 \end{figure}
 
-
+\begin{table}[h]
+\centering
+\caption{
+\small Fit fractions of the amplitudes selected by Stage 1 of the model selection procedure.
+}
 \input{tables/lassoFit/LASSO/fitFractions.tex}
+\label{tab:lassoFit}
+\end{table}
 
 \clearpage
 \begin{figure}[h]
@@ -97,6 +106,8 @@ where we choose the decay fraction threshold to be $0.5 \%$.
 		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_phi_Kpi_Dspi_mod.pdf} 
 
 		\caption{} 		
+				\label{fig:lassoFit}
+
 	\centering
 		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/leg.pdf} 
 		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Kpipi_mod_log.pdf} 
@@ -112,6 +123,7 @@ where we choose the decay fraction threshold to be $0.5 \%$.
 		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_phi_Kpi_Dspi_mod_log.pdf} 
 
 		\caption{} 		
+		\label{fig:lassoFit2}
 \end{figure}
 
 \clearpage
@@ -121,21 +133,23 @@ Table \ref{tab:lassoModel}
 lists the real and imaginary part of the complex amplitude coefficients $a_{i}$, 
 obtained by fitting the LASSO model to the data,
 along with the corresponding fit fractions. 
-The letters in square brackets refer to the relative orbital angular momentum of the decay products. 
-If no angular momentum is specified, the lowest angular momentum state consistent with angular momentum conservation and, where appropriate, parity conservation is used.
-In order to provide implementation-independent measurements in addition to the complex coefficients $a_i$, we define two quantities. Firstly, the fit fractions
+%The letters in square brackets refer to the relative orbital angular momentum of the decay products. 
+%If no angular momentum is specified, the lowest angular momentum state consistent with angular momentum conservation and, where appropriate, parity conservation is used.
+%In order to provide implementation-independent measurements in addition to the complex coefficients $a_i$, we define two quantities. 
+The fit fractions
 \begin{equation}
 \label{eq:DefineFitFractions}
 	F_{i} \equiv \frac{\int \left\vert   a_{i} \, A_{i}(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4} }
-	{\int \left\vert  A_{\Dz}(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4}}, 
+	{\int \left\vert  \mathcal A(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4}}, 
 \end{equation}
-which are a measure of the relative strength between the different transitions. Secondly, the interference fractions are given by
-\begin{equation}
-\label{eq:DefineInterferenceFractions}
-	I_{ij} \equiv \frac{\int  2\,\Re[a_{i}a^*_{j} \, A_{i}(\phsPoint) A^*_{j}(\phsPoint) ] \, \text{d}\Phi_{4} }
-	{\int \left\vert  A_{\Dz}(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4}} ,
-\end{equation}
-which measures the interference effects between amplitude pairs. Constructive interference leads to $I_{ij} > 0$, while destructive interference leads to $I_{ij} < 0$. Note that $\sum_i F_{i} + \sum_{j<k} I_{j,k} = 1$.
+which are a measure of the relative strength between the different transitions. 
+%Secondly, the interference fractions are given by
+%\begin{equation}
+%\label{eq:DefineInterferenceFractions}
+%	I_{ij} \equiv \frac{\int  2\,\Re[a_{i}a^*_{j} \, A_{i}(\phsPoint) A^*_{j}(\phsPoint) ] \, \text{d}\Phi_{4} }
+%	{\int \left\vert  A_{\Dz}(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4}} ,
+%\end{equation}
+%which measures the interference effects between amplitude pairs. Constructive interference leads to $I_{ij} > 0$, while destructive interference leads to $I_{ij} < 0$. Note that $\sum_i F_{i} + \sum_{j<k} I_{j,k} = 1$.
 %The interference fractions are given in Appendix~\ref{a:interference}. 
 
 Figure \ref{fig:baselineFit} shows the distributions of 
