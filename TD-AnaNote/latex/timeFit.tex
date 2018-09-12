@@ -1,25 +1,23 @@
 % !TEX root = main.tex
-\section{Time dependent fit}
-\label{sec:Tfit}
+\section{Decay-time fit}
+\label{sec:timeFit}
 
-This section covers the phasespace integrated, time-dependent fit to $\Bs\to\Ds\hadron\pion\pion$ data.
-%For the phasespace integrated fit to $\Bs\to\Ds\kaon\pion\pion$ data, the sensitivity to the CKM phase $\gamma$ will depend on the magnitude of the coherence factor $\kappa$, defined in Eq. \ref{eq:coherenceFactor}, 
-%which is added as an additional fit parameter. 
-We use the \textsf{sFit} technique \cite{Pivk:2004ty}  to statistically remove background from the decay time fit, leaving only the signal PDF to describe the decay time. 
+This section covers the phase space integrated, time-dependent fit to $\Bs\to\Ds\hadron\pion\pion$ data.
+We use the \textsf{sFit} technique \cite{Pivk:2004ty} to statistically subtract the background, leaving only the signal PDF to describe the decay-time. 
 The \textsf{sWeights} are calculated based on the fit to the reconstructed $B_s$ mass distribution described in Sec.~\ref{sec:massFits}.
 As additional input to the fit, the tagging information (Sec. \ref{sec:Tagging}), 
 as well as the decay time acceptance (Sec. \ref{sec:Acceptance}) and resolution (Sec. \ref{sec:Resolution}) is used and fixed to the values obtained by the dedicated studies. 
 Taking all inputs into account, the final time dependent fit PDF is given by
 \begin{equation}
 \label{eq:TPDF_full}
-\mathcal{PDF}(t,\vec{\lambda}) = \left(\epsilon(t)\cdot \int P(x,t,q_t,q_f) \text d x \right) \times \mathcal{R}(t - t^{'}),
+\mathcal{P}(t,\delta t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS}) \propto \left[ p(t^{'},\delta t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})  \otimes \mathcal{R}(t - t^{'},\delta t) \right] \cdot \epsilon(t)
 \end{equation}
 where $\int P(x,t,q_t,q_f) \text d$ is the PDF given by Eq. \ref{eq:PDF_intX}, $\epsilon(t)$ is the efficiency due to the time acceptance effects and $\mathcal{R}(t - t^{'})$ is the Gaussian time resolution function. 
 
 
 
-\subsection{sFit to $\Bs\to\Ds\pion\pion\pion$ data}  
-The phasespace-integrated, time-dependent fit is performed to the full sWeighted sample of selected candidates from Run I and 2015+2016 Run II data, containing both possible magnet polarities and all $\Ds$ final states.
+\subsection{Fit to $\Bs\to\Ds\pion\pion\pion$ data}  
+
 In the fit, the values of $\Gs$ and $\DGs$ are fixed to the latest PDG report \cite{PDG2016}. All tagging parameters are fixed to the central values found in the tagging calibration, described in Sec. \ref{sec:Tagging}.
 Due to the fact that the $\Bs\to\Ds\pion\pion\pion$ decay is flavour specific, the CP-coefficients can be fixed to $C=1$ and $D_{f} = D_{\bar{f}} = S_{f} = S_{\bar{f}} = 0$, reducing Eq. \ref{eq:PDF_intX} to
 

@@ -55,27 +55,27 @@ Afterwards, this term must be discarded in the final amplitude fit with the sele
 The set of amplitudes is selected using the optimal value of $\lambda=28$, and is henceforth called the LASSO model; 
 Figure \ref{fig:BIC}(a) shows the distribution of BIC values obtained by scanning over $\lambda$
 where we choose the decay fraction threshold to be $0.5 \%$.
-In addition, we repeated the model selection procedure under multiple different conditions:
-\begin{enumerate}
-	\item The fit fraction threshold for inclusion in the final model was varied within the interval $[0.05, 5] \%$.
-		The set of selected amplitudes is stable for thresholds between $0.1\%$ and $1\%$. 
-		Other choices result in marginally different models containing one component more or less.
-	\item Instead of BIC, the Akaike information criteria ($\text{AIC}(\lambda) = -2 \, \log  \mathcal L + 2 \, r$ \cite{AIC}) was used to optimize $\lambda$.
-		For a given threshold, the AIC method tends to prefer %slightly 
-		lower $\lambda$ values.
-		However, the set of models obtained varying the threshold within the interval $[0.05, 5] \%$
-		is identical to the BIC method. 
-	\item The amplitudes selected under nominal conditions were excluded one-by-one from the set of all amplitudes considered.  
-\end{enumerate}
-From that we obtained a set of alternative models shown in Appendix~\ref{a:alternative}.
+%In addition, we repeated the model selection procedure under multiple different conditions:
+%\begin{enumerate}
+%	\item The fit fraction threshold for inclusion in the final model was varied within the interval $[0.05, 5] \%$.
+%		The set of selected amplitudes is stable for thresholds between $0.1\%$ and $1\%$. 
+%		Other choices result in marginally different models containing one component more or less.
+%	\item Instead of BIC, the Akaike information criteria ($\text{AIC}(\lambda) = -2 \, \log  \mathcal L + 2 \, r$ \cite{AIC}) was used to optimize $\lambda$.
+%		For a given threshold, the AIC method tends to prefer %slightly 
+%		lower $\lambda$ values.
+%		However, the set of models obtained varying the threshold within the interval $[0.05, 5] \%$
+%		is identical to the BIC method. 
+%	\item The amplitudes selected under nominal conditions were excluded one-by-one from the set of all amplitudes considered.  
+%\end{enumerate}
+%From that we obtained a set of alternative models shown in Appendix~\ref{a:alternative}.
 
-%\begin{figure}[b]
-%  \centering
-%  \includegraphics[width=0.49\textwidth, height=!]{figs/BIC_4pi.eps} 
-%  \includegraphics[width=0.49\linewidth, height=!]{figs/BIC_KKpipi.eps}
-%  \caption{Difference in the BIC value from its minimum as function of the LASSO parameter $\lambda$ for $\Dz \to \fourpi$ (a) and Stage 1 $\Dz \to \KKpipi$ (b).}
-%  \label{fig:BIC}
-%\end{figure}
+\begin{figure}[b]
+  \centering
+  \includegraphics[width=0.45\textwidth, height=!]{figs/lassoFit/Lasso_BIC.pdf} 
+  \includegraphics[width=0.45\linewidth, height=!]{figs/fullFit/ReLasso_BIC.pdf}
+  \caption{Difference in the BIC value from its minimum as function of the LASSO parameter $\lambda$ for $\Dz \to \fourpi$ (a) and Stage 1 $\Dz \to \KKpipi$ (b).}
+  \label{fig:BIC}
+\end{figure}
 
 
 \input{tables/lassoFit/LASSO/fitFractions.tex}
