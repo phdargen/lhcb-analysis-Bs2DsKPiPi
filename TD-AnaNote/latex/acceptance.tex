@@ -15,7 +15,7 @@ for which less than $70\%$ of the reconstructed hits are matched to generated tr
 In particular for signal decays involving many tracks (as in our case),
 this arbitrary cutoff is not $100\%$ efficient.
 Moreover, the efficiency is expected to depend on the kinematics which would lead to a biased acceptance determination
-if candidates with \textsf{BKGCAT}$=60$ would be removed. \\
+if candidates with \textsf{BKGCAT}$=60$ would be removed. 
 We therefore include \textsf{BKGCAT}$=60$ and statistically subtract the ghost background by using the \textsf{sPlot} technique.
 The \textsf{sWeights} are calculated from a fit to the reconstructed $B_s$ mass.  
 The signal contribution is modeled as described in Sec.~\ref{subsec:signalModel} and the background with a polynomial.
@@ -24,11 +24,9 @@ the second events with \textsf{BKGCAT}  = 60.
 To account for the different mass resolution we use a different $\sigma$ for each category,
 while the mean and the tail parameters are shared between them. 
 The background component is only included for the second category.
-\\
+
 A significant fraction of $8\%$ of the true signal candidates are classified as ghosts,
 while only $20 \%$ of the events classified with \textsf{BKGCAT}$=60$ are indeed genuine ghosts.
-
-
 %We repeat the efficiency determination with an alternative fit model to assign a systematic uncertainty.
 
 
@@ -40,10 +38,21 @@ while only $20 \%$ of the events classified with \textsf{BKGCAT}$=60$ are indeed
 %\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/normMC_pull.pdf}
 %\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/normMC_ghost_pull.pdf}
 
-\caption{The reconstructed $B_s$ mass distribution for simulated $B_s \to D_s K \pi \pi$  %(top) and $B_s \to D_s \pi \pi \pi$ (bottom) 
+\caption{\small The reconstructed $B_s$ mass distribution for simulated $B_s \to D_s K \pi \pi$  %(top) and $B_s \to D_s \pi \pi \pi$ (bottom) 
 decays classified with \textsf{BKGCAT} = 20 or 50 (left) and \textsf{BKGCAT} = 60 (right) after the full selection. }
 \label{fig:}
 \end{figure}
+
+
+\subsubsection{Correction of data-simulation differences}
+
+For the evaluation of phase space efficiency and to a lesser extend also the decay-time efficiency we rely on simulated data 
+as discussed in the following sections.
+A number of data-driven corrections are applied to the MC samples to account for known data-simulation differences.
+The MC sample is reweighted to match the two-dimensional $p_T$ and $\eta$ distribution observed on real data.
+An additional reweighting of the track multiplicity is applied on top of that.
+The distributions before and after reweighting are shown in Appendix \ref{a:DataMC}.
+We use the \textsf{PIDCorr} tool to correct the simulated PID responses based on PID calibration samples \cite{LHCb-INT-2017-007}.
 
 %\clearpage
 %\subsubsection{PID efficiencies}
@@ -210,8 +219,8 @@ The final strategy will be fixed, depending on the MC availability, during the r
 \includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run1_t0.pdf}
 \caption{
 \footnotesize Decay-time fit projections for 
-$\Bs\to\Ds\pion\pion\pion$ data (up-left), $\Bs\to\Ds\pion\pion\pion$ MC (up-right), $\Bd\to\Ds\kaon\pion\pion$ data (down-left) 
-and $\Bs\to\Ds\kaon\pion\pion$ MC (down-right)  
+$\Bs\to\Ds\pion\pion\pion$ data (top-left), $\Bs\to\Ds\pion\pion\pion$ MC (top-right), $\Bd\to\Ds\kaon\pion\pion$ data (bottom-left) 
+and $\Bs\to\Ds\kaon\pion\pion$ MC (bottom-right)  
 in category [\textsf{Run-I},\textsf{L0-TOS}]. \\
 The respective acceptance function is overlaid in an arbitrary scale.
  }
@@ -222,8 +231,8 @@ The respective acceptance function is overlaid in an arbitrary scale.
 \includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run1_t1.pdf}
 \caption{
 \footnotesize Decay-time fit projections for 
-$\Bs\to\Ds\pion\pion\pion$ data (up-left), $\Bs\to\Ds\pion\pion\pion$ MC (up-right), $\Bd\to\Ds\kaon\pion\pion$ data (down-left) 
-and $\Bs\to\Ds\kaon\pion\pion$ MC (down-right)  
+$\Bs\to\Ds\pion\pion\pion$ data (top-left), $\Bs\to\Ds\pion\pion\pion$ MC (top-right), $\Bd\to\Ds\kaon\pion\pion$ data (bottom-left) 
+and $\Bs\to\Ds\kaon\pion\pion$ MC (bottom-right)  
 in category [\textsf{Run-I},\textsf{L0-TIS}]. \\
 The respective acceptance function is overlaid in an arbitrary scale.
  }\label{fig:accFit2}
@@ -238,8 +247,8 @@ The respective acceptance function is overlaid in an arbitrary scale.
 \includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run2_t0.pdf}
 \caption{
 \footnotesize Decay-time fit projections for 
-$\Bs\to\Ds\pion\pion\pion$ data (up-left), $\Bs\to\Ds\pion\pion\pion$ MC (up-right), $\Bd\to\Ds\kaon\pion\pion$ data (down-left) 
-and $\Bs\to\Ds\kaon\pion\pion$ MC (down-right)  
+$\Bs\to\Ds\pion\pion\pion$ data (top-left), $\Bs\to\Ds\pion\pion\pion$ MC (top-right), $\Bd\to\Ds\kaon\pion\pion$ data (bottom-left) 
+and $\Bs\to\Ds\kaon\pion\pion$ MC (bottom-right)  
 in category [\textsf{Run-II},\textsf{L0-TOS}]. \\
 The respective acceptance function is overlaid in an arbitrary scale.
  }\label{fig:accFit3}
@@ -249,8 +258,8 @@ The respective acceptance function is overlaid in an arbitrary scale.
 \includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/adaptive_N4/timeAccRatioFit_signal_mc_Run2_t1.pdf}
 \caption{
 \footnotesize Decay-time fit projections for 
-$\Bs\to\Ds\pion\pion\pion$ data (up-left), $\Bs\to\Ds\pion\pion\pion$ MC (up-right), $\Bd\to\Ds\kaon\pion\pion$ data (down-left) 
-and $\Bs\to\Ds\kaon\pion\pion$ MC (down-right)  
+$\Bs\to\Ds\pion\pion\pion$ data (top-left), $\Bs\to\Ds\pion\pion\pion$ MC (top-right), $\Bd\to\Ds\kaon\pion\pion$ data (bottom-left) 
+and $\Bs\to\Ds\kaon\pion\pion$ MC (bottom-right)  
 in category [\textsf{Run-II},\textsf{L0-TIS}]. \\
 The respective acceptance function is overlaid in an arbitrary scale.
  }\label{fig:accFit4}
@@ -287,7 +296,7 @@ $x_{k}$ is the $k$-th MC event. As a result, the phase-space efficiency can be i
 \newline
 \\
 \pretextcomment{Disclaimer: 
-At the moment there is only a small Run-I MC sample available where a DecFile (EventType: ) 
+At the moment there is only a small Run-I MC sample available where a DecFile (EventType: 13266007) 
 was used from which we were not able to reproduce the generator pdf $A^{\prime}$.
 We can therefore not follow our preferred procedure described above. 
 An alternative, provisionally method is briefly described in the following.

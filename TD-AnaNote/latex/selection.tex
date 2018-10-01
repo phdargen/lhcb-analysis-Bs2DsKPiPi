@@ -533,8 +533,52 @@ All tracks & hasRich & $= 1$ \\
 \end{table}
 
 
-%\subsection{Simulation}
+\clearpage
+\subsection{Simulation}
+
+Several Monte Carlo (MC) samples are used in the analysis for acceptance andbackground studies.
+A full list of them is given in Tab.~\ref{table:mcSamples}.
+In each case, the decay model includes a mixture of non-interfering resonances contributing to the 
+$X_s \to K \pi \pi$ or $X_d \to \pi \pi \pi$ bachelor system and a non-resonant (phase-space) component.
+All MC samples are generated using \textsf{Pythia8}, reconstructed using
+\textsf{Reco14c}, \textsf{Reco15} and \textsf{Reco16} for Run-I,15 and 16 data and
+selected using the same criteria as in data.
+\newline
+\\
+\pretextcomment{
+All samples indicated with 'Requested' have been requested in Dec. 17 and are expected to be available soon.
+}
+
+\begin{table}[h]
+\centering
+\caption{List of simulated samples used in the analysis.}
+\resizebox{\linewidth}{!}{
+ \renewcommand{\arraystretch}{1.2}
+% \small
+ \begin{tabular}{l l l l l l l ll}
+\hline
+\hline
+Decay & Event Type &  \multicolumn{1}{c}{\textsf{Sim}} &  \multicolumn{4}{c}{Statistics} & Filter \\
+ &  &  & 11 & 12 & 15 & 16 &  \\
+
+\hline
+$B_s \to (D_s \to K K \pi) K \pi\pi$  & 13266007   & 08i & 1.2 M & 1.2 M & - & -   & Generator Level  \\
+$B_s \to (D_s \to K K \pi) K \pi\pi$  & 13266008  & 09c & Requested & Requested & Requested & Requested  & Generator Level, Stripping  \\
+$B_s \to (D_s \to K \pi \pi) K \pi\pi$  & 13266058 & 09c  & Requested & Requested & Requested & Requested   & Generator Level, Stripping  \\
+$B_s \to (D_s \to \pi \pi \pi) K \pi\pi$  & 13266038  & 09c &  Requested & Requested & Requested & Requested  & Generator Level, Stripping  \\
+\\
+$B_s \to (D_s \to K K \pi) \pi \pi\pi$  & 13266006 & 08i   & 1.2 M & 1.2 M & - & -   & Generator Level  \\
+$B_s \to (D_s \to K K \pi) \pi \pi\pi$  & 13266068  & 09c & Requested & Requested & Requested & Requested   & Generator Level, Stripping  \\
+$B_s \to (D_s \to K \pi \pi) \pi \pi\pi$  & 13266088  & 09c & Requested & Requested & Requested & Requested   & Generator Level, Stripping  \\
+$B_s \to (D_s \to \pi \pi \pi) \pi \pi\pi$  & 13266078 & 09c  &Requested & Requested & Requested & Requested    & Generator Level, Stripping  \\
+\\
+$B_s \to D_s^* \pi \pi\pi, D_s \to KK \pi$  & 13266201 & 08i   & 1.2 M & 1.2 M & - & -    & Generator Level  \\
 
 
-
+\hline
+\hline
+\end{tabular}
+}
+\label{table:mcSamples}
+\end{table}
 
