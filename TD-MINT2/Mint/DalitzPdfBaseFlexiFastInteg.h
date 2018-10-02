@@ -225,6 +225,10 @@ class DalitzPdfBaseFlexiFastInteg
         return _faint.numberOfFitFractionsLargerThanThreshold(threshold);
   }
     
+  FitFractionList getFractions() const{return _faint.getFractions();}
+  FitFractionList getInterferenceTerms() const{return _faint.getInterferenceTerms();}
+  bool doFractions() {return _faint.doFractions();}  
+    
   void doFinalStats(MINT::Minimiser* mini=0);
   void doFinalStatsAndSave(MINT::Minimiser* min=0,const std::string& fname = "FitAmpResults.txt", const std::string& fnameROOT="fitFractions.root");
 };
