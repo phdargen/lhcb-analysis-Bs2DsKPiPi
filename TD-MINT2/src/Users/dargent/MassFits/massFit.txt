@@ -15,8 +15,8 @@
 
 * for Systematics
 "useCBSignal"        	0
-"useExpBkgShape"	1
-"useCommonCombBkg"	1
+"useExpBkgShape"	0
+"useCommonCombBkg"	0
 "inverted_misID"	0
 "random_misID"		0
 *Scale factor for misID yield in signal fit
@@ -28,16 +28,19 @@
 "altPartBkg"     0
 "useB0"     	 1	
 "fixSignalShapeFromMC"	 0
-"outFileNameNorm"	"BsDspipipi_test.root"
+"inFileNameNorm"        "/auto/data/dargent/BsDsKpipi/Final/Data/norm_tagged.root"
+"outFileNameNorm"       "/auto/data/kecke/Bs2Dspipipi_DCBSignalAndAltCombBkg.root"
 
 * Signal fit:
-"fixMisIDyields"	1
-"useNormScaleFactors"	1
-"useNormSignalShape"	1
-"constrainCombBkgFromSS"	0
+"fixMisIDyields"	 1
+"useNormScaleFactors"	 1
+"useNormSignalShape"	 1
+"constrainCombBkgFromSS" 0
 
-"sWeightSignal"	 	0
-"outFileNameSignal"	"/auto/data/kecke/Bs2DsKpipi_altPartRecoBkg.root"
+"PIDKcut_for_misID"	 12
+
+"sWeightSignal"	 	1
+"outFileNameSignal"	"/auto/data/kecke/Bs2DsKpipi_PIDK12.root"
 "inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/Final/Data/signal_tagged.root"
 
 * MC fit:

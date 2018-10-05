@@ -83,6 +83,7 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi"){
 
 	NamedParameter<double> min_MM("min_MM",5100.);
 	NamedParameter<double> max_MM("max_MM",5700.);
+	NamedParameter<int>    PIDKcut_for_misID("PIDKcut_for_misID",10);
 
 	TString fileName = "/auto/data/dargent/BsDsKpipi/Preselected/MC/";
 	if(channel == "Dstar3pi")fileName += "norm_Ds2KKpi_12_Dstar_bkg.root";
@@ -92,9 +93,12 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi"){
 		throw "ERROR";
 	}
 	TString calib_fileName = fileName;
-	calib_fileName.ReplaceAll("bkg.root","bkg_PIDK_10.root");
-	TString out_fileName = fileName;
-	out_fileName.ReplaceAll("/Preselected/","/Final/");
+	calib_fileName.ReplaceAll("bkg.root",("bkg_PIDK_"+anythingToString((int)PIDKcut_for_misID)+".root").c_str());
+	TString out_fileName;
+	if(channel == "Dstar3pi") out_fileName = ("norm_Ds2KKpi_12_Dstar_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+".root").c_str();
+	if(channel == "Ds3pi") out_fileName = ("norm_Ds2KKpi_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+".root").c_str();
+	 
+	//out_fileName.ReplaceAll("/Preselected/","/Final/");
 
 	/// Load file
 	TFile* calib_file = new TFile(calib_fileName);
@@ -571,6 +575,7 @@ vector<double> fitMisIdBkgShape_Ds3pi(){
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 	NamedParameter<int> inverted_misID("inverted_misID", 0);
 	NamedParameter<int> random_misID("random_misID", 0);
+	NamedParameter<int>    PIDKcut_for_misID("PIDKcut_for_misID",10);
 
 	/// Define shape of Bs->Ds(*)pipipi BG as 2 crystal balls
 	RooRealVar Bs_Mass("fake_Bs_MM", "m(D_{s}^{-} #pi_{K}^{+}#pi^{+}#pi^{-})", 5300., 6000.,"MeV/c^{2}");
@@ -601,7 +606,9 @@ vector<double> fitMisIdBkgShape_Ds3pi(){
 	TFile* file;
 	TTree* tree;
 	if((inverted_misID == 0) && (random_misID == 0)){
-		file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_Ds2KKpi_bkg.root");
+		//file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_Ds2KKpi_bkg.root");
+		//tree = (TTree*) file->Get("DecayTree");
+		file = new TFile(("norm_Ds2KKpi_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+".root").c_str());
 		tree = (TTree*) file->Get("DecayTree");
 	}
 	if(inverted_misID == 1){
@@ -687,6 +694,7 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(){
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 	NamedParameter<int> inverted_misID("inverted_misID", 0);
 	NamedParameter<int> random_misID("random_misID", 0);
+	NamedParameter<int>    PIDKcut_for_misID("PIDKcut_for_misID",10);
 
 	/// Define shape of Bs->Ds(*)pipipi BG as 2 crystal balls
 	RooRealVar Bs_Mass("fake_Bs_MM", "m(D_{s}^{-} #pi_{K}^{+}#pi^{+}#pi^{-})", 4900., 6200.,"MeV/c^{2}");
@@ -716,7 +724,9 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(){
 	TFile* file;
 	TTree* tree;
 	if((inverted_misID == 0) && (random_misID == 0)){
-		file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_Ds2KKpi_12_Dstar_bkg.root");
+		//file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_Ds2KKpi_12_Dstar_bkg.root");
+		//tree = (TTree*) file->Get("DecayTree");
+		file = new TFile(("norm_Ds2KKpi_12_Dstar_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+".root").c_str());
 		tree = (TTree*) file->Get("DecayTree");
 	}
 	if(inverted_misID == 1){
@@ -3868,7 +3878,8 @@ int main(int argc, char** argv){
 
     str_trigger.push_back(TString("t0"));
     str_trigger.push_back(TString("t1"));
-    
+
+
     if(channel == "Norm") fitNorm();
     else if(channel == "Signal") fitSignal();
     else if(channel == "PartBkg") AnalyticPartBkg();
