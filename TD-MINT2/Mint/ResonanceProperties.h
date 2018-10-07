@@ -70,6 +70,16 @@ class ResonanceProperties{
   MINT::FitParameter _fitModel_independent_Bin_10_Re;
   MINT::FitParameter _fitModel_independent_Bin_10_Im;
    
+  MINT::FitParameter _fitGLASS_a;
+  MINT::FitParameter _fitGLASS_r;
+  MINT::FitParameter _fitGLASS_F;
+  MINT::FitParameter _fitGLASS_phiF;
+  MINT::FitParameter _fitGLASS_R;
+  MINT::FitParameter _fitGLASS_phiR;
+  MINT::FitParameter _fitGLASS_alpha1;
+  MINT::FitParameter _fitGLASS_alpha2;
+  MINT::FitParameter _fitGLASS_alpha3;
+
   const std::string& prefix()const{return _prefix;}
   std::string makeFitParName(const std::string& propertyName, int pdg_id) const;
  public:

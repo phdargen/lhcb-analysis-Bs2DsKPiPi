@@ -57,6 +57,16 @@ class ResonancePropertiesFitRef : public MINT::FitParDependent{
     MINT::FitParRef _fitModel_independent_Bin_9_Im;
     MINT::FitParRef _fitModel_independent_Bin_10_Re;
     MINT::FitParRef _fitModel_independent_Bin_10_Im;
+    
+    MINT::FitParRef _fitGLASS_a;
+    MINT::FitParRef _fitGLASS_r;
+    MINT::FitParRef _fitGLASS_F;
+    MINT::FitParRef _fitGLASS_phiF;
+    MINT::FitParRef _fitGLASS_R;
+    MINT::FitParRef _fitGLASS_phiR;
+    MINT::FitParRef _fitGLASS_alpha1;
+    MINT::FitParRef _fitGLASS_alpha2;
+    MINT::FitParRef _fitGLASS_alpha3;
 
  public:
     ResonancePropertiesFitRef(const ResonanceProperties& repo
@@ -109,7 +119,17 @@ class ResonancePropertiesFitRef : public MINT::FitParDependent{
     double fitModel_independent_Bin_9_Im() const{return _fitModel_independent_Bin_9_Im;}
     double fitModel_independent_Bin_10_Re() const{return _fitModel_independent_Bin_10_Re;}
     double fitModel_independent_Bin_10_Im() const{return _fitModel_independent_Bin_10_Im;}
-
+   
+    double fitGLASS_a() const{return _fitGLASS_a;}
+    double fitGLASS_r() const{return _fitGLASS_r;}
+    double fitGLASS_F() const{return _fitGLASS_F;}
+    double fitGLASS_phiF() const{return _fitGLASS_phiF;}
+    double fitGLASS_R() const{return _fitGLASS_R;}
+    double fitGLASS_phiR() const{return _fitGLASS_phiR;}
+    double fitGLASS_alpha1() const{return _fitGLASS_alpha1;}
+    double fitGLASS_alpha2() const{return _fitGLASS_alpha2;}
+    double fitGLASS_alpha3() const{return _fitGLASS_alpha3;}
+    
     int pid()       const{return _pid;}
 
     virtual ~ResonancePropertiesFitRef(){}

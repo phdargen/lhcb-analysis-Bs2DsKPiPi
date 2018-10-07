@@ -122,10 +122,10 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
   // if it already is a decay with the BgSpinZero option, then there's not point in adding it again.
 
     
-  if(! isCLEO2012)addSimple(ai, opt + "CLEO2012");
+  //if(! isCLEO2012)addSimple(ai, opt + "CLEO2012");
   // if it already is a decay with the CLEO2012 option, then there's not point in adding it again.
-  if(dbThis) cout << "NamedDecayTreeList::add: just added D->f\t" 
-		  << ai.tree().oneLiner() << endl;
+  //if(dbThis) cout << "NamedDecayTreeList::add: just added D->f\t" 
+  //	  << ai.tree().oneLiner() << endl;
 
   DecayTree dt = ai.tree();
     
@@ -1124,6 +1124,8 @@ int NamedDecayTreeList::makeDsKpipiList() {
     dk = new DecayTree(531);
     dk->addDgtr(-431, 10323)->addDgtr(211, 10311)->addDgtr(321,-211);
     this->add(AmpInitialiser(*dk, "Lass"));
+    this->add(AmpInitialiser(*dk, "GLass"));
+    this->add(AmpInitialiser(*dk, "Bugg"));
     this->add(*dk);
     delete dk;
 
@@ -1247,6 +1249,7 @@ int NamedDecayTreeList::makeDsKpipiList() {
     dk = new DecayTree(531);
     dk->addDgtr(-431, 100321)->addDgtr(211, 10311)->addDgtr(321,-211);
     this->add(AmpInitialiser(*dk, "Lass"));
+    this->add(AmpInitialiser(*dk, "GLass"));
     this->add(AmpInitialiser(*dk, "MI_100321"));
     this->add(AmpInitialiser(*dk, "MI_100321Lass"));
     this->add(*dk);
@@ -1470,6 +1473,7 @@ int NamedDecayTreeList::makeDsKpipiList() {
     dk->addDgtr(10311)->addDgtr(321, -211);
     add(*dk);
     this->add(AmpInitialiser(*dk,"Lass"));
+    this->add(AmpInitialiser(*dk, "GLass"));
     this->add(AmpInitialiser(*dk,"NonRes"));
     this->add(AmpInitialiser(*dk,"NonResPow"));
     this->add(AmpInitialiser(*dk,"NonResExp"));

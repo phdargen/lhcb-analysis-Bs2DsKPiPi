@@ -118,6 +118,17 @@ ResonanceProperties::ResonanceProperties(int pdg_id, MinuitParameterSet* mps, co
   , _fitModel_independent_Bin_9_Im(makeFitParName("MI::", pdg_id)+"_Bin_9_Im", 1, 0.  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
   , _fitModel_independent_Bin_10_Re(makeFitParName("MI::", pdg_id)+"_Bin_10_Re", 1, 0.  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
   , _fitModel_independent_Bin_10_Im(makeFitParName("MI::", pdg_id)+"_Bin_10_Im", 1, 0.  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+
+  , _fitGLASS_a(makeFitParName("GLASS::a_", pdg_id), 1, 0.224  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitGLASS_r(makeFitParName("GLASS::r_", pdg_id), 1, -15.01  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitGLASS_F(makeFitParName("GLASS::F_", pdg_id), 1, 0.62  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitGLASS_phiF(makeFitParName("GLASS::phiF_", pdg_id), 1, -0.1  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitGLASS_R(makeFitParName("GLASS::R_", pdg_id), 1, 1  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitGLASS_phiR(makeFitParName("GLASS::phiR_", pdg_id), 1, 1.1  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitGLASS_alpha1(makeFitParName("GLASS::alpha1_", pdg_id), 1, 0  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitGLASS_alpha2(makeFitParName("GLASS::alpha2_", pdg_id), 1, 0.  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitGLASS_alpha3(makeFitParName("GLASS::alpha3_", pdg_id), 1, 0.  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+
 { 
 
         //fix to PDG value if not explicitly initiallised 
@@ -178,6 +189,17 @@ ResonanceProperties::ResonanceProperties(const std::string& name, MinuitParamete
   , _fitModel_independent_Bin_9_Im(makeFitParName("MI::", _pid)+"_Bin_9_Im", 1, 0.  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
   , _fitModel_independent_Bin_10_Re(makeFitParName("MI::", _pid)+"_Bin_10_Re", 1, 0.  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
   , _fitModel_independent_Bin_10_Im(makeFitParName("MI::", _pid)+"_Bin_10_Im", 1, 0.  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+, _fitGLASS_a(makeFitParName("GLASS::a_", _pid), 1, 0.224  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+, _fitGLASS_r(makeFitParName("GLASS::r_", _pid), 1, -15.01  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+, _fitGLASS_F(makeFitParName("GLASS::F_", _pid), 1, 0.62  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+, _fitGLASS_phiF(makeFitParName("GLASS::phiF_", _pid), 1, -0.1  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+, _fitGLASS_R(makeFitParName("GLASS::R_", _pid), 1, 1  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+, _fitGLASS_phiR(makeFitParName("GLASS::phiR_", _pid), 1, 1.1  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+, _fitGLASS_alpha1(makeFitParName("GLASS::alpha1_", _pid), 1, 0  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+, _fitGLASS_alpha2(makeFitParName("GLASS::alpha2_", _pid), 1, 0.  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+, _fitGLASS_alpha3(makeFitParName("GLASS::alpha3_", _pid), 1, 0.  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+
+
 { 
 }
 

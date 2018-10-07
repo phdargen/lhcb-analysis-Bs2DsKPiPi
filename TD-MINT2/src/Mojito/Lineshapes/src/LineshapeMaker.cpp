@@ -13,6 +13,7 @@
 #include "Mint/Histo_BW.h"
 #include "Mint/GounarisSakurai.h"
 #include "Mint/Lass.h"
+#include "Mint/GLass.h"
 #include "Mint/Flatte.h"
 #include "Mint/FocusFlatte.h"
 #include "Mint/CrystalBarrelFOCUS.h"
@@ -121,7 +122,7 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
     return new Histo_BW(*tree, lineshapePrefix);
   }
 
-  if(abs(tree->getVal().pdg()) == 9000221 || abs(tree->getVal().pdg()) == 999001 ){ // sigma
+  if(abs(tree->getVal().pdg()) == 9000221 || abs(tree->getVal().pdg()) == 999001 || abs(tree->getVal().pdg()) == 10321 || abs(tree->getVal().pdg()) == 10311 ){ // sigma or kappa
         if(A_is_in_B("Bugg", lopt)){
             if(dbThis) cout << "LineshapeMaker: " << "\n\t> returning Bugg lineshape" << endl;
             return new Bugg_BW(*tree, lineshapePrefix);  
@@ -150,7 +151,12 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
       return new BW_BW(*tree, lineshapePrefix);
     }
   }else if(abs(tree->getVal().pdg()) == 10321 || abs(tree->getVal().pdg()) == 10311 ){ // K0*(1430), charged or neutral
-    if(A_is_in_B("Lass", lopt)){
+    if(A_is_in_B("GLass", lopt)){
+          cout << "LineshapeMaker: "
+          << "\n\t> returning Lass lineshape"
+          << endl;
+          return new GLass(*tree, lineshapePrefix);
+    }else if(A_is_in_B("Lass", lopt)){
       cout << "LineshapeMaker: "
 	   << "\n\t> returning Lass lineshape"
 	   << endl;

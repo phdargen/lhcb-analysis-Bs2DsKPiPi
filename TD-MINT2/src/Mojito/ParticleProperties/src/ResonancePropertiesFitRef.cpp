@@ -54,6 +54,15 @@ ResonancePropertiesFitRef::ResonancePropertiesFitRef(const ResonanceProperties& 
   , _fitModel_independent_Bin_9_Im(repo._fitModel_independent_Bin_9_Im, this)
   , _fitModel_independent_Bin_10_Re(repo._fitModel_independent_Bin_10_Re, this)
   , _fitModel_independent_Bin_10_Im(repo._fitModel_independent_Bin_10_Im, this)
+  , _fitGLASS_a(repo._fitGLASS_a, this)
+  , _fitGLASS_r(repo._fitGLASS_r, this)
+  , _fitGLASS_F(repo._fitGLASS_F, this)
+  , _fitGLASS_phiF(repo._fitGLASS_phiF, this)
+  , _fitGLASS_R(repo._fitGLASS_R, this)
+  , _fitGLASS_phiR(repo._fitGLASS_phiR, this)
+  , _fitGLASS_alpha1(repo._fitGLASS_alpha1, this)
+  , _fitGLASS_alpha2(repo._fitGLASS_alpha2, this)
+  , _fitGLASS_alpha3(repo._fitGLASS_alpha3, this)
 {
 }
 
