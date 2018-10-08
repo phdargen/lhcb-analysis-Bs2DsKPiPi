@@ -96,7 +96,7 @@ j.submit()
 
 j = Job(name = "15UMC")
 myApp = GaudiExec()
-myApp.directory = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/FT/DaVinciDev_v42r7p2"
+myApp.directory = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/FT_new3/DaVinciDev_v42r7p2"
 j.application = myApp
 j.application.options = ["b2d3pi_15_MC_Up.py"]
 j.backend=Dirac()
@@ -122,7 +122,7 @@ j.submit()
 
 j = Job(name = "15DMC")
 myApp = GaudiExec()
-myApp.directory = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/FT/DaVinciDev_v42r7p2"
+myApp.directory = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/FT_new3/DaVinciDev_v42r7p2"
 j.application = myApp
 j.application.options = ["b2d3pi_15_MC_Down.py"]
 j.backend=Dirac()
@@ -148,7 +148,7 @@ j.submit()
 
 j = Job(name = "16UMC")
 myApp = GaudiExec()
-myApp.directory = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/FT/DaVinciDev_v42r7p2"
+myApp.directory = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/FT_new3/DaVinciDev_v42r7p2"
 j.application = myApp
 j.application.options = ["b2d3pi_16_MC_Up.py"]
 j.backend=Dirac()
@@ -174,7 +174,7 @@ j.submit()
 
 j = Job(name = "16DMC")
 myApp = GaudiExec()
-myApp.directory = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/FT/DaVinciDev_v42r7p2"
+myApp.directory = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/FT_new3/DaVinciDev_v42r7p2"
 j.application = myApp
 j.application.options = ["b2d3pi_16_MC_Down.py"]
 j.backend=Dirac()
