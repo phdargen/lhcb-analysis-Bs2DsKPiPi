@@ -603,5 +603,5 @@ else:
 ## Use the local input data
 #from GaudiConf import IOHelper
 #IOHelper().inputFiles([
-    #'00069595_00000014_1.bhadroncompleteevent.dst'
+    #'/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/ForManuel/00069078_00006651_1.bhadroncompleteevent.dst'
 #], clear=True)

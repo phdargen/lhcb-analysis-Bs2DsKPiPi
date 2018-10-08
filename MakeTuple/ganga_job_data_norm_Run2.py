@@ -3,7 +3,7 @@ j3 = Job(name = "15N")
 	#myApp = prepareGaudiExec('DaVinci','v38r1p4', myPath='.')
 #except:
 myApp = GaudiExec()
-myApp.directory = "./FT/DaVinciDev_v44r3"
+myApp.directory = "./FT_new3/DaVinciDev_v42r7p2"
 j3.application = myApp
 j3.application.options = ["b2d3pi_15.py"]
 j3.backend=Dirac()
@@ -28,7 +28,7 @@ j4 = Job(name = "16N")
 	#myApp = prepareGaudiExec('DaVinci','v41r4p1', myPath='.')
 #except:
 myApp = GaudiExec()
-myApp.directory = "./FT/DaVinciDev_v44r3"
+myApp.directory = "./FT_new3/DaVinciDev_v42r7p2"
 j4.application = myApp
 j4.application.options = ["b2d3pi_16.py"]
 j4.backend=Dirac()
@@ -50,7 +50,7 @@ j4.submit()
 
 j5 = Job(name = "17N")
 myApp = GaudiExec()
-myApp.directory = "./FT/DaVinciDev_v44r3"
+myApp.directory = "./FT_new3/DaVinciDev_v42r7p2"
 j5.application = myApp
 j5.application.options = ["b2d3pi_17.py"]
 j5.backend=Dirac()

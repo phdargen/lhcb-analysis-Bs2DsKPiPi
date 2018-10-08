@@ -146,30 +146,30 @@ j.parallel_submit = True
 j.submit()
 
 
-#j = Job(name = "16UMC")
-#myApp = GaudiExec()
-#myApp.directory = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/FT/DaVinciDev_v42r7p2"
-#j.application = myApp
-#j.application.options = ["b2dKpipi_16_MC_Up.py"]
-#j.backend=Dirac()
-#j.application.platform = "x86_64-slc6-gcc49-opt"
-#datatmp=BKQuery('/MC/2016/Beam6500GeV-2016-MagUp-Nu1.6-25ns-Pythia8/Sim09c/Trig0x6138160F/Reco16/Turbo03/Stripping28r1p1Filtered/13266008/B02D0HHH.STRIP.DST', dqflag=['OK']).getDataset()
-#datatmp2=BKQuery('/MC/2016/Beam6500GeV-2016-MagUp-Nu1.6-25ns-Pythia8/Sim09c/Trig0x6138160F/Reco16/Turbo03/Stripping28r1p1Filtered/13266038/B02D0HHH.STRIP.DST', dqflag=['OK']).getDataset()
-#datatmp3=BKQuery('/MC/2016/Beam6500GeV-2016-MagUp-Nu1.6-25ns-Pythia8/Sim09c/Trig0x6138160F/Reco16/Turbo03/Stripping28r1p1Filtered/13266058/B02D0HHH.STRIP.DST', dqflag=['OK']).getDataset()
+j = Job(name = "16UMC")
+myApp = GaudiExec()
+myApp.directory = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/FT/DaVinciDev_v42r7p2"
+j.application = myApp
+j.application.options = ["b2dKpipi_16_MC_Up.py"]
+j.backend=Dirac()
+j.application.platform = "x86_64-slc6-gcc49-opt"
+datatmp=BKQuery('/MC/2016/Beam6500GeV-2016-MagUp-Nu1.6-25ns-Pythia8/Sim09c/Trig0x6138160F/Reco16/Turbo03/Stripping28r1p1Filtered/13266008/B02D0HHH.STRIP.DST', dqflag=['OK']).getDataset()
+datatmp2=BKQuery('/MC/2016/Beam6500GeV-2016-MagUp-Nu1.6-25ns-Pythia8/Sim09c/Trig0x6138160F/Reco16/Turbo03/Stripping28r1p1Filtered/13266038/B02D0HHH.STRIP.DST', dqflag=['OK']).getDataset()
+datatmp3=BKQuery('/MC/2016/Beam6500GeV-2016-MagUp-Nu1.6-25ns-Pythia8/Sim09c/Trig0x6138160F/Reco16/Turbo03/Stripping28r1p1Filtered/13266058/B02D0HHH.STRIP.DST', dqflag=['OK']).getDataset()
 
-#for f in datatmp2.files:
-	#datatmp.append(f)
+for f in datatmp2.files:
+	datatmp.append(f)
 
-#for f in datatmp3.files:
-	#datatmp.append(f)
+for f in datatmp3.files:
+	datatmp.append(f)
 
-#j.inputdata = datatmp
-#j.splitter = SplitByFiles( filesPerJob = 1)
-#j.splitter.ignoremissing= True
-#j.outputfiles = [DiracFile('*.root'), LocalFile('stdout')]
-#j.do_auto_resubmit = False
-#j.parallel_submit = True
-#j.submit()
+j.inputdata = datatmp
+j.splitter = SplitByFiles( filesPerJob = 1)
+j.splitter.ignoremissing= True
+j.outputfiles = [DiracFile('*.root'), LocalFile('stdout')]
+j.do_auto_resubmit = False
+j.parallel_submit = True
+j.submit()
 
 
 j = Job(name = "16DMC")

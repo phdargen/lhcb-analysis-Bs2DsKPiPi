@@ -42,7 +42,7 @@ for f in datatmp10.files:
 	datatmp9.append(f)
 
 j5.inputdata = datatmp9
-j5.splitter = SplitByFiles( filesPerJob = 50)
+j5.splitter = SplitByFiles( filesPerJob = 40)
 j5.splitter.ignoremissing= True
 j5.outputfiles = [DiracFile('*.root'), LocalFile('stdout')]
 j5.do_auto_resubmit = False

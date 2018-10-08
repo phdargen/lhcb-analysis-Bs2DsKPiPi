@@ -282,7 +282,7 @@ b2dkpipi_d2pipipiTuple.ToolList +=  [#"TupleToolGeometry", \
                               #"TupleToolAngles", \
                               "TupleToolPid", \
                               "TupleToolTrackIsolation",
-			       "TupleToolVtxIsoln"
+			       "TupleToolVtxIsoln",
                               "TupleToolTagging" 
 			      ]
 
@@ -435,7 +435,7 @@ b2dkpipi_d2KpipiTuple.ToolList +=  [#"TupleToolGeometry", \
                               #"TupleToolAngles", \
                               "TupleToolPid", \
                               "TupleToolTrackIsolation",
-	                      "TupleToolVtxIsoln"
+	                      "TupleToolVtxIsoln",
                               "TupleToolTagging" 
 			      ]
 
@@ -573,7 +573,7 @@ else:
     DaVinci().Simulation = True
     
 DaVinci().EvtMax = -1
-#DaVinci().EvtMax = 1000
+#DaVinci().EvtMax = 10000
 DaVinci().SkipEvents = 0
 DaVinci().PrintFreq = 50000
 DaVinci().TupleFile = "b2dhhh.root"
@@ -600,9 +600,9 @@ else:
         	DaVinci().CondDBtag = "sim-20141210-vc-mu100" 
 
 
-
 ## Use the local input data
 #from GaudiConf import IOHelper
 #IOHelper().inputFiles([
-    #'00069595_00000014_1.bhadroncompleteevent.dst'
+    #'./00041834_00000016_1.bhadroncompleteevent.dst'
+    #,'00041834_00000150_1.bhadroncompleteevent.dst'
 #], clear=True)

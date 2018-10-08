@@ -3,28 +3,26 @@ from Configurables import DaVinci
 from Configurables import CombineParticles
 
 ############# Global settings
-year = "2011"
-data = False
-down = True
-stream = "B02D0hhh.Strip"
+year = "2017"
+data = True
+down = False
+stream = "AllStreams"
 if (data):
     stream = "BhadronCompleteEvent"
 
 # Event filter
 from PhysSelPython.Wrappers import AutomaticData, Selection, SelectionSequence
 from Configurables import FilterDesktop
-line = 'B02DKPiPiD2HHHPIDBeauty2CharmLine'
+line = 'B02DPiPiPiD2HHHPIDBeauty2CharmLine'
 inputs = '/Event/'+stream+'/Phys/{0}/Particles'.format(line)
 reqsel = AutomaticData(Location = inputs)
-Bs2DsXSel = FilterDesktop("Bs2DsXSel", Code = "(INTREE((ABSID=='D+')&(M>1888))) & (INTREE((ABSID=='D+')&(M<2048))) & (INTREE((ABSID=='B0')&(M>5000))) & (INTREE((ABSID=='B0')&(M<6000))) & (INTREE((ABSID=='K_1(1270)+')&(M<3000)))")
+Bs2DsXSel = FilterDesktop("Bs2DsXSel", Code = "(INTREE((ABSID=='D+')&(M>1888))) & (INTREE((ABSID=='D+')&(M<2048))) & (INTREE((ABSID=='B0')&(M>5000))) & (INTREE((ABSID=='B0')&(M<6000))) & (INTREE((ABSID=='a_1(1260)+')&(M<3000)))")
 MyFilterSel = Selection("MyFilterSel", Algorithm = Bs2DsXSel, RequiredSelections = [reqsel])
-
 
 from Configurables import CheckPV
 checkPVs = CheckPV("checkPVs")
 checkPVs.MinPVs = 1
 checkPVs.MaxPVs = -1
-
 
 triggerlines_Run1 = [
 		"L0HadronDecision", 
@@ -47,69 +45,71 @@ triggerlines_Run2 = [
 		"L0PhotonDecision",
                 "Hlt1TrackMVADecision",
                 "Hlt1TwoTrackMVADecision",
-		'Hlt2IncPhiDecision', 
-		"Hlt2PhiIncPhiDecision",
+                "Hlt2PhiIncPhiDecision",
                 'Hlt2Topo2BodyDecision',
                 'Hlt2Topo3BodyDecision',
                 'Hlt2Topo4BodyDecision'
 ]
 
-triggerlines = triggerlines_Run1
+triggerlines = triggerlines_Run2
 
-from Configurables import (BTagging)   
-Btag = BTagging("BTagging")
-Btag.Inputs = [ "/Event/"+stream+"/Phys/"+line+"/Particles"]
-Btag.OutputLevel    = 6
+#from Configurables import (BTagging)   
+#Btag = BTagging("BTagging")
+#Btag.Inputs = [ "/Event/"+stream+"/Phys/"+line+"/Particles"]
+#Btag.OutputLevel    = 6
 
-from FlavourTagging.Tunings import TuneTool
-def configureTaggingTools(BTuple, BsBd):
+#from FlavourTagging.Tunings import TuneTool
+#def configureTaggingTools(BTuple, BsBd):
 	
-	    from Configurables import BTagging, BTaggingTool
-	    toolname = BsBd+"TaggingTool"
-	    BTuple.TaggingToolName ="BTaggingTool/"+toolname
-	    BTuple.ExtraName = toolname
-	    if(data):
-		    TuneTool(BTuple,"Stripping21",toolname)
-	    else :
-		    TuneTool(BTuple,"Stripping21_MC",toolname)
-	    BTuple.Verbose = True
-	    BTuple.addTool(BTaggingTool,name=toolname)
-	    BTuple.__getattr__(toolname).ForceSignalID = BsBd
+	    #from Configurables import BTagging, BTaggingTool
+	    #toolname = BsBd+"TaggingTool"
+	    #BTuple.TaggingToolName ="BTaggingTool/"+toolname
+	    #BTuple.ExtraName = toolname
+	    #if(data):
+		    #TuneTool(BTuple,"Stripping21",toolname)
+	    #else :
+		    #TuneTool(BTuple,"Stripping21_MC",toolname)
+	    #BTuple.Verbose = True
+	    #BTuple.addTool(BTaggingTool,name=toolname)
+	    #BTuple.__getattr__(toolname).ForceSignalID = BsBd
+
 
 ###############   Pre Filter, does not really do much except choose only candidates passing the Stripping line, maybe beneficial to performance
 from Configurables import LoKi__HDRFilter as StripFilter
 stripFilter = StripFilter( 'stripPassFilter',\
-                           Code = "HLT_PASS('StrippingB02DKPiPiD2HHHPIDBeauty2CharmLineDecision')",\
+                           Code = "HLT_PASS('StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLineDecision')",\
                            Location= "/Event/Strip/Phys/DecReports")
 
 ############# DecayTreeTuple
 from DecayTreeTuple.Configuration import *
 from Configurables import TupleToolTISTOS
+from PhysSelPython.Wrappers import AutomaticData, Selection, SelectionSequence
 from Configurables import PrintDecayTree, PrintDecayTreeTool
 ##subpid stuff
 #from Configurables import SubPIDMMFilter
 from Configurables import SubstitutePID,BTaggingTool
-from Configurables import TupleToolDecayTreeFitter, TupleToolTrackIsolation, TupleToolTagging, TupleToolRecoStats, TupleToolKinematic, TupleToolGeometry, TupleToolVtxIsoln
+from Configurables import TupleToolDecayTreeFitter, TupleToolTrackIsolation, TupleToolTagging, TupleToolRecoStats, TupleToolKinematic, TupleToolGeometry,TupleToolVtxIsoln
 from Configurables import LoKi__Hybrid__TupleTool
 
+
 #B0 -> (D- -> K K pi) (K_1(1270)+ -> K+ pi+ pi-)
-b2dkpipiTuple = DecayTreeTuple("Bs2DsKpipi_Ds2KKpi_Tuple")
-b2dkpipiTuple.Decay = "[[B0]cc -> ^(D- -> ^K+ ^K- ^pi-) ^(K_1(1270)+ -> ^K+ ^pi+ ^pi-)]CC"
+b2dkpipiTuple = DecayTreeTuple("Bs2Dspipipi_Ds2KKpi_Tuple")
+b2dkpipiTuple.Decay = "[[B0]cc -> ^(D- -> ^K+ ^K- ^pi-) ^(a_1(1260)+ -> ^pi+ ^pi+ ^pi-)]CC"
 b2dkpipiTuple.Branches= {
-"Bs" : "^([[B0]cc -> (D- -> K+ K- pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC)" ,
-"K_1_1270_plus" : "[[B0]cc -> (D- -> K+ K- pi-) ^(K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"K_plus" : "[[B0]cc -> (D- -> K+ K- pi-) (K_1(1270)+ -> ^K+ pi+ pi-)  ]CC",
-"pi_plus" : "[[B0]cc -> (D- -> K+ K- pi-) (K_1(1270)+ -> K+ ^pi+ pi-)  ]CC",
-"pi_minus" : "[[B0]cc -> (D- -> K+ K- pi-) (K_1(1270)+ -> K+ pi+ ^pi-) ]CC",
-"Ds" : "[[B0]cc -> ^(D- -> K+ K- pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"K_plus_fromDs" : "[[B0]cc -> (D- -> ^K+ K- pi-) (K_1(1270)+ -> K+ pi+ pi-)  ]CC",
-"K_minus_fromDs" : "[[B0]cc -> (D- -> K+ ^K- pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"pi_minus_fromDs" : "[[B0]cc -> (D- -> K+ K- ^pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC"
+"Bs" : "^([[B0]cc -> (D- -> K+ K- pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC)" ,
+"a_1_1260_plus" : "[[B0]cc -> (D- -> K+ K- pi-) ^(a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_plus1" : "[[B0]cc -> (D- -> K+ K- pi-) (a_1(1260)+ -> ^pi+ pi+ pi-)  ]CC",
+"pi_plus2" : "[[B0]cc -> (D- -> K+ K- pi-) (a_1(1260)+ -> pi+ ^pi+ pi-)  ]CC",
+"pi_minus" : "[[B0]cc -> (D- -> K+ K- pi-) (a_1(1260)+ -> pi+ pi+ ^pi-) ]CC",
+"Ds" : "[[B0]cc -> ^(D- -> K+ K- pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"K_plus_fromDs" : "[[B0]cc -> (D- -> ^K+ K- pi-) (a_1(1260)+ -> pi+ pi+ pi-)  ]CC",
+"K_minus_fromDs" : "[[B0]cc -> (D- -> K+ ^K- pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_minus_fromDs" : "[[B0]cc -> (D- -> K+ K- ^pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC"
 }
 b2dkpipiTuple.ReFitPVs = True
 
 #config tools
-b2dkpipiTuple.ToolList +=  ["TupleToolGeometry", \
+b2dkpipiTuple.ToolList +=  [#"TupleToolGeometry", \
                             "TupleToolKinematic", \
                             "TupleToolPrimaries", \
                             "TupleToolEventInfo", \
@@ -117,34 +117,24 @@ b2dkpipiTuple.ToolList +=  ["TupleToolGeometry", \
                             "TupleToolRecoStats", \
                             #"TupleToolAngles", \
                             "TupleToolPid", \
+                            #"TupleToolPhotonInfo", \
                             "TupleToolTrackIsolation",
-			    "TupleToolVtxIsoln",
-                            "TupleToolTagging" 
+			    "TupleToolVtxIsoln" 
 			    ]
-
-from Configurables import MCMatchObjP2MCRelator
 
 if (data==False):
     b2dkpipiTuple.ToolList +=  [
-                           # "TupleToolMCTruth", \
+                            "TupleToolMCTruth", \
                             "TupleToolMCBackgroundInfo",
 			     "TupleToolPhotonInfo"
 				]
-				
-    # Add TupleToolMCTruth with fix for "Fatal error No valid data at '/Event/Hlt2/Long/Protos'"
-    default_rel_locs = MCMatchObjP2MCRelator().getDefaultProperty('RelTableLocations')
-    rel_locs = [loc for loc in default_rel_locs if 'Turbo' not in loc]
-
-    mctruth = b2dkpipiTuple.addTupleTool('TupleToolMCTruth')
-    mctruth.ToolList =  [
+    MCTruth = TupleToolMCTruth()
+    MCTruth.ToolList =  [
          "MCTupleToolHierarchy"
         , "MCTupleToolKinematic"
         , "MCTupleToolReconstructed"
-    ]
-    mctruth.addTool(MCMatchObjP2MCRelator)
-    mctruth.MCMatchObjP2MCRelator.RelTableLocations = rel_locs			
-    #MCTruth = TupleToolMCTruth()
-    #b2dkpipiTuple.addTool(MCTruth) 
+        ]
+    b2dkpipiTuple.addTool(MCTruth) 
 
 b2dkpipiTuple.addTool(TupleToolTrackIsolation, name="TupleToolTrackIsolation")
 b2dkpipiTuple.TupleToolTrackIsolation.FillAsymmetry = True
@@ -208,17 +198,22 @@ LoKiToolDs = b2dkpipiTuple.Ds.addTupleTool("LoKi::Hybrid::TupleTool/LoKiToolDs")
 LoKiToolDs.Variables = { "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)"
                        };
 
-b2dkpipiTuple.addTool(TupleToolDecay, name="K_1_1270_plus")
-LoKiToolK_1_1270_plus = b2dkpipiTuple.K_1_1270_plus.addTupleTool("LoKi::Hybrid::TupleTool/LoKiToolK_1_1270_plus")
-LoKiToolK_1_1270_plus.Variables = { "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)"
+b2dkpipiTuple.addTool(TupleToolDecay, name="a_1_1260_plus")
+LoKiToola_1_1260_plus = b2dkpipiTuple.a_1_1260_plus.addTupleTool("LoKi::Hybrid::TupleTool/LoKiToola_1_1260_plus")
+LoKiToola_1_1260_plus.Variables = { "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)"
                        };
 
-b2dkpipiTuple.addTool(TupleToolTagging, name="TupleToolTagging")
-b2dkpipiTuple.TupleToolTagging.Verbose = True
-b2dkpipiTuple.TupleToolTagging.StoreTaggersInfo = False
+#tagging config
+from Configurables import BTaggingTool
+tt_tagging = b2dkpipiTuple.addTupleTool("TupleToolTagging") 
+tt_tagging.Verbose = True
+tt_tagging.AddMVAFeatureInfo = False
+tt_tagging.AddTagPartsInfo = False 
 
-tag=b2dkpipiTuple.Bs.addTupleTool( TupleToolTagging, name = "BsAll")
-configureTaggingTools(tag, "Bs")
+btagtool = tt_tagging.addTool(BTaggingTool , name = "MyBTaggingTool")
+from FlavourTagging.Tunings import applyTuning as applyFTTuning # pick the right tuning here ...
+applyFTTuning(btagtool , tuning_version="Summer2017Optimisation")
+tt_tagging.TaggingToolName = btagtool.getFullName ()
 
 #trigger config
 b2dkpipitt = b2dkpipiTuple.addTupleTool(TupleToolTISTOS)
@@ -239,7 +234,7 @@ b2dkpipitt.VerboseHlt2 = True
 #b2dkpipiprinter = PrintDecayTree("PrintB2Dkpipi")
 #b2dkpipiprinter.addTool( PrintDecayTreeTool, name = "PrintDecay" )
 #b2dkpipiprinter.PrintDecay.Information = "Name M P Px Py Pz Pt chi2"
-#b2dkpipiprinter.Inputs = [  "/Event/"+stream+"/Phys/B02DKPiPiD2HHHPIDBeauty2CharmLine/Particles"  ]
+#b2dkpipiprinter.Inputs = [ makebu2kpipimumuseq.outputLocation() ]
 
 #main sequence
 makeb2dkpipiseq = SelectionSequence("makeb2dkpipiseq", TopSelection = MyFilterSel)
@@ -248,30 +243,31 @@ b2dkpipiseq = GaudiSequencer("B2dkpipiSeq")
 #b2dkpipiseq.RootInTES = '/Event/{0}'.format(stream)
 b2dkpipiseq.Members += [makeb2dkpipiseq.sequence(),b2dkpipiTuple]
 
-#b2dkpipiTuple.Inputs = [ "/Event/"+stream+"/Phys/B02DKPiPiD2HHHPIDBeauty2CharmLine/Particles" ]
+#b2dkpipiTuple.Inputs = [ "/Event/"+stream+"/Phys/B02DPiPiPiD2HHHPIDBeauty2CharmLine/Particles" ]
 #b2dkpipiseq = GaudiSequencer("B2dkpipiSeq")
-#b2dkpipiseq.Members += [b2dkpipiTuple,b2dkpipiprinter]
+##bu2kpipimumuseq.Members += [makebu2kpipimumuseq.sequence(), bu2kpipimumuprinter, bu2kpipimumutuple]
+#b2dkpipiseq.Members += [b2dkpipiTuple]
 
 
 #
 #B0 -> (D- -> pi pi pi) (K_1(1270)+ -> K+ pi+ pi-)
-b2dkpipi_d2pipipiTuple = DecayTreeTuple("Bs2DsKpipi_Ds2pipipi_Tuple")
-b2dkpipi_d2pipipiTuple.Decay = "[[B0]cc -> ^(D- -> ^pi+ ^pi- ^pi-) ^(K_1(1270)+ -> ^K+ ^pi+ ^pi-)]CC"
+b2dkpipi_d2pipipiTuple = DecayTreeTuple("Bs2Dspipipi_Ds2pipipi_Tuple")
+b2dkpipi_d2pipipiTuple.Decay = "[[B0]cc -> ^(D- -> ^pi+ ^pi- ^pi-) ^(a_1(1260)+ -> ^pi+ ^pi+ ^pi-)]CC"
 b2dkpipi_d2pipipiTuple.Branches= {
-"Bs" : "^([[B0]cc -> (D- -> pi+ pi- pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC)" ,
-"K_1_1270_plus" : "[[B0]cc -> (D- -> pi+ pi- pi-) ^(K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"K_plus" : "[[B0]cc -> (D- -> pi+ pi- pi-) (K_1(1270)+ -> ^K+ pi+ pi-)  ]CC",
-"pi_plus" : "[[B0]cc -> (D- -> pi+ pi- pi-) (K_1(1270)+ -> K+ ^pi+ pi-)  ]CC",
-"pi_minus" : "[[B0]cc -> (D- -> pi+ pi- pi-) (K_1(1270)+ -> K+ pi+ ^pi-) ]CC",
-"Ds" : "[[B0]cc -> ^(D- -> pi+ pi- pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"pi_plus_fromDs" : "[[B0]cc -> (D- -> ^pi+ pi- pi-) (K_1(1270)+ -> K+ pi+ pi-)  ]CC",
-"pi_minus_fromDs" : "[[B0]cc -> (D- -> pi+ ^pi- pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"pi_minus2_fromDs" : "[[B0]cc -> (D- -> pi+ pi- ^pi-) (K_1(1270)+ -> K+ pi+ pi-) ]CC"
+"Bs" : "^([[B0]cc -> (D- -> pi+ pi- pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC)" ,
+"a_1_1260_plus" : "[[B0]cc -> (D- -> pi+ pi- pi-) ^(a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_plus1" : "[[B0]cc -> (D- -> pi+ pi- pi-) (a_1(1260)+ -> ^pi+ pi+ pi-)  ]CC",
+"pi_plus2" : "[[B0]cc -> (D- -> pi+ pi- pi-) (a_1(1260)+ -> pi+ ^pi+ pi-)  ]CC",
+"pi_minus" : "[[B0]cc -> (D- -> pi+ pi- pi-) (a_1(1260)+ -> pi+ pi+ ^pi-) ]CC",
+"Ds" : "[[B0]cc -> ^(D- -> pi+ pi- pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_plus_fromDs" : "[[B0]cc -> (D- -> ^pi+ pi- pi-) (a_1(1260)+ -> pi+ pi+ pi-)  ]CC",
+"pi_minus_fromDs" : "[[B0]cc -> (D- -> pi+ ^pi- pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_minus2_fromDs" : "[[B0]cc -> (D- -> pi+ pi- ^pi-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC"
 }
 b2dkpipi_d2pipipiTuple.ReFitPVs = True
 
 #config tools
-b2dkpipi_d2pipipiTuple.ToolList +=  ["TupleToolGeometry", \
+b2dkpipi_d2pipipiTuple.ToolList +=  [#"TupleToolGeometry", \
                               "TupleToolKinematic", \
                               "TupleToolPrimaries", \
                               "TupleToolEventInfo", \
@@ -280,29 +276,22 @@ b2dkpipi_d2pipipiTuple.ToolList +=  ["TupleToolGeometry", \
                               #"TupleToolAngles", \
                               "TupleToolPid", \
                               "TupleToolTrackIsolation",
-			       "TupleToolVtxIsoln",
-                              "TupleToolTagging" 
+			       "TupleToolVtxIsoln"
 			      ]
 
-if (data==False):
+if(data==False):
     b2dkpipi_d2pipipiTuple.ToolList +=  [
-                           # "TupleToolMCTruth", \
+                            "TupleToolMCTruth", \
                             "TupleToolMCBackgroundInfo",
-			     "TupleToolPhotonInfo"
-				]
-				
-    # Add TupleToolMCTruth with fix for "Fatal error No valid data at '/Event/Hlt2/Long/Protos'"
-    default_rel_locs = MCMatchObjP2MCRelator().getDefaultProperty('RelTableLocations')
-    rel_locs = [loc for loc in default_rel_locs if 'Turbo' not in loc]
-
-    mctruth = b2dkpipi_d2pipipiTuple.addTupleTool('TupleToolMCTruth')
-    mctruth.ToolList =  [
+			    "TupleToolPhotonInfo" \
+			    ]
+    MCTruth_d2pipipi = TupleToolMCTruth()
+    MCTruth_d2pipipi.ToolList =  [
          "MCTupleToolHierarchy"
         , "MCTupleToolKinematic"
         , "MCTupleToolReconstructed"
-    ]
-    mctruth.addTool(MCMatchObjP2MCRelator)
-    mctruth.MCMatchObjP2MCRelator.RelTableLocations = rel_locs	
+        ]
+    b2dkpipi_d2pipipiTuple.addTool(MCTruth_d2pipipi) 
 
 b2dkpipi_d2pipipiTuple.addTool(TupleToolTrackIsolation, name="TupleToolTrackIsolation")
 b2dkpipi_d2pipipiTuple.TupleToolTrackIsolation.FillAsymmetry = True
@@ -321,7 +310,8 @@ b2dkpipi_d2pipipiTuple.addTool(TupleToolRecoStats, name="TupleToolRecoStats")
 b2dkpipi_d2pipipiTuple.TupleToolRecoStats.Verbose = True
 b2dkpipi_d2pipipiTuple.UseLabXSyntax = True                          
 b2dkpipi_d2pipipiTuple.RevertToPositiveID = False
-                       
+            
+	    
 b2dkpipi_d2pipipiTuple.addTool(TupleToolDecay, name="Bs")
 b2dkpipi_d2pipipiTuple.Bs.addTool(TupleToolDecayTreeFitter("DTF"))
 b2dkpipi_d2pipipiTuple.Bs.ToolList +=  ["TupleToolDecayTreeFitter/DTF" ]      
@@ -364,29 +354,21 @@ b2dkpipi_d2pipipiTuple.addTool(TupleToolDecay, name="Ds")
 LoKiToolDs = b2dkpipi_d2pipipiTuple.Ds.addTupleTool("LoKi::Hybrid::TupleTool/LoKiToolDs")
 LoKiToolDs.Variables = { "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)"};
 
-b2dkpipi_d2pipipiTuple.addTool(TupleToolDecay, name="K_1_1270_plus")
-LoKiToolK_1_1270_plus = b2dkpipi_d2pipipiTuple.K_1_1270_plus.addTupleTool("LoKi::Hybrid::TupleTool/LoKiToolK_1_1270_plus")
-LoKiToolK_1_1270_plus.Variables = { "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)" };
+b2dkpipi_d2pipipiTuple.addTool(TupleToolDecay, name="a_1_1260_plus")
+LoKiToola_1_1260_plus = b2dkpipi_d2pipipiTuple.a_1_1260_plus.addTupleTool("LoKi::Hybrid::TupleTool/LoKiToola_1_1260_plus")
+LoKiToola_1_1260_plus.Variables = { "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)" };
 
 #tagging config
-b2dkpipi_d2pipipiTuple.addTool(TupleToolTagging, name="TupleToolTagging")
-b2dkpipi_d2pipipiTuple.TupleToolTagging.Verbose = True
-b2dkpipi_d2pipipiTuple.TupleToolTagging.StoreTaggersInfo = False
+from Configurables import BTaggingTool
+tt_tagging = b2dkpipi_d2pipipiTuple.addTupleTool("TupleToolTagging") 
+tt_tagging.Verbose = True
+tt_tagging.AddMVAFeatureInfo = False
+tt_tagging.AddTagPartsInfo = False 
 
-tag_d2pipipi=b2dkpipi_d2pipipiTuple.Bs.addTupleTool( TupleToolTagging, name = "BsAll")
-configureTaggingTools(tag_d2pipipi, "Bs")
-
-##tagging config
-#from Configurables import BTaggingTool
-#tt_tagging = b2dkpipi_d2pipipiTuple.addTupleTool("TupleToolTagging") 
-#tt_tagging.Verbose = True
-#tt_tagging.AddMVAFeatureInfo = False
-#tt_tagging.AddTagPartsInfo = False 
-
-#btagtool = tt_tagging.addTool(BTaggingTool , name = "MyBTaggingTool")
-#from FlavourTagging.Tunings import applyTuning as applyFTTuning # pick the right tuning here ...
-#applyFTTuning(btagtool , tuning_version="Summer2017Optimisation")
-#tt_tagging.TaggingToolName = btagtool.getFullName ()
+btagtool = tt_tagging.addTool(BTaggingTool , name = "MyBTaggingTool")
+from FlavourTagging.Tunings import applyTuning as applyFTTuning # pick the right tuning here ...
+applyFTTuning(btagtool , tuning_version="Summer2017Optimisation")
+tt_tagging.TaggingToolName = btagtool.getFullName ()
 
 #trigger config
 b2dkpipi_d2pipipitt = b2dkpipi_d2pipipiTuple.addTupleTool(TupleToolTISTOS)
@@ -406,30 +388,26 @@ b2dkpipi_d2pipipiseq = GaudiSequencer("B2dkpipi_d2pipipiSeq")
 #b2dkpipiseq.RootInTES = '/Event/{0}'.format(stream)
 b2dkpipi_d2pipipiseq.Members += [makeb2dkpipi_d2pipipiseq.sequence(),b2dkpipi_d2pipipiTuple]
 
-#b2dkpipi_d2pipipiTuple.Inputs = [ "/Event/"+stream+"/Phys/B02DKPiPiD2HHHPIDBeauty2CharmLine/Particles" ]
-#b2dkpipi_d2pipipiseq = GaudiSequencer("B2dkpipi_d2pipipiSeq")
-#b2dkpipi_d2pipipiseq.Members += [b2dkpipi_d2pipipiTuple]
-
 
 #
 #B0 -> (D- -> K pi pi) (K_1(1270)+ -> K+ pi+ pi-)
-b2dkpipi_d2KpipiTuple = DecayTreeTuple("Bs2DsKpipi_Ds2Kpipi_Tuple")
-b2dkpipi_d2KpipiTuple.Decay = "[[B0]cc -> ^(D- -> ^pi+ ^pi- ^K-) ^(K_1(1270)+ -> ^K+ ^pi+ ^pi-)]CC"
+b2dkpipi_d2KpipiTuple = DecayTreeTuple("Bs2Dspipipi_Ds2Kpipi_Tuple")
+b2dkpipi_d2KpipiTuple.Decay = "[[B0]cc -> ^(D- -> ^pi+ ^pi- ^K-) ^(a_1(1260)+ -> ^pi+ ^pi+ ^pi-)]CC"
 b2dkpipi_d2KpipiTuple.Branches= {
-"Bs" : "^([[B0]cc -> (D- -> pi+ pi- K-) (K_1(1270)+ -> K+ pi+ pi-) ]CC)" ,
-"K_1_1270_plus" : "[[B0]cc -> (D- -> pi+ pi- K-) ^(K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"K_plus" : "[[B0]cc -> (D- -> pi+ pi- K-) (K_1(1270)+ -> ^K+ pi+ pi-)  ]CC",
-"pi_plus" : "[[B0]cc -> (D- -> pi+ pi- K-) (K_1(1270)+ -> K+ ^pi+ pi-)  ]CC",
-"pi_minus" : "[[B0]cc -> (D- -> pi+ pi- K-) (K_1(1270)+ -> K+ pi+ ^pi-) ]CC",
-"Ds" : "[[B0]cc -> ^(D- -> pi+ pi- K-) (K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"pi_plus_fromDs" : "[[B0]cc -> (D- -> ^pi+ pi- K-) (K_1(1270)+ -> K+ pi+ pi-)  ]CC",
-"pi_minus_fromDs" : "[[B0]cc -> (D- -> pi+ ^pi- K-) (K_1(1270)+ -> K+ pi+ pi-) ]CC",
-"K_minus_fromDs" : "[[B0]cc -> (D- -> pi+ pi- ^K-) (K_1(1270)+ -> K+ pi+ pi-) ]CC"
+"Bs" : "^([[B0]cc -> (D- -> pi+ pi- K-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC)" ,
+"a_1_1260_plus" : "[[B0]cc -> (D- -> pi+ pi- K-) ^(a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_plus1" : "[[B0]cc -> (D- -> pi+ pi- K-) (a_1(1260)+ -> ^pi+ pi+ pi-)  ]CC",
+"pi_plus2" : "[[B0]cc -> (D- -> pi+ pi- K-) (a_1(1260)+ -> pi+ ^pi+ pi-)  ]CC",
+"pi_minus" : "[[B0]cc -> (D- -> pi+ pi- K-) (a_1(1260)+ -> pi+ pi+ ^pi-) ]CC",
+"Ds" : "[[B0]cc -> ^(D- -> pi+ pi- K-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"pi_plus_fromDs" : "[[B0]cc -> (D- -> ^pi+ pi- K-) (a_1(1260)+ -> pi+ pi+ pi-)  ]CC",
+"pi_minus_fromDs" : "[[B0]cc -> (D- -> pi+ ^pi- K-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC",
+"K_minus_fromDs" : "[[B0]cc -> (D- -> pi+ pi- ^K-) (a_1(1260)+ -> pi+ pi+ pi-) ]CC"
 }
 b2dkpipi_d2KpipiTuple.ReFitPVs = True
 
 #config tools
-b2dkpipi_d2KpipiTuple.ToolList +=  ["TupleToolGeometry", \
+b2dkpipi_d2KpipiTuple.ToolList +=  [#"TupleToolGeometry", \
                               "TupleToolKinematic", \
                               "TupleToolPrimaries", \
                               "TupleToolEventInfo", \
@@ -438,29 +416,23 @@ b2dkpipi_d2KpipiTuple.ToolList +=  ["TupleToolGeometry", \
                               #"TupleToolAngles", \
                               "TupleToolPid", \
                               "TupleToolTrackIsolation",
-	                      "TupleToolVtxIsoln",
-                              "TupleToolTagging" 
+	                      "TupleToolVtxIsoln"
+                              #"TupleToolTagging" 
 			      ]
 
-if (data==False):
+if(data==False):
     b2dkpipi_d2KpipiTuple.ToolList +=  [
-                           # "TupleToolMCTruth", \
+                            "TupleToolMCTruth", \
                             "TupleToolMCBackgroundInfo",
-			     "TupleToolPhotonInfo"
-				]
-				
-    # Add TupleToolMCTruth with fix for "Fatal error No valid data at '/Event/Hlt2/Long/Protos'"
-    default_rel_locs = MCMatchObjP2MCRelator().getDefaultProperty('RelTableLocations')
-    rel_locs = [loc for loc in default_rel_locs if 'Turbo' not in loc]
-
-    mctruth = b2dkpipi_d2KpipiTuple.addTupleTool('TupleToolMCTruth')
-    mctruth.ToolList =  [
+			    "TupleToolPhotonInfo"
+			    ]
+    MCTruth_d2Kpipi = TupleToolMCTruth()
+    MCTruth_d2Kpipi.ToolList =  [
          "MCTupleToolHierarchy"
         , "MCTupleToolKinematic"
         , "MCTupleToolReconstructed"
-    ]
-    mctruth.addTool(MCMatchObjP2MCRelator)
-    mctruth.MCMatchObjP2MCRelator.RelTableLocations = rel_locs	
+        ]
+    b2dkpipi_d2KpipiTuple.addTool(MCTruth_d2Kpipi) 
 			      
 b2dkpipi_d2KpipiTuple.addTool(TupleToolTrackIsolation, name="TupleToolTrackIsolation")
 b2dkpipi_d2KpipiTuple.TupleToolTrackIsolation.FillAsymmetry = True
@@ -523,30 +495,21 @@ b2dkpipi_d2KpipiTuple.addTool(TupleToolDecay, name="Ds")
 LoKiToolDs = b2dkpipi_d2KpipiTuple.Ds.addTupleTool("LoKi::Hybrid::TupleTool/LoKiToolDs")
 LoKiToolDs.Variables = { "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)"};
 
-b2dkpipi_d2KpipiTuple.addTool(TupleToolDecay, name="K_1_1270_plus")
-LoKiToolK_1_1270_plus = b2dkpipi_d2KpipiTuple.K_1_1270_plus.addTupleTool("LoKi::Hybrid::TupleTool/LoKiToolK_1_1270_plus")
-LoKiToolK_1_1270_plus.Variables = { "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)" };
+b2dkpipi_d2KpipiTuple.addTool(TupleToolDecay, name="a_1_1260_plus")
+LoKiToola_1_1260_plus = b2dkpipi_d2KpipiTuple.a_1_1260_plus.addTupleTool("LoKi::Hybrid::TupleTool/LoKiToola_1_1260_plus")
+LoKiToola_1_1260_plus.Variables = { "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)" };
 
 #tagging config
-b2dkpipi_d2KpipiTuple.addTool(TupleToolTagging, name="TupleToolTagging")
-b2dkpipi_d2KpipiTuple.TupleToolTagging.Verbose = True
-b2dkpipi_d2KpipiTuple.TupleToolTagging.StoreTaggersInfo = False
+from Configurables import BTaggingTool
+tt_tagging = b2dkpipi_d2KpipiTuple.addTupleTool("TupleToolTagging") 
+tt_tagging.Verbose = True
+tt_tagging.AddMVAFeatureInfo = False
+tt_tagging.AddTagPartsInfo = False 
 
-tag_d2Kpipi=b2dkpipi_d2KpipiTuple.Bs.addTupleTool( TupleToolTagging, name = "BsAll")
-configureTaggingTools(tag_d2Kpipi, "Bs")
-
-#tagging config
-#from Configurables import BTaggingTool
-#tt_tagging = b2dkpipi_d2KpipiTuple.addTupleTool("TupleToolTagging") 
-#tt_tagging.Verbose = True
-#tt_tagging.AddMVAFeatureInfo = False
-#tt_tagging.AddTagPartsInfo = False 
-
-#btagtool = tt_tagging.addTool(BTaggingTool , name = "MyBTaggingTool")
-#from FlavourTagging.Tunings import applyTuning as applyFTTuning # pick the right tuning here ...
-#applyFTTuning(btagtool , tuning_version="Summer2017Optimisation")
-#tt_tagging.TaggingToolName = btagtool.getFullName ()
-
+btagtool = tt_tagging.addTool(BTaggingTool , name = "MyBTaggingTool")
+from FlavourTagging.Tunings import applyTuning as applyFTTuning # pick the right tuning here ...
+applyFTTuning(btagtool , tuning_version="Summer2017Optimisation")
+tt_tagging.TaggingToolName = btagtool.getFullName ()
 
 #trigger config
 b2dkpipi_d2Kpipitt = b2dkpipi_d2KpipiTuple.addTupleTool(TupleToolTISTOS)
@@ -566,14 +529,11 @@ b2dkpipi_d2Kpipiseq = GaudiSequencer("B2dkpipi_d2KpipiSeq")
 #b2dkpipiseq.RootInTES = '/Event/{0}'.format(stream)
 b2dkpipi_d2Kpipiseq.Members += [makeb2dkpipi_d2Kpipiseq.sequence(),b2dkpipi_d2KpipiTuple]
 
-#b2dkpipi_d2KpipiTuple.Inputs = [ "/Event/"+stream+"/Phys/B02DKPiPiD2HHHPIDBeauty2CharmLine/Particles" ]
-#b2dkpipi_d2Kpipiseq = GaudiSequencer("B2dkpipi_d2KpipiSeq")
-#b2dkpipi_d2Kpipiseq.Members += [b2dkpipi_d2KpipiTuple]
 
 #
 #
 #
-DaVinci().EventPreFilters = [stripFilter, checkPVs]
+DaVinci().EventPreFilters = [stripFilter,checkPVs]
 DaVinci().UserAlgorithms += [ b2dkpipiseq,b2dkpipi_d2pipipiseq,b2dkpipi_d2Kpipiseq]
 
 DaVinci().DataType = year
@@ -581,9 +541,8 @@ if (data):
     DaVinci().Simulation = False
 else:
     DaVinci().Simulation = True
-    
 DaVinci().EvtMax = -1
-#DaVinci().EvtMax = 1000
+#DaVinci().EvtMax = 5000
 DaVinci().SkipEvents = 0
 DaVinci().PrintFreq = 50000
 DaVinci().TupleFile = "b2dhhh.root"
@@ -593,55 +552,27 @@ from Configurables import CondDB, CondDBAccessSvc
 
 if (data):
 	CondDB().LatestGlobalTagByDataType = year
+
     
 else:  
-    #if(year == "2012"):
-	    #DaVinci().DDDBtag = "dddb-20130929-1"
-    	    #if (down):
-            	#DaVinci().CondDBtag = "sim-20130522-1-vc-md100"
-    	    #else:
-        	#DaVinci().CondDBtag = "sim-20130522-1-vc-mu100" 
-
-    #if(year == "2011"):
-	    #DaVinci().DDDBtag = "dddb-20130929"
-    	    #if (down):
-            	#DaVinci().CondDBtag = "sim-20130522-vc-md100"
-    	    #else:
-        	#DaVinci().CondDBtag = "sim-20130522-vc-mu100" 
-
     if(year == "2012"):
-	    DaVinci().DDDBtag = "dddb-20170721-2"
+	    DaVinci().DDDBtag = "dddb-20130929-1"
     	    if (down):
-            	DaVinci().CondDBtag = "sim-20160321-2-vc-md100"
+            	DaVinci().CondDBtag = "sim-20141210-1-vc-md100"
     	    else:
-        	DaVinci().CondDBtag = "sim-20160321-2-vc-mu100" 
+        	DaVinci().CondDBtag = "sim-20141210-1-vc-mu100" 
 
     if(year == "2011"):
-	    DaVinci().DDDBtag = "dddb-20170721-1"
+	    DaVinci().DDDBtag = "dddb-20130929"
     	    if (down):
-            	DaVinci().CondDBtag = "sim-20160614-1-vc-md100"
+            	DaVinci().CondDBtag = "sim-20141210-vc-md100"
     	    else:
-        	DaVinci().CondDBtag = "sim-20160614-1-vc-mu100" 
-
-    if(year == "2015"):
-	    DaVinci().DDDBtag = "dddb-20170721-3"
-    	    if (down):
-            	DaVinci().CondDBtag = "sim-20161124-vc-md100"
-    	    else:
-        	DaVinci().CondDBtag = "sim-20161124-vc-mu100" 
-
-    if(year == "2016"):
-	    DaVinci().DDDBtag = "dddb-20170721-3"
-    	    if (down):
-            	DaVinci().CondDBtag = "sim-20170721-2-vc-md100"
-    	    else:
-        	DaVinci().CondDBtag = "sim-20170721-2-vc-mu100" 
-
-
-
-
+        	DaVinci().CondDBtag = "sim-20141210-vc-mu100" 
+		
+		
+		
 ## Use the local input data
 #from GaudiConf import IOHelper
 #IOHelper().inputFiles([
-    #'/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/00077535_00000007_1.b02d0hhh.strip.dst'
+    #'00069595_00000014_1.bhadroncompleteevent.dst'
 #], clear=True)

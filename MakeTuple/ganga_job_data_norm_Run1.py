@@ -1,26 +1,26 @@
-j=Job(name='11N')
-j.application=DaVinci(version="v36r1p1")
-j.application.optsfile = ['b2d3pi_11.py']
-j.application.platform = "x86_64-slc6-gcc48-opt"
-datatmp=BKQuery('/LHCb/Collision11/Beam3500GeV-VeloClosed-MagDown/Real Data/Reco14/Stripping21r1/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
-datatmp2=BKQuery('/LHCb/Collision11/Beam3500GeV-VeloClosed-MagUp/Real Data/Reco14/Stripping21r1/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
+#j=Job(name='11N')
+#j.application=DaVinci(version="v36r1p1")
+#j.application.optsfile = ['b2d3pi_11.py']
+#j.application.platform = "x86_64-slc6-gcc48-opt"
+#datatmp=BKQuery('/LHCb/Collision11/Beam3500GeV-VeloClosed-MagDown/Real Data/Reco14/Stripping21r1/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
+#datatmp2=BKQuery('/LHCb/Collision11/Beam3500GeV-VeloClosed-MagUp/Real Data/Reco14/Stripping21r1/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
 
-for f in datatmp2.files:
-	datatmp.append(f)
+#for f in datatmp2.files:
+	#datatmp.append(f)
 
-j.backend=Dirac()
-j.inputdata = datatmp
-j.splitter = SplitByFiles( filesPerJob = 30 )
-j.splitter.ignoremissing= True
-j.outputfiles = [DiracFile('*.root'), LocalFile('stdout')]
-j.do_auto_resubmit = False
-j.submit()
+#j.backend=Dirac()
+#j.inputdata = datatmp
+#j.splitter = SplitByFiles( filesPerJob = 30 )
+#j.splitter.ignoremissing= True
+#j.outputfiles = [DiracFile('*.root'), LocalFile('stdout')]
+#j.do_auto_resubmit = False
+#j.submit()
 
 
 j2=Job(name='12N')
 j2.application=DaVinci(version="v36r1p1")
 j2.application.platform = "x86_64-slc6-gcc48-opt"
-j2.application.options = [ 'b2d3pi_12.py']
+j2.application.optsfile = [ 'b2d3pi_12.py']
 datatmp3=BKQuery('/LHCb/Collision12/Beam4000GeV-VeloClosed-MagDown/Real Data/Reco14/Stripping21/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
 datatmp4=BKQuery('/LHCb/Collision12/Beam4000GeV-VeloClosed-MagUp/Real Data/Reco14/Stripping21/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
 

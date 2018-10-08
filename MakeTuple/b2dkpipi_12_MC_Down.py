@@ -54,28 +54,27 @@ triggerlines_Run2 = [
                 'Hlt2Topo4BodyDecision'
 ]
 
-triggerlines = triggerlines_Run2
+triggerlines = triggerlines_Run1
 
-#from Configurables import (BTagging)   
-#Btag = BTagging("BTagging")
-#Btag.Inputs = [ "/Event/"+stream+"/Phys/"+line+"/Particles"]
-#Btag.OutputLevel    = 6
+from Configurables import (BTagging)   
+Btag = BTagging("BTagging")
+Btag.Inputs = [ "/Event/"+stream+"/Phys/"+line+"/Particles"]
+Btag.OutputLevel    = 6
 
-#from FlavourTagging.Tunings import TuneTool
-#def configureTaggingTools(BTuple, BsBd):
+from FlavourTagging.Tunings import TuneTool
+def configureTaggingTools(BTuple, BsBd):
 	
-	    #from Configurables import BTagging, BTaggingTool
-	    #toolname = BsBd+"TaggingTool"
-	    #BTuple.TaggingToolName ="BTaggingTool/"+toolname
-	    #BTuple.ExtraName = toolname
-	    #if(data):
-		    #TuneTool(BTuple,"Stripping21",toolname)
-	    #else :
-		    #TuneTool(BTuple,"Stripping21_MC",toolname)
-	    #BTuple.Verbose = True
-	    #BTuple.addTool(BTaggingTool,name=toolname)
-	    #BTuple.__getattr__(toolname).ForceSignalID = BsBd
-
+	    from Configurables import BTagging, BTaggingTool
+	    toolname = BsBd+"TaggingTool"
+	    BTuple.TaggingToolName ="BTaggingTool/"+toolname
+	    BTuple.ExtraName = toolname
+	    if(data):
+		    TuneTool(BTuple,"Stripping21",toolname)
+	    else :
+		    TuneTool(BTuple,"Stripping21_MC",toolname)
+	    BTuple.Verbose = True
+	    BTuple.addTool(BTaggingTool,name=toolname)
+	    BTuple.__getattr__(toolname).ForceSignalID = BsBd
 
 ###############   Pre Filter, does not really do much except choose only candidates passing the Stripping line, maybe beneficial to performance
 from Configurables import LoKi__HDRFilter as StripFilter
@@ -110,7 +109,7 @@ b2dkpipiTuple.Branches= {
 b2dkpipiTuple.ReFitPVs = True
 
 #config tools
-b2dkpipiTuple.ToolList +=  [#"TupleToolGeometry", \
+b2dkpipiTuple.ToolList +=  ["TupleToolGeometry", \
                             "TupleToolKinematic", \
                             "TupleToolPrimaries", \
                             "TupleToolEventInfo", \
@@ -120,7 +119,7 @@ b2dkpipiTuple.ToolList +=  [#"TupleToolGeometry", \
                             "TupleToolPid", \
                             "TupleToolTrackIsolation",
 			    "TupleToolVtxIsoln",
-                            #"TupleToolTagging" 
+                            "TupleToolTagging" 
 			    ]
 
 from Configurables import MCMatchObjP2MCRelator
@@ -214,24 +213,12 @@ LoKiToolK_1_1270_plus = b2dkpipiTuple.K_1_1270_plus.addTupleTool("LoKi::Hybrid::
 LoKiToolK_1_1270_plus.Variables = { "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)"
                        };
 
-##tagging config
-#b2dkpipiTuple.addTool(TupleToolTagging, name="TupleToolTagging")
-#b2dkpipiTuple.TupleToolTagging.Verbose = True
-#b2dkpipiTuple.TupleToolTagging.StoreTaggersInfo = True
-#tag=b2dkpipiTuple.Bs.addTupleTool( TupleToolTagging, name = "BsAll")
-#configureTaggingTools(tag, "Bs")
+b2dkpipiTuple.addTool(TupleToolTagging, name="TupleToolTagging")
+b2dkpipiTuple.TupleToolTagging.Verbose = True
+b2dkpipiTuple.TupleToolTagging.StoreTaggersInfo = False
 
-#tagging config
-from Configurables import BTaggingTool
-tt_tagging = b2dkpipiTuple.addTupleTool("TupleToolTagging") 
-tt_tagging.Verbose = True
-tt_tagging.AddMVAFeatureInfo = False
-tt_tagging.AddTagPartsInfo = False 
-
-btagtool = tt_tagging.addTool(BTaggingTool , name = "MyBTaggingTool")
-from FlavourTagging.Tunings import applyTuning as applyFTTuning # pick the right tuning here ...
-applyFTTuning(btagtool , tuning_version="Summer2017Optimisation")
-tt_tagging.TaggingToolName = btagtool.getFullName ()
+tag=b2dkpipiTuple.Bs.addTupleTool( TupleToolTagging, name = "BsAll")
+configureTaggingTools(tag, "Bs")
 
 #trigger config
 b2dkpipitt = b2dkpipiTuple.addTupleTool(TupleToolTISTOS)
@@ -284,7 +271,7 @@ b2dkpipi_d2pipipiTuple.Branches= {
 b2dkpipi_d2pipipiTuple.ReFitPVs = True
 
 #config tools
-b2dkpipi_d2pipipiTuple.ToolList +=  [#"TupleToolGeometry", \
+b2dkpipi_d2pipipiTuple.ToolList +=  ["TupleToolGeometry", \
                               "TupleToolKinematic", \
                               "TupleToolPrimaries", \
                               "TupleToolEventInfo", \
@@ -293,8 +280,8 @@ b2dkpipi_d2pipipiTuple.ToolList +=  [#"TupleToolGeometry", \
                               #"TupleToolAngles", \
                               "TupleToolPid", \
                               "TupleToolTrackIsolation",
-			       "TupleToolVtxIsoln"
-                              #"TupleToolTagging" 
+			       "TupleToolVtxIsoln",
+                              "TupleToolTagging" 
 			      ]
 
 if (data==False):
@@ -382,24 +369,24 @@ LoKiToolK_1_1270_plus = b2dkpipi_d2pipipiTuple.K_1_1270_plus.addTupleTool("LoKi:
 LoKiToolK_1_1270_plus.Variables = { "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)" };
 
 #tagging config
-#b2dkpipi_d2pipipiTuple.addTool(TupleToolTagging, name="TupleToolTagging")
-#b2dkpipi_d2pipipiTuple.TupleToolTagging.Verbose = True
-#b2dkpipi_d2pipipiTuple.TupleToolTagging.StoreTaggersInfo = True
+b2dkpipi_d2pipipiTuple.addTool(TupleToolTagging, name="TupleToolTagging")
+b2dkpipi_d2pipipiTuple.TupleToolTagging.Verbose = True
+b2dkpipi_d2pipipiTuple.TupleToolTagging.StoreTaggersInfo = False
 
-#tag_d2pipipi=b2dkpipi_d2pipipiTuple.Bs.addTupleTool( TupleToolTagging, name = "BsAll")
-#configureTaggingTools(tag_d2pipipi, "Bs")
+tag_d2pipipi=b2dkpipi_d2pipipiTuple.Bs.addTupleTool( TupleToolTagging, name = "BsAll")
+configureTaggingTools(tag_d2pipipi, "Bs")
 
-#tagging config
-from Configurables import BTaggingTool
-tt_tagging = b2dkpipi_d2pipipiTuple.addTupleTool("TupleToolTagging") 
-tt_tagging.Verbose = True
-tt_tagging.AddMVAFeatureInfo = False
-tt_tagging.AddTagPartsInfo = False 
+##tagging config
+#from Configurables import BTaggingTool
+#tt_tagging = b2dkpipi_d2pipipiTuple.addTupleTool("TupleToolTagging") 
+#tt_tagging.Verbose = True
+#tt_tagging.AddMVAFeatureInfo = False
+#tt_tagging.AddTagPartsInfo = False 
 
-btagtool = tt_tagging.addTool(BTaggingTool , name = "MyBTaggingTool")
-from FlavourTagging.Tunings import applyTuning as applyFTTuning # pick the right tuning here ...
-applyFTTuning(btagtool , tuning_version="Summer2017Optimisation")
-tt_tagging.TaggingToolName = btagtool.getFullName ()
+#btagtool = tt_tagging.addTool(BTaggingTool , name = "MyBTaggingTool")
+#from FlavourTagging.Tunings import applyTuning as applyFTTuning # pick the right tuning here ...
+#applyFTTuning(btagtool , tuning_version="Summer2017Optimisation")
+#tt_tagging.TaggingToolName = btagtool.getFullName ()
 
 #trigger config
 b2dkpipi_d2pipipitt = b2dkpipi_d2pipipiTuple.addTupleTool(TupleToolTISTOS)
@@ -442,7 +429,7 @@ b2dkpipi_d2KpipiTuple.Branches= {
 b2dkpipi_d2KpipiTuple.ReFitPVs = True
 
 #config tools
-b2dkpipi_d2KpipiTuple.ToolList +=  [#"TupleToolGeometry", \
+b2dkpipi_d2KpipiTuple.ToolList +=  ["TupleToolGeometry", \
                               "TupleToolKinematic", \
                               "TupleToolPrimaries", \
                               "TupleToolEventInfo", \
@@ -451,8 +438,8 @@ b2dkpipi_d2KpipiTuple.ToolList +=  [#"TupleToolGeometry", \
                               #"TupleToolAngles", \
                               "TupleToolPid", \
                               "TupleToolTrackIsolation",
-	                      "TupleToolVtxIsoln"
-                              #"TupleToolTagging" 
+	                      "TupleToolVtxIsoln",
+                              "TupleToolTagging" 
 			      ]
 
 if (data==False):
@@ -541,24 +528,24 @@ LoKiToolK_1_1270_plus = b2dkpipi_d2KpipiTuple.K_1_1270_plus.addTupleTool("LoKi::
 LoKiToolK_1_1270_plus.Variables = { "DOCA1" : "DOCA(1,2)" , "DOCA2" : "DOCA(1,3)" , "DOCA3" : "DOCA(2,3)" };
 
 #tagging config
-#b2dkpipi_d2KpipiTuple.addTool(TupleToolTagging, name="TupleToolTagging")
-#b2dkpipi_d2KpipiTuple.TupleToolTagging.Verbose = True
-#b2dkpipi_d2KpipiTuple.TupleToolTagging.StoreTaggersInfo = True
+b2dkpipi_d2KpipiTuple.addTool(TupleToolTagging, name="TupleToolTagging")
+b2dkpipi_d2KpipiTuple.TupleToolTagging.Verbose = True
+b2dkpipi_d2KpipiTuple.TupleToolTagging.StoreTaggersInfo = False
 
-#tag_d2Kpipi=b2dkpipi_d2KpipiTuple.Bs.addTupleTool( TupleToolTagging, name = "BsAll")
-#configureTaggingTools(tag_d2Kpipi, "Bs")
+tag_d2Kpipi=b2dkpipi_d2KpipiTuple.Bs.addTupleTool( TupleToolTagging, name = "BsAll")
+configureTaggingTools(tag_d2Kpipi, "Bs")
 
 #tagging config
-from Configurables import BTaggingTool
-tt_tagging = b2dkpipi_d2KpipiTuple.addTupleTool("TupleToolTagging") 
-tt_tagging.Verbose = True
-tt_tagging.AddMVAFeatureInfo = False
-tt_tagging.AddTagPartsInfo = False 
+#from Configurables import BTaggingTool
+#tt_tagging = b2dkpipi_d2KpipiTuple.addTupleTool("TupleToolTagging") 
+#tt_tagging.Verbose = True
+#tt_tagging.AddMVAFeatureInfo = False
+#tt_tagging.AddTagPartsInfo = False 
 
-btagtool = tt_tagging.addTool(BTaggingTool , name = "MyBTaggingTool")
-from FlavourTagging.Tunings import applyTuning as applyFTTuning # pick the right tuning here ...
-applyFTTuning(btagtool , tuning_version="Summer2017Optimisation")
-tt_tagging.TaggingToolName = btagtool.getFullName ()
+#btagtool = tt_tagging.addTool(BTaggingTool , name = "MyBTaggingTool")
+#from FlavourTagging.Tunings import applyTuning as applyFTTuning # pick the right tuning here ...
+#applyFTTuning(btagtool , tuning_version="Summer2017Optimisation")
+#tt_tagging.TaggingToolName = btagtool.getFullName ()
 
 
 #trigger config
@@ -656,5 +643,5 @@ else:
 ## Use the local input data
 #from GaudiConf import IOHelper
 #IOHelper().inputFiles([
-    #'/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/00076890_00000010_1.b02d0hhh.strip.dst'
+    #'/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/MakeTuple/00077535_00000007_1.b02d0hhh.strip.dst'
 #], clear=True)
