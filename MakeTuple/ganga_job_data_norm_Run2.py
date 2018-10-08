@@ -7,7 +7,7 @@ myApp.directory = "./FT_new3/DaVinciDev_v42r7p2"
 j3.application = myApp
 j3.application.options = ["b2d3pi_15.py"]
 j3.backend=Dirac()
-j3.application.platform = "x86_64-slc6-gcc62-opt"
+j5.application.platform = "x86_64-slc6-gcc49-opt"
 datatmp5=BKQuery('/LHCb/Collision15/Beam6500GeV-VeloClosed-MagDown/Real Data/Reco15a/Stripping24r1/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
 datatmp6=BKQuery('/LHCb/Collision15/Beam6500GeV-VeloClosed-MagUp/Real Data/Reco15a/Stripping24r1/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
 
@@ -32,7 +32,7 @@ myApp.directory = "./FT_new3/DaVinciDev_v42r7p2"
 j4.application = myApp
 j4.application.options = ["b2d3pi_16.py"]
 j4.backend=Dirac()
-j4.application.platform = "x86_64-slc6-gcc62-opt"
+j5.application.platform = "x86_64-slc6-gcc49-opt"
 datatmp7=BKQuery('/LHCb/Collision16/Beam6500GeV-VeloClosed-MagDown/Real Data/Reco16/Stripping28r1p1/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
 datatmp8=BKQuery('/LHCb/Collision16/Beam6500GeV-VeloClosed-MagUp/Real Data/Reco16/Stripping28r1p1/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
 
@@ -54,7 +54,7 @@ myApp.directory = "./FT_new3/DaVinciDev_v42r7p2"
 j5.application = myApp
 j5.application.options = ["b2d3pi_17.py"]
 j5.backend=Dirac()
-j5.application.platform = "x86_64-slc6-gcc62-opt"
+j5.application.platform = "x86_64-slc6-gcc49-opt"
 datatmp9=BKQuery('/LHCb/Collision17/Beam6500GeV-VeloClosed-MagDown/Real Data/Reco17/Stripping29r2/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
 datatmp10=BKQuery('/LHCb/Collision17/Beam6500GeV-VeloClosed-MagUp/Real Data/Reco17/Stripping29r2/90000000/BHADRONCOMPLETEEVENT.DST', dqflag=['OK']).getDataset()
 
