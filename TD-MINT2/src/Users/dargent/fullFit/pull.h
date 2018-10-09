@@ -145,19 +145,23 @@ void pull::Init(TTree *tree)
 		fChain->SetBranchAddress(_paraNames[i], mean);
 		continue;
 	}
-        fChain->SetBranchAddress(_paraNames[i]+"_mean", mean);
+        int b_mean = fChain->SetBranchAddress(_paraNames[i]+"_mean", mean);
+	if(b_mean) *mean = 0.;
 
         double * init = new double[1];
         _inits.push_back(init);
-        fChain->SetBranchAddress(_paraNames[i]+"_init", init);
+        int b_init = fChain->SetBranchAddress(_paraNames[i]+"_init", init);
+	if(b_init) *init = 0.;
 
         double * err = new double[1];
         _errs.push_back(err);
-        fChain->SetBranchAddress(_paraNames[i]+"_err", err);
+        int b_err = fChain->SetBranchAddress(_paraNames[i]+"_err", err);
+	if(b_err) *err = 0.;
 
         double * pull = new double[1];
         _pulls.push_back(pull);
-        fChain->SetBranchAddress(_paraNames[i]+"_pull", pull);
+        int b_pull = fChain->SetBranchAddress(_paraNames[i]+"_pull", pull);
+	if(b_pull) *pull = 0.;
     } 
    Notify();
 }

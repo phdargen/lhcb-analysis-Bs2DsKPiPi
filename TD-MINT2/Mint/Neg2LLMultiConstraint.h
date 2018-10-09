@@ -33,18 +33,14 @@ class Neg2LLMultiConstraint: public Minimisable{
         : Minimisable(mps), _mps(mps) {
 
 			/// Parameters to constrain
-			NamedParameter<string> constrain(("ConstrainMulti"+label).c_str(), (string)"" );
+			NamedParameter<string> constrain(("ConstrainMulti"+label).c_str(), (string)"" , (char*) 0);
 			string constrain_s = constrain;			
-			cout << constrain_s << endl;
 			vector<string> constrain_v = split(constrain_s, " ");
-			cout << constrain_v << endl;
 
 			/// Cov. matrix			
 			NamedParameter<string> corr(("ConstrainMulti"+label+"_corr").c_str(),(string)"", (char*) 0);
 			string corr_s = corr;			
-			cout << corr_s << endl;
 			vector<double> corr_v = splitValues(corr_s, " ");
-			cout << corr_v << endl;
 
 			TMatrixDSym cov(constrain_v.size());
 			int index = 0;

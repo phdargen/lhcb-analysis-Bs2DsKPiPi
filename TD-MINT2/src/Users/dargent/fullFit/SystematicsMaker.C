@@ -66,14 +66,14 @@ void fitParams(){
 //     TMatrixD* cov_stat = new TMatrixD(p_stat.getStatCov());
 
     /// Fit bias from toys
-//     pull p(paraNames,"signal_toy/pull__*.root");
-//     TMatrixD* cov = new TMatrixD(p.getCov());
-//     covs.push_back(cov);
+    pull p(paraNames,"signal_toy/pull__*.root");
+    TMatrixD* cov = new TMatrixD(p.getCov());
+    covs.push_back(cov);
 
     /// Acc systematics (with cholesky)
-//     pull p_acc_chol(paraNames,"signal_toy/pullAccChol_*.root","MinuitParameterSetNtp",false, false, 900);
-//     TMatrixD* cov_acc_chol = new TMatrixD(p_acc_chol.getDeltaCovChol("signal_toy/pull__*.root","_accChol",50));
-//     covs.push_back(cov_acc_chol);
+    pull p_acc_chol(paraNames,"signal_toy/pullAccChol_*.root","MinuitParameterSetNtp",false, false, 900);
+    TMatrixD* cov_acc_chol = new TMatrixD(p_acc_chol.getDeltaCovChol("signal_toy/pull__*.root","_accChol",50));
+    covs.push_back(cov_acc_chol);
 
     /// resolution systematics 
     pull p_res_Run1_a(paraNames,"signal_sys_res_Run1_a/pull__*.root");
@@ -381,15 +381,15 @@ void fitParams(){
 
     /// Total systematics table   
     vector<string> sysNames;
-//     sysNames.push_back("Fit bias");
-//     sysNames.push_back("Time-Acc.");
+    sysNames.push_back("Fit bias");
+    sysNames.push_back("Time-Acc.");
     sysNames.push_back("Resolution");
     sysNames.push_back("$\\Delta m_{s}$");
     sysNames.push_back("Asymmetries");
     sysNames.push_back("Background");
 
     sysNames.push_back("Lineshapes");
-    sysNames.push_back("Resonances $m, \\Gamma$");
+    sysNames.push_back("Resonances $m,\\Gamma$");
     sysNames.push_back("Form-Factors");
     sysNames.push_back("Phsp-Acc.");
     sysNames.push_back("Amp. Model");
@@ -665,6 +665,197 @@ void fractions(){
 }
 
 
+void altModels(){
+
+   /// Fit parameters    
+    vector<TString> paraNames;
+    paraNames.push_back("Bs0_K_1__1270_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("Bs0_K_1__1270_p_D__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("Bs0_K_1__1270_p__rho_770_0__pippim_Kp_Dsm");
+    paraNames.push_back("Bs0_K_1__1270_p__rho_1450_0__pippim_Kp_Dsm");
+    paraNames.push_back("Bs0_K_1__1270_p__K_0_s_1430_0__Kppim_pip_Dsm");
+    paraNames.push_back("Bs0_K_1__1400_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("Bs0_K_1__1400_p__rho_770_0__pippim_Kp_Dsm");
+    paraNames.push_back("Bs0_Ks_1410_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("Bs0_Ks_1410_p__rho_770_0__pippim_Kp_Dsm");
+    paraNames.push_back("Bs0_K_2_s_1430_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("Bs0_K_2_s_1430_p__rho_770_0__pippim_Kp_Dsm");    
+    paraNames.push_back("Bs0_K_1460_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("Bs0_K_1460_p__rho_770_0__pippim_Kp_Dsm");
+    paraNames.push_back("Bs0_K_1460_p__sigma10__pippim_Kp_Dsm");
+    paraNames.push_back("Bs0_Ks_1680_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("Bs0_Ks_1680_p__rho_770_0__pippim_Kp_Dsm");    
+    paraNames.push_back("Bs0_K_2__1770_p__Ks_892_0__Kppim_pip_Dsm");
+//     paraNames.push_back("Bs0_K_2__1770_p__rho_770_0__pippim_Kp_Dsm");
+    paraNames.push_back("Bs0_NonResS0__Dsmpip_Ks_892_0__Kppim_");
+    paraNames.push_back("Bs0_NonResV0__Dsmpip_Ks_892_0__Kppim_");
+    paraNames.push_back("Bs0_P_NonResV0__Dsmpip_Ks_892_0__Kppim_");
+    paraNames.push_back("Bs0_D_NonResV0__Dsmpip_Ks_892_0__Kppim_");
+    paraNames.push_back("Bs0_K_0_s_1430_0__Kppim_NonResS0__Dsmpip_");
+    paraNames.push_back("Bs0_NonResS0__DsmKp_sigma10__pippim_");
+    paraNames.push_back("Bs0_NonResV0__DsmKp_sigma10__pippim_");
+    paraNames.push_back("Bs0_NonResS0__DsmKp_f_0_980_0__pippim_");
+    paraNames.push_back("Bs0_f_2_1270_0_pippim_NonResS0__DsmKp_");
+    paraNames.push_back("Bs0_f_2_1270_0_pippim_NonResV0__DsmKp_");
+    paraNames.push_back("Bs0_f_0_1370_0_pippim_NonResS0__DsmKp_");
+    paraNames.push_back("Bs0_NonResS0__DsmKp_rho_770_0__pippim_");
+    paraNames.push_back("Bs0_NonResV0__DsmKp_rho_770_0__pippim_");
+    paraNames.push_back("Bs0_P_NonResV0__DsmKp_rho_770_0__pippim_");
+    paraNames.push_back("Bs0_D_NonResV0__DsmKp_rho_770_0__pippim_");
+    paraNames.push_back("Sum");
+    int N_1 = paraNames.size();
+
+    paraNames.push_back("bar_Bs0_K_1__1270_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("bar_Bs0_K_1__1270_p_D__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("bar_Bs0_K_1__1270_p__rho_770_0__pippim_Kp_Dsm");
+    paraNames.push_back("bar_Bs0_K_1__1270_p__rho_1450_0__pippim_Kp_Dsm");
+    paraNames.push_back("bar_Bs0_K_1__1270_p__K_0_s_1430_0__Kppim_pip_Dsm");
+    paraNames.push_back("bar_Bs0_K_1__1400_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("bar_Bs0_K_1__1400_p__rho_770_0__pippim_Kp_Dsm");
+    paraNames.push_back("bar_Bs0_Ks_1410_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("bar_Bs0_Ks_1410_p__rho_770_0__pippim_Kp_Dsm");
+    paraNames.push_back("bar_Bs0_K_2_s_1430_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("bar_Bs0_K_2_s_1430_p__rho_770_0__pippim_Kp_Dsm");    
+    paraNames.push_back("bar_Bs0_K_1460_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("bar_Bs0_K_1460_p__rho_770_0__pippim_Kp_Dsm");
+    paraNames.push_back("bar_Bs0_K_1460_p__sigma10__pippim_Kp_Dsm");
+    paraNames.push_back("bar_Bs0_Ks_1680_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("bar_Bs0_Ks_1680_p__rho_770_0__pippim_Kp_Dsm");    
+    paraNames.push_back("bar_Bs0_K_2__1770_p__Ks_892_0__Kppim_pip_Dsm");
+//     paraNames.push_back("bar_Bs0_K_2__1770_p__rho_770_0__pippim_Kp_Dsm");
+    paraNames.push_back("bar_Bs0_NonResS0__Dsmpip_Ks_892_0__Kppim_");
+    paraNames.push_back("bar_Bs0_NonResV0__Dsmpip_Ks_892_0__Kppim_");
+    paraNames.push_back("bar_Bs0_P_NonResV0__Dsmpip_Ks_892_0__Kppim_");
+    paraNames.push_back("bar_Bs0_D_NonResV0__Dsmpip_Ks_892_0__Kppim_");
+    paraNames.push_back("bar_Bs0_K_0_s_1430_0__Kppim_NonResS0__Dsmpip_");
+    paraNames.push_back("bar_Bs0_NonResS0__DsmKp_sigma10__pippim_");
+    paraNames.push_back("bar_Bs0_NonResV0__DsmKp_sigma10__pippim_");
+    paraNames.push_back("bar_Bs0_NonResS0__DsmKp_f_0_980_0__pippim_");
+    paraNames.push_back("bar_Bs0_f_2_1270_0_pippim_NonResS0__DsmKp_");
+    paraNames.push_back("bar_Bs0_f_2_1270_0_pippim_NonResV0__DsmKp_");
+    paraNames.push_back("bar_Bs0_f_0_1370_0_pippim_NonResS0__DsmKp_");
+    paraNames.push_back("bar_Bs0_NonResS0__DsmKp_rho_770_0__pippim_");
+    paraNames.push_back("bar_Bs0_NonResV0__DsmKp_rho_770_0__pippim_");
+    paraNames.push_back("bar_Bs0_P_NonResV0__DsmKp_rho_770_0__pippim_");
+    paraNames.push_back("bar_Bs0_D_NonResV0__DsmKp_rho_770_0__pippim_");
+    paraNames.push_back("bar_Sum");
+    int N_2 = paraNames.size();
+
+    paraNames.push_back("mass_K_1__1400_p");
+    paraNames.push_back("width_K_1__1400_p");
+    paraNames.push_back("mass_Ks_1410_p");
+    paraNames.push_back("width_Ks_1410_p");
+
+    paraNames.push_back("r");
+    paraNames.push_back("k");
+    paraNames.push_back("delta");
+    paraNames.push_back("gamma");
+
+    pull p(paraNames,"signal/pull__301.root","Coherence");
+    vector<double> vals = p.getVals()  ;
+    vector<double> errs_stat = p.getErrs()  ;
+
+    pull p_1(paraNames,"signal/pull__301.root","Coherence");
+    vector<double> vals_1 = p_1.getVals()  ;
+    vector<double> errs_stat_1 = p_1.getErrs()  ;
+
+    pull p_2(paraNames,"signal/pull__301.root","Coherence");
+    vector<double> vals_2 = p_2.getVals()  ;
+    vector<double> errs_stat_2 = p_2.getErrs()  ;
+
+    pull p_3(paraNames,"signal/pull__301.root","Coherence");
+    vector<double> vals_3 = p_3.getVals()  ;
+    vector<double> errs_stat_3 = p_3.getErrs()  ;
+
+    pull p_4(paraNames,"signal/pull__301.root","Coherence");
+    vector<double> vals_4 = p_4.getVals()  ;
+    vector<double> errs_stat_4 = p_4.getErrs()  ;
+
+    pull p_5(paraNames,"signal/pull__301.root","Coherence");
+    vector<double> vals_5 = p_5.getVals()  ;
+    vector<double> errs_stat_5 = p_5.getErrs()  ;
+
+    pull p_6(paraNames,"signal/pull__301.root","Coherence");
+    vector<double> vals_6 = p_6.getVals()  ;
+    vector<double> errs_stat_6 = p_6.getErrs()  ;
+
+    pull p_7(paraNames,"signal/pull__301.root","Coherence");
+    vector<double> vals_7 = p_7.getVals()  ;
+    vector<double> errs_stat_7 = p_7.getErrs()  ;
+
+    pull p_8(paraNames,"signal/pull__301.root","Coherence");
+    vector<double> vals_8 = p_8.getVals()  ;
+    vector<double> errs_stat_8 = p_8.getErrs()  ;
+
+    pull p_9(paraNames,"signal/pull__301.root","Coherence");
+    vector<double> vals_9 = p_9.getVals()  ;
+    vector<double> errs_stat_9 = p_9.getErrs()  ;
+
+    vector< vector<double> > vec_vals;
+    vec_vals.push_back(vals);
+    vec_vals.push_back(vals_1);
+    vec_vals.push_back(vals_2);
+    vec_vals.push_back(vals_3);
+    vec_vals.push_back(vals_4);
+    vec_vals.push_back(vals_5);
+    vec_vals.push_back(vals_6);
+    vec_vals.push_back(vals_7);
+    vec_vals.push_back(vals_8);
+    vec_vals.push_back(vals_9);
+
+    vector< vector<double> > vec_errs;
+    vec_errs.push_back(errs_stat);
+    vec_errs.push_back(errs_stat_1);
+    vec_errs.push_back(errs_stat_2);
+    vec_errs.push_back(errs_stat_3);
+    vec_errs.push_back(errs_stat_4);
+    vec_errs.push_back(errs_stat_5);
+    vec_errs.push_back(errs_stat_6);
+    vec_errs.push_back(errs_stat_7);
+    vec_errs.push_back(errs_stat_8);
+    vec_errs.push_back(errs_stat_9);
+
+
+    /// Result table   
+    ofstream SummaryFile;
+    SummaryFile.open("../../../../../TD-AnaNote/latex/tables/fullFit/signal/altModel_table.tex",std::ofstream::trunc);
+
+    SummaryFile << "\\begin{tabular}{l l " ;
+    for(int j=0; j < vec_vals.size(); j++) SummaryFile << " r " ;
+    SummaryFile << " } " << "\n";
+    SummaryFile << "\\hline" << "\n";
+    SummaryFile << "\\hline" << "\n";
+    SummaryFile << "& & \\multicolumn{1}{c}{Baseline} " ;
+    for(int j=1; j < vec_vals.size(); j++)SummaryFile << " & \\multicolumn{1}{c}{Alt." << j <<  "} ";
+    SummaryFile << " \\\\ " << "\n";
+    SummaryFile << "\\hline" << "\n";
+
+    SummaryFile << std::fixed << std::setprecision(1);
+ 
+    for(int i= 0; i < paraNames.size(); i++){
+
+	    if(i==0) SummaryFile << "\\multirow{" << N_1 << "}{*}{$b \\to c$} ";
+	    if(i==N_1-1) SummaryFile << "\\multirow{" << N_1 << "}{*}{$b \\to u$} ";
+            SummaryFile << " & " ;
+	    SummaryFile << p.latexNameMod(paraNames[i]) ;
+	    double scale = (i>N_2) ? 1. : 100.; 
+	    if(i == paraNames.size()-5)SummaryFile << std::fixed << std::setprecision(2);
+
+	    for(int j=0; j < vec_vals.size(); j++){
+		    if(vec_vals[j][i] == 0) SummaryFile << " & " ;
+		    else SummaryFile << " & "  << (double)((i<paraNames.size()-5) ? vec_vals[j][i] * scale : vec_vals[j][i] - vec_vals[0][i] ) << " $\\pm$ " << vec_errs[j][i]* scale ;
+	    }	    
+	    SummaryFile << " \\\\ " << "\n";
+	    if(i==N_1-1 || i==N_2-1) SummaryFile << "\\hline" << "\n";
+    }
+    
+    SummaryFile << "\\hline" << "\n";
+    SummaryFile << "\\hline" << "\n";
+    SummaryFile << "\\end{tabular}" << "\n";
+
+}
+
+
 int main(int argc, char** argv){
 
     TH1::SetDefaultSumw2();
@@ -673,8 +864,9 @@ int main(int argc, char** argv){
     //gStyle->SetOptFit(111);
     //gStyle->UseCurrentStyle();
 
-    fitParams();
+//     fitParams();
 //     fractions();
+	altModels();
 
     return 0;
 }

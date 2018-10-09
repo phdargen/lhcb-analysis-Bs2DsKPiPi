@@ -722,7 +722,7 @@ bool FitAmpPairList::doFractions(){
 
 
 bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
-					   , const std::string&  // dummy
+					   , const std::string&  fnameROOT
 					   , Minimiser* mini
 					   ){
   bool dbThis=true;
@@ -789,7 +789,6 @@ bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
     }
   }
 
-
   if(dbThis)cout << "filled FitFractionLists" << endl;
   if(printFitErrors){
     _singleAmpFractions.setSumFitError(fcov->getFractionSumError());
@@ -830,11 +829,6 @@ bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
 //   }
   /// latex table
   if(!os)return true;
-  os << "\\begin{table}[h]" << "\n";
-  os << "\\centering" << "\n";
-  os << "\\caption{Fit fractions for "; 
-  os << "$B_s \\to D_s K \\pi \\pi$";
-  os << " data.}\n";
   os << "\\begin{tabular}{l r}" << "\n";
   os << "\\hline" << "\n";
   os << "\\hline" << "\n";
@@ -855,32 +849,74 @@ bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
     name.ReplaceAll("pi","\\pi");
     name.ReplaceAll("rho","\\rho");
     name.ReplaceAll("sigma10","\\sigma");
-
-//     name.ReplaceAll("K*(892)0","K^{*}(892)");
-//     name.ReplaceAll("K(0)*(1430)0","K(0)^{*}(1430)");
     name.ReplaceAll("GS","");
     name.ReplaceAll("SBW","");
     name.ReplaceAll("RhoOmega","");
-    name.ReplaceAll("LASS","");
+    name.ReplaceAll("Lass","");
+    name.ReplaceAll("Bugg","");
+    name.ReplaceAll("Flatte","");
     name.ReplaceAll("+","^+");
     name.ReplaceAll("-","^-");
     name.ReplaceAll("*","^*");
     name.ReplaceAll(")0",")^0");
-    //name.ReplaceAll("("," \\left [ ");
-    //name.ReplaceAll(")"," \\right ] ");
     name.ReplaceAll(","," \\, ");
+    name.ReplaceAll("NonResS0( \\to D_s^- \\, \\pi^+)","( D_s^- \\, \\pi^+)_{S}");
+    name.ReplaceAll("NonResV0( \\to D_s^- \\, \\pi^+)","( D_s^- \\, \\pi^+)_{P}");
+    name.ReplaceAll("NonResS0( \\to D_s^- \\, K^+)","( D_s^- \\, K^+)_{S}");
+    name.ReplaceAll("NonResV0( \\to D_s^- \\, K^+)","( D_s^- \\, K^+)_{P}");
 
     os << std::fixed << std::setprecision(2) << "$" << name << "$ & " << frac * 100. << " $\\pm$ "  << frac_err * 100. <<  " \\\\" << "\n";
-
   }
   os <<  " \\hline" << "\n";
   os << " Sum & " << std::fixed << std::setprecision(2) << _singleAmpFractions.sum().frac() * 100. << " $\\pm$ "  << fcov->getFractionSumError() * 100. <<  " \\\\" << "\n";
   os << "\\hline" << "\n";
   os << "\\hline" << "\n";
   os << "\\end{tabular}" << "\n";
-  os << "\\label{table:ampFit}" << "\n";
-  os << "\\end{table}";	
   os.close();
+
+  TFile* paraFile = new TFile((fnameROOT).c_str(), "RECREATE");
+  TTree* tree = new TTree("fractions","fractions");
+    
+  for(unsigned int i=0; i < this->size(); i++){    
+	double frac = this->at(i).integral()/norm;
+	TString name;
+	if(this->at(i).isSingleAmp())name = TString(this->at(i).fitAmp1().name());
+	else name = TString(this->at(i).name());
+	FitFraction f((string)name, frac);	
+
+	name.ReplaceAll("A(","");
+	name.ReplaceAll("fit","");
+	name.ReplaceAll("[","_");
+	name.ReplaceAll("]","_");
+	name.ReplaceAll("(","_");
+	name.ReplaceAll(")","_");
+	name.ReplaceAll("->","_");
+	name.ReplaceAll("+","p");
+	name.ReplaceAll("-","m");
+	name.ReplaceAll("*","s");
+	name.ReplaceAll(",","");
+	name.ReplaceAll("GS","");
+	name.ReplaceAll("Lass","");
+	name.ReplaceAll("RhoOmega","");
+	name.ReplaceAll("Bugg","");
+	name.ReplaceAll("Flatte","");
+
+	if(0 != tree){
+		double val = frac;
+		if(!this->at(i).isSingleAmp()) name = "int_" + name;
+		TBranch* Bra_val = tree->Branch( ((string)name).c_str(), &val, ((string)(name+"/D")).c_str());
+		if(0 != Bra_val)  Bra_val->Fill();
+	}
+  }
+  double val = _singleAmpFractions.sum().frac();
+  TBranch* Bra_val = tree->Branch( "Sum", &val, "Sum/D");
+  if(0 != Bra_val) Bra_val->Fill();
+
+  if(0 != tree) tree->Fill();
+
+  tree->Write();  
+  paraFile->Close();
+  delete paraFile;
   
   return true;
 }

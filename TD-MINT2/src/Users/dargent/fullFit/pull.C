@@ -51,16 +51,76 @@ TString pull::latexName(TString s){
     if(s == "abar_NS_rho_Amp") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\rho(770) \\, \\text{Mag} (b \\to u)$";
     if(s == "abar_NS_rho_Phase") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\rho(770) \\, \\text{Phase} (b \\to u)$";
 
-
     if(s == "Bs0_K_1__1270_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "Bs0_K_1__1270_p_D__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270)[D] \\to K^{*}(892) \\, \\pi )$";
     if(s == "Bs0_K_1__1270_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K \\, \\rho(770) )$";
+    if(s == "Bs0_K_1__1270_p__rho_1450_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K \\, \\rho(1450) )$";
     if(s == "Bs0_K_1__1270_p__K_0_s_1430_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}_{0}(1430) \\, \\pi )$";
     if(s == "Bs0_K_1__1400_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1400) \\to K^{*}(892) \\, \\pi )$";
-    if(s == "Bs0_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
+    if(s == "Bs0_K_1__1400_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_1(1400) \\to K \\, \\rho(770) )$";
+    if(s == "Bs0_K_2_s_1430_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_2^{*}(1430) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "Bs0_K_2_s_1430_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_2^{*}(1430) \\to K \\, \\rho(770) )$";
+    if(s == "Bs0_K_1460_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K(1460) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "Bs0_K_1460_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K(1460) \\to K \\, \\rho(770) )$";
+    if(s == "Bs0_K_1460_p__sigma10__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K(1460) \\to K \\, \\sigma )$";
     if(s == "Bs0_Ks_1410_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K^{*}(1410) \\to K^{*}(892) \\, \\pi )$";
     if(s == "Bs0_Ks_1410_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K^{*}(1410) \\to K \\, \\rho(770) )$";
-    if(s == "Bs0_K_1460_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K(1460) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "Bs0_Ks_1680_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K^{*}(1680) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "Bs0_Ks_1680_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K^{*}(1680) \\to K \\, \\rho(770) )$";
+    if(s == "Bs0_K_2__1770_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_2(1770) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "Bs0_K_2__1770_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_2(1770) \\to K \\, \\rho(770) )$";
+    if(s == "Bs0_NonResS0__Dsmpip_Ks_892_0__Kppim_") return "$B_s \\to ( D_s \\, \\pi)_{S} \\, \\, K^{*}(892)$";
+    if(s == "Bs0_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
+    if(s == "Bs0_P_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s[P] \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
+    if(s == "Bs0_D_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s[D] \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
+    if(s == "Bs0_NonResS0__DsmKp_rho_770_0__pippim_") return "$B_s \\to ( D_s \\, K)_{D} \\, \\, \\rho(770)$";
     if(s == "Bs0_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
+    if(s == "Bs0_P_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s[P] \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
+    if(s == "Bs0_D_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s[D] \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
+    if(s == "Bs0_NonResS0__DsmKp_sigma10__pippim_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, \\sigma$";
+    if(s == "Bs0_NonResV0__DsmKp_sigma10__pippim_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\sigma$";
+    if(s == "Bs0_NonResS0__DsmKp_f_0_980_0__pippim_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_0(980)$";
+    if(s == "Bs0_f_2_1270_0_pippim_NonResS0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_2(1270)$";
+    if(s == "Bs0_f_2_1270_0_pippim_NonResV0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, f_2(1270)$";
+    if(s == "Bs0_f_0_1370_0_pippim_NonResS0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_0(1370)$";
+    if(s == "Bs0_K_0_s_1430_0__Kppim_NonResS0__Dsmpip_") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}_{0}(1430)$";
+
+    if(s == "bar_Bs0_K_1__1270_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "bar_Bs0_K_1__1270_p_D__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270)[D] \\to K^{*}(892) \\, \\pi )$";
+    if(s == "bar_Bs0_K_1__1270_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K \\, \\rho(770) )$";
+    if(s == "bar_Bs0_K_1__1270_p__rho_1450_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K \\, \\rho(1450) )$";
+    if(s == "bar_Bs0_K_1__1270_p__K_0_s_1430_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}_{0}(1430) \\, \\pi )$";
+    if(s == "bar_Bs0_K_1__1400_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1400) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "bar_Bs0_K_1__1400_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_1(1400) \\to K \\, \\rho(770) )$";
+    if(s == "bar_Bs0_K_2_s_1430_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_2^{*}(1430) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "bar_Bs0_K_2_s_1430_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_2^{*}(1430) \\to K \\, \\rho(770) )$";
+    if(s == "bar_Bs0_K_1460_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K(1460) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "bar_Bs0_K_1460_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K(1460) \\to K \\, \\rho(770) )$";
+    if(s == "bar_Bs0_K_1460_p__sigma10__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K(1460) \\to K \\, \\sigma )$";
+    if(s == "bar_Bs0_Ks_1410_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K^{*}(1410) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "bar_Bs0_Ks_1410_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K^{*}(1410) \\to K \\, \\rho(770) )$";
+    if(s == "bar_Bs0_Ks_1680_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K^{*}(1680) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "bar_Bs0_Ks_1680_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K^{*}(1680) \\to K \\, \\rho(770) )$";
+    if(s == "bar_Bs0_K_2__1770_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_2(1770) \\to K^{*}(892) \\, \\pi )$";
+    if(s == "bar_Bs0_K_2__1770_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_2(1770) \\to K \\, \\rho(770) )$";
+    if(s == "bar_Bs0_NonResS0__Dsmpip_Ks_892_0__Kppim_") return "$B_s \\to ( D_s \\, \\pi)_{S} \\, \\, K^{*}(892)$";
+    if(s == "bar_Bs0_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
+    if(s == "bar_Bs0_P_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s[P] \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
+    if(s == "bar_Bs0_D_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s[D] \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
+    if(s == "bar_Bs0_NonResS0__DsmKp_rho_770_0__pippim_") return "$B_s \\to ( D_s \\, K)_{D} \\, \\, \\rho(770)$";
+    if(s == "bar_Bs0_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
+    if(s == "bar_Bs0_P_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s[P] \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
+    if(s == "bar_Bs0_D_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s[D] \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
+    if(s == "bar_Bs0_NonResS0__DsmKp_sigma10__pippim_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, \\sigma$";
+    if(s == "bar_Bs0_NonResV0__DsmKp_sigma10__pippim_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\sigma$";
+    if(s == "bar_Bs0_NonResS0__DsmKp_f_0_980_0__pippim_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_0(980)$";
+    if(s == "bar_Bs0_f_2_1270_0_pippim_NonResS0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_2(1270)$";
+    if(s == "bar_Bs0_f_2_1270_0_pippim_NonResV0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, f_2(1270)$";
+    if(s == "bar_Bs0_f_0_1370_0_pippim_NonResS0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_0(1370)$";
+    if(s == "bar_Bs0_K_0_s_1430_0__Kppim_NonResS0__Dsmpip_") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}_{0}(1430)$";
+
+    if(s == "Sum") return "$\\text{Sum}$";
+    if(s == "bar_Sum") return "$\\text{Sum}$";
 
     return "$" + s + "$";
 }
@@ -77,6 +137,7 @@ TString pull::latexNameMod(TString s){
     if(s == "abar_NS_Ks_Amp") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892) $";
     if(s == "abar_NS_rho_Amp") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\rho(770) $";
 
+    if(s == "k") return "$\\kappa$";
     if(s == "delta") return "$\\delta \\, [\\degrees]$";
     if(s == "gamma") return "$\\gamma - 2 \\beta_{s} \\, [\\degrees]$";
 
