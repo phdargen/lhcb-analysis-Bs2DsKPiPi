@@ -141,8 +141,11 @@ void BkgStudies_norm_Ds2KKpi(){
 	TH1D* mass_Ds2KKpi_as_Lc2KPpi_afterVeto_2 = new TH1D("   ", ";m(K^{+} K^{-}_{p} #pi^{-}) [MeV/c^{2}];Events", 50, -100, 100);
 
 
-	TH1D* mass_Ds2KKpi_as_D02KK_beforeVeto = new TH1D(" ", ";m(K^{+} K^{-}) [MeV/c^{2}];Events", 50, 1800, 1900);
-	TH1D* mass_Ds2KKpi_as_D02KK_afterVeto = new TH1D("   ", ";m(K^{+} K^{-}) [MeV/c^{2}];Events", 50, 1800,1900);
+	TH1D* mass_Ds2KKpi_as_D02KK_beforeVeto = new TH1D(" ", ";m(K^{+} K^{-}) [MeV/c^{2}];Events", 50, 1700, 1880);
+	TH1D* mass_Ds2KKpi_as_D02KK_afterVeto = new TH1D("   ", ";m(K^{+} K^{-}) [MeV/c^{2}];Events", 50, 1700,1880);
+
+	TH1D* mass_Ds2KKpi_as_D02KK_beforeVeto2 = new TH1D(" ", ";m(K^{+} K^{-} #pi^{-}) - m(K^{+} K^{-}) [MeV/c^{2}];Events", 50, 130, 200);
+	TH1D* mass_Ds2KKpi_as_D02KK_afterVeto2 = new TH1D("   ", ";m(K^{+} K^{-} #pi^{-}) - m(K^{+} K^{-}) [MeV/c^{2}];Events", 50, 130,200);
 
 
 	//loop over events
@@ -167,6 +170,7 @@ void BkgStudies_norm_Ds2KKpi(){
 		mass_Ds2KKpi_as_D2Kpipi_beforeVeto->Fill((K_plus_fromDs + pi_minus_fromDs + Kminus_asPiminus_MisID).M()-massD0);
 		mass_Ds2KKpi_as_Lc2KPpi_beforeVeto->Fill((K_plus_fromDs + pi_minus_fromDs + Kminus_asProton_MisID).M()-massLambda_c);
 		mass_Ds2KKpi_as_D02KK_beforeVeto->Fill((K_plus_fromDs + K_minus_fromDs).M());
+		mass_Ds2KKpi_as_D02KK_beforeVeto2->Fill((K_plus_fromDs + K_minus_fromDs + pi_minus_fromDs).M() - (K_plus_fromDs + K_minus_fromDs).M());
 
 		if(Ds_finalState==0){
 			mass_Ds2KKpi_as_D2Kpipi_beforeVeto_0->Fill((K_plus_fromDs + pi_minus_fromDs + Kminus_asPiminus_MisID).M()-massD0);
@@ -207,8 +211,10 @@ void BkgStudies_norm_Ds2KKpi(){
 			}
 		}
  
-		if((K_plus_fromDs + K_minus_fromDs).M() < 1840.){
+// 		if((K_plus_fromDs + K_minus_fromDs).M() < 1840.){
+		if((K_plus_fromDs + K_minus_fromDs + pi_minus_fromDs).M() - (K_plus_fromDs + K_minus_fromDs).M() > 155){
 			mass_Ds2KKpi_as_D02KK_afterVeto->Fill((K_plus_fromDs + K_minus_fromDs).M());
+			mass_Ds2KKpi_as_D02KK_afterVeto2->Fill((K_plus_fromDs + K_minus_fromDs + pi_minus_fromDs).M() - (K_plus_fromDs + K_minus_fromDs).M());
 		}
 
 	}
@@ -336,6 +342,16 @@ void BkgStudies_norm_Ds2KKpi(){
 	c->Print("eps/Ds2KKpi/norm_Ds2KKpi_as_D02KK_compareVeto.eps");
 	c->Print("../../../../../TD-AnaNote/latex/figs/BkgStudies/norm_Ds2KKpi_as_D02KK_compareVeto.pdf");
 
+
+    	mass_Ds2KKpi_as_D02KK_beforeVeto2->SetLineColor(kBlack);
+    	mass_Ds2KKpi_as_D02KK_beforeVeto2->SetMarkerColor(kBlack);
+   	mass_Ds2KKpi_as_D02KK_beforeVeto2->Draw("");
+    	mass_Ds2KKpi_as_D02KK_afterVeto2->SetLineColor(kBlue);
+    	mass_Ds2KKpi_as_D02KK_afterVeto2->SetMarkerColor(kBlue);
+    	mass_Ds2KKpi_as_D02KK_afterVeto2->Draw("histsame");
+
+	c->Print("eps/Ds2KKpi/norm_Ds2KKpi_as_D02KK_compareVeto_2.eps");
+	c->Print("../../../../../TD-AnaNote/latex/figs/BkgStudies/norm_Ds2KKpi_as_D02KK_compareVeto_2.pdf");
 }
 
 void BkgStudies_signal_Ds2KKpi(){
@@ -615,7 +631,8 @@ void BkgStudies_norm_Ds2Kpipi(){
 	TH1D* mass_Ds2Kpipi_as_D02Kpi_beforeVeto = new TH1D(" ", ";m(K^{-} #pi^{+}) [MeV/c^{2}];Events", 50, 1600., 1900.);
 	TH1D* mass_Ds2Kpipi_as_D02Kpi_afterVeto = new TH1D("   ", ";m(K^{-} #pi^{+}) [MeV/c^{2}];Events", 50, 1600., 1900.);
 
-
+	TH1D* mass_Ds2Kpipi_as_D02Kpi_beforeVeto2 = new TH1D(" ", ";m(K^{-} #pi^{-} #pi^{+}) - m(K^{-} #pi^{+}) [MeV/c^{2}];Events", 50, 130., 200.);
+	TH1D* mass_Ds2Kpipi_as_D02Kpi_afterVeto2 = new TH1D("   ", ";m(K^{-} #pi^{-} #pi^{+}) - m(K^{-} #pi^{+}) [MeV/c^{2}];Events", 50, 130., 200.);
 
 	//loop over events
 	int numEvents = tree->GetEntries();
@@ -643,6 +660,8 @@ void BkgStudies_norm_Ds2Kpipi(){
 		mass_Ds2Kpipi_as_Lc2KPpi_beforeVeto->Fill((Kminus_asProton_MisID + piplus_asKaon_MisID + pi_minus_fromDs).M()-massLambda_c);
 		mass_Ds2Kpipi_as_Lc2piPpi_beforeVeto->Fill((Kminus_asProton_MisID + pi_minus_fromDs + pi_plus_fromDs).M()-massLambda_c);
 		mass_Ds2Kpipi_as_D02Kpi_beforeVeto->Fill((K_minus_fromDs + pi_plus_fromDs).M());
+		mass_Ds2Kpipi_as_D02Kpi_beforeVeto2->Fill((K_minus_fromDs + pi_plus_fromDs + pi_minus_fromDs).M() - (K_minus_fromDs + pi_plus_fromDs).M());
+
 
 		//fill histos with veto cuts
 		if(TMath::Abs((Kminus_asPion_MisID + pi_minus_fromDs + pi_plus_fromDs).M() - massDminus ) > 40. || K_minus_fromDs_PIDK > 20.){
@@ -651,8 +670,10 @@ void BkgStudies_norm_Ds2Kpipi(){
 		if(TMath::Abs((pi_plus_fromDs + Kminus_asProton_MisID + pi_minus_fromDs).M() - massLambda_c) > 40. || (K_minus_fromDs_PIDK - K_minus_fromDs_PIDp) > 5.){
 			mass_Ds2Kpipi_as_Lc2piPpi_afterVeto->Fill((pi_plus_fromDs + Kminus_asProton_MisID + pi_minus_fromDs).M()-massLambda_c);
 		}
-		if((pi_plus_fromDs + K_minus_fromDs).M() < 1750.){
+// 		if((pi_plus_fromDs + K_minus_fromDs).M() < 1750.){
+		if((K_minus_fromDs + pi_plus_fromDs + pi_minus_fromDs).M() - (K_minus_fromDs + pi_plus_fromDs).M() > 155){
 			mass_Ds2Kpipi_as_D02Kpi_afterVeto->Fill((K_minus_fromDs + pi_plus_fromDs).M());
+			mass_Ds2Kpipi_as_D02Kpi_afterVeto2->Fill((K_minus_fromDs + pi_plus_fromDs + pi_minus_fromDs).M() - (K_minus_fromDs + pi_plus_fromDs).M());
 		}
 
 	}
@@ -729,6 +750,20 @@ void BkgStudies_norm_Ds2Kpipi(){
     	//leg_3->Draw();
 	c->Print("eps/Ds2Kpipi/norm_Ds2Kpipi_as_D02Kpi_compareVeto.eps");
 	c->Print("../../../../../TD-AnaNote/latex/figs/BkgStudies/norm_Ds2Kpipi_as_D02Kpi_compareVeto.pdf");
+
+
+
+	mass_Ds2Kpipi_as_D02Kpi_beforeVeto2->SetMinimum(0);
+    	mass_Ds2Kpipi_as_D02Kpi_beforeVeto2->SetLineColor(kBlack);
+    	mass_Ds2Kpipi_as_D02Kpi_beforeVeto2->SetMarkerColor(kBlack);
+   	mass_Ds2Kpipi_as_D02Kpi_beforeVeto2->Draw("");
+    	mass_Ds2Kpipi_as_D02Kpi_afterVeto2->SetLineColor(kBlue);
+    	mass_Ds2Kpipi_as_D02Kpi_afterVeto2->SetMarkerColor(kBlue);
+    	mass_Ds2Kpipi_as_D02Kpi_afterVeto2->Draw("histsame");
+
+	c->Print("eps/Ds2Kpipi/norm_Ds2Kpipi_as_D02Kpi_compareVeto_2.eps");
+	c->Print("../../../../../TD-AnaNote/latex/figs/BkgStudies/norm_Ds2Kpipi_as_D02Kpi_compareVeto_2.pdf");
+
 
 }
 
@@ -1015,8 +1050,11 @@ void BkgStudies_norm_Ds2pipipi(){
 
 	TH1D* mass_Ds2pipipi_as_D02pipi_beforeVeto = new TH1D(" ", ";m(#pi^{+} #pi^{-}) [MeV/c^{2}];Events", 50, 1600., 1900.);
 	TH1D* mass_Ds2pipipi_as_D02pipi_afterVeto = new TH1D("   ", ";m(#pi^{+} #pi^{-}) [MeV/c^{2}];Events", 50, 1600., 1900.);
-	TH1D* mass_Ds2pipipi_as_D02pipi_beforeVeto_2 = new TH1D("     ", ";m(#pi^{+} #pi^{-}) [MeV/c^{2}];Events", 50, 1600., 1900.);
-	TH1D* mass_Ds2pipipi_as_D02pipi_afterVeto_2 = new TH1D("        ", ";m(#pi^{+} #pi^{-}) [MeV/c^{2}];Events", 50, 1600., 1900.);
+	TH1D* mass_Ds2pipipi_as_D02pipi_beforeVeto_2 = new TH1D("     ", ";m(#pi^{+} #pi^{-} #pi^{-}) - m(#pi^{+} #pi^{-}) [MeV/c^{2}];Events", 50, 130 , 200);
+	TH1D* mass_Ds2pipipi_as_D02pipi_afterVeto_2 = new TH1D("        ", ";m(#pi^{+} #pi^{-} #pi^{-}) - m(#pi^{+} #pi^{-}) [MeV/c^{2}];Events", 50, 130., 200);
+
+	TH1D* mass_Ds2pipipi_as_D02Kpi_beforeVeto = new TH1D("     ", ";m(#pi^{+} #pi^{-}) [MeV/c^{2}];Events", 100, 130 , 200);
+	TH1D* mass_Ds2pipipi_as_D02Kpi_afterVeto = new TH1D("        ", ";m(#pi^{+} #pi^{-}) [MeV/c^{2}];Events", 100, 130., 200);
 
 	TH1D* mass_Ds2pipipi_as_Lc2piPpi_beforeVeto = new TH1D(" ", ";m(#pi^{+} #pi^{-}_{#bar{p}} #pi^{-}) - m_{#Lambda_{c}} [MeV/c^{2}];Events", 50, -100,100);
 	TH1D* mass_Ds2pipipi_as_Lc2piPpi_afterVeto = new TH1D("   ", ";m(#pi^{+} #pi^{-}_{#bar{p}} #pi^{-}) [MeV/c^{2}];Events", 50, -100,100);
@@ -1054,6 +1092,12 @@ void BkgStudies_norm_Ds2pipipi(){
 		mass_Ds2pipipi_as_D02pipi_beforeVeto->Fill((pi_plus_fromDs + pi_minus_fromDs).M());
 		mass_Ds2pipipi_as_D02pipi_beforeVeto->Fill((pi_plus_fromDs + pi_minus2_fromDs).M());
 
+		mass_Ds2pipipi_as_D02pipi_beforeVeto_2->Fill((pi_plus_fromDs + pi_minus_fromDs + pi_minus2_fromDs).M() - (pi_plus_fromDs + pi_minus_fromDs).M());
+		mass_Ds2pipipi_as_D02pipi_beforeVeto_2->Fill((pi_plus_fromDs + pi_minus_fromDs + pi_minus2_fromDs).M() - (pi_plus_fromDs + pi_minus2_fromDs).M());
+
+		mass_Ds2pipipi_as_D02Kpi_beforeVeto->Fill((piplus_asKaon_MisID + pi_minus_fromDs + pi_minus2_fromDs).M() - (piplus_asKaon_MisID + pi_minus_fromDs).M());
+		mass_Ds2pipipi_as_D02Kpi_beforeVeto->Fill((piplus_asKaon_MisID + pi_minus_fromDs + pi_minus2_fromDs).M() - (piplus_asKaon_MisID + pi_minus2_fromDs).M());
+
 		mass_Ds2pipipi_as_Lc2piPpi_beforeVeto->Fill((pi_plus_fromDs + piminus_asProton_MisID + pi_minus2_fromDs).M()-massLambda_c);
 		mass_Ds2pipipi_as_Lc2piPpi_beforeVeto->Fill((pi_plus_fromDs + pi_minus_fromDs + piminus2_asProton_MisID).M()-massLambda_c);
 
@@ -1062,11 +1106,17 @@ void BkgStudies_norm_Ds2pipipi(){
 
 
 		//fill histos with veto cuts
-		if((pi_plus_fromDs + pi_minus_fromDs).M() < 1700.){
+// 		if((pi_plus_fromDs + pi_minus_fromDs).M() < 1700.){
+		if((pi_plus_fromDs + pi_minus_fromDs + pi_minus2_fromDs).M() - (pi_plus_fromDs + pi_minus_fromDs).M() > 155 && (pi_plus_fromDs + pi_minus_fromDs + pi_minus2_fromDs).M() - (pi_plus_fromDs + pi_minus2_fromDs).M() > 155 ){
 			mass_Ds2pipipi_as_D02pipi_afterVeto->Fill((pi_plus_fromDs + pi_minus_fromDs).M());
-		}
-		if((pi_plus_fromDs + pi_minus2_fromDs).M() < 1700.){
+			mass_Ds2pipipi_as_D02pipi_afterVeto_2->Fill((pi_plus_fromDs + pi_minus_fromDs + pi_minus2_fromDs).M() - (pi_plus_fromDs + pi_minus_fromDs).M());
+			mass_Ds2pipipi_as_D02Kpi_afterVeto->Fill((piplus_asKaon_MisID + pi_minus_fromDs + pi_minus2_fromDs).M() - (piplus_asKaon_MisID + pi_minus_fromDs).M());
+// 		}
+// 		if((pi_plus_fromDs + pi_minus2_fromDs).M() < 1700.){
+// 		if((pi_plus_fromDs + pi_minus_fromDs + pi_minus2_fromDs).M() - (pi_plus_fromDs + pi_minus2_fromDs).M() > 150 && (piplus_asKaon_MisID + pi_minus_fromDs + pi_minus2_fromDs).M() - (piplus_asKaon_MisID + pi_minus2_fromDs).M() > 150){
 			mass_Ds2pipipi_as_D02pipi_afterVeto->Fill((pi_plus_fromDs + pi_minus2_fromDs).M());
+			mass_Ds2pipipi_as_D02pipi_afterVeto_2->Fill((pi_plus_fromDs + pi_minus_fromDs + pi_minus2_fromDs).M() - (pi_plus_fromDs + pi_minus2_fromDs).M());
+			mass_Ds2pipipi_as_D02Kpi_afterVeto->Fill((piplus_asKaon_MisID + pi_minus_fromDs + pi_minus2_fromDs).M() - (piplus_asKaon_MisID + pi_minus2_fromDs).M());
 		}
 		if(TMath::Abs((pi_plus_fromDs + piminus_asProton_MisID + pi_minus2_fromDs).M() - massLambda_c) > 40. || pi_minus_fromDs_PIDp < 5.){
 			mass_Ds2pipipi_as_Lc2piPpi_afterVeto->Fill((pi_plus_fromDs + piminus_asProton_MisID + pi_minus2_fromDs).M()-massLambda_c);
@@ -1102,15 +1152,25 @@ void BkgStudies_norm_Ds2pipipi(){
 	c->Print("eps/Ds2pipipi/norm_Ds2pipipi_as_D02pipi_compareVeto.eps");
 	c->Print("../../../../../TD-AnaNote/latex/figs/BkgStudies/norm_Ds2pipipi_as_D02pipi_compareVeto.pdf");
 
+    	mass_Ds2pipipi_as_D02Kpi_beforeVeto->SetLineColor(kBlack);
+    	mass_Ds2pipipi_as_D02Kpi_beforeVeto->SetMarkerColor(kBlack);
+   	mass_Ds2pipipi_as_D02Kpi_beforeVeto->Draw("");
+    	mass_Ds2pipipi_as_D02Kpi_afterVeto->SetLineColor(kBlue);
+    	mass_Ds2pipipi_as_D02Kpi_afterVeto->SetMarkerColor(kBlue);
+    	mass_Ds2pipipi_as_D02Kpi_afterVeto->Draw("histsame");
+
+	c->Print("eps/Ds2pipipi/norm_Ds2pipipi_as_D02Kpi_compareVeto.eps");
+	c->Print("../../../../../TD-AnaNote/latex/figs/BkgStudies/norm_Ds2pipipi_as_D02Kpi_compareVeto.pdf");
+
 
 	mass_Ds2pipipi_as_D02pipi_beforeVeto_2->Draw("E1"); c->Print("eps/Ds2pipipi/norm_Ds2pipipi_as_D02pipi_beforeVeto_2.eps");
 	mass_Ds2pipipi_as_D02pipi_afterVeto_2->Draw("E1"); c->Print("eps/Ds2pipipi/norm_Ds2pipipi_as_D02pipi_afterVeto_2.eps");
 
-    	mass_Ds2pipipi_as_D02pipi_beforeVeto_2->SetLineColor(kRed);
-    	mass_Ds2pipipi_as_D02pipi_beforeVeto_2->SetMarkerColor(kRed);
+    	mass_Ds2pipipi_as_D02pipi_beforeVeto_2->SetLineColor(kBlack);
+    	mass_Ds2pipipi_as_D02pipi_beforeVeto_2->SetMarkerColor(kBlack);
    	mass_Ds2pipipi_as_D02pipi_beforeVeto_2->Draw("");
-    	mass_Ds2pipipi_as_D02pipi_afterVeto_2->SetLineColor(kBlack);
-    	mass_Ds2pipipi_as_D02pipi_afterVeto_2->SetMarkerColor(kBlack);
+    	mass_Ds2pipipi_as_D02pipi_afterVeto_2->SetLineColor(kBlue);
+    	mass_Ds2pipipi_as_D02pipi_afterVeto_2->SetMarkerColor(kBlue);
     	mass_Ds2pipipi_as_D02pipi_afterVeto_2->Draw("histsame");
 
     	TLegend *leg_2 = new TLegend(0.2,0.7,0.45,0.85);
@@ -1120,8 +1180,9 @@ void BkgStudies_norm_Ds2pipipi(){
     	leg_2->SetLineColor(kWhite);
     	leg_2->SetFillColor(kWhite);
     	leg_2->SetTextSize(0.05);
-    	leg_2->Draw();
+//     	leg_2->Draw();
 	c->Print("eps/Ds2pipipi/norm_Ds2pipipi_as_D02pipi_compareVeto_2.eps");
+	c->Print("../../../../../TD-AnaNote/latex/figs/BkgStudies/norm_Ds2pipipi_as_D02pipi_compareVeto_2.pdf");
 
 
 
@@ -1519,8 +1580,8 @@ void BkgStudies_Xd(){
         	if (0ul == (i % 10000ul)) std::cout << "Read event " << i << "/" << numEvents << std::endl;
         	tree->GetEntry(i);
 		if(Bs_MM < 5200 || Bs_MM > 5700) continue;		
-		if(pi_plus1_PIDK > 0) continue;
-		if(pi_plus2_PIDK > 0) continue;
+		//if(pi_plus1_PIDK > 0) continue;
+		//if(pi_plus2_PIDK > 0) continue;
 
         	//fill the Lorentz vectors
 		Ds.SetXYZM(Ds_PX, Ds_PY, Ds_PZ, massDs);
@@ -1549,10 +1610,10 @@ void BkgStudies_Xd(){
 		if(pi_plus2_PIDK < 5.){
 		mass_Bs2Dspipipi_as_Bs2DsKpipi_afterVeto_2->Fill((Ds + pi_plus + pi_minus + piplus2_asKaon_MisID).M());
 		}
-		if(TMath::Abs((piplus_asKaon_MisID + pi_minus + pi_plus2).M() - massDs) > 25. ||  pi_plus1_PIDK < -5){
+		if(TMath::Abs((piplus_asKaon_MisID + pi_minus + pi_plus2).M() - massDs) > 20. ||  pi_plus1_PIDK < -5){
 		mass_Bs2Dspipipi_as_Bs2DsDs_afterVeto->Fill((piplus_asKaon_MisID + pi_minus + pi_plus2).M()-massDs);
 		}
-		if(TMath::Abs((pi_plus + pi_minus + piplus2_asKaon_MisID).M() - massDs) > 25. ||  pi_plus2_PIDK < -5){
+		if(TMath::Abs((pi_plus + pi_minus + piplus2_asKaon_MisID).M() - massDs) > 20. ||  pi_plus2_PIDK < -5){
 		mass_Bs2Dspipipi_as_Bs2DsDs_afterVeto->Fill((piplus2_asKaon_MisID + pi_minus + pi_plus).M()-massDs);
 		}
 	}
@@ -1756,7 +1817,7 @@ void BkgStudies_Xs(){
         	tree->GetEntry(i);
 
 		if(Bs_MM < 5200 || Bs_MM > 5700) continue;		
-		if(pi_minus_PIDK > 0) continue;
+		//if(pi_minus_PIDK > 0) continue;
 
         	//fill the Lorentz vectors
 		Ds.SetXYZM(Ds_PX, Ds_PY, Ds_PZ, massDs);
@@ -1776,10 +1837,10 @@ void BkgStudies_Xs(){
 
 		//fill histos with vetoes applied
 		if(K_plus_PIDK > 10.){
-		mass_Bs2DsKpipi_as_Bs2Dspipipi_afterVeto->Fill((Ds + Kplus_asPion_MisID + pi_minus + pi_plus).M());
+			mass_Bs2DsKpipi_as_Bs2Dspipipi_afterVeto->Fill((Ds + Kplus_asPion_MisID + pi_minus + pi_plus).M());
 		}
 
-		if(TMath::Abs((K_plus + piminus_asKaon_MisID + pi_plus).M() - massDs) > 25. || pi_minus_PIDK < -10.){
+		if(TMath::Abs((K_plus + piminus_asKaon_MisID + pi_plus).M() - massDs) > 20. || pi_minus_PIDK < -5.){
 			mass_Bs2DsKpipi_as_Bs2DsDs_afterVeto->Fill((K_plus + piminus_asKaon_MisID + pi_plus).M()-massDs);
 		}
 
@@ -1846,8 +1907,8 @@ int main(int argc, char** argv){
 	NamedParameter<int>  do_Ds2KKpi("do_Ds2KKpi", 1);
 
 	if(channel == "Norm") {
-		BkgStudies_Xd();
-		BkgStudies_Xs();
+// 		BkgStudies_Xd();
+// 		BkgStudies_Xs();
 		if(do_Ds2pipipi == 1) BkgStudies_norm_Ds2pipipi();
 		if(do_Ds2Kpipi == 1) BkgStudies_norm_Ds2Kpipi();
 		if(do_Ds2KKpi == 1) BkgStudies_norm_Ds2KKpi();
