@@ -45,11 +45,12 @@ and the mass difference of the two $B_s$
 mass eigenstates.
 %We choose a convention in which $\Delta\Gamma_s = \Gamma_L - \Gamma_H < 0$ and $\Delta m_s = m_H - m_L > 0$, where the indices $H$ and $L$ refer to the heavy and light mass eigenstates of the $B_s$ meson.
 We choose a convention in which $\Delta\Gamma_s < 0$ and $\Delta m_s > 0$. 
-We further assume $\vert q/p \vert = 1$ for the complex coefficients $p$ and $q$ which relate the $B_s$ meson mass eigenstates to the flavour eigenstates (no \CP violationin the mixing).
+We further assume $\vert q/p \vert = 1$ for the complex coefficients $p$ and $q$ which relate the $B_s$ meson mass eigenstates to the flavour eigenstates (no \CP violation
+in the mixing).
 The CKM angle $\gamma$ can be extracted from the \CP violating phase associated to the interference between mixing and decay, $\gamma - 2 \beta_s $, 
 since the $B_s^{0}-\bar B_s^{0}$ mixing phase, $\beta_s$, is well constrained from $B_s \to J/\psi \, \phi$ and related modes. 
 
-The static total decay amplitudes  $\mathcal A^c_{f}(\phsPoint)$  and $ \mathcal A^c_{f}(\phsPoint)$ 
+The static total decay amplitudes  $\mathcal A^c_{f}(\phsPoint)$  and $ \mathcal A^u_{f}(\phsPoint)$ 
 are given by the coherent sum over all intermediate state amplitudes $A_i(\phsPoint)$, each weighted by a complex coefficient
 to be determined from data,
  \begin{align}
@@ -180,7 +181,7 @@ derived in Ref.~\cite{Bl2}
 by assuming a square well interaction potential with radius $r_{\rm BW}$,
 are used as form factors, $B_L$.
 They depend on
-the breakup momentum $q$,
+the breakup momentum $q$, which is defined as the magnitude of the three-momentum of one of the daughters in the rest frame of the decaying resonance
 and the orbital angular momentum $L$, between the resonance daughters.
 Their explicit expressions are
 \begin{align}
@@ -247,7 +248,7 @@ The nominal masses and widths of the resonances are taken from the PDG \cite{PDG
 	We use the Gounaris-Sakurai parametrization for the $\rho(770)^{0} \to \pi \pi$ propagator \cite{GS}.
 	For the decay chain $K_1(1270) \to \rho(770) K$, we include $\rho-\omega$ mixing with the relative magnitude and phase between $\rho$ and $\omega$ fixed 
 	to the values determined in Ref.~\cite{Schubiger}.
-	The energy-dependent width of the $f_{0}(980)$ resonance is given by the sum of the partial widths into the $\pi\pi$ and $KK$ channels \cite{Flatte},
+	The energy-dependent width of the $f_{0}(980)$ resonance is given by the sum of the partial widths into the $\pi\pi$ and $KK$ channels (\ie the Flatt\'{e} lineshape \cite{Flatte}),
 %		\begin{equation}
 %			\Gamma_{f_{0}(980)}(s) = g_{\pi\pi} \, \Gamma^{(2)}_{f_{0}(980) \to \pi \pi}(s) + g_{KK} \, \Gamma^{(2)}_{f_{0}(980) \to KK}(s),
 %		\end{equation}
@@ -467,7 +468,7 @@ The hadronic amplitudes are renormalized prior to the amplitude fit such that
 	\int  \left\vert   A_{i}(\phsPoint) \right\vert^{2} \, \dphs= 1 .
 \end{equation}
 This allows us to set more intuitive starting values as the amplitude coefficients are all on a comparable scale.
-Moreover, the total amplitudes $\mathcal A^{c(u)}_{f}(\phsPoint)$ are renormalized on-the-fly such that
+Moreover, the total amplitudes $\mathcal A^{c(u)}_{f}(\phsPoint)$ are renormalized on-the-fly (\ie at each minimization step) such that
 \begin{align}
 	\nonumber 
 	\int  \left\vert  \mathcal A^{c(u)}_{f}(\phsPoint) \right\vert^{2} \, \dphs  & = 1  \\
@@ -518,6 +519,9 @@ To cross-check it, we use \textsf{EVTGEN} to generate toy events with time-depen
 Since this event model does not allow for multiple interfering resonances, we generate only the decay chain 
 $B_s \to D_s \left( K_1(1400) \to K^{*}(892) \pi \right)$. Table \ref{tab:InputGenMC}  lists the generated input parameters.
 The toy data set is fitted with our \textsf{MINT2} implementation of the full time-dependent amplitude pdf and the phasespace-integrated pdf.
+Flat decay-time and phase-space acceptances are used. The true ID of the $B_s$ meson is used to tag the initial flavor (\ie perfect tagging). 
+For technical reasons (the extreme case of perfect resolution is currently not implemented in our fitter) we smeared the generated decay-times with a Gaussian of width $45 \fs$. 
+We use a Gaussian of the same width to convolute the pdf for fitting. More details of the fit procedures are given in Secs.~\ref{sec:timeFit} and \ref{sec:fullFit}.
 The fit projections are shown in Figs.~\ref{fig:FitGenMC} and \ref{fig:FitGenMC2}.
 
 The \CP coefficients $C,D,\bar D,S,\bar S$ are the fit parameters in case of the phasespace-integrated pdf,

@@ -5,7 +5,8 @@
 The systematic uncertainties on the measured observables are summarized in Table \ref{tab:normSys} for the decay-time fit to $B_s \to D_s \pi\pi\pi$,
 in Table \ref{tab:sigSys} for the decay-time fit to $B_s \to D_s K\pi\pi$
 and in Table \ref{tab:sigSys2} for the full time-dependent amplitude fit to $B_s \to D_s K\pi\pi$ decays.
-A description of each systematiceffect is given in the following subsections
+A description of each systematic
+effect is given in the following subsections
 starting with the ones common to all fits.
 Afterwards, systematic effect specific to the amplitude description are discussed.
 
@@ -42,6 +43,7 @@ decays and flip the mass hypothesis of the $\pip$ with the higher misidentificat
 %The resulting $m(\Ds^{(*)}\pion_{\kaon}\pion\pion)$ distribution is then modeled and the shape obtained from the fit is used in the nominal mass fit to signal. 
 Two alternative approaches are considered:
 we flip the mass hypothesis of the $\pip$ candidate with the lower probability of beeing misidentified; we randomly flip the mass hypothesis of a $\pip$ candidate.
+We further vary the default PIDK cut (PIDK $> 10$) by $\pm 2$. For each case, the mis-ID yields are reevaluated from the $\pi \to K$ fake rate and fixed in the corresponding fit.
 
 \end{itemize}
 %The crystal ball model is given by a gaussian core with an exponential tail on one side. 
@@ -71,7 +73,7 @@ we flip the mass hypothesis of the $\pip$ candidate with the lower probability o
 % \end{equation}
 %
 %This shape is convoluted with the same gaussian resolution function used for the HORNSdini model.
-To evaluate the possible source of systematic uncertainty arising from the fixed yields of the mis-ID backgrounds, the yields are fixed to zero or doubled.
+%To evaluate the possible source of systematic uncertainty arising from the fixed yields of the mis-ID backgrounds, the yields are fixed to zero or doubled.
 
 In total 15 (7) different combinations of the modifications discussed above are tested for the fit to the $\Ds \kaon \pion\pion$ ($\Ds \pi \pion\pion$) mass distribution.
 For each case, new signal \textsf{sWeights} are calculated and the \textsf{sFits} to data are repeated. 
@@ -100,7 +102,8 @@ The sample variance of the obtained differences to the nominal fit value are use
 %The variation of knot positions is found to give a neglectable effect when compared to the variation of spline coefficients.
 
 
-%where s controls the expected exponential slope, and the acceptance%will parameterize any dierence between the observed and the expected slope. 
+%where s controls the expected exponential slope, and the acceptance
+%will parameterize any dierence between the observed and the expected slope. 
 
 The systematic uncertainty related to the decay-time efficiency as well as
 $\Gamma_s$ and $\Delta\Gamma_s$ are studied simultaneously.
@@ -114,7 +117,8 @@ arrive at the final systematic uncertainty.
 
 To improve the coverage of the multi-dimensional parameter space, a Cholesky decomposition \cite{Golub:1996:MC:248979} is used to generate a set of uncorrelated vectors from the covariance matrix $\text{cov}(\lambda_i,\lambda_j)$, where the vector $\lambda$ includes the parameters $\Gamma_s$, $\Delta\Gamma_s$ and the $N=4$ spline coefficients for each category of the simultaneous fit.
 The correlations between $\Gamma_s$ ($\Delta\Gamma_s$) and the spline coefficients are measured by rerunning the acceptance fits described in Sec.~\ref{sec:timeAcceptance} 
-with the values of $\Gamma_s$ ($\Delta\Gamma_s$) varied by $\pm 1\sigma$ and measuring the shift in the spline coefficients as a fraction oftheir uncertainty. 
+with the values of $\Gamma_s$ ($\Delta\Gamma_s$) varied by $\pm 1\sigma$ and measuring the shift in the spline coefficients as a fraction of
+their uncertainty. 
 For the correlation between $\Gamma_s$ and $\Delta\Gamma_s$ we use the HFAG value \cite{HFAG}.
 
 %\clearpage
@@ -209,10 +213,14 @@ are evaluated by means of a toy study similar to the procedure performed for the
 \subsection{Multiple candidates}
 
 The fraction of events with multiple candidates has been found to be very small, it is $1.6\%$ for $D_s K \pi\pi$ and $1.5\%$ for $D_s \pi \pi\pi$. 
-Thus the nominal result is obtained keeping all candidates, while a systematic uncertainty is assignedby repeating the fit randomly keeping only one candidate when multiple ones are founds.
+Thus the nominal result is obtained keeping all candidates, while a systematic uncertainty is assigned
+by repeating the fit randomly keeping only one candidate when multiple ones are founds.
 No shifts in the fit central values are observed.
 
-\subsection{Length and momentum scales}The uncertainty on the LHCb length scale is estimated to be at most $0.020\%$\cite{LHCb-ANA-2012-053}, which translatesdirectly in an uncertainty on $\Delta m_s$ of $0.020\%$ with other parameters being unaffected.The momentum scale uncertainty is at most $0.022\%$.
+\subsection{Length and momentum scales}
+The uncertainty on the LHCb length scale is estimated to be at most $0.020\%$\cite{LHCb-ANA-2012-053}, which translates
+directly in an uncertainty on $\Delta m_s$ of $0.020\%$ with other parameters being unaffected.
+The momentum scale uncertainty is at most $0.022\%$.
 
 
 \subsection{Phase space acceptance}
@@ -221,7 +229,9 @@ For the phase space acceptance we rely on simulated data.
 The integration error due to the limited size of the MC sample 
 used to normalize the signal PDF is evaluated by bootstrapping the MC sample and repeating the full time-dependent amplitude fit.
 
-To asses the uncertainty due to possible data-simulation differences, we determinealternative phase space efficiencies by varying the selection requirements on quantities thatare expected not to be well described by the simulation. 
+To asses the uncertainty due to possible data-simulation differences, we determine
+alternative phase space efficiencies by varying the selection requirements on quantities that
+are expected not to be well described by the simulation. 
 In particular, we consider the following variations:
 
 \begin{itemize}
@@ -251,18 +261,25 @@ We assign the sample variance of the fitted values using the alternative phase s
 }
 
 \subsection{Resonance description}
-
+\label{ssec:lineshapeSys}
 The following alternative line shape parameterizations are considered as part of the systematic studies:
 \begin{itemize}
 
-	\item The Lass description for the $K\pi$ $S$-wave is replaced by a relativistic Breit-Wigner propagator (Equation \ref{eq:gamma2})
+	\item The Lass description for the $K\pi$ $S$-wave is replaced by a more general model (Glass \cite{delAmoSanchez:2010xz,Aaij:2015lsa})
 	\item The Gounaris-Sakurai description for the $\rho(770)$ is replaced by a relativistic Breit-Wigner propagator (Equation \ref{eq:gamma2})
 	\item The $\omega$ contribution to the decay channel $K_1(1270) \to K \, \rho(770)/\omega$ is set to zero
 	\item For the decay channel $K^{*}(1410) \to K \, \rho(770)$, we include $\rho(770)-\omega$ mixing with a relative magnitude and phase determined from data
-	\item Instead of taking the energy-dependent widths of the three-body resonances from Refs.~\cite{dArgent:2017gzv,Aaij:2017kbo}, we derive them from Equation~\ref{eq:gamma3} assuming an uniform phase space population. 
+	\item Instead of taking the energy-dependent widths of the three-body resonances from Refs.~\cite{dArgent:2017gzv,Aaij:2017kbo}, 
+	we derive them from Equation~\ref{eq:gamma3} 
+%	assuming an uniform phase space population. 
+	taking only the dominant $K\pi\pi$ decay mode into account
 
 \end{itemize}
-The data fits are repeated for each alternative model and the shifts of the central values are taken as systematic uncertainties. They are added in quadrature.
+The data fits are repeated for each alternative model and 
+%the shifts of the 
+the RMS of the
+central values are taken as systematic uncertainties. 
+%They are added in quadrature.
 
 The uncertainties due to fixed masses and widths of resonances are evaluated
 from toys where we vary them one-by-one within their quoted errors. 
@@ -272,44 +289,49 @@ and then fitted whereby the radial parameter is uniformly varied within the inte
 
 
 \subsection{Alternative amplitude models}
+\label{ssec:altModels}
 
 We tested several modifications of the LASSO model to assign an additional model uncertainty to the measured observables $r,\delta$ and $\gamma-2\beta_s$ as well as to 
 the measured masses and widths of the $K_1(1400)$ and $K^*(1410)$ resonances.
 The amplitude coefficients are by definition parameters of a given model which is why we do not evaluate a model uncertainty for them.
-	
+The fit results of the following alternative models (Alt.~1 - Alt.~15) are summarized in Tables~\ref{tab:altModels} and \ref{tab:altModels2}.
+
 \begin{itemize}
-
-	\item All amplitudes selected by Stage 1 of the model selection are included for both $b\to c$ and $b\to u$ transitions
+\small
+	\item All amplitudes selected by Stage 1 of the model selection are included for both $b\to c$ and $b\to u$ transitions (Alt.~1)
 				
-	\item The decay channel $K_1(1270)[D] \to K^*(892) \, \pi$ is added where the $K^*(892) \, \pi$ system is in relative a D-wave state
+	\item The decay channels $K_1(1270)[D] \to K^*(892) \, \pi$, where the $K^*(892) \, \pi$ system is in relative a D-wave state,
+	and $K_1(1400) \to K \, \rho(1450)$ are added (Alt.~2)
 
-	\item The decay channel $K_1(1400) \to K \, \rho(770)$ is added
-	
-	\item The decay channels $K_2^*(1430) \to K \, \rho(770)$ and $K_2^*(1430) \to K^*(892) \, \pi$ are added
-	
-	\item The decay channels $K(1460) \to K \, \rho(770)$ and $K(1460) \to K \, \sigma$ are added
-	
-	\item The $K(1460)$ resonance is removed
-	
-	\item The decay channels $K^*(1680) \to K \, \rho(770)$ and $K^*(1680) \to K^*(892) \, \pi$ are added
-	
-	\item The decay channels $K_2(1770) \to K \, \rho(770)$ and $K_2(1770)  \to K^*(892) \, \pi$ are added
+	\item The decay channel $K_1(1400) \to K \, \rho(770)$ is added (Alt.~15)
 		
-	\item The amplitudes $B_s \to (D_s \, \pi)_{P} \, K^{*}(892)$ and $B_s \to (D_s \, K)_{P} \, \rho(770)$ are replaced by 
-		$B_s \to (D_s \, \pi)_{S} \, K^{*}(892)$ and $B_s \to (D_s \, K)_{S} \, \rho(770)$
+	\item The decay channels $K(1460) \to K \, \rho(770)$ and $K(1460) \to K \, \sigma$ are added (Alt.~3)
 	
-	\item Higher orbital angular momentum states are added for the amplitudes: $B_s[S,P,D] \to (D_s \, \pi)_{P} \, K^{*}(892)$ and $B_s[S,P,D] \to (D_s \, K)_{P} \, \rho(770)$
+	\item The $K(1460)$ resonance is removed (Alt.~12)
 	
-	\item The amplitudes $B_s \to (D_s \, \pi)_{P} \, K^{*}(892)$ and $B_s \to (D_s \, K)_{P} \, \rho(770)$ are removed
+	\item The decay channels $K^*(1680) \to K \, \rho(770)$ and $K^*(1680) \to K^*(892) \, \pi$ are added (Alt.~9)
+	
+	\item The decay channel $K_2(1770)  \to K^*(892) \, \pi$ is added (Alt.~10)
+		
+	\item The amplitude $B_s \to (D_s \, K)_{P} \, \rho(770)$ is replaced by $B_s \to (D_s \, K)_{S} \, \rho(770)$  (Alt.~11)
+	
+	\item Higher orbital angular momentum states are added for the amplitudes: $B_s \to (D_s \, \pi)_{P} \, K^{*}(892)$ and $B_s \to (D_s \, K)_{P} \, \rho(770)$  (Alt.~4 and Alt.~5)
+	
+	\item The amplitudes $B_s \to (D_s \, \pi)_{P} \, K^{*}(892)$ and $B_s \to (D_s \, K)_{P} \, \rho(770)$ are removed (Alt.~14 and Alt.~13)
 
-	\item The amplitudes $B_s \to (D_s \, K)_{P} \, \sigma$, $B_s \to (D_s \, K)_{P} \, f_2(1270)$ and $B_s \to (D_s \, K)_{P} \, f_0(1370)$ are added
+	\item The amplitudes $B_s \to (D_s \, K) \, \sigma$, $B_s \to (D_s \, K) \, f_0(980)$, $B_s \to (D_s \, K) \, f_2(1270)$ and $B_s \to (D_s \, K) \, f_0(1370)$ are added in different combinations and angular momentum configurations (Alt.~6, Alt.~7 and Alt.~8 )
 
-	\item The amplitudes $B_s \to (D_s \, \pi)_{P} \, K_0^*(1430)$ and $B_s \to (D_s \, K)_{S} \, K_2^*(1430)$ are added
+
+	\item The decay channels $K_2^*(1430) \to K \, \rho(770)$ and $K_2^*(1430) \to K^*(892) \, \pi$ are added (not used)
+
+	\item The amplitudes $B_s \to (D_s \, \pi)_{P} \, K_0^*(1430)$ and $B_s \to (D_s \, K)_{S} \, K_2^*(1430)$ are added (not used)
+
+	\item A flat non-resonant $B_s \to D_s K \pi\pi$ component is added (not used)
 
 \end{itemize}
 %
 In total 20 different sets of amplitudes are fitted. In some cases, the fit fractions of additionally added amplitudes turn out to be exactly zero.
-These model are effectively not distinguisbale from the baseline LASSO model and are not considered further.
+These model are effectively not distinguishable from the baseline LASSO model and are not considered further.
 From the remaining 15 models, we compute the sample variance for each observable and take it as model uncertainty.
 
 %\subsection{Summary of systematic uncertainties}
@@ -317,6 +339,38 @@ From the remaining 15 models, we compute the sample variance for each observable
 %All contributing systematic uncertainties are summarized in Table \ref{tab:SystSummary}. 
 %The individual uncertainties are summed in quadrature to arrive at the total systematic uncertainty for the respective CP observable.
 %Their total magnitude ranges from (30-40)$\%$ of the statistical uncertainty of the fit.
+
+\begin{table}[h]
+\centering
+\caption{Fit fractions in percent for the baseline and several alternative amplitude models (Alt. 1 - Alt. 7). 
+Resonance parameters and the physical observables $r, \kappa, \delta, \gamma - 2 \beta_s$ are also given.
+The values of the physical observables are given relative to the baseline result.
+The uncertainties are statistical only.}
+\resizebox{1.05\linewidth}{!}{
+\tiny
+	\renewcommand{\arraystretch}{1.2}
+
+	\input{tables/fullFit/signal/altModel_table.tex}
+}
+\label{tab:altModels}
+\end{table}
+
+
+\begin{table}[h]
+\centering
+\caption{Fit fractions in percent for several alternative amplitude models (Alt. 8 - Alt. 15). 
+Resonance parameters and the physical observables $r, \kappa, \delta, \gamma - 2 \beta_s$ are also given.
+The values of the physical observables are given relative to the baseline result.
+The uncertainties are statistical only.}
+\resizebox{1.05\linewidth}{!}{
+\tiny
+	\renewcommand{\arraystretch}{1.2}
+
+	\input{tables/fullFit/signal/altModel_table2.tex}
+}
+\label{tab:altModels2}
+\end{table}
+
 \clearpage
 
 \begin{sidewaystable}[h]

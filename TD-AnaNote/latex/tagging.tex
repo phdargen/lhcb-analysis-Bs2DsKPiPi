@@ -8,13 +8,14 @@ a number of flavour tagging algorithms are used that either determine the flavou
 or use particles produced in the fragmentation of the signal candidate $\Bs$/$\Bsb$ (same side, SS \cite{Aaij:2016psi}). 
 For the same side, the algorithm searching for the charge of an additional kaon that accompanies the fragmentation of the signal candidate is used (SS-Kaon). 
 For the opposite site, four different taggers are chosen: 
-The algorithms that use the charge of an electron or a muon from semi-leptonic B decays (OS-$\electron$,$\muon$), the tagger that uses the charge of a kaon from a b $\to$ c $\to$ s decay chain (OS-nnetKaon) 
+the algorithms that use the charge of an electron or a muon from semi-leptonic B decays (OS-$\electron$,$\muon$), the tagger that uses the charge of a kaon from a b $\to$ c $\to$ s decay chain (OS-nnetKaon) 
 and the algorithm that determines the $\Bs$/$\Bsb$ candidate flavour from the charge of a secondary vertex, reconstructed from the OS b decay product (OS-VtxCharge). 
 %All four taggers are then combined into a single OS tagger. 
 
 Every tagging algorithm is prone to misidentify the signal candidate at a certain mistag rate $\omega$. % = (wrong tags)/ (all tags)$. 
 This might be caused by particle misidentification, flavour oscillation of the neutral opposite site B-meson or by tracks that are wrongly picked up from the underlying event. 
-An imperfect determination of the $\Bs$ production flavor dilutes the observed \CP asymmetry by a factor $D_{tag} = 1 - 2\omega$.
+An imperfect determination of the $\Bs$ production 
+flavor dilutes the observed \CP asymmetry by a factor $D_{tag} = 1 - 2\omega$.
 %\begin{equation}
 %\label{eq: taggingDilution}
 %D_tag = 1 - 2\omega.
@@ -29,7 +30,8 @@ where $\epsilon_{tag}$ is the fraction of tagged candidates.
 For each $\Bs$/$\Bsb$ candidate, the tagging algorithms provide, besides 
 a flavour tag $q=1,-1,0$ (for an initial $\Bs$, $\Bsb$ or no tag), 
 a prediction for the mistag probability $\eta$ 
-based on the output of multivariate classifiers.These are trained on simulated samples of flavour specific control channels ($\Bs\to\Dsm\pip$ (SS algorithm) and $\Bu\to\jpsi\Kp$ (OS algorithms))
+based on the output of multivariate classifiers.
+These are trained on simulated samples of flavour specific control channels ($\Bs\to\Dsm\pip$ (SS algorithm) and $\Bu\to\jpsi\Kp$ (OS algorithms))
 and are optimized for highest $\epsilon_{eff}$ on data.
 Utilizing flavour-specific final states, the estimated mistag $\eta$ of each tagger has to be calibrated to match the actual mistag probability $\omega$. 
 For the calibration, a linear model
@@ -158,10 +160,11 @@ A linear fit, including the $1\sigma$ and $2\sigma$ error bands is overlaid for 
 \label{subsec:TaggingComparison}
 
 The OS-Combo and SS-Kaon taggers are calibrated simultaneously by fitting the $B_s \to D_s \pi\pi\pi$ decay-time distribution as discussed in Sec.~\ref{sec:timeFit}.
-The predicted mistag probabilities $\eta_{OS}$ and $\eta_{SS}$, shown Fig.~\ref{fig:w_data_comparison} for $B_s \to D_s \pi\pi\pi$ and $B_s \to D_s K\pi\pi$ data,
+In this fit, the predicted mistag probabilities $\eta_{OS}$ and $\eta_{SS}$, shown Fig.~\ref{fig:w_data_comparison} for $B_s \to D_s \pi\pi\pi$ and $B_s \to D_s K\pi\pi$ data,
 are included as per-event observables, effectively giving a larger weight to the events that have a lower mistag probability.
 The tagger responses are combined into a single response on an event-by-event basis during the fit.
-Tables \ref{tab:tagPerfRun1} and \ref{tab:tagPerfRun2} report the tagging performances for the OS and SS combination considering three mutually exclusive categories of tagged events: OS only, SS only and both OS and SS.
+Tables \ref{tab:tagPerfRun1} and \ref{tab:tagPerfRun2} report the tagging performances for the OS and SS combination 
+considering three mutually exclusive categories of tagged events: OS only, SS only and both OS and SS.
 
 
 %To justify the usage of the tagging calibration, obtained using the $\Bs\to\Ds\pion\pion\pion$ sample, for our signal decay, the performance of the taggers in the two decay channels needs to be compatible. 
@@ -176,8 +179,8 @@ Tables \ref{tab:tagPerfRun1} and \ref{tab:tagPerfRun2} report the tagging perfor
 %\end{figure}
 
 \begin{figure}[h]
-\includegraphics[height=!,width=0.5\textwidth]{figs/dataVsMC/norm2signal/Ds2all_Bs_TAGOMEGA_OS.pdf}
-\includegraphics[height=!,width=0.5\textwidth]{figs/dataVsMC/norm2signal/Ds2all_Bs_SS_nnetKaon_PROB.pdf}
+\includegraphics[height=!,width=0.5\textwidth]{figs/dataVsMC/norm2signal/Ds2all_OS_Combination_PROB.pdf}
+\includegraphics[height=!,width=0.5\textwidth]{figs/dataVsMC/norm2signal/Ds2all_SS_Kaon_PROB.pdf}
 \caption{Distributions of the predicted mistag $\eta$ for the OS combination (left) and the SS kaon tagger (right) 
 for signal candidates in the $\Bs\to\Ds\kaon\pion\pion$ (black) and $\Bs\to\Ds\pion\pion\pion$ (red) data samples.}
 \label{fig:w_data_comparison}

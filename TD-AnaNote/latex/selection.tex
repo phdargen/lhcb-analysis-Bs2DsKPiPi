@@ -72,7 +72,7 @@ For the $\kaon\kaon\pion$  final state we make use of the well known resonance s
 the decay proceeds either via the narrow $\phiz$ resonance, the broader $\Kstarz$ resonance or (predominantly) non-resonant.
 Within the $\phiz$ resonance region the sample is already sufficiently clean after the stripping so that we do not impose additional criteria on the $D_s$ daughters.
 For the $\Kstarz$ and non-resonant regions consecutively tighter requirements on the particle identification and the $D_s$ flight-distance are applied. 
-We apply global requirements for the other final states. All cuts are summarized in Table \ref{table:selDs}.
+We apply global requirements (\ie independent of the $D_s$ Dalitz-plot position) for the other final states. All cuts are summarized in Table \ref{table:selDs}.
 
 
 %Depending on the decay process being resonant or not, we apply additional PID requirements on this final state:
@@ -104,6 +104,7 @@ We consequently choose to limit the considered phase space region to $m(K\pi\pi)
  
  \clearpage
 \subsubsection{Physics background vetoes}
+ \label{ssec:vetoes}
 
 We veto various physical backgrounds, which have either the same final state as our signal decay, or can contribute via a single misidentification of $\kaon \leftrightarrow \pion$, $\kaon\leftrightarrow\proton$ or $\pi \leftrightarrow\proton$. 
 Depending on the $D_s$ final state different vetoes are applied in order to account for peaking backgrounds originating from charm meson or charmed baryon decays.
@@ -122,8 +123,9 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 	$m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 40$ MeV
 	or the $\Km$ has to fulfill more stringent PID criteria depending on the resonant region (see Table  \ref{table:selDs}).
 	
-	\item $\Dz\to\kaon\kaon$: \\
-	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\kaon\pion$ decay, vetoed by requiring $m(\kaon\kaon) < 1840 \mev$. 
+	\item $D^{*-} \to (\Dz\to\kaon\kaon) \pim$: \\
+	%$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\kaon\pion$ decay, 
+	Same final state, vetoed by requiring $\left( M(KK\pim) - m(\kaon\kaon) \right) >  155 \mev$. 
 \end{enumerate}
 
 \item $\Ds^-\to\pion^+\pion^-\pion^-$
@@ -140,9 +142,11 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 %	$m(\pip \pi^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV
 %	or PIDp($\pim$) $< 0$ for each $\pim$.
 
-	\item $\Dz\to\pion\pion$: \\
-	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\pion\pion\pion$ decay, 
-		vetoed by requiring both possible combinations to have $m(\pion\pion) < 1700 \mev$.
+	\item $D^{*-} \to (\Dz\to\pion\pion) \pim$: \\
+%	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\pion\pion\pion$ decay, 
+%		vetoed by requiring both possible combinations to have $m(\pion\pion) < 1700 \mev$.
+	Same final state, vetoed by requiring $\left( M(\pi\pi\pim) - m(\pi\pi) \right) >  155 \mev$. 
+
 \end{enumerate}
 
 \item $\Ds^- \to K^- \pion^+\pion^-$
@@ -164,14 +168,16 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 	$m(K^-_p \pip \pim) \ne m(\Lambda_c) \pm 40$ MeV
 	or PIDK($\Km$) $-$ PIDp($\Km$) $> 5$.
 	
-	\item $\Dz\to\kaon\pion$: \\
-	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\pion\pion$ decay, 
-		vetoed by requiring both possible combinations to have $m(\kaon\pion) < 1750 \mev$.
+	\item $D^{*-} \to (\Dz\to\kaon\pion) \pim$: \\
+	Same final state, vetoed by requiring $\left( M(K\pi\pim) - m(K\pi) \right) >  155 \mev$. 
+%	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\pion\pion$ decay, 
+%		vetoed by requiring both possible combinations to have $m(\kaon\pion) < 1750 \mev$.
 \end{enumerate}
 
 \end{enumerate}
 The effects of these veto cuts are illustrated in Figs.~\ref{fig:vetoD},\ref{fig:vetoLambda} and \ref{fig:vetoD0}.
-To reduce cross-feed from our calibration channel into the signal channel and vice-versa we require tight PID cuts on the ambiguous bachelor kaon (PIDK(K) $>$ 10)/pion (PIDK(K) $<$ 0). 
+To reduce cross-feed from our calibration channel into the signal channel and vice-versa we require tight PID cuts on the ambiguous bachelor track; 
+for the signal channel we apply $\text{PIDK}(K^+) >  10$ and for the calibration channel $\text{PIDK}(\pip) < 0$. 
 In addition, we veto $\Bs\to\Dsm\Dsp$ decays which is illustrated in Fig.~\ref{fig:vetoDs}.
  \clearpage
 \begin{enumerate}
@@ -244,10 +250,11 @@ The distributions are shown without (black) and with (blue) the $\Lambda_c$-veto
 \end{figure}
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2KKpi_as_D02KK_compareVeto.pdf} 
-\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2pipipi_as_D02pipi_compareVeto.pdf} 
-\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2Kpipi_as_D02Kpi_compareVeto.pdf} 
-\caption{Background contributions to $D_s \to KK\pi$ (left), $D_s \to \pi\pi\pi$ (middle) and $D_s \to K\pi\pi$ (right) from $D^0\to hh$ decays combined with a random pion. }
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2KKpi_as_D02KK_compareVeto_2.pdf} 
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2pipipi_as_D02pipi_compareVeto_2.pdf} 
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2Kpipi_as_D02Kpi_compareVeto_2.pdf} 
+\caption{Background contributions to $D_s^- \to KK\pi$ (left), $D_s^- \to \pi\pi\pi$ (middle) and $D_s^- \to K\pi\pi$ (right) from $D^{*-} \to (D^0\to hh) \pim$ decays. 
+The $D^{*-}$ background contribution peaks at $m(hh\pim) - m(hh) \approx 145.5 \mev$ which corresponds to the mass difference of the $D^{*-}$ and $D^0$ mesons. }
 \label{fig:vetoD0}
 \end{figure}
 \begin{figure}[h]
@@ -429,7 +436,7 @@ The signal significance is normalized to be 1 at the optimal BDTG cut value.
 $D_s \to h h h$ &  $m(hhh)$ & = $m_{D_s} \pm 25 \mev$  \\
 %& $p_T $ & $> 1600 \mev$\\
 \\
-$D_s^- \to K K \pi^-$  & $D^0$ veto  & $m(K K) < 1840$ MeV \\
+$D_s^- \to K K \pi^-$  & $D^{*-}$ veto  & $m(KK\pim) - m(K K) > 155$ MeV \\
 \\
 $D_s^- \to \phi \pi^-$ & $m(KK)$  & $= m_{\phi} \pm 12$ MeV \\
 & PIDK($K^+$) & $> -10$ \\
@@ -460,16 +467,16 @@ $D_s^- \to (K K \pi^-)_{NR}$ & $m(KK)$  & $\ne m_{\phi} \pm 12$ MeV \\
 & $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 40$ MeV  $||$ $\text{PIDK}(K^-) > 15$\\
 & $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 40$ MeV  $||$ $\text{PIDK}(K^-)-\text{PIDp}(K^-) > 5$ \\
 \\
-$D_s \to \pi \pi \pi$ & PIDK($\pi$) & $< 10$  \\
+$D_s^- \to \pi \pi \pi$ & PIDK($\pi$) & $< 10$  \\
 & PIDp($\pi$) & $< 20$ \\
-& $D^0$ veto  & $m(\pip \pim) < 1700$ MeV \\
+& $D^{*-}$ veto  & $m(\pi \pi \pim) - m(\pi \pi) > 155$ MeV \\
 &  $\chi^{2}_{FD}$ & $> 9$ \\
 &  FD in $z$  &$ > 0$ \\
 \\
 $D_s^- \to K^- \pip \pim$ & PIDK($K$) & $> 8$  \\
 & PIDK($\pi$) & $< 5$ \\
 & PIDp($\pi$) & $< 20$ \\
-& $D^0$ veto  & $m(K^- \pip) < 1750$ MeV \\
+& $D^{*-}$ veto  & $m(K^- \pip \pim) - m(K^- \pip) > 155$ MeV \\
 &  $\chi^{2}_{FD}$ & $> 9$ \\
 &  FD in $z$  &$ > 0$ \\
 & $D^-$ veto  & $m(K^-_\pi \pip \pim) \ne m(D^-) \pm 40$ MeV  $||$ $\text{PIDK}(K^-) > 15$\\
@@ -536,7 +543,8 @@ All tracks & hasRich & $= 1$ \\
 \clearpage
 \subsection{Simulation}
 
-Several Monte Carlo (MC) samples are used in the analysis for acceptance andbackground studies.
+Several Monte Carlo (MC) samples are used in the analysis for acceptance and
+background studies.
 A full list of them is given in Tab.~\ref{table:mcSamples}.
 In each case, the decay model includes a mixture of non-interfering resonances contributing to the 
 $X_s \to K \pi \pi$ or $X_d \to \pi \pi \pi$ bachelor system and a non-resonant (phase-space) component.

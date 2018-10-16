@@ -71,6 +71,8 @@ At the optimal value of $\lambda=50$, the set of amplitudes with a decay fractio
 are considered further for step two of the model selection.
 The selected amplitudes and their fractions are summarized in Table \ref{tab:lassoFit}.
 The fit projections are shown in Fig.~\ref{fig:lassoFit}.
+The set of selected amplitudes is stable for thresholds between $0.1\%$ and $1\%.$. 
+Other choices result in marginally different models containing one component more or less. These are included in the set of alternative models used for the systematic studies presented in Sec.~\ref{ssec:altModels}.
 
 In Stage 2, the LASSO procedure is again performed by fitting the full time-dependent amplitude PDF.
 The components selected by Stage 1 are included for both $b\to c$ and $b\to u$ transitions and the likelihood is extended as follows:
@@ -83,8 +85,8 @@ The final set of $b\to c$ and $b\to u$ amplitudes is selected using the optimal 
 
 \begin{figure}[b]
   \centering
-  \includegraphics[width=0.45\textwidth, height=!]{figs/lassoFit/Lasso_BIC.pdf} 
-  \includegraphics[width=0.45\linewidth, height=!]{figs/fullFit/ReLasso_BIC.pdf}
+  \includegraphics[width=0.4\textwidth, height=!]{figs/lassoFit/Lasso_BIC.pdf} 
+  \includegraphics[width=0.4\linewidth, height=!]{figs/fullFit/ReLasso_BIC.pdf}
   \caption{Difference in the BIC value from its minimum as function of the LASSO parameter $\lambda$ for step 1 (left) and step 2 (right) of the model selection.}
   \label{fig:BIC}
 \end{figure}
@@ -154,7 +156,7 @@ Moreover, the masses and widths of the $K_1(1400)$ and $K^{*}(1410)$ resonances 
 Figure \ref{fig:fullFit} shows the distributions of 
 selected phase space observables, which demonstrate 
 reasonable agreement between data and the fit model. 
-We also project into the transversity basis to demonstrate good description of the overall angular structure.
+We also project into the transversity basis to demonstrate good description of the overall angular structure (see \ref{fig:fullFit} bottom row).
 The acoplanarity angle 
 ${\chi}$, is the angle between the two decay planes formed by 
 the $K^+\pi^-$ system and the $D_s^- \pip$ system
@@ -179,7 +181,7 @@ The number of degrees of freedom $\nu$, in an unbinned fit is bounded by $N_{\rm
 where $N_{\rm par}$ is the number of free fit parameters.
 We use the \chisq value divided by $\nu = (N_{\rm bins}-1) - N_{\rm par}$ as a conservative estimate.
 For the LASSO model, this 
-amounts to $\chisq/\nu = 1.40$ %with $\nu = 221$,
+amounts to $\chisq/\nu = 1.40$ with $\nu = 137$,
 indicating a decent fit quality.
 
 \begin{table}[h]

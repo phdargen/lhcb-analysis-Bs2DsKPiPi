@@ -32,8 +32,8 @@ while only $20 \%$ of the events classified with \textsf{BKGCAT}$=60$ are indeed
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signalMC_pull.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/signalMC_ghost_pull.pdf}
+\includegraphics[height=!,width=0.35\textwidth]{figs/MassFit/signalMC_pull.pdf}
+\includegraphics[height=!,width=0.35\textwidth]{figs/MassFit/signalMC_ghost_pull.pdf}
 
 %\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/normMC_pull.pdf}
 %\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/normMC_ghost_pull.pdf}
@@ -51,6 +51,7 @@ as discussed in the following sections.
 A number of data-driven corrections are applied to the MC samples to account for known data-simulation differences.
 The MC sample is reweighted to match the two-dimensional $p_T$ and $\eta$ distribution observed on real data.
 An additional reweighting of the track multiplicity is applied on top of that.
+These corrections are derived from the calibration channel $B_s\to D_s \pi\pi\pi$ and applied to both the signal and calibration channel MC samples.
 The distributions before and after reweighting are shown in Appendix \ref{a:DataMC}.
 We use the \textsf{PIDCorr} tool to correct the simulated PID responses based on PID calibration samples \cite{LHCb-INT-2017-007}.
 
@@ -171,7 +172,8 @@ v_{N} = v_{N-1} + \frac{v_{N-2} - v_{N-1}}{t_{N-2} - t_{N-1}} \cdot (t_{N} - t_{
 It was found that at least $N=6$ knots are necessary for a sufficient fit quality.
 
 \clearpage
-Three distinct splines are used in the following combinations to describe the acceptances for thefour datasets:
+Three distinct splines are used in the following combinations to describe the acceptances for the
+four datasets:
 \begin{itemize}
 	\item $\Bs \to D_sK\pi\pi$ MC:   $\epsilon^{MC}_{D_sK\pi\pi}(t)$ 
 	\item $\Bs \to D_s\pi\pi\pi$ MC:   $\epsilon^{MC}_{D_s\pi\pi\pi}(t) = R(t) \cdot \epsilon^{MC}_{D_sK\pi\pi}(t)$ 
@@ -309,10 +311,10 @@ As discriminating variables, five invariant mass combinations are used as shown 
 Based on the classifier output distributions, shown in Fig.~\ref{fig:PhspBDT}, an efficiency as function of the BDTG response is derived.
 
 A large toy MC sample is generated (500 k events) according to a preliminary amplitude model $A^{\prime}(\phsPoint)$
-and for each event a weight, depending on the BDTG response, is assigned
+and for each event a weight, depending on the BDTG response (see Fig.~\ref{fig:PhspBDT}), is assigned
 to account for the efficiency variation across phase space.
 This reweighted toy MC sample is then effectively distributed as $A^{\prime}(\phsPoint) \cdot \epsilon(\phsPoint)$ and can be used to calculate the normalization integrals in Equation~\ref{eq:pdfPhspAcc}.
-Figure \ref{fig:PhspBDTeff} compares the phase space efficiency obtained from the reweigted toy MC sample with the 'true' efficiency 
+Figure \ref{fig:PhspBDTeff} compares the phase space efficiency obtained from the reweighed toy MC sample with the 'true' efficiency 
 given by the ratio of selected and generated MC events. 
 A fairly good agreement is observed in all dimensions.
 
