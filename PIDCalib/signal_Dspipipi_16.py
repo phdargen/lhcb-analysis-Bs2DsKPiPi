@@ -321,7 +321,7 @@ simversion = "run2"
 # IF NOT: use /tmp if you have enough RAM
 # temp_folder = '/tmp'
 # ELSE: use current folder
-temp_folder = '.'
+temp_folder = '/tmp'
 import string
 import random
 rand_string = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))  # get 10 random chars for temp_file prefix

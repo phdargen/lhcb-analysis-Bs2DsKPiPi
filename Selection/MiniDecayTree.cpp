@@ -773,18 +773,26 @@ void MiniDecayTree::Loop()
 	summary_tree->Branch("pi_plus2_PIDK_raw", &pi_plus2_PIDK_raw, "pi_plus2_PIDK_raw/D");
     }
     double pi_minus_fromDs_PIDK_gen, pi_minus_fromDs_PIDK_corr, pi_minus_fromDs_PIDK_raw;
+    double pi_minus2_fromDs_PIDK_gen, pi_minus2_fromDs_PIDK_corr, pi_minus2_fromDs_PIDK_raw;
     double K_minus_fromDs_PIDK_gen, K_minus_fromDs_PIDK_corr, K_minus_fromDs_PIDK_raw;
     double K_plus_fromDs_PIDK_gen, K_plus_fromDs_PIDK_corr, K_plus_fromDs_PIDK_raw;
+    double pi_plus_fromDs_PIDK_gen, pi_plus_fromDs_PIDK_corr, pi_plus_fromDs_PIDK_raw;
     if(!_data){
 	summary_tree->Branch("pi_minus_fromDs_PIDK_gen", &pi_minus_fromDs_PIDK_gen, "pi_minus_fromDs_PIDK_gen/D");
 	summary_tree->Branch("pi_minus_fromDs_PIDK_corr", &pi_minus_fromDs_PIDK_corr, "pi_minus_fromDs_PIDK_corr/D");
 	summary_tree->Branch("pi_minus_fromDs_PIDK_raw", &pi_minus_fromDs_PIDK_raw, "pi_minus_fromDs_PIDK_raw/D");
+	summary_tree->Branch("pi_minus2_fromDs_PIDK_gen", &pi_minus2_fromDs_PIDK_gen, "pi_minus2_fromDs_PIDK_gen/D");
+	summary_tree->Branch("pi_minus2_fromDs_PIDK_corr", &pi_minus2_fromDs_PIDK_corr, "pi_minus2_fromDs_PIDK_corr/D");
+	summary_tree->Branch("pi_minus2_fromDs_PIDK_raw", &pi_minus2_fromDs_PIDK_raw, "pi_minus2_fromDs_PIDK_raw/D");
 	summary_tree->Branch("K_minus_fromDs_PIDK_gen", &K_minus_fromDs_PIDK_gen, "K_minus_fromDs_PIDK_gen/D");
 	summary_tree->Branch("K_minus_fromDs_PIDK_corr", &K_minus_fromDs_PIDK_corr, "K_minus_fromDs_PIDK_corr/D");
 	summary_tree->Branch("K_minus_fromDs_PIDK_raw", &K_minus_fromDs_PIDK_raw, "K_minus_fromDs_PIDK_raw/D");
 	summary_tree->Branch("K_plus_fromDs_PIDK_gen", &K_plus_fromDs_PIDK_gen, "K_plus_fromDs_PIDK_gen/D");
 	summary_tree->Branch("K_plus_fromDs_PIDK_corr", &K_plus_fromDs_PIDK_corr, "K_plus_fromDs_PIDK_corr/D");
 	summary_tree->Branch("K_plus_fromDs_PIDK_raw", &K_plus_fromDs_PIDK_raw, "K_plus_fromDs_PIDK_raw/D");
+	summary_tree->Branch("pi_plus_fromDs_PIDK_gen", &pi_plus_fromDs_PIDK_gen, "pi_plus_fromDs_PIDK_gen/D");
+	summary_tree->Branch("pi_plus_fromDs_PIDK_corr", &pi_plus_fromDs_PIDK_corr, "pi_plus_fromDs_PIDK_corr/D");
+	summary_tree->Branch("pi_plus_fromDs_PIDK_raw", &pi_plus_fromDs_PIDK_raw, "pi_plus_fromDs_PIDK_raw/D");
     }
     /*
     double K_plus_PIDp_gen, K_plus_PIDp_corr, K_plus_PIDp_raw;
@@ -846,11 +854,11 @@ void MiniDecayTree::Loop()
 
 				if(Polarity == 1){ 
 					K_plus_PIDK_corr = K_plus_PIDK_corr_MagUp;	
-					K_plus_PIDK_gen = K_plus_PIDK_gen_MagUp;
+					K_plus_PIDK_gen = K_plus_PIDK_gen_MagDown;
 					pi_plus_PIDK_corr = pi_plus_PIDK_corr_MagUp;	
-					pi_plus_PIDK_gen = pi_plus_PIDK_gen_MagUp;
+					pi_plus_PIDK_gen = pi_plus_PIDK_gen_MagDown;
 					pi_minus_PIDK_corr = pi_minus_PIDK_corr_MagUp;	
-					pi_minus_PIDK_gen = pi_minus_PIDK_gen_MagUp;
+					pi_minus_PIDK_gen = pi_minus_PIDK_gen_MagDown;
 
 					//K_plus_PIDp_corr = K_plus_PIDp_corr_MagUp;	
 					//K_plus_PIDp_gen = K_plus_PIDp_gen_MagUp;
@@ -903,11 +911,11 @@ void MiniDecayTree::Loop()
 
 				if(Polarity == 1){ 
 					pi_plus1_PIDK_corr = pi_plus1_PIDK_corr_MagUp;	
-					pi_plus1_PIDK_gen = pi_plus1_PIDK_gen_MagUp;
+					pi_plus1_PIDK_gen = pi_plus1_PIDK_gen_MagDown;
 					pi_plus2_PIDK_corr = pi_plus2_PIDK_corr_MagUp;	
-					pi_plus2_PIDK_gen = pi_plus2_PIDK_gen_MagUp;
+					pi_plus2_PIDK_gen = pi_plus2_PIDK_gen_MagDown;
 					pi_minus_PIDK_corr = pi_minus_PIDK_corr_MagUp;	
-					pi_minus_PIDK_gen = pi_minus_PIDK_gen_MagUp;
+					pi_minus_PIDK_gen = pi_minus_PIDK_gen_MagDown;
 
 					//pi_plus1_PIDp_corr = pi_plus1_PIDp_corr_MagUp;	
 					//pi_plus1_PIDp_gen = pi_plus1_PIDp_gen_MagUp;
@@ -960,11 +968,11 @@ void MiniDecayTree::Loop()
 
 				if(Polarity == 1){ 
 					K_plus_fromDs_PIDK_corr = K_plus_fromDs_PIDK_corr_MagUp;	
-					K_plus_fromDs_PIDK_gen = K_plus_fromDs_PIDK_gen_MagUp;
+					K_plus_fromDs_PIDK_gen = K_plus_fromDs_PIDK_gen_MagDown;
 					K_minus_fromDs_PIDK_corr = K_minus_fromDs_PIDK_corr_MagUp;	
-					K_minus_fromDs_PIDK_gen = K_minus_fromDs_PIDK_gen_MagUp;
+					K_minus_fromDs_PIDK_gen = K_minus_fromDs_PIDK_gen_MagDown;
 					pi_minus_fromDs_PIDK_corr = pi_minus_fromDs_PIDK_corr_MagUp;	
-					pi_minus_fromDs_PIDK_gen = pi_minus_fromDs_PIDK_gen_MagUp;
+					pi_minus_fromDs_PIDK_gen = pi_minus_fromDs_PIDK_gen_MagDown;
 
 					//K_plus_fromDs_PIDp_corr = K_plus_fromDs_PIDp_corr_MagUp;	
 					//K_plus_fromDs_PIDp_gen = K_plus_fromDs_PIDp_gen_MagUp;
@@ -1007,6 +1015,74 @@ void MiniDecayTree::Loop()
 				}
 			
 		}
+	
+		if(_Ds_finalState == Ds_finalState::Kpipi){
+				pi_plus_fromDs_PIDK_raw = pi_plus_fromDs_PIDK;
+				K_minus_fromDs_PIDK_raw = K_minus_fromDs_PIDK;
+				pi_minus_fromDs_PIDK_raw = pi_minus_fromDs_PIDK;
+
+				if(Polarity == 1){ 
+					pi_plus_fromDs_PIDK_corr = pi_plus_fromDs_PIDK_corr_MagUp;	
+					pi_plus_fromDs_PIDK_gen = pi_plus_fromDs_PIDK_gen_MagDown;
+					K_minus_fromDs_PIDK_corr = K_minus_fromDs_PIDK_corr_MagUp;	
+					K_minus_fromDs_PIDK_gen = K_minus_fromDs_PIDK_gen_MagDown;
+					pi_minus_fromDs_PIDK_corr = pi_minus_fromDs_PIDK_corr_MagUp;	
+					pi_minus_fromDs_PIDK_gen = pi_minus_fromDs_PIDK_gen_MagDown;
+				}	
+				else { 
+					pi_plus_fromDs_PIDK_corr = pi_plus_fromDs_PIDK_corr_MagDown;
+					pi_plus_fromDs_PIDK_gen = pi_plus_fromDs_PIDK_gen_MagDown;
+					K_minus_fromDs_PIDK_corr = K_minus_fromDs_PIDK_corr_MagDown;	
+					K_minus_fromDs_PIDK_gen = K_minus_fromDs_PIDK_gen_MagDown;
+					pi_minus_fromDs_PIDK_corr = pi_minus_fromDs_PIDK_corr_MagDown;	
+					pi_minus_fromDs_PIDK_gen = pi_minus_fromDs_PIDK_gen_MagDown;
+				}
+				if(_usePIDvar == "Corr"){ 
+					pi_plus_fromDs_PIDK = pi_plus_fromDs_PIDK_corr;
+					K_minus_fromDs_PIDK = K_minus_fromDs_PIDK_corr;
+					pi_minus_fromDs_PIDK = pi_minus_fromDs_PIDK_corr;
+				}
+				else if(_usePIDvar == "Gen") { 
+					pi_plus_fromDs_PIDK = pi_plus_fromDs_PIDK_gen;
+					K_minus_fromDs_PIDK = K_minus_fromDs_PIDK_gen;
+					pi_minus_fromDs_PIDK = pi_minus_fromDs_PIDK_gen;
+				}
+		}
+
+		if(_Ds_finalState == Ds_finalState::pipipi){
+				pi_plus_fromDs_PIDK_raw = pi_plus_fromDs_PIDK;
+				pi_minus2_fromDs_PIDK_raw = pi_minus2_fromDs_PIDK;
+				pi_minus_fromDs_PIDK_raw = pi_minus_fromDs_PIDK;
+
+				if(Polarity == 1){ 
+					pi_plus_fromDs_PIDK_corr = pi_plus_fromDs_PIDK_corr_MagUp;	
+					pi_plus_fromDs_PIDK_gen = pi_plus_fromDs_PIDK_gen_MagDown;
+					pi_minus2_fromDs_PIDK_corr = pi_minus2_fromDs_PIDK_corr_MagUp;	
+					pi_minus2_fromDs_PIDK_gen = pi_minus2_fromDs_PIDK_gen_MagDown;
+					pi_minus_fromDs_PIDK_corr = pi_minus_fromDs_PIDK_corr_MagUp;	
+					pi_minus_fromDs_PIDK_gen = pi_minus_fromDs_PIDK_gen_MagDown;
+				}	
+				else { 
+					pi_plus_fromDs_PIDK_corr = pi_plus_fromDs_PIDK_corr_MagDown;
+					pi_plus_fromDs_PIDK_gen = pi_plus_fromDs_PIDK_gen_MagDown;
+					pi_minus2_fromDs_PIDK_corr = pi_minus2_fromDs_PIDK_corr_MagDown;	
+					pi_minus2_fromDs_PIDK_gen = pi_minus2_fromDs_PIDK_gen_MagDown;
+					pi_minus_fromDs_PIDK_corr = pi_minus_fromDs_PIDK_corr_MagDown;	
+					pi_minus_fromDs_PIDK_gen = pi_minus_fromDs_PIDK_gen_MagDown;
+				}
+				if(_usePIDvar == "Corr"){ 
+					pi_plus_fromDs_PIDK = pi_plus_fromDs_PIDK_corr;
+					pi_minus2_fromDs_PIDK = pi_minus2_fromDs_PIDK_corr;
+					pi_minus_fromDs_PIDK = pi_minus_fromDs_PIDK_corr;
+				}
+				else if(_usePIDvar == "Gen") { 
+					pi_plus_fromDs_PIDK = pi_plus_fromDs_PIDK_gen;
+					pi_minus2_fromDs_PIDK = pi_minus2_fromDs_PIDK_gen;
+					pi_minus_fromDs_PIDK = pi_minus_fromDs_PIDK_gen;
+				}
+		}
+
+
 	}
 	
         set_LorentzVectors();    

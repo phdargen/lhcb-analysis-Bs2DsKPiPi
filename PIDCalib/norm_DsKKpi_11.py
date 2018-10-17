@@ -318,9 +318,9 @@ simversion = "sim09"
 # make sure we don't overwrite local files and prefix them with random strings
 # IF ON LXPLUS: if /tmp exists and is accessible, use for faster processing
 # IF NOT: use /tmp if you have enough RAM
-# temp_folder = '/tmp'
+temp_folder = '/tmp'
 # ELSE: use current folder
-temp_folder = '.'
+#temp_folder = '.'
 import string
 import random
 rand_string = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))  # get 10 random chars for temp_file prefix

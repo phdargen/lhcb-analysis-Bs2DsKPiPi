@@ -342,6 +342,9 @@ inline Bool_t DecayTree::LooseCutsLTU(Long64_t i){
     //b_nPV->GetEntry(i);
     //if(nPV > 5) return false;
 
+    b_Bs_DTF_ctau->GetEntry(i);
+    if(Bs_DTF_ctau[0] * 3.33564095 > 0.05) return false;
+
     b_Bs_MM->GetEntry(i);
     if(Bs_MM < 5200. || Bs_MM > 5700.) return false;
         

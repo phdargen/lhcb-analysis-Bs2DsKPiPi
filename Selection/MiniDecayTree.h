@@ -1183,7 +1183,7 @@ pi_minus_fromDs_PIDp_corr_MagUp;
 MiniDecayTree::MiniDecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString polarity, TString inFileLoc, TString outFileLoc, Bool_t charmLess, TString usePIDvar, Bool_t bkg, Bool_t ltu, Bool_t ss ) : DecayTree(decay,year,finalState,dataType, polarity, inFileLoc, outFileLoc, bkg, ltu, ss), _charmLess(charmLess), _usePIDvar(usePIDvar)
 {
     _inFileName = _outFileName;
-//     if(!_data) _inFileName.ReplaceAll(".root","_PID.root");
+     if(!_data) _inFileName.ReplaceAll(".root","_PID.root");
     _outFileName = _outFileName.ReplaceAll(TString("Mini/"),TString("Preselected/"));   
     if(_charmLess) _outFileName.ReplaceAll(".root","_charmLess.root");
 }

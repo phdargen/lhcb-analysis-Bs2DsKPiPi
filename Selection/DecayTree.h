@@ -4708,6 +4708,7 @@ void DecayTree::Init()
 	    fChain->SetBranchAddress("Bs_PV_chi2", Bs_PV_chi2, &b_Bs_PV_chi2);
 	    fChain->SetBranchAddress("Bs_PV_nDOF", Bs_PV_nDOF, &b_Bs_PV_nDOF);
    	    fChain->SetBranchAddress("nPV", &nPV, &b_nPV);
+	    fChain->SetBranchAddress("Bs_DTF_ctau", Bs_DTF_ctau, &b_Bs_DTF_ctau);
     }
     if(_decay== Decay::signal){
 	fChain->SetBranchAddress("K_plus_PIDK", &K_plus_PIDK, &b_K_plus_PIDK);
