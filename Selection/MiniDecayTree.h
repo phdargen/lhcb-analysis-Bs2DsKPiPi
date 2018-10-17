@@ -49,13 +49,20 @@ public :
     TLorentzVector pi_plus1;
     TLorentzVector pi_plus2;
     
-    TLorentzVector BsDTF_Ds;
     TLorentzVector BsDTF_K_plus;
     TLorentzVector BsDTF_pi_plus;
     TLorentzVector BsDTF_pi_minus;
     TLorentzVector BsDTF_pi_plus1;
     TLorentzVector BsDTF_pi_plus2;
-    
+
+    TLorentzVector BsDTF_Ds;
+    TLorentzVector BsDTF_K_plus_fromDs;
+    TLorentzVector BsDTF_K_minus_fromDs;
+    TLorentzVector BsDTF_pi_minus_fromDs;
+    TLorentzVector BsDTF_pi_plus_fromDs;
+    TLorentzVector BsDTF_pi_minus2_fromDs;
+
+    TLorentzVector DTF_Ds;    
     TLorentzVector DTF_K_plus_fromDs;
     TLorentzVector DTF_K_minus_fromDs;
     TLorentzVector DTF_pi_minus_fromDs;
@@ -491,6 +498,39 @@ pi_minus_fromDs_PIDp_corr_MagUp;
 
    Double_t pi_plus1_PIDp_gen_MagDown, pi_plus1_PIDp_gen_MagUp, pi_plus1_PIDp_corr_MagDown, pi_plus1_PIDp_corr_MagUp;
    Double_t pi_plus2_PIDp_gen_MagDown, pi_plus2_PIDp_gen_MagUp, pi_plus2_PIDp_corr_MagDown, pi_plus2_PIDp_corr_MagUp;
+
+
+ Short_t         Bs_OS_Muon_DEC;
+ Float_t         Bs_OS_Muon_PROB;
+ Short_t         Bs_OS_Electron_DEC;
+ Float_t         Bs_OS_Electron_PROB;
+ Short_t         Bs_OS_Kaon_DEC;
+ Float_t         Bs_OS_Kaon_PROB;
+ Short_t         Bs_VtxCharge_DEC;
+ Float_t         Bs_VtxCharge_PROB;
+ Short_t         Bs_OS_nnetKaon_DEC;
+ Float_t         Bs_OS_nnetKaon_PROB;
+ Short_t         Bs_SS_nnetKaon_DEC;
+ Float_t         Bs_SS_nnetKaon_PROB;
+ Short_t         Bs_OS_Charm_DEC;
+ Float_t         Bs_OS_Charm_PROB;
+
+
+ Int_t         Bs_OS_Muon_TAGDEC;
+ Double_t         Bs_OS_Muon_TAGETA;
+ Int_t         Bs_OS_Electron_TAGDEC;
+ Double_t         Bs_OS_Electron_TAGETA;
+ Int_t         Bs_OS_Kaon_TAGDEC;
+ Double_t         Bs_OS_Kaon_TAGETA;
+ Int_t         Bs_VtxCharge_TAGDEC;
+ Double_t         Bs_VtxCharge_TAGETA;
+ Int_t         Bs_OS_nnetKaon_TAGDEC;
+ Double_t         Bs_OS_nnetKaon_TAGETA;
+ Int_t         Bs_SS_nnetKaon_TAGDEC;
+ Double_t         Bs_SS_nnetKaon_TAGETA;
+ Int_t         Bs_OS_Charm_TAGDEC;
+ Double_t         Bs_OS_Charm_TAGETA;
+
 
 /*
  Short_t         Bs_OS_Muon_DEC;
@@ -1143,7 +1183,7 @@ pi_minus_fromDs_PIDp_corr_MagUp;
 MiniDecayTree::MiniDecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString polarity, TString inFileLoc, TString outFileLoc, Bool_t charmLess, TString usePIDvar, Bool_t bkg, Bool_t ltu, Bool_t ss ) : DecayTree(decay,year,finalState,dataType, polarity, inFileLoc, outFileLoc, bkg, ltu, ss), _charmLess(charmLess), _usePIDvar(usePIDvar)
 {
     _inFileName = _outFileName;
-    if(!_data) _inFileName.ReplaceAll(".root","_PID.root");
+//     if(!_data) _inFileName.ReplaceAll(".root","_PID.root");
     _outFileName = _outFileName.ReplaceAll(TString("Mini/"),TString("Preselected/"));   
     if(_charmLess) _outFileName.ReplaceAll(".root","_charmLess.root");
 }
@@ -1168,6 +1208,35 @@ void MiniDecayTree::Init()
         
     fChain->SetBranchAddress("Bs_MINIPNEXTBEST", &Bs_MINIPNEXTBEST, &b_Bs_MINIPNEXTBEST);
     fChain->SetBranchAddress("Bs_MINIPCHI2NEXTBEST", &Bs_MINIPCHI2NEXTBEST, &b_Bs_MINIPCHI2NEXTBEST);
+
+    if(_year <= 12 && _ltu ==false && _ss == false){
+	fChain->SetBranchAddress("Bs_OS_Muon_DEC", &Bs_OS_Muon_DEC);
+        fChain->SetBranchAddress("Bs_OS_Muon_PROB", &Bs_OS_Muon_PROB);
+        fChain->SetBranchAddress("Bs_OS_Electron_DEC", &Bs_OS_Electron_DEC);
+        fChain->SetBranchAddress("Bs_OS_Electron_PROB", &Bs_OS_Electron_PROB);
+        fChain->SetBranchAddress("Bs_VtxCharge_DEC", &Bs_VtxCharge_DEC);
+        fChain->SetBranchAddress("Bs_VtxCharge_PROB", &Bs_VtxCharge_PROB);
+        fChain->SetBranchAddress("Bs_OS_nnetKaon_DEC", &Bs_OS_nnetKaon_DEC);
+        fChain->SetBranchAddress("Bs_OS_nnetKaon_PROB", &Bs_OS_nnetKaon_PROB);
+        fChain->SetBranchAddress("Bs_SS_nnetKaon_DEC", &Bs_SS_nnetKaon_DEC);
+        fChain->SetBranchAddress("Bs_SS_nnetKaon_PROB", &Bs_SS_nnetKaon_PROB);
+        fChain->SetBranchAddress("Bs_OS_Charm_DEC", &Bs_OS_Charm_DEC);
+        fChain->SetBranchAddress("Bs_OS_Charm_PROB", &Bs_OS_Charm_PROB);
+    }
+    else if(_ltu ==false && _ss == false){
+	fChain->SetBranchAddress("Bs_OSMuonLatest_TAGDEC", &Bs_OS_Muon_TAGDEC);
+        fChain->SetBranchAddress("Bs_OSMuonLatest_TAGETA", &Bs_OS_Muon_TAGETA);
+        fChain->SetBranchAddress("Bs_OSElectronLatest_TAGDEC", &Bs_OS_Electron_TAGDEC);
+        fChain->SetBranchAddress("Bs_OSElectronLatest_TAGETA", &Bs_OS_Electron_TAGETA);
+        fChain->SetBranchAddress("Bs_OSVtxCh_TAGDEC", &Bs_VtxCharge_TAGDEC);
+        fChain->SetBranchAddress("Bs_OSVtxCh_TAGETA", &Bs_VtxCharge_TAGETA);
+        fChain->SetBranchAddress("Bs_OSKaonLatest_TAGDEC", &Bs_OS_nnetKaon_TAGDEC);
+        fChain->SetBranchAddress("Bs_OSKaonLatest_TAGETA", &Bs_OS_nnetKaon_TAGETA);
+        fChain->SetBranchAddress("Bs_SSKaonLatest_TAGDEC", &Bs_SS_nnetKaon_TAGDEC);
+        fChain->SetBranchAddress("Bs_SSKaonLatest_TAGETA", &Bs_SS_nnetKaon_TAGETA);
+        fChain->SetBranchAddress("Bs_OSCharm_TAGDEC", &Bs_OS_Charm_TAGDEC);
+        fChain->SetBranchAddress("Bs_OSCharm_TAGETA", &Bs_OS_Charm_TAGETA);
+    }
 
     if(_decay == Decay::signal){
     	fChain->SetBranchAddress("K_plus_hasRich", &K_plus_hasRich);
@@ -1942,28 +2011,7 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("Bs_TAGDECISION_OS", &Bs_TAGDECISION_OS, &b_Bs_TAGDECISION_OS);
         fChain->SetBranchAddress("Bs_TAGOMEGA_OS", &Bs_TAGOMEGA_OS, &b_Bs_TAGOMEGA_OS);
         fChain->SetBranchAddress("Bs_TAGGER", &Bs_TAGGER, &b_Bs_TAGGER);
-        fChain->SetBranchAddress("Bs_OS_Muon_DEC", &Bs_OS_Muon_DEC, &b_Bs_OS_Muon_DEC);
-        fChain->SetBranchAddress("Bs_OS_Muon_PROB", &Bs_OS_Muon_PROB, &b_Bs_OS_Muon_PROB);
-        fChain->SetBranchAddress("Bs_OS_Electron_DEC", &Bs_OS_Electron_DEC, &b_Bs_OS_Electron_DEC);
-        fChain->SetBranchAddress("Bs_OS_Electron_PROB", &Bs_OS_Electron_PROB, &b_Bs_OS_Electron_PROB);
-        fChain->SetBranchAddress("Bs_OS_Kaon_DEC", &Bs_OS_Kaon_DEC, &b_Bs_OS_Kaon_DEC);
-        fChain->SetBranchAddress("Bs_OS_Kaon_PROB", &Bs_OS_Kaon_PROB, &b_Bs_OS_Kaon_PROB);
-        fChain->SetBranchAddress("Bs_SS_Kaon_DEC", &Bs_SS_Kaon_DEC, &b_Bs_SS_Kaon_DEC);
-        fChain->SetBranchAddress("Bs_SS_Kaon_PROB", &Bs_SS_Kaon_PROB, &b_Bs_SS_Kaon_PROB);
-        fChain->SetBranchAddress("Bs_SS_Pion_DEC", &Bs_SS_Pion_DEC, &b_Bs_SS_Pion_DEC);
-        fChain->SetBranchAddress("Bs_SS_Pion_PROB", &Bs_SS_Pion_PROB, &b_Bs_SS_Pion_PROB);
-        fChain->SetBranchAddress("Bs_SS_PionBDT_DEC", &Bs_SS_PionBDT_DEC, &b_Bs_SS_PionBDT_DEC);
-        fChain->SetBranchAddress("Bs_SS_PionBDT_PROB", &Bs_SS_PionBDT_PROB, &b_Bs_SS_PionBDT_PROB);
-        fChain->SetBranchAddress("Bs_VtxCharge_DEC", &Bs_VtxCharge_DEC, &b_Bs_VtxCharge_DEC);
-        fChain->SetBranchAddress("Bs_VtxCharge_PROB", &Bs_VtxCharge_PROB, &b_Bs_VtxCharge_PROB);
-        fChain->SetBranchAddress("Bs_OS_nnetKaon_DEC", &Bs_OS_nnetKaon_DEC, &b_Bs_OS_nnetKaon_DEC);
-        fChain->SetBranchAddress("Bs_OS_nnetKaon_PROB", &Bs_OS_nnetKaon_PROB, &b_Bs_OS_nnetKaon_PROB);
-        fChain->SetBranchAddress("Bs_SS_nnetKaon_DEC", &Bs_SS_nnetKaon_DEC, &b_Bs_SS_nnetKaon_DEC);
-        fChain->SetBranchAddress("Bs_SS_nnetKaon_PROB", &Bs_SS_nnetKaon_PROB, &b_Bs_SS_nnetKaon_PROB);
-        fChain->SetBranchAddress("Bs_SS_Proton_DEC", &Bs_SS_Proton_DEC, &b_Bs_SS_Proton_DEC);
-        fChain->SetBranchAddress("Bs_SS_Proton_PROB", &Bs_SS_Proton_PROB, &b_Bs_SS_Proton_PROB);
-        fChain->SetBranchAddress("Bs_OS_Charm_DEC", &Bs_OS_Charm_DEC, &b_Bs_OS_Charm_DEC);
-        fChain->SetBranchAddress("Bs_OS_Charm_PROB", &Bs_OS_Charm_PROB, &b_Bs_OS_Charm_PROB);*/
+        fChain->SetBranchAddress("Bs_OS_Muon_DEC", &Bs_OS_Muon_DEC, &b_Bs_OS_Muon_DEC);*/
         fChain->SetBranchAddress("Bs_ptasy_1.00", &Bs_ptasy_1_00, &b_Bs_ptasy_1_00);
         fChain->SetBranchAddress("Bs_B0DTF_nPV", &Bs_B0DTF_nPV, &b_Bs_B0DTF_nPV);
         fChain->SetBranchAddress("Bs_B0DTF_D_splus_M", Bs_B0DTF_D_splus_M, &b_Bs_B0DTF_D_splus_M);
@@ -2291,26 +2339,6 @@ void MiniDecayTree::Init()
         //fChain->SetBranchAddress("Ds_TAUCHI2", &Ds_TAUCHI2, &b_Ds_TAUCHI2);
         fChain->SetBranchAddress("Ds_ptasy_1.00", &Ds_ptasy_1_00, &b_Ds_ptasy_1_00);
         fChain->SetBranchAddress("pi_plus_fromDs_ETA", &pi_plus_fromDs_ETA, &b_pi_plus_fromDs_ETA);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV2_ProbNNmu", &pi_plus_fromDs_MC12TuneV2_ProbNNmu, &b_pi_plus_fromDs_MC12TuneV2_ProbNNmu);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV2_ProbNNpi", &pi_plus_fromDs_MC12TuneV2_ProbNNpi, &b_pi_plus_fromDs_MC12TuneV2_ProbNNpi);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV2_ProbNNk", &pi_plus_fromDs_MC12TuneV2_ProbNNk, &b_pi_plus_fromDs_MC12TuneV2_ProbNNk);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV2_ProbNNp", &pi_plus_fromDs_MC12TuneV2_ProbNNp, &b_pi_plus_fromDs_MC12TuneV2_ProbNNp);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV2_ProbNNghost", &pi_plus_fromDs_MC12TuneV2_ProbNNghost, &b_pi_plus_fromDs_MC12TuneV2_ProbNNghost);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV3_ProbNNmu", &pi_plus_fromDs_MC12TuneV3_ProbNNmu, &b_pi_plus_fromDs_MC12TuneV3_ProbNNmu);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV3_ProbNNpi", &pi_plus_fromDs_MC12TuneV3_ProbNNpi, &b_pi_plus_fromDs_MC12TuneV3_ProbNNpi);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV3_ProbNNk", &pi_plus_fromDs_MC12TuneV3_ProbNNk, &b_pi_plus_fromDs_MC12TuneV3_ProbNNk);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV3_ProbNNp", &pi_plus_fromDs_MC12TuneV3_ProbNNp, &b_pi_plus_fromDs_MC12TuneV3_ProbNNp);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV3_ProbNNghost", &pi_plus_fromDs_MC12TuneV3_ProbNNghost, &b_pi_plus_fromDs_MC12TuneV3_ProbNNghost);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV4_ProbNNmu", &pi_plus_fromDs_MC12TuneV4_ProbNNmu, &b_pi_plus_fromDs_MC12TuneV4_ProbNNmu);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV4_ProbNNpi", &pi_plus_fromDs_MC12TuneV4_ProbNNpi, &b_pi_plus_fromDs_MC12TuneV4_ProbNNpi);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV4_ProbNNk", &pi_plus_fromDs_MC12TuneV4_ProbNNk, &b_pi_plus_fromDs_MC12TuneV4_ProbNNk);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV4_ProbNNp", &pi_plus_fromDs_MC12TuneV4_ProbNNp, &b_pi_plus_fromDs_MC12TuneV4_ProbNNp);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC12TuneV4_ProbNNghost", &pi_plus_fromDs_MC12TuneV4_ProbNNghost, &b_pi_plus_fromDs_MC12TuneV4_ProbNNghost);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC15TuneV1_ProbNNmu", &pi_plus_fromDs_MC15TuneV1_ProbNNmu, &b_pi_plus_fromDs_MC15TuneV1_ProbNNmu);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC15TuneV1_ProbNNpi", &pi_plus_fromDs_MC15TuneV1_ProbNNpi, &b_pi_plus_fromDs_MC15TuneV1_ProbNNpi);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC15TuneV1_ProbNNk", &pi_plus_fromDs_MC15TuneV1_ProbNNk, &b_pi_plus_fromDs_MC15TuneV1_ProbNNk);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC15TuneV1_ProbNNp", &pi_plus_fromDs_MC15TuneV1_ProbNNp, &b_pi_plus_fromDs_MC15TuneV1_ProbNNp);
-        fChain->SetBranchAddress("pi_plus_fromDs_MC15TuneV1_ProbNNghost", &pi_plus_fromDs_MC15TuneV1_ProbNNghost, &b_pi_plus_fromDs_MC15TuneV1_ProbNNghost);
         fChain->SetBranchAddress("pi_plus_fromDs_IP_OWNPV", &pi_plus_fromDs_IP_OWNPV, &b_pi_plus_fromDs_IP_OWNPV);
         fChain->SetBranchAddress("pi_plus_fromDs_IPCHI2_OWNPV", &pi_plus_fromDs_IPCHI2_OWNPV, &b_pi_plus_fromDs_IPCHI2_OWNPV);
         fChain->SetBranchAddress("pi_plus_fromDs_P", &pi_plus_fromDs_P, &b_pi_plus_fromDs_P);
@@ -2333,26 +2361,6 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("pi_plus_fromDs_TRACK_GhostProb", &pi_plus_fromDs_TRACK_GhostProb, &b_pi_plus_fromDs_TRACK_GhostProb);
         fChain->SetBranchAddress("pi_plus_fromDs_ptasy_1.00", &pi_plus_fromDs_ptasy_1_00, &b_pi_plus_fromDs_ptasy_1_00);
         fChain->SetBranchAddress("pi_minus_fromDs_ETA", &pi_minus_fromDs_ETA, &b_pi_minus_fromDs_ETA);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV2_ProbNNmu", &pi_minus_fromDs_MC12TuneV2_ProbNNmu, &b_pi_minus_fromDs_MC12TuneV2_ProbNNmu);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV2_ProbNNpi", &pi_minus_fromDs_MC12TuneV2_ProbNNpi, &b_pi_minus_fromDs_MC12TuneV2_ProbNNpi);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV2_ProbNNk", &pi_minus_fromDs_MC12TuneV2_ProbNNk, &b_pi_minus_fromDs_MC12TuneV2_ProbNNk);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV2_ProbNNp", &pi_minus_fromDs_MC12TuneV2_ProbNNp, &b_pi_minus_fromDs_MC12TuneV2_ProbNNp);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV2_ProbNNghost", &pi_minus_fromDs_MC12TuneV2_ProbNNghost, &b_pi_minus_fromDs_MC12TuneV2_ProbNNghost);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV3_ProbNNmu", &pi_minus_fromDs_MC12TuneV3_ProbNNmu, &b_pi_minus_fromDs_MC12TuneV3_ProbNNmu);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV3_ProbNNpi", &pi_minus_fromDs_MC12TuneV3_ProbNNpi, &b_pi_minus_fromDs_MC12TuneV3_ProbNNpi);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV3_ProbNNk", &pi_minus_fromDs_MC12TuneV3_ProbNNk, &b_pi_minus_fromDs_MC12TuneV3_ProbNNk);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV3_ProbNNp", &pi_minus_fromDs_MC12TuneV3_ProbNNp, &b_pi_minus_fromDs_MC12TuneV3_ProbNNp);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV3_ProbNNghost", &pi_minus_fromDs_MC12TuneV3_ProbNNghost, &b_pi_minus_fromDs_MC12TuneV3_ProbNNghost);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV4_ProbNNmu", &pi_minus_fromDs_MC12TuneV4_ProbNNmu, &b_pi_minus_fromDs_MC12TuneV4_ProbNNmu);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV4_ProbNNpi", &pi_minus_fromDs_MC12TuneV4_ProbNNpi, &b_pi_minus_fromDs_MC12TuneV4_ProbNNpi);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV4_ProbNNk", &pi_minus_fromDs_MC12TuneV4_ProbNNk, &b_pi_minus_fromDs_MC12TuneV4_ProbNNk);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV4_ProbNNp", &pi_minus_fromDs_MC12TuneV4_ProbNNp, &b_pi_minus_fromDs_MC12TuneV4_ProbNNp);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC12TuneV4_ProbNNghost", &pi_minus_fromDs_MC12TuneV4_ProbNNghost, &b_pi_minus_fromDs_MC12TuneV4_ProbNNghost);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC15TuneV1_ProbNNmu", &pi_minus_fromDs_MC15TuneV1_ProbNNmu, &b_pi_minus_fromDs_MC15TuneV1_ProbNNmu);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC15TuneV1_ProbNNpi", &pi_minus_fromDs_MC15TuneV1_ProbNNpi, &b_pi_minus_fromDs_MC15TuneV1_ProbNNpi);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC15TuneV1_ProbNNk", &pi_minus_fromDs_MC15TuneV1_ProbNNk, &b_pi_minus_fromDs_MC15TuneV1_ProbNNk);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC15TuneV1_ProbNNp", &pi_minus_fromDs_MC15TuneV1_ProbNNp, &b_pi_minus_fromDs_MC15TuneV1_ProbNNp);
-        fChain->SetBranchAddress("pi_minus_fromDs_MC15TuneV1_ProbNNghost", &pi_minus_fromDs_MC15TuneV1_ProbNNghost, &b_pi_minus_fromDs_MC15TuneV1_ProbNNghost);
         fChain->SetBranchAddress("pi_minus_fromDs_IP_OWNPV", &pi_minus_fromDs_IP_OWNPV, &b_pi_minus_fromDs_IP_OWNPV);
         fChain->SetBranchAddress("pi_minus_fromDs_IPCHI2_OWNPV", &pi_minus_fromDs_IPCHI2_OWNPV, &b_pi_minus_fromDs_IPCHI2_OWNPV);
         fChain->SetBranchAddress("pi_minus_fromDs_P", &pi_minus_fromDs_P, &b_pi_minus_fromDs_P);
@@ -2375,26 +2383,6 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("pi_minus_fromDs_TRACK_GhostProb", &pi_minus_fromDs_TRACK_GhostProb, &b_pi_minus_fromDs_TRACK_GhostProb);
         fChain->SetBranchAddress("pi_minus_fromDs_ptasy_1.00", &pi_minus_fromDs_ptasy_1_00, &b_pi_minus_fromDs_ptasy_1_00);
         fChain->SetBranchAddress("pi_minus2_fromDs_ETA", &pi_minus2_fromDs_ETA, &b_pi_minus2_fromDs_ETA);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV2_ProbNNmu", &pi_minus2_fromDs_MC12TuneV2_ProbNNmu, &b_pi_minus2_fromDs_MC12TuneV2_ProbNNmu);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV2_ProbNNpi", &pi_minus2_fromDs_MC12TuneV2_ProbNNpi, &b_pi_minus2_fromDs_MC12TuneV2_ProbNNpi);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV2_ProbNNk", &pi_minus2_fromDs_MC12TuneV2_ProbNNk, &b_pi_minus2_fromDs_MC12TuneV2_ProbNNk);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV2_ProbNNp", &pi_minus2_fromDs_MC12TuneV2_ProbNNp, &b_pi_minus2_fromDs_MC12TuneV2_ProbNNp);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV2_ProbNNghost", &pi_minus2_fromDs_MC12TuneV2_ProbNNghost, &b_pi_minus2_fromDs_MC12TuneV2_ProbNNghost);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV3_ProbNNmu", &pi_minus2_fromDs_MC12TuneV3_ProbNNmu, &b_pi_minus2_fromDs_MC12TuneV3_ProbNNmu);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV3_ProbNNpi", &pi_minus2_fromDs_MC12TuneV3_ProbNNpi, &b_pi_minus2_fromDs_MC12TuneV3_ProbNNpi);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV3_ProbNNk", &pi_minus2_fromDs_MC12TuneV3_ProbNNk, &b_pi_minus2_fromDs_MC12TuneV3_ProbNNk);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV3_ProbNNp", &pi_minus2_fromDs_MC12TuneV3_ProbNNp, &b_pi_minus2_fromDs_MC12TuneV3_ProbNNp);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV3_ProbNNghost", &pi_minus2_fromDs_MC12TuneV3_ProbNNghost, &b_pi_minus2_fromDs_MC12TuneV3_ProbNNghost);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV4_ProbNNmu", &pi_minus2_fromDs_MC12TuneV4_ProbNNmu, &b_pi_minus2_fromDs_MC12TuneV4_ProbNNmu);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV4_ProbNNpi", &pi_minus2_fromDs_MC12TuneV4_ProbNNpi, &b_pi_minus2_fromDs_MC12TuneV4_ProbNNpi);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV4_ProbNNk", &pi_minus2_fromDs_MC12TuneV4_ProbNNk, &b_pi_minus2_fromDs_MC12TuneV4_ProbNNk);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV4_ProbNNp", &pi_minus2_fromDs_MC12TuneV4_ProbNNp, &b_pi_minus2_fromDs_MC12TuneV4_ProbNNp);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC12TuneV4_ProbNNghost", &pi_minus2_fromDs_MC12TuneV4_ProbNNghost, &b_pi_minus2_fromDs_MC12TuneV4_ProbNNghost);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC15TuneV1_ProbNNmu", &pi_minus2_fromDs_MC15TuneV1_ProbNNmu, &b_pi_minus2_fromDs_MC15TuneV1_ProbNNmu);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC15TuneV1_ProbNNpi", &pi_minus2_fromDs_MC15TuneV1_ProbNNpi, &b_pi_minus2_fromDs_MC15TuneV1_ProbNNpi);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC15TuneV1_ProbNNk", &pi_minus2_fromDs_MC15TuneV1_ProbNNk, &b_pi_minus2_fromDs_MC15TuneV1_ProbNNk);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC15TuneV1_ProbNNp", &pi_minus2_fromDs_MC15TuneV1_ProbNNp, &b_pi_minus2_fromDs_MC15TuneV1_ProbNNp);
-        fChain->SetBranchAddress("pi_minus2_fromDs_MC15TuneV1_ProbNNghost", &pi_minus2_fromDs_MC15TuneV1_ProbNNghost, &b_pi_minus2_fromDs_MC15TuneV1_ProbNNghost);
         fChain->SetBranchAddress("pi_minus2_fromDs_IP_OWNPV", &pi_minus2_fromDs_IP_OWNPV, &b_pi_minus2_fromDs_IP_OWNPV);
         fChain->SetBranchAddress("pi_minus2_fromDs_IPCHI2_OWNPV", &pi_minus2_fromDs_IPCHI2_OWNPV, &b_pi_minus2_fromDs_IPCHI2_OWNPV);
         fChain->SetBranchAddress("pi_minus2_fromDs_P", &pi_minus2_fromDs_P, &b_pi_minus2_fromDs_P);
@@ -2466,26 +2454,6 @@ void MiniDecayTree::Init()
         //fChain->SetBranchAddress("K_1_1270_plus_TAUCHI2", &K_1_1270_plus_TAUCHI2, &b_K_1_1270_plus_TAUCHI2);
         fChain->SetBranchAddress("K_1_1270_plus_ptasy_1.00", &K_1_1270_plus_ptasy_1_00, &b_K_1_1270_plus_ptasy_1_00);
         fChain->SetBranchAddress("K_plus_ETA", &K_plus_ETA, &b_K_plus_ETA);
-        fChain->SetBranchAddress("K_plus_MC12TuneV2_ProbNNmu", &K_plus_MC12TuneV2_ProbNNmu, &b_K_plus_MC12TuneV2_ProbNNmu);
-        fChain->SetBranchAddress("K_plus_MC12TuneV2_ProbNNpi", &K_plus_MC12TuneV2_ProbNNpi, &b_K_plus_MC12TuneV2_ProbNNpi);
-        fChain->SetBranchAddress("K_plus_MC12TuneV2_ProbNNk", &K_plus_MC12TuneV2_ProbNNk, &b_K_plus_MC12TuneV2_ProbNNk);
-        fChain->SetBranchAddress("K_plus_MC12TuneV2_ProbNNp", &K_plus_MC12TuneV2_ProbNNp, &b_K_plus_MC12TuneV2_ProbNNp);
-        fChain->SetBranchAddress("K_plus_MC12TuneV2_ProbNNghost", &K_plus_MC12TuneV2_ProbNNghost, &b_K_plus_MC12TuneV2_ProbNNghost);
-        fChain->SetBranchAddress("K_plus_MC12TuneV3_ProbNNmu", &K_plus_MC12TuneV3_ProbNNmu, &b_K_plus_MC12TuneV3_ProbNNmu);
-        fChain->SetBranchAddress("K_plus_MC12TuneV3_ProbNNpi", &K_plus_MC12TuneV3_ProbNNpi, &b_K_plus_MC12TuneV3_ProbNNpi);
-        fChain->SetBranchAddress("K_plus_MC12TuneV3_ProbNNk", &K_plus_MC12TuneV3_ProbNNk, &b_K_plus_MC12TuneV3_ProbNNk);
-        fChain->SetBranchAddress("K_plus_MC12TuneV3_ProbNNp", &K_plus_MC12TuneV3_ProbNNp, &b_K_plus_MC12TuneV3_ProbNNp);
-        fChain->SetBranchAddress("K_plus_MC12TuneV3_ProbNNghost", &K_plus_MC12TuneV3_ProbNNghost, &b_K_plus_MC12TuneV3_ProbNNghost);
-        fChain->SetBranchAddress("K_plus_MC12TuneV4_ProbNNmu", &K_plus_MC12TuneV4_ProbNNmu, &b_K_plus_MC12TuneV4_ProbNNmu);
-        fChain->SetBranchAddress("K_plus_MC12TuneV4_ProbNNpi", &K_plus_MC12TuneV4_ProbNNpi, &b_K_plus_MC12TuneV4_ProbNNpi);
-        fChain->SetBranchAddress("K_plus_MC12TuneV4_ProbNNk", &K_plus_MC12TuneV4_ProbNNk, &b_K_plus_MC12TuneV4_ProbNNk);
-        fChain->SetBranchAddress("K_plus_MC12TuneV4_ProbNNp", &K_plus_MC12TuneV4_ProbNNp, &b_K_plus_MC12TuneV4_ProbNNp);
-        fChain->SetBranchAddress("K_plus_MC12TuneV4_ProbNNghost", &K_plus_MC12TuneV4_ProbNNghost, &b_K_plus_MC12TuneV4_ProbNNghost);
-        fChain->SetBranchAddress("K_plus_MC15TuneV1_ProbNNmu", &K_plus_MC15TuneV1_ProbNNmu, &b_K_plus_MC15TuneV1_ProbNNmu);
-        fChain->SetBranchAddress("K_plus_MC15TuneV1_ProbNNpi", &K_plus_MC15TuneV1_ProbNNpi, &b_K_plus_MC15TuneV1_ProbNNpi);
-        fChain->SetBranchAddress("K_plus_MC15TuneV1_ProbNNk", &K_plus_MC15TuneV1_ProbNNk, &b_K_plus_MC15TuneV1_ProbNNk);
-        fChain->SetBranchAddress("K_plus_MC15TuneV1_ProbNNp", &K_plus_MC15TuneV1_ProbNNp, &b_K_plus_MC15TuneV1_ProbNNp);
-        fChain->SetBranchAddress("K_plus_MC15TuneV1_ProbNNghost", &K_plus_MC15TuneV1_ProbNNghost, &b_K_plus_MC15TuneV1_ProbNNghost);
         fChain->SetBranchAddress("K_plus_IP_OWNPV", &K_plus_IP_OWNPV, &b_K_plus_IP_OWNPV);
         fChain->SetBranchAddress("K_plus_IPCHI2_OWNPV", &K_plus_IPCHI2_OWNPV, &b_K_plus_IPCHI2_OWNPV);
         fChain->SetBranchAddress("K_plus_P", &K_plus_P, &b_K_plus_P);
@@ -2508,26 +2476,6 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("K_plus_TRACK_GhostProb", &K_plus_TRACK_GhostProb, &b_K_plus_TRACK_GhostProb);
         fChain->SetBranchAddress("K_plus_ptasy_1.00", &K_plus_ptasy_1_00, &b_K_plus_ptasy_1_00);
         fChain->SetBranchAddress("pi_plus_ETA", &pi_plus_ETA, &b_pi_plus_ETA);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV2_ProbNNmu", &pi_plus_MC12TuneV2_ProbNNmu, &b_pi_plus_MC12TuneV2_ProbNNmu);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV2_ProbNNpi", &pi_plus_MC12TuneV2_ProbNNpi, &b_pi_plus_MC12TuneV2_ProbNNpi);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV2_ProbNNk", &pi_plus_MC12TuneV2_ProbNNk, &b_pi_plus_MC12TuneV2_ProbNNk);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV2_ProbNNp", &pi_plus_MC12TuneV2_ProbNNp, &b_pi_plus_MC12TuneV2_ProbNNp);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV2_ProbNNghost", &pi_plus_MC12TuneV2_ProbNNghost, &b_pi_plus_MC12TuneV2_ProbNNghost);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV3_ProbNNmu", &pi_plus_MC12TuneV3_ProbNNmu, &b_pi_plus_MC12TuneV3_ProbNNmu);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV3_ProbNNpi", &pi_plus_MC12TuneV3_ProbNNpi, &b_pi_plus_MC12TuneV3_ProbNNpi);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV3_ProbNNk", &pi_plus_MC12TuneV3_ProbNNk, &b_pi_plus_MC12TuneV3_ProbNNk);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV3_ProbNNp", &pi_plus_MC12TuneV3_ProbNNp, &b_pi_plus_MC12TuneV3_ProbNNp);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV3_ProbNNghost", &pi_plus_MC12TuneV3_ProbNNghost, &b_pi_plus_MC12TuneV3_ProbNNghost);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV4_ProbNNmu", &pi_plus_MC12TuneV4_ProbNNmu, &b_pi_plus_MC12TuneV4_ProbNNmu);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV4_ProbNNpi", &pi_plus_MC12TuneV4_ProbNNpi, &b_pi_plus_MC12TuneV4_ProbNNpi);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV4_ProbNNk", &pi_plus_MC12TuneV4_ProbNNk, &b_pi_plus_MC12TuneV4_ProbNNk);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV4_ProbNNp", &pi_plus_MC12TuneV4_ProbNNp, &b_pi_plus_MC12TuneV4_ProbNNp);
-        fChain->SetBranchAddress("pi_plus_MC12TuneV4_ProbNNghost", &pi_plus_MC12TuneV4_ProbNNghost, &b_pi_plus_MC12TuneV4_ProbNNghost);
-        fChain->SetBranchAddress("pi_plus_MC15TuneV1_ProbNNmu", &pi_plus_MC15TuneV1_ProbNNmu, &b_pi_plus_MC15TuneV1_ProbNNmu);
-        fChain->SetBranchAddress("pi_plus_MC15TuneV1_ProbNNpi", &pi_plus_MC15TuneV1_ProbNNpi, &b_pi_plus_MC15TuneV1_ProbNNpi);
-        fChain->SetBranchAddress("pi_plus_MC15TuneV1_ProbNNk", &pi_plus_MC15TuneV1_ProbNNk, &b_pi_plus_MC15TuneV1_ProbNNk);
-        fChain->SetBranchAddress("pi_plus_MC15TuneV1_ProbNNp", &pi_plus_MC15TuneV1_ProbNNp, &b_pi_plus_MC15TuneV1_ProbNNp);
-        fChain->SetBranchAddress("pi_plus_MC15TuneV1_ProbNNghost", &pi_plus_MC15TuneV1_ProbNNghost, &b_pi_plus_MC15TuneV1_ProbNNghost);
         fChain->SetBranchAddress("pi_plus_IP_OWNPV", &pi_plus_IP_OWNPV, &b_pi_plus_IP_OWNPV);
         fChain->SetBranchAddress("pi_plus_IPCHI2_OWNPV", &pi_plus_IPCHI2_OWNPV, &b_pi_plus_IPCHI2_OWNPV);
         fChain->SetBranchAddress("pi_plus_P", &pi_plus_P, &b_pi_plus_P);
@@ -2550,26 +2498,6 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("pi_plus_TRACK_GhostProb", &pi_plus_TRACK_GhostProb, &b_pi_plus_TRACK_GhostProb);
         fChain->SetBranchAddress("pi_plus_ptasy_1.00", &pi_plus_ptasy_1_00, &b_pi_plus_ptasy_1_00);
         fChain->SetBranchAddress("pi_minus_ETA", &pi_minus_ETA, &b_pi_minus_ETA);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV2_ProbNNmu", &pi_minus_MC12TuneV2_ProbNNmu, &b_pi_minus_MC12TuneV2_ProbNNmu);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV2_ProbNNpi", &pi_minus_MC12TuneV2_ProbNNpi, &b_pi_minus_MC12TuneV2_ProbNNpi);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV2_ProbNNk", &pi_minus_MC12TuneV2_ProbNNk, &b_pi_minus_MC12TuneV2_ProbNNk);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV2_ProbNNp", &pi_minus_MC12TuneV2_ProbNNp, &b_pi_minus_MC12TuneV2_ProbNNp);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV2_ProbNNghost", &pi_minus_MC12TuneV2_ProbNNghost, &b_pi_minus_MC12TuneV2_ProbNNghost);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV3_ProbNNmu", &pi_minus_MC12TuneV3_ProbNNmu, &b_pi_minus_MC12TuneV3_ProbNNmu);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV3_ProbNNpi", &pi_minus_MC12TuneV3_ProbNNpi, &b_pi_minus_MC12TuneV3_ProbNNpi);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV3_ProbNNk", &pi_minus_MC12TuneV3_ProbNNk, &b_pi_minus_MC12TuneV3_ProbNNk);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV3_ProbNNp", &pi_minus_MC12TuneV3_ProbNNp, &b_pi_minus_MC12TuneV3_ProbNNp);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV3_ProbNNghost", &pi_minus_MC12TuneV3_ProbNNghost, &b_pi_minus_MC12TuneV3_ProbNNghost);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV4_ProbNNmu", &pi_minus_MC12TuneV4_ProbNNmu, &b_pi_minus_MC12TuneV4_ProbNNmu);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV4_ProbNNpi", &pi_minus_MC12TuneV4_ProbNNpi, &b_pi_minus_MC12TuneV4_ProbNNpi);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV4_ProbNNk", &pi_minus_MC12TuneV4_ProbNNk, &b_pi_minus_MC12TuneV4_ProbNNk);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV4_ProbNNp", &pi_minus_MC12TuneV4_ProbNNp, &b_pi_minus_MC12TuneV4_ProbNNp);
-        fChain->SetBranchAddress("pi_minus_MC12TuneV4_ProbNNghost", &pi_minus_MC12TuneV4_ProbNNghost, &b_pi_minus_MC12TuneV4_ProbNNghost);
-        fChain->SetBranchAddress("pi_minus_MC15TuneV1_ProbNNmu", &pi_minus_MC15TuneV1_ProbNNmu, &b_pi_minus_MC15TuneV1_ProbNNmu);
-        fChain->SetBranchAddress("pi_minus_MC15TuneV1_ProbNNpi", &pi_minus_MC15TuneV1_ProbNNpi, &b_pi_minus_MC15TuneV1_ProbNNpi);
-        fChain->SetBranchAddress("pi_minus_MC15TuneV1_ProbNNk", &pi_minus_MC15TuneV1_ProbNNk, &b_pi_minus_MC15TuneV1_ProbNNk);
-        fChain->SetBranchAddress("pi_minus_MC15TuneV1_ProbNNp", &pi_minus_MC15TuneV1_ProbNNp, &b_pi_minus_MC15TuneV1_ProbNNp);
-        fChain->SetBranchAddress("pi_minus_MC15TuneV1_ProbNNghost", &pi_minus_MC15TuneV1_ProbNNghost, &b_pi_minus_MC15TuneV1_ProbNNghost);
         fChain->SetBranchAddress("pi_minus_IP_OWNPV", &pi_minus_IP_OWNPV, &b_pi_minus_IP_OWNPV);
         fChain->SetBranchAddress("pi_minus_IPCHI2_OWNPV", &pi_minus_IPCHI2_OWNPV, &b_pi_minus_IPCHI2_OWNPV);
         fChain->SetBranchAddress("pi_minus_P", &pi_minus_P, &b_pi_minus_P);
@@ -3417,8 +3345,6 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("Bs_L0Global_TOS", &Bs_L0Global_TOS, &b_Bs_L0Global_TOS);
         fChain->SetBranchAddress("Bs_L0HadronDecision_TIS", &Bs_L0HadronDecision_TIS, &b_Bs_L0HadronDecision_TIS);
         fChain->SetBranchAddress("Bs_L0HadronDecision_TOS", &Bs_L0HadronDecision_TOS, &b_Bs_L0HadronDecision_TOS);
-        fChain->SetBranchAddress("Bs_L0GlobalDecision_TIS", &Bs_L0GlobalDecision_TIS, &b_Bs_L0GlobalDecision_TIS);
-        fChain->SetBranchAddress("Bs_L0GlobalDecision_TOS", &Bs_L0GlobalDecision_TOS, &b_Bs_L0GlobalDecision_TOS);
 /*        fChain->SetBranchAddress("Bs_Hlt1TrackAllL0Decision_TIS", &Bs_Hlt1TrackAllL0Decision_TIS, &b_Bs_Hlt1TrackAllL0Decision_TIS);
         fChain->SetBranchAddress("Bs_Hlt1TrackAllL0Decision_TOS", &Bs_Hlt1TrackAllL0Decision_TOS, &b_Bs_Hlt1TrackAllL0Decision_TOS);
         fChain->SetBranchAddress("Bs_Hlt1TrackMVADecision_TIS", &Bs_Hlt1TrackMVADecision_TIS, &b_Bs_Hlt1TrackMVADecision_TIS);
@@ -4639,7 +4565,6 @@ void MiniDecayTree::Init()
 	fChain->SetBranchAddress("K_1_1270_plus_DOCA2", &K_1_1270_plus_DOCA2, &b_K_1_1270_plus_DOCA2);
 	fChain->SetBranchAddress("K_1_1270_plus_DOCA3", &K_1_1270_plus_DOCA3, &b_K_1_1270_plus_DOCA3);
 	fChain->SetBranchAddress("K_1_1270_plus_ETA", &K_1_1270_plus_ETA, &b_K_1_1270_plus_ETA);
-	fChain->SetBranchAddress("K_1_1270_plus_CosTheta", &K_1_1270_plus_CosTheta, &b_K_1_1270_plus_CosTheta);
 	fChain->SetBranchAddress("K_1_1270_plus_ENDVERTEX_X", &K_1_1270_plus_ENDVERTEX_X, &b_K_1_1270_plus_ENDVERTEX_X);
 	fChain->SetBranchAddress("K_1_1270_plus_ENDVERTEX_Y", &K_1_1270_plus_ENDVERTEX_Y, &b_K_1_1270_plus_ENDVERTEX_Y);
 	fChain->SetBranchAddress("K_1_1270_plus_ENDVERTEX_Z", &K_1_1270_plus_ENDVERTEX_Z, &b_K_1_1270_plus_ENDVERTEX_Z);
@@ -4648,7 +4573,6 @@ void MiniDecayTree::Init()
 	fChain->SetBranchAddress("K_1_1270_plus_ENDVERTEX_ZERR", &K_1_1270_plus_ENDVERTEX_ZERR, &b_K_1_1270_plus_ENDVERTEX_ZERR);
 	fChain->SetBranchAddress("K_1_1270_plus_ENDVERTEX_CHI2", &K_1_1270_plus_ENDVERTEX_CHI2, &b_K_1_1270_plus_ENDVERTEX_CHI2);
 	fChain->SetBranchAddress("K_1_1270_plus_ENDVERTEX_NDOF", &K_1_1270_plus_ENDVERTEX_NDOF, &b_K_1_1270_plus_ENDVERTEX_NDOF);
-	fChain->SetBranchAddress("K_1_1270_plus_ENDVERTEX_COV_", K_1_1270_plus_ENDVERTEX_COV_, &b_K_1_1270_plus_ENDVERTEX_COV_);
 	fChain->SetBranchAddress("K_1_1270_plus_OWNPV_X", &K_1_1270_plus_OWNPV_X, &b_K_1_1270_plus_OWNPV_X);
 	fChain->SetBranchAddress("K_1_1270_plus_OWNPV_Y", &K_1_1270_plus_OWNPV_Y, &b_K_1_1270_plus_OWNPV_Y);
 	fChain->SetBranchAddress("K_1_1270_plus_OWNPV_Z", &K_1_1270_plus_OWNPV_Z, &b_K_1_1270_plus_OWNPV_Z);
@@ -4657,7 +4581,6 @@ void MiniDecayTree::Init()
 	fChain->SetBranchAddress("K_1_1270_plus_OWNPV_ZERR", &K_1_1270_plus_OWNPV_ZERR, &b_K_1_1270_plus_OWNPV_ZERR);
 	fChain->SetBranchAddress("K_1_1270_plus_OWNPV_CHI2", &K_1_1270_plus_OWNPV_CHI2, &b_K_1_1270_plus_OWNPV_CHI2);
 	fChain->SetBranchAddress("K_1_1270_plus_OWNPV_NDOF", &K_1_1270_plus_OWNPV_NDOF, &b_K_1_1270_plus_OWNPV_NDOF);
-	fChain->SetBranchAddress("K_1_1270_plus_OWNPV_COV_", K_1_1270_plus_OWNPV_COV_, &b_K_1_1270_plus_OWNPV_COV_);
 	fChain->SetBranchAddress("K_1_1270_plus_IP_OWNPV", &K_1_1270_plus_IP_OWNPV, &b_K_1_1270_plus_IP_OWNPV);
 	fChain->SetBranchAddress("K_1_1270_plus_IPCHI2_OWNPV", &K_1_1270_plus_IPCHI2_OWNPV, &b_K_1_1270_plus_IPCHI2_OWNPV);
 	fChain->SetBranchAddress("K_1_1270_plus_FD_OWNPV", &K_1_1270_plus_FD_OWNPV, &b_K_1_1270_plus_FD_OWNPV);
@@ -4671,7 +4594,6 @@ void MiniDecayTree::Init()
 	fChain->SetBranchAddress("K_1_1270_plus_ORIVX_ZERR", &K_1_1270_plus_ORIVX_ZERR, &b_K_1_1270_plus_ORIVX_ZERR);
 	fChain->SetBranchAddress("K_1_1270_plus_ORIVX_CHI2", &K_1_1270_plus_ORIVX_CHI2, &b_K_1_1270_plus_ORIVX_CHI2);
 	fChain->SetBranchAddress("K_1_1270_plus_ORIVX_NDOF", &K_1_1270_plus_ORIVX_NDOF, &b_K_1_1270_plus_ORIVX_NDOF);
-	fChain->SetBranchAddress("K_1_1270_plus_ORIVX_COV_", K_1_1270_plus_ORIVX_COV_, &b_K_1_1270_plus_ORIVX_COV_);
 	fChain->SetBranchAddress("K_1_1270_plus_FD_ORIVX", &K_1_1270_plus_FD_ORIVX, &b_K_1_1270_plus_FD_ORIVX);
 	fChain->SetBranchAddress("K_1_1270_plus_FDCHI2_ORIVX", &K_1_1270_plus_FDCHI2_ORIVX, &b_K_1_1270_plus_FDCHI2_ORIVX);
 	fChain->SetBranchAddress("K_1_1270_plus_DIRA_ORIVX", &K_1_1270_plus_DIRA_ORIVX, &b_K_1_1270_plus_DIRA_ORIVX);
@@ -4683,7 +4605,6 @@ void MiniDecayTree::Init()
 	fChain->SetBranchAddress("K_1_1270_plus_PZ", &K_1_1270_plus_PZ, &b_K_1_1270_plus_PZ);
 	fChain->SetBranchAddress("K_1_1270_plus_MM", &K_1_1270_plus_MM, &b_K_1_1270_plus_MM);
 	fChain->SetBranchAddress("K_1_1270_plus_MMERR", &K_1_1270_plus_MMERR, &b_K_1_1270_plus_MMERR);
-	fChain->SetBranchAddress("K_1_1270_plus_M", &K_1_1270_plus_M, &b_K_1_1270_plus_M);
 	fChain->SetBranchAddress("K_1_1270_plus_ID", &K_1_1270_plus_ID, &b_K_1_1270_plus_ID);
         fChain->SetBranchAddress("K_1_1270_plus_ptasy_1.00", &K_1_1270_plus_ptasy_1_00, &b_K_1_1270_plus_ptasy_1_00);
 	fChain->SetBranchAddress("K_plus_ETA", &K_plus_ETA, &b_K_plus_ETA);

@@ -54,17 +54,17 @@ TTree* DecayTree::GetInputTree(){
     }
 
     else if(_decay==Decay::signal && _data==DataType::data && _year == 15){
-	TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/15/";
+	TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_10_18/Signal/Data/15/";
         chain->Add(loc+"b2dhhh*.root");
     }
 
     else if(_decay==Decay::signal && _data==DataType::data && _year == 16 && _ltu == false && _ss == false){
-        TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/16/";
+        TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_10_18/Signal/Data/16/";
         chain->Add(loc+"b2dhhh*.root");
     }
 
     else if(_decay==Decay::signal && _data==DataType::data && _year == 16 && _ltu == true){
-	TString loc = "/auto/data/dargent/BsDsKpipi/Stripped/Signal/Data/16LTU/";
+	TString loc = "/auto/data/kecke/BsDsKpipi/LTU_16/";
         chain->Add(loc+"b2dhhh*.root");
     }
 
@@ -76,7 +76,12 @@ TTree* DecayTree::GetInputTree(){
     }
 
     else if(_decay==Decay::signal && _data==DataType::data && _year == 17 && _ltu == false){
-        TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Signal/Data/17/";
+        TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_10_18/Signal/Data/17/";
+        chain->Add(loc+"b2dhhh*.root");
+    }
+
+    else if(_decay==Decay::signal && _data==DataType::data && _year == 17 && _ltu == true){
+        TString loc = "/auto/data/kecke/BsDsKpipi/LTU_17/";
         chain->Add(loc+"b2dhhh*.root");
     }
 
@@ -91,9 +96,62 @@ TTree* DecayTree::GetInputTree(){
    }
 
     else if(_decay==Decay::norm && _data==DataType::data && _year == 17){
-        TString loc = "/auto/data/kecke/B2DPiPiPi/16/";
+        TString loc = "/auto/data/dargent/BsDsKpipi/Stripped_04_18/Norm/Data/17/";
         chain->Add(loc+"b2dhhh*.root");
    }
+
+  else if(_decay==Decay::norm && _data==DataType::mc && _year == 11){
+        TString loc = "/auto/data/kecke/B2DPiPiPi/11DMC/";
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/kecke/B2DPiPiPi/11UMC/";
+        chain->Add(loc+"b2dhhh*.root");
+   }
+  else if(_decay==Decay::norm && _data==DataType::mc && _year == 12){
+        TString loc = "/auto/data/kecke/B2DPiPiPi/12DMC/";
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/kecke/B2DPiPiPi/12UMC/";
+        chain->Add(loc+"b2dhhh*.root");
+   }
+  else if(_decay==Decay::norm && _data==DataType::mc && _year == 15){
+        TString loc = "/auto/data/kecke/B2DPiPiPi/15DMC/";
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/kecke/B2DPiPiPi/15UMC/";
+        chain->Add(loc+"b2dhhh*.root");
+   }
+  else if(_decay==Decay::norm && _data==DataType::mc && _year == 16){
+        TString loc = "/auto/data/kecke/B2DPiPiPi/16DMC/";
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/kecke/B2DPiPiPi/16UMC/";
+        chain->Add(loc+"b2dhhh*.root");
+   }
+
+  else if(_decay==Decay::signal && _data==DataType::mc && _year == 11){
+        TString loc = "/auto/data/kecke/B2DKPiPi/11DMC/";
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/kecke/B2DKPiPi/11UMC/";
+        chain->Add(loc+"b2dhhh*.root");
+   }
+  else if(_decay==Decay::signal && _data==DataType::mc && _year == 12){
+        TString loc = "/auto/data/kecke/B2DKPiPi/12DMC/";
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/kecke/B2DKPiPi/12UMC/";
+        chain->Add(loc+"b2dhhh*.root");
+   }
+  else if(_decay==Decay::signal && _data==DataType::mc && _year == 15){
+        TString loc = "/auto/data/kecke/B2DKPiPi/15DMC/";
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/kecke/B2DKPiPi/15UMC/";
+        chain->Add(loc+"b2dhhh*.root");
+   }
+  else if(_decay==Decay::signal && _data==DataType::mc && _year == 16){
+        TString loc = "/auto/data/kecke/B2DKPiPi/16DMC/";
+        chain->Add(loc+"b2dhhh*.root");
+        loc = "/auto/data/kecke/B2DKPiPi/16UMC/";
+        chain->Add(loc+"b2dhhh*.root");
+   }
+
+
+
 
     else {
         TString fileName = _inFileLoc + "Stripped/";
@@ -175,7 +233,7 @@ inline Bool_t DecayTree::TriggerCuts(Long64_t i){
     b_Bs_L0HadronDecision_TOS->GetEntry(i);
     if( (!Bs_L0Global_TIS) && (!Bs_L0HadronDecision_TOS)) return false;
     
-    if(_year == 15 || _year == 16){
+    if(_year == 15 || _year == 16 || _year == 17){
         b_Bs_Hlt1TrackMVADecision_TOS->GetEntry(i);
         b_Bs_Hlt1TwoTrackMVADecision_TOS->GetEntry(i);
         if((!Bs_Hlt1TrackMVADecision_TOS) && (!Bs_Hlt1TwoTrackMVADecision_TOS) ) return false;
@@ -183,9 +241,14 @@ inline Bool_t DecayTree::TriggerCuts(Long64_t i){
         b_Bs_Hlt2Topo2BodyDecision_TOS->GetEntry(i);
         b_Bs_Hlt2Topo3BodyDecision_TOS->GetEntry(i);
         b_Bs_Hlt2Topo4BodyDecision_TOS->GetEntry(i);
-        b_Bs_Hlt2PhiIncPhiDecision_TOS->GetEntry(i);
-        if((!Bs_Hlt2Topo2BodyDecision_TOS) &&  (!Bs_Hlt2Topo3BodyDecision_TOS) && (!Bs_Hlt2Topo4BodyDecision_TOS)  
-        && (!Bs_Hlt2PhiIncPhiDecision_TOS) ) return false;
+	if(_year == 15){
+		b_Bs_Hlt2IncPhiDecision_TOS->GetEntry(i);
+        	if((!Bs_Hlt2Topo2BodyDecision_TOS) &&  (!Bs_Hlt2Topo3BodyDecision_TOS) && (!Bs_Hlt2Topo4BodyDecision_TOS) && (!Bs_Hlt2IncPhiDecision_TOS) ) return false;	
+	}
+	else {
+		b_Bs_Hlt2PhiIncPhiDecision_TOS->GetEntry(i);
+        	if((!Bs_Hlt2Topo2BodyDecision_TOS) &&  (!Bs_Hlt2Topo3BodyDecision_TOS) && (!Bs_Hlt2Topo4BodyDecision_TOS) && (!Bs_Hlt2PhiIncPhiDecision_TOS) ) return false;
+	}
     }
     
     else if(_year == 11 || _year == 12){
@@ -244,8 +307,31 @@ inline Bool_t DecayTree::LooseCuts(Long64_t i){
     //if(Ds_FDCHI2_ORIVX < 0) return false;
 
     if(_decay== Decay::signal){
-        b_K_plus_PIDK->GetEntry(i);
-        if(_data)if(K_plus_PIDK<2) return false;
+        if(_data){
+		b_K_plus_PIDK->GetEntry(i);
+        	if(K_plus_PIDK<5) return false;
+	}else {
+		b_Bs_BKGCAT->GetEntry(i);
+		if(Bs_BKGCAT != 20 && Bs_BKGCAT != 60) return false;
+		b_Bs_BsDTF_K_1_1270_plus_M->GetEntry(i);
+		if(Bs_BsDTF_K_1_1270_plus_M[0] > 2500) return false;
+	}
+    }
+
+    else if(_decay == Decay::norm){
+	b_Bs_BsDTF_a_1_1260_plus_M->GetEntry(i);
+	if(Bs_BsDTF_a_1_1260_plus_M[0] > 2000) return false;
+
+        if(_data){
+		b_pi_plus1_PIDK->GetEntry(i);
+        	b_pi_plus2_PIDK->GetEntry(i);
+        	if(pi_plus1_PIDK > 5) return false;
+        	if(pi_plus2_PIDK > 5) return false;
+	}else {
+		b_Bs_BKGCAT->GetEntry(i);
+		if(Bs_BKGCAT != 20 && Bs_BKGCAT != 60) return false;
+	}
+
     }
     
     return true;
@@ -376,7 +462,7 @@ void DecayTree::Loop()
    fChain->SetBranchStatus("*MM*",1);  
    fChain->SetBranchStatus("*TAU*",1);  
    fChain->SetBranchStatus("*ptasy_1.00",1);  
-   fChain->SetBranchStatus("*Chi2*",1);  
+//    fChain->SetBranchStatus("*Chi2*",1);  
 
    fChain->SetBranchStatus("*DIRA*",1);  
    fChain->SetBranchStatus("Ds_DOCA*",1);  

@@ -375,6 +375,7 @@ public :
     Float_t         Bs_BsDTF_K_1_1270_plus_Kplus_PY[100];   //[Bs_BsDTF_nPV]
     Float_t         Bs_BsDTF_K_1_1270_plus_Kplus_PZ[100];   //[Bs_BsDTF_nPV]
     Float_t         Bs_BsDTF_K_1_1270_plus_M[100];   //[Bs_BsDTF_nPV]
+    Float_t         Bs_BsDTF_a_1_1260_plus_M[100];   //[Bs_BsDTF_nPV]
     Float_t         Bs_BsDTF_K_1_1270_plus_MERR[100];   //[Bs_BsDTF_nPV]
     Float_t         Bs_BsDTF_K_1_1270_plus_P[100];   //[Bs_BsDTF_nPV]
     Float_t         Bs_BsDTF_K_1_1270_plus_PERR[100];   //[Bs_BsDTF_nPV]
@@ -1693,6 +1694,8 @@ public :
     Double_t        K_plus_PIDe;
     Double_t        K_plus_PIDmu;
     Double_t        K_plus_PIDK;
+    Double_t        pi_plus1_PIDK;
+    Double_t        pi_plus2_PIDK;
     Double_t        K_plus_PIDp;
     Double_t        K_plus_ProbNNe;
     Double_t        K_plus_ProbNNk;
@@ -2360,8 +2363,10 @@ public :
     Int_t           nMuonCoordsS3;
     Int_t           nMuonCoordsS4;
     Int_t           nMuonTracks;
-    
+    Int_t	    Bs_BKGCAT;
+
     // List of branches
+    TBranch        *b_Bs_BKGCAT;   //!
     TBranch        *b_Bs_DOCA1;   //!
     TBranch        *b_Bs_DOCA2;   //!
     TBranch        *b_Bs_DOCA3;   //!
@@ -2663,6 +2668,7 @@ public :
     TBranch        *b_Bs_BsDTF_K_1_1270_plus_Kplus_PY;   //!
     TBranch        *b_Bs_BsDTF_K_1_1270_plus_Kplus_PZ;   //!
     TBranch        *b_Bs_BsDTF_K_1_1270_plus_M;   //!
+    TBranch        *b_Bs_BsDTF_a_1_1260_plus_M;   //!
     TBranch        *b_Bs_BsDTF_K_1_1270_plus_MERR;   //!
     TBranch        *b_Bs_BsDTF_K_1_1270_plus_P;   //!
     TBranch        *b_Bs_BsDTF_K_1_1270_plus_PERR;   //!
@@ -3981,6 +3987,8 @@ public :
     TBranch        *b_K_plus_PIDe;   //!
     TBranch        *b_K_plus_PIDmu;   //!
     TBranch        *b_K_plus_PIDK;   //!
+    TBranch        *b_pi_plus1_PIDK;
+    TBranch        *b_pi_plus2_PIDK;
     TBranch        *b_K_plus_PIDp;   //!
     TBranch        *b_K_plus_ProbNNe;   //!
     TBranch        *b_K_plus_ProbNNk;   //!
@@ -4708,7 +4716,17 @@ void DecayTree::Init()
 	fChain->SetBranchAddress("K_plus_isMuon", &K_plus_isMuon, &b_K_plus_isMuon);
 	fChain->SetBranchAddress("pi_plus_isMuon", &pi_plus_isMuon, &b_pi_plus_isMuon);
 	fChain->SetBranchAddress("pi_minus_isMuon", &pi_minus_isMuon, &b_pi_minus_isMuon);
+        if(!_ltu)fChain->SetBranchAddress("Bs_BsDTF_K_1_1270_plus_M", Bs_BsDTF_K_1_1270_plus_M, &b_Bs_BsDTF_K_1_1270_plus_M);
     }
+    if(_decay== Decay::norm){
+	fChain->SetBranchAddress("pi_plus1_PIDK", &pi_plus1_PIDK, &b_pi_plus1_PIDK);
+	fChain->SetBranchAddress("pi_plus2_PIDK", &pi_plus2_PIDK, &b_pi_plus2_PIDK);
+        if(!_ltu)fChain->SetBranchAddress("Bs_BsDTF_a_1_1260_plus_M", Bs_BsDTF_a_1_1260_plus_M, &b_Bs_BsDTF_a_1_1260_plus_M);
+    }
+    if(!_data){
+	 fChain->SetBranchAddress("Bs_BKGCAT", &Bs_BKGCAT,&b_Bs_BKGCAT);
+    }
+
     fChain->SetBranchAddress("Bs_ETA", &Bs_ETA, &b_Bs_ETA);
     fChain->SetBranchAddress("Bs_ENDVERTEX_X", &Bs_ENDVERTEX_X, &b_Bs_ENDVERTEX_X);
     fChain->SetBranchAddress("Bs_ENDVERTEX_Y", &Bs_ENDVERTEX_Y, &b_Bs_ENDVERTEX_Y);
@@ -4759,10 +4777,10 @@ void DecayTree::Init()
     //fChain->SetBranchAddress("Bs_Hlt1TrackMVALooseDecision_TOS", &Bs_Hlt1TrackMVALooseDecision_TOS, &b_Bs_Hlt1TrackMVALooseDecision_TOS);
     //fChain->SetBranchAddress("Bs_Hlt1TwoTrackMVALooseDecision_TIS", &Bs_Hlt1TwoTrackMVALooseDecision_TIS, &b_Bs_Hlt1TwoTrackMVALooseDecision_TIS);
     //fChain->SetBranchAddress("Bs_Hlt1TwoTrackMVALooseDecision_TOS", &Bs_Hlt1TwoTrackMVALooseDecision_TOS, &b_Bs_Hlt1TwoTrackMVALooseDecision_TOS);
-    if(_year < 15)fChain->SetBranchAddress("Bs_Hlt2IncPhiDecision_TIS", &Bs_Hlt2IncPhiDecision_TIS, &b_Bs_Hlt2IncPhiDecision_TIS);
-    if(_year < 15)fChain->SetBranchAddress("Bs_Hlt2IncPhiDecision_TOS", &Bs_Hlt2IncPhiDecision_TOS, &b_Bs_Hlt2IncPhiDecision_TOS);
-    if(_year > 12)fChain->SetBranchAddress("Bs_Hlt2PhiIncPhiDecision_TIS", &Bs_Hlt2PhiIncPhiDecision_TIS, &b_Bs_Hlt2PhiIncPhiDecision_TIS);
-    if(_year > 12)fChain->SetBranchAddress("Bs_Hlt2PhiIncPhiDecision_TOS", &Bs_Hlt2PhiIncPhiDecision_TOS, &b_Bs_Hlt2PhiIncPhiDecision_TOS);
+    if(_year < 16)fChain->SetBranchAddress("Bs_Hlt2IncPhiDecision_TIS", &Bs_Hlt2IncPhiDecision_TIS, &b_Bs_Hlt2IncPhiDecision_TIS);
+    if(_year < 16)fChain->SetBranchAddress("Bs_Hlt2IncPhiDecision_TOS", &Bs_Hlt2IncPhiDecision_TOS, &b_Bs_Hlt2IncPhiDecision_TOS);
+    if(_year > 15)fChain->SetBranchAddress("Bs_Hlt2PhiIncPhiDecision_TIS", &Bs_Hlt2PhiIncPhiDecision_TIS, &b_Bs_Hlt2PhiIncPhiDecision_TIS);
+    if(_year > 15)fChain->SetBranchAddress("Bs_Hlt2PhiIncPhiDecision_TOS", &Bs_Hlt2PhiIncPhiDecision_TOS, &b_Bs_Hlt2PhiIncPhiDecision_TOS);
     if(_year < 15)fChain->SetBranchAddress("Bs_Hlt2Topo2BodyBBDTDecision_TIS", &Bs_Hlt2Topo2BodyBBDTDecision_TIS, &b_Bs_Hlt2Topo2BodyBBDTDecision_TIS);
     if(_year < 15)fChain->SetBranchAddress("Bs_Hlt2Topo2BodyBBDTDecision_TOS", &Bs_Hlt2Topo2BodyBBDTDecision_TOS, &b_Bs_Hlt2Topo2BodyBBDTDecision_TOS);
     if(_year < 15)fChain->SetBranchAddress("Bs_Hlt2Topo3BodyBBDTDecision_TIS", &Bs_Hlt2Topo3BodyBBDTDecision_TIS, &b_Bs_Hlt2Topo3BodyBBDTDecision_TIS);
@@ -4873,7 +4891,6 @@ void DecayTree::Init()
     fChain->SetBranchAddress("Bs_BsDTF_K_1_1270_plus_Kplus_PX", Bs_BsDTF_K_1_1270_plus_Kplus_PX, &b_Bs_BsDTF_K_1_1270_plus_Kplus_PX);
     fChain->SetBranchAddress("Bs_BsDTF_K_1_1270_plus_Kplus_PY", Bs_BsDTF_K_1_1270_plus_Kplus_PY, &b_Bs_BsDTF_K_1_1270_plus_Kplus_PY);
     fChain->SetBranchAddress("Bs_BsDTF_K_1_1270_plus_Kplus_PZ", Bs_BsDTF_K_1_1270_plus_Kplus_PZ, &b_Bs_BsDTF_K_1_1270_plus_Kplus_PZ);
-    fChain->SetBranchAddress("Bs_BsDTF_K_1_1270_plus_M", Bs_BsDTF_K_1_1270_plus_M, &b_Bs_BsDTF_K_1_1270_plus_M);
     fChain->SetBranchAddress("Bs_BsDTF_K_1_1270_plus_MERR", Bs_BsDTF_K_1_1270_plus_MERR, &b_Bs_BsDTF_K_1_1270_plus_MERR);
     fChain->SetBranchAddress("Bs_BsDTF_K_1_1270_plus_P", Bs_BsDTF_K_1_1270_plus_P, &b_Bs_BsDTF_K_1_1270_plus_P);
     fChain->SetBranchAddress("Bs_BsDTF_K_1_1270_plus_PERR", Bs_BsDTF_K_1_1270_plus_PERR, &b_Bs_BsDTF_K_1_1270_plus_PERR);
