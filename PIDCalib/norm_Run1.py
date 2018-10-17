@@ -226,8 +226,8 @@ for input_file, output_file, dataset, pidname, tracks, method in files :
 		command += " -e %s_%s" % (track, etavar)
 		##      command += " -q %s_%s" % (track, pvar)   # Could also use P variable instead of eta
 		command += " -n %s" % ntrvar
-		command += " -l %s" % config[1]
-		command += " -z %s" % config[2]
+		#command += " -l %s" % config[1]
+		#command += " -z %s" % config[2]
 		command += " -t %s" % treename
 		command += " -p %s_%s_%s" % (track, var, pidname)
 		command += " -c %s" % config[0]
@@ -244,8 +244,8 @@ for input_file, output_file, dataset, pidname, tracks, method in files :
             command += " -e %s_%s" % (track, etavar)
             ## command += " -q %s_%s" % (track, pvar)   # Could also use P variable instead of eta
             command += " -n %s" % ntrvar
-	    command += " -l %s" % config[1]
-	    command += " -z %s" % config[2]
+	    #command += " -l %s" % config[1]
+	    #command += " -z %s" % config[2]
             command += " -t %s" % treename
 	    command += " -p %s_%s_%s" % (track, var, pidname)
             command += " -s %s_%s" % (track, var)

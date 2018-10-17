@@ -182,17 +182,119 @@ trackList = [
 
 # List of input ROOT files with MC ntuples. Format: 
 #   (inputfile, outputfile, dataset)
-indir = "/auto/data/dargent/BsDsKpipi/Mini/MC/"
+indir = "./" #/auto/data/dargent/BsDsKpipi/Mini/MC/"
 files = [
+
+  (indir+"signal_Ds2KKpi_11.root",          indir+"/signal_Ds2KKpi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[0],"Gen"), 
+  (indir+"signal_Ds2KKpi_11_PID_tmp.root", indir+"/signal_Ds2KKpi_11_PID_tmp2.root", "MagDown_2011", "corr_MagDown",trackList[0],"Corr"), 
+  (indir+"signal_Ds2KKpi_11_PID_tmp2.root", indir+"/signal_Ds2KKpi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[0],"Corr"),
+   
+  (indir+"signal_Ds2KKpi_12.root",          indir+"/signal_Ds2KKpi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[0],"Gen"), 
+  (indir+"signal_Ds2KKpi_12_PID_tmp.root", indir+"/signal_Ds2KKpi_12_PID_tmp2.root", "MagDown_2012", "corr_MagDown",trackList[0],"Corr"), 
+  (indir+"signal_Ds2KKpi_12_PID_tmp2.root", indir+"/signal_Ds2KKpi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[0],"Corr"),
+
+
+  (indir+"signal_Ds2pipipi_11.root",          indir+"/signal_Ds2pipipi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[1],"Gen"), 
+  (indir+"signal_Ds2pipipi_11_PID_tmp.root", indir+"/signal_Ds2pipipi_11_PID_tmp2.root", "MagDown_2011", "corr_MagDown",trackList[1],"Corr"), 
+  (indir+"signal_Ds2pipipi_11_PID_tmp2.root", indir+"/signal_Ds2pipipi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[1],"Corr"),
+   
+  (indir+"signal_Ds2pipipi_12.root",          indir+"/signal_Ds2pipipi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[1],"Gen"), 
+  (indir+"signal_Ds2pipipi_12_PID_tmp.root", indir+"/signal_Ds2pipipi_12_PID_tmp2.root", "MagDown_2012", "corr_MagDown",trackList[1],"Corr"), 
+  (indir+"signal_Ds2pipipi_12_PID_tmp2.root", indir+"/signal_Ds2pipipi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[1],"Corr"),
+
+
+  (indir+"signal_Ds2Kpipi_11.root",          indir+"/signal_Ds2Kpipi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[2],"Gen"), 
+  (indir+"signal_Ds2Kpipi_11_PID_tmp.root", indir+"/signal_Ds2Kpipi_11_PID_tmp2.root", "MagDown_2011", "corr_MagDown",trackList[2],"Corr"), 
+  (indir+"signal_Ds2Kpipi_11_PID_tmp2.root", indir+"/signal_Ds2Kpipi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[2],"Corr"),
+   
+  (indir+"signal_Ds2Kpipi_12.root",          indir+"/signal_Ds2Kpipi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[2],"Gen"), 
+  (indir+"signal_Ds2Kpipi_12_PID_tmp.root", indir+"/signal_Ds2Kpipi_12_PID_tmp2.root", "MagDown_2012", "corr_MagDown",trackList[2],"Corr"), 
+  (indir+"signal_Ds2Kpipi_12_PID_tmp2.root", indir+"/signal_Ds2Kpipi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[2],"Corr"),
+
+
   (indir+"signal_Ds2KKpi_15.root",          indir+"/signal_Ds2KKpi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[0],"Gen"), 
-  (indir+"signal_Ds2KKpi_15_PID_tmp.root",  indir+"/signal_Ds2KKpi_15_PID_tmp2.root", "MagUp_2015",   "gen_MagUp",  trackList[0],"Gen"), 
-  (indir+"signal_Ds2KKpi_15_PID_tmp2.root", indir+"/signal_Ds2KKpi_15_PID_tmp3.root", "MagDown_2015", "corr_MagDown",trackList[0],"Corr"), 
-  (indir+"signal_Ds2KKpi_15_PID_tmp3.root", indir+"/signal_Ds2KKpi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[0],"Corr"),
+  (indir+"signal_Ds2KKpi_15_PID_tmp.root", indir+"/signal_Ds2KKpi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[0],"Corr"), 
+  (indir+"signal_Ds2KKpi_15_PID_tmp2.root", indir+"/signal_Ds2KKpi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[0],"Corr"),
    
   (indir+"signal_Ds2KKpi_16.root",          indir+"/signal_Ds2KKpi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[0],"Gen"), 
-  (indir+"signal_Ds2KKpi_16_PID_tmp.root",  indir+"/signal_Ds2KKpi_16_PID_tmp2.root", "MagUp_2016",   "gen_MagUp",  trackList[0],"Gen"), 
-  (indir+"signal_Ds2KKpi_16_PID_tmp2.root", indir+"/signal_Ds2KKpi_16_PID_tmp3.root", "MagDown_2016", "corr_MagDown",trackList[0],"Corr"), 
-  (indir+"signal_Ds2KKpi_16_PID_tmp3.root", indir+"/signal_Ds2KKpi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[0],"Corr"),
+  (indir+"signal_Ds2KKpi_16_PID_tmp.root", indir+"/signal_Ds2KKpi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[0],"Corr"), 
+  (indir+"signal_Ds2KKpi_16_PID_tmp2.root", indir+"/signal_Ds2KKpi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[0],"Corr"),
+
+
+  (indir+"signal_Ds2pipipi_15.root",          indir+"/signal_Ds2pipipi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[1],"Gen"), 
+  (indir+"signal_Ds2pipipi_15_PID_tmp.root", indir+"/signal_Ds2pipipi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[1],"Corr"), 
+  (indir+"signal_Ds2pipipi_15_PID_tmp2.root", indir+"/signal_Ds2pipipi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[1],"Corr"),
+   
+  (indir+"signal_Ds2pipipi_16.root",          indir+"/signal_Ds2pipipi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[1],"Gen"), 
+  (indir+"signal_Ds2pipipi_16_PID_tmp.root", indir+"/signal_Ds2pipipi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[1],"Corr"), 
+  (indir+"signal_Ds2pipipi_16_PID_tmp2.root", indir+"/signal_Ds2pipipi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[1],"Corr"),
+
+
+  (indir+"signal_Ds2Kpipi_15.root",          indir+"/signal_Ds2Kpipi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[2],"Gen"), 
+  (indir+"signal_Ds2Kpipi_15_PID_tmp.root", indir+"/signal_Ds2Kpipi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[2],"Corr"), 
+  (indir+"signal_Ds2Kpipi_15_PID_tmp2.root", indir+"/signal_Ds2Kpipi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[2],"Corr"),
+   
+  (indir+"signal_Ds2Kpipi_16.root",          indir+"/signal_Ds2Kpipi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[2],"Gen"), 
+  (indir+"signal_Ds2Kpipi_16_PID_tmp.root", indir+"/signal_Ds2Kpipi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[2],"Corr"), 
+  (indir+"signal_Ds2Kpipi_16_PID_tmp2.root", indir+"/signal_Ds2Kpipi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[2],"Corr"),
+
+
+
+
+  (indir+"norm_Ds2KKpi_11.root",          indir+"/norm_Ds2KKpi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[3],"Gen"), 
+  (indir+"norm_Ds2KKpi_11_PID_tmp.root", indir+"/norm_Ds2KKpi_11_PID_tmp2.root", "MagDown_2011", "corr_MagDown",trackList[3],"Corr"), 
+  (indir+"norm_Ds2KKpi_11_PID_tmp2.root", indir+"/norm_Ds2KKpi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[3],"Corr"),
+   
+  (indir+"norm_Ds2KKpi_12.root",          indir+"/norm_Ds2KKpi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[3],"Gen"), 
+  (indir+"norm_Ds2KKpi_12_PID_tmp.root", indir+"/norm_Ds2KKpi_12_PID_tmp2.root", "MagDown_2012", "corr_MagDown",trackList[3],"Corr"), 
+  (indir+"norm_Ds2KKpi_12_PID_tmp2.root", indir+"/norm_Ds2KKpi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[3],"Corr"),
+
+
+  (indir+"norm_Ds2pipipi_11.root",          indir+"/norm_Ds2pipipi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[4],"Gen"), 
+  (indir+"norm_Ds2pipipi_11_PID_tmp.root", indir+"/norm_Ds2pipipi_11_PID_tmp2.root", "MagDown_2011", "corr_MagDown",trackList[4],"Corr"), 
+  (indir+"norm_Ds2pipipi_11_PID_tmp2.root", indir+"/norm_Ds2pipipi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[4],"Corr"),
+   
+  (indir+"norm_Ds2pipipi_12.root",          indir+"/norm_Ds2pipipi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[4],"Gen"), 
+  (indir+"norm_Ds2pipipi_12_PID_tmp.root", indir+"/norm_Ds2pipipi_12_PID_tmp2.root", "MagDown_2012", "corr_MagDown",trackList[4],"Corr"), 
+  (indir+"norm_Ds2pipipi_12_PID_tmp2.root", indir+"/norm_Ds2pipipi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[4],"Corr"),
+
+
+  (indir+"norm_Ds2Kpipi_11.root",          indir+"/norm_Ds2Kpipi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[5],"Gen"), 
+  (indir+"norm_Ds2Kpipi_11_PID_tmp.root", indir+"/norm_Ds2Kpipi_11_PID_tmp2.root", "MagDown_2011", "corr_MagDown",trackList[5],"Corr"), 
+  (indir+"norm_Ds2Kpipi_11_PID_tmp2.root", indir+"/norm_Ds2Kpipi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[5],"Corr"),
+   
+  (indir+"norm_Ds2Kpipi_12.root",          indir+"/norm_Ds2Kpipi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[5],"Gen"), 
+  (indir+"norm_Ds2Kpipi_12_PID_tmp.root", indir+"/norm_Ds2Kpipi_12_PID_tmp2.root", "MagDown_2012", "corr_MagDown",trackList[5],"Corr"), 
+  (indir+"norm_Ds2Kpipi_12_PID_tmp2.root", indir+"/norm_Ds2Kpipi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[5],"Corr"),
+
+
+  (indir+"norm_Ds2KKpi_15.root",          indir+"/norm_Ds2KKpi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[3],"Gen"), 
+  (indir+"norm_Ds2KKpi_15_PID_tmp.root", indir+"/norm_Ds2KKpi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[3],"Corr"), 
+  (indir+"norm_Ds2KKpi_15_PID_tmp2.root", indir+"/norm_Ds2KKpi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[3],"Corr"),
+   
+  (indir+"norm_Ds2KKpi_16.root",          indir+"/norm_Ds2KKpi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[3],"Gen"), 
+  (indir+"norm_Ds2KKpi_16_PID_tmp.root", indir+"/norm_Ds2KKpi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[3],"Corr"), 
+  (indir+"norm_Ds2KKpi_16_PID_tmp2.root", indir+"/norm_Ds2KKpi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[3],"Corr"),
+
+
+  (indir+"norm_Ds2pipipi_15.root",          indir+"/norm_Ds2pipipi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[4],"Gen"), 
+  (indir+"norm_Ds2pipipi_15_PID_tmp.root", indir+"/norm_Ds2pipipi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[4],"Corr"), 
+  (indir+"norm_Ds2pipipi_15_PID_tmp2.root", indir+"/norm_Ds2pipipi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[4],"Corr"),
+   
+  (indir+"norm_Ds2pipipi_16.root",          indir+"/norm_Ds2pipipi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[4],"Gen"), 
+  (indir+"norm_Ds2pipipi_16_PID_tmp.root", indir+"/norm_Ds2pipipi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[4],"Corr"), 
+  (indir+"norm_Ds2pipipi_16_PID_tmp2.root", indir+"/norm_Ds2pipipi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[4],"Corr"),
+
+
+  (indir+"norm_Ds2Kpipi_15.root",          indir+"/norm_Ds2Kpipi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[5],"Gen"), 
+  (indir+"norm_Ds2Kpipi_15_PID_tmp.root", indir+"/norm_Ds2Kpipi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[5],"Corr"), 
+  (indir+"norm_Ds2Kpipi_15_PID_tmp2.root", indir+"/norm_Ds2Kpipi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[5],"Corr"),
+   
+  (indir+"norm_Ds2Kpipi_16.root",          indir+"/norm_Ds2Kpipi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[5],"Gen"), 
+  (indir+"norm_Ds2Kpipi_16_PID_tmp.root", indir+"/norm_Ds2Kpipi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[5],"Corr"), 
+  (indir+"norm_Ds2Kpipi_16_PID_tmp2.root", indir+"/norm_Ds2Kpipi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[5],"Corr"),
+
+
 ]
 
 # Name of the input tree
@@ -214,9 +316,21 @@ treename = input_tree
 
 simversion = "run2"
 
+# make sure we don't overwrite local files and prefix them with random strings
+# IF ON LXPLUS: if /tmp exists and is accessible, use for faster processing
+# IF NOT: use /tmp if you have enough RAM
+# temp_folder = '/tmp'
+# ELSE: use current folder
+temp_folder = '.'
+import string
+import random
+rand_string = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))  # get 10 random chars for temp_file prefix
+temp_file_prefix = temp_folder + '/' + rand_string  # prefix temp files with folder and unique ID
+
+
 for input_file, output_file, dataset, pidname, tracks, method in files : 
   tmpinfile = input_file
-  tmpoutfile = "tmp3.root"
+  tmpoutfile = "%s_tmp1.root" % temp_file_prefix
   for track, subst in tracks.iteritems() : 
     for var, config in subst.iteritems() : 
 	if method == "Gen" :
@@ -257,13 +371,14 @@ for input_file, output_file, dataset, pidname, tracks, method in files :
 
       	treename = output_tree
       	tmpinfile = tmpoutfile
-      	if tmpoutfile == "tmp3.root" : 
-      	  tmpoutfile = "tmp4.root"
-      	else : 
-       	 tmpoutfile = "tmp3.root"
-
-     	 print command
+      	if 'tmp1' in tmpoutfile:
+        	tmpoutfile = tmpoutfile.replace('tmp1', 'tmp2')
+      	else :
+        	tmpoutfile = tmpoutfile.replace('tmp2', 'tmp1')
+     	 
+	print command
       	os.system(command)
 
-  os.system("rm %s" % tmpoutfile)
+
+  print("mv %s %s" % (tmpinfile, output_file))
   os.system("mv %s %s" % (tmpinfile, output_file))
