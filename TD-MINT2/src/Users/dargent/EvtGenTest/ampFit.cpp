@@ -57,6 +57,8 @@
 #include "Mint/LASSO.h"
 #include "Mint/LASSO_flexi.h"
 #include "TRandom3.h"
+#include <TLegend.h>
+#include <TLegendEntry.h>
 
 using namespace std;
 using namespace MINT;
@@ -1031,7 +1033,8 @@ int makeMINTtupleGen(){
      // tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_test_DsKpipi,Kpipi.root");
       //tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/signal_KKpi/Gen.root");
       //tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/signal_Kpipi/Gen.root");
-      tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/signal_Kpipi/Gen.root");
+//       tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/signal_Kpipi/Gen.root");
+      tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_13266008_PG.root");
 
     if (dbThis) cout << "Read the file" << endl;	
     double K_gen[5]; 
@@ -1149,7 +1152,7 @@ int makeMINTtupleGen(){
         if(numSelected==N)break;
     }
     
-    TString output = outputDir + "GenMC_EvtGen_DsKpipi,Kpipi";
+    TString output = outputDir + "GenMC_13266008_PG";
     if(N != -1)output += "_small";
     output+=".root";
     
@@ -1160,7 +1163,6 @@ int makeMINTtupleGen(){
 
     return 0;
 }
-
 
 int makeMINTtupleGen_Ds3pi(){
     
@@ -1186,9 +1188,9 @@ int makeMINTtupleGen_Ds3pi(){
 //      tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_13266007.root");
       //tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_test_DsKpipi,pipipi.root");
      // tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_test_Dspipipi,KKpi.root");
-      tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/norm_KKpi/Gen.root");
-      //tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/norm_Kpipi/Gen.root");
-     // tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/norm_pipipi/Gen.root");
+      //tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/norm_KKpi/Gen.root");
+      tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/norm_Kpipi/Gen.root");
+      //tree_gen->Add("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/EvtGen/release/final/test_PG/norm_pipipi/Gen.root");
 
     if (dbThis) cout << "Read the file" << endl;	
     double K_gen[5]; 
@@ -1320,7 +1322,7 @@ int makeMINTtupleGen_Ds3pi(){
         if(numSelected==N)break;
     }
     
-    TString output = outputDir + "GenMC_EvtGen_Dspipipi,KKpi";
+    TString output = outputDir + "GenMC_EvtGen_Dspipipi,Kpipi";
     if(N != -1)output += "_small";
     output+=".root";
     
@@ -1332,13 +1334,12 @@ int makeMINTtupleGen_Ds3pi(){
     return 0;
 }
 
-
 void reweightEvtGen(){
 
   NamedParameter<int> EventPattern("Event Pattern", 421, -321, 211, 211, -211);
   DalitzEventPattern pat(EventPattern);
 
-  FitAmpIncoherentSum fas(pat);
+  FitAmpIncoherentSumEvtGen fas(pat);
 
   DalitzEventList eventListMC;
   TFile *FileMC =  TFile::Open("/auto/data/dargent/BsDsKpipi/MINT/GenMC_EvtGen.root");
@@ -1493,6 +1494,11 @@ void makeMINTtupleGenInAcc(){
     int dim = 1;
 
     TChain* tree_gen=new TChain("MCDecayTreeTuple/MCDecayTree");
+    tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_1.root");
+    tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_2.root");
+    tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_3.root");
+    tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_4.root");
+    tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_5.root");
     tree_gen->Add("/auto/data/dargent/BsDsKpipi/EvtGen/Gen_6.root");
     double K_gen[5]; 
     double pip_gen[5]; 
@@ -1535,7 +1541,7 @@ void makeMINTtupleGenInAcc(){
     tree_gen->SetBranchAddress("piminus0_TRUEP_E",&Ds_pim_gen[3]); 
     tree_gen->SetBranchAddress("piminus0_TRUEPT",&Ds_pim_gen[4]); 
 
-    DiskResidentEventList eventList(pdg,"SignalIntegrationEvents_EvtGen_inAcc.root","RECREATE");
+    DiskResidentEventList eventList(pdg,"SignalIntegrationEvents_EvtGen_inAcc2.root","RECREATE");
 
     for(int i=0; i< tree_gen->GetEntries(); i++)
     {	
@@ -1675,6 +1681,1177 @@ int fracFit(){
 }
 
 
+
+
+double cosThetaAngle(const DalitzEvent& evt, int a, int b, int c, int d){
+	TLorentzVector p0 = evt.p(a);
+  	TLorentzVector p1 = evt.p(b) ;
+  	TLorentzVector p2 = evt.p(c) ;
+ 	TLorentzVector p3 = evt.p(d) ;
+ 	TLorentzVector pD = p0 + p1 + p2 + p3 ;
+ 	p0.Boost( - pD.BoostVector() );
+ 	p1.Boost( - pD.BoostVector() );
+ 	p2.Boost( - pD.BoostVector() );
+ 	p3.Boost( - pD.BoostVector() );
+
+	TVector3 mother = (p0+p1).Vect().Unit();
+	p0.Boost( - (p0+p1).BoostVector());
+	TVector3 daughter = p0.Vect().Unit();
+	
+	return mother.Dot(daughter);
+}
+
+double acoplanarityAngle(const DalitzEvent& evt, int a, int b, int c, int d){
+	TLorentzVector p0 = evt.p(a);
+  	TLorentzVector p1 = evt.p(b) ;
+  	TLorentzVector p2 = evt.p(c) ;
+ 	TLorentzVector p3 = evt.p(d) ;
+ 	TLorentzVector pD = p0 + p1 + p2 + p3 ;
+ 	p0.Boost( - pD.BoostVector() );
+ 	p1.Boost( - pD.BoostVector() );
+ 	p2.Boost( - pD.BoostVector() );
+ 	p3.Boost( - pD.BoostVector() );
+ 	TVector3 e1 = (p0.Vect().Cross( p1.Vect() )).Unit();
+ 	TVector3 e2 = (p2.Vect().Cross( p3.Vect() )).Unit();
+ 	//return t1.Angle( t2 ); 	
+	TVector3 ez=  (p3+p2).Vect().Unit();
+
+        double cosPhi= e1.Dot(e2);
+	double sinPhi = (e1.Cross(e2)).Dot(ez);
+	double phi= acos(cosPhi);
+	return (sinPhi > 0.0 ? phi : -phi);
+}
+
+
+
+void addGenPdfToMC(){
+
+		NamedParameter<int> EventPattern("Event Pattern", 421, -321, 211, 211, -211);
+		DalitzEventPattern pat(EventPattern);
+
+		TChain* tree=new TChain("DecayTree");
+// 		tree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/signal_*11.root");
+		tree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/signal_*12.root");
+		tree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/signal_*15.root");
+// 		tree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/signal_*16.root");
+
+		tree->SetBranchStatus("*",0);
+		tree->SetBranchStatus("year",1);
+		tree->SetBranchStatus("*DEC",1);
+		tree->SetBranchStatus("*PROB",1);
+		tree->SetBranchStatus("*OS*",1);
+		tree->SetBranchStatus("*TAU*",1);
+		tree->SetBranchStatus("*ID*",1);
+		tree->SetBranchStatus("weight",1);
+		tree->SetBranchStatus("Bs_DTF_MM",1);
+		tree->SetBranchStatus("BsDTF_*P*",1);
+		tree->SetBranchStatus("TriggerCat",1);
+		tree->SetBranchStatus("run",1);
+		tree->SetBranchStatus("*BKGCAT*",1);
+
+		int f,cat,Ds_ID;
+		int year,run,Ds_finalState,trigger;	
+		double K[4];
+		double pip[4];
+		double pim[4];
+		double Ds_Kp[4],Ds_Km[4],Ds_pim[4],Ds[4];
+		double mB,w;
+	
+		tree->SetBranchAddress("Ds_TRUEID",&Ds_ID);
+		tree->SetBranchAddress("year",&year);
+		tree->SetBranchAddress("run",&run);
+		tree->SetBranchAddress("TriggerCat",&trigger);
+		tree->SetBranchAddress("Bs_DTF_MM",&mB);
+		tree->SetBranchAddress("Bs_BKGCAT",&cat);
+		tree->SetBranchAddress("weight",&w);
+		tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
+
+		tree->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
+		tree->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
+		tree->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
+		tree->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
+		
+		tree->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
+		tree->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
+		tree->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
+		tree->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);
+		
+		tree-> SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
+		tree->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
+		tree->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
+		tree->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);
+
+		tree->SetBranchAddress("BsDTF_Ds_PX",&Ds[0]);
+		tree->SetBranchAddress("BsDTF_Ds_PY",&Ds[1]);
+		tree->SetBranchAddress("BsDTF_Ds_PZ",&Ds[2]);
+		tree->SetBranchAddress("BsDTF_Ds_PE",&Ds[3]);    
+
+		FitAmpIncoherentSumEvtGen fas(pat);
+		DalitzEventList eventListMC;            
+		DalitzEventList eventListMC_CP;            
+
+	        vector<int> s234;
+    		s234.push_back(2);
+		s234.push_back(3);
+		s234.push_back(4);
+		vector<int> s134;
+		s134.push_back(1);
+		s134.push_back(3);
+		s134.push_back(4);
+
+		TH1D* h_Kpipi= new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,1000,1950);
+		TH1D* h_Kpipi_gen= (TH1D*)h_Kpipi->Clone();
+
+		TH1D* h_Kpipi_Run1= (TH1D*)h_Kpipi->Clone();
+		TH1D* h_Kpipi_Run2= (TH1D*)h_Kpipi->Clone();
+		TH1D* h_Kpipi_t0= (TH1D*)h_Kpipi->Clone();
+		TH1D* h_Kpipi_t1= (TH1D*)h_Kpipi->Clone();
+		TH1D* h_Kpipi_p= (TH1D*)h_Kpipi->Clone();
+		TH1D* h_Kpipi_m= (TH1D*)h_Kpipi->Clone();
+		TH1D* h_Kpipi_KKpi = (TH1D*)h_Kpipi->Clone();
+		TH1D* h_Kpipi_Kpipi = (TH1D*)h_Kpipi->Clone();
+		TH1D* h_Kpipi_pipipi = (TH1D*)h_Kpipi->Clone();
+
+		TH1D* h_Kpi= new TH1D("",";#left[m(K^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,600,1200);
+		TH1D* h_Kpi_gen= (TH1D*)h_Kpi->Clone();
+	
+		TH1D* h_Kpi_Run1= (TH1D*)h_Kpi->Clone();
+		TH1D* h_Kpi_Run2= (TH1D*)h_Kpi->Clone();
+		TH1D* h_Kpi_t0= (TH1D*)h_Kpi->Clone();
+		TH1D* h_Kpi_t1= (TH1D*)h_Kpi->Clone();
+		TH1D* h_Kpi_p= (TH1D*)h_Kpi->Clone();
+		TH1D* h_Kpi_m= (TH1D*)h_Kpi->Clone();
+		TH1D* h_Kpi_KKpi = (TH1D*)h_Kpi->Clone();
+		TH1D* h_Kpi_Kpipi = (TH1D*)h_Kpi->Clone();
+		TH1D* h_Kpi_pipipi = (TH1D*)h_Kpi->Clone();
+		
+		TH1D* h_pipi= new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,200,1200);
+		TH1D* h_pipi_gen= (TH1D*)h_pipi->Clone();
+
+		TH1D* h_pipi_Run1= (TH1D*)h_pipi->Clone();
+		TH1D* h_pipi_Run2= (TH1D*)h_pipi->Clone();
+		TH1D* h_pipi_t0= (TH1D*)h_pipi->Clone();
+		TH1D* h_pipi_t1= (TH1D*)h_pipi->Clone();
+		TH1D* h_pipi_p= (TH1D*)h_pipi->Clone();
+		TH1D* h_pipi_m= (TH1D*)h_pipi->Clone();
+		TH1D* h_pipi_KKpi = (TH1D*)h_pipi->Clone();
+		TH1D* h_pipi_Kpipi = (TH1D*)h_pipi->Clone();
+		TH1D* h_pipi_pipipi = (TH1D*)h_pipi->Clone();
+		
+		TH1D* h_Dspi= new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (MeV);Events (norm.) ",40,1900,5000);
+		TH1D* h_Dspi_gen= (TH1D*)h_Dspi->Clone();
+
+		TH1D* h_Dspi_Run1= (TH1D*)h_Dspi->Clone();
+		TH1D* h_Dspi_Run2= (TH1D*)h_Dspi->Clone();
+		TH1D* h_Dspi_t0= (TH1D*)h_Dspi->Clone();
+		TH1D* h_Dspi_t1= (TH1D*)h_Dspi->Clone();
+		TH1D* h_Dspi_p= (TH1D*)h_Dspi->Clone();
+		TH1D* h_Dspi_m= (TH1D*)h_Dspi->Clone();
+		TH1D* h_Dspi_KKpi = (TH1D*)h_Dspi->Clone();
+		TH1D* h_Dspi_Kpipi = (TH1D*)h_Dspi->Clone();
+		TH1D* h_Dspi_pipipi = (TH1D*)h_Dspi->Clone();
+		
+		TH1D* h_Dspipi= new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,2400,5100);
+		TH1D* h_Dspipi_gen= (TH1D*)h_Dspipi->Clone();
+
+		TH1D* h_Dspipi_Run1= (TH1D*)h_Dspipi->Clone();
+		TH1D* h_Dspipi_Run2= (TH1D*)h_Dspipi->Clone();
+		TH1D* h_Dspipi_t0= (TH1D*)h_Dspipi->Clone();
+		TH1D* h_Dspipi_t1= (TH1D*)h_Dspipi->Clone();
+		TH1D* h_Dspipi_p= (TH1D*)h_Dspipi->Clone();
+		TH1D* h_Dspipi_m= (TH1D*)h_Dspipi->Clone();
+		TH1D* h_Dspipi_KKpi = (TH1D*)h_Dspipi->Clone();
+		TH1D* h_Dspipi_Kpipi = (TH1D*)h_Dspipi->Clone();
+		TH1D* h_Dspipi_pipipi = (TH1D*)h_Dspipi->Clone();
+		
+		TH1D* h_cosTheta_Kpi= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
+		TH1D* h_cosTheta_Kpi_gen= (TH1D*)h_cosTheta_Kpi->Clone();
+
+		TH1D* h_cosTheta_Kpi_Run1= (TH1D*)h_cosTheta_Kpi->Clone();
+		TH1D* h_cosTheta_Kpi_Run2= (TH1D*)h_cosTheta_Kpi->Clone();
+		TH1D* h_cosTheta_Kpi_t0= (TH1D*)h_cosTheta_Kpi->Clone();
+		TH1D* h_cosTheta_Kpi_t1= (TH1D*)h_cosTheta_Kpi->Clone();
+		TH1D* h_cosTheta_Kpi_p= (TH1D*)h_cosTheta_Kpi->Clone();
+		TH1D* h_cosTheta_Kpi_m= (TH1D*)h_cosTheta_Kpi->Clone();
+		TH1D* h_cosTheta_Kpi_KKpi = (TH1D*)h_cosTheta_Kpi->Clone();
+		TH1D* h_cosTheta_Kpi_Kpipi = (TH1D*)h_cosTheta_Kpi->Clone();
+		TH1D* h_cosTheta_Kpi_pipipi = (TH1D*)h_cosTheta_Kpi->Clone();
+		
+		TH1D* h_cosTheta_Dspi= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+		TH1D* h_cosTheta_Dspi_gen= (TH1D*)h_cosTheta_Dspi->Clone();
+
+		TH1D* h_cosTheta_Dspi_Run1= (TH1D*)h_cosTheta_Dspi->Clone();
+		TH1D* h_cosTheta_Dspi_Run2= (TH1D*)h_cosTheta_Dspi->Clone();
+		TH1D* h_cosTheta_Dspi_t0= (TH1D*)h_cosTheta_Dspi->Clone();
+		TH1D* h_cosTheta_Dspi_t1= (TH1D*)h_cosTheta_Dspi->Clone();
+		TH1D* h_cosTheta_Dspi_p= (TH1D*)h_cosTheta_Dspi->Clone();
+		TH1D* h_cosTheta_Dspi_m= (TH1D*)h_cosTheta_Dspi->Clone();
+		TH1D* h_cosTheta_Dspi_KKpi = (TH1D*)h_cosTheta_Dspi->Clone();
+		TH1D* h_cosTheta_Dspi_Kpipi = (TH1D*)h_cosTheta_Dspi->Clone();
+		TH1D* h_cosTheta_Dspi_pipipi = (TH1D*)h_cosTheta_Dspi->Clone();
+		
+		TH1D* h_phi_Kpi_Dspi= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
+		TH1D* h_phi_Kpi_Dspi_gen= (TH1D*)h_phi_Kpi_Dspi->Clone();
+
+		TH1D* h_phi_Kpi_Dspi_Run1= (TH1D*)h_phi_Kpi_Dspi->Clone();
+		TH1D* h_phi_Kpi_Dspi_Run2= (TH1D*)h_phi_Kpi_Dspi->Clone();
+		TH1D* h_phi_Kpi_Dspi_t0= (TH1D*)h_phi_Kpi_Dspi->Clone();
+		TH1D* h_phi_Kpi_Dspi_t1= (TH1D*)h_phi_Kpi_Dspi->Clone();
+		TH1D* h_phi_Kpi_Dspi_p= (TH1D*)h_phi_Kpi_Dspi->Clone();
+		TH1D* h_phi_Kpi_Dspi_m= (TH1D*)h_phi_Kpi_Dspi->Clone();
+		TH1D* h_phi_Kpi_Dspi_KKpi = (TH1D*)h_phi_Kpi_Dspi->Clone();
+		TH1D* h_phi_Kpi_Dspi_Kpipi = (TH1D*)h_phi_Kpi_Dspi->Clone();
+		TH1D* h_phi_Kpi_Dspi_pipipi = (TH1D*)h_phi_Kpi_Dspi->Clone();
+
+		int badEvents = 0;
+		for(int i = 0; i < tree->GetEntries(); i++){          
+			tree->GetEntry(i);                    
+
+			if(Ds_ID<0)f=-1;
+			else if(Ds_ID > 0)f= 1;
+			if(f == 0 ){
+				badEvents++;
+				continue;
+			}			
+
+			double sign = 1.;
+			if(f > 0) sign = -1.;
+	
+			TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
+			TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
+			TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
+			TLorentzVector D_p = TLorentzVector(sign*Ds[0],sign*Ds[1],sign*Ds[2],Ds[3]);
+			TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+			// array of vectors
+			vector<TLorentzVector> vectorOfvectors;
+		
+			vectorOfvectors.push_back(B_p*MeV);
+			vectorOfvectors.push_back(D_p*MeV);
+			vectorOfvectors.push_back(K_p*MeV);
+			vectorOfvectors.push_back(pip_p*MeV);
+			vectorOfvectors.push_back(pim_p*MeV);
+			DalitzEvent evt = DalitzEvent(pat, vectorOfvectors);
+
+ 		 	if(sqrt(evt.sij(s234)/(GeV*GeV)) > 1.95 || sqrt(evt.s(2,4)/(GeV*GeV)) > 1.2 || sqrt(evt.s(3,4)/(GeV*GeV)) > 1.2) continue;
+			if(!(evt.phaseSpace() > 0.)){
+// 				cout << "bad" << endl;
+// 				cout << cat << endl;
+// 				cout << sqrt(evt.sij(s234)/(GeV*GeV)) << endl << endl;
+				badEvents++;
+				continue;
+			}
+
+			h_Kpipi->Fill(sqrt(evt.sij(s234))*MeV);
+			h_Kpi->Fill(sqrt(evt.s(2,4))*MeV);
+			h_pipi->Fill(sqrt(evt.s(3,4))*MeV);
+			h_Dspi->Fill(sqrt(evt.s(1,3))*MeV);
+			h_Dspipi->Fill(sqrt(evt.sij(s134))*MeV);
+			h_cosTheta_Kpi->Fill(cosThetaAngle(evt,2,4,1,3));
+			h_cosTheta_Dspi->Fill(cosThetaAngle(evt,1,3,2,4));
+			h_phi_Kpi_Dspi->Fill(acoplanarityAngle(evt,2,4,1,3));
+
+			if(run == 1){
+				h_Kpipi_Run1->Fill(sqrt(evt.sij(s234))*MeV);
+				h_Kpi_Run1->Fill(sqrt(evt.s(2,4))*MeV);
+				h_pipi_Run1->Fill(sqrt(evt.s(3,4))*MeV);
+				h_Dspi_Run1->Fill(sqrt(evt.s(1,3))*MeV);
+				h_Dspipi_Run1->Fill(sqrt(evt.sij(s134))*MeV);
+				h_cosTheta_Kpi_Run1->Fill(cosThetaAngle(evt,2,4,1,3));
+				h_cosTheta_Dspi_Run1->Fill(cosThetaAngle(evt,1,3,2,4));
+				h_phi_Kpi_Dspi_Run1->Fill(acoplanarityAngle(evt,2,4,1,3));
+			}
+			else {
+				h_Kpipi_Run2->Fill(sqrt(evt.sij(s234))*MeV);
+				h_Kpi_Run2->Fill(sqrt(evt.s(2,4))*MeV);
+				h_pipi_Run2->Fill(sqrt(evt.s(3,4))*MeV);
+				h_Dspi_Run2->Fill(sqrt(evt.s(1,3))*MeV);
+				h_Dspipi_Run2->Fill(sqrt(evt.sij(s134))*MeV);
+				h_cosTheta_Kpi_Run2->Fill(cosThetaAngle(evt,2,4,1,3));
+				h_cosTheta_Dspi_Run2->Fill(cosThetaAngle(evt,1,3,2,4));
+				h_phi_Kpi_Dspi_Run2->Fill(acoplanarityAngle(evt,2,4,1,3));
+			}
+			if(Ds_finalState < 3){
+				h_Kpipi_KKpi->Fill(sqrt(evt.sij(s234))*MeV);
+				h_Kpi_KKpi->Fill(sqrt(evt.s(2,4))*MeV);
+				h_pipi_KKpi->Fill(sqrt(evt.s(3,4))*MeV);
+				h_Dspi_KKpi->Fill(sqrt(evt.s(1,3))*MeV);
+				h_Dspipi_KKpi->Fill(sqrt(evt.sij(s134))*MeV);
+				h_cosTheta_Kpi_KKpi->Fill(cosThetaAngle(evt,2,4,1,3));
+				h_cosTheta_Dspi_KKpi->Fill(cosThetaAngle(evt,1,3,2,4));
+				h_phi_Kpi_Dspi_KKpi->Fill(acoplanarityAngle(evt,2,4,1,3));		
+			}
+			if(Ds_finalState == 3){
+				h_Kpipi_pipipi->Fill(sqrt(evt.sij(s234))*MeV);
+				h_Kpi_pipipi->Fill(sqrt(evt.s(2,4))*MeV);
+				h_pipi_pipipi->Fill(sqrt(evt.s(3,4))*MeV);
+				h_Dspi_pipipi->Fill(sqrt(evt.s(1,3))*MeV);
+				h_Dspipi_pipipi->Fill(sqrt(evt.sij(s134))*MeV);
+				h_cosTheta_Kpi_pipipi->Fill(cosThetaAngle(evt,2,4,1,3));
+				h_cosTheta_Dspi_pipipi->Fill(cosThetaAngle(evt,1,3,2,4));
+				h_phi_Kpi_Dspi_pipipi->Fill(acoplanarityAngle(evt,2,4,1,3));		
+			}
+			if(Ds_finalState == 4){
+				h_Kpipi_Kpipi->Fill(sqrt(evt.sij(s234))*MeV);
+				h_Kpi_Kpipi->Fill(sqrt(evt.s(2,4))*MeV);
+				h_pipi_Kpipi->Fill(sqrt(evt.s(3,4))*MeV);
+				h_Dspi_Kpipi->Fill(sqrt(evt.s(1,3))*MeV);
+				h_Dspipi_Kpipi->Fill(sqrt(evt.sij(s134))*MeV);
+				h_cosTheta_Kpi_Kpipi->Fill(cosThetaAngle(evt,2,4,1,3));
+				h_cosTheta_Dspi_Kpipi->Fill(cosThetaAngle(evt,1,3,2,4));
+				h_phi_Kpi_Dspi_Kpipi->Fill(acoplanarityAngle(evt,2,4,1,3));	
+			}
+			if(trigger == 0){
+				h_Kpipi_t0->Fill(sqrt(evt.sij(s234))*MeV);
+				h_Kpi_t0->Fill(sqrt(evt.s(2,4))*MeV);
+				h_pipi_t0->Fill(sqrt(evt.s(3,4))*MeV);
+				h_Dspi_t0->Fill(sqrt(evt.s(1,3))*MeV);
+				h_Dspipi_t0->Fill(sqrt(evt.sij(s134))*MeV);
+				h_cosTheta_Kpi_t0->Fill(cosThetaAngle(evt,2,4,1,3));
+				h_cosTheta_Dspi_t0->Fill(cosThetaAngle(evt,1,3,2,4));
+				h_phi_Kpi_Dspi_t0->Fill(acoplanarityAngle(evt,2,4,1,3));		
+			}
+			if(trigger == 1){
+				h_Kpipi_t1->Fill(sqrt(evt.sij(s234))*MeV);
+				h_Kpi_t1->Fill(sqrt(evt.s(2,4))*MeV);
+				h_pipi_t1->Fill(sqrt(evt.s(3,4))*MeV);
+				h_Dspi_t1->Fill(sqrt(evt.s(1,3))*MeV);
+				h_Dspipi_t1->Fill(sqrt(evt.sij(s134))*MeV);
+				h_cosTheta_Kpi_t1->Fill(cosThetaAngle(evt,2,4,1,3));
+				h_cosTheta_Dspi_t1->Fill(cosThetaAngle(evt,1,3,2,4));
+				h_phi_Kpi_Dspi_t1->Fill(acoplanarityAngle(evt,2,4,1,3));		
+			}
+			if(f > 0){
+				h_Kpipi_p->Fill(sqrt(evt.sij(s234))*MeV);
+				h_Kpi_p->Fill(sqrt(evt.s(2,4))*MeV);
+				h_pipi_p->Fill(sqrt(evt.s(3,4))*MeV);
+				h_Dspi_p->Fill(sqrt(evt.s(1,3))*MeV);
+				h_Dspipi_p->Fill(sqrt(evt.sij(s134))*MeV);
+				h_cosTheta_Kpi_p->Fill(cosThetaAngle(evt,2,4,1,3));
+				h_cosTheta_Dspi_p->Fill(cosThetaAngle(evt,1,3,2,4));
+				h_phi_Kpi_Dspi_p->Fill(acoplanarityAngle(evt,2,4,1,3));		
+			}
+			else{
+				h_Kpipi_m->Fill(sqrt(evt.sij(s234))*MeV);
+				h_Kpi_m->Fill(sqrt(evt.s(2,4))*MeV);
+				h_pipi_m->Fill(sqrt(evt.s(3,4))*MeV);
+				h_Dspi_m->Fill(sqrt(evt.s(1,3))*MeV);
+				h_Dspipi_m->Fill(sqrt(evt.sij(s134))*MeV);
+				h_cosTheta_Kpi_m->Fill(cosThetaAngle(evt,2,4,1,3));
+				h_cosTheta_Dspi_m->Fill(cosThetaAngle(evt,1,3,2,4));
+				h_phi_Kpi_Dspi_m->Fill(acoplanarityAngle(evt,2,4,1,3));		
+			}
+
+			evt.setGeneratorPdfRelativeToPhaseSpace(fas.getVal(evt));
+			eventListMC.Add(evt);
+			evt.CP_conjugateYourself();
+			eventListMC_CP.Add(evt);		
+		}
+		cout << endl << "bad events " << badEvents << " ( " << badEvents/(double) tree->GetEntries() * 100. << " %)" << endl << endl;
+		eventListMC.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC.root");
+		eventListMC_CP.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_CP.root");
+
+		DiskResidentEventList eventList("/auto/data/dargent/BsDsKpipi/MINT/DecFileTest/GenMC_13266008_PG.root","OPEN");
+		for (int i=0; i<eventList.size(); i++) {
+			DalitzEvent evt(eventList.getEvent(i));
+	
+ 		 	if(sqrt(evt.sij(s234)/(GeV*GeV)) > 1.95 || sqrt(evt.s(2,4)/(GeV*GeV)) > 1.2 || sqrt(evt.s(3,4)/(GeV*GeV)) > 1.2) continue;
+			if(!(evt.phaseSpace() > 0.)){
+				badEvents++;
+				continue;
+			}
+	
+			h_Kpipi_gen->Fill(sqrt(evt.sij(s234))*MeV);
+			h_Kpi_gen->Fill(sqrt(evt.s(2,4))*MeV);
+			h_pipi_gen->Fill(sqrt(evt.s(3,4))*MeV);
+			h_Dspi_gen->Fill(sqrt(evt.s(1,3))*MeV);
+			h_Dspipi_gen->Fill(sqrt(evt.sij(s134))*MeV);
+			h_cosTheta_Kpi_gen->Fill(cosThetaAngle(evt,2,4,1,3));
+			h_cosTheta_Dspi_gen->Fill(cosThetaAngle(evt,1,3,2,4));
+			h_phi_Kpi_Dspi_gen->Fill(acoplanarityAngle(evt,2,4,1,3));
+		}
+
+
+		TCanvas*c = new TCanvas();
+
+		h_Kpipi->DrawNormalized("",1);
+		h_Kpipi_gen->SetLineColor(kRed);
+		h_Kpipi_gen->DrawNormalized("histsame",1);
+		c->Print("h_Kpipi.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/h_Kpipi.pdf");
+		
+		TH1D* h_Kpipi_eff = (TH1D*)h_Kpipi->Clone();
+		h_Kpipi_eff->Divide(h_Kpipi,h_Kpipi_gen);
+		h_Kpipi_eff->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Kpipi_eff->DrawNormalized("e",1);
+		c->Print("eff_Kpipi.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Kpipi.pdf");
+
+		///
+		TH1D* h_Kpipi_eff_Run1 = (TH1D*)h_Kpipi->Clone();
+		h_Kpipi_eff_Run1->Divide(h_Kpipi_Run1,h_Kpipi_gen);
+		h_Kpipi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Kpipi_eff_Run2 = (TH1D*)h_Kpipi->Clone();
+		h_Kpipi_eff_Run2->Divide(h_Kpipi_Run2,h_Kpipi_gen);
+		h_Kpipi_eff_Run2->SetLineColor(kRed);
+		h_Kpipi_eff_Run2->SetMarkerColor(kRed);
+
+		h_Kpipi_eff_Run1->Scale(1./h_Kpipi_eff_Run1->Integral());
+		h_Kpipi_eff_Run2->Scale(1./h_Kpipi_eff_Run2->Integral());
+   		h_Kpipi_eff_Run1->SetMaximum(h_Kpipi_eff_Run1->GetMaximum()*1.4);
+
+		h_Kpipi_eff_Run1->Draw("e");
+		h_Kpipi_eff_Run2->Draw("same");
+
+		TLegend* leg = new TLegend(0.15,0.6,0.45,0.9,"");
+		leg->SetLineStyle(0);
+		leg->SetLineColor(0);
+		leg->SetFillColor(0);
+		leg->SetTextFont(22);
+		leg->SetTextColor(1);
+		leg->SetTextSize(0.04);
+		leg->SetTextAlign(12);
+		leg->AddEntry(h_Kpipi_eff_Run1,"Run-I","LEP");
+		TLegendEntry* le = leg->AddEntry(h_Kpipi_eff_Run2,"Run-II","LEP");
+		le->SetTextColor(kRed);    		
+ 		leg->Draw();
+
+		c->Print("eff_Kpipi_run.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Kpipi_run.pdf");
+
+		///
+		TH1D* h_Kpipi_eff_t0 = (TH1D*)h_Kpipi->Clone();
+		h_Kpipi_eff_t0->Divide(h_Kpipi_t0,h_Kpipi_gen);
+		h_Kpipi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Kpipi_eff_t1 = (TH1D*)h_Kpipi->Clone();
+		h_Kpipi_eff_t1->Divide(h_Kpipi_t1,h_Kpipi_gen);
+		h_Kpipi_eff_t1->SetLineColor(kRed);
+		h_Kpipi_eff_t1->SetMarkerColor(kRed);
+
+		h_Kpipi_eff_t0->Scale(1./h_Kpipi_eff_t0->Integral());
+		h_Kpipi_eff_t1->Scale(1./h_Kpipi_eff_t1->Integral());
+   		h_Kpipi_eff_t0->SetMaximum(h_Kpipi_eff_t0->GetMaximum()*1.4);
+
+		h_Kpipi_eff_t0->Draw("e");
+		h_Kpipi_eff_t1->Draw("same");
+
+		leg = new TLegend(0.15,0.6,0.45,0.9,"");
+		leg->SetLineStyle(0);
+		leg->SetLineColor(0);
+		leg->SetFillColor(0);
+		leg->SetTextFont(22);
+		leg->SetTextColor(1);
+		leg->SetTextSize(0.04);
+		leg->SetTextAlign(12);
+		leg->AddEntry(h_Kpipi_eff_t0,"L0-TOS","LEP");
+		le = leg->AddEntry(h_Kpipi_eff_t1,"LO-TIS","LEP");
+		le->SetTextColor(kRed);    		
+ 		leg->Draw();
+
+		c->Print("eff_Kpipi_trigger.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Kpipi_trigger.pdf");
+
+		///
+		TH1D* h_Kpipi_eff_p = (TH1D*)h_Kpipi->Clone();
+		h_Kpipi_eff_p->Divide(h_Kpipi_p,h_Kpipi_gen);
+		h_Kpipi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Kpipi_eff_m = (TH1D*)h_Kpipi->Clone();
+		h_Kpipi_eff_m->Divide(h_Kpipi_m,h_Kpipi_gen);
+		h_Kpipi_eff_m->SetLineColor(kRed);
+		h_Kpipi_eff_m->SetMarkerColor(kRed);
+
+		h_Kpipi_eff_p->Scale(1./h_Kpipi_eff_p->Integral());
+		h_Kpipi_eff_m->Scale(1./h_Kpipi_eff_m->Integral());
+   		h_Kpipi_eff_p->SetMaximum(h_Kpipi_eff_p->GetMaximum()*1.4);
+
+		h_Kpipi_eff_p->Draw("e");
+		h_Kpipi_eff_m->Draw("same");
+
+		leg = new TLegend(0.15,0.6,0.45,0.9,"");
+		leg->SetLineStyle(0);
+		leg->SetLineColor(0);
+		leg->SetFillColor(0);
+		leg->SetTextFont(22);
+		leg->SetTextColor(1);
+		leg->SetTextSize(0.04);
+		leg->SetTextAlign(12);
+		leg->AddEntry(h_Kpipi_eff_p,"f=1","LEP");
+		le = leg->AddEntry(h_Kpipi_eff_m,"f=-1","LEP");
+		le->SetTextColor(kRed);    		
+ 		leg->Draw();
+
+		c->Print("eff_Kpipi_f.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Kpipi_f.pdf");
+
+
+		///
+		TH1D* h_Kpipi_eff_KKpi = (TH1D*)h_Kpipi->Clone();
+		h_Kpipi_eff_KKpi->Divide(h_Kpipi_KKpi,h_Kpipi_gen);
+		h_Kpipi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Kpipi_eff_pipipi = (TH1D*)h_Kpipi->Clone();
+		h_Kpipi_eff_pipipi->Divide(h_Kpipi_pipipi,h_Kpipi_gen);
+		h_Kpipi_eff_pipipi->SetLineColor(kRed);
+		h_Kpipi_eff_pipipi->SetMarkerColor(kRed);
+
+		TH1D* h_Kpipi_eff_Kpipi = (TH1D*)h_Kpipi->Clone();
+		h_Kpipi_eff_Kpipi->Divide(h_Kpipi_Kpipi,h_Kpipi_gen);
+		h_Kpipi_eff_Kpipi->SetLineColor(kBlue);
+		h_Kpipi_eff_Kpipi->SetMarkerColor(kBlue);
+
+		h_Kpipi_eff_KKpi->Scale(1./h_Kpipi_eff_KKpi->Integral());
+		h_Kpipi_eff_pipipi->Scale(1./h_Kpipi_eff_pipipi->Integral());
+		h_Kpipi_eff_Kpipi->Scale(1./h_Kpipi_eff_Kpipi->Integral());
+   		h_Kpipi_eff_KKpi->SetMaximum(h_Kpipi_eff_KKpi->GetMaximum()*1.4);
+
+		h_Kpipi_eff_KKpi->Draw("e");
+		h_Kpipi_eff_pipipi->Draw("same");
+		h_Kpipi_eff_Kpipi->Draw("same");
+
+		leg = new TLegend(0.15,0.6,0.45,0.9,"");
+		leg->SetLineStyle(0);
+		leg->SetLineColor(0);
+		leg->SetFillColor(0);
+		leg->SetTextFont(22);
+		leg->SetTextColor(1);
+		leg->SetTextSize(0.04);
+		leg->SetTextAlign(12);
+		
+		leg->AddEntry(h_Kpipi_eff_KKpi,"D_{s}#rightarrowKK#pi","LEP");
+		le = leg->AddEntry(h_Kpipi_eff_pipipi,"D_{s}#rightarrow#pi#pi#pi","LEP");
+		le->SetTextColor(kRed);    		
+		le = leg->AddEntry(h_Kpipi_eff_Kpipi,"D_{s}#rightarrowK#pi#pi","LEP");
+		le->SetTextColor(kBlue);    		
+
+ 		leg->Draw();
+		c->Print("eff_Kpipi_Ds.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Kpipi_Ds.pdf");
+
+
+
+
+
+		///
+		TH1D* h_Kpi_eff_Run1 = (TH1D*)h_Kpi->Clone();
+		h_Kpi_eff_Run1->Divide(h_Kpi_Run1,h_Kpi_gen);
+		h_Kpi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Kpi_eff_Run2 = (TH1D*)h_Kpi->Clone();
+		h_Kpi_eff_Run2->Divide(h_Kpi_Run2,h_Kpi_gen);
+		h_Kpi_eff_Run2->SetLineColor(kRed);
+		h_Kpi_eff_Run2->SetMarkerColor(kRed);
+
+		h_Kpi_eff_Run1->Scale(1./h_Kpi_eff_Run1->Integral());
+		h_Kpi_eff_Run2->Scale(1./h_Kpi_eff_Run2->Integral());
+   		h_Kpi_eff_Run1->SetMaximum(h_Kpi_eff_Run1->GetMaximum()*1.4);
+
+		h_Kpi_eff_Run1->Draw("e");
+		h_Kpi_eff_Run2->Draw("same");
+
+		c->Print("eff_Kpi_run.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Kpi_run.pdf");
+
+		///
+		TH1D* h_Kpi_eff_t0 = (TH1D*)h_Kpi->Clone();
+		h_Kpi_eff_t0->Divide(h_Kpi_t0,h_Kpi_gen);
+		h_Kpi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Kpi_eff_t1 = (TH1D*)h_Kpi->Clone();
+		h_Kpi_eff_t1->Divide(h_Kpi_t1,h_Kpi_gen);
+		h_Kpi_eff_t1->SetLineColor(kRed);
+		h_Kpi_eff_t1->SetMarkerColor(kRed);
+
+		h_Kpi_eff_t0->Scale(1./h_Kpi_eff_t0->Integral());
+		h_Kpi_eff_t1->Scale(1./h_Kpi_eff_t1->Integral());
+   		h_Kpi_eff_t0->SetMaximum(h_Kpi_eff_t0->GetMaximum()*1.4);
+
+		h_Kpi_eff_t0->Draw("e");
+		h_Kpi_eff_t1->Draw("same");
+
+		c->Print("eff_Kpi_trigger.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Kpi_trigger.pdf");
+
+		///
+		TH1D* h_Kpi_eff_p = (TH1D*)h_Kpi->Clone();
+		h_Kpi_eff_p->Divide(h_Kpi_p,h_Kpi_gen);
+		h_Kpi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Kpi_eff_m = (TH1D*)h_Kpi->Clone();
+		h_Kpi_eff_m->Divide(h_Kpi_m,h_Kpi_gen);
+		h_Kpi_eff_m->SetLineColor(kRed);
+		h_Kpi_eff_m->SetMarkerColor(kRed);
+
+		h_Kpi_eff_p->Scale(1./h_Kpi_eff_p->Integral());
+		h_Kpi_eff_m->Scale(1./h_Kpi_eff_m->Integral());
+   		h_Kpi_eff_p->SetMaximum(h_Kpi_eff_p->GetMaximum()*1.4);
+
+		h_Kpi_eff_p->Draw("e");
+		h_Kpi_eff_m->Draw("same");
+
+		c->Print("eff_Kpi_f.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Kpi_f.pdf");
+
+		///
+		TH1D* h_Kpi_eff_KKpi = (TH1D*)h_Kpi->Clone();
+		h_Kpi_eff_KKpi->Divide(h_Kpi_KKpi,h_Kpi_gen);
+		h_Kpi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Kpi_eff_pipipi = (TH1D*)h_Kpi->Clone();
+		h_Kpi_eff_pipipi->Divide(h_Kpi_pipipi,h_Kpi_gen);
+		h_Kpi_eff_pipipi->SetLineColor(kRed);
+		h_Kpi_eff_pipipi->SetMarkerColor(kRed);
+
+		TH1D* h_Kpi_eff_Kpipi = (TH1D*)h_Kpi->Clone();
+		h_Kpi_eff_Kpipi->Divide(h_Kpi_Kpipi,h_Kpi_gen);
+		h_Kpi_eff_Kpipi->SetLineColor(kBlue);
+		h_Kpi_eff_Kpipi->SetMarkerColor(kBlue);
+
+		h_Kpi_eff_KKpi->Scale(1./h_Kpi_eff_KKpi->Integral());
+		h_Kpi_eff_pipipi->Scale(1./h_Kpi_eff_pipipi->Integral());
+		h_Kpi_eff_Kpipi->Scale(1./h_Kpi_eff_Kpipi->Integral());
+   		h_Kpi_eff_KKpi->SetMaximum(h_Kpi_eff_KKpi->GetMaximum()*1.4);
+
+		h_Kpi_eff_KKpi->Draw("e");
+		h_Kpi_eff_pipipi->Draw("same");
+		h_Kpi_eff_Kpipi->Draw("same");
+
+		c->Print("eff_Kpi_Ds.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Kpi_Ds.pdf");
+
+
+		///
+		TH1D* h_pipi_eff_Run1 = (TH1D*)h_pipi->Clone();
+		h_pipi_eff_Run1->Divide(h_pipi_Run1,h_pipi_gen);
+		h_pipi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_pipi_eff_Run2 = (TH1D*)h_pipi->Clone();
+		h_pipi_eff_Run2->Divide(h_pipi_Run2,h_pipi_gen);
+		h_pipi_eff_Run2->SetLineColor(kRed);
+		h_pipi_eff_Run2->SetMarkerColor(kRed);
+
+		h_pipi_eff_Run1->Scale(1./h_pipi_eff_Run1->Integral());
+		h_pipi_eff_Run2->Scale(1./h_pipi_eff_Run2->Integral());
+   		h_pipi_eff_Run1->SetMaximum(h_pipi_eff_Run1->GetMaximum()*1.4);
+
+		h_pipi_eff_Run1->Draw("e");
+		h_pipi_eff_Run2->Draw("same");
+
+		c->Print("eff_pipi_run.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_pipi_run.pdf");
+
+		///
+		TH1D* h_pipi_eff_t0 = (TH1D*)h_pipi->Clone();
+		h_pipi_eff_t0->Divide(h_pipi_t0,h_pipi_gen);
+		h_pipi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_pipi_eff_t1 = (TH1D*)h_pipi->Clone();
+		h_pipi_eff_t1->Divide(h_pipi_t1,h_pipi_gen);
+		h_pipi_eff_t1->SetLineColor(kRed);
+		h_pipi_eff_t1->SetMarkerColor(kRed);
+
+		h_pipi_eff_t0->Scale(1./h_pipi_eff_t0->Integral());
+		h_pipi_eff_t1->Scale(1./h_pipi_eff_t1->Integral());
+   		h_pipi_eff_t0->SetMaximum(h_pipi_eff_t0->GetMaximum()*1.4);
+
+		h_pipi_eff_t0->Draw("e");
+		h_pipi_eff_t1->Draw("same");
+
+		c->Print("eff_pipi_trigger.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_pipi_trigger.pdf");
+
+		///
+		TH1D* h_pipi_eff_p = (TH1D*)h_pipi->Clone();
+		h_pipi_eff_p->Divide(h_pipi_p,h_pipi_gen);
+		h_pipi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_pipi_eff_m = (TH1D*)h_pipi->Clone();
+		h_pipi_eff_m->Divide(h_pipi_m,h_pipi_gen);
+		h_pipi_eff_m->SetLineColor(kRed);
+		h_pipi_eff_m->SetMarkerColor(kRed);
+
+		h_pipi_eff_p->Scale(1./h_pipi_eff_p->Integral());
+		h_pipi_eff_m->Scale(1./h_pipi_eff_m->Integral());
+   		h_pipi_eff_p->SetMaximum(h_pipi_eff_p->GetMaximum()*1.4);
+
+		h_pipi_eff_p->Draw("e");
+		h_pipi_eff_m->Draw("same");
+
+		c->Print("eff_pipi_f.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_pipi_f.pdf");
+
+		///
+		TH1D* h_pipi_eff_KKpi = (TH1D*)h_pipi->Clone();
+		h_pipi_eff_KKpi->Divide(h_pipi_KKpi,h_pipi_gen);
+		h_pipi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_pipi_eff_pipipi = (TH1D*)h_pipi->Clone();
+		h_pipi_eff_pipipi->Divide(h_pipi_pipipi,h_pipi_gen);
+		h_pipi_eff_pipipi->SetLineColor(kRed);
+		h_pipi_eff_pipipi->SetMarkerColor(kRed);
+
+		TH1D* h_pipi_eff_Kpipi = (TH1D*)h_pipi->Clone();
+		h_pipi_eff_Kpipi->Divide(h_pipi_Kpipi,h_pipi_gen);
+		h_pipi_eff_Kpipi->SetLineColor(kBlue);
+		h_pipi_eff_Kpipi->SetMarkerColor(kBlue);
+
+		h_pipi_eff_KKpi->Scale(1./h_pipi_eff_KKpi->Integral());
+		h_pipi_eff_pipipi->Scale(1./h_pipi_eff_pipipi->Integral());
+		h_pipi_eff_Kpipi->Scale(1./h_pipi_eff_Kpipi->Integral());
+   		h_pipi_eff_KKpi->SetMaximum(h_pipi_eff_KKpi->GetMaximum()*1.4);
+
+		h_pipi_eff_KKpi->Draw("e");
+		h_pipi_eff_pipipi->Draw("same");
+		h_pipi_eff_Kpipi->Draw("same");
+
+		c->Print("eff_pipi_Ds.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_pipi_Ds.pdf");
+
+
+		///
+		TH1D* h_Dspi_eff_Run1 = (TH1D*)h_Dspi->Clone();
+		h_Dspi_eff_Run1->Divide(h_Dspi_Run1,h_Dspi_gen);
+		h_Dspi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Dspi_eff_Run2 = (TH1D*)h_Dspi->Clone();
+		h_Dspi_eff_Run2->Divide(h_Dspi_Run2,h_Dspi_gen);
+		h_Dspi_eff_Run2->SetLineColor(kRed);
+		h_Dspi_eff_Run2->SetMarkerColor(kRed);
+
+		h_Dspi_eff_Run1->Scale(1./h_Dspi_eff_Run1->Integral());
+		h_Dspi_eff_Run2->Scale(1./h_Dspi_eff_Run2->Integral());
+   		h_Dspi_eff_Run1->SetMaximum(h_Dspi_eff_Run1->GetMaximum()*1.4);
+
+		h_Dspi_eff_Run1->Draw("e");
+		h_Dspi_eff_Run2->Draw("same");
+
+		c->Print("eff_Dspi_run.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Dspi_run.pdf");
+
+		///
+		TH1D* h_Dspi_eff_t0 = (TH1D*)h_Dspi->Clone();
+		h_Dspi_eff_t0->Divide(h_Dspi_t0,h_Dspi_gen);
+		h_Dspi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Dspi_eff_t1 = (TH1D*)h_Dspi->Clone();
+		h_Dspi_eff_t1->Divide(h_Dspi_t1,h_Dspi_gen);
+		h_Dspi_eff_t1->SetLineColor(kRed);
+		h_Dspi_eff_t1->SetMarkerColor(kRed);
+
+		h_Dspi_eff_t0->Scale(1./h_Dspi_eff_t0->Integral());
+		h_Dspi_eff_t1->Scale(1./h_Dspi_eff_t1->Integral());
+   		h_Dspi_eff_t0->SetMaximum(h_Dspi_eff_t0->GetMaximum()*1.4);
+
+		h_Dspi_eff_t0->Draw("e");
+		h_Dspi_eff_t1->Draw("same");
+
+		c->Print("eff_Dspi_trigger.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Dspi_trigger.pdf");
+
+		///
+		TH1D* h_Dspi_eff_p = (TH1D*)h_Dspi->Clone();
+		h_Dspi_eff_p->Divide(h_Dspi_p,h_Dspi_gen);
+		h_Dspi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Dspi_eff_m = (TH1D*)h_Dspi->Clone();
+		h_Dspi_eff_m->Divide(h_Dspi_m,h_Dspi_gen);
+		h_Dspi_eff_m->SetLineColor(kRed);
+		h_Dspi_eff_m->SetMarkerColor(kRed);
+
+		h_Dspi_eff_p->Scale(1./h_Dspi_eff_p->Integral());
+		h_Dspi_eff_m->Scale(1./h_Dspi_eff_m->Integral());
+   		h_Dspi_eff_p->SetMaximum(h_Dspi_eff_p->GetMaximum()*1.4);
+
+		h_Dspi_eff_p->Draw("e");
+		h_Dspi_eff_m->Draw("same");
+
+		c->Print("eff_Dspi_f.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Dspi_f.pdf");
+
+		///
+		TH1D* h_Dspi_eff_KKpi = (TH1D*)h_Dspi->Clone();
+		h_Dspi_eff_KKpi->Divide(h_Dspi_KKpi,h_Dspi_gen);
+		h_Dspi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Dspi_eff_pipipi = (TH1D*)h_Dspi->Clone();
+		h_Dspi_eff_pipipi->Divide(h_Dspi_pipipi,h_Dspi_gen);
+		h_Dspi_eff_pipipi->SetLineColor(kRed);
+		h_Dspi_eff_pipipi->SetMarkerColor(kRed);
+
+		TH1D* h_Dspi_eff_Kpipi = (TH1D*)h_Dspi->Clone();
+		h_Dspi_eff_Kpipi->Divide(h_Dspi_Kpipi,h_Dspi_gen);
+		h_Dspi_eff_Kpipi->SetLineColor(kBlue);
+		h_Dspi_eff_Kpipi->SetMarkerColor(kBlue);
+
+		h_Dspi_eff_KKpi->Scale(1./h_Dspi_eff_KKpi->Integral());
+		h_Dspi_eff_pipipi->Scale(1./h_Dspi_eff_pipipi->Integral());
+		h_Dspi_eff_Kpipi->Scale(1./h_Dspi_eff_Kpipi->Integral());
+   		h_Dspi_eff_KKpi->SetMaximum(h_Dspi_eff_KKpi->GetMaximum()*1.4);
+
+		h_Dspi_eff_KKpi->Draw("e");
+		h_Dspi_eff_pipipi->Draw("same");
+		h_Dspi_eff_Kpipi->Draw("same");
+
+		c->Print("eff_Dspi_Ds.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Dspi_Ds.pdf");
+
+
+		///
+		TH1D* h_Dspipi_eff_Run1 = (TH1D*)h_Dspipi->Clone();
+		h_Dspipi_eff_Run1->Divide(h_Dspipi_Run1,h_Dspipi_gen);
+		h_Dspipi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Dspipi_eff_Run2 = (TH1D*)h_Dspipi->Clone();
+		h_Dspipi_eff_Run2->Divide(h_Dspipi_Run2,h_Dspipi_gen);
+		h_Dspipi_eff_Run2->SetLineColor(kRed);
+		h_Dspipi_eff_Run2->SetMarkerColor(kRed);
+
+		h_Dspipi_eff_Run1->Scale(1./h_Dspipi_eff_Run1->Integral());
+		h_Dspipi_eff_Run2->Scale(1./h_Dspipi_eff_Run2->Integral());
+   		h_Dspipi_eff_Run1->SetMaximum(h_Dspipi_eff_Run1->GetMaximum()*1.4);
+
+		h_Dspipi_eff_Run1->Draw("e");
+		h_Dspipi_eff_Run2->Draw("same");
+
+		c->Print("eff_Dspipi_run.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Dspipi_run.pdf");
+
+		///
+		TH1D* h_Dspipi_eff_t0 = (TH1D*)h_Dspipi->Clone();
+		h_Dspipi_eff_t0->Divide(h_Dspipi_t0,h_Dspipi_gen);
+		h_Dspipi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Dspipi_eff_t1 = (TH1D*)h_Dspipi->Clone();
+		h_Dspipi_eff_t1->Divide(h_Dspipi_t1,h_Dspipi_gen);
+		h_Dspipi_eff_t1->SetLineColor(kRed);
+		h_Dspipi_eff_t1->SetMarkerColor(kRed);
+
+		h_Dspipi_eff_t0->Scale(1./h_Dspipi_eff_t0->Integral());
+		h_Dspipi_eff_t1->Scale(1./h_Dspipi_eff_t1->Integral());
+   		h_Dspipi_eff_t0->SetMaximum(h_Dspipi_eff_t0->GetMaximum()*1.4);
+
+		h_Dspipi_eff_t0->Draw("e");
+		h_Dspipi_eff_t1->Draw("same");
+
+		c->Print("eff_Dspipi_trigger.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Dspipi_trigger.pdf");
+
+		///
+		TH1D* h_Dspipi_eff_p = (TH1D*)h_Dspipi->Clone();
+		h_Dspipi_eff_p->Divide(h_Dspipi_p,h_Dspipi_gen);
+		h_Dspipi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Dspipi_eff_m = (TH1D*)h_Dspipi->Clone();
+		h_Dspipi_eff_m->Divide(h_Dspipi_m,h_Dspipi_gen);
+		h_Dspipi_eff_m->SetLineColor(kRed);
+		h_Dspipi_eff_m->SetMarkerColor(kRed);
+
+		h_Dspipi_eff_p->Scale(1./h_Dspipi_eff_p->Integral());
+		h_Dspipi_eff_m->Scale(1./h_Dspipi_eff_m->Integral());
+   		h_Dspipi_eff_p->SetMaximum(h_Dspipi_eff_p->GetMaximum()*1.4);
+
+		h_Dspipi_eff_p->Draw("e");
+		h_Dspipi_eff_m->Draw("same");
+
+		c->Print("eff_Dspipi_f.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Dspipi_f.pdf");
+
+		///
+		TH1D* h_Dspipi_eff_KKpi = (TH1D*)h_Dspipi->Clone();
+		h_Dspipi_eff_KKpi->Divide(h_Dspipi_KKpi,h_Dspipi_gen);
+		h_Dspipi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_Dspipi_eff_pipipi = (TH1D*)h_Dspipi->Clone();
+		h_Dspipi_eff_pipipi->Divide(h_Dspipi_pipipi,h_Dspipi_gen);
+		h_Dspipi_eff_pipipi->SetLineColor(kRed);
+		h_Dspipi_eff_pipipi->SetMarkerColor(kRed);
+
+		TH1D* h_Dspipi_eff_Kpipi = (TH1D*)h_Dspipi->Clone();
+		h_Dspipi_eff_Kpipi->Divide(h_Dspipi_Kpipi,h_Dspipi_gen);
+		h_Dspipi_eff_Kpipi->SetLineColor(kBlue);
+		h_Dspipi_eff_Kpipi->SetMarkerColor(kBlue);
+
+		h_Dspipi_eff_KKpi->Scale(1./h_Dspipi_eff_KKpi->Integral());
+		h_Dspipi_eff_pipipi->Scale(1./h_Dspipi_eff_pipipi->Integral());
+		h_Dspipi_eff_Kpipi->Scale(1./h_Dspipi_eff_Kpipi->Integral());
+   		h_Dspipi_eff_KKpi->SetMaximum(h_Dspipi_eff_KKpi->GetMaximum()*1.4);
+
+		h_Dspipi_eff_KKpi->Draw("e");
+		h_Dspipi_eff_pipipi->Draw("same");
+		h_Dspipi_eff_Kpipi->Draw("same");
+
+		c->Print("eff_Dspipi_Ds.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Dspipi_Ds.pdf");
+
+
+		///
+		TH1D* h_cosTheta_Kpi_eff_Run1 = (TH1D*)h_cosTheta_Kpi->Clone();
+		h_cosTheta_Kpi_eff_Run1->Divide(h_cosTheta_Kpi_Run1,h_cosTheta_Kpi_gen);
+		h_cosTheta_Kpi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_cosTheta_Kpi_eff_Run2 = (TH1D*)h_cosTheta_Kpi->Clone();
+		h_cosTheta_Kpi_eff_Run2->Divide(h_cosTheta_Kpi_Run2,h_cosTheta_Kpi_gen);
+		h_cosTheta_Kpi_eff_Run2->SetLineColor(kRed);
+		h_cosTheta_Kpi_eff_Run2->SetMarkerColor(kRed);
+
+		h_cosTheta_Kpi_eff_Run1->Scale(1./h_cosTheta_Kpi_eff_Run1->Integral());
+		h_cosTheta_Kpi_eff_Run2->Scale(1./h_cosTheta_Kpi_eff_Run2->Integral());
+   		h_cosTheta_Kpi_eff_Run1->SetMaximum(h_cosTheta_Kpi_eff_Run1->GetMaximum()*1.4);
+
+		h_cosTheta_Kpi_eff_Run1->Draw("e");
+		h_cosTheta_Kpi_eff_Run2->Draw("same");
+
+		c->Print("eff_cosTheta_Kpi_run.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_cosTheta_Kpi_run.pdf");
+
+		///
+		TH1D* h_cosTheta_Kpi_eff_t0 = (TH1D*)h_cosTheta_Kpi->Clone();
+		h_cosTheta_Kpi_eff_t0->Divide(h_cosTheta_Kpi_t0,h_cosTheta_Kpi_gen);
+		h_cosTheta_Kpi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_cosTheta_Kpi_eff_t1 = (TH1D*)h_cosTheta_Kpi->Clone();
+		h_cosTheta_Kpi_eff_t1->Divide(h_cosTheta_Kpi_t1,h_cosTheta_Kpi_gen);
+		h_cosTheta_Kpi_eff_t1->SetLineColor(kRed);
+		h_cosTheta_Kpi_eff_t1->SetMarkerColor(kRed);
+
+		h_cosTheta_Kpi_eff_t0->Scale(1./h_cosTheta_Kpi_eff_t0->Integral());
+		h_cosTheta_Kpi_eff_t1->Scale(1./h_cosTheta_Kpi_eff_t1->Integral());
+   		h_cosTheta_Kpi_eff_t0->SetMaximum(h_cosTheta_Kpi_eff_t0->GetMaximum()*1.4);
+
+		h_cosTheta_Kpi_eff_t0->Draw("e");
+		h_cosTheta_Kpi_eff_t1->Draw("same");
+
+		c->Print("eff_cosTheta_Kpi_trigger.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_cosTheta_Kpi_trigger.pdf");
+
+		///
+		TH1D* h_cosTheta_Kpi_eff_p = (TH1D*)h_cosTheta_Kpi->Clone();
+		h_cosTheta_Kpi_eff_p->Divide(h_cosTheta_Kpi_p,h_cosTheta_Kpi_gen);
+		h_cosTheta_Kpi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_cosTheta_Kpi_eff_m = (TH1D*)h_cosTheta_Kpi->Clone();
+		h_cosTheta_Kpi_eff_m->Divide(h_cosTheta_Kpi_m,h_cosTheta_Kpi_gen);
+		h_cosTheta_Kpi_eff_m->SetLineColor(kRed);
+		h_cosTheta_Kpi_eff_m->SetMarkerColor(kRed);
+
+		h_cosTheta_Kpi_eff_p->Scale(1./h_cosTheta_Kpi_eff_p->Integral());
+		h_cosTheta_Kpi_eff_m->Scale(1./h_cosTheta_Kpi_eff_m->Integral());
+   		h_cosTheta_Kpi_eff_p->SetMaximum(h_cosTheta_Kpi_eff_p->GetMaximum()*1.4);
+
+		h_cosTheta_Kpi_eff_p->Draw("e");
+		h_cosTheta_Kpi_eff_m->Draw("same");
+
+		c->Print("eff_cosTheta_Kpi_f.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_cosTheta_Kpi_f.pdf");
+
+		///
+		TH1D* h_cosTheta_Kpi_eff_KKpi = (TH1D*)h_cosTheta_Kpi->Clone();
+		h_cosTheta_Kpi_eff_KKpi->Divide(h_cosTheta_Kpi_KKpi,h_cosTheta_Kpi_gen);
+		h_cosTheta_Kpi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_cosTheta_Kpi_eff_pipipi = (TH1D*)h_cosTheta_Kpi->Clone();
+		h_cosTheta_Kpi_eff_pipipi->Divide(h_cosTheta_Kpi_pipipi,h_cosTheta_Kpi_gen);
+		h_cosTheta_Kpi_eff_pipipi->SetLineColor(kRed);
+		h_cosTheta_Kpi_eff_pipipi->SetMarkerColor(kRed);
+
+		TH1D* h_cosTheta_Kpi_eff_Kpipi = (TH1D*)h_cosTheta_Kpi->Clone();
+		h_cosTheta_Kpi_eff_Kpipi->Divide(h_cosTheta_Kpi_Kpipi,h_cosTheta_Kpi_gen);
+		h_cosTheta_Kpi_eff_Kpipi->SetLineColor(kBlue);
+		h_cosTheta_Kpi_eff_Kpipi->SetMarkerColor(kBlue);
+
+		h_cosTheta_Kpi_eff_KKpi->Scale(1./h_cosTheta_Kpi_eff_KKpi->Integral());
+		h_cosTheta_Kpi_eff_pipipi->Scale(1./h_cosTheta_Kpi_eff_pipipi->Integral());
+		h_cosTheta_Kpi_eff_Kpipi->Scale(1./h_cosTheta_Kpi_eff_Kpipi->Integral());
+   		h_cosTheta_Kpi_eff_KKpi->SetMaximum(h_cosTheta_Kpi_eff_KKpi->GetMaximum()*1.4);
+
+		h_cosTheta_Kpi_eff_KKpi->Draw("e");
+		h_cosTheta_Kpi_eff_pipipi->Draw("same");
+		h_cosTheta_Kpi_eff_Kpipi->Draw("same");
+
+		c->Print("eff_cosTheta_Kpi_Ds.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_cosTheta_Kpi_Ds.pdf");
+
+		///
+		TH1D* h_cosTheta_Dspi_eff_Run1 = (TH1D*)h_cosTheta_Dspi->Clone();
+		h_cosTheta_Dspi_eff_Run1->Divide(h_cosTheta_Dspi_Run1,h_cosTheta_Dspi_gen);
+		h_cosTheta_Dspi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_cosTheta_Dspi_eff_Run2 = (TH1D*)h_cosTheta_Dspi->Clone();
+		h_cosTheta_Dspi_eff_Run2->Divide(h_cosTheta_Dspi_Run2,h_cosTheta_Dspi_gen);
+		h_cosTheta_Dspi_eff_Run2->SetLineColor(kRed);
+		h_cosTheta_Dspi_eff_Run2->SetMarkerColor(kRed);
+
+		h_cosTheta_Dspi_eff_Run1->Scale(1./h_cosTheta_Dspi_eff_Run1->Integral());
+		h_cosTheta_Dspi_eff_Run2->Scale(1./h_cosTheta_Dspi_eff_Run2->Integral());
+   		h_cosTheta_Dspi_eff_Run1->SetMaximum(h_cosTheta_Dspi_eff_Run1->GetMaximum()*1.4);
+
+		h_cosTheta_Dspi_eff_Run1->Draw("e");
+		h_cosTheta_Dspi_eff_Run2->Draw("same");
+
+		c->Print("eff_cosTheta_Dspi_run.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_cosTheta_Dspi_run.pdf");
+
+		///
+		TH1D* h_cosTheta_Dspi_eff_t0 = (TH1D*)h_cosTheta_Dspi->Clone();
+		h_cosTheta_Dspi_eff_t0->Divide(h_cosTheta_Dspi_t0,h_cosTheta_Dspi_gen);
+		h_cosTheta_Dspi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_cosTheta_Dspi_eff_t1 = (TH1D*)h_cosTheta_Dspi->Clone();
+		h_cosTheta_Dspi_eff_t1->Divide(h_cosTheta_Dspi_t1,h_cosTheta_Dspi_gen);
+		h_cosTheta_Dspi_eff_t1->SetLineColor(kRed);
+		h_cosTheta_Dspi_eff_t1->SetMarkerColor(kRed);
+
+		h_cosTheta_Dspi_eff_t0->Scale(1./h_cosTheta_Dspi_eff_t0->Integral());
+		h_cosTheta_Dspi_eff_t1->Scale(1./h_cosTheta_Dspi_eff_t1->Integral());
+   		h_cosTheta_Dspi_eff_t0->SetMaximum(h_cosTheta_Dspi_eff_t0->GetMaximum()*1.4);
+
+		h_cosTheta_Dspi_eff_t0->Draw("e");
+		h_cosTheta_Dspi_eff_t1->Draw("same");
+
+		c->Print("eff_cosTheta_Dspi_trigger.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_cosTheta_Dspi_trigger.pdf");
+
+		///
+		TH1D* h_cosTheta_Dspi_eff_p = (TH1D*)h_cosTheta_Dspi->Clone();
+		h_cosTheta_Dspi_eff_p->Divide(h_cosTheta_Dspi_p,h_cosTheta_Dspi_gen);
+		h_cosTheta_Dspi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_cosTheta_Dspi_eff_m = (TH1D*)h_cosTheta_Dspi->Clone();
+		h_cosTheta_Dspi_eff_m->Divide(h_cosTheta_Dspi_m,h_cosTheta_Dspi_gen);
+		h_cosTheta_Dspi_eff_m->SetLineColor(kRed);
+		h_cosTheta_Dspi_eff_m->SetMarkerColor(kRed);
+
+		h_cosTheta_Dspi_eff_p->Scale(1./h_cosTheta_Dspi_eff_p->Integral());
+		h_cosTheta_Dspi_eff_m->Scale(1./h_cosTheta_Dspi_eff_m->Integral());
+   		h_cosTheta_Dspi_eff_p->SetMaximum(h_cosTheta_Dspi_eff_p->GetMaximum()*1.4);
+
+		h_cosTheta_Dspi_eff_p->Draw("e");
+		h_cosTheta_Dspi_eff_m->Draw("same");
+
+		c->Print("eff_cosTheta_Dspi_f.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_cosTheta_Dspi_f.pdf");
+
+		///
+		TH1D* h_cosTheta_Dspi_eff_KKpi = (TH1D*)h_cosTheta_Dspi->Clone();
+		h_cosTheta_Dspi_eff_KKpi->Divide(h_cosTheta_Dspi_KKpi,h_cosTheta_Dspi_gen);
+		h_cosTheta_Dspi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_cosTheta_Dspi_eff_pipipi = (TH1D*)h_cosTheta_Dspi->Clone();
+		h_cosTheta_Dspi_eff_pipipi->Divide(h_cosTheta_Dspi_pipipi,h_cosTheta_Dspi_gen);
+		h_cosTheta_Dspi_eff_pipipi->SetLineColor(kRed);
+		h_cosTheta_Dspi_eff_pipipi->SetMarkerColor(kRed);
+
+		TH1D* h_cosTheta_Dspi_eff_Kpipi = (TH1D*)h_cosTheta_Dspi->Clone();
+		h_cosTheta_Dspi_eff_Kpipi->Divide(h_cosTheta_Dspi_Kpipi,h_cosTheta_Dspi_gen);
+		h_cosTheta_Dspi_eff_Kpipi->SetLineColor(kBlue);
+		h_cosTheta_Dspi_eff_Kpipi->SetMarkerColor(kBlue);
+
+		h_cosTheta_Dspi_eff_KKpi->Scale(1./h_cosTheta_Dspi_eff_KKpi->Integral());
+		h_cosTheta_Dspi_eff_pipipi->Scale(1./h_cosTheta_Dspi_eff_pipipi->Integral());
+		h_cosTheta_Dspi_eff_Kpipi->Scale(1./h_cosTheta_Dspi_eff_Kpipi->Integral());
+   		h_cosTheta_Dspi_eff_KKpi->SetMaximum(h_cosTheta_Dspi_eff_KKpi->GetMaximum()*1.4);
+
+		h_cosTheta_Dspi_eff_KKpi->Draw("e");
+		h_cosTheta_Dspi_eff_pipipi->Draw("same");
+		h_cosTheta_Dspi_eff_Kpipi->Draw("same");
+
+		c->Print("eff_cosTheta_Dspi_Ds.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_cosTheta_Dspi_Ds.pdf");
+
+
+		///
+		TH1D* h_phi_Kpi_Dspi_eff_Run1 = (TH1D*)h_phi_Kpi_Dspi->Clone();
+		h_phi_Kpi_Dspi_eff_Run1->Divide(h_phi_Kpi_Dspi_Run1,h_phi_Kpi_Dspi_gen);
+		h_phi_Kpi_Dspi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_phi_Kpi_Dspi_eff_Run2 = (TH1D*)h_phi_Kpi_Dspi->Clone();
+		h_phi_Kpi_Dspi_eff_Run2->Divide(h_phi_Kpi_Dspi_Run2,h_phi_Kpi_Dspi_gen);
+		h_phi_Kpi_Dspi_eff_Run2->SetLineColor(kRed);
+		h_phi_Kpi_Dspi_eff_Run2->SetMarkerColor(kRed);
+
+		h_phi_Kpi_Dspi_eff_Run1->Scale(1./h_phi_Kpi_Dspi_eff_Run1->Integral());
+		h_phi_Kpi_Dspi_eff_Run2->Scale(1./h_phi_Kpi_Dspi_eff_Run2->Integral());
+   		h_phi_Kpi_Dspi_eff_Run1->SetMaximum(h_phi_Kpi_Dspi_eff_Run1->GetMaximum()*1.4);
+
+		h_phi_Kpi_Dspi_eff_Run1->Draw("e");
+		h_phi_Kpi_Dspi_eff_Run2->Draw("same");
+
+		c->Print("eff_phi_Kpi_Dspi_run.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_phi_Kpi_Dspi_run.pdf");
+
+		///
+		TH1D* h_phi_Kpi_Dspi_eff_t0 = (TH1D*)h_phi_Kpi_Dspi->Clone();
+		h_phi_Kpi_Dspi_eff_t0->Divide(h_phi_Kpi_Dspi_t0,h_phi_Kpi_Dspi_gen);
+		h_phi_Kpi_Dspi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_phi_Kpi_Dspi_eff_t1 = (TH1D*)h_phi_Kpi_Dspi->Clone();
+		h_phi_Kpi_Dspi_eff_t1->Divide(h_phi_Kpi_Dspi_t1,h_phi_Kpi_Dspi_gen);
+		h_phi_Kpi_Dspi_eff_t1->SetLineColor(kRed);
+		h_phi_Kpi_Dspi_eff_t1->SetMarkerColor(kRed);
+
+		h_phi_Kpi_Dspi_eff_t0->Scale(1./h_phi_Kpi_Dspi_eff_t0->Integral());
+		h_phi_Kpi_Dspi_eff_t1->Scale(1./h_phi_Kpi_Dspi_eff_t1->Integral());
+   		h_phi_Kpi_Dspi_eff_t0->SetMaximum(h_phi_Kpi_Dspi_eff_t0->GetMaximum()*1.4);
+
+		h_phi_Kpi_Dspi_eff_t0->Draw("e");
+		h_phi_Kpi_Dspi_eff_t1->Draw("same");
+
+		c->Print("eff_phi_Kpi_Dspi_trigger.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_phi_Kpi_Dspi_trigger.pdf");
+
+		///
+		TH1D* h_phi_Kpi_Dspi_eff_p = (TH1D*)h_phi_Kpi_Dspi->Clone();
+		h_phi_Kpi_Dspi_eff_p->Divide(h_phi_Kpi_Dspi_p,h_phi_Kpi_Dspi_gen);
+		h_phi_Kpi_Dspi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_phi_Kpi_Dspi_eff_m = (TH1D*)h_phi_Kpi_Dspi->Clone();
+		h_phi_Kpi_Dspi_eff_m->Divide(h_phi_Kpi_Dspi_m,h_phi_Kpi_Dspi_gen);
+		h_phi_Kpi_Dspi_eff_m->SetLineColor(kRed);
+		h_phi_Kpi_Dspi_eff_m->SetMarkerColor(kRed);
+
+		h_phi_Kpi_Dspi_eff_p->Scale(1./h_phi_Kpi_Dspi_eff_p->Integral());
+		h_phi_Kpi_Dspi_eff_m->Scale(1./h_phi_Kpi_Dspi_eff_m->Integral());
+   		h_phi_Kpi_Dspi_eff_p->SetMaximum(h_phi_Kpi_Dspi_eff_p->GetMaximum()*1.4);
+
+		h_phi_Kpi_Dspi_eff_p->Draw("e");
+		h_phi_Kpi_Dspi_eff_m->Draw("same");
+
+		c->Print("eff_phi_Kpi_Dspi_f.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_phi_Kpi_Dspi_f.pdf");
+
+		///
+		TH1D* h_phi_Kpi_Dspi_eff_KKpi = (TH1D*)h_phi_Kpi_Dspi->Clone();
+		h_phi_Kpi_Dspi_eff_KKpi->Divide(h_phi_Kpi_Dspi_KKpi,h_phi_Kpi_Dspi_gen);
+		h_phi_Kpi_Dspi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+
+		TH1D* h_phi_Kpi_Dspi_eff_pipipi = (TH1D*)h_phi_Kpi_Dspi->Clone();
+		h_phi_Kpi_Dspi_eff_pipipi->Divide(h_phi_Kpi_Dspi_pipipi,h_phi_Kpi_Dspi_gen);
+		h_phi_Kpi_Dspi_eff_pipipi->SetLineColor(kRed);
+		h_phi_Kpi_Dspi_eff_pipipi->SetMarkerColor(kRed);
+
+		TH1D* h_phi_Kpi_Dspi_eff_Kpipi = (TH1D*)h_phi_Kpi_Dspi->Clone();
+		h_phi_Kpi_Dspi_eff_Kpipi->Divide(h_phi_Kpi_Dspi_Kpipi,h_phi_Kpi_Dspi_gen);
+		h_phi_Kpi_Dspi_eff_Kpipi->SetLineColor(kBlue);
+		h_phi_Kpi_Dspi_eff_Kpipi->SetMarkerColor(kBlue);
+
+		h_phi_Kpi_Dspi_eff_KKpi->Scale(1./h_phi_Kpi_Dspi_eff_KKpi->Integral());
+		h_phi_Kpi_Dspi_eff_pipipi->Scale(1./h_phi_Kpi_Dspi_eff_pipipi->Integral());
+		h_phi_Kpi_Dspi_eff_Kpipi->Scale(1./h_phi_Kpi_Dspi_eff_Kpipi->Integral());
+   		h_phi_Kpi_Dspi_eff_KKpi->SetMaximum(h_phi_Kpi_Dspi_eff_KKpi->GetMaximum()*1.4);
+
+		h_phi_Kpi_Dspi_eff_KKpi->Draw("e");
+		h_phi_Kpi_Dspi_eff_pipipi->Draw("same");
+		h_phi_Kpi_Dspi_eff_Kpipi->Draw("same");
+
+		c->Print("eff_phi_Kpi_Dspi_Ds.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_phi_Kpi_Dspi_Ds.pdf");
+
+
+}
+
+
+
 int main(int argc, char** argv){
     
     time_t startTime = time(0);
@@ -1696,14 +2873,18 @@ int main(int argc, char** argv){
 
    //    makeIntegratorFile(atoi(argv[1]));
 	//makeMINTtupleGen();
-     makeMINTtupleGen_Ds3pi();
+    // makeMINTtupleGen_Ds3pi();
      //makeIntegratorFilePhsp();
 
-//	makeMINTtupleGenInAcc();
-      ampFit(atoi(argv[1]));
-    //  fracFit();
+// 	makeMINTtupleGenInAcc();
+//       ampFit(atoi(argv[1]));
+//      fracFit();
 //     makeMINTtupleGenForToys();
 
+
+// 	makeMINTtupleGen();
+
+     addGenPdfToMC();
 
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;

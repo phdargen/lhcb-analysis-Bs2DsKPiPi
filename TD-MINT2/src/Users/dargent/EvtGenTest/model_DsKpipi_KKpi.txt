@@ -15,7 +15,7 @@ RandomSeed  0
 
 *"InputFileName"		"toys.root"
 *"InputFileName"            "/auto/data/dargent/Bs2DsKpipi/MINT2/MINT_data_3sigma.root"
-"InputFileName"		   "/auto/data/dargent/BsDsKpipi/MINT/DecFileTest/GenMC_EvtGen_DsKpipi,KKpi.root"
+"InputFileName"		   "/auto/data/dargent/BsDsKpipi/MINT/DecFileTest/GenMC_13266008_PG.root"
 "OutputRootFile"	"toys.root"
 
 "OutputDir"		"model_DsKpipi_KKpi/"
