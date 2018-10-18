@@ -3,8 +3,8 @@
 "makeNewList"    	1
 "matchList"      	1
 
-"inFileName"   		"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_16_LTU.root"
-"outFileName"   	"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_16_LTU_multCand.root"
+"inFileName"   		"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_16_LTU.root"
+"outFileName"   	"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_16_LTU_multCand.root"
 
-"cut"       		""
-"listName"		"Ds3pi_LTU"
+"cut"       		"Ds_ENDVERTEX_CHI2/3. < 5 && Ds_FDCHI2_ORIVX > 9 && Ds_IPCHI2_OWNPV < 9 && XsDaughters_max_IPCHI2 < 40 && DsDaughters_min_IPCHI2 > 5 && Bs_DTF_TAU < 0 && Bs_DTF_TAU > -0.25 && (nPV ==1 || (Ds_MINIPCHI2NEXTBEST-Ds_IPCHI2_OWNPV) > 20)"
+"listName"		"Ds2Kpipi_LTU"
