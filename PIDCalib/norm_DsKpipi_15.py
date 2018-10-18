@@ -182,7 +182,7 @@ trackList = [
 
 # List of input ROOT files with MC ntuples. Format: 
 #   (inputfile, outputfile, dataset)
-indir = "./" #/auto/data/dargent/BsDsKpipi/Mini/MC/"
+indir = "/eos/lhcb/user/p/phdargen/BsDsKpipi/" #/auto/data/dargent/BsDsKpipi/Mini/MC/"
 files = [
 
   #(indir+"signal_Ds2KKpi_11.root",          indir+"/signal_Ds2KKpi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[0],"Gen"), 
@@ -286,9 +286,9 @@ files = [
   #(indir+"norm_Ds2pipipi_16_PID_tmp2.root", indir+"/norm_Ds2pipipi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[4],"Corr"),
 
 
-  (indir+"norm_Ds2Kpipi_15.root",          indir+"/norm_Ds2Kpipi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[5],"Gen"), 
-  (indir+"norm_Ds2Kpipi_15_PID_tmp.root", indir+"/norm_Ds2Kpipi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[5],"Corr"), 
-  (indir+"norm_Ds2Kpipi_15_PID_tmp2.root", indir+"/norm_Ds2Kpipi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[5],"Corr"),
+  (indir+"norm_Ds2Kpipi_15.root",          "norm_Ds2Kpipi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[5],"Gen"), 
+  ("norm_Ds2Kpipi_15_PID_tmp.root", "norm_Ds2Kpipi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[5],"Corr"), 
+  ("norm_Ds2Kpipi_15_PID_tmp2.root", "norm_Ds2Kpipi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[5],"Corr"),
    
   #(indir+"norm_Ds2Kpipi_16.root",          indir+"/norm_Ds2Kpipi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[5],"Gen"), 
   #(indir+"norm_Ds2Kpipi_16_PID_tmp.root", indir+"/norm_Ds2Kpipi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[5],"Corr"), 
@@ -321,7 +321,7 @@ simversion = "run2"
 # IF NOT: use /tmp if you have enough RAM
 # temp_folder = '/tmp'
 # ELSE: use current folder
-temp_folder = '/tmp'
+temp_folder = '.'
 import string
 import random
 rand_string = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))  # get 10 random chars for temp_file prefix
@@ -382,3 +382,10 @@ for input_file, output_file, dataset, pidname, tracks, method in files :
 
   print("mv %s %s" % (tmpinfile, output_file))
   os.system("mv %s %s" % (tmpinfile, output_file))
+  print("rm %s" % tmpoutfile)
+  os.system("rm %s" % tmpoutfile)
+  
+for input_file, output_file, dataset, pidname, tracks, method in files :
+  if 'tmp' in output_file:
+    print("rm %s" % output_file)
+    os.system("rm %s" % output_file)
