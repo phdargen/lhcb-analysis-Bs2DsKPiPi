@@ -1,20 +1,25 @@
 * general options
 "updateAnaNote"		0
 
-"fitDsMass"	 	0
+"fitDsMass"	 		 1
 "fitIntegratedResolution"	 0
 "fitResoRelation"		 1
 
 * options for Ds mass fit
-"inFileNameForDsMassFit"		"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2*_16_LTU_multCand.root"
-"outFileNameForDsMassFit"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_LTU.root"
+*"inFileNameForDsMassFit"		"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2*_16_LTU_multCand.root"
+*"outFileNameForDsMassFit"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_LTU.root"
+
+"inFileNameForDsMassFit"   		"/auto/data/kecke/BsDsKpipi/signal_Ds2*_17_LTU_multCand.root"
+"outFileNameForDsMassFit" 		"/auto/data/kecke/BsDsKpipi/Final/Data/signal_LTU_17.root"
+
 "sWeight"			1
 "weightVar"			"weight"		
 	
 * options for scale factor fit
 "dataType"		"Data"
-"inFileName"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_LTU.root"
-"minEventsPerBin"	 600
+"Year"			17
+"inFileName"		"/auto/data/kecke/BsDsKpipi/Final/Data/signal_LTU.root"
+"minEventsPerBin"	 1500
 "Bs_TAU_Var"		"Bs_DTF_TAU"
 "TAUERR_min"	 0.
 "TAUERR_max"	 0.1
@@ -24,3 +29,4 @@
 "fixMean"	1
 "fixGaussFraction"	 1
 "gaussFraction"		 0.75
+"DoSystematics"		 0

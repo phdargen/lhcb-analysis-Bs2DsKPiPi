@@ -76,7 +76,7 @@ using namespace MINT;
 TFile* file_res = 0;
 TTree* tree_res = 0;
 
-vector<double> FitTimeRes(double min, double max, string binName = "", TString Bs_TAU_Var = "Bs_DTF_TAU", TString dataType = "MC"){
+vector<double> FitTimeRes(double min, double max, string binName = "", TString Bs_TAU_Var = "Bs_DTF_TAU", TString dataType = "MC", int year = 16){
 	
 	/// Options
         NamedParameter<string> weightVar("weightVar", (string)"weight");
@@ -91,15 +91,17 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
         NamedParameter<int> fixGaussFraction("fixGaussFraction", 0);
         NamedParameter<double> gaussFraction("gaussFraction", 0.75);
 
+	if(dataType == "Data" && year == 16) dataType.Append("_16");
+	if(dataType == "Data" && year == 17) dataType.Append("_17");
+
 	/// Load file
         RooRealVar Bs_TAU(Bs_TAU_Var, Bs_TAU_Var, -20.,20.);
         RooRealVar Bs_TAUERR(Bs_TAU_Var+"ERR", Bs_TAU_Var+"ERR", min, max,"ps");
 	RooRealVar Bs_TRUETAU("Bs_TRUETAU", "Bs_TRUETAU", 0.,20.);
 	RooRealVar weight(((string)weightVar).c_str() , ((string)weightVar).c_str(), 0.);
         RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
-        RooRealVar year("year", "year", 0.);	
 
-	RooArgList list =  RooArgList(Bs_TAU,Bs_TAUERR,weight,Ds_finalState,year);
+	RooArgList list =  RooArgList(Bs_TAU,Bs_TAUERR,weight,Ds_finalState);
 	if(dataType == "MC")list.add(Bs_TRUETAU);
 	RooDataSet* data = new RooDataSet("data","data",list,Import(*tree_res),WeightVar(((string)weightVar).c_str()));
 
@@ -426,12 +428,15 @@ TH1D* createBinning(TString Bs_TAU_Var = "Bs_DTF_TAU"){
 	return h;
 }
 
-void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
+void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", int year = 16){
 
         NamedParameter<int> updateAnaNote("updateAnaNote", 1);
 
 	TH1D* binning = createBinning(Bs_TAU_Var);	
 	TH1D* ResoRelation = (TH1D*) binning->Clone("ResoRelation");
+
+	if(dataType == "Data" && year == 16) dataType.Append("_16");
+	if(dataType == "Data" && year == 17) dataType.Append("_17");
 	
 	ofstream datafile;
 	if(updateAnaNote)datafile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ResoTable_"+dataType+".txt",std::ofstream::trunc);
@@ -454,7 +459,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
         double yerr[nBins]; 
 
 	for(int i = 1; i <= binning->GetNbinsX(); i++){
-		vector<double> reso_bin = FitTimeRes(binning->GetBinLowEdge(i),binning->GetBinLowEdge(i+1),anythingToString((int)i),Bs_TAU_Var,dataType);
+		vector<double> reso_bin = FitTimeRes(binning->GetBinLowEdge(i),binning->GetBinLowEdge(i+1),anythingToString((int)i),Bs_TAU_Var,dataType, year);
 		
 		ResoRelation->SetBinContent(i, reso_bin[0]);
 		ResoRelation->SetBinError(i, reso_bin[1]);
@@ -572,7 +577,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
 	leg.Draw();
 	
 	c->Print("Plots/ScaleFactor_"+dataType+".eps");
-        if(updateAnaNote)c->Print("../../../../../TD-AnaNote/latex/figs/Resolution/ScaleFactor_"+dataType+".pdf");
+        if(updateAnaNote) c->Print("../../../../../TD-AnaNote/latex/figs/Resolution/ScaleFactor_"+dataType+".pdf");
 
 	if(updateAnaNote){
 		ofstream eqfile;
@@ -588,7 +593,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC"){
 	}
 }
 
-void fitSignalShape(TCut cut = ""){
+void fitSignalShape(TCut cut = "", int year = 16){
 
         /// Options
         NamedParameter<int> updateAnaNote("updateAnaNote", 0);
@@ -734,8 +739,8 @@ void fitSignalShape(TCut cut = ""){
         
         pad2->Update();
         canvas->Update();
-        canvas->SaveAs("Ds_M_pull.eps");
- 	if(updateAnaNote)canvas->Print("../../../../../TD-AnaNote/latex/figs/Resolution/Ds_M_pull.pdf");
+        canvas->SaveAs(("Ds_M_pull_"+anythingToString(int(year))+".eps").c_str());
+ 	if(updateAnaNote)canvas->Print(("../../../../../TD-AnaNote/latex/figs/Resolution/Ds_M_pull_"+anythingToString(int(year))+".pdf").c_str());
 
 	out_tree->Write();
 	output->Close();
@@ -750,6 +755,8 @@ int main(int argc, char** argv){
     TH2::SetDefaultSumw2();
  
     /// Options
+    NamedParameter<int> Year("Year", 16);
+    int year = Year;
     NamedParameter<string> DataType("dataType",(string)"MC");
     TString dataType = TString((string) DataType);
     NamedParameter<string> inFileName("inFileName", (string)"/auto/data/dargent/BsDsKpipi/Final/MC/signal.root");
@@ -761,8 +768,8 @@ int main(int argc, char** argv){
     NamedParameter<int> fitIntegratedResolution("fitIntegratedResolution", 0);	
     NamedParameter<int> fitResoRelation("fitResoRelation", 0);	
 
-    if(fitDsMass)fitSignalShape("!isRejectedMultipleCandidate");
-
+    if(fitDsMass)fitSignalShape("!isRejectedMultipleCandidate", year);
+	cout << "one" << endl;
     if(fitIntegratedResolution || fitResoRelation){
 	  /// Load file
   	  TFile* file = new TFile(((string)inFileName).c_str());
@@ -773,13 +780,14 @@ int main(int argc, char** argv){
 	  tree->SetBranchStatus("year",1);
 	  tree->SetBranchStatus("*finalState",1);
   	  file_res = new TFile("dummy_res.root","RECREATE");
-  	  tree_res = tree->CopyTree("");
+  	  if(dataType == "Data") tree_res = tree->CopyTree(("year == "+anythingToString((int)year)).c_str());
+	  else tree_res = tree->CopyTree("");
 	  file->Close();
     }
-
+	cout << "two" << endl;
     if(fitIntegratedResolution)FitTimeRes(TAUERR_min, TAUERR_max, "all", TString((string) Bs_TAU_Var), dataType);
-    if(fitResoRelation)FitResoRelation(TString((string) Bs_TAU_Var),dataType);
-
+    if(fitResoRelation)FitResoRelation(TString((string) Bs_TAU_Var),dataType, year);
+	cout << "three" << endl;
     if(!file_res)file_res->Close();
   
     cout << "==============================================" << endl;
