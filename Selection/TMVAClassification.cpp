@@ -40,7 +40,7 @@ void TMVAClassification( TString myMethodList = "BDTG", TString trainOn = "MC", 
 	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2*_17.root");
 	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_15.root");
 	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_16.root");
-	   //background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_17.root");
+	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_17.root");
    }
 
    TChain* signal = new TChain("DecayTree");
@@ -321,7 +321,7 @@ void TMVAClassification( TString myMethodList = "BDTG", TString trainOn = "MC", 
 }
 
 
-void trainAll( TString myMethodList = "BDTG", TString trainOn = "MC") {
+void trainAll( TString myMethodList = "BDTG", TString trainOn = "Data") {
 
 	gROOT->SetBatch(true);
 	TMVAClassification( myMethodList, trainOn , "run1",  "t0", "even" );
@@ -334,8 +334,8 @@ void trainAll( TString myMethodList = "BDTG", TString trainOn = "MC") {
  	TMVAClassification( myMethodList, trainOn , "run2",  "t0", "odd" );
  	TMVAClassification( myMethodList, trainOn , "run2",  "t1", "odd" );
 
-// 	TMVAClassification( myMethodList, trainOn , "run1",  "t0", "all" );
-//  	TMVAClassification( myMethodList, trainOn , "run1",  "t1", "all" );
-//  	TMVAClassification( myMethodList, trainOn , "run2",  "t0", "all" );
-//  	TMVAClassification( myMethodList, trainOn , "run2",  "t1", "all" );
+	TMVAClassification( myMethodList, trainOn , "run1",  "t0", "all" );
+ 	TMVAClassification( myMethodList, trainOn , "run1",  "t1", "all" );
+ 	TMVAClassification( myMethodList, trainOn , "run2",  "t0", "all" );
+ 	TMVAClassification( myMethodList, trainOn , "run2",  "t1", "all" );
 }

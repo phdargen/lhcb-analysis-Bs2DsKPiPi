@@ -33,7 +33,7 @@
 using namespace std;
 using namespace TMVA;
 
-void TMVAClassificationApplication(TString decay = "Signal", TString dataType = "Data", TString myMethod = "BDTG", TString trainedOn = "MC" ) 
+void TMVAClassificationApplication(TString decay = "Signal", TString dataType = "Data", TString myMethod = "BDTG", TString trainedOn = "Data" ) 
 {   
 #ifdef __CINT__
    gROOT->ProcessLine( ".O0" ); // turn off optimization in CINT
@@ -79,8 +79,19 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    else if(decay == "Signal" && dataType == "MC"){ 	  
 	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/signal_Ds2KKpi_11.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/signal_Ds2KKpi_12.root");
-   	//theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_11.root");
-   	//theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_12.root");
+	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/signal_Ds2KKpi_15.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/signal_Ds2KKpi_16.root");
+
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_11.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_12.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_15.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2pipipi_16.root");
+
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2Kpipi_11.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2Kpipi_12.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2Kpipi_15.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2Kpipi_16.root");
+
 	outFileName += "MC/signal.root";
    }
 
@@ -89,19 +100,19 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2KKpi_12.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2KKpi_15.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2KKpi_16.root");
-   	//theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2KKpi_17.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2KKpi_17.root");
    	
 	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2pipipi_11.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2pipipi_12.root");
 	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2pipipi_15.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2pipipi_16.root");
-   	//theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2pipipi_17.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2pipipi_17.root");
 
 	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2Kpipi_11.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2Kpipi_12.root");
 	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2Kpipi_15.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2Kpipi_16.root");
-   	//theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2Kpipi_17.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2Kpipi_17.root");
 
 	outFileName += "Data/norm.root";
    }
@@ -109,8 +120,18 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    else if(decay == "Norm" && dataType == "MC"){ 	  
 	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2KKpi_11.root");
    	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2KKpi_12.root");
-   	//theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2pipipi_11.root");
-   	//theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2pipipi_12.root");
+	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2KKpi_15.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2KKpi_16.root");
+
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2pipipi_11.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2pipipi_12.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2pipipi_15.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2pipipi_16.root");
+
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2Kpipi_11.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2Kpipi_12.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2Kpipi_15.root");
+   	theTree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/norm_Ds2Kpipi_16.root");
 
 	outFileName += "MC/norm.root";
    }
@@ -123,8 +144,8 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    // Disable not needed branches
    //theTree->SetBranchStatus("*PARTICLES*",0); 
    theTree->SetBranchStatus("*MC12Tune*",0);
-   if(decay == "Norm")theTree->SetBranchStatus("*a_1_1260*",0);
-   else theTree->SetBranchStatus("*K_1_1270*",0);
+   //if(decay == "Norm")theTree->SetBranchStatus("*a_1_1260*",0);
+   //else theTree->SetBranchStatus("*K_1_1270*",0);
    //theTree->SetBranchStatus("*SS_Proton*",0);
    //theTree->SetBranchStatus("*SS_Pion*",0);
    /*
@@ -308,10 +329,10 @@ void TMVAClassificationApplication(TString decay = "Signal", TString dataType = 
    cout << "==> TMVAClassificationApplication is done!" << endl << endl;
 } 
 
-void applyToAll(TString myMethod = "BDTG", TString trainedOn = "MC" ){
+void applyToAll(TString myMethod = "BDTG", TString trainedOn = "Data" ){
 
-	TMVAClassificationApplication("Signal", "Data", myMethod, trainedOn );
-	//TMVAClassificationApplication("Signal", "MC", myMethod, trainedOn );
+ 	TMVAClassificationApplication("Signal", "Data", myMethod, trainedOn );
+	TMVAClassificationApplication("Signal", "MC", myMethod, trainedOn );
 	TMVAClassificationApplication("Norm", "Data", myMethod, trainedOn );
-	//TMVAClassificationApplication("Norm", "MC", myMethod, trainedOn );
+	TMVAClassificationApplication("Norm", "MC", myMethod, trainedOn );
 }

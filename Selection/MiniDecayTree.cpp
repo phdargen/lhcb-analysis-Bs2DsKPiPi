@@ -16,18 +16,18 @@ using namespace std;
 inline Bool_t MiniDecayTree::PhaseSpace_Cuts(){
 
     if(_decay == Decay::signal){
-        if((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() > 1950.) return false;
-//         if((BsDTF_K_plus + BsDTF_pi_minus).M()  > 1200.) return false;
-//         if((BsDTF_pi_plus + BsDTF_pi_minus).M() > 1200.) return false;
+        if((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() > 1900.) return false;
+        if((BsDTF_K_plus + BsDTF_pi_minus).M()  > 1300.) return false;
+        if((BsDTF_pi_plus + BsDTF_pi_minus).M() > 1300.) return false;
 
         if((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() < massKaon + 2. * massPion) return false;
         if((BsDTF_K_plus + BsDTF_pi_minus).M()  < massKaon + massPion) return false;
         if((BsDTF_pi_plus + BsDTF_pi_minus).M() < 2. * massPion) return false;
     }
     else {
-    	if((BsDTF_pi_plus1 + BsDTF_pi_plus2 + BsDTF_pi_minus).M() > 1950.) return false;
-//         if((BsDTF_pi_plus1 + BsDTF_pi_minus).M()  > 1200.) return false;
-//         if((BsDTF_pi_plus2 + BsDTF_pi_minus).M()  > 1200.) return false;
+    	if((BsDTF_pi_plus1 + BsDTF_pi_plus2 + BsDTF_pi_minus).M() > 1900.) return false;
+        if((BsDTF_pi_plus1 + BsDTF_pi_minus).M()  > 1300.) return false;
+        if((BsDTF_pi_plus2 + BsDTF_pi_minus).M()  > 1300.) return false;
 
     	if((BsDTF_pi_plus1 + BsDTF_pi_plus2 + BsDTF_pi_minus).M() < 3. * massPion) return false;
         if((BsDTF_pi_plus1 + BsDTF_pi_minus).M()  < 2. * massPion) return false;
@@ -132,7 +132,7 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
 
     else if(_Ds_finalState == Ds_finalState::KsK){
         if(K_plus_fromDs_PIDK < -10) return false;
-        else if(K_minus_fromDs_PIDK < -5) return false;
+        else if(K_minus_fromDs_PIDK < 0) return false;
         else if(pi_minus_fromDs_PIDK > 10) return false;        
     }
 
@@ -182,7 +182,6 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
         else if(pi_plus_PIDK > 10) return false;
         else if(pi_minus_PIDK > 5) return false;
 	// remove events with no PID info
-        if(pi_minus_PIDK == 0) return false;
 	if( K_plus_hasRich == 0  ) return false;        
 	if( pi_plus_hasRich == 0  ) return false;        
 	if( pi_minus_hasRich == 0  ) return false;
@@ -249,7 +248,7 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
 	||  ((pi_plus_fromDs + pi_minus_fromDs + pi_minus2_fromDs).M() - (pi_plus_fromDs + pi_minus2_fromDs).M()) < 155.) return false;
         // Charmless veto
         if(!_ltu)if((Ds_ENDVERTEX_Z - Bs_ENDVERTEX_Z) < 0) return false;
-        if(Ds_FDCHI2_ORIVX < 6) return false;
+        if(Ds_FDCHI2_ORIVX < 9) return false;
         //Lambda_c veto
         //if( TMath::Abs((pi_plus_fromDs + piminus_fromDs_asProton_MissID + pi_minus2_fromDs).M() - massLambda_c) < 30. && pi_minus_fromDs_PIDp < 0 ) return false;
         //if( TMath::Abs((pi_plus_fromDs + piminus2_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && pi_minus2_fromDs_PIDp < 0 ) return false;
@@ -269,7 +268,7 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
     
     if(_decay == Decay::signal){
         // Ds veto
-        if(TMath::Abs((K_plus + pi_plus + pi_minus).M() - massDs) < 20) return false;
+        if(TMath::Abs((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() - massDs) < 20) return false;
         if(TMath::Abs((K_plus + pi_plus + pi_minus_asK_MissID).M() - massDs) < 20 && pi_minus_PIDK > -5) return false;
 	// Semi-lep. veto
 	//if( K_plus_isMuon == 1 ) return false;
@@ -746,6 +745,12 @@ void MiniDecayTree::Loop()
     summary_tree->Branch("BsDTF_Ds_piminus_PY", &BsDTF_Ds_piminus_PY, "BsDTF_Ds_piminus_PY/D");
     summary_tree->Branch("BsDTF_Ds_piminus_PZ", &BsDTF_Ds_piminus_PZ, "BsDTF_Ds_piminus_PZ/D");
     summary_tree->Branch("BsDTF_Ds_piminus_PE", &BsDTF_Ds_piminus_PE, "BsDTF_Ds_piminus_PE/D");   
+
+    double BsDTF_Ds_PX,BsDTF_Ds_PY,BsDTF_Ds_PZ,BsDTF_Ds_PE;
+    summary_tree->Branch("BsDTF_Ds_PX", &BsDTF_Ds_PX, "BsDTF_Ds_PX/D");
+    summary_tree->Branch("BsDTF_Ds_PY", &BsDTF_Ds_PY, "BsDTF_Ds_PY/D");
+    summary_tree->Branch("BsDTF_Ds_PZ", &BsDTF_Ds_PZ, "BsDTF_Ds_PZ/D");
+    summary_tree->Branch("BsDTF_Ds_PE", &BsDTF_Ds_PE, "BsDTF_Ds_PE/D");   
 
     // MC PID
     double K_plus_PIDK_gen, K_plus_PIDK_corr, K_plus_PIDK_raw;
@@ -1452,6 +1457,11 @@ void MiniDecayTree::Loop()
         Bs_BsDTF_TAU = Bs_BsDTF_ctau[0] * 3.33564095;
         Bs_BsDTF_TAUERR = Bs_BsDTF_ctauErr[0] * 3.33564095;
 
+        BsDTF_Ds_PX = BsDTF_Ds.Px() ;
+        BsDTF_Ds_PY = BsDTF_Ds.Py() ;
+        BsDTF_Ds_PZ = BsDTF_Ds.Pz() ;
+        BsDTF_Ds_PE = BsDTF_Ds.E() ;
+
 	if(run ==1){
 		OS_Muon_DEC = (int) Bs_OS_Muon_DEC;
 		OS_Muon_PROB = (double) Bs_OS_Muon_PROB;
@@ -1487,8 +1497,8 @@ void MiniDecayTree::Loop()
 
 	//if(track_min_P < 2500) continue;
 	if(!_ltu){
- 		if(Bs_BsDTF_TAU < 0.35 || Bs_BsDTF_TAU > 12.) continue;
-		if(Bs_BsDTF_TAUERR < 0. || Bs_BsDTF_TAUERR > 0.15) continue;
+ 		if(Bs_BsDTF_TAU < 0.4 || Bs_BsDTF_TAU > 10.) continue;
+		if(Bs_BsDTF_TAUERR < 0. || Bs_BsDTF_TAUERR > 0.1) continue;
 	}
 	else {
 		//if(PV_CHI2NDOF > 10)continue;

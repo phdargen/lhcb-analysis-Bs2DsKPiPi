@@ -30,6 +30,9 @@ lb-run -c x86_64-slc6-gcc7-opt --nightly lhcb-head Urania/HEAD python ./norm_Dsp
 lb-run -c x86_64-slc6-gcc7-opt --nightly lhcb-head Urania/HEAD python ./norm_Dspipipi_16.py  > out_norm_pipipi_16.txt & 
 
 
+lb-run -c x86_64-slc6-gcc7-opt --nightly lhcb-head Urania/HEAD python ./norm_Run2.py 
+
+
 
 # lb-run Urania/v7r0 python ./signal_Run1.py
 # lb-run -c x86_64-slc6-gcc7-opt --nightly lhcb-head Urania/HEAD python ./signal_Run2.py

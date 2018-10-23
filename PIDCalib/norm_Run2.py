@@ -11,27 +11,27 @@ trackList = [
 	# Bs->DsKpipi, Ds->KKpi
 	{
 		'pi_minus'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 	
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 	
 			#         "PIDp"       : "pi_CombDLLp", 
 		},
 		'K_plus'   : {
-				"PIDK"       : ("K_CombDLLK" , "-2" , "100"), 
+				"PIDK"       : ("K_CombDLLK_Brunel" , "-2" , "100"), 
 			##    "PIDp"       : "K_CombDLLp", 
 		},
 		'pi_plus'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 
 				##    "PIDp"       : "pi_CombDLLp", 
 		},        
 		'K_plus_fromDs'   : {
-				"PIDK"       : ("K_CombDLLK" , "-10" , "100") , 
+				"PIDK"       : ("K_CombDLLK_Brunel" , "-10" , "100") , 
 				##"PIDp"       : "K_CombDLLp", 
 		},                    
 		'K_minus_fromDs'   : {
-				"PIDK"       : ("K_CombDLLK" , "-10" , "100"), 
+				"PIDK"       : ("K_CombDLLK_Brunel" , "-10" , "100"), 
 		##        "PIDp"       : "K_CombDLLp", 
 		},            
 		'pi_minus_fromDs'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "20"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "20"), 
 		##        "PIDp"       : "pi_CombDLLp", 
 		}                   
 	},
@@ -39,27 +39,27 @@ trackList = [
 	# Bs->DsKpipi, Ds->pipipi
 	{
 		'pi_minus'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 	
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 	
 			#         "PIDp"       : "pi_CombDLLp", 
 		},
 		'K_plus'   : {
-				"PIDK"       : ("K_CombDLLK" , "-2" , "100"), 
+				"PIDK"       : ("K_CombDLLK_Brunel" , "-2" , "100"), 
 			##    "PIDp"       : "K_CombDLLp", 
 		},
 		'pi_plus'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 
 				##    "PIDp"       : "pi_CombDLLp", 
 		},        
 		'pi_plus_fromDs'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "20") , 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "20") , 
 				##"PIDp"       : "K_CombDLLp", 
 		},                    
 		'pi_minus_fromDs'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "20"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "20"), 
 		##        "PIDp"       : "K_CombDLLp", 
 		},            
 		'pi_minus2_fromDs'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "20"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "20"), 
 		##        "PIDp"       : "pi_CombDLLp", 
 		}                   
 	},
@@ -67,27 +67,27 @@ trackList = [
 		# Bs->DsKpipi, Ds->Kpipi
 	{
 		'pi_minus'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 	
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 	
 			#         "PIDp"       : "pi_CombDLLp", 
 		},
 		'K_plus'   : {
-				"PIDK"       : ("K_CombDLLK" , "-2" , "100"), 
+				"PIDK"       : ("K_CombDLLK_Brunel" , "-2" , "100"), 
 			##    "PIDp"       : "K_CombDLLp", 
 		},
 		'pi_plus'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 
 				##    "PIDp"       : "pi_CombDLLp", 
 		},        
 		'pi_plus_fromDs'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "20") , 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "20") , 
 				##"PIDp"       : "K_CombDLLp", 
 		},                    
 		'K_minus_fromDs'   : {
-				"PIDK"       : ("K_CombDLLK" , "-10" , "100"), 
+				"PIDK"       : ("K_CombDLLK_Brunel" , "-10" , "100"), 
 		##        "PIDp"       : "K_CombDLLp", 
 		},            
 		'pi_minus_fromDs'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "20"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "20"), 
 		##        "PIDp"       : "pi_CombDLLp", 
 		}                   
 	},
@@ -96,27 +96,27 @@ trackList = [
 		# Bs->Dspipipi, Ds->KKpi
 	{
 		'pi_minus'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 	
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 	
 			#         "PIDp"       : "pi_CombDLLp", 
 		},
 		'pi_plus1'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 
 			##    "PIDp"       : "K_CombDLLp", 
 		},
 		'pi_plus2'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 
 				##    "PIDp"       : "pi_CombDLLp", 
 		},        
 		'K_plus_fromDs'   : {
-				"PIDK"       : ("K_CombDLLK" , "-10" , "100") , 
+				"PIDK"       : ("K_CombDLLK_Brunel" , "-10" , "100") , 
 				##"PIDp"       : "K_CombDLLp", 
 		},                    
 		'K_minus_fromDs'   : {
-				"PIDK"       : ("K_CombDLLK" , "-10" , "100"), 
+				"PIDK"       : ("K_CombDLLK_Brunel" , "-10" , "100"), 
 		##        "PIDp"       : "K_CombDLLp", 
 		},            
 		'pi_minus_fromDs'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "20"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "20"), 
 		##        "PIDp"       : "pi_CombDLLp", 
 		}                   
 	},
@@ -124,27 +124,27 @@ trackList = [
 		# Bs->Dspipipi, Ds->pipipi
 	{
 		'pi_minus'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 	
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 	
 			#         "PIDp"       : "pi_CombDLLp", 
 		},
 		'pi_plus1'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 
 			##    "PIDp"       : "K_CombDLLp", 
 		},
 		'pi_plus2'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 
 				##    "PIDp"       : "pi_CombDLLp", 
 		},          
 		'pi_plus_fromDs'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "20") , 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "20") , 
 				##"PIDp"       : "K_CombDLLp", 
 		},                    
 		'pi_minus_fromDs'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "20"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "20"), 
 		##        "PIDp"       : "K_CombDLLp", 
 		},            
 		'pi_minus2_fromDs'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "20"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "20"), 
 		##        "PIDp"       : "pi_CombDLLp", 
 		}                   
 	},
@@ -152,27 +152,27 @@ trackList = [
 		# Bs->Dspipipi, Ds->Kpipi
 	{
 		'pi_minus'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 	
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 	
 			#         "PIDp"       : "pi_CombDLLp", 
 		},
 		'pi_plus1'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 
 			##    "PIDp"       : "K_CombDLLp", 
 		},
 		'pi_plus2'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "10"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "10"), 
 				##    "PIDp"       : "pi_CombDLLp", 
 		},       
 		'pi_plus_fromDs'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "20") , 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "20") , 
 				##"PIDp"       : "K_CombDLLp", 
 		},                    
 		'K_minus_fromDs'   : {
-				"PIDK"       : ("K_CombDLLK" , "-10" , "100"), 
+				"PIDK"       : ("K_CombDLLK_Brunel" , "-10" , "100"), 
 		##        "PIDp"       : "K_CombDLLp", 
 		},            
 		'pi_minus_fromDs'   : {
-				"PIDK"       : ("pi_CombDLLK" , "-100" , "20"), 
+				"PIDK"       : ("pi_CombDLLK_Brunel" , "-100" , "20"), 
 		##        "PIDp"       : "pi_CombDLLp", 
 		}                   
 	},
@@ -182,34 +182,35 @@ trackList = [
 
 # List of input ROOT files with MC ntuples. Format: 
 #   (inputfile, outputfile, dataset)
-indir = "./" #/auto/data/dargent/BsDsKpipi/Mini/MC/"
+indir = "./" #/eos/lhcb/user/p/phdargen/BsDsKpipi/" #/auto/data/dargent/BsDsKpipi/Mini/MC/"
 files = [
 
-  (indir+"signal_Ds2KKpi_11.root",          indir+"signal_Ds2KKpi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[0],"Gen"), 
-  (indir+"signal_Ds2KKpi_11_PID_tmp.root", indir+"signal_Ds2KKpi_11_PID_tmp2.root", "MagDown_2011", "corr_MagDown",trackList[0],"Corr"), 
-  (indir+"signal_Ds2KKpi_11_PID_tmp2.root", indir+"signal_Ds2KKpi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[0],"Corr"),
+  #(indir+"signal_Ds2KKpi_11.root",          indir+"/signal_Ds2KKpi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[0],"Gen"), 
+  #(indir+"signal_Ds2KKpi_11_PID_tmp.root", indir+"/signal_Ds2KKpi_11_PID_tmp2.root", "MagDown_2011", "corr_MagDown",trackList[0],"Corr"), 
+  #(indir+"signal_Ds2KKpi_11_PID_tmp2.root", indir+"/signal_Ds2KKpi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[0],"Corr"),
    
-  (indir+"signal_Ds2KKpi_12.root",          "signal_Ds2KKpi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[0],"Gen"), 
-  ("signal_Ds2KKpi_12_PID_tmp.root", "signal_Ds2KKpi_12_PID_tmp2.root", "MagDown_2012", "corr_MagDown",trackList[0],"Corr"), 
-  ("signal_Ds2KKpi_12_PID_tmp2.root", "signal_Ds2KKpi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[0],"Corr"),
+  #(indir+"signal_Ds2KKpi_12.root",          indir+"/signal_Ds2KKpi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[0],"Gen"), 
+  #(indir+"signal_Ds2KKpi_12_PID_tmp.root", indir+"/signal_Ds2KKpi_12_PID_tmp2.root", "MagDown_2012", "corr_MagDown",trackList[0],"Corr"), 
+  #(indir+"signal_Ds2KKpi_12_PID_tmp2.root", indir+"/signal_Ds2KKpi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[0],"Corr"),
 
 
-  (indir+"signal_Ds2pipipi_11.root",          indir+"signal_Ds2pipipi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[1],"Gen"), 
-  (indir+"signal_Ds2pipipi_11_PID_tmp.root", indir+"signal_Ds2pipipi_11_PID_tmp2.root", "MagDown_2011", "corr_MagDown",trackList[1],"Corr"), 
-  (indir+"signal_Ds2pipipi_11_PID_tmp2.root", indir+"signal_Ds2pipipi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[1],"Corr"),
+  #(indir+"signal_Ds2pipipi_11.root",          indir+"/signal_Ds2pipipi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[1],"Gen"), 
+  #(indir+"signal_Ds2pipipi_11_PID_tmp.root", indir+"/signal_Ds2pipipi_11_PID_tmp2.root", "MagDown_2011", "corr_MagDown",trackList[1],"Corr"), 
+  #(indir+"signal_Ds2pipipi_11_PID_tmp2.root", indir+"/signal_Ds2pipipi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[1],"Corr"),
    
-  (indir+"signal_Ds2pipipi_12.root",          indir+"signal_Ds2pipipi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[1],"Gen"), 
-  (indir+"signal_Ds2pipipi_12_PID_tmp.root", indir+"signal_Ds2pipipi_12_PID_tmp2.root", "MagDown_2012", "corr_MagDown",trackList[1],"Corr"), 
-  (indir+"signal_Ds2pipipi_12_PID_tmp2.root", indir+"signal_Ds2pipipi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[1],"Corr"),
+  #(indir+"signal_Ds2pipipi_12.root",          indir+"/signal_Ds2pipipi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[1],"Gen"), 
+  #(indir+"signal_Ds2pipipi_12_PID_tmp.root", indir+"/signal_Ds2pipipi_12_PID_tmp2.root", "MagDown_2012", "corr_MagDown",trackList[1],"Corr"), 
+  #(indir+"signal_Ds2pipipi_12_PID_tmp2.root", indir+"/signal_Ds2pipipi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[1],"Corr"),
 
 
-  (indir+"signal_Ds2Kpipi_11.root",          indir+"signal_Ds2Kpipi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[2],"Gen"), 
-  (indir+"signal_Ds2Kpipi_11_PID_tmp.root", indir+"signal_Ds2Kpipi_11_PID_tmp2.root", "MagDown_2011", "corr_MagDown",trackList[2],"Corr"), 
-  (indir+"signal_Ds2Kpipi_11_PID_tmp2.root", indir+"signal_Ds2Kpipi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[2],"Corr"),
+  #(indir+"signal_Ds2Kpipi_11.root",          indir+"/signal_Ds2Kpipi_11_PID_tmp.root",  "MagDown_2011", "gen_MagDown",trackList[2],"Gen"), 
+  #(indir+"signal_Ds2Kpipi_11_PID_tmp.root", indir+"/signal_Ds2Kpipi_11_PID_tmp2.root", "MagDown_2011", "corr_MagDown",trackList[2],"Corr"), 
+  #(indir+"signal_Ds2Kpipi_11_PID_tmp2.root", indir+"/signal_Ds2Kpipi_11_PID.root",      "MagUp_2011",   "corr_MagUp",  trackList[2],"Corr"),
    
-  (indir+"signal_Ds2Kpipi_12.root",          indir+"signal_Ds2Kpipi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[2],"Gen"), 
-  (indir+"signal_Ds2Kpipi_12_PID_tmp.root", indir+"signal_Ds2Kpipi_12_PID_tmp2.root", "MagDown_2012", "corr_MagDown",trackList[2],"Corr"), 
-  (indir+"signal_Ds2Kpipi_12_PID_tmp2.root", indir+"signal_Ds2Kpipi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[2],"Corr"),
+  #(indir+"signal_Ds2Kpipi_12.root",          indir+"/signal_Ds2Kpipi_12_PID_tmp.root",  "MagDown_2012", "gen_MagDown",trackList[2],"Gen"), 
+  #(indir+"signal_Ds2Kpipi_12_PID_tmp.root", indir+"/signal_Ds2Kpipi_12_PID_tmp2.root", "MagDown_2012", "corr_MagDown",trackList[2],"Corr"), 
+  #(indir+"signal_Ds2Kpipi_12_PID_tmp2.root", indir+"/signal_Ds2Kpipi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[2],"Corr"),
+
 
   #(indir+"signal_Ds2KKpi_15.root",          indir+"/signal_Ds2KKpi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[0],"Gen"), 
   #(indir+"signal_Ds2KKpi_15_PID_tmp.root", indir+"/signal_Ds2KKpi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[0],"Corr"), 
@@ -236,6 +237,7 @@ files = [
   #(indir+"signal_Ds2Kpipi_16.root",          indir+"/signal_Ds2Kpipi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[2],"Gen"), 
   #(indir+"signal_Ds2Kpipi_16_PID_tmp.root", indir+"/signal_Ds2Kpipi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[2],"Corr"), 
   #(indir+"signal_Ds2Kpipi_16_PID_tmp2.root", indir+"/signal_Ds2Kpipi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[2],"Corr"),
+
 
 
 
@@ -266,31 +268,31 @@ files = [
   #(indir+"norm_Ds2Kpipi_12_PID_tmp2.root", indir+"/norm_Ds2Kpipi_12_PID.root",      "MagUp_2012",   "corr_MagUp",  trackList[5],"Corr"),
 
 
-  #(indir+"norm_Ds2KKpi_15.root",          indir+"/norm_Ds2KKpi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[3],"Gen"), 
-  #(indir+"norm_Ds2KKpi_15_PID_tmp.root", indir+"/norm_Ds2KKpi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[3],"Corr"), 
-  #(indir+"norm_Ds2KKpi_15_PID_tmp2.root", indir+"/norm_Ds2KKpi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[3],"Corr"),
+  (indir+"norm_Ds2KKpi_15.root",          indir+"norm_Ds2KKpi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[3],"Gen"), 
+  ("norm_Ds2KKpi_15_PID_tmp.root", indir+"norm_Ds2KKpi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[3],"Corr"), 
+  ("norm_Ds2KKpi_15_PID_tmp2.root", indir+"norm_Ds2KKpi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[3],"Corr"),
    
-  #(indir+"norm_Ds2KKpi_16.root",          indir+"/norm_Ds2KKpi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[3],"Gen"), 
-  #(indir+"norm_Ds2KKpi_16_PID_tmp.root", indir+"/norm_Ds2KKpi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[3],"Corr"), 
-  #(indir+"norm_Ds2KKpi_16_PID_tmp2.root", indir+"/norm_Ds2KKpi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[3],"Corr"),
+  (indir+"norm_Ds2KKpi_16.root",          indir+"norm_Ds2KKpi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[3],"Gen"), 
+  ("norm_Ds2KKpi_16_PID_tmp.root", indir+"norm_Ds2KKpi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[3],"Corr"), 
+  ("norm_Ds2KKpi_16_PID_tmp2.root", indir+"norm_Ds2KKpi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[3],"Corr"),
 
 
-  #(indir+"norm_Ds2pipipi_15.root",          indir+"/norm_Ds2pipipi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[4],"Gen"), 
-  #(indir+"norm_Ds2pipipi_15_PID_tmp.root", indir+"/norm_Ds2pipipi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[4],"Corr"), 
-  #(indir+"norm_Ds2pipipi_15_PID_tmp2.root", indir+"/norm_Ds2pipipi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[4],"Corr"),
+  (indir+"norm_Ds2pipipi_15.root",          indir+"norm_Ds2pipipi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[4],"Gen"), 
+  ("norm_Ds2pipipi_15_PID_tmp.root", indir+"norm_Ds2pipipi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[4],"Corr"), 
+  ("norm_Ds2pipipi_15_PID_tmp2.root", indir+"norm_Ds2pipipi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[4],"Corr"),
    
-  #(indir+"norm_Ds2pipipi_16.root",          indir+"/norm_Ds2pipipi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[4],"Gen"), 
-  #(indir+"norm_Ds2pipipi_16_PID_tmp.root", indir+"/norm_Ds2pipipi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[4],"Corr"), 
-  #(indir+"norm_Ds2pipipi_16_PID_tmp2.root", indir+"/norm_Ds2pipipi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[4],"Corr"),
+  (indir+"norm_Ds2pipipi_16.root",          "norm_Ds2pipipi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[4],"Gen"), 
+  ("norm_Ds2pipipi_16_PID_tmp.root", "norm_Ds2pipipi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[4],"Corr"), 
+  ("norm_Ds2pipipi_16_PID_tmp2.root", "norm_Ds2pipipi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[4],"Corr"),
 
 
-  #(indir+"norm_Ds2Kpipi_15.root",          indir+"/norm_Ds2Kpipi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[5],"Gen"), 
-  #(indir+"norm_Ds2Kpipi_15_PID_tmp.root", indir+"/norm_Ds2Kpipi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[5],"Corr"), 
-  #(indir+"norm_Ds2Kpipi_15_PID_tmp2.root", indir+"/norm_Ds2Kpipi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[5],"Corr"),
+  (indir+"norm_Ds2Kpipi_15.root",          indir+"norm_Ds2Kpipi_15_PID_tmp.root",  "MagDown_2015", "gen_MagDown",trackList[5],"Gen"), 
+  (indir+"norm_Ds2Kpipi_15_PID_tmp.root", indir+"norm_Ds2Kpipi_15_PID_tmp2.root", "MagDown_2015", "corr_MagDown",trackList[5],"Corr"), 
+  (indir+"norm_Ds2Kpipi_15_PID_tmp2.root", indir+"norm_Ds2Kpipi_15_PID.root",      "MagUp_2015",   "corr_MagUp",  trackList[5],"Corr"),
    
-  #(indir+"norm_Ds2Kpipi_16.root",          indir+"/norm_Ds2Kpipi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[5],"Gen"), 
-  #(indir+"norm_Ds2Kpipi_16_PID_tmp.root", indir+"/norm_Ds2Kpipi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[5],"Corr"), 
-  #(indir+"norm_Ds2Kpipi_16_PID_tmp2.root", indir+"/norm_Ds2Kpipi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[5],"Corr"),
+  (indir+"norm_Ds2Kpipi_16.root",          indir+"norm_Ds2Kpipi_16_PID_tmp.root",  "MagDown_2016", "gen_MagDown",trackList[5],"Gen"), 
+  (indir+"norm_Ds2Kpipi_16_PID_tmp.root", indir+"norm_Ds2Kpipi_16_PID_tmp2.root", "MagDown_2016", "corr_MagDown",trackList[5],"Corr"), 
+  (indir+"norm_Ds2Kpipi_16_PID_tmp2.root", indir+"norm_Ds2Kpipi_16_PID.root",      "MagUp_2016",   "corr_MagUp",  trackList[5],"Corr"),
 
 
 ]
@@ -312,7 +314,7 @@ seed = None   # No initial seed
 output_tree = input_tree.split("/")[-1]
 treename = input_tree
 
-simversion = "sim09"
+simversion = "run2"
 
 # make sure we don't overwrite local files and prefix them with random strings
 # IF ON LXPLUS: if /tmp exists and is accessible, use for faster processing
@@ -382,6 +384,7 @@ for input_file, output_file, dataset, pidname, tracks, method in files :
   os.system("mv %s %s" % (tmpinfile, output_file))
   print("rm %s" % tmpoutfile)
   os.system("rm %s" % tmpoutfile)
+  
   
   
 for input_file, output_file, dataset, pidname, tracks, method in files :

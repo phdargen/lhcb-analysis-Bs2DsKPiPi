@@ -307,14 +307,14 @@ inline Bool_t DecayTree::LooseCuts(Long64_t i){
     //if(Ds_FDCHI2_ORIVX < 0) return false;
 
     if(_decay== Decay::signal){
+	b_Bs_BsDTF_K_1_1270_plus_M->GetEntry(i);
+	if(Bs_BsDTF_K_1_1270_plus_M[0] > 2000) return false;
         if(_data){
 		b_K_plus_PIDK->GetEntry(i);
         	if(K_plus_PIDK<5) return false;
 	}else {
 		b_Bs_BKGCAT->GetEntry(i);
 		if(Bs_BKGCAT != 20 && Bs_BKGCAT != 60) return false;
-		b_Bs_BsDTF_K_1_1270_plus_M->GetEntry(i);
-		if(Bs_BsDTF_K_1_1270_plus_M[0] > 2500) return false;
 	}
     }
 
@@ -449,7 +449,8 @@ void DecayTree::Loop()
 	fChain->SetBranchStatus("*_1_12*OWNPV_COV*",0);  
 	fChain->SetBranchStatus("*_1_12*ORIVX*",1);  
 	fChain->SetBranchStatus("*_1_12*ORIVX_COV*",0);  
-        fChain->SetBranchStatus("*_1_12*_DOCA*",1);     
+        fChain->SetBranchStatus("*_1_12*_DOCA*",1);  
+	fChain->SetBranchStatus("*Chi2*",1);  
    }
    fChain->SetBranchStatus("*IP*",1);  
    fChain->SetBranchStatus("*IPCHI2*",1);  
@@ -465,7 +466,6 @@ void DecayTree::Loop()
    fChain->SetBranchStatus("*MM*",1);  
    fChain->SetBranchStatus("*TAU*",1);  
    fChain->SetBranchStatus("*ptasy_1.00",1);  
-//    fChain->SetBranchStatus("*Chi2*",1);  
 
    fChain->SetBranchStatus("*DIRA*",1);  
    fChain->SetBranchStatus("Ds_DOCA*",1);  
