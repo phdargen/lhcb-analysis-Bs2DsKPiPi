@@ -219,13 +219,13 @@ void TMVAClassification( TString myMethodList = "BDTG", TString trainOn = "MC", 
 
    // Apply additional cuts on the signal and background samples (can be different)
    TCut mycuts; 
-   mycuts = "maxCos > -0.95 && Bs_IPCHI2_OWNPV < 16 && Bs_SmallestDeltaChi2OneTrack > 5 && Ds_finalState < 5 && PV_CHI2NDOF < 15 && Xs_max_DOCA < 0.5";
+   mycuts = "maxCos > -0.95 && Bs_IPCHI2_OWNPV < 16 && Bs_SmallestDeltaChi2OneTrack > 5 && Ds_finalState < 5 && PV_CHI2NDOF < 15 && Xs_max_DOCA < 0.5 && m_pipi < 1200 && m_Kpi < 1200";
    if(run != "all")mycuts += "run == " + run.ReplaceAll("run","");
    if(trigger != "all")mycuts += "TriggerCat == " + trigger.ReplaceAll("t","");
    if(trainOn == "MC") mycuts += "Bs_MM > 5300 && Bs_MM < 5420 && Bs_BKGCAT == 20";
 
    TCut mycutb = "Bs_MM > 5500";
-   mycutb += "maxCos > -0.95 && Bs_IPCHI2_OWNPV < 16 && Bs_SmallestDeltaChi2OneTrack > 5 && Ds_finalState < 5 && PV_CHI2NDOF < 15 && Xs_max_DOCA < 0.5" ;
+   mycutb += "maxCos > -0.95 && Bs_IPCHI2_OWNPV < 16 && Bs_SmallestDeltaChi2OneTrack > 5 && Ds_finalState < 5 && PV_CHI2NDOF < 15 && Xs_max_DOCA < 0.5 && m_pipi < 1200 && m_Kpi < 1200" ;
    if(run != "all")mycutb += "run == " + run;
    if(trigger != "all")mycutb += "TriggerCat == " + trigger ;
    
