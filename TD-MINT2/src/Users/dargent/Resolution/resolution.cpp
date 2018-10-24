@@ -89,6 +89,7 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
         NamedParameter<int> fixGaussFraction("fixGaussFraction", 0);
         NamedParameter<double> gaussFraction("gaussFraction", 0.75);
 
+	if(dataType == "Data" && year == 0) dataType.Append("_all");
 	if(dataType == "Data" && year == 16) dataType.Append("_16");
 	if(dataType == "Data" && year == 17) dataType.Append("_17");
 
@@ -433,14 +434,13 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
 	TH1D* binning = createBinning(Bs_TAU_Var);	
 	TH1D* ResoRelation = (TH1D*) binning->Clone("ResoRelation");
 
+	if(dataType == "Data" && year == 0) dataType.Append("_all");
 	if(dataType == "Data" && year == 16) dataType.Append("_16");
 	if(dataType == "Data" && year == 17) dataType.Append("_17");
 	
 	ofstream datafile;
 	if(updateAnaNote)datafile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ResoTable_"+dataType+".txt",std::ofstream::trunc);
 	else datafile.open("ResoTable_"+dataType+".txt", std::ofstream::trunc);		
-	datafile << "\\begin{table}[h]" << "\n";
-	datafile << "\\centering" << "\n";
 	datafile << " \\begin{tabular}{c | c c c | c c}" << "\n";
 	datafile << "\\hline" << "\n";
 	datafile << "\\hline" << "\n";
@@ -478,12 +478,6 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
 	datafile << "\\hline" << "\n";
 	datafile << "\\hline" << "\n";
 	datafile << "\\end{tabular}" << "\n";
-	datafile << "\\caption{Measured time resolution for ";
-	if(dataType=="MC")datafile << "$B_s \\to D_s K \\pi \\pi$ MC ";
-	else datafile << "prompt-$D_s$ data ";
-	datafile <<  "in bins of the per-event decay time error estimate.}" << "\n";
-	datafile << "\\label{table:ResoParams"+dataType+"}" << "\n";
-	datafile << "\\end{table}" << "\n";
 	datafile.close();
 
 	ResoRelation_ga->SetTitle(";#sigma_{t} [ps];#sigma_{eff} [ps]");
@@ -577,11 +571,12 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
 	c->Print("Plots/ScaleFactor_"+dataType+".eps");
         if(updateAnaNote) c->Print("../../../../../TD-AnaNote/latex/figs/Resolution/ScaleFactor_"+dataType+".pdf");
 
+	TString dataTypeLable = dataType.ReplaceAll("_",",");
 	if(updateAnaNote){
 		ofstream eqfile;
 		eqfile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ScaleFactor_"+dataType+".txt",std::ofstream::trunc);
 		eqfile << "\\begin{equation}" << "\n";
-		eqfile <<  "\\sigma_{eff}^{"+dataType+"}(\\sigma_t) = \\left( " ;
+		eqfile <<  "\\sigma_{eff}^{"+dataTypeLable+"}(\\sigma_t) = \\left( " ;
 		eqfile << std::setprecision(1) << std::fixed <<  fitFunc->GetParameter(0) * 1000. << " \\pm " << fitFunc->GetParError(0) * 1000. << " \\right) \\text{fs} + \\left( ";
 		eqfile << std::setprecision(3) << std::fixed  <<  fitFunc->GetParameter(1) << " \\pm " << fitFunc->GetParError(1) ;
 		eqfile << " \\right) \\sigma_t" << "\n";
@@ -595,7 +590,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
 		ofstream eqfile;
 		eqfile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ScaleFactor_"+dataType+"_coreGauss.txt",std::ofstream::trunc);
 		eqfile << "\\begin{equation}" << "\n";
-		eqfile <<  "\\sigma_{eff, "+dataType+"}^{core-Gauss}(\\sigma_t) = \\left( " ;
+		eqfile <<  "\\sigma_{eff, "+dataTypeLable+"}^{core-Gauss}(\\sigma_t) = \\left( " ;
 		eqfile << std::setprecision(1) << std::fixed <<  fitFunc->GetParameter(0) * 1000. << " \\pm " << fitFunc->GetParError(0) * 1000. << " \\right) \\text{fs} + \\left( ";
 		eqfile << std::setprecision(3) << std::fixed  <<  fitFunc->GetParameter(1) << " \\pm " << fitFunc->GetParError(1) ;
 		eqfile << " \\right) \\sigma_t" << "\n";
@@ -607,7 +602,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
 		ofstream eqfile;
 		eqfile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ScaleFactor_"+dataType+"_singleGauss.txt",std::ofstream::trunc);
 		eqfile << "\\begin{equation}" << "\n";
-		eqfile <<  "\\sigma_{eff "+dataType+"}^{single-Gauss}(\\sigma_t) = \\left( " ;
+		eqfile <<  "\\sigma_{eff "+dataTypeLable+"}^{single-Gauss}(\\sigma_t) = \\left( " ;
 		eqfile << std::setprecision(1) << std::fixed <<  fitFunc->GetParameter(0) * 1000. << " \\pm " << fitFunc->GetParError(0) * 1000. << " \\right) \\text{fs} + \\left( ";
 		eqfile << std::setprecision(3) << std::fixed  <<  fitFunc->GetParameter(1) << " \\pm " << fitFunc->GetParError(1) ;
 		eqfile << " \\right) \\sigma_t" << "\n";
@@ -808,8 +803,11 @@ int main(int argc, char** argv){
 	  tree->SetBranchStatus("year",1);
 	  tree->SetBranchStatus("*finalState",1);
   	  file_res = new TFile("dummy_res.root","RECREATE");
-  	  if(dataType == "Data") tree_res = tree->CopyTree(("year == "+anythingToString((int)year)).c_str());
-	  else tree_res = tree->CopyTree("");
+	  if(dataType == "Data"){
+                if(year == 0)tree_res = tree->CopyTree("");
+                else tree_res = tree->CopyTree(("year == "+anythingToString((int)year)).c_str());
+          }
+  	  else tree_res = tree->CopyTree("");
 	  file->Close();
     }
     if(fitIntegratedResolution)FitTimeRes(TAUERR_min, TAUERR_max, "all", TString((string) Bs_TAU_Var), dataType, year);
