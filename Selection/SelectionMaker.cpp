@@ -51,11 +51,13 @@ int main(int argc, char** argv){
     /// bools: charmless,bkg,ltu,ss
     MiniDecayTree d(decay, year, finalState, dataType, polarity, "/auto/data/dargent/BsDsKpipi/", "/auto/data/dargent/BsDsKpipi/", false, "", false, false, false);
     //d.set_inFileName(d.get_outFileName());
-    //TString out = d.get_outFileName();
+    TString out = d.get_outFileName();
     //d.set_inFileName(out.ReplaceAll(".root","_noVetoes.root"));
     //d.set_outFileName(out.ReplaceAll(".root","2.root"));    
-    //d.set_outFileName((d.get_outFileName()).ReplaceAll(".root","_PIDGen.root"));    
-    //d.set_outFileName((d.get_outFileName()).ReplaceAll(".root","_PIDMC.root"));    
+//     d.set_outFileName(out.ReplaceAll(".root","_PIDGen.root"));    
+    d.set_outFileName(out.ReplaceAll(".root","_PIDMC.root"));    
+//     d.set_outFileName(out.ReplaceAll(".root","_Bkg.root"));    
+
     //d.set_outFileName((d.get_outFileName()).ReplaceAll(".root","_noPIDCuts.root"));    
     d.Loop();
 

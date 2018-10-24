@@ -1,0 +1,4 @@
+OS_Muon_CalibrationArchive = "OS_Muon_Calibration.xml"
+OS_Electron_CalibrationArchive = "OS_Electron_Calibration.xml"
+OS_nnetKaon_CalibrationArchive = "OS_nnetKaon_Calibration.xml"
+VtxCharge_CalibrationArchive = "VtxCharge_Calibration.xml"

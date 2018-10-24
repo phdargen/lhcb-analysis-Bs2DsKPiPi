@@ -1183,7 +1183,7 @@ pi_minus_fromDs_PIDp_corr_MagUp;
 MiniDecayTree::MiniDecayTree(Decay::Type decay, Year::Type year, Ds_finalState::Type finalState, DataType::Type dataType, TString polarity, TString inFileLoc, TString outFileLoc, Bool_t charmLess, TString usePIDvar, Bool_t bkg, Bool_t ltu, Bool_t ss ) : DecayTree(decay,year,finalState,dataType, polarity, inFileLoc, outFileLoc, bkg, ltu, ss), _charmLess(charmLess), _usePIDvar(usePIDvar)
 {
     _inFileName = _outFileName;
-//      if(!_data) _inFileName.ReplaceAll(".root","_PID.root");
+     if(!_data) _inFileName.ReplaceAll(".root","_PID.root");
     _outFileName = _outFileName.ReplaceAll(TString("Mini/"),TString("Preselected/"));   
     if(_charmLess) _outFileName.ReplaceAll(".root","_charmLess.root");
 }
@@ -1938,6 +1938,34 @@ void MiniDecayTree::Init()
     	    fChain->SetBranchAddress("pi_minus_fromDs_MC_MOTHER_ID", &pi_minus_fromDs_MC_MOTHER_ID);
 	    fChain->SetBranchAddress("pi_plus_fromDs_MC_MOTHER_ID", &pi_plus_fromDs_MC_MOTHER_ID);
    	    fChain->SetBranchAddress("pi_minus2_fromDs_MC_MOTHER_ID", &pi_minus2_fromDs_MC_MOTHER_ID);
+
+	    fChain->SetBranchAddress("K_plus_PIDK_gen_MagDown", &K_plus_PIDK_gen_MagDown);
+    	    fChain->SetBranchAddress("pi_plus_PIDK_gen_MagDown", &pi_plus_PIDK_gen_MagDown);
+    	    fChain->SetBranchAddress("pi_minus_PIDK_gen_MagDown", &pi_minus_PIDK_gen_MagDown);
+    	    fChain->SetBranchAddress("pi_plus_fromDs_PIDK_gen_MagDown", &pi_plus_fromDs_PIDK_gen_MagDown);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_PIDK_gen_MagDown", &pi_minus_fromDs_PIDK_gen_MagDown);
+    	    fChain->SetBranchAddress("pi_minus2_fromDs_PIDK_gen_MagDown", &pi_minus2_fromDs_PIDK_gen_MagDown);
+
+	    fChain->SetBranchAddress("K_plus_PIDK_gen_MagUp", &K_plus_PIDK_gen_MagUp);
+    	    fChain->SetBranchAddress("pi_plus_PIDK_gen_MagUp", &pi_plus_PIDK_gen_MagUp);
+    	    fChain->SetBranchAddress("pi_minus_PIDK_gen_MagUp", &pi_minus_PIDK_gen_MagUp);
+    	    fChain->SetBranchAddress("pi_plus_fromDs_PIDK_gen_MagUp", &pi_plus_fromDs_PIDK_gen_MagUp);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_PIDK_gen_MagUp", &pi_minus_fromDs_PIDK_gen_MagUp);
+    	    fChain->SetBranchAddress("pi_minus2_fromDs_PIDK_gen_MagUp", &pi_minus2_fromDs_PIDK_gen_MagUp);
+
+	    fChain->SetBranchAddress("K_plus_PIDK_corr_MagDown", &K_plus_PIDK_corr_MagDown);
+    	    fChain->SetBranchAddress("pi_plus_PIDK_corr_MagDown", &pi_plus_PIDK_corr_MagDown);
+    	    fChain->SetBranchAddress("pi_minus_PIDK_corr_MagDown", &pi_minus_PIDK_corr_MagDown);
+    	    fChain->SetBranchAddress("pi_plus_fromDs_PIDK_corr_MagDown", &pi_plus_fromDs_PIDK_corr_MagDown);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_PIDK_corr_MagDown", &pi_minus_fromDs_PIDK_corr_MagDown);
+    	    fChain->SetBranchAddress("pi_minus2_fromDs_PIDK_corr_MagDown", &pi_minus2_fromDs_PIDK_corr_MagDown);
+
+	    fChain->SetBranchAddress("K_plus_PIDK_corr_MagUp", &K_plus_PIDK_corr_MagUp);
+    	    fChain->SetBranchAddress("pi_plus_PIDK_corr_MagUp", &pi_plus_PIDK_corr_MagUp);
+    	    fChain->SetBranchAddress("pi_minus_PIDK_corr_MagUp", &pi_minus_PIDK_corr_MagUp);
+    	    fChain->SetBranchAddress("pi_plus_fromDs_PIDK_corr_MagUp", &pi_plus_fromDs_PIDK_corr_MagUp);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_PIDK_corr_MagUp", &pi_minus_fromDs_PIDK_corr_MagUp);
+    	    fChain->SetBranchAddress("pi_minus2_fromDs_PIDK_corr_MagUp", &pi_minus2_fromDs_PIDK_corr_MagUp);
 	}
 
         fChain->SetBranchAddress("Bs_ETA", &Bs_ETA, &b_Bs_ETA);
@@ -3305,6 +3333,41 @@ void MiniDecayTree::Init()
     	    fChain->SetBranchAddress("pi_minus_fromDs_MC_MOTHER_ID", &pi_minus_fromDs_MC_MOTHER_ID);
 	    fChain->SetBranchAddress("pi_plus_fromDs_MC_MOTHER_ID", &pi_plus_fromDs_MC_MOTHER_ID);
    	    fChain->SetBranchAddress("pi_minus2_fromDs_MC_MOTHER_ID", &pi_minus2_fromDs_MC_MOTHER_ID);
+
+	    fChain->SetBranchAddress("pi_plus1_PIDK_gen_MagDown", &pi_plus1_PIDK_gen_MagDown);
+    	    fChain->SetBranchAddress("pi_plus2_PIDK_gen_MagDown", &pi_plus2_PIDK_gen_MagDown);
+    	    fChain->SetBranchAddress("pi_minus_PIDK_gen_MagDown", &pi_minus_PIDK_gen_MagDown);
+    	    fChain->SetBranchAddress("K_plus_fromDs_PIDK_gen_MagDown", &K_plus_fromDs_PIDK_gen_MagDown);
+    	    fChain->SetBranchAddress("K_minus_fromDs_PIDK_gen_MagDown", &K_minus_fromDs_PIDK_gen_MagDown);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_PIDK_gen_MagDown", &pi_minus_fromDs_PIDK_gen_MagDown);
+
+	    fChain->SetBranchAddress("pi_plus1_PIDK_gen_MagUp", &pi_plus1_PIDK_gen_MagUp);
+    	    fChain->SetBranchAddress("pi_plus2_PIDK_gen_MagUp", &pi_plus2_PIDK_gen_MagUp);
+    	    fChain->SetBranchAddress("pi_minus_PIDK_gen_MagUp", &pi_minus_PIDK_gen_MagUp);
+
+	    fChain->SetBranchAddress("pi_plus1_PIDK_corr_MagDown", &pi_plus1_PIDK_corr_MagDown);
+    	    fChain->SetBranchAddress("pi_plus2_PIDK_corr_MagDown", &pi_plus2_PIDK_corr_MagDown);
+    	    fChain->SetBranchAddress("pi_minus_PIDK_corr_MagDown", &pi_minus_PIDK_corr_MagDown);
+
+	    fChain->SetBranchAddress("pi_plus1_PIDK_corr_MagUp", &pi_plus1_PIDK_corr_MagUp);
+    	    fChain->SetBranchAddress("pi_plus2_PIDK_corr_MagUp", &pi_plus2_PIDK_corr_MagUp);
+    	    fChain->SetBranchAddress("pi_minus_PIDK_corr_MagUp", &pi_minus_PIDK_corr_MagUp);
+
+    	    fChain->SetBranchAddress("pi_plus_fromDs_PIDK_gen_MagDown", &pi_plus_fromDs_PIDK_gen_MagDown);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_PIDK_gen_MagDown", &pi_minus_fromDs_PIDK_gen_MagDown);
+    	    fChain->SetBranchAddress("pi_minus2_fromDs_PIDK_gen_MagDown", &pi_minus2_fromDs_PIDK_gen_MagDown);
+
+    	    fChain->SetBranchAddress("pi_plus_fromDs_PIDK_gen_MagUp", &pi_plus_fromDs_PIDK_gen_MagUp);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_PIDK_gen_MagUp", &pi_minus_fromDs_PIDK_gen_MagUp);
+    	    fChain->SetBranchAddress("pi_minus2_fromDs_PIDK_gen_MagUp", &pi_minus2_fromDs_PIDK_gen_MagUp);
+
+    	    fChain->SetBranchAddress("pi_plus_fromDs_PIDK_corr_MagDown", &pi_plus_fromDs_PIDK_corr_MagDown);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_PIDK_corr_MagDown", &pi_minus_fromDs_PIDK_corr_MagDown);
+    	    fChain->SetBranchAddress("pi_minus2_fromDs_PIDK_corr_MagDown", &pi_minus2_fromDs_PIDK_corr_MagDown);
+
+    	    fChain->SetBranchAddress("pi_plus_fromDs_PIDK_corr_MagUp", &pi_plus_fromDs_PIDK_corr_MagUp);
+    	    fChain->SetBranchAddress("pi_minus_fromDs_PIDK_corr_MagUp", &pi_minus_fromDs_PIDK_corr_MagUp);
+    	    fChain->SetBranchAddress("pi_minus2_fromDs_PIDK_corr_MagUp", &pi_minus2_fromDs_PIDK_corr_MagUp);
 	}
 
         fChain->SetBranchAddress("Bs_ETA", &Bs_ETA, &b_Bs_ETA);

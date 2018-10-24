@@ -17,8 +17,8 @@ inline Bool_t MiniDecayTree::PhaseSpace_Cuts(){
 
     if(_decay == Decay::signal){
         if((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() > 1900.) return false;
-        if((BsDTF_K_plus + BsDTF_pi_minus).M()  > 1300.) return false;
-        if((BsDTF_pi_plus + BsDTF_pi_minus).M() > 1300.) return false;
+        if((BsDTF_K_plus + BsDTF_pi_minus).M()  > 1200.) return false;
+        if((BsDTF_pi_plus + BsDTF_pi_minus).M() > 1200.) return false;
 
         if((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() < massKaon + 2. * massPion) return false;
         if((BsDTF_K_plus + BsDTF_pi_minus).M()  < massKaon + massPion) return false;
@@ -26,8 +26,8 @@ inline Bool_t MiniDecayTree::PhaseSpace_Cuts(){
     }
     else {
     	if((BsDTF_pi_plus1 + BsDTF_pi_plus2 + BsDTF_pi_minus).M() > 1900.) return false;
-        if((BsDTF_pi_plus1 + BsDTF_pi_minus).M()  > 1300.) return false;
-        if((BsDTF_pi_plus2 + BsDTF_pi_minus).M()  > 1300.) return false;
+        if((BsDTF_pi_plus1 + BsDTF_pi_minus).M()  > 1200.) return false;
+        if((BsDTF_pi_plus2 + BsDTF_pi_minus).M()  > 1200.) return false;
 
     	if((BsDTF_pi_plus1 + BsDTF_pi_plus2 + BsDTF_pi_minus).M() < 3. * massPion) return false;
         if((BsDTF_pi_plus1 + BsDTF_pi_minus).M()  < 2. * massPion) return false;
@@ -51,7 +51,11 @@ inline Bool_t MiniDecayTree::MC_Cuts(){
 		        	mother_ids.push_back(pi_minus_fromDs_MC_MOTHER_ID);
         			mother_ids.push_back(pi_minus2_fromDs_MC_MOTHER_ID);
 			}
-			else if(_Ds_finalState == Ds_finalState::Kpipi){}
+			else if(_Ds_finalState == Ds_finalState::Kpipi){
+        			mother_ids.push_back(K_minus_fromDs_MC_MOTHER_ID);
+		        	mother_ids.push_back(pi_plus_fromDs_MC_MOTHER_ID);
+        			mother_ids.push_back(pi_minus_fromDs_MC_MOTHER_ID);
+			}
   			else {
         			mother_ids.push_back(K_plus_fromDs_MC_MOTHER_ID);
 		        	mother_ids.push_back(K_minus_fromDs_MC_MOTHER_ID);
@@ -180,7 +184,7 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
     if(_decay == Decay::signal){
         if(K_plus_PIDK < 10) return false;
         else if(pi_plus_PIDK > 10) return false;
-        else if(pi_minus_PIDK > 5) return false;
+        else if(pi_minus_PIDK > 2) return false;
 	// remove events with no PID info
 	if( K_plus_hasRich == 0  ) return false;        
 	if( pi_plus_hasRich == 0  ) return false;        
