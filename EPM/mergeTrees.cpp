@@ -144,6 +144,6 @@ void mergeTrees(string old_fileName , string tagging_fileName_Run1, string taggi
 
 int main(int argc, char** argv){
 	mergeTrees("/auto/data/dargent/BsDsKpipi/Final/Data/norm","OS_combo_Run1","OS_combo_Run2");
-	mergeTrees("/auto/data/dargent/BsDsKpipi/Final/Data/signal","OS_combo_Run1_signal","OS_combo_Run2_signal");
+ 	mergeTrees("/auto/data/dargent/BsDsKpipi/Final/Data/signal","OS_combo_Run1_signal","OS_combo_Run2_signal");
 	return 0;
 }
