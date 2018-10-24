@@ -1,0 +1,4 @@
+\begin{equation}
+\sigma_{eff Data_17}^{single-Gauss}(\sigma_t) = \left( 5.6 \pm 1.2 \right) \text{fs} + \left( 1.012 \pm 0.031 \right) \sigma_t
+\label{eq:scaleFactorData_17,single}
+\end{equation}

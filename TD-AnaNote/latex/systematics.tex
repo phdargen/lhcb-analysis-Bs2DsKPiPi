@@ -175,16 +175,22 @@ Due to the tails of the distribution, which broaden the width of the Gaussian fu
 \end{itemize}
 %
 For each case, a new scaling function is derived: 
-\begin{equation}
-\sigma_{eff}^{core-Gauss}(\sigma_t) = \left(4.9  \pm 2.0 \right) \text{fs} + \left( 0.821 \pm 0.050 \right) \sigma_t
-\label{eq:ResoSyst1}
-\end{equation}
+
+\input{tables/Resolution/ScaleFactor_Data_16_coreGauss.txt}
+\input{tables/Resolution/ScaleFactor_Data_16_singleGauss.txt}
+\input{tables/Resolution/ScaleFactor_Data_17_coreGauss.txt}
+\input{tables/Resolution/ScaleFactor_Data_17_singleGauss.txt}
+%\begin{equation}
+%\sigma_{eff}^{core-Gauss}(\sigma_t) = \left(4.9  \pm 2.0 \right) \text{fs} + \left( 0.821 \pm 0.050 \right) \sigma_t
+%\label{eq:ResoSyst1}
+%\end{equation}
 %
-\begin{equation}
-\sigma_{eff}^{single-Gauss}(\sigma_t) = \left(8.3  \pm 1.5 \right) \text{fs} + \left( 0.997 \pm 0.037 \right) \sigma_t
-\label{eq:ResoSyst2}
-\end{equation}
-which are compared to the nominal result in Fig.~\ref{fig:SystscaleFactor}.
+%\begin{equation}
+%\sigma_{eff}^{single-Gauss}(\sigma_t) = \left(8.3  \pm 1.5 \right) \text{fs} + \left( 0.997 \pm 0.037 \right) \sigma_t
+%\label{eq:ResoSyst2}
+%\end{equation}
+
+Thy are compared to the nominal result in Fig.~\ref{fig:SystscaleFactor}.
 
 Due to the high correlation between the decay-time resolution and the tagging calibration, their systematic uncertainty has to be studied simultaneously.
 First, the decay-time fits to $B_s \to D_s \pi\pi\pi$ data are repeated using the alternative decay-time error scaling functions.
@@ -198,9 +204,11 @@ Finally, we take the biggest change in fit central value as the systematic for e
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.6\textwidth]{figs/Resolution/ResoSyst.pdf}
+\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ResoSyst_16.pdf}
+\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ResoSyst_17.pdf}
 \caption{\small The measured resolution scaling function of the per-event decay time error estimate $\sigma_t$ for fake $B_s$ candidates (Run-II data) 
-for (black line) the nominal scaling, (blue line) only using the narrow gaussian width of the double gaussian fit model or (red line) when determining the resolution using a single gaussian model.}
+for (black line) the nominal scaling, (blue line) only using the narrow gaussian width of the double gaussian fit model or (red line) when determining the resolution using a single gaussian model. 
+Data taken in (left) 2016 and (right) 2017.}
 \label{fig:SystscaleFactor}
 \end{figure}
 

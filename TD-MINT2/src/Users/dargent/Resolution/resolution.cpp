@@ -76,7 +76,7 @@ using namespace MINT;
 TFile* file_res = 0;
 TTree* tree_res = 0;
 
-vector<double> FitTimeRes(double min, double max, string binName = "", TString Bs_TAU_Var = "Bs_DTF_TAU", TString dataType = "MC", int year = 16){
+vector<double> FitTimeRes(double min, double max, string binName = "", TString Bs_TAU_Var = "Bs_DTF_TAU", TString dataType = "MC", int year = 16, int doSystematics= 0, int ngauss = 2){
 	
 	/// Options
         NamedParameter<string> weightVar("weightVar", (string)"weight");
@@ -84,9 +84,7 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 	NamedParameter<double> TAUERR_min("TAUERR_min", 0.);		
         NamedParameter<double> TAUERR_max("TAUERR_max", 0.15);
 	NamedParameter<int> useTransformedSigma("useTransformedSigma", 0);
-	NamedParameter<int> DoSystematics("DoSystematics", 0);
 
-	NamedParameter<int> nGauss("nGauss", 2);
         NamedParameter<int> fixMean("fixMean", 0);
         NamedParameter<int> fixGaussFraction("fixGaussFraction", 0);
         NamedParameter<double> gaussFraction("gaussFraction", 0.75);
@@ -139,9 +137,9 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 	RooGaussian Gauss3("Gauss3", "Gauss3", *Bs_DeltaTau, *mean1, *sigma3);
 	
 	RooAddPdf* pdf;
-	if(nGauss<3)pdf = new RooAddPdf("pdf", "pdf", RooArgList(Gauss1,Gauss2),RooArgList(*f));
+	if(ngauss<3)pdf = new RooAddPdf("pdf", "pdf", RooArgList(Gauss1,Gauss2),RooArgList(*f));
 	else pdf = new RooAddPdf("pdf", "pdf", RooArgList(Gauss1,Gauss2,Gauss3),RooArgList(*f,*f2));
-	if(nGauss==1){
+	if(ngauss==1){
 		f->setVal(1);
 		f->setConstant();
 		sigma2->setConstant();
@@ -343,19 +341,19 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 
 	else datafile.open("ResoTable_"+dataType+".txt", std::ios_base::app);
 
-	if(!DoSystematics) datafile << std::setprecision(3) << leg_min.ReplaceAll("fs","") + " - " + leg_max.ReplaceAll("fs","") << " & "<< sig1 * 1000 << " $\\pm$ " << dsig1 * 1000 << " & " << sig2 * 1000 << " $\\pm$ " << dsig2 * 1000 << " & " << f1 << " $\\pm$ " << df1 << " & " << dilution_val << " $\\pm$ " <<  dilution_error << " & " << resolution_eff.getVal() * 1000 << " $\\pm$ " << resolution_eff.getPropagatedError(*result)* 1000 << " \\\\" << "\n";
-	if(DoSystematics) datafile << std::setprecision(3) << leg_min.ReplaceAll("fs","") + " - " + leg_max.ReplaceAll("fs","") << " & "<< sig1 * 1000 << " $\\pm$ " << dsig1 * 1000 << " \\\\" << "\n";
+	if(!doSystematics) datafile << std::setprecision(3) << leg_min.ReplaceAll("fs","") + " - " + leg_max.ReplaceAll("fs","") << " & "<< sig1 * 1000 << " $\\pm$ " << dsig1 * 1000 << " & " << sig2 * 1000 << " $\\pm$ " << dsig2 * 1000 << " & " << f1 << " $\\pm$ " << df1 << " & " << dilution_val << " $\\pm$ " <<  dilution_error << " & " << resolution_eff.getVal() * 1000 << " $\\pm$ " << resolution_eff.getPropagatedError(*result)* 1000 << " \\\\" << "\n";
+	if(doSystematics) datafile << std::setprecision(3) << leg_min.ReplaceAll("fs","") + " - " + leg_max.ReplaceAll("fs","") << " & "<< sig1 * 1000 << " $\\pm$ " << dsig1 * 1000 << " \\\\" << "\n";
 
 	datafile.close();
 
 	vector<double> resoValues;
-	if(!DoSystematics){
+	if(!doSystematics){
 		resoValues.push_back(resolution_eff.getVal());
 		resoValues.push_back(resolution_eff.getPropagatedError(*result));
 		resoValues.push_back(data->mean(Bs_TAUERR));
 	}
 
-	if(DoSystematics){
+	if(doSystematics){
 		resoValues.push_back(sig1);
 		resoValues.push_back(dsig1);
 		resoValues.push_back(data->mean(Bs_TAUERR));
@@ -428,7 +426,7 @@ TH1D* createBinning(TString Bs_TAU_Var = "Bs_DTF_TAU"){
 	return h;
 }
 
-void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", int year = 16){
+void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", int year = 16, int doSystematics = 0, int ngauss = 2){
 
         NamedParameter<int> updateAnaNote("updateAnaNote", 1);
 
@@ -459,7 +457,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
         double yerr[nBins]; 
 
 	for(int i = 1; i <= binning->GetNbinsX(); i++){
-		vector<double> reso_bin = FitTimeRes(binning->GetBinLowEdge(i),binning->GetBinLowEdge(i+1),anythingToString((int)i),Bs_TAU_Var,dataType, year);
+		vector<double> reso_bin = FitTimeRes(binning->GetBinLowEdge(i),binning->GetBinLowEdge(i+1),anythingToString((int)i),Bs_TAU_Var,dataType, year, doSystematics, ngauss);
 		
 		ResoRelation->SetBinContent(i, reso_bin[0]);
 		ResoRelation->SetBinError(i, reso_bin[1]);
@@ -562,7 +560,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
 	fitFunc->Draw("same");
 	//fitFunc_DsK_data->Draw("same");
 	if(dataType=="MC")fitFunc_DsK_mc->Draw("same");
-	else fitFunc_jpsiPhi_data->Draw("same");
+	if(dataType!="MC" && year == 16) fitFunc_jpsiPhi_data->Draw("same");
 	fitFunc2->Draw("same");
 	//ResoRelation_ga->Draw("Psame");
 
@@ -572,7 +570,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
         leg.AddEntry(fitFunc,"Linear Fit","l");
 	leg.AddEntry(fitFunc2,"Quadratic Fit","l");
         if(dataType=="MC")leg.AddEntry(fitFunc_DsK_mc,"B_{s} #rightarrow D_{s}K MC","l");
-	else leg.AddEntry(fitFunc_jpsiPhi_data,"B_{s} #rightarrow J/#psi #phi Data","l");
+	if(dataType!="MC" && year == 16) leg.AddEntry(fitFunc_jpsiPhi_data,"B_{s} #rightarrow J/#psi #phi Data","l");
 // 	else leg.AddEntry(fitFunc2,"Quadratic Fit","l");
 	leg.Draw();
 	
@@ -588,6 +586,32 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
 		eqfile << std::setprecision(3) << std::fixed  <<  fitFunc->GetParameter(1) << " \\pm " << fitFunc->GetParError(1) ;
 		eqfile << " \\right) \\sigma_t" << "\n";
 		eqfile << "\\label{eq:scaleFactor"+dataType+"}" << "\n";
+		eqfile << "\\end{equation}" << "\n";
+		eqfile.close();
+	}
+
+
+	if(doSystematics == 1 && ngauss == 2){
+		ofstream eqfile;
+		eqfile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ScaleFactor_"+dataType+"_coreGauss.txt",std::ofstream::trunc);
+		eqfile << "\\begin{equation}" << "\n";
+		eqfile <<  "\\sigma_{eff, "+dataType+"}^{core-Gauss}(\\sigma_t) = \\left( " ;
+		eqfile << std::setprecision(1) << std::fixed <<  fitFunc->GetParameter(0) * 1000. << " \\pm " << fitFunc->GetParError(0) * 1000. << " \\right) \\text{fs} + \\left( ";
+		eqfile << std::setprecision(3) << std::fixed  <<  fitFunc->GetParameter(1) << " \\pm " << fitFunc->GetParError(1) ;
+		eqfile << " \\right) \\sigma_t" << "\n";
+		eqfile << "\\label{eq:scaleFactor"+dataType+",core}" << "\n";
+		eqfile << "\\end{equation}" << "\n";
+		eqfile.close();
+	}
+	if(ngauss == 1){
+		ofstream eqfile;
+		eqfile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ScaleFactor_"+dataType+"_singleGauss.txt",std::ofstream::trunc);
+		eqfile << "\\begin{equation}" << "\n";
+		eqfile <<  "\\sigma_{eff "+dataType+"}^{single-Gauss}(\\sigma_t) = \\left( " ;
+		eqfile << std::setprecision(1) << std::fixed <<  fitFunc->GetParameter(0) * 1000. << " \\pm " << fitFunc->GetParError(0) * 1000. << " \\right) \\text{fs} + \\left( ";
+		eqfile << std::setprecision(3) << std::fixed  <<  fitFunc->GetParameter(1) << " \\pm " << fitFunc->GetParError(1) ;
+		eqfile << " \\right) \\sigma_t" << "\n";
+		eqfile << "\\label{eq:scaleFactor"+dataType+",single}" << "\n";
 		eqfile << "\\end{equation}" << "\n";
 		eqfile.close();
 	}
@@ -762,14 +786,18 @@ int main(int argc, char** argv){
     NamedParameter<string> inFileName("inFileName", (string)"/auto/data/dargent/BsDsKpipi/Final/MC/signal.root");
     NamedParameter<double> TAUERR_min("TAUERR_min", 0.);		
     NamedParameter<double> TAUERR_max("TAUERR_max", 0.12);	
-    NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");		
+    NamedParameter<string> Bs_TAU_Var("Bs_TAU_Var",(string)"Bs_TAU");	
+    NamedParameter<int> DoSystematics("DoSystematics", 0);
+    int doSystematics = DoSystematics;
+    NamedParameter<int> nGauss("nGauss", 2);
+    int ngauss = nGauss;
 
     NamedParameter<int> fitDsMass("fitDsMass", 0);	
     NamedParameter<int> fitIntegratedResolution("fitIntegratedResolution", 0);	
     NamedParameter<int> fitResoRelation("fitResoRelation", 0);	
 
     if(fitDsMass)fitSignalShape("!isRejectedMultipleCandidate", year);
-	cout << "one" << endl;
+
     if(fitIntegratedResolution || fitResoRelation){
 	  /// Load file
   	  TFile* file = new TFile(((string)inFileName).c_str());
@@ -784,10 +812,8 @@ int main(int argc, char** argv){
 	  else tree_res = tree->CopyTree("");
 	  file->Close();
     }
-	cout << "two" << endl;
-    if(fitIntegratedResolution)FitTimeRes(TAUERR_min, TAUERR_max, "all", TString((string) Bs_TAU_Var), dataType);
-    if(fitResoRelation)FitResoRelation(TString((string) Bs_TAU_Var),dataType, year);
-	cout << "three" << endl;
+    if(fitIntegratedResolution)FitTimeRes(TAUERR_min, TAUERR_max, "all", TString((string) Bs_TAU_Var), dataType, year);
+    if(fitResoRelation)FitResoRelation(TString((string) Bs_TAU_Var),dataType, year, doSystematics, ngauss);
     if(!file_res)file_res->Close();
   
     cout << "==============================================" << endl;

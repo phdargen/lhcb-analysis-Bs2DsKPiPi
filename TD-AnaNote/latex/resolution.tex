@@ -166,18 +166,21 @@ The selection is similar than the one for real data with the important differenc
 Even after the full selection, a significant number of multiple candidates is observed.
 These are predominantly fake $B_s$ candidates that share the same $D_s$ candidate combined with different random tracks from the PV.
 We select one of these multiple candidates randomly which retains approximately $20\%$ of the total candidates.
+As can be seen in Figure \ref{fig:Norm_16v17}, the shapes of the distributions of the unscaled decay time error $\sigma_{t}$ for data taken in 2016 and 2017 are significantly different. 
+Therefore, the scaling of the decay time error is treated separately for 2015+2016 and 2017 data.
 The invariant mass distribution of the selected $D_s$ candidates is shown in Fig.~\ref{fig:ResoFit_Ds}.
 To separate true $D_s$ candidates from random combinations, the \textsf{sPlot} method is used to statistically subtract combinatorial background from the sample.
 
-Figure \ref{fig:scaleFactorData} shows the \textsf{sWeighted} decay-time distribution for fake $B_s$ candidates.
+Figure \ref{fig:scaleFactorData_16} and \ref{fig:scaleFactorData_17} show the \textsf{sWeighted} decay-time distributions for fake $B_s$ candidates from 2016 and 2017 data, respectively.
 Similar as in the previous section, the decay-time distribution is fitted with a double-Gaussian resolution model in slices of the per-event decay time error.
 Since some $D_s$ candidates might actually originate from true $B_s$ decays, the decay-time distribution of the fake $B_s$ candidates 
 might show a bias towards positive decay times. 
 Therefore, we determine the decay-time resolution from the negative decay-time distribution only.
 Details of the fit results in each slice are shown in appendix \ref{sec:DecResFits}. 
-The resulting calibration function:
-\input{tables/Resolution/ScaleFactor_Data.txt}
-is in good agreement with the one obtained for the $B_s \to J/\psi \phi$ (Run-II) analysis \cite{LHCb-ANA-2017-028}. 
+The resulting calibration functions are:
+\input{tables/Resolution/ScaleFactor_Data_16.txt}
+\input{tables/Resolution/ScaleFactor_Data_17.txt}
+For 2016, the result is in good agreement with the one obtained for the $B_s \to J/\psi \phi$ (Run-II) analysis that uses 2016 data \cite{LHCb-ANA-2017-028}. 
 \begin{equation}
 \sigma_{eff}^{J/\psi\phi}(\sigma_t) = \left( 12.25 \pm 0.33 \right) \text{fs} + \left( 0.8721 \pm 0.0080 \right) \sigma_t
 \label{eq:scaleFactorJpsiPhi}
@@ -249,19 +252,30 @@ All tracks  & $p_T$ & $> 500$ MeV \\
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/Ds_M_pull.pdf}
-\caption{The invariant mass distribution for prompt $D_s$ candidates. }
+\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/Ds_M_pull_16.pdf}
+\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/Ds_M_pull_17.pdf}
+\caption{The invariant mass distribution for prompt $D_s$ candidates for data taken from the LTUB stripping line in (left) 2016 and (right) 2017. }
 \label{fig:ResoFit_Ds}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/SignalData_bin_all.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ScaleFactor_Data.pdf}
+\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/SignalData_16_bin_all.pdf}
+\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ScaleFactor_Data_16.pdf}
 \caption{ (Left) Decay-time distribution for fake $B_s$ candidates from promptly produced $D_s$ candidates, combined with random prompt $K\pi\pi$ bachelor tracks.
 (Right) The measured resolution $\sigma_{eff}$ as function of the per-event decay time error estimate $\sigma_t$ for fake $B_s$ candidates (Run-II data).
-The fitted calibration curve is shown in blue.}
-\label{fig:scaleFactorData}
+The fitted calibration curve is shown in blue. Data taken in 2016.}
+\label{fig:scaleFactorData_16}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/SignalData_17_bin_all.pdf}
+\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ScaleFactor_Data_17.pdf}
+\caption{ (Left) Decay-time distribution for fake $B_s$ candidates from promptly produced $D_s$ candidates, combined with random prompt $K\pi\pi$ bachelor tracks.
+(Right) The measured resolution $\sigma_{eff}$ as function of the per-event decay time error estimate $\sigma_t$ for fake $B_s$ candidates (Run-II data).
+The fitted calibration curve is shown in blue. Data taken in 2017.}
+\label{fig:scaleFactorData_17}
 \end{figure}
 
 
