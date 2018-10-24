@@ -1,5 +1,3 @@
-\begin{table}[h]
-\centering
  \begin{tabular}{c | c c c | c c}
 \hline
 \hline
@@ -19,6 +17,3 @@ $\sigma_{t}$ Bin [fs] & $\sigma_{1}$ [fs] & $\sigma_{2}$ [fs] & $f_{1}$ & D & $\
 \hline
 \hline
 \end{tabular}
-\caption{Measured time resolution for prompt-$D_s$ data in bins of the per-event decay time error estimate. Data taken in 2017.}
-\label{table:ResoParamsData_17}
-\end{table}

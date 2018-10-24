@@ -295,59 +295,31 @@ where $A^{\prime}$ labels the amplitude model used for the generation and
 $x_{k}$ is the $k$-th MC event. As a result, the phase-space efficiency can be included in the  fit without explicitly modeling it.
 %For $\Dz \to \pi^+ \pi^- \pip \pim$, we use a sample of $N_{\rm MC}  = 600 000$  MC events to 
 %ensure that the uncertainty on the integral is less than $0.5 \%$.
-\newline
-\\
-\pretextcomment{Disclaimer: 
-At the moment there is only a small Run-I MC sample available where a DecFile (EventType: 13266007) 
-was used from which we were not able to reproduce the generator pdf $A^{\prime}$.
-We can therefore not follow our preferred procedure described above. 
-An alternative, provisionally method is briefly described in the following.
- }
+%\newline
+%\\
+%\pretextcomment{Disclaimer: 
+%At the moment there is only a small Run-I MC sample available where a DecFile (EventType: 13266007) 
+%was used from which we were not able to reproduce the generator pdf $A^{\prime}$.
+%We can therefore not follow our preferred procedure described above. 
+%An alternative, provisionally method is briefly described in the following.
+% }
 
-\clearpage 
-\noindent We use a BDTG to map the five-dimensional phase space to an one-dimensional distribution \cite{PhysRevLett.121.091801}.
-The BDTG is trained to learn the differences between the selected MC and a generator level MC sample.
-As discriminating variables, five invariant mass combinations are used as shown in Fig.~\ref{fig:varPhspBDT}.
-Based on the classifier output distributions, shown in Fig.~\ref{fig:PhspBDT}, an efficiency as function of the BDTG response is derived.
-
-A large toy MC sample is generated (500 k events) according to a preliminary amplitude model $A^{\prime}(\phsPoint)$
-and for each event a weight, depending on the BDTG response (see Fig.~\ref{fig:PhspBDT}), is assigned
-to account for the efficiency variation across phase space.
-This reweighted toy MC sample is then effectively distributed as $A^{\prime}(\phsPoint) \cdot \epsilon(\phsPoint)$ and can be used to calculate the normalization integrals in Equation~\ref{eq:pdfPhspAcc}.
-Figure \ref{fig:PhspBDTeff} compares the phase space efficiency obtained from the reweighed toy MC sample with the 'true' efficiency 
-given by the ratio of selected and generated MC events. 
-A fairly good agreement is observed in all dimensions.
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.9\textwidth]{figs/AcceptancePhspBDT/variables_id_c1.pdf}
-\caption{Discriminating variables used to train the BDTG. The selected MC sample is shown in blue and the generator MC sample in red.}
-\label{fig:varPhspBDT}
-\end{figure}
-\begin{figure}[h]
-\centering
-\includegraphics[height=!,width=0.4\textwidth]{figs/AcceptancePhspBDT/BDTG.pdf}
-\includegraphics[height=!,width=0.4\textwidth]{figs/AcceptancePhspBDT/eff.pdf}
-\caption{Left: Output distributions of the BDTG for the simulated MC sample (blue) and the generator level sample (red).
-Right: Phase space efficiency as function of the BDTG response computed as the ratio of selected and generated decays.}
-\label{fig:PhspBDT}
-\end{figure}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_Kpipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_Kpi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_pipi.pdf}
 
-\begin{figure}[h]
-\centering
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_Kpipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_Kpi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_pipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_Dspipi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_Dspi.pdf}
 
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_Dspipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_Dspi.pdf}
-
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_cosTheta_Kpi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_cosTheta_Dspi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhspBDT/eff_phi_Kpi_Dspi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_cosTheta_Kpi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_cosTheta_Dspi.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_phi_Kpi_Dspi.pdf}
 
 \caption{Efficiency variation as a function of the phase-space variables obtained from the ratio of selected and generated MC events (data points) 
 and efficiency obtained from a reweigted toy MC sample (blue).
 }
-\label{fig:PhspBDTeff}
+\label{fig:PhspEff}
 \end{figure}
