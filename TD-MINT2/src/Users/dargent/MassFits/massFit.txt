@@ -3,10 +3,14 @@
 "nBins"		100
 "min_MM"	5200.
 "max_MM"	5700.
-"cut_BDT_MC" 	0.3
-*"cut_BDT" 	"BDTG > 0.3"
-"cut_BDT" 	"( (run ==1 && TriggerCat == 0 && BDTG > 0.45) || (run ==1 && TriggerCat == 1 && BDTG > 0.50) || (run ==2 && TriggerCat == 0 && BDTG > 0.35) || (run ==2 && TriggerCat == 1 && BDTG > 0.50) )"
+*"cut_BDT" 	"( (run ==1 && TriggerCat == 0 && BDTG > 0.45) || (run ==1 && TriggerCat == 1 && BDTG > 0.50) || (run ==2 && TriggerCat == 0 && BDTG > 0.35) || (run ==2 && TriggerCat == 1 && BDTG > 0.50) ) "
+*"cut_BDT" 	"( (run ==1 && TriggerCat == 0 && BDTG > 0.2) || (run ==1 && TriggerCat == 1 && BDTG > 0.4) || (run ==2 && TriggerCat == 0 && BDTG > 0.3) || (run ==2 && TriggerCat == 1 && BDTG > 0.5) ) "
+
+"cut_BDT" 	"( (run ==1 && TriggerCat == 0 && BDTG > 0.3) || (run ==1 && TriggerCat == 1 && BDTG > 0.4) || (run ==2 && TriggerCat == 0 && BDTG > 0.2) || (run ==2 && TriggerCat == 1 && BDTG > 0.4) ) "
+
+
 "optimizeBDT"		0
+*"cut_BDT" 	"BDTG > 0.3"
 
 "numCPU"	 10
 "newTable"	0
@@ -16,7 +20,7 @@
 * for Systematics
 "useCBSignal"        	0
 "useExpBkgShape"	0
-"useCommonCombBkg"	0
+"useCommonCombBkg"	1
 "inverted_misID"	0
 "random_misID"		0
 *Scale factor for misID yield in signal fit
@@ -28,8 +32,8 @@
 "altPartBkg"     0
 "useB0"     	 1	
 "fixSignalShapeFromMC"	 0
-"inFileNameNorm"        "/auto/data/dargent/BsDsKpipi/Final/Data/norm_tagged.root"
-"outFileNameNorm"       "/auto/data/kecke/Bs2Dspipipi_DCBSignalAndAltCombBkg.root"
+"inFileNameNorm"        "/auto/data/dargent/BsDsKpipi/BDT/Data/norm.root"
+*"outFileNameNorm"       "testNorm.root"
 
 * Signal fit:
 "fixMisIDyields"	 1
@@ -37,11 +41,11 @@
 "useNormSignalShape"	 1
 "constrainCombBkgFromSS" 0
 
-"PIDKcut_for_misID"	 12
+"PIDKcut_for_misID"	 10
 
-"sWeightSignal"	 	1
-"outFileNameSignal"	"/auto/data/kecke/Bs2DsKpipi_PIDK12.root"
-"inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/Final/Data/signal_tagged.root"
+"sWeightSignal"	 	0
+*"outFileNameSignal"	"test.root"
+"inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/BDT/Data/signal.root"
 
 * MC fit:
 "sWeightMC"	0

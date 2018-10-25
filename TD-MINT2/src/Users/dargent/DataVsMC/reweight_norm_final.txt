@@ -1,15 +1,16 @@
 * reweighting
 
-"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/MC/norm.root"
+"ReweightFromA"		"norm_scaled.root"
 "ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
-"ApplyWeightToC"	"/auto/data/dargent/BsDsKpipi/Final/MC/signal.root"
+*"ApplyWeightToC"	"/auto/data/dargent/BsDsKpipi/Final/MC/signal.root"
 
 "OutputDir"		"norm_final/"
 
 "legTitle"	"B_{s}#rightarrowD_{s}#pi#pi#pi"
 "nameA"		"MC"
 "weightVarA"	"weight"
-"newWeightVarA"	"weight3"
+"newWeightVarA"	"weight_scaled_rw6"   * must not exist !
+
 
 "nameB"		"Data"
 "weightVarB"	"N_Bs_sw"
@@ -17,17 +18,17 @@
 "weightVarC"	"weight"
 "newWeightVarC"	"weight3"
 
-"reweight"	1
-"reweightInBinsOfRun"    	 1
-"reweightInBinsOfFinalState"	 1
+"reweight"	0
+"reweightInBinsOfRun"    	 -1
+"reweightInBinsOfFinalState"	 0
 "reweightInBinsOfTrigger"	 0
-"maxWeight"	10
+"maxWeight"	20
 "nIterations"   1
-"minEventsPerBin"  150
+"minEventsPerBin"  40
 "maxBinsPerDim"    200
 
 "reweightVarSet1"	 1
-"reweightVarSet2"	 1
+"reweightVarSet2"	 0
 "reweightVarSet3"	 0
 "reweightVarSet4"	 0
 "reweightVarSet5"	 0
