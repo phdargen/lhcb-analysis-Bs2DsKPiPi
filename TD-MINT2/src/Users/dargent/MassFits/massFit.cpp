@@ -79,27 +79,39 @@ vector<TString> str_trigger;
 static const double massKaon = 493.68;
 static const double massPion = 139.57;
 
-double prepareMisIdBkgShape(TString channel = "Dstar3pi"){
+double prepareMisIdBkgShape(TString channel = "Dstar3pi", int run = 1){
 
 	NamedParameter<double> min_MM("min_MM",5100.);
 	NamedParameter<double> max_MM("max_MM",5700.);
 	NamedParameter<int>    PIDKcut_for_misID("PIDKcut_for_misID",10);
 
 	TString fileName = "/auto/data/dargent/BsDsKpipi/Preselected/MC/";
-	if(channel == "Dstar3pi")fileName += "norm_Ds2KKpi_12_Dstar_bkg.root";
-	else if(channel == "Ds3pi")fileName += "norm_Ds2KKpi_bkg.root";
+ 	TString calib_fileName;
+
+	if(channel == "Dstar3pi"){
+		fileName += "norm_Ds2KKpi_12_Dstar_bkg.root";
+		if(run==1)calib_fileName = "/work/kecke/Promotion/UraniaDev_v7r0/misID_Dstar_PIDK10_12down.root";
+		if(run==2)calib_fileName = "/work/kecke/Promotion/UraniaDev_v7r0/misID_Dstar_PIDK10_16down.root";
+	}
+	else if(channel == "Ds3pi" && run ==1){
+		fileName += "norm_Ds2KKpi_12_Bkg.root";
+		calib_fileName = "/work/kecke/Promotion/UraniaDev_v7r0/misID_PIDK10_12down.root";
+	}
+	else if(channel == "Ds3pi" && run ==2){
+		fileName += "norm_Ds2KKpi_16_Bkg.root";
+		calib_fileName = "/work/kecke/Promotion/UraniaDev_v7r0/misID_PIDK10_16down.root";
+	}
 	else {
 		cout << "ERROR::No channel specified" << endl;
 		throw "ERROR";
 	}
-	TString calib_fileName = fileName;
-	calib_fileName.ReplaceAll("bkg.root",("bkg_PIDK_"+anythingToString((int)PIDKcut_for_misID)+".root").c_str());
-	TString out_fileName;
-	if(channel == "Dstar3pi") out_fileName = ("norm_Ds2KKpi_12_Dstar_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+".root").c_str();
-	if(channel == "Ds3pi") out_fileName = ("norm_Ds2KKpi_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+".root").c_str();
-	 
-	//out_fileName.ReplaceAll("/Preselected/","/Final/");
 
+// 	TString calib_fileName = fileName;
+// 	calib_fileName.ReplaceAll("bkg.root",("bkg_PIDK_"+anythingToString((int)PIDKcut_for_misID)+".root").c_str());
+	TString out_fileName;
+	if(channel == "Dstar3pi") out_fileName = ("norm_Ds2KKpi_Dstar_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_run"+anythingToString(run)+".root").c_str();
+	if(channel == "Ds3pi") out_fileName = ("norm_Ds2KKpi_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_run"+anythingToString(run)+".root").c_str();
+	 
 	/// Load file
 	TFile* calib_file = new TFile(calib_fileName);
 	TTree* calib_tree = (TTree*) calib_file->Get("CalibTool_PIDCalibTree");
@@ -109,6 +121,13 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi"){
 
 	TFile* file = new TFile(fileName);
 	TTree* tree = (TTree*) file->Get("DecayTree");
+	tree->SetBranchStatus("*",0);
+	tree->SetBranchStatus("*_P*",1);
+	tree->SetBranchStatus("*MM*",1);
+	tree->SetBranchStatus("Ds_finalState",1);
+	tree->SetBranchStatus("TriggerCat",1);
+	tree->SetBranchStatus("run",1);
+	tree->SetBranchStatus("*ETA*",1);
 	
 	TFile* out_file = new TFile(out_fileName,"RECREATE");
 	TTree* new_tree = tree->CopyTree("3000 <= pi_plus1_P && 100000 > pi_plus1_P && 1.5 <= pi_plus1_ETA && 5 > pi_plus1_ETA && 3000 <= pi_plus2_P && 100000 > pi_plus2_P && 1.5 <= pi_plus2_ETA && 5 > pi_plus2_ETA");
@@ -139,8 +158,9 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi"){
         new_tree->SetBranchAddress("pi_minus_PY", &pi_minus_PY);
         new_tree->SetBranchAddress("pi_minus_PZ", &pi_minus_PZ);
 
-	int Ds_finalState;
+	int Ds_finalState,trigger;
 	new_tree->SetBranchAddress("Ds_finalState", &Ds_finalState);
+	new_tree->SetBranchAddress("TriggerCat", &trigger);
 
 	if(calib_tree->GetEntries() != new_tree->GetEntries()){
 		cout << "Error:: Event numbers don't match !" << endl;
@@ -186,7 +206,7 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi"){
 		else if(Ds_finalState == 1) n_1 ++;
 		else if(Ds_finalState == 2) n_2 ++;
 
-		if(fake_m_Kpipi < 1950. && fake_m_Kpi < 1200. && fake_m_pipi < 1200.) { 
+		if(fake_m_Kpipi < 1900. && fake_m_Kpi < 1200. && fake_m_pipi < 1200.) { 
 			if(fake_Bs_MM > min_MM && fake_Bs_MM < max_MM){
 				eff += EventWeight;
 				if(Ds_finalState == 0) eff_0 += EventWeight;
@@ -195,6 +215,8 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi"){
 			}
 		}
 		else fake_Bs_MM = -999;
+
+// 		if(trigger==1)fake_Bs_MM = -999;
 
 		b_weight->Fill();
 		b_fake_Bs_MM->Fill();
@@ -216,7 +238,7 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi"){
 	return fake_prob;
 }
 
-double prepareMisIdBkgShape_inverted(TString channel = "Dstar3pi"){
+double prepareMisIdBkgShape_inverted(TString channel = "Dstar3pi", int run = 1){
 
 	NamedParameter<double> min_MM("min_MM",5100.);
 	NamedParameter<double> max_MM("max_MM",5700.);
@@ -350,7 +372,7 @@ double prepareMisIdBkgShape_inverted(TString channel = "Dstar3pi"){
 	return fake_prob;
 }
 
-double prepareMisIdBkgShape_random(TString channel = "Dstar3pi"){
+double prepareMisIdBkgShape_random(TString channel = "Dstar3pi", int run =1){
 
 	NamedParameter<double> min_MM("min_MM",5100.);
 	NamedParameter<double> max_MM("max_MM",5700.);
@@ -570,7 +592,7 @@ vector<double> fitPartRecoBkgShape(){
 	return params;
 }
 
-vector<double> fitMisIdBkgShape_Ds3pi(){
+vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 	NamedParameter<int> inverted_misID("inverted_misID", 0);
@@ -608,7 +630,7 @@ vector<double> fitMisIdBkgShape_Ds3pi(){
 	if((inverted_misID == 0) && (random_misID == 0)){
 		//file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_Ds2KKpi_bkg.root");
 		//tree = (TTree*) file->Get("DecayTree");
-		file = new TFile(("norm_Ds2KKpi_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+".root").c_str());
+		file = new TFile(("norm_Ds2KKpi_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_run"+anythingToString(run)+".root").c_str());
 		tree = (TTree*) file->Get("DecayTree");
 	}
 	if(inverted_misID == 1){
@@ -635,6 +657,7 @@ vector<double> fitMisIdBkgShape_Ds3pi(){
 	RooPlot* frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
         frame_m->GetXaxis()->SetTitle("m(D_{s}^{-}#pi^{+}_{K}#pi^{+}#pi^{-}) [MeV/c^{2}]");
+        frame_m->GetYaxis()->SetTitle("Yield (norm.)");
 
 	data->plotOn(frame_m,Name("data"),MarkerSize(1),Binning(40),DataError(RooAbsData::SumW2));
 	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlue),LineWidth(3));
@@ -689,7 +712,7 @@ vector<double> fitMisIdBkgShape_Ds3pi(){
 	return params;
 }
 
-vector<double> fitMisIdBkgShape_Dsstar3pi(){
+vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
 
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 	NamedParameter<int> inverted_misID("inverted_misID", 0);
@@ -726,7 +749,7 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(){
 	if((inverted_misID == 0) && (random_misID == 0)){
 		//file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_Ds2KKpi_12_Dstar_bkg.root");
 		//tree = (TTree*) file->Get("DecayTree");
-		file = new TFile(("norm_Ds2KKpi_12_Dstar_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+".root").c_str());
+		file = new TFile(("norm_Ds2KKpi_Dstar_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_run"+anythingToString(run)+".root").c_str());
 		tree = (TTree*) file->Get("DecayTree");
 	}
 	if(inverted_misID == 1){
@@ -2645,10 +2668,14 @@ void fitSignal(){
 	/// MisID bkg
 	double fake_prob_Ds = 0;
 	double fake_prob_Dstar = 0;
+	double fake_prob_Ds_Run2 = 0;
+	double fake_prob_Dstar_Run2 = 0;
 
 	if((inverted_misID == 0) && (random_misID == 0)){
 		fake_prob_Ds = prepareMisIdBkgShape("Ds3pi");
         	fake_prob_Dstar = prepareMisIdBkgShape("Dstar3pi");
+		fake_prob_Ds_Run2 = prepareMisIdBkgShape("Ds3pi",2);
+        	fake_prob_Dstar_Run2 = prepareMisIdBkgShape("Dstar3pi",2);
 	}
 	if(inverted_misID == 1){
 		fake_prob_Ds = prepareMisIdBkgShape_inverted("Ds3pi");
@@ -2659,22 +2686,41 @@ void fitSignal(){
        		fake_prob_Dstar = prepareMisIdBkgShape_random("Dstar3pi");
 	}
 
+	// Run 1
 	vector<double> bkg_misID_Ds3pi_params = fitMisIdBkgShape_Ds3pi();
 	
-	RooRealVar misID_Ds3pi_mean1("misID_Ds3pi_mean1","misID_Ds3pi_mean1", bkg_misID_Ds3pi_params[0]);//,bkg_misID_Ds3pi_params[0]-50,bkg_misID_Ds3pi_params[0]+50);
+	RooRealVar misID_Ds3pi_mean1("misID_Ds3pi_mean1","misID_Ds3pi_mean1", bkg_misID_Ds3pi_params[0]);
 	RooRealVar misID_Ds3pi_mean2("misID_Ds3pi_mean2","misID_Ds3pi_mean2", bkg_misID_Ds3pi_params[1]);
 	RooRealVar misID_Ds3pi_a1("misID_Ds3pi_a1","misID_Ds3pi_a1",bkg_misID_Ds3pi_params[2]);
 	RooRealVar misID_Ds3pi_a2("misID_Ds3pi_a2","misID_Ds3pi_a2",bkg_misID_Ds3pi_params[3]);
 	RooRealVar misID_Ds3pi_n1("misID_Ds3pi_n1","misID_Ds3pi_n1",bkg_misID_Ds3pi_params[4]);
 	RooRealVar misID_Ds3pi_n2("misID_Ds3pi_n2","misID_Ds3pi_n2",bkg_misID_Ds3pi_params[5]);
-	RooRealVar misID_Ds3pi_sigma1("misID_Ds3pi_sigma1", "misID_Ds3pi_sigma1", bkg_misID_Ds3pi_params[6]);//,  bkg_misID_Ds3pi_params[6] * 0.5,  bkg_misID_Ds3pi_params[6]*1.5);
+	RooRealVar misID_Ds3pi_sigma1("misID_Ds3pi_sigma1", "misID_Ds3pi_sigma1", bkg_misID_Ds3pi_params[6]);
 	RooRealVar misID_Ds3pi_sigma2("misID_Ds3pi_sigma2", "misID_Ds3pi_sigma2", bkg_misID_Ds3pi_params[7]);
 	RooRealVar misID_Ds3pi_f("misID_Ds3pi_f", "misID_Ds3pi_f", bkg_misID_Ds3pi_params[8]);
 
 	RooCBShape misID_Ds3pi_CB1("misID_Ds3pi_CB1", "misID_Ds3pi_CB1", DTF_Bs_M, misID_Ds3pi_mean1, misID_Ds3pi_sigma1, misID_Ds3pi_a1, misID_Ds3pi_n1);
 	RooCBShape misID_Ds3pi_CB2("misID_Ds3pi_CB2", "misID_Ds3pi_CB2", DTF_Bs_M, misID_Ds3pi_mean2, misID_Ds3pi_sigma2, misID_Ds3pi_a2, misID_Ds3pi_n2);
-	RooAddPdf bkg_misID_Ds3pi("bkg_misID_Ds3pi", "bkg_misID_Ds3pi", RooArgList(misID_Ds3pi_CB1, misID_Ds3pi_CB2), RooArgList(misID_Ds3pi_f));
+	RooAddPdf bkg_misID_Ds3pi_Run1("bkg_misID_Ds3pi_Run1", "bkg_misID_Ds3pi_Run1", RooArgList(misID_Ds3pi_CB1, misID_Ds3pi_CB2), RooArgList(misID_Ds3pi_f));
 
+	// Run 2
+	bkg_misID_Ds3pi_params = fitMisIdBkgShape_Ds3pi(2);
+	
+	RooRealVar misID_Ds3pi_mean1_Run2("misID_Ds3pi_mean1_Run2","misID_Ds3pi_mean1_Run2", bkg_misID_Ds3pi_params[0]);
+	RooRealVar misID_Ds3pi_mean2_Run2("misID_Ds3pi_mean2_Run2","misID_Ds3pi_mean2_Run2", bkg_misID_Ds3pi_params[1]);
+	RooRealVar misID_Ds3pi_a1_Run2("misID_Ds3pi_a1_Run2","misID_Ds3pi_a1_Run2",bkg_misID_Ds3pi_params[2]);
+	RooRealVar misID_Ds3pi_a2_Run2("misID_Ds3pi_a2_Run2","misID_Ds3pi_a2_Run2",bkg_misID_Ds3pi_params[3]);
+	RooRealVar misID_Ds3pi_n1_Run2("misID_Ds3pi_n1_Run2","misID_Ds3pi_n1_Run2",bkg_misID_Ds3pi_params[4]);
+	RooRealVar misID_Ds3pi_n2_Run2("misID_Ds3pi_n2_Run2","misID_Ds3pi_n2_Run2",bkg_misID_Ds3pi_params[5]);
+	RooRealVar misID_Ds3pi_sigma1_Run2("misID_Ds3pi_sigma1_Run2", "misID_Ds3pi_sigma1_Run2", bkg_misID_Ds3pi_params[6]);
+	RooRealVar misID_Ds3pi_sigma2_Run2("misID_Ds3pi_sigma2_Run2", "misID_Ds3pi_sigma2_Run2", bkg_misID_Ds3pi_params[7]);
+	RooRealVar misID_Ds3pi_f_Run2("misID_Ds3pi_f_Run2", "misID_Ds3pi_f_Run2", bkg_misID_Ds3pi_params[8]);
+
+	RooCBShape misID_Ds3pi_CB1_Run2("misID_Ds3pi_CB1_Run2", "misID_Ds3pi_CB1_Run2", DTF_Bs_M, misID_Ds3pi_mean1_Run2, misID_Ds3pi_sigma1_Run2, misID_Ds3pi_a1_Run2, misID_Ds3pi_n1_Run2);
+	RooCBShape misID_Ds3pi_CB2_Run2("misID_Ds3pi_CB2_Run2", "misID_Ds3pi_CB2_Run2", DTF_Bs_M, misID_Ds3pi_mean2_Run2, misID_Ds3pi_sigma2_Run2, misID_Ds3pi_a2_Run2, misID_Ds3pi_n2_Run2);
+	RooAddPdf bkg_misID_Ds3pi_Run2("bkg_misID_Ds3pi_Run2", "bkg_misID_Ds3pi_Run2", RooArgList(misID_Ds3pi_CB1_Run2, misID_Ds3pi_CB2_Run2), RooArgList(misID_Ds3pi_f_Run2));
+
+	// Run 1
 	vector<double> bkg_misID_Dsstar3pi_params = fitMisIdBkgShape_Dsstar3pi();
 	RooRealVar misID_Dsstar3pi_mean1("misID_Dsstar3pi_mean1","misID_Dsstar3pi_mean1", bkg_misID_Dsstar3pi_params[0]);
 	RooRealVar misID_Dsstar3pi_mean2("misID_Dsstar3pi_mean2","misID_Dsstar3pi_mean2", bkg_misID_Dsstar3pi_params[1]);
@@ -2688,10 +2734,36 @@ void fitSignal(){
 
 	RooCBShape misID_Dsstar3pi_CB1("misID_Dsstar3pi_CB1", "misID_Dsstar3pi_CB1", DTF_Bs_M, misID_Dsstar3pi_mean1, misID_Dsstar3pi_sigma1, misID_Dsstar3pi_a1, misID_Dsstar3pi_n1);
 	RooCBShape misID_Dsstar3pi_CB2("misID_Dsstar3pi_CB2", "misID_Dsstar3pi_CB2", DTF_Bs_M, misID_Dsstar3pi_mean2, misID_Dsstar3pi_sigma2, misID_Dsstar3pi_a2, misID_Dsstar3pi_n2);
-	RooAddPdf bkg_misID_Dsstar3pi("bkg_misID_Dsstar3pi", "bkg_misID_Dsstar3pi", RooArgList(misID_Dsstar3pi_CB1, misID_Dsstar3pi_CB2), RooArgList(misID_Dsstar3pi_f));
+	RooAddPdf bkg_misID_Dsstar3pi_Run1("bkg_misID_Dsstar3pi_Run1", "bkg_misID_Dsstar3pi_Run1", RooArgList(misID_Dsstar3pi_CB1, misID_Dsstar3pi_CB2), RooArgList(misID_Dsstar3pi_f));
+
+
+	// Run 2
+	bkg_misID_Dsstar3pi_params = fitMisIdBkgShape_Dsstar3pi(2);
+	RooRealVar misID_Dsstar3pi_mean1_Run2("misID_Dsstar3pi_mean1_Run2","misID_Dsstar3pi_mean1_Run2", bkg_misID_Dsstar3pi_params[0]);
+	RooRealVar misID_Dsstar3pi_mean2_Run2("misID_Dsstar3pi_mean2_Run2","misID_Dsstar3pi_mean2_Run2", bkg_misID_Dsstar3pi_params[1]);
+	RooRealVar misID_Dsstar3pi_a1_Run2("misID_Dsstar3pi_a1_Run2","misID_Dstars3pi_a1_Run2",bkg_misID_Dsstar3pi_params[2]);
+	RooRealVar misID_Dsstar3pi_a2_Run2("misID_Dsstar3pi_a2_Run2","misID_Dsstar3pi_a2_Run2",bkg_misID_Dsstar3pi_params[3]);
+	RooRealVar misID_Dsstar3pi_n1_Run2("misID_Dsstar3pi_n1_Run2","misID_Dsstar3pi_n1_Run2",bkg_misID_Dsstar3pi_params[4]);
+	RooRealVar misID_Dsstar3pi_n2_Run2("misID_Dsstar3pi_n2_Run2","misID_Dsstar3pi_n2_Run2",bkg_misID_Dsstar3pi_params[5]);
+	RooRealVar misID_Dsstar3pi_sigma1_Run2("misID_Dsstar3pi_sigma1_Run2", "misID_Dsstar3pi_sigma1_Run2", bkg_misID_Dsstar3pi_params[6]);
+	RooRealVar misID_Dsstar3pi_sigma2_Run2("misID_Dsstar3pi_sigma2_Run2", "misID_Dsstar3pi_sigma2_Run2", bkg_misID_Dsstar3pi_params[7]);
+	RooRealVar misID_Dsstar3pi_f_Run2("misID_Dsstar3pi_f_Run2", "misID_Dsstar3pi_f_Run2", bkg_misID_Dsstar3pi_params[8]);
+
+	RooCBShape misID_Dsstar3pi_CB1_Run2("misID_Dsstar3pi_CB1_Run2", "misID_Dsstar3pi_CB1_Run2", DTF_Bs_M, misID_Dsstar3pi_mean1_Run2, misID_Dsstar3pi_sigma1_Run2, misID_Dsstar3pi_a1_Run2, misID_Dsstar3pi_n1_Run2);
+	RooCBShape misID_Dsstar3pi_CB2_Run2("misID_Dsstar3pi_CB2_Run2", "misID_Dsstar3pi_CB2_Run2", DTF_Bs_M, misID_Dsstar3pi_mean2_Run2, misID_Dsstar3pi_sigma2_Run2, misID_Dsstar3pi_a2_Run2, misID_Dsstar3pi_n2_Run2);
+	RooAddPdf bkg_misID_Dsstar3pi_Run2("bkg_misID_Dsstar3pi_Run2", "bkg_misID_Dsstar3pi_Run2", RooArgList(misID_Dsstar3pi_CB1_Run2, misID_Dsstar3pi_CB2_Run2), RooArgList(misID_Dsstar3pi_f_Run2));
+
+
+	/// total misID shape
+	RooRealVar misID_Ds3pi_Run("misID_Ds3pi_Run", "misID_Ds3pi_Run", 1.);
+	RooAddPdf bkg_misID_Ds3pi("bkg_misID_Ds3pi", "bkg_misID_Ds3pi", RooArgList(bkg_misID_Ds3pi_Run1, bkg_misID_Ds3pi_Run2), RooArgList(misID_Ds3pi_Run));
+
+	RooRealVar misID_Dsstar3pi_Run("misID_Dsstar3pi_Run", "misID_Dsstar3pi_Run", 1.);
+	RooAddPdf bkg_misID_Dsstar3pi("bkg_misID_Dsstar3pi", "bkg_misID_Dsstar3pi", RooArgList(bkg_misID_Dsstar3pi_Run1, bkg_misID_Dsstar3pi_Run2), RooArgList(misID_Dsstar3pi_Run));
 
 	RooRealVar misID_f("misID_f", "misID_f", 0.5,0.,1.);
 	RooAddPdf bkg_misID("bkg_misID", "bkg_misID", RooArgList(bkg_misID_Ds3pi, bkg_misID_Dsstar3pi), RooArgList(misID_f));
+
 
 	/// Total pdf
 	RooRealVar n_sig("n_sig", "n_sig", data->numEntries()/4., 0., data->numEntries());
@@ -2712,7 +2784,7 @@ void fitSignal(){
 	else config->setStringValue("splitCats" ,"year Ds_finalState_mod") ;
 
 	if(useTriggerCat){
-		config->setStringValue("pdf", "run            : scale_mean "
+		config->setStringValue("pdf", "run            : scale_mean, misID_Ds3pi_Run, misID_Dsstar3pi_Run "
 					"run,TriggerCat :	scale_sigma "
 					"Ds_finalState_mod :  exp_par "  
 					"run,Ds_finalState_mod,TriggerCat : n_sig, n_sig_B0, n_exp_bkg, n_partReco_bkg, n_misID_bkg, misID_f") ; 
@@ -2768,30 +2840,38 @@ void fitSignal(){
 	int counter = 0;
 
 	if(useTriggerCat){
-		for(int i=0; i<str_run.size(); i++) for(int j=0; j<str_Ds.size(); j++) for(int k=0; k<str_trigger.size(); k++){
-			double val = scale_misIDyield * (fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]/eff_bkg_partReco_inSigRange)   ;
-			((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(val);
-			if(fixMisIDyields)((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setConstant();
-			else ((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setRange(val * 0.5 , val * 3.);
-	
-			((RooRealVar*) fitParams->find("misID_f_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal( fake_prob_Ds * Ds_yields[counter] / (fake_prob_Ds * Ds_yields[counter] + fake_prob_Dstar * Dstar_yields[counter]/eff_bkg_partReco_inSigRange   ));
-			((RooRealVar*) fitParams->find("misID_f_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setConstant();
-	
-			/// Set start values for yields
-			RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]);
-			((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
-			((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
-			((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
-			((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setRange(data_slice->numEntries()*0.03,data_slice->numEntries()*0.3);
-			((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
+		for(int i=0; i<str_run.size(); i++){ 
+			((RooRealVar*)fitParams->find("misID_Ds3pi_Run"+ str_run[i]))->setVal(1.-i);
+			((RooRealVar*)fitParams->find("misID_Ds3pi_Run"+ str_run[i]))->setConstant();
+			((RooRealVar*)fitParams->find("misID_Dsstar3pi_Run"+ str_run[i]))->setVal(1.-i);
+			((RooRealVar*)fitParams->find("misID_Dsstar3pi_Run"+ str_run[i]))->setConstant();
 
+			double fake_prob_Ds_val = (i==0) ? fake_prob_Ds : fake_prob_Ds_Run2;
+			double fake_prob_Dstar_val = (i==0) ? fake_prob_Dstar : fake_prob_Dstar_Run2;
 
-			///Fix bkg from sidebands
-			//bkg_exp1.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
-			/// Fix parameters
-			//if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setConstant();
+			for(int j=0; j<str_Ds.size(); j++) for(int k=0; k<str_trigger.size(); k++){
+				double val = scale_misIDyield * (fake_prob_Ds_val * Ds_yields[counter] + fake_prob_Dstar_val * Dstar_yields[counter]/eff_bkg_partReco_inSigRange)   ;
+				((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(val);
+				if(fixMisIDyields)((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setConstant();
+				else ((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setRange(val * 0.5 , val * 3.);
+		
+				((RooRealVar*) fitParams->find("misID_f_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal( fake_prob_Ds_val * Ds_yields[counter] / (fake_prob_Ds_val * Ds_yields[counter] + fake_prob_Dstar_val * Dstar_yields[counter]/eff_bkg_partReco_inSigRange   ));
+				((RooRealVar*) fitParams->find("misID_f_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setConstant();
+		
+				/// Set start values for yields
+				RooDataSet* data_slice = new RooDataSet("data_slice","data_slice",data,list,"run==run::" + str_run[i] + " && Ds_finalState_mod == Ds_finalState_mod::" + str_Ds[j] + " && TriggerCat==TriggerCat::" + str_trigger[k]);
+				((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
+				((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
+				((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
+				((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setRange(data_slice->numEntries()*0.03,data_slice->numEntries()*0.3);
+				((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(data_slice->numEntries()/4.);
 	
-			counter++;
+				///Fix bkg from sidebands
+				//bkg_exp1.fitTo(*data_slice,Save(kTRUE),Range(5500.,5700.));
+				/// Fix parameters
+				//if(fixExpBkgFromSidebands)((RooRealVar*) fitParams->find("exp_par_"+ str_Ds[j]))->setConstant();	
+				counter++;
+			}
 		}
 	}
 	else {
