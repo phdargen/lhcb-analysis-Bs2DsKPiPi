@@ -360,7 +360,7 @@ double prepareMisIdBkgShape_inverted(TString channel = "Dstar3pi", int run = 1){
 		fake_Bs_MM = (Ds + pi_minus + pi_plus1 + pi_plus2).M() ;
 		fake_m_Kpipi =  (pi_minus + pi_plus1 + pi_plus2).M() ;
 		
-		EventWeight = max(pi_plus1_PIDCalibEff,pi_plus2_PIDCalibEff);
+		EventWeight = min(pi_plus1_PIDCalibEff,pi_plus2_PIDCalibEff);
 
 		if(Ds_finalState == 0) n_0 ++;
 		else if(Ds_finalState == 1) n_1 ++;
@@ -523,7 +523,8 @@ double prepareMisIdBkgShape_random(TString channel = "Dstar3pi", int run =1){
 		fake_Bs_MM = (Ds + pi_minus + pi_plus1 + pi_plus2).M() ;
 		fake_m_Kpipi =  (pi_minus + pi_plus1 + pi_plus2).M() ;
 		
-		EventWeight = max(pi_plus1_PIDCalibEff,pi_plus2_PIDCalibEff);
+		if(seed > 0.) EventWeight = pi_plus1_PIDCalibEff;
+		else EventWeight = pi_plus2_PIDCalibEff;
 
 		if(Ds_finalState == 0) n_0 ++;
 		else if(Ds_finalState == 1) n_1 ++;
@@ -2915,10 +2916,10 @@ void fitSignal(){
 
 	if(useTriggerCat){
 		for(int i=0; i<str_run.size(); i++){ 
-			((RooRealVar*)fitParams->find("misID_Ds3pi_Run"+ str_run[i]))->setVal(1.-i);
-			((RooRealVar*)fitParams->find("misID_Ds3pi_Run"+ str_run[i]))->setConstant();
-			((RooRealVar*)fitParams->find("misID_Dsstar3pi_Run"+ str_run[i]))->setVal(1.-i);
-			((RooRealVar*)fitParams->find("misID_Dsstar3pi_Run"+ str_run[i]))->setConstant();
+			((RooRealVar*)fitParams->find("misID_Ds3pi_Run_"+ str_run[i]))->setVal(1.-i);
+			((RooRealVar*)fitParams->find("misID_Ds3pi_Run_"+ str_run[i]))->setConstant();
+			((RooRealVar*)fitParams->find("misID_Dsstar3pi_Run_"+ str_run[i]))->setVal(1.-i);
+			((RooRealVar*)fitParams->find("misID_Dsstar3pi_Run_"+ str_run[i]))->setConstant();
 
 			double fake_prob_Ds_val = (i==0) ? fake_prob_Ds : fake_prob_Ds_Run2;
 			double fake_prob_Dstar_val = (i==0) ? fake_prob_Dstar : fake_prob_Dstar_Run2;
