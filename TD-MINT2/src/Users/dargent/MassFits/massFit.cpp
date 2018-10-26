@@ -79,6 +79,7 @@ vector<TString> str_trigger;
 static const double massKaon = 493.68;
 static const double massPion = 139.57;
 
+
 double prepareMisIdBkgShape(TString channel = "Dstar3pi", int run = 1){
 
 	NamedParameter<double> min_MM("min_MM",5100.);
@@ -90,16 +91,16 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi", int run = 1){
 
 	if(channel == "Dstar3pi"){
 		fileName += "norm_Ds2KKpi_12_Dstar_bkg.root";
-		if(run==1)calib_fileName = "/work/kecke/Promotion/UraniaDev_v7r0/misID_Dstar_PIDK10_12down.root";
-		if(run==2)calib_fileName = "/work/kecke/Promotion/UraniaDev_v7r0/misID_Dstar_PIDK10_16down.root";
+		if(run==1)calib_fileName = ("/work/kecke/Promotion/UraniaDev_v7r0/misID_Dstar_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_12down.root").c_str();
+		if(run==2)calib_fileName = ("/work/kecke/Promotion/UraniaDev_v7r0/misID_Dstar_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_16down.root").c_str();
 	}
 	else if(channel == "Ds3pi" && run ==1){
 		fileName += "norm_Ds2KKpi_12_Bkg.root";
-		calib_fileName = "/work/kecke/Promotion/UraniaDev_v7r0/misID_PIDK10_12down.root";
+		calib_fileName = ("/work/kecke/Promotion/UraniaDev_v7r0/misID_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_12down.root").c_str();
 	}
 	else if(channel == "Ds3pi" && run ==2){
 		fileName += "norm_Ds2KKpi_16_Bkg.root";
-		calib_fileName = "/work/kecke/Promotion/UraniaDev_v7r0/misID_PIDK10_16down.root";
+		calib_fileName = ("/work/kecke/Promotion/UraniaDev_v7r0/misID_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_16down.root").c_str();
 	}
 	else {
 		cout << "ERROR::No channel specified" << endl;
@@ -242,20 +243,35 @@ double prepareMisIdBkgShape_inverted(TString channel = "Dstar3pi", int run = 1){
 
 	NamedParameter<double> min_MM("min_MM",5100.);
 	NamedParameter<double> max_MM("max_MM",5700.);
+	NamedParameter<int>    PIDKcut_for_misID("PIDKcut_for_misID",10);
 
 	TString fileName = "/auto/data/dargent/BsDsKpipi/Preselected/MC/";
-	if(channel == "Dstar3pi")fileName += "norm_Ds2KKpi_12_Dstar_bkg.root";
-	else if(channel == "Ds3pi")fileName += "norm_Ds2KKpi_bkg.root";
+ 	TString calib_fileName;
+
+	if(channel == "Dstar3pi"){
+		fileName += "norm_Ds2KKpi_12_Dstar_bkg.root";
+		if(run==1)calib_fileName = ("/work/kecke/Promotion/UraniaDev_v7r0/misID_Dstar_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_12down.root").c_str();
+		if(run==2)calib_fileName = ("/work/kecke/Promotion/UraniaDev_v7r0/misID_Dstar_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_16down.root").c_str();
+	}
+	else if(channel == "Ds3pi" && run ==1){
+		fileName += "norm_Ds2KKpi_12_Bkg.root";
+		calib_fileName = ("/work/kecke/Promotion/UraniaDev_v7r0/misID_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_12down.root").c_str();
+	}
+	else if(channel == "Ds3pi" && run ==2){
+		fileName += "norm_Ds2KKpi_16_Bkg.root";
+		calib_fileName = ("/work/kecke/Promotion/UraniaDev_v7r0/misID_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_16down.root").c_str();
+	}
 	else {
 		cout << "ERROR::No channel specified" << endl;
 		throw "ERROR";
 	}
-	TString calib_fileName = fileName;
-	calib_fileName.ReplaceAll("bkg.root","bkg_PIDK_10.root");
-	TString out_fileName;
-	if(channel == "Dstar3pi") out_fileName = "norm_Ds2KKpi_12_Dstar_bkg_inverted.root";
-	if(channel == "Ds3pi") out_fileName = "norm_Ds2KKpi_bkg_inverted.root";
 
+// 	TString calib_fileName = fileName;
+// 	calib_fileName.ReplaceAll("bkg.root",("bkg_PIDK_"+anythingToString((int)PIDKcut_for_misID)+".root").c_str());
+	TString out_fileName;
+	if(channel == "Dstar3pi") out_fileName = ("norm_Ds2KKpi_Dstar_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_run"+anythingToString(run)+".root").c_str();
+	if(channel == "Ds3pi") out_fileName = ("norm_Ds2KKpi_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_run"+anythingToString(run)+".root").c_str();
+	 
 	/// Load file
 	TFile* calib_file = new TFile(calib_fileName);
 	TTree* calib_tree = (TTree*) calib_file->Get("CalibTool_PIDCalibTree");
@@ -265,6 +281,13 @@ double prepareMisIdBkgShape_inverted(TString channel = "Dstar3pi", int run = 1){
 
 	TFile* file = new TFile(fileName);
 	TTree* tree = (TTree*) file->Get("DecayTree");
+	tree->SetBranchStatus("*",0);
+	tree->SetBranchStatus("*_P*",1);
+	tree->SetBranchStatus("*MM*",1);
+	tree->SetBranchStatus("Ds_finalState",1);
+	tree->SetBranchStatus("TriggerCat",1);
+	tree->SetBranchStatus("run",1);
+	tree->SetBranchStatus("*ETA*",1);
 	
 	TFile* out_file = new TFile(out_fileName,"RECREATE");
 	TTree* new_tree = tree->CopyTree("3000 <= pi_plus1_P && 100000 > pi_plus1_P && 1.5 <= pi_plus1_ETA && 5 > pi_plus1_ETA && 3000 <= pi_plus2_P && 100000 > pi_plus2_P && 1.5 <= pi_plus2_ETA && 5 > pi_plus2_ETA");
@@ -295,8 +318,9 @@ double prepareMisIdBkgShape_inverted(TString channel = "Dstar3pi", int run = 1){
         new_tree->SetBranchAddress("pi_minus_PY", &pi_minus_PY);
         new_tree->SetBranchAddress("pi_minus_PZ", &pi_minus_PZ);
 
-	int Ds_finalState;
+	int Ds_finalState,trigger;
 	new_tree->SetBranchAddress("Ds_finalState", &Ds_finalState);
+	new_tree->SetBranchAddress("TriggerCat", &trigger);
 
 	if(calib_tree->GetEntries() != new_tree->GetEntries()){
 		cout << "Error:: Event numbers don't match !" << endl;
@@ -336,13 +360,13 @@ double prepareMisIdBkgShape_inverted(TString channel = "Dstar3pi", int run = 1){
 		fake_Bs_MM = (Ds + pi_minus + pi_plus1 + pi_plus2).M() ;
 		fake_m_Kpipi =  (pi_minus + pi_plus1 + pi_plus2).M() ;
 		
-		EventWeight = min(pi_plus1_PIDCalibEff,pi_plus2_PIDCalibEff);
+		EventWeight = max(pi_plus1_PIDCalibEff,pi_plus2_PIDCalibEff);
 
 		if(Ds_finalState == 0) n_0 ++;
 		else if(Ds_finalState == 1) n_1 ++;
 		else if(Ds_finalState == 2) n_2 ++;
 
-		if(fake_m_Kpipi < 1950. && fake_m_Kpi < 1200. && fake_m_pipi < 1200.) { 
+		if(fake_m_Kpipi < 1900. && fake_m_Kpi < 1200. && fake_m_pipi < 1200.) { 
 			if(fake_Bs_MM > min_MM && fake_Bs_MM < max_MM){
 				eff += EventWeight;
 				if(Ds_finalState == 0) eff_0 += EventWeight;
@@ -351,6 +375,8 @@ double prepareMisIdBkgShape_inverted(TString channel = "Dstar3pi", int run = 1){
 			}
 		}
 		else fake_Bs_MM = -999;
+
+// 		if(trigger==1)fake_Bs_MM = -999;
 
 		b_weight->Fill();
 		b_fake_Bs_MM->Fill();
@@ -376,22 +402,37 @@ double prepareMisIdBkgShape_random(TString channel = "Dstar3pi", int run =1){
 
 	NamedParameter<double> min_MM("min_MM",5100.);
 	NamedParameter<double> max_MM("max_MM",5700.);
+	NamedParameter<int>    PIDKcut_for_misID("PIDKcut_for_misID",10);
 
 	TRandom3* randomNumber = new TRandom3();
 
 	TString fileName = "/auto/data/dargent/BsDsKpipi/Preselected/MC/";
-	if(channel == "Dstar3pi")fileName += "norm_Ds2KKpi_12_Dstar_bkg.root";
-	else if(channel == "Ds3pi")fileName += "norm_Ds2KKpi_bkg.root";
+ 	TString calib_fileName;
+
+	if(channel == "Dstar3pi"){
+		fileName += "norm_Ds2KKpi_12_Dstar_bkg.root";
+		if(run==1)calib_fileName = ("/work/kecke/Promotion/UraniaDev_v7r0/misID_Dstar_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_12down.root").c_str();
+		if(run==2)calib_fileName = ("/work/kecke/Promotion/UraniaDev_v7r0/misID_Dstar_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_16down.root").c_str();
+	}
+	else if(channel == "Ds3pi" && run ==1){
+		fileName += "norm_Ds2KKpi_12_Bkg.root";
+		calib_fileName = ("/work/kecke/Promotion/UraniaDev_v7r0/misID_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_12down.root").c_str();
+	}
+	else if(channel == "Ds3pi" && run ==2){
+		fileName += "norm_Ds2KKpi_16_Bkg.root";
+		calib_fileName = ("/work/kecke/Promotion/UraniaDev_v7r0/misID_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_16down.root").c_str();
+	}
 	else {
 		cout << "ERROR::No channel specified" << endl;
 		throw "ERROR";
 	}
-	TString calib_fileName = fileName;
-	calib_fileName.ReplaceAll("bkg.root","bkg_PIDK_10.root");
-	TString out_fileName = fileName;
-	if(channel == "Dstar3pi") out_fileName = "norm_Ds2KKpi_12_Dstar_bkg_random.root";
-	if(channel == "Ds3pi") out_fileName = "norm_Ds2KKpi_bkg_random.root";
 
+// 	TString calib_fileName = fileName;
+// 	calib_fileName.ReplaceAll("bkg.root",("bkg_PIDK_"+anythingToString((int)PIDKcut_for_misID)+".root").c_str());
+	TString out_fileName;
+	if(channel == "Dstar3pi") out_fileName = ("norm_Ds2KKpi_Dstar_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_run"+anythingToString(run)+".root").c_str();
+	if(channel == "Ds3pi") out_fileName = ("norm_Ds2KKpi_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_run"+anythingToString(run)+".root").c_str();
+	 
 	/// Load file
 	TFile* calib_file = new TFile(calib_fileName);
 	TTree* calib_tree = (TTree*) calib_file->Get("CalibTool_PIDCalibTree");
@@ -401,6 +442,13 @@ double prepareMisIdBkgShape_random(TString channel = "Dstar3pi", int run =1){
 
 	TFile* file = new TFile(fileName);
 	TTree* tree = (TTree*) file->Get("DecayTree");
+	tree->SetBranchStatus("*",0);
+	tree->SetBranchStatus("*_P*",1);
+	tree->SetBranchStatus("*MM*",1);
+	tree->SetBranchStatus("Ds_finalState",1);
+	tree->SetBranchStatus("TriggerCat",1);
+	tree->SetBranchStatus("run",1);
+	tree->SetBranchStatus("*ETA*",1);
 	
 	TFile* out_file = new TFile(out_fileName,"RECREATE");
 	TTree* new_tree = tree->CopyTree("3000 <= pi_plus1_P && 100000 > pi_plus1_P && 1.5 <= pi_plus1_ETA && 5 > pi_plus1_ETA && 3000 <= pi_plus2_P && 100000 > pi_plus2_P && 1.5 <= pi_plus2_ETA && 5 > pi_plus2_ETA");
@@ -431,8 +479,9 @@ double prepareMisIdBkgShape_random(TString channel = "Dstar3pi", int run =1){
         new_tree->SetBranchAddress("pi_minus_PY", &pi_minus_PY);
         new_tree->SetBranchAddress("pi_minus_PZ", &pi_minus_PZ);
 
-	int Ds_finalState;
+	int Ds_finalState,trigger;
 	new_tree->SetBranchAddress("Ds_finalState", &Ds_finalState);
+	new_tree->SetBranchAddress("TriggerCat", &trigger);
 
 	if(calib_tree->GetEntries() != new_tree->GetEntries()){
 		cout << "Error:: Event numbers don't match !" << endl;
@@ -458,7 +507,6 @@ double prepareMisIdBkgShape_random(TString channel = "Dstar3pi", int run =1){
 		
 		Ds.SetPxPyPzE(Ds_PX,Ds_PY,Ds_PZ,Ds_PE);
        		pi_minus.SetXYZM(pi_minus_PX,pi_minus_PY,pi_minus_PZ,massPion);
-
 		if(seed > 0.){
 			    pi_plus1.SetXYZM(pi_plus1_PX,pi_plus1_PY,pi_plus1_PZ,massKaon);
       			    pi_plus2.SetXYZM(pi_plus2_PX,pi_plus2_PY,pi_plus2_PZ,massPion);
@@ -475,14 +523,13 @@ double prepareMisIdBkgShape_random(TString channel = "Dstar3pi", int run =1){
 		fake_Bs_MM = (Ds + pi_minus + pi_plus1 + pi_plus2).M() ;
 		fake_m_Kpipi =  (pi_minus + pi_plus1 + pi_plus2).M() ;
 		
-		if(seed > 0.)EventWeight = pi_plus1_PIDCalibEff;
-		else EventWeight = pi_plus2_PIDCalibEff;
+		EventWeight = max(pi_plus1_PIDCalibEff,pi_plus2_PIDCalibEff);
 
 		if(Ds_finalState == 0) n_0 ++;
 		else if(Ds_finalState == 1) n_1 ++;
 		else if(Ds_finalState == 2) n_2 ++;
 
-		if(fake_m_Kpipi < 1950. && fake_m_Kpi < 1200. && fake_m_pipi < 1200.) { 
+		if(fake_m_Kpipi < 1900. && fake_m_Kpi < 1200. && fake_m_pipi < 1200.) { 
 			if(fake_Bs_MM > min_MM && fake_Bs_MM < max_MM){
 				eff += EventWeight;
 				if(Ds_finalState == 0) eff_0 += EventWeight;
@@ -491,6 +538,8 @@ double prepareMisIdBkgShape_random(TString channel = "Dstar3pi", int run =1){
 			}
 		}
 		else fake_Bs_MM = -999;
+
+// 		if(trigger==1)fake_Bs_MM = -999;
 
 		b_weight->Fill();
 		b_fake_Bs_MM->Fill();
@@ -664,7 +713,7 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
-	c1->Print("eps/BkgShape/Bs2Dspipipi_as_DsKpipi.eps");
+	c1->Print(("eps/BkgShape/Bs2Dspipipi_as_DsKpipi_Run"+anythingToString(run)+".eps").c_str());
 	if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dspipipi_as_DsKpipi.pdf");
 
 	frame_m= Bs_Mass.frame();
@@ -675,7 +724,7 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
-	c1->Print("eps/BkgShape/Bs2Dspipipi_as_DsKpipi_0.eps");
+	c1->Print(("eps/BkgShape/Bs2Dspipipi_as_DsKpipi_0_Run"+anythingToString(run)+".eps").c_str());
 
 	frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
@@ -685,7 +734,7 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
-	c1->Print("eps/BkgShape/Bs2Dspipipi_as_DsKpipi_1.eps");
+	c1->Print(("eps/BkgShape/Bs2Dspipipi_as_DsKpipi_1_Run"+anythingToString(run)+".eps").c_str());
 
 	frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
@@ -695,7 +744,7 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
-	c1->Print("eps/BkgShape/Bs2Dspipipi_as_DsKpipi_2.eps");
+	c1->Print(("eps/BkgShape/Bs2Dspipipi_as_DsKpipi_2_Run"+anythingToString(run)+".eps").c_str());
 
 	/// Return fit params
 	vector<double> params;
@@ -782,7 +831,7 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
-	c1->Print("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi.eps");
+	c1->Print(("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_Run"+anythingToString(run)+".eps").c_str());
 	if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dsstarpipipi_as_DsKpipi.pdf");
 
 	frame_m= Bs_Mass.frame();
@@ -793,7 +842,7 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
-	c1->Print("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_0.eps");
+	c1->Print(("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_0_Run"+anythingToString(run)+".eps").c_str());
 
 	frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
@@ -803,7 +852,7 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
-	c1->Print("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_1.eps");
+	c1->Print(("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_1_Run"+anythingToString(run)+".eps").c_str());
 
 	frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
@@ -813,7 +862,7 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
-	c1->Print("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_2.eps");
+	c1->Print(("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_2_Run"+anythingToString(run)+".eps").c_str());
 
 	/// Return fit params
 	vector<double> params; 
