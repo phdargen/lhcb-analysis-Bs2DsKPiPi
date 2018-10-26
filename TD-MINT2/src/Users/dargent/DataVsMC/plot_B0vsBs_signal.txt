@@ -1,7 +1,7 @@
 * reweighting
 
-"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root"
-"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root"
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_tagged.root"
+"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_tagged.root"
 "ApplyWeightToC"	""
 
 "OutputDir"		"B0vsBs_signal/"

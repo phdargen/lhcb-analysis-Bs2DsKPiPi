@@ -1,7 +1,7 @@
 * reweighting
 
-"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
-"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm_tagged.root"
+"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm_tagged.root"
 "ApplyWeightToC"	""
 
 "OutputDir"		"run1vs2_norm/"

@@ -1,0 +1,42 @@
+* reweighting
+
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root"
+"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_12_SS.root"
+"ApplyWeightToC"	""
+
+"OutputDir"		"combBkg_signal/"
+
+"legTitle"	"B_{s}#rightarrowD_{s}K#pi#pi"
+
+"nameA"		"Data"
+"weightVarA"	"weight"
+"newWeightVarA"	"weight"
+"cutA"		"Bs_DTF_MM > 5500 && Ds_finalState < 3"
+
+"nameB"		"SS"
+"weightVarB"	"weight"
+"cutB"		"Bs_DTF_MM > 5500 && Bs_DTF_MM <= 5700"
+
+"weightVarC"	""
+"newWeightVarC"	""
+
+"reweight"	0
+"reweightInBinsOfRun"    	 1
+"reweightInBinsOfFinalState"	 1
+"reweightInBinsOfTrigger"	 0
+"maxWeight"	10
+"nIterations"   1
+"minEventsPerBin"  250
+"maxBinsPerDim"    200
+
+"reweightVarSet1"	 1
+"reweightVarSet2"	 1
+"reweightVarSet3"	 0
+"reweightVarSet4"	 1
+"reweightVarSet5"	 1
+
+
+* plotting MC vs Data
+"nBins"		 40
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		0

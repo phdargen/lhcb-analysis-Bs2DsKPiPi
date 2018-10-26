@@ -1,13 +1,13 @@
 * reweighting
 
-"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
-"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm_tagged.root"
+"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm_tagged.root"
 "ApplyWeightToC"	""
 
 "OutputDir"		"finalState_norm/"
 
 "legTitle"	"B_{s}#rightarrowD_{s}#pi#pi#pi Data"
-"nameA"		"D_{s}#rightarrow#pi#pi#pi"
+"nameA"		"D_{s}#rightarrowK#pi#pi"
 "weightVarA"	"N_Bs_sw"
 "newWeightVarA"	"noweight"
 "cutA"		"Ds_finalState == 3"

@@ -277,8 +277,8 @@ void compare(TString fileA, TString fileB, TString weightA, TString weightB, TSt
     plot(new_treeA,new_treeB,"Bs_P","p(B) [MeV]",nBins,0,900000,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_ETA","#eta(B)",nBins,1,6,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_FDCHI2_OWNPV","#chi^{2}_{FD}(B)",nBins,0,100000,weightA, weightB, newWeightB, label,true);     plot(new_treeA,new_treeB,"Bs_ENDVERTEX_CHI2","#chi^{2}_{vtx}(B)",nBins,0,35,weightA, weightB, newWeightB, label);
-    plot(new_treeA,new_treeB,"Bs_BsDTF_TAU","t(B) [ps]",nBins,0.,10.,weightA, weightB, newWeightB, label);
-    plot(new_treeA,new_treeB,"Bs_BsDTF_TAUERR","#sigma_{t}(B) [ps]",nBins,0,0.15,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Bs_BsDTF_TAU","t(B) [ps]",nBins,0.4,10.,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Bs_BsDTF_TAUERR","#sigma_{t}(B) [ps]",nBins,0,0.1,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_ptasy_1.00","B_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
     plot(new_treeA,new_treeB,"Bs_DTF_MMERR","#sigma_{m} [MeV]",nBins,4.,25.,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_DTF_MM","m(B) [MeV]",100.,5200.,5700.,"noweight", "noweight", "noweight", label);
@@ -333,23 +333,23 @@ void compare(TString fileA, TString fileB, TString weightA, TString weightB, TSt
 //     plot(new_treeA,new_treeB,"m_DsKpip","m(D_{s}^{-}K^{+}#pi^{+})[MeV]",nBins,1900,5500,weightA, weightB, newWeightB, label,false,true);
 
     if(Decay == "signal"){
-        plot(new_treeA,new_treeB,"K_plus_PT","p_{T}(K^{+}) [MeV]",nBins,0,10000,weightA, weightB, newWeightB, label);
-        plot(new_treeA,new_treeB,"K_plus_ETA","#eta(K^{+})",nBins,1,6,weightA, weightB, newWeightB, label);
-        plot(new_treeA,new_treeB,"K_plus_IPCHI2_OWNPV","#chi^{2}_{IP}(K^{+})",nBins,0,10000,weightA, weightB, newWeightB, label,true);
-        plot(new_treeA,new_treeB,"K_plus_PIDK","DLL_{K#pi}(K^{+}) ",nBins,-20,100,weightA, weightB, newWeightB, label);
-        plot(new_treeA,new_treeB,"K_plus_TRACK_GhostProb","ghost prob (K^{+})",nBins,0,0.4,weightA, weightB, newWeightB, label);
+//         plot(new_treeA,new_treeB,"K_plus_PT","p_{T}(K^{+}) [MeV]",nBins,0,10000,weightA, weightB, newWeightB, label);
+//         plot(new_treeA,new_treeB,"K_plus_ETA","#eta(K^{+})",nBins,1,6,weightA, weightB, newWeightB, label);
+//         plot(new_treeA,new_treeB,"K_plus_IPCHI2_OWNPV","#chi^{2}_{IP}(K^{+})",nBins,0,10000,weightA, weightB, newWeightB, label,true);
+//         plot(new_treeA,new_treeB,"K_plus_PIDK","DLL_{K#pi}(K^{+}) ",nBins,-20,100,weightA, weightB, newWeightB, label);
+//         plot(new_treeA,new_treeB,"K_plus_TRACK_GhostProb","ghost prob (K^{+})",nBins,0,0.4,weightA, weightB, newWeightB, label);
         //plot(new_treeA,new_treeB,"K_plus_ProbNNghost","ghost prob (K^{+})",nBins,0,0.4,weightA, weightB, newWeightB, label);
 
-        plot(new_treeA,new_treeB,"pi_plus_PT","p_{T}(#pi^{+}) [MeV]",nBins,0,10000,weightA, weightB, newWeightB, label);
-        plot(new_treeA,new_treeB,"pi_plus_ETA","#eta(#pi^{+})",nBins,1,6,weightA, weightB, newWeightB, label);
-        plot(new_treeA,new_treeB,"pi_plus_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{+})",nBins,0,10000,weightA, weightB, newWeightB, label,true);
-        plot(new_treeA,new_treeB,"pi_plus_PIDK","DLL_{K#pi}(#pi^{+}) ",nBins,-100,100,weightA, weightB, newWeightB, label);
+//         plot(new_treeA,new_treeB,"pi_plus_PT","p_{T}(#pi^{+}) [MeV]",nBins,0,10000,weightA, weightB, newWeightB, label);
+//         plot(new_treeA,new_treeB,"pi_plus_ETA","#eta(#pi^{+})",nBins,1,6,weightA, weightB, newWeightB, label);
+//         plot(new_treeA,new_treeB,"pi_plus_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{+})",nBins,0,10000,weightA, weightB, newWeightB, label,true);
+//         plot(new_treeA,new_treeB,"pi_plus_PIDK","DLL_{K#pi}(#pi^{+}) ",nBins,-100,100,weightA, weightB, newWeightB, label);
         //plot(new_treeA,new_treeB,"pi_plus_TRACK_GhostProb","ghost prob (#pi^{+})",nBins,0,0.4,weightA, weightB, newWeightB, label);
 
-        plot(new_treeA,new_treeB,"pi_minus_PT","p_{T}(#pi^{-}) [MeV]",nBins,0,10000,weightA, weightB, newWeightB, label);
-        plot(new_treeA,new_treeB,"pi_minus_ETA","#eta(#pi^{-})",nBins,1,6,weightA, weightB, newWeightB, label);
-        plot(new_treeA,new_treeB,"pi_minus_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{-})",nBins,0,10000,weightA, weightB, newWeightB, label,true);
-        plot(new_treeA,new_treeB,"pi_minus_PIDK","DLL_{K#pi}(#pi^{-}) ",nBins,-100,100,weightA, weightB, newWeightB, label);
+//         plot(new_treeA,new_treeB,"pi_minus_PT","p_{T}(#pi^{-}) [MeV]",nBins,0,10000,weightA, weightB, newWeightB, label);
+//         plot(new_treeA,new_treeB,"pi_minus_ETA","#eta(#pi^{-})",nBins,1,6,weightA, weightB, newWeightB, label);
+//         plot(new_treeA,new_treeB,"pi_minus_IPCHI2_OWNPV","#chi^{2}_{IP}(#pi^{-})",nBins,0,10000,weightA, weightB, newWeightB, label,true);
+//         plot(new_treeA,new_treeB,"pi_minus_PIDK","DLL_{K#pi}(#pi^{-}) ",nBins,-100,100,weightA, weightB, newWeightB, label);
         //plot(new_treeA,new_treeB,"pi_minus_TRACK_GhostProb","ghost prob (#pi^{-})",nBins,0,0.4,weightA, weightB, newWeightB, label);
     }   
     else if(Decay == "norm") {
@@ -1212,11 +1212,11 @@ void rescaleMC(string fileA, string fileB){
     tree->SetBranchStatus("year",1);
     tree->SetBranchStatus("run",1);
     tree->SetBranchStatus("TriggerCat",1);
-    tree->SetBranchStatus("weight",1);
+    tree->SetBranchStatus("weight*",1);
 
     double sw;
     int Ds_finalState, year, trigger, run;
-    tree->SetBranchAddress("weight",&sw);
+    tree->SetBranchAddress("weight_rw",&sw);
     tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
     tree->SetBranchAddress("year",&year);
     tree->SetBranchAddress("run",&run);
@@ -1238,6 +1238,7 @@ void rescaleMC(string fileA, string fileB){
     double sumTrigger1 = 0;
 
     TH3D* h = new TH3D("","",2,-0.5,1.5,2,0.5,2.5,5,-0.5,4.5);
+    TH2D* h2 = new TH2D("","",2,-0.5,1.5,2,0.5,2.5);
 
     for (int i = 0; i < tree->GetEntries(); i++){
     
@@ -1262,7 +1263,7 @@ void rescaleMC(string fileA, string fileB){
 	if(trigger==1)sumTrigger1 += sw;
 
 	h->Fill((double)trigger,(double)run,(double)Ds_finalState,sw);
-
+	h2->Fill((double)trigger,(double)run,sw);
     }
 
     TFile* f2 = new TFile(fileB.c_str(),"OPEN");
@@ -1298,6 +1299,7 @@ void rescaleMC(string fileA, string fileB){
     double sumTrigger1_data = 0;
 
     TH3D* h_data = new TH3D("","",2,-0.5,1.5,2,0.5,2.5,5,-0.5,4.5);
+    TH2D* h2_data = new TH2D("","",2,-0.5,1.5,2,0.5,2.5);
 
     for (int i = 0; i < tree2->GetEntries(); i++){
     
@@ -1323,6 +1325,7 @@ void rescaleMC(string fileA, string fileB){
 	if(trigger==1)sumTrigger1_data += sw;
 
 	h_data->Fill((double)trigger,(double)run,(double)Ds_finalState,sw);
+	h2_data->Fill((double)trigger,(double)run,sw);
     }
 
     double scaleRun1 = sumRun1_data/sumw_data / (sumRun1/sumw);
@@ -1339,9 +1342,13 @@ void rescaleMC(string fileA, string fileB){
 
     h->Scale(1./h->Integral());
     h_data->Scale(1./h_data->Integral());
-
     TH3D *h_weight =(TH3D *)h->Clone();
     h_weight->Divide(h_data,h);
+
+    h2->Scale(1./h2->Integral());
+    h2_data->Scale(1./h2_data->Integral());
+    TH2D *h2_weight =(TH2D *)h2->Clone();
+    h2_weight->Divide(h2_data,h2);
 
     TFile* output=new TFile( ((TString)fileA).ReplaceAll(".root","_scaled.root"),"RECREATE");
     double weight_scaled;
@@ -1368,8 +1375,10 @@ void rescaleMC(string fileA, string fileB){
     tree->SetBranchStatus("Bs_DTF_MM*",1);
     tree->SetBranchStatus("*DIRA*",1);
 
+    tree->SetBranchStatus("weight",0);
     TTree* new_tree = tree->CopyTree("");
-    TBranch* b_weight_scaled = new_tree->Branch("weight_scaled", &weight_scaled, "weight_scaled/D");
+    TBranch* b_weight_scaled = new_tree->Branch("weight", &weight_scaled, "weight/D");
+    tree->SetBranchStatus("weight",1);
 
     double sumw_new = 0;
     double sumw2_new = 0;
@@ -1379,7 +1388,8 @@ void rescaleMC(string fileA, string fileB){
         tree->GetEntry(i);
 	
 	weight_scaled = sw;
-	weight_scaled *= h_weight->GetBinContent(h_weight->FindBin((double)trigger,(double)run,(double)Ds_finalState));
+// 	weight_scaled *= h_weight->GetBinContent(h_weight->FindBin((double)trigger,(double)run,(double)Ds_finalState));
+	weight_scaled *= h2_weight->GetBinContent(h2_weight->FindBin((double)trigger,(double)run));
 
 	sumw_new += weight_scaled;
 	sumw2_new += weight_scaled*weight_scaled;
@@ -1692,7 +1702,7 @@ int main(int argc, char** argv){
 						
     /// Draw comparison plots 
     for(int i= 0; i < years.size(); i++) for(int j= 0; j < Ds_finalStates.size(); j++)for(int k= 0; k < trigger.size(); k++){ 
-        compare((string) ReweightToB, (string) ReweightFromA, (string) weightVarB, (string) weightVarA, (string) newWeightVarA, (string) cutB, (string) cutA, years[i], Ds_finalStates[j],trigger[k]);
+//         compare((string) ReweightToB, (string) ReweightFromA, (string) weightVarB, (string) weightVarA, (string) newWeightVarA, (string) cutB, (string) cutA, years[i], Ds_finalStates[j],trigger[k]);
     }
 
     cout << "==============================================" << endl;

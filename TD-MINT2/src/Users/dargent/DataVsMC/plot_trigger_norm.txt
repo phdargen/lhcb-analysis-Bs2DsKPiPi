@@ -1,20 +1,20 @@
 * reweighting
 
-"ReweightFromA"		"../Files/Final/Data/norm.root"
-"ReweightToB"		"../Files/Final/Data/norm.root"
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm_tagged.root"
+"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm_tagged.root"
 "ApplyWeightToC"	""
 
 "OutputDir"		"trigger_norm/"
 
 "legTitle"	"B_{s}#rightarrowD_{s}#pi#pi#pi Data"
-"nameA"		"L0_Hadron_TOS"
+"nameA"		"L0-TOS"
 "weightVarA"	"N_Bs_sw"
 "newWeightVarA"	"noweight"
-"cutA"		"Bs_L0HadronDecision_TOS"
+"cutA"		"TriggerCat == 0"
 
-"nameB"		"!L0_Hadron_TOS"
+"nameB"		"L0-TIS"
 "weightVarB"	"N_Bs_sw"
-"cutB"		"!Bs_L0HadronDecision_TOS"
+"cutB"		"TriggerCat == 1"
 
 "weightVarC"	"noweight"
 "newWeightVarC"	"noweight"

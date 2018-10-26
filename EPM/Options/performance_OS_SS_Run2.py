@@ -50,8 +50,8 @@ UseTauErr = 1
 TypeTauErr = "Double_t"
 BranchTauErr = "Bs_BsDTF_TAUERR"
 
-ResolutionGaussian1_A = 0.0097
-ResolutionGaussian1_B = 0.915
+ResolutionGaussian1_A = 0.0076
+ResolutionGaussian1_B = 0.958
 
 DrawOscillationPlots = 1
 #OscillationPlotsMaximum = 1.1

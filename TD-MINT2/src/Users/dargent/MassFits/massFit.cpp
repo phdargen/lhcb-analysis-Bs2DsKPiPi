@@ -842,29 +842,47 @@ vector<double> fitSignalShape(TString channel = "signal"){
 
 	/// Load file
 	TString inFileName = "/auto/data/dargent/BsDsKpipi/BDT/MC/"+channel+".root";
-	TChain* tree = new TChain("DecayTree");	
-	if(fitPreselected) {
-		tree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/"+channel+"_Ds2*pi_11.root");
-		tree->Add("/auto/data/dargent/BsDsKpipi/Preselected/MC/"+channel+"_Ds2*pi_12.root");
-	}
-	else tree->Add(inFileName);
+	TFile* f = new TFile(inFileName);
+	TTree* tree = (TTree*) f->Get("DecayTree");
 
 	if(!sWeight){
-		tree->SetBranchStatus("*",0);
-		tree->SetBranchStatus("Bs_BKGCAT",1);
-		tree->SetBranchStatus("Bs_TRUEID",1);
-		tree->SetBranchStatus("Bs_DTF_MM",1);
-		if(!fitPreselected)tree->SetBranchStatus("BDTG",1);
-		tree->SetBranchStatus("Ds_finalState",1);
-		tree->SetBranchStatus("run",1);
-		tree->SetBranchStatus("year",1);
-		tree->SetBranchStatus("TriggerCat",1);
+			tree->SetBranchStatus("*",0);
+			tree->SetBranchStatus("Bs_BKGCAT",1);
+			tree->SetBranchStatus("Bs_TRUEID",1);
+			tree->SetBranchStatus("Bs_DTF_MM",1);
+			if(!fitPreselected)tree->SetBranchStatus("BDTG",1);
+			tree->SetBranchStatus("Ds_finalState",1);
+			tree->SetBranchStatus("run",1);
+			tree->SetBranchStatus("year",1);
+			tree->SetBranchStatus("TriggerCat",1);
+	}
+	else {
+		    	tree->SetBranchStatus("*ENDVERTEX*",0);
+			tree->SetBranchStatus("*OWNPV*",0);
+			tree->SetBranchStatus("*ORIVX*",0);
+			tree->SetBranchStatus("*TOPPV*",0);
+			tree->SetBranchStatus("*TRUE*VERTEX*",0);
+			tree->SetBranchStatus("Bs_*_DEC",0);
+			tree->SetBranchStatus("Bs_*_PROB",0);
+			tree->SetBranchStatus("Bs_B0DTF_*",0);
+			tree->SetBranchStatus("Bs_DTF_*",0);
+			tree->SetBranchStatus("Bs_BsDTF_*",0);
+			tree->SetBranchStatus("Bs_PV_*",0);
+			tree->SetBranchStatus("*BsTaggingTool*",0);
+			tree->SetBranchStatus("*_PP_*",0);
+			tree->SetBranchStatus("*ProtoParticles*",0);
+			tree->SetBranchStatus("*gen*",0);
+			tree->SetBranchStatus("*corr*",0);
+			tree->SetBranchStatus("*CHI2*",1);
+			tree->SetBranchStatus("*TAU*",1);
+			tree->SetBranchStatus("Bs_DTF_MM*",1);
+			tree->SetBranchStatus("*DIRA*",1);
 	}
 	tree->SetBranchStatus("weight",0);
 
 	TFile* output;
 	if(!sWeight || fitPreselected) output = new TFile("dummy.root","RECREATE");
-	else output = new TFile(inFileName.ReplaceAll("/BDT/","/Final/"),"RECREATE");
+	else output = new TFile((inFileName.ReplaceAll("/BDT/","/Final/")).ReplaceAll(".root",".root"),"RECREATE");
 
 	TTree* out_tree;
 	if(fitPreselected)out_tree = tree->CopyTree(("Bs_DTF_MM >= " + anythingToString((double)min_MM) + " && Bs_DTF_MM <= " + anythingToString((double)max_MM) ).c_str() );
@@ -876,6 +894,12 @@ vector<double> fitSignalShape(TString channel = "signal"){
 	out_tree->SetBranchAddress("Bs_BKGCAT",&BKGCAT);
 	out_tree->SetBranchAddress("Bs_TRUEID",&Bs_TRUEID);
     	TBranch* b_w = out_tree->Branch("weight", &sw, "weight/D");
+
+	out_tree->SetBranchStatus("*",0);
+	out_tree->SetBranchStatus("Bs_BKGCAT",1);
+	out_tree->SetBranchStatus("bkgCAT",1);
+	out_tree->SetBranchStatus("weight",1);
+	out_tree->SetBranchStatus("Bs_DTF_MM",1);
 
 	for(int i= 0; i< out_tree->GetEntries();i++){
 		out_tree->GetEntry(i);
@@ -1093,6 +1117,7 @@ vector<double> fitSignalShape(TString channel = "signal"){
 
 	cout << endl << "Fraction of signal classified as ghosts = " << n_sig_ghost.getVal()/(n_sig.getVal()+n_sig_ghost.getVal()) << endl;
 
+	out_tree->SetBranchStatus("*",1);
 	out_tree->Write();
 	output->Close();
 	return params;

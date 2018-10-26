@@ -1,24 +1,23 @@
 * reweighting
 
-"ReweightFromA"		"norm_scaled.root"
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/MC/norm_PIDGen.root"
 "ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
-*"ApplyWeightToC"	"/auto/data/dargent/BsDsKpipi/Final/MC/signal.root"
+"ApplyWeightToC"	"/auto/data/dargent/BsDsKpipi/Final/MC/signal_PIDGen.root"
 
 "OutputDir"		"norm_final/"
 
 "legTitle"	"B_{s}#rightarrowD_{s}#pi#pi#pi"
 "nameA"		"MC"
 "weightVarA"	"weight"
-"newWeightVarA"	"weight_scaled_rw6"   * must not exist !
-
+"newWeightVarA"	"weight_rw"   * must not exist !
 
 "nameB"		"Data"
 "weightVarB"	"N_Bs_sw"
 
 "weightVarC"	"weight"
-"newWeightVarC"	"weight3"
+"newWeightVarC"	"weight_rw"
 
-"reweight"	0
+"reweight"	1
 "reweightInBinsOfRun"    	 -1
 "reweightInBinsOfFinalState"	 0
 "reweightInBinsOfTrigger"	 0

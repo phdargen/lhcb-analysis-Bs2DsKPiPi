@@ -50,9 +50,10 @@ UseTauErr = 1
 TypeTauErr = "Double_t"
 BranchTauErr = "Bs_BsDTF_TAUERR"
 
-ResolutionGaussian1_A = 0.0097
-ResolutionGaussian1_B = 0.915
-
+ResolutionGaussian1_A = 0.0076
+ResolutionGaussian1_B = 0.958
+#ResolutionGaussian1_A = 0.0097
+#ResolutionGaussian1_B = 0.915
 DrawOscillationPlots = 1
 #OscillationPlotsMaximum = 1.1
 
@@ -106,11 +107,11 @@ VtxCharge_BranchProb = "OS_VtxCharge_PROB"
 #SS_Kaon_BranchProb  = "Bs_SS_Kaon_PROB"
 
 ## BUGGY ?
-#OS_Charm_Use = 1
-#OS_Charm_TypeDec = "Short_t"
-#OS_Charm_BranchDec = "Bs_OS_Charm_DEC"
-#OS_Charm_TypeProb = "Float_t"
-#OS_Charm_BranchProb = "Bs_OS_Charm_PROB"
+OS_Charm_Use = 1
+OS_Charm_TypeDec = "Int_t"
+OS_Charm_BranchDec = "OS_Charm_DEC"
+OS_Charm_TypeProb = "Double_t"
+OS_Charm_BranchProb = "OS_Charm_PROB"
 
 #OS_Combination_Use  = 1
 #OS_Combination_TypeDec	= "Int_t"
@@ -158,4 +159,5 @@ OS_Muon_CalibrationArchive = "out_OS_Run2/OS_Muon_Calibration.xml"
 OS_Electron_CalibrationArchive = "out_OS_Run2/OS_Electron_Calibration.xml"
 OS_nnetKaon_CalibrationArchive = "out_OS_Run2/OS_nnetKaon_Calibration.xml"
 VtxCharge_CalibrationArchive = "out_OS_Run2/VtxCharge_Calibration.xml"
+OS_Charm_CalibrationArchive = "out_OS_Run2/OS_Charm_Calibration.xml"
 

@@ -1,0 +1,38 @@
+* reweighting
+
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_LTU.root"
+"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root"
+"ApplyWeightToC"	""
+
+"OutputDir"		"LTU/combined/"
+
+"legTitle"	"LHCb Data"
+"nameA"		"prompt-D_{s}"
+"weightVarA"	"weight"
+"newWeightVarA"	"weight2"
+
+"nameB"		"B_{s}#rightarrowD_{s}K#pi#pi"
+"weightVarB"	"N_Bs_sw"
+
+"weightVarC"	"noweight"
+"newWeightVarC"	"noweight"
+
+"reweight"	0
+"reweightInBinsOfRun"    	 1
+"reweightInBinsOfFinalState"	 0
+"reweightInBinsOfTrigger"	 0
+"maxWeight"	10
+"nIterations"   1
+"minEventsPerBin"  150
+"maxBinsPerDim"    200
+
+"reweightVarSet1"	 0
+"reweightVarSet2"	 0
+"reweightVarSet3"	 1
+"reweightVarSet4"	 0
+"reweightVarSet5"	 0
+
+* plotting MC vs Data
+"nBins"		 40
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		1

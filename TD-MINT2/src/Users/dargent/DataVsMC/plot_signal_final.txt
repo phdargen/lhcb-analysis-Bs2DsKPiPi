@@ -10,7 +10,7 @@
 
 "nameA"		"MC"
 "weightVarA"	"weight"
-"newWeightVarA"	"weight3"
+"newWeightVarA"	"weight_rw"
 "cutA"		""
 
 "nameB"		"Data"
@@ -20,8 +20,8 @@
 "newWeightVarC"	""
 
 "reweight"	0
-"reweightInBinsOfRun"    	 1
-"reweightInBinsOfFinalState"	 1
+"reweightInBinsOfRun"    	 -1
+"reweightInBinsOfFinalState"	 0
 "reweightInBinsOfTrigger"	 0
 "maxWeight"	10
 "nIterations"   1

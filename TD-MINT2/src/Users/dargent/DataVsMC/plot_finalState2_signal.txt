@@ -1,0 +1,43 @@
+* reweighting
+
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_tagged.root"
+"ReweightToB"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_tagged.root"
+"ApplyWeightToC"	""
+
+"OutputDir"		"finalState2_signal/"
+
+"legTitle"	"B_{s}#rightarrowD_{s}K#pi#pi Data"
+"nameA"		"D_{s}#rightarrowK#pi#pi"
+"weightVarA"	"N_Bs_sw"
+"newWeightVarA"	"noweight"
+"cutA"		"Ds_finalState == 4"
+
+"nameB"		"D_{s}#rightarrowKK#pi"
+"weightVarB"	"N_Bs_sw"
+"cutB"		"Ds_finalState < 3"
+
+"weightVarC"	"noweight"
+"newWeightVarC"	"noweight"
+
+"reweight"	0
+"reweightInBinsOfRun"    	 -1
+"reweightInBinsOfFinalState"	 0
+"reweightInBinsOfTrigger"	0
+
+"maxWeight"	10
+"nIterations"   1
+"minEventsPerBin"  250
+"maxBinsPerDim"    200
+
+"reweightVarSet1"	 0
+"reweightVarSet2"	 0
+"reweightVarSet3"	 1
+"reweightVarSet4"	 0
+"reweightVarSet5"	 0
+
+
+
+* plotting MC vs Data
+"nBins"		 40
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		1
