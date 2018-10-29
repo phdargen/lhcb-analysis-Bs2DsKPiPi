@@ -613,12 +613,13 @@ vector<double> fitPartRecoBkgShape(){
 	TCanvas* c1= new TCanvas("");
 	RooPlot* frame_m= Bs_MM.frame();
 	frame_m->SetTitle("");
+        frame_m->GetYaxis()->SetTitle("Yield (norm.)");
         frame_m->GetXaxis()->SetTitle("m(D_{s}^{-}#pi^{+}#pi^{+}#pi^{-}) [MeV/c^{2}]");
 	data->plotOn(frame_m,Name("data"),MarkerSize(1),Binning(50));
 	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlue),LineWidth(3));
-	pdf->plotOn(frame_m,Components(BifGauss1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
-	pdf->plotOn(frame_m,Components(BifGauss2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
-	pdf->plotOn(frame_m,Components(BifGauss3),LineColor(kGreen),LineStyle(kDashed),LineWidth(1));
+// 	pdf->plotOn(frame_m,Components(BifGauss1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
+// 	pdf->plotOn(frame_m,Components(BifGauss2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
+// 	pdf->plotOn(frame_m,Components(BifGauss3),LineColor(kGreen),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
 	c1->Print("eps/BkgShape/Bs2Dsstartpipipi.eps");
 	if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dsstartpipipi.pdf");
@@ -844,6 +845,7 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
 	TCanvas* c1= new TCanvas("");
 	RooPlot* frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
+        frame_m->GetYaxis()->SetTitle("Yield (norm.)");
         frame_m->GetXaxis()->SetTitle("m(D_{s}^{-}#pi^{+}_{K}#pi^{+}#pi^{-}) [MeV/c^{2}]");
 	data->plotOn(frame_m,Name("data"),MarkerSize(1),Binning(40));
 	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlue),LineWidth(3));
@@ -2666,7 +2668,7 @@ void fitSignal(){
 	RooFormulaVar mean_B0("mean_B0","@0 - @1", RooArgSet(mean,RooConst(87.33))); 
 	RooRealVar scale_sigma_B0("scale_sigma_B0", "scale_sigma_B0", 1.,0.,2.);
 	RooFormulaVar sigma_B0("sigma_B0","@0 * @1", RooArgSet(scale_sigma_B0,sigma)); 
-	RooFormulaVar sigma2_B0("sigma_B0","@0 * @1", RooArgSet(scale_sigma_B0,sigma2)); 
+	RooFormulaVar sigma2_B0("sigma2_B0","@0 * @1", RooArgSet(scale_sigma_B0,sigma2)); 
 	RooRealVar alpha_B0("alpha_B0", "alpha_B0", sig_params[2],-1,1); 
 	RooRealVar beta_B0("beta_B0", "beta_B0", sig_params[3]); 
 
