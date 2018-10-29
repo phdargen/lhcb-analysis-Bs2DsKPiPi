@@ -169,6 +169,7 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi", int run = 1){
 	}
 
 	double eff = 0;
+	double eff_err = 0;
 	double eff_0 = 0;
 	double eff_1 = 0;
 	double eff_2 = 0;
@@ -210,6 +211,7 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi", int run = 1){
 		if(fake_m_Kpipi < 1900. && fake_m_Kpi < 1200. && fake_m_pipi < 1200.) { 
 			if(fake_Bs_MM > min_MM && fake_Bs_MM < max_MM){
 				eff += EventWeight;
+				eff_err += EventWeight * EventWeight;
 				if(Ds_finalState == 0) eff_0 += EventWeight;
 				if(Ds_finalState == 1) eff_1 += EventWeight;
 				if(Ds_finalState == 2) eff_2 += EventWeight;
@@ -227,7 +229,9 @@ double prepareMisIdBkgShape(TString channel = "Dstar3pi", int run = 1){
 	}
 
 	double fake_prob = eff/calib_tree->GetEntries();
-	cout << "Fake prob. for " << channel << " = " << fake_prob * 100. << " % " << endl;
+	double fake_prob_err = sqrt(eff_err)/calib_tree->GetEntries();
+
+	cout << "Fake prob. for " << channel << " = " << fake_prob * 100. << " pm " << fake_prob_err * 100. << " % " << endl;
 	cout << "Now for different Ds final states :" << endl;
 	cout << eff_0/n_0 * 100. << " % " << endl;
 	cout << eff_1/n_1 * 100. << " % " << endl;
@@ -656,23 +660,31 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 	RooRealVar Bs_MM("Bs_MM", "m(D_{s}^{-} K^{+}#pi^{-}#pi^{-})", 5320., 5420.,"MeV/c^{2}");
 
 	//mean of crrystal balls
-	RooRealVar mean1("mean1","mu", 5444.,5400.,5490.);
-	RooRealVar mean2("mean2","mu", 5517.,5450.,5650.);
+	RooRealVar mean1("mean1","mu1", 5444.,5400.,5490.);
+	RooRealVar mean2("mean2","mu2", 5517.,5450.,5650.);
+	RooRealVar mean3("mean3","mu3", 5617.,5450.,5650.);
+
 	// asymmetry parameter of crystsal balls
 	RooRealVar a1("a1","a1",-1.5, -4.,3.);
 	RooRealVar a2("a2","a2",-0.6, -1.5,1.5);
+	RooRealVar a3("a3","a3",-0.6, -1.5,1.5);
 	RooRealVar n1("n1","n1",0.3, 0.,2.);
 	RooRealVar n2("n2","n2",10., 0.,200.);
+	RooRealVar n3("n3","n3",10., 0.,200.);
 	//sigma of crystal balls
 	RooRealVar sigma1("sigma_{1}", "sigma1", 24.,5.,300.);
 	RooRealVar sigma2("sigma_{2}", "sigma2", 89.,5.,300.);
+	RooRealVar sigma3("sigma_{3}", "sigma3", 89.,5.,300.);
 	//crystal Balls
 	RooCBShape CB1("CB1", "CB1", Bs_Mass, mean1, sigma1, a1, n1);
 	RooCBShape CB2("CB2", "CB2", Bs_Mass, mean2, sigma2, a2, n2);
+	RooCBShape CB3("CB3", "CB3", Bs_Mass, mean3, sigma3, a3, n3);
+
 	//fraction of crystal balls
 	RooRealVar f_1("f_{1}", "fraction1", 0.5, 0., 1.);
+	RooRealVar f_2("f_{2}", "fraction2", 0.1, 0., 1.);
 	//add all gaussians
-	RooAbsPdf* pdf=new RooAddPdf("BkgShape", "BkgShape", RooArgList(CB1, CB2), RooArgList(f_1));
+	RooAbsPdf* pdf=new RooAddPdf("BkgShape", "BkgShape", RooArgList(CB1, CB2,CB3), RooArgList(f_1,f_2),kTRUE);
 	
 	///Load file
 	TFile* file;
@@ -711,8 +723,8 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 
 	data->plotOn(frame_m,Name("data"),MarkerSize(1),Binning(40),DataError(RooAbsData::SumW2));
 	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlue),LineWidth(3));
-	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
-	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
+// 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
+// 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
 	c1->Print(("eps/BkgShape/Bs2Dspipipi_as_DsKpipi_Run"+anythingToString(run)+".eps").c_str());
 	if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dspipipi_as_DsKpipi.pdf");
@@ -758,6 +770,12 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 	params.push_back(sigma1.getVal());
 	params.push_back(sigma2.getVal());
 	params.push_back(f_1.getVal());
+
+	params.push_back(mean3.getVal());
+	params.push_back(a3.getVal());
+	params.push_back(n3.getVal());
+	params.push_back(sigma3.getVal());
+	params.push_back(f_2.getVal());
 
 	return params;
 }
@@ -829,8 +847,8 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
         frame_m->GetXaxis()->SetTitle("m(D_{s}^{-}#pi^{+}_{K}#pi^{+}#pi^{-}) [MeV/c^{2}]");
 	data->plotOn(frame_m,Name("data"),MarkerSize(1),Binning(40));
 	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlue),LineWidth(3));
-	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
-	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
+// 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
+// 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
 	c1->Print(("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_Run"+anythingToString(run)+".eps").c_str());
 	if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dsstarpipipi_as_DsKpipi.pdf");
@@ -887,6 +905,7 @@ vector<double> fitSignalShape(TString channel = "signal"){
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 	NamedParameter<int> fitPreselected("fitPreselected", 0);
 	NamedParameter<int> sWeight("sWeightMC", 0);
+	NamedParameter<int> useDoubleRJ("useDoubleRJ", 1);
 	double min_MM = 5320. ;
 	double max_MM = 5420. ;
 
@@ -974,9 +993,23 @@ vector<double> fitSignalShape(TString channel = "signal"){
 	/// Signal pdf
 	RooRealVar mean("mean", "mean", 5366.89,5350.,5390.); 
 	RooRealVar sigma("sigma", "sigma", 20.,0.,80.); 
+	RooRealVar sigma2("sigma2", "sigma2", 50.,0.,80.); 
 	RooRealVar gamma("gamma", "gamma", -0.5,-5,5.); 
 	RooRealVar delta("delta", "delta", 0.5,-5,5.); 
-	RooJohnsonSU* signal= new RooJohnsonSU("signal","signal",DTF_Bs_M, mean,sigma,gamma,delta);
+	RooRealVar gamma2("gamma2", "gamma2", -0.5,-5,5.); 
+	RooRealVar delta2("delta2", "delta2", 0.5,-5,5.); 
+// 	RooJohnsonSU* signal= new RooJohnsonSU("signal","signal",DTF_Bs_M, mean,sigma,gamma,delta);
+	RooJohnsonSU* signal1= new RooJohnsonSU("signal1","signal1",DTF_Bs_M, mean,sigma,gamma,delta);
+	RooJohnsonSU* signal2= new RooJohnsonSU("signal2","signal2",DTF_Bs_M, mean,sigma2,gamma2,delta2);
+	RooRealVar f1("f1", "f1", 0.9);
+	RooAddPdf* signal = new RooAddPdf("signal", "signal", RooArgList(*signal1,*signal2), RooArgList(f1));
+	if(!useDoubleRJ){
+		f1.setVal(1);
+		f1.setConstant();
+		sigma2.setConstant();
+		gamma2.setConstant();
+		delta2.setConstant();
+	}
 
 	RooRealVar mean_ghost("mean_ghost", "mean_ghost", 5366.89,5350.,5390.); 
 	RooRealVar sigma_ghost("sigma_ghost", "sigma_ghost", 20.,0.,80.); 
@@ -1164,6 +1197,10 @@ vector<double> fitSignalShape(TString channel = "signal"){
 	params.push_back(sigma.getVal());
 	params.push_back(gamma.getVal());
 	params.push_back(delta.getVal());
+	params.push_back(sigma2.getVal());
+	params.push_back(gamma2.getVal());
+	params.push_back(delta2.getVal());
+	params.push_back(f1.getVal());
 
 	cout << endl << "Fraction of signal classified as ghosts = " << n_sig_ghost.getVal()/(n_sig.getVal()+n_sig_ghost.getVal()) << endl;
 
@@ -1535,6 +1572,7 @@ vector< vector<double> > fitNorm(){
 
 	/// Options
 	NamedParameter<int> useCBSignal("useCBSignal", 0);
+	NamedParameter<int> useDoubleRJ("useDoubleRJ", 1);
 	NamedParameter<int> fixExpBkgFromSidebands("fixExpBkgFromSidebands", 0);
 	NamedParameter<int> useExpBkgShape("useExpBkgShape", 0);
         NamedParameter<int> ignorePartRecoBkg("ignorePartRecoBkg", 0);
@@ -1617,20 +1655,38 @@ vector< vector<double> > fitNorm(){
 	vector<double> sig_params = fitSignalShape("norm");
 	RooRealVar mean_MC("mean_MC", "#mu MC", sig_params[0]); 
 	RooRealVar sigma_MC("sigma_MC", "#sigma MC", sig_params[1]);
+	RooRealVar sigma2_MC("sigma2_MC", "#sigma2 MC", sig_params[4]);
 	RooRealVar scale_mean("scale_mean", "scale #mu",1.,0.5,2.); 
 	RooRealVar scale_sigma("scale_sigma", "scale #sigma", 1.2, 0.5,2.);
+
 	RooFormulaVar mean("mean","@0 * @1", RooArgSet(scale_mean,mean_MC)); 
 	RooFormulaVar sigma("sigma","@0 * @1", RooArgSet(scale_sigma,sigma_MC)); 
+	RooFormulaVar sigma2("sigma2","@0 * @1", RooArgSet(scale_sigma,sigma2_MC)); 
+
 	RooRealVar alpha("alpha", "#alpha", sig_params[2],-5.,5.); 
-	RooRealVar beta("beta", "#beta", sig_params[3]);
+	RooRealVar beta("beta", "#beta", sig_params[3],-5.,5.);
+	RooRealVar alpha2("alpha2", "#alpha2", sig_params[5],-5.,5.); 
+	RooRealVar beta2("beta2", "#beta2", sig_params[6]);
+	RooRealVar f_RJ("f_RJ", "f_RJ", sig_params[7]);
+
 	if(fixSignalShapeFromMC){
 		alpha.setConstant();
+		alpha2.setConstant();
 		beta.setConstant();
+		beta2.setConstant();
 	} 
-	RooJohnsonSU signal_RJ("signal_RJ","signal_RJ",DTF_Bs_M, mean,sigma,alpha,beta);
+	if(!useDoubleRJ){
+		alpha2.setConstant();
+		beta2.setConstant();
+	}
+
+	RooJohnsonSU signal1_RJ("signal1_RJ","signal1_RJ",DTF_Bs_M, mean,sigma,alpha,beta);
+	RooJohnsonSU signal2_RJ("signal2_RJ","signal2_RJ",DTF_Bs_M, mean,sigma2,alpha2,beta2);
+	RooAddPdf signal_RJ("signal_RJ","signal_RJ",RooArgList(signal1_RJ,signal2_RJ),RooArgList(f_RJ));
+// 	RooJohnsonSU signal_RJ("signal_RJ","signal_RJ",DTF_Bs_M, mean,sigma,alpha,beta);
 
 	///Signal Pdf for Systematics
-	vector<double> sig_params_DCB = fitSignalShape_DCB("signal");
+	vector<double> sig_params_DCB = fitSignalShape_DCB("norm");
 
 	RooRealVar meanBs1("meanBs1","meanBs1", sig_params_DCB[0]);
 	RooRealVar sigmaBs1("sigmaBs1","sigmaBs1",sig_params_DCB[1]);
@@ -1658,7 +1714,9 @@ vector< vector<double> > fitNorm(){
 	/// add B⁰ -> D_s 3pi
 	RooRealVar mean_MC_B0("mean_MC_B0", " #mu MC_B0", (sig_params[0] - 87.42)); 
 	RooFormulaVar mean_B0("mean_B0","@0 * @1", RooArgSet(scale_mean,mean_MC_B0)); 
-	RooJohnsonSU signal_B0("signal_B0","signal_B0",DTF_Bs_M, mean_B0,sigma,alpha,beta);
+	RooJohnsonSU signal1_B0("signal1_B0","signal1_B0",DTF_Bs_M, mean_B0,sigma,alpha,beta);
+	RooJohnsonSU signal2_B0("signal2_B0","signal2_B0",DTF_Bs_M, mean_B0,sigma2,alpha2,beta2);
+	RooAddPdf signal_B0("signal_B0","signal_B0",RooArgList(signal1_B0,signal2_B0),RooArgList(f_RJ));
 
 	/// Combinatorial bkg pdf
 	RooRealVar exp_par("exp_par","exp_par",-1.6508e-03,-10.,10.);
@@ -2362,6 +2420,9 @@ vector< vector<double> > fitNorm(){
 	}
 	signal_params.push_back(alpha.getVal());
 	signal_params.push_back(beta.getVal());
+	signal_params.push_back(alpha2.getVal());
+	signal_params.push_back(beta2.getVal());
+	signal_params.push_back(f_RJ.getVal());
 
 	vector<double> partReco_params;
 
@@ -2517,6 +2578,13 @@ void fitSignal(){
 	NamedParameter<string> outFileName("outFileNameSignal",(string)"/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
 	NamedParameter<double> scale_misIDyield("scale_misIDyield", 1.);
 
+	NamedParameter<double> eff_phsp_Ds("eff_phsp_Ds", 0.822);
+	NamedParameter<double> eff_PID_Ds_Run1("eff_PID_Ds_Run1", 0.7712);
+	NamedParameter<double> eff_PID_Ds_Run2("eff_PID_Ds_Run2", 0.8097);
+	NamedParameter<double> eff_phsp_Dstar("eff_phsp_Dstar", 0.659);
+	NamedParameter<double> eff_PID_Dstar_Run1("eff_PID_Dstar_Run1", 0.7712);
+	NamedParameter<double> eff_PID_Dstar_Run2("eff_PID_Dstar_Run2", 0.8097);
+
 	///define categories
 	RooCategory year("year","year") ;
 	year.defineType("y11",11);
@@ -2578,24 +2646,34 @@ void fitSignal(){
 	vector<double> sig_params = fitSignalShape("signal");
 	RooRealVar mean_MC("mean_MC", "mean_MC", sig_params[0]); 
 	RooRealVar sigma_MC("sigma_MC", "sigma_MC", sig_params[1]);
+	RooRealVar sigma2_MC("sigma2_MC", "sigma2_MC", sig_params[4]);
 	RooRealVar scale_mean("scale_mean", "scale_mean",1.,0.,2. ); 
 	RooRealVar scale_sigma("scale_sigma", "scale_sigma", 1.,0.,2.);
 	RooFormulaVar mean("mean","@0 * @1", RooArgSet(scale_mean,mean_MC)); 
-	RooFormulaVar sigma("sigma","@0 * @1", RooArgSet(scale_sigma,sigma_MC)); 
-	RooRealVar alpha("alpha", "alpha", sig_params[2],-1,1); 
+	RooFormulaVar sigma("sigma","@0 * @1", RooArgSet(scale_sigma,sigma_MC));
+	RooFormulaVar sigma2("sigma2","@0 * @1", RooArgSet(scale_sigma,sigma2_MC)); 
+	RooRealVar alpha("alpha", "alpha", sig_params[2]); 
 	RooRealVar beta("beta", "beta", sig_params[3]); 
+	RooRealVar alpha2("alpha2", "alpha2", sig_params[5]); 
+	RooRealVar beta2("beta2", "beta2", sig_params[6]); 
+	RooRealVar f_RJ("f_RJ", "f_RJ", sig_params[7]);
 
-	RooJohnsonSU signal_RJ("signal_RJ","signal_RJ",DTF_Bs_M, mean,sigma,alpha,beta);
+// 	RooJohnsonSU signal_RJ("signal_RJ","signal_RJ",DTF_Bs_M, mean,sigma,alpha,beta);
+	RooJohnsonSU signal1_RJ("signal1_RJ","signal1_RJ",DTF_Bs_M, mean,sigma,alpha,beta);
+	RooJohnsonSU signal2_RJ("signal2_RJ","signal2_RJ",DTF_Bs_M, mean,sigma2,alpha2,beta2);
+	RooAddPdf signal_RJ("signal_RJ","signal_RJ",RooArgList(signal1_RJ,signal2_RJ),RooArgList(f_RJ));
 
 	/// B0 pdf
 	RooFormulaVar mean_B0("mean_B0","@0 - @1", RooArgSet(mean,RooConst(87.33))); 
 	RooRealVar scale_sigma_B0("scale_sigma_B0", "scale_sigma_B0", 1.,0.,2.);
 	RooFormulaVar sigma_B0("sigma_B0","@0 * @1", RooArgSet(scale_sigma_B0,sigma)); 
+	RooFormulaVar sigma2_B0("sigma_B0","@0 * @1", RooArgSet(scale_sigma_B0,sigma2)); 
 	RooRealVar alpha_B0("alpha_B0", "alpha_B0", sig_params[2],-1,1); 
 	RooRealVar beta_B0("beta_B0", "beta_B0", sig_params[3]); 
 
-	RooJohnsonSU signal_B0("signal_B0","signal_B0",DTF_Bs_M, mean_B0,sigma_B0,alpha,beta);
-
+	RooJohnsonSU signal1_B0("signal1_B0","signal1_B0",DTF_Bs_M, mean_B0,sigma_B0,alpha,beta);
+	RooJohnsonSU signal2_B0("signal2_B0","signal2_B0",DTF_Bs_M, mean_B0,sigma2_B0,alpha2,beta2);
+	RooAddPdf signal_B0("signal_B0","signal_B0",RooArgList(signal1_B0,signal2_B0),RooArgList(f_RJ));
 
 	///Signal Pdf for Systematics
 	vector<double> sig_params_DCB = fitSignalShape_DCB("signal");
@@ -2755,10 +2833,14 @@ void fitSignal(){
 	if(inverted_misID == 1){
 		fake_prob_Ds = prepareMisIdBkgShape_inverted("Ds3pi");
        		fake_prob_Dstar = prepareMisIdBkgShape_inverted("Dstar3pi");
+		fake_prob_Ds_Run2 = prepareMisIdBkgShape_inverted("Ds3pi",2);
+       		fake_prob_Dstar_Run2 = prepareMisIdBkgShape_inverted("Dstar3pi",2);
 	}
 	if(random_misID == 1){
 		fake_prob_Ds = prepareMisIdBkgShape_random("Ds3pi");
        		fake_prob_Dstar = prepareMisIdBkgShape_random("Dstar3pi");
+		fake_prob_Ds_Run2 = prepareMisIdBkgShape_random("Ds3pi",2);
+       		fake_prob_Dstar_Run2 = prepareMisIdBkgShape_random("Dstar3pi",2);
 	}
 
 	// Run 1
@@ -2774,9 +2856,17 @@ void fitSignal(){
 	RooRealVar misID_Ds3pi_sigma2("misID_Ds3pi_sigma2", "misID_Ds3pi_sigma2", bkg_misID_Ds3pi_params[7]);
 	RooRealVar misID_Ds3pi_f("misID_Ds3pi_f", "misID_Ds3pi_f", bkg_misID_Ds3pi_params[8]);
 
+	RooRealVar misID_Ds3pi_mean3("misID_Ds3pi_mean3","misID_Ds3pi_mean3", bkg_misID_Ds3pi_params[9]);
+	RooRealVar misID_Ds3pi_a3("misID_Ds3pi_a3","misID_Ds3pi_a3",bkg_misID_Ds3pi_params[10]);
+	RooRealVar misID_Ds3pi_n3("misID_Ds3pi_n3","misID_Ds3pi_n3",bkg_misID_Ds3pi_params[11]);
+	RooRealVar misID_Ds3pi_sigma3("misID_Ds3pi_sigma3", "misID_Ds3pi_sigma3", bkg_misID_Ds3pi_params[12]);
+	RooRealVar misID_Ds3pi_f2("misID_Ds3pi_f2", "misID_Ds3pi_f2", bkg_misID_Ds3pi_params[13]);
+
 	RooCBShape misID_Ds3pi_CB1("misID_Ds3pi_CB1", "misID_Ds3pi_CB1", DTF_Bs_M, misID_Ds3pi_mean1, misID_Ds3pi_sigma1, misID_Ds3pi_a1, misID_Ds3pi_n1);
 	RooCBShape misID_Ds3pi_CB2("misID_Ds3pi_CB2", "misID_Ds3pi_CB2", DTF_Bs_M, misID_Ds3pi_mean2, misID_Ds3pi_sigma2, misID_Ds3pi_a2, misID_Ds3pi_n2);
-	RooAddPdf bkg_misID_Ds3pi_Run1("bkg_misID_Ds3pi_Run1", "bkg_misID_Ds3pi_Run1", RooArgList(misID_Ds3pi_CB1, misID_Ds3pi_CB2), RooArgList(misID_Ds3pi_f));
+	RooCBShape misID_Ds3pi_CB3("misID_Ds3pi_CB3", "misID_Ds3pi_CB3", DTF_Bs_M, misID_Ds3pi_mean3, misID_Ds3pi_sigma3, misID_Ds3pi_a3, misID_Ds3pi_n3);
+
+	RooAddPdf bkg_misID_Ds3pi_Run1("bkg_misID_Ds3pi_Run1", "bkg_misID_Ds3pi_Run1", RooArgList(misID_Ds3pi_CB1, misID_Ds3pi_CB2,misID_Ds3pi_CB3), RooArgList(misID_Ds3pi_f,misID_Ds3pi_f2),kTRUE);
 
 	// Run 2
 	bkg_misID_Ds3pi_params = fitMisIdBkgShape_Ds3pi(2);
@@ -2791,9 +2881,17 @@ void fitSignal(){
 	RooRealVar misID_Ds3pi_sigma2_Run2("misID_Ds3pi_sigma2_Run2", "misID_Ds3pi_sigma2_Run2", bkg_misID_Ds3pi_params[7]);
 	RooRealVar misID_Ds3pi_f_Run2("misID_Ds3pi_f_Run2", "misID_Ds3pi_f_Run2", bkg_misID_Ds3pi_params[8]);
 
+	RooRealVar misID_Ds3pi_mean3_Run2("misID_Ds3pi_mean3_Run2","misID_Ds3pi_mean3_Run2", bkg_misID_Ds3pi_params[9]);
+	RooRealVar misID_Ds3pi_a3_Run2("misID_Ds3pi_a3_Run2","misID_Ds3pi_a3_Run2",bkg_misID_Ds3pi_params[10]);
+	RooRealVar misID_Ds3pi_n3_Run2("misID_Ds3pi_n3_Run2","misID_Ds3pi_n3_Run2",bkg_misID_Ds3pi_params[11]);
+	RooRealVar misID_Ds3pi_sigma3_Run2("misID_Ds3pi_sigma3_Run2", "misID_Ds3pi_sigma3_Run2", bkg_misID_Ds3pi_params[12]);
+	RooRealVar misID_Ds3pi_f2_Run2("misID_Ds3pi_f2_Run2", "misID_Ds3pi_f2_Run2", bkg_misID_Ds3pi_params[13]);
+
 	RooCBShape misID_Ds3pi_CB1_Run2("misID_Ds3pi_CB1_Run2", "misID_Ds3pi_CB1_Run2", DTF_Bs_M, misID_Ds3pi_mean1_Run2, misID_Ds3pi_sigma1_Run2, misID_Ds3pi_a1_Run2, misID_Ds3pi_n1_Run2);
 	RooCBShape misID_Ds3pi_CB2_Run2("misID_Ds3pi_CB2_Run2", "misID_Ds3pi_CB2_Run2", DTF_Bs_M, misID_Ds3pi_mean2_Run2, misID_Ds3pi_sigma2_Run2, misID_Ds3pi_a2_Run2, misID_Ds3pi_n2_Run2);
-	RooAddPdf bkg_misID_Ds3pi_Run2("bkg_misID_Ds3pi_Run2", "bkg_misID_Ds3pi_Run2", RooArgList(misID_Ds3pi_CB1_Run2, misID_Ds3pi_CB2_Run2), RooArgList(misID_Ds3pi_f_Run2));
+	RooCBShape misID_Ds3pi_CB3_Run2("misID_Ds3pi_CB3_Run2", "misID_Ds3pi_CB3_Run2", DTF_Bs_M, misID_Ds3pi_mean3_Run2, misID_Ds3pi_sigma3_Run2, misID_Ds3pi_a3_Run2, misID_Ds3pi_n3_Run2);
+
+	RooAddPdf bkg_misID_Ds3pi_Run2("bkg_misID_Ds3pi_Run2", "bkg_misID_Ds3pi_Run2", RooArgList(misID_Ds3pi_CB1_Run2, misID_Ds3pi_CB2_Run2, misID_Ds3pi_CB3_Run2), RooArgList(misID_Ds3pi_f_Run2,misID_Ds3pi_f2_Run2),kTRUE);
 
 	// Run 1
 	vector<double> bkg_misID_Dsstar3pi_params = fitMisIdBkgShape_Dsstar3pi();
@@ -2902,10 +3000,11 @@ void fitSignal(){
 		}
 	}
 	if(useNormSignalShape){
-		alpha.setVal(scaleFactors[scaleFactors.size()-2]);
-		beta.setVal(scaleFactors[scaleFactors.size()-1]);
-		alpha.setConstant();
-		beta.setConstant();
+		alpha.setVal(scaleFactors[scaleFactors.size()-5]);
+		beta.setVal(scaleFactors[scaleFactors.size()-4]);
+		alpha2.setVal(scaleFactors[scaleFactors.size()-3]);
+		beta2.setVal(scaleFactors[scaleFactors.size()-2]);
+		f_RJ.setVal(scaleFactors[scaleFactors.size()-1]);
 	}
 
 	/// Fix misID yields 
@@ -2921,9 +3020,12 @@ void fitSignal(){
 			((RooRealVar*)fitParams->find("misID_Dsstar3pi_Run_"+ str_run[i]))->setVal(1.-i);
 			((RooRealVar*)fitParams->find("misID_Dsstar3pi_Run_"+ str_run[i]))->setConstant();
 
-			double fake_prob_Ds_val = (i==0) ? fake_prob_Ds : fake_prob_Ds_Run2;
-			double fake_prob_Dstar_val = (i==0) ? fake_prob_Dstar : fake_prob_Dstar_Run2;
-
+			double fake_prob_Ds_val = (i==0) ? fake_prob_Ds / eff_PID_Ds_Run1 : fake_prob_Ds_Run2 / eff_PID_Ds_Run2;
+			double fake_prob_Dstar_val = (i==0) ? fake_prob_Dstar / eff_PID_Dstar_Run1 : fake_prob_Dstar_Run2/ eff_PID_Dstar_Run2;
+		
+			fake_prob_Ds_val /= eff_phsp_Ds;
+			fake_prob_Dstar_val /= eff_phsp_Dstar;
+			
 			for(int j=0; j<str_Ds.size(); j++) for(int k=0; k<str_trigger.size(); k++){
 				double val = scale_misIDyield * (fake_prob_Ds_val * Ds_yields[counter] + fake_prob_Dstar_val * Dstar_yields[counter]/eff_bkg_partReco_inSigRange)   ;
 				((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->setVal(val);

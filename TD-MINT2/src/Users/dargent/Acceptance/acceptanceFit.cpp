@@ -94,14 +94,14 @@ double dgamma_B0 = 0.0;
 double deltaMd = 0.0;
 
 /// MC values (old decFile)
-double tau_MC = 1.510; 
-double dgamma_MC = .09166; 
-double deltaMs_MC = 17.8;  
+// double tau_MC = 1.510; 
+// double dgamma_MC = .09166; 
+// double deltaMs_MC = 17.8;  
 
 /// MC values (new decFile)
-//double tau_MC = 1.512; 
-//double dgamma_MC = .1097; 
-//double deltaMs_MC = 17.8; 
+double tau_MC = 1.512; 
+double dgamma_MC = .1097; 
+double deltaMs_MC = 17.8; 
 
 TH1D* createBinning(){
 
@@ -111,7 +111,7 @@ TH1D* createBinning(){
         NamedParameter<int> minEventsPerBin("minEventsPerBin", 1000); 
 	int dim = 1;
 
-	TFile* file= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal.root");
+	TFile* file= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal_scaled.root");
 	TTree* tree= (TTree*) file->Get("DecayTree");
 	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("weight",1);
@@ -137,7 +137,7 @@ TH1D* createBinning(){
    	/// Define binning based on MC
     	HyperHistogram hist(limits, points,                     
                          /*** Name of the binning algorithm you want to use     */
-                         HyperBinningAlgorithms::SMART_MULTI, 
+                         HyperBinningAlgorithms::LIKELIHOOD, 
                          /***  The minimum number of events allowed in each bin */
                          /***  from the HyperPointSet provided (points1)        */
                          AlgOption::MinBinContent      (minEventsPerBin),    
@@ -173,7 +173,7 @@ TH1D* createBinning(){
 	return h;
 }
 
-vector< TGraph* > fitSplineAcc(string CutString, string marginalPdfsPrefix = "", double offset_dt = 0. , double scale_dt = 1.2){
+vector< TGraph* > fitSplineAcc(string CutString, string marginalPdfsPrefix = "", double offset_dt = 0. , double scale_dt = 1.2, bool plot = false ){
 
 	// Options
     	NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
@@ -344,124 +344,124 @@ vector< TGraph* > fitSplineAcc(string CutString, string marginalPdfsPrefix = "",
        		myCoeffsErr.push_back(((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError());
 	}
         
-/*
-	/// Plot
-	TCanvas* canvas = new TCanvas();
-	canvas->cd();
-	canvas->SetTopMargin(0.05);
-	canvas->SetBottomMargin(0.05);
-
-	TLegend leg(0.65,0.65,0.9,0.9,"");
-        leg.SetLineStyle(0);
-        leg.SetLineColor(0);
-	leg.SetFillColor(0);
-	leg.SetTextFont(22);
-	leg.SetTextColor(1);
-	leg.SetTextSize(0.06);
-	leg.SetTextAlign(12);
-
-	RooPlot* frame_m = Bs_TAU.frame();	
-	frame_m->GetXaxis()->SetLabelColor( kWhite);
-	frame_m->GetYaxis()->SetTitleOffset(0.95);
-
-	dataset->plotOn(frame_m, Binning(nBins), Name("data"));
-	totPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf"));
-	//totPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf"),ProjWData(Bs_TAUERR,*dataset));
-	spl->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline"),VisualizeError(*myfitresult));
+	if(plot){
+		/// Plot
+		TCanvas* canvas = new TCanvas();
+		canvas->cd();
+		canvas->SetTopMargin(0.05);
+		canvas->SetBottomMargin(0.05);
 	
-	leg.AddEntry(frame_m->findObject("data"),"LHCb data","ep");
-	leg.AddEntry(frame_m->findObject("pdf"),"Fit","l");
-	leg.AddEntry(frame_m->findObject("spline"),"Acceptance","l");
+		TLegend leg(0.65,0.65,0.9,0.9,"");
+		leg.SetLineStyle(0);
+		leg.SetLineColor(0);
+		leg.SetFillColor(0);
+		leg.SetTextFont(22);
+		leg.SetTextColor(1);
+		leg.SetTextSize(0.06);
+		leg.SetTextAlign(12);
 	
-	TPad* pad1 = new TPad("upperPad", "upperPad", .0, .3, 1.0, 1.0);
-	pad1->SetBorderMode(0);
-	pad1->SetBorderSize(-1);
-	pad1->SetBottomMargin(0.);
-	pad1->Draw();
-	pad1->cd();
-	frame_m->GetYaxis()->SetRangeUser(0.011,frame_m->GetMaximum()*1.1);
-	frame_m->Draw();
-	leg.Draw();
-
-	canvas->cd();
-	TPad* pad2 = new TPad("lowerPad", "lowerPad", .0, .005, 1.0, .3);
-	pad2->SetBorderMode(0);
-	pad2->SetBorderSize(-1);
-	pad2->SetFillStyle(0);
-	pad2->SetTopMargin(0.);
-	pad2->SetBottomMargin(0.35);
-	pad2->Draw();
-	pad2->cd();
+		RooPlot* frame_m = Bs_TAU.frame();	
+		frame_m->GetXaxis()->SetLabelColor( kWhite);
+		frame_m->GetYaxis()->SetTitleOffset(0.95);
 	
-	RooPlot* frame_p = Bs_TAU.frame();
-	frame_p->GetYaxis()->SetNdivisions(5);
-	frame_p->GetYaxis()->SetLabelSize(0.12);
-	frame_p->GetXaxis()->SetLabelSize(0.12);
-	frame_p->GetXaxis()->SetTitleOffset(0.75);
-	frame_p->GetXaxis()->SetTitleSize(0.2);
-	frame_p->GetXaxis()->SetTitle("#font[132]{t(B_{s}) [ps]}");
-	
-	RooHist* pullHist  = frame_m->pullHist("data","pdf");
-	frame_p->addPlotable(pullHist,"BX");
-	
-	double max = 5.0 ;
-	double min = -5.0 ;
-
-	double rangeX = max-min;
-	double zero = max/rangeX;
-	frame_p->GetYaxis()->SetRangeUser(min,max);
-
-	TGraph* graph = new TGraph(2);
-	graph->SetMaximum(max);
-	graph->SetMinimum(min);
-	graph->SetPoint(1,min_TAU,0);
-	graph->SetPoint(2,max_TAU,0);
-	
-	TGraph* graph2 = new TGraph(2);
-	graph2->SetMaximum(max);
-	graph2->SetMinimum(min);
-	graph2->SetPoint(1,min_TAU,-3);
-	graph2->SetPoint(2,max_TAU,-3);
-	graph2->SetLineColor(kRed);
-	
-	TGraph* graph3 = new TGraph(2);
-	graph3->SetMaximum(max);
-	graph3->SetMinimum(min);
-	graph3->SetPoint(1,min_TAU,3);
-	graph3->SetPoint(2,max_TAU,3);
-	graph3->SetLineColor(kRed);
-	
-	frame_p->Draw();
-	graph->Draw("same");
-	graph2->Draw("same");
-	graph3->Draw("same");
+		dataset->plotOn(frame_m, Binning(nBins), Name("data"));
+		totPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf"));
+		//totPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf"),ProjWData(Bs_TAUERR,*dataset));
+		spl->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline"),VisualizeError(*myfitresult));
 		
-	pad2->Update();
-	canvas->Update();
-	canvas->SaveAs(("Plot/timeAccFit_"+(string)BinningName+ "_" + marginalPdfsPrefix + ".eps").c_str());
+		leg.AddEntry(frame_m->findObject("data"),"LHCb data","ep");
+		leg.AddEntry(frame_m->findObject("pdf"),"Fit","l");
+		leg.AddEntry(frame_m->findObject("spline"),"Acceptance","l");
+		
+		TPad* pad1 = new TPad("upperPad", "upperPad", .0, .3, 1.0, 1.0);
+		pad1->SetBorderMode(0);
+		pad1->SetBorderSize(-1);
+		pad1->SetBottomMargin(0.);
+		pad1->Draw();
+		pad1->cd();
+		frame_m->GetYaxis()->SetRangeUser(0.011,frame_m->GetMaximum()*1.1);
+		frame_m->Draw();
+		leg.Draw();
 	
-	pad1->SetLogy(1);
-	pad1->Update();
-	canvas->Update();
-	canvas->SaveAs(("Plot/timeAccFit_"+(string)BinningName+ "_" + marginalPdfsPrefix + "_log.eps").c_str());
+		canvas->cd();
+		TPad* pad2 = new TPad("lowerPad", "lowerPad", .0, .005, 1.0, .3);
+		pad2->SetBorderMode(0);
+		pad2->SetBorderSize(-1);
+		pad2->SetFillStyle(0);
+		pad2->SetTopMargin(0.);
+		pad2->SetBottomMargin(0.35);
+		pad2->Draw();
+		pad2->cd();
+		
+		RooPlot* frame_p = Bs_TAU.frame();
+		frame_p->GetYaxis()->SetNdivisions(5);
+		frame_p->GetYaxis()->SetLabelSize(0.12);
+		frame_p->GetXaxis()->SetLabelSize(0.12);
+		frame_p->GetXaxis()->SetTitleOffset(0.75);
+		frame_p->GetXaxis()->SetTitleSize(0.2);
+		frame_p->GetXaxis()->SetTitle("#font[132]{t(B_{s}) [ps]}");
+		
+		RooHist* pullHist  = frame_m->pullHist("data","pdf");
+		frame_p->addPlotable(pullHist,"BX");
+		
+		double max = 5.0 ;
+		double min = -5.0 ;
 	
-	// ???
-	double chi2 = frame_m->chiSquare("pdf","data",values.size());
-	cout << "chi2 = " << chi2 << endl;
-	cout << "used datasets:     "<< CutString.c_str() << endl;
-	    
-	ofstream resultsFile;
-	resultsFile.open(("results_norm_" + marginalPdfsPrefix + "_" + (string)BinningName+ ".txt").c_str(),std::ofstream::trunc);
-	resultsFile << "knot_positions " ;
-	for(int i= 0; i< myBinning.size(); i++){
-		resultsFile << myBinning[i] << " " ;
+		double rangeX = max-min;
+		double zero = max/rangeX;
+		frame_p->GetYaxis()->SetRangeUser(min,max);
+	
+		TGraph* graph = new TGraph(2);
+		graph->SetMaximum(max);
+		graph->SetMinimum(min);
+		graph->SetPoint(1,min_TAU,0);
+		graph->SetPoint(2,max_TAU,0);
+		
+		TGraph* graph2 = new TGraph(2);
+		graph2->SetMaximum(max);
+		graph2->SetMinimum(min);
+		graph2->SetPoint(1,min_TAU,-3);
+		graph2->SetPoint(2,max_TAU,-3);
+		graph2->SetLineColor(kRed);
+		
+		TGraph* graph3 = new TGraph(2);
+		graph3->SetMaximum(max);
+		graph3->SetMinimum(min);
+		graph3->SetPoint(1,min_TAU,3);
+		graph3->SetPoint(2,max_TAU,3);
+		graph3->SetLineColor(kRed);
+		
+		frame_p->Draw();
+		graph->Draw("same");
+		graph2->Draw("same");
+		graph3->Draw("same");
+			
+		pad2->Update();
+		canvas->Update();
+		canvas->SaveAs(("Plot/timeAccFit_"+(string)BinningName+ "_" + marginalPdfsPrefix + ".eps").c_str());
+		
+		pad1->SetLogy(1);
+		pad1->Update();
+		canvas->Update();
+		canvas->SaveAs(("Plot/timeAccFit_"+(string)BinningName+ "_" + marginalPdfsPrefix + "_log.eps").c_str());
+		
+		// ???
+		double chi2 = frame_m->chiSquare("pdf","data",values.size());
+		cout << "chi2 = " << chi2 << endl;
+		cout << "used datasets:     "<< CutString.c_str() << endl;
+		
+		ofstream resultsFile;
+		resultsFile.open(("results_norm_" + marginalPdfsPrefix + "_" + (string)BinningName+ ".txt").c_str(),std::ofstream::trunc);
+		resultsFile << "knot_positions " ;
+		for(int i= 0; i< myBinning.size(); i++){
+			resultsFile << myBinning[i] << " " ;
+		}
+		resultsFile << endl;
+		for(int i= 0; i< myBinning.size(); i++){
+			resultsFile << "c" + anythingToString(i) + "_" + marginalPdfsPrefix << "  " << 2 << "  " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() 
+			<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
+		}
 	}
-	resultsFile << endl;
-	for(int i= 0; i< myBinning.size(); i++){
-		resultsFile << "c" + anythingToString(i) + "_" + marginalPdfsPrefix << "  " << 2 << "  " << ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getVal() 
-		<< "  " <<  ((RooRealVar*)tacc_list.find(("coeff_"+anythingToString(i)).c_str()))->getError() << endl;
-	}
-*/
 
    	vector< vector<double> > myCoeffsAndErr;
     	myCoeffsAndErr.push_back(myCoeffs);
@@ -630,7 +630,7 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
     tree_norm->SetBranchStatus("TriggerCat",1);
     tree_norm->SetBranchStatus("run",1);    
 
-    TFile* file_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal.root");
+    TFile* file_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal_scaled.root");
     TTree* tree_mc = (TTree*) file_mc->Get("DecayTree");
     tree_mc->SetBranchStatus("*",0);
     tree_mc->SetBranchStatus("*TAU*",1);
@@ -640,7 +640,7 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
     tree_mc->SetBranchStatus("TriggerCat",1);
     tree_mc->SetBranchStatus("run",1);    
     
-    TFile* file_norm_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm.root");
+    TFile* file_norm_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_scaled.root");
     TTree* tree_norm_mc = (TTree*) file_norm_mc->Get("DecayTree");
     tree_norm_mc->SetBranchStatus("*",0);
     tree_norm_mc->SetBranchStatus("*TAU*",1);
@@ -653,12 +653,16 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
     // Define observables
     RooRealVar Bs_TAU(((string)Bs_TAU_Var).c_str(), ((string)Bs_TAU_Var).c_str(), min_TAU, max_TAU, "ps");
     RooRealVar Bs_TAUERR(((string)Bs_TAU_Var+"ERR").c_str(), ((string)Bs_TAU_Var+"ERR").c_str(), min_TAUERR,max_TAUERR,"ps");
+
+    RooRealVar B0_TAU("Bs_DTF_TAU", "Bs_DTF_TAU", min_TAU, max_TAU, "ps");
+    RooRealVar B0_TAUERR("Bs_DTF_TAUERR", "Bs_DTF_TAUERR", min_TAUERR,max_TAUERR,"ps");
+
     RooRealVar weight("weight" , "weight", 0.);
     RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
     RooRealVar year("year", "year", 0.);
     RooRealVar run("run", "run", 0.);
     RooRealVar TriggerCat("TriggerCat", "TriggerCat", 0.);
-    RooArgSet observables(Bs_TAU, Bs_TAUERR, Ds_finalState, year, run, weight, TriggerCat);
+    RooArgSet observables(Bs_TAU, Bs_TAUERR,B0_TAU, B0_TAUERR, Ds_finalState, year, run, weight, TriggerCat);
     
     // Define category to distinguish between singal and norm data
     RooCategory decay("decay","decay") ;
@@ -716,6 +720,7 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
     tacc_list.add(*coeff_last);
     
     RooCubicSplineFun* spline_signal = new RooCubicSplineFun("spline_signal", "spline_signal", Bs_TAU, myBinning, tacc_list);
+    RooCubicSplineFun* spline_signal_B0 = new RooCubicSplineFun("spline_signal_B0", "spline_signal_B0", B0_TAU, myBinning, tacc_list);
     
     // Spline for DsKpipi MC acceptance
     RooArgList mc_tacc_list;
@@ -771,19 +776,20 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
     RooRealVar trm_offset( "trm_offset", "trm_offset", offset_dt);
     RooRealVar trm_scale( "trm_scale", "trm_scale", scale_dt);
     RooFormulaVar dt_scaled( "dt_scaled","dt_scaled", "@0+@1*@2",RooArgList(trm_offset,trm_scale,Bs_TAUERR));
+    RooFormulaVar dt_scaled_B0( "dt_scaled_B0","dt_scaled_B0", "@0+@1*@2",RooArgList(trm_offset,trm_scale,B0_TAUERR));
 
     RooRealVar trm_mean_mc( "trm_mean_mc" , "trm_mean_mc", 0.0, "ps" );
     RooRealVar trm_offset_mc( "trm_offset_mc", "trm_offset_mc", offset_dt_MC);
     RooRealVar trm_scale_mc( "trm_scale_mc", "trm_scale_mc", scale_dt_MC);
     RooFormulaVar dt_scaled_mc( "dt_scaled_mc","dt_scaled_mc", "@0+@1*@2",RooArgList(trm_offset_mc,trm_scale_mc,Bs_TAUERR));
     
-    RooGaussEfficiencyModel trm_signal_B0("trm_signal_B0", "trm_signal_B0", Bs_TAU, *spline_signal, RooRealConstant::value(0.), dt_scaled, trm_mean, RooRealConstant::value(1.) );
+    RooGaussEfficiencyModel trm_signal_B0("trm_signal_B0", "trm_signal_B0", B0_TAU, *spline_signal_B0, RooRealConstant::value(0.), dt_scaled_B0, trm_mean, RooRealConstant::value(1.) );
     RooGaussEfficiencyModel trm_norm("trm_norm", "trm_norm", Bs_TAU, *spline_norm, RooRealConstant::value(0.), dt_scaled, trm_mean, RooRealConstant::value(1.) );
     RooGaussEfficiencyModel trm_signal_mc("trm_signal_mc", "trm_signal_mc", Bs_TAU, *spline_signal_mc, RooRealConstant::value(0.), dt_scaled_mc, trm_mean_mc, RooRealConstant::value(1.) );
     RooGaussEfficiencyModel trm_norm_mc("trm_norm_mc", "trm_norm_mc", Bs_TAU, *spline_norm_mc, RooRealConstant::value(0.), dt_scaled_mc, trm_mean_mc, RooRealConstant::value(1.) );
 
     // time pdfs
-    RooBDecay* time_pdf_signal_B0 = new RooBDecay("time_pdf_signal_B0", "time_pdf_signal_B0", Bs_TAU, RooRealConstant::value(tau_B0),
+    RooBDecay* time_pdf_signal_B0 = new RooBDecay("time_pdf_signal_B0", "time_pdf_signal_B0", B0_TAU, RooRealConstant::value(tau_B0),
                                         RooRealConstant::value(dgamma_B0), RooRealConstant::value(1.0),  RooRealConstant::value(0.0),
                                         RooRealConstant::value(0.0),  RooRealConstant::value(0.0),  RooRealConstant::value(deltaMd),
                                         trm_signal_B0, RooBDecay::SingleSided);
@@ -815,10 +821,13 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
     }
     RooDataHist* r_h_dt = new RooDataHist("r_h_dt","r_h_dt",Bs_TAUERR,h_dt);
     RooHistPdf* pdf_sigma_t = new RooHistPdf("pdf_sigma_t","pdf_sigma_t",Bs_TAUERR,*r_h_dt);
+
+    RooDataHist* r_h_dt_B0 = new RooDataHist("r_h_dt_B0","r_h_dt_B0",B0_TAUERR,h_dt);
+    RooHistPdf* pdf_sigma_t_B0 = new RooHistPdf("pdf_sigma_t_B0","pdf_sigma_t_B0",B0_TAUERR,*r_h_dt_B0);
     f_pdfs->Close();
 
     // total pdfs
-    RooProdPdf* pdf_signal_B0= new RooProdPdf("pdf_signal_B0","pdf_signal_B0",RooArgSet(*pdf_sigma_t),Conditional(RooArgSet(*time_pdf_signal_B0),RooArgSet(Bs_TAU)));
+    RooProdPdf* pdf_signal_B0= new RooProdPdf("pdf_signal_B0","pdf_signal_B0",RooArgSet(*pdf_sigma_t_B0),Conditional(RooArgSet(*time_pdf_signal_B0),RooArgSet(B0_TAU)));
     RooProdPdf* pdf_norm= new RooProdPdf("pdf_norm","pdf_norm",RooArgSet(*pdf_sigma_t),Conditional(RooArgSet(*time_pdf_norm),RooArgSet(Bs_TAU)));
     RooProdPdf* pdf_signal_mc= new RooProdPdf("pdf_signal_mc","pdf_signal_mc",RooArgSet(*pdf_sigma_t),Conditional(RooArgSet(*time_pdf_signal_mc),RooArgSet(Bs_TAU)));
     RooProdPdf* pdf_norm_mc= new RooProdPdf("pdf_norm_mc","pdf_norm_mc",RooArgSet(*pdf_sigma_t),Conditional(RooArgSet(*time_pdf_norm_mc),RooArgSet(Bs_TAU)));
@@ -838,12 +847,11 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
     RooAbsReal::defaultIntegratorConfig()->getConfigSection("RooAdaptiveGaussKronrodIntegrator1D").setCatLabel("method","21Points");
     RooAbsReal::defaultIntegratorConfig()->getConfigSection("RooAdaptiveGaussKronrodIntegrator1D").setRealValue("maxSeg", 1000);
 
-    // Fit only signal MC to set reasonable start parameters
+    /// Fit only signal MC to set reasonable start parameters
     pdf_signal_mc->fitTo(*data_signal_mc, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Extended(kFALSE));
     pdf_signal_B0->fitTo(*data, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Extended(kFALSE));
     
-    // Perform simulataneous fit
-    //RooFitResult *myfitresult = simPdf->fitTo(*dataset, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Optimize(2), Strategy(2),Extended(kFALSE));
+    /// Perform simulataneous fit
     RooFitResult *myfitresult = simPdf->fitTo(*dataset, Save(1), SumW2Error(kTRUE), NumCPU(numCPU),Extended(kFALSE));
     myfitresult->Print("v");
     
@@ -896,7 +904,8 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
         graph3->SetPoint(2,max_TAU,3);
         graph3->SetLineColor(kRed);
         
-        RooPlot* frame_m = Bs_TAU.frame();	
+        RooPlot* frame_m = Bs_TAU.frame();
+	if(decays[i]=="signal_B0") frame_m = B0_TAU.frame();	
         frame_m->GetXaxis()->SetLabelColor( kWhite);
         frame_m->GetYaxis()->SetTitleOffset(0.95);
                 
@@ -905,14 +914,13 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
 		pdf_signal_B0->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]));
 	}
 	else{
-		if(decays[i]=="signal_B0")dataset->plotOn(frame_m, Binning(nBins/2), Name("data_"+decays[i]),Cut("decay==decay::"+decays[i]));
-        	else dataset->plotOn(frame_m, Binning(nBins), Name("data_"+decays[i]),Cut("decay==decay::"+decays[i]));
-		//simPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]),Slice(decay,decays[i]),ProjWData(decay,*dataset),ProjWData(Bs_TAUERR,*dataset));
+		if(decays[i]=="signal_B0") dataset->plotOn(frame_m, Binning(25), Name("data_"+decays[i]),Cut("decay==decay::"+decays[i]));
+		else dataset->plotOn(frame_m, Binning(nBins), Name("data_"+decays[i]),Cut("decay==decay::"+decays[i]));
         	simPdf->plotOn(frame_m, LineColor(kBlue+1),  Name("pdf_"+decays[i]),Slice(decay,decays[i]),ProjWData(decay,*dataset));
 	}
         if(decays[i]=="signal_mc")spline_signal_mc->plotOn(frame_m, LineColor(kGreen+1), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
 
-        else if(decays[i]=="signal_B0")spline_signal->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
+        else if(decays[i]=="signal_B0")spline_signal_B0->plotOn(frame_m, LineColor(kRed), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
      
         else if(decays[i]=="norm_mc"){ 
             spline_norm_mc->plotOn(frame_m, LineColor(kBlack), Normalization(frame_m->GetMaximum()*0.25, RooAbsReal::NumEvent),Name("spline_"+decays[i]));
@@ -941,6 +949,8 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
         if(decays[i]=="norm")leg.AddEntry(frame_m->findObject("spline_signal_"+decays[i]),"#varepsilon_{D_{s}K#pi#pi}^{Data}(t)","l");
         else if(decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("spline_signal_"+decays[i]),"#varepsilon_{D_{s}K#pi#pi}^{MC}(t)","l");
         if(decays[i]=="norm" || decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("spline_ratio_"+decays[i]),"R(t)","l");
+
+
 
         double chi2 = frame_m->chiSquare("pdf_"+decays[i],"data_"+decays[i],values.size());
         cout << "chi2 = " << chi2 << endl;
@@ -999,18 +1009,18 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
     ofstream datafile;
     if(updateAnaNote) datafile.open(("../../../../../TD-AnaNote/latex/tables/Acceptance/"+(string)BinningName+"/splineCoeffs_"+ marginalPdfsPrefix + ".tex").c_str(),std::ofstream::trunc);
     else datafile.open(("splineCoeffs_"+ marginalPdfsPrefix + "_" + (string)BinningName+ ".tex").c_str(),std::ofstream::trunc);
-    datafile << "\\begin{table}[hp!]" << "\n";
-    datafile << "\\centering" << "\n";
-    datafile << "\\small" << "\n";
-    datafile << "\\caption{Time acceptance parameters for ";
-    if(CutString == "") datafile << " all events. }" << "\n";
-    else datafile << "events in category [";
-    if(A_is_in_B("run == 1", CutString)) datafile << "\\textsf{Run-I}"; 
-    else if(A_is_in_B("run == 2", CutString)) datafile << "\\textsf{Run-II}"; 
-    if(A_is_in_B("&&", CutString)) datafile << ","; 
-    if(A_is_in_B("TriggerCat == 0", CutString)) datafile << "\\textsf{L0-TOS}"; 
-    else if(A_is_in_B("TriggerCat == 1", CutString)) datafile << "\\textsf{L0-TIS}"; 
-    if(CutString != "") datafile << "].}" << "\n";
+//     datafile << "\\begin{table}[hp!]" << "\n";
+//     datafile << "\\centering" << "\n";
+//     datafile << "\\small" << "\n";
+//     datafile << "\\caption{Time acceptance parameters for ";
+//     if(CutString == "") datafile << " all events. }" << "\n";
+//     else datafile << "events in category [";
+//     if(A_is_in_B("run == 1", CutString)) datafile << "\\textsf{Run-I}"; 
+//     else if(A_is_in_B("run == 2", CutString)) datafile << "\\textsf{Run-II}"; 
+//     if(A_is_in_B("&&", CutString)) datafile << ","; 
+//     if(A_is_in_B("TriggerCat == 0", CutString)) datafile << "\\textsf{L0-TOS}"; 
+//     else if(A_is_in_B("TriggerCat == 1", CutString)) datafile << "\\textsf{L0-TIS}"; 
+//     if(CutString != "") datafile << "].}" << "\n";
     datafile << "\\begin{tabular}{c c c c c}" << "\n";
     datafile << "\\hline" << "\n";
     datafile << "\\hline" << "\n";
@@ -1041,8 +1051,8 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
     datafile << "\\hline" << "\n";
     datafile << "\\hline" << "\n";
     datafile << "\\end{tabular}" << "\n";
-    datafile << "\\label{table:splines}" << "\n";
-    datafile << "\\end{table}";
+//     datafile << "\\label{table:splines}" << "\n";
+//     datafile << "\\end{table}";
 
     ofstream resultsFile;
     resultsFile.open(("results_" + marginalPdfsPrefix + "_" + (string)BinningName+ ".txt").c_str(),std::ofstream::trunc);
@@ -1076,12 +1086,14 @@ void compareAcceptance(){
     cuts_year.push_back("(year == 12)");
     cuts_year.push_back("(year == 15)");
     cuts_year.push_back("(year == 16)");  
+    cuts_year.push_back("(year == 17)");  
     
     vector<TString> legend_year;
     legend_year.push_back("Year 11");
     legend_year.push_back("Year 12");
     legend_year.push_back("Year 15");
     legend_year.push_back("Year 16");
+    legend_year.push_back("Year 17");
 
 
     vector<TString> cuts_year_t0;
@@ -1089,12 +1101,14 @@ void compareAcceptance(){
     cuts_year_t0.push_back("(year == 12)&& TriggerCat == 0");
     cuts_year_t0.push_back("(year == 15)&& TriggerCat == 0");
     cuts_year_t0.push_back("(year == 16) && TriggerCat == 0 ");  
+    cuts_year_t0.push_back("(year == 17) && TriggerCat == 0 ");  
 
     vector<TString> cuts_year_t1;
     cuts_year_t1.push_back("(year == 11)&& TriggerCat == 1");
     cuts_year_t1.push_back("(year == 12)&& TriggerCat == 1");
     cuts_year_t1.push_back("(year == 15)&& TriggerCat == 1");
     cuts_year_t1.push_back("(year == 16) && TriggerCat == 1 ");  
+    cuts_year_t1.push_back("(year == 17) && TriggerCat == 1 ");  
     
 
     // Compare different Ds final states
@@ -1148,29 +1162,29 @@ void compareAcceptance(){
     vector< vector<TString> > cut_set;    
 //     cut_set.push_back(cuts_year);
 //     cut_set.push_back(cuts_year_t0);
-//     cut_set.push_back(cuts_year_t1);    
+    cut_set.push_back(cuts_year_t1);    
 //      cut_set.push_back(cuts_Ds);
-    cut_set.push_back(cuts_Ds_mod);
-    cut_set.push_back(cuts_run);    
-    cut_set.push_back(cuts_trigger);    
+//     cut_set.push_back(cuts_Ds_mod);
+//     cut_set.push_back(cuts_run);    
+//     cut_set.push_back(cuts_trigger);    
     
     vector< vector<TString> > legend_title_set;
 //     legend_title_set.push_back(legend_year);
 //      legend_title_set.push_back(legend_year);
-//      legend_title_set.push_back(legend_year);
+     legend_title_set.push_back(legend_year);
 //     legend_title_set.push_back(legend_Ds);
-    legend_title_set.push_back(legend_Ds_mod);
-    legend_title_set.push_back(legend_run);
-    legend_title_set.push_back(legend_trigger);
+//     legend_title_set.push_back(legend_Ds_mod);
+//     legend_title_set.push_back(legend_run);
+//     legend_title_set.push_back(legend_trigger);
         
     vector<TString> plot_titles;
 //      plot_titles.push_back("year");
 //     plot_titles.push_back("year_t0");
-//      plot_titles.push_back("year_t1");
+     plot_titles.push_back("year_t1");
 //     plot_titles.push_back("DsFinalState");
-    plot_titles.push_back("DsFinalState_mod");
-    plot_titles.push_back("run");
-    plot_titles.push_back("trigger");    
+//     plot_titles.push_back("DsFinalState_mod");
+//     plot_titles.push_back("run");
+//     plot_titles.push_back("trigger");    
 
     for (int a = 0; a < cut_set.size(); a++) {
         
@@ -1198,7 +1212,7 @@ void compareAcceptance(){
 	    if(n == 1) color = kBlue;
 	    if(n == 2) color = kGreen;
 	    if(n == 3) color = kMagenta;
-	    if(n == 4) color = kGray;
+	    if(n == 4) color = kGray+3;
 
 	    myGraphs[0]->SetMinimum(0.);
 	    myGraphs[0]->SetMaximum(2.);
@@ -1618,6 +1632,7 @@ int main(int argc, char** argv){
 
     //checkPV(); 
 //     produceMarginalPdfs();
+
     if(CompareAcceptance)compareAcceptance();
 
     if(FitSplineAccRatio){
@@ -1632,11 +1647,11 @@ int main(int argc, char** argv){
 	marginalPdfs.push_back("Run1_t1");
 
 	dataCuts.push_back(" run == 2 && TriggerCat == 0 ");
-	mcCuts.push_back("");
+	mcCuts.push_back("run == 2 && TriggerCat == 0");
 	marginalPdfs.push_back("Run2_t0");
 
 	dataCuts.push_back(" run == 2 && TriggerCat == 1 ");
-	mcCuts.push_back("");
+	mcCuts.push_back("run == 2 && TriggerCat == 1");
 	marginalPdfs.push_back("Run2_t1");
 
 	vector<TMatrixDSym*> cors_fit;
@@ -1753,10 +1768,10 @@ int main(int argc, char** argv){
     if(FitSplineNorm){
 // 	fitSplineAcc("" , "comb", 0.01 , 1.);
 // 	fitSplineAcc(" run == 2" , "Run2", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
-	fitSplineAcc(" run == 1 && TriggerCat == 0 " , "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
-/*	fitSplineAcc(" run == 1 && TriggerCat == 1 " , "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1);
-	fitSplineAcc(" run == 2 && TriggerCat == 0 " , "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);
-	fitSplineAcc(" run == 2 && TriggerCat == 1 " , "Run2_t1", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2);*/
+	fitSplineAcc(" run == 1 && TriggerCat == 0 " , "Run1_t0", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, true);
+	fitSplineAcc(" run == 1 && TriggerCat == 1 " , "Run1_t1", (double) offset_sigma_dt_Run1, (double) scale_sigma_dt_Run1, true);
+	fitSplineAcc(" run == 2 && TriggerCat == 0 " , "Run2_t0", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, true);
+	fitSplineAcc(" run == 2 && TriggerCat == 1 " , "Run2_t1", (double) offset_sigma_dt_Run2, (double) scale_sigma_dt_Run2, true);
     }
 
     cout << "==============================================" << endl;

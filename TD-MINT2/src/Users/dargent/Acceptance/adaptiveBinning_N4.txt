@@ -1,12 +1,12 @@
 * options for acceptance 
 "Bs_TAU_Var"		"Bs_BsDTF_TAU"
 
-"CompareAcceptance"	1
+"CompareAcceptance"	0
 "FitSplineAccRatio"	0
-"FitSplineNorm"		0
+"FitSplineNorm"		1
 "doSystematics"		0
 
-"updateAnaNote"		1
+"updateAnaNote"		0
 
 * binning options
 "BinningName"		"adaptive_N4"
@@ -14,20 +14,24 @@
 "max_TAU" 	 10.
 "min_TAUERR"	 0.0001
 "max_TAUERR" 	 0.1
-"nBins"		 60
+"nBins"		 100
 
 "fitB0"	 	1
 "fixRatio"	0
 "fixFirstKnot"	0
 
 "useAdaptiveBinningKnots"	 0
-"minEventsPerBin"	 3000
+"minEventsPerBin"	 	70000
 
 "offset_sigma_dt_Run1"		0.0103
 "scale_sigma_dt_Run1"		1.28	
 
-"offset_sigma_dt_Run2"		0.0097
-"scale_sigma_dt_Run2"		0.915	
+"offset_sigma_dt_Run2"		0.0076
+"scale_sigma_dt_Run2"		0.958	
+
+*"offset_sigma_dt_Run2"		0.0097
+*"scale_sigma_dt_Run2"		0.915	
+
 * From J/psi phi 
 *"offset_sigma_dt_Run2"		0.01206
 *"scale_sigma_dt_Run2"		0.8793	
@@ -37,7 +41,7 @@
 *"knot_values"	 	 3.7571e-01 5.2204e-01 6.6662e-01 8.5160e-01
 
 * N = 4
-"knot_positions"	0.8 1.6 2.5 6.5
+"knot_positions"	0.5 1.35 2.5 6.5
 "knot_values"	 	 0.5 0.7 1 1
 
 * N = 5
