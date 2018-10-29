@@ -727,7 +727,7 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 // 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
 	c1->Print(("eps/BkgShape/Bs2Dspipipi_as_DsKpipi_Run"+anythingToString(run)+".eps").c_str());
-	if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dspipipi_as_DsKpipi.pdf");
+	if(updateAnaNotePlots)c1->Print(("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dspipipi_as_DsKpipi_Run"+anythingToString(run)+".pdf").c_str());
 
 	frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
@@ -851,7 +851,7 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
 // 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
 	c1->Print(("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_Run"+anythingToString(run)+".eps").c_str());
-	if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dsstarpipipi_as_DsKpipi.pdf");
+	if(updateAnaNotePlots)c1->Print(("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_Run"+anythingToString(run)+".pdf").c_str());
 
 	frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
@@ -1666,7 +1666,7 @@ vector< vector<double> > fitNorm(){
 	RooRealVar alpha("alpha", "#alpha", sig_params[2],-5.,5.); 
 	RooRealVar beta("beta", "#beta", sig_params[3],-5.,5.);
 	RooRealVar alpha2("alpha2", "#alpha2", sig_params[5],-5.,5.); 
-	RooRealVar beta2("beta2", "#beta2", sig_params[6]);
+	RooRealVar beta2("beta2", "#beta2", sig_params[6],-5.,5.);
 	RooRealVar f_RJ("f_RJ", "f_RJ", sig_params[7]);
 
 	if(fixSignalShapeFromMC){
@@ -2571,7 +2571,6 @@ void fitSignal(){
 	NamedParameter<int> useTriggerCat("useTriggerCat", 0);
 	NamedParameter<int> constrainCombBkgFromSS("constrainCombBkgFromSS",0);
 	NamedParameter<int> optimizeBDT("optimizeBDT",0);
-	NamedParameter<int> newTable("newTable",0);
 	NamedParameter<int> useB0("useB0", 0);
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
 	NamedParameter<string> inFileName("inFileNameSignal",(string)"/auto/data/dargent/BsDsKpipi/BDT/Data/signal.root");
