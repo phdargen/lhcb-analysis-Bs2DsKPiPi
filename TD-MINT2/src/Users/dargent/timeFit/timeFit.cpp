@@ -273,6 +273,11 @@ void fullTimeFit(int step=0, string mode = "fit"){
     FitParameter  production_asym_Run2("production_asym_Run2",1,0.,0.);
     FitParameter  detection_asym_Run2("detection_asym_Run2",1,0.,0.);
 
+    FitParameter  scale_mean_dt_Run2_17("scale_mean_dt_Run2_17",1,1,0.1);
+    FitParameter  offset_sigma_dt_Run2_17("offset_sigma_dt_Run2_17",1,0.,0.1);
+    FitParameter  scale_sigma_dt_Run2_17("scale_sigma_dt_Run2_17",1,1.2,0.1);
+    FitParameter  scale_sigma_2_dt_Run2_17("scale_sigma_2_dt_Run2_17",1,0.,0.1);
+
     /// Fit parameters per run and trigger cat
     FitParameter  c0_Run1_t0("c0_Run1_t0",1,1,0.1);
     FitParameter  c1_Run1_t0("c1_Run1_t0",1,1,0.1);
@@ -376,7 +381,32 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
                               production_asym_Run2, detection_asym_Run2, "Run2_t1" );
+
+
+    FullTimePdf t_pdf_Run2_17_t0(C, D, D_bar, S, S_bar, k,
+                              Gamma, dGamma, dm
+                              ,offset_sigma_dt_Run2_17, scale_mean_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
+                              ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
+                              ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
+                              p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "Run2_17_t0" );
+
+
+    FullTimePdf t_pdf_Run2_17_t1(C, D, D_bar, S, S_bar, k,
+                              Gamma, dGamma, dm
+                              ,offset_sigma_dt_Run2_17, scale_mean_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
+                              ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
+                              ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
+                              p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "Run2_17_t1" );
     
+
     //phasespace bins
     FullTimePdf t_pdf_Run1_t0_bin1(C_1, D_1, D_bar_1, S_1, S_bar_1, k,
                       Gamma, dGamma, dm
@@ -512,7 +542,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 
     /// Randomize start vals
     MinuitParameterSet* mps = MinuitParameterSet::getDefaultSet();
-    if(randomizeStartVals){
+    if(randomizeStartVals && (string)channel=="signal"){
 	double val = gRandom->Uniform(0,1);
 	mps->getParPtr("C")->setCurrentFitVal(val);
 	((FitParameter*)mps->getParPtr("C"))->setInit(val);	
@@ -535,7 +565,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     }
 
     /// Set blinded fit parameters to true values for toy generation
-    if(mode == "gen"){
+    if(mode == "gen" && (string)channel=="signal"){
 	double real_val = (double)C + C.blinding();
 	C.setCurrentFitVal(real_val);
 	C.setInit(real_val);
@@ -555,6 +585,10 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	real_val = (double)S_bar + S_bar.blinding();
 	S_bar.setCurrentFitVal(real_val);
 	S_bar.setInit(real_val);
+
+	real_val = (double)dm + dm.blinding();
+	dm.setCurrentFitVal(real_val);
+	dm.setInit(real_val);
     }
 
     /// Load data
@@ -651,7 +685,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	}
     }
     DalitzEventList eventList,eventList_f,eventList_f_bar;
-    DalitzEventList eventList_Run1_t0,eventList_Run1_t1,eventList_Run2_t0,eventList_Run2_t1;
+    DalitzEventList eventList_Run1_t0,eventList_Run1_t1,eventList_Run2_t0,eventList_Run2_t1,eventList_Run2_17_t0,eventList_Run2_17_t1;
 
     DalitzEventList eventList_Run1_t0_bin1,eventList_Run1_t1_bin1,eventList_Run2_t0_bin1,eventList_Run2_t1_bin1;
     DalitzEventList eventList_Run1_t0_bin2,eventList_Run1_t1_bin2,eventList_Run2_t0_bin2,eventList_Run2_t1_bin2;
@@ -790,9 +824,10 @@ void fullTimeFit(int step=0, string mode = "fit"){
 
 // 	if(!(evt.phaseSpace() > 0.))continue;
 
+	run = (run == 2 && year == 17) ? 3 : run;
         evt.setWeight(sw);
         evt.setValueInVector(0, t);
-        evt.setValueInVector(1, dt);
+        evt.setValueInVector(1, dt);   
         if(f<0)evt.setValueInVector(2, 1);
         else if(f > 0)evt.setValueInVector(2, -1);
         else {
@@ -815,6 +850,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
         else if(run == 1 && trigger == 1) eventList_Run1_t1.Add(evt);
         else if(run == 2 && trigger == 0) eventList_Run2_t0.Add(evt);
         else if(run == 2 && trigger == 1) eventList_Run2_t1.Add(evt);
+        else if(run == 3 && trigger == 0) eventList_Run2_17_t0.Add(evt);
+        else if(run == 3 && trigger == 1) eventList_Run2_17_t1.Add(evt);
 
 	//if( sqrt(evt.sij(s234)) < 1350.) {
 	if( abs( sqrt(evt.s(2,4)) - 891.76) < 50.3) {
@@ -848,6 +885,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
     Neg2LL neg2LL_Run1_t1(t_pdf_Run1_t1, eventList_Run1_t1);    
     Neg2LL neg2LL_Run2_t0(t_pdf_Run2_t0, eventList_Run2_t0);    
     Neg2LL neg2LL_Run2_t1(t_pdf_Run2_t1, eventList_Run2_t1);    
+    Neg2LL neg2LL_Run2_17_t0(t_pdf_Run2_17_t0, eventList_Run2_17_t0);    
+    Neg2LL neg2LL_Run2_17_t1(t_pdf_Run2_17_t1, eventList_Run2_17_t1);    
 
     Neg2LL neg2LL_Run1_t0_bin1(t_pdf_Run1_t0_bin1, eventList_Run1_t0_bin1);    
     Neg2LL neg2LL_Run1_t1_bin1(t_pdf_Run1_t1_bin1, eventList_Run1_t1_bin1);    
@@ -869,6 +908,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
     if(eventList_Run1_t1.size()>0)neg2LL_sim.add(&neg2LL_Run1_t1);
     if(eventList_Run2_t0.size()>0)neg2LL_sim.add(&neg2LL_Run2_t0);
     if(eventList_Run2_t1.size()>0)neg2LL_sim.add(&neg2LL_Run2_t1);
+    if(eventList_Run2_17_t0.size()>0)neg2LL_sim.add(&neg2LL_Run2_17_t0);
+    if(eventList_Run2_17_t1.size()>0)neg2LL_sim.add(&neg2LL_Run2_17_t1);
 
     Neg2LLSum neg2LL_sim_bins;
     if(eventList_Run1_t0_bin1.size()>0)neg2LL_sim_bins.add(&neg2LL_Run1_t0_bin1);
@@ -991,6 +1032,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
     double N_Run1_t1 = 0;
     double N_Run2_t0 = 0;
     double N_Run2_t1 = 0;
+    double N_Run2_17_t0 = 0;
+    double N_Run2_17_t1 = 0;
 
     double sigma_t_eff = 0;
 
@@ -1020,6 +1063,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
         else if(run_evt==1 && trigger_evt == 1)N_Run1_t1 += eventList[i].getWeight();
         else if(run_evt==2 && trigger_evt == 0)N_Run2_t0 += eventList[i].getWeight();
         else if(run_evt==2 && trigger_evt == 1)N_Run2_t1 += eventList[i].getWeight();
+        else if(run_evt==3 && trigger_evt == 0)N_Run2_17_t0 += eventList[i].getWeight();
+        else if(run_evt==3 && trigger_evt == 1)N_Run2_17_t1 += eventList[i].getWeight();
 
         std::pair<double, double> calibrated_mistag_os;
         std::pair<double, double> calibrated_mistag_ss;
@@ -1153,6 +1198,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
     cout << "N_Run1_t1 =" << N_Run1_t1/N <<  endl;
     cout << "N_Run2_t0 =" << N_Run2_t0/N <<  endl;
     cout << "N_Run2_t1 =" << N_Run2_t1/N <<  endl;
+    cout << "N_Run2_17_t0 =" << N_Run2_17_t0/N <<  endl;
+    cout << "N_Run2_17_t1 =" << N_Run2_17_t1/N <<  endl;
 
     cout << "sigma_t_eff = " << sigma_t_eff/N << endl << endl;
 
@@ -1181,6 +1228,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
 		toys.Add(t_pdf_Run1_t1.generateToys(N_scale_toys *N_Run1_t1,1,1));
 		toys.Add(t_pdf_Run2_t0.generateToys(N_scale_toys *N_Run2_t0,2,0));
 		toys.Add(t_pdf_Run2_t1.generateToys(N_scale_toys *N_Run2_t1,2,1));
+		toys.Add(t_pdf_Run2_17_t0.generateToys(N_scale_toys *N_Run2_17_t0,3,0));
+		toys.Add(t_pdf_Run2_17_t1.generateToys(N_scale_toys *N_Run2_17_t1,3,1));
 	}
 	else toys.Add(t_pdf.generateToys(N_scale_toys *N));
 
@@ -1269,75 +1318,75 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	resultsfile << "\\hline" << "\n";
 
 	if((string)channel == "norm"){
-	resultsfile << std::fixed << std::setprecision(4) 
-	<< "Run-I & $p_{0}^{\\text{OS}}$ & " <<  mps->getParPtr("p0_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("p0_os_Run1")->err() << "\\\\" << "\n"
-	<< "&$p_{1}^{\\text{OS}}$  & " <<  mps->getParPtr("p1_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("p1_os_Run1")->err() << "\\\\" << "\n"
-	<< "&$\\Delta p_{0}^{\\text{OS}}$  & " <<  mps->getParPtr("delta_p0_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("delta_p0_os_Run1")->err() << "\\\\" << "\n"
-	<< "&$\\Delta p_{1}^{\\text{OS}}$  & " <<  mps->getParPtr("delta_p1_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("delta_p1_os_Run1")->err() << "\\\\" << "\n"
-	<< "&$\\epsilon_{tag}^{\\text{OS}}$  & " <<  mps->getParPtr("tageff_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("tageff_os_Run1")->err() << "\\\\" << "\n"
-	<< "&$\\Delta\\epsilon_{tag}^{\\text{OS}}$  & " <<  mps->getParPtr("tageff_asym_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("tageff_asym_os_Run1")->err() << "\\\\" << "\n"
+		resultsfile << std::fixed << std::setprecision(4) 
+		<< "Run-I & $p_{0}^{\\text{OS}}$ & " <<  mps->getParPtr("p0_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("p0_os_Run1")->err() << "\\\\" << "\n"
+		<< "&$p_{1}^{\\text{OS}}$  & " <<  mps->getParPtr("p1_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("p1_os_Run1")->err() << "\\\\" << "\n"
+		<< "&$\\Delta p_{0}^{\\text{OS}}$  & " <<  mps->getParPtr("delta_p0_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("delta_p0_os_Run1")->err() << "\\\\" << "\n"
+		<< "&$\\Delta p_{1}^{\\text{OS}}$  & " <<  mps->getParPtr("delta_p1_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("delta_p1_os_Run1")->err() << "\\\\" << "\n"
+		<< "&$\\epsilon_{tag}^{\\text{OS}}$  & " <<  mps->getParPtr("tageff_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("tageff_os_Run1")->err() << "\\\\" << "\n"
+		<< "&$\\Delta\\epsilon_{tag}^{\\text{OS}}$  & " <<  mps->getParPtr("tageff_asym_os_Run1")->mean() << " $\\pm$ " << mps->getParPtr("tageff_asym_os_Run1")->err() << "\\\\" << "\n"
+		
+		<< "& $p_{0}^{\\text{SS}}$ & " <<  mps->getParPtr("p0_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("p0_ss_Run1")->err() << "\\\\" << "\n"
+		<< "&$p_{1}^{\\text{SS}}$  & " <<  mps->getParPtr("p1_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("p1_ss_Run1")->err() << "\\\\" << "\n"
+		<< "&$\\Delta p_{0}^{\\text{SS}}$  & " <<  mps->getParPtr("delta_p0_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("delta_p0_ss_Run1")->err() << "\\\\" << "\n"
+		<< "&$\\Delta p_{1}^{\\text{SS}}$  & " <<  mps->getParPtr("delta_p1_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("delta_p1_ss_Run1")->err() << "\\\\" << "\n"
+		<< "&$\\epsilon_{tag}^{\\text{SS}}$  & " <<  mps->getParPtr("tageff_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("tageff_ss_Run1")->err() << "\\\\" << "\n"
+		<< "&$\\Delta\\epsilon_{tag}^{\\text{SS}}$  & " <<  mps->getParPtr("tageff_asym_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("tageff_asym_ss_Run1")->err() << "\\\\" << "\n"
 	
-	<< "& $p_{0}^{\\text{SS}}$ & " <<  mps->getParPtr("p0_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("p0_ss_Run1")->err() << "\\\\" << "\n"
-	<< "&$p_{1}^{\\text{SS}}$  & " <<  mps->getParPtr("p1_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("p1_ss_Run1")->err() << "\\\\" << "\n"
-	<< "&$\\Delta p_{0}^{\\text{SS}}$  & " <<  mps->getParPtr("delta_p0_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("delta_p0_ss_Run1")->err() << "\\\\" << "\n"
-	<< "&$\\Delta p_{1}^{\\text{SS}}$  & " <<  mps->getParPtr("delta_p1_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("delta_p1_ss_Run1")->err() << "\\\\" << "\n"
-	<< "&$\\epsilon_{tag}^{\\text{SS}}$  & " <<  mps->getParPtr("tageff_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("tageff_ss_Run1")->err() << "\\\\" << "\n"
-	<< "&$\\Delta\\epsilon_{tag}^{\\text{SS}}$  & " <<  mps->getParPtr("tageff_asym_ss_Run1")->mean() << " $\\pm$ " << mps->getParPtr("tageff_asym_ss_Run1")->err() << "\\\\" << "\n"
-
-	<< "&$A_{p}$ & " <<  mps->getParPtr("production_asym_Run1")->mean() << " $\\pm$ " << mps->getParPtr("production_asym_Run1")->err() << "\\\\" << "\n";
-
-	resultsfile << "\\\\" << "\n" ;
-	resultsfile << std::fixed << std::setprecision(4) 
-	<< "Run-II & $p_{0}^{\\text{OS}}$  & " <<  mps->getParPtr("p0_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("p0_os_Run2")->err() << "\\\\" << "\n"
-	<< "&$p_{1}^{\\text{OS}}$  & " <<  mps->getParPtr("p1_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("p1_os_Run2")->err() << "\\\\" << "\n"
-	<< "&$\\Delta p_{0}^{\\text{OS}}$  & " <<  mps->getParPtr("delta_p0_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("delta_p0_os_Run2")->err() << "\\\\" << "\n"
-	<< "&$\\Delta p_{1}^{\\text{OS}}$  & " <<  mps->getParPtr("delta_p1_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("delta_p1_os_Run2")->err() << "\\\\" << "\n"
-	<< "&$\\epsilon_{tag}^{\\text{OS}}$  & " <<  mps->getParPtr("tageff_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("tageff_os_Run2")->err() << "\\\\" << "\n"
-	<< "&$\\Delta\\epsilon_{tag}^{\\text{OS}}$  & " <<  mps->getParPtr("tageff_asym_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("tageff_asym_os_Run2")->err() << "\\\\" << "\n"
-
-	<< "& $p_{0}^{\\text{SS}}$  & " <<  mps->getParPtr("p0_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("p0_ss_Run2")->err() << "\\\\" << "\n"
-	<< "&$p_{1}^{\\text{SS}}$  & " <<  mps->getParPtr("p1_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("p1_ss_Run2")->err() << "\\\\" << "\n"
-	<< "&$\\Delta p_{0}^{\\text{SS}}$  & " <<  mps->getParPtr("delta_p0_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("delta_p0_ss_Run2")->err() << "\\\\" << "\n"
-	<< "&$\\Delta p_{1}^{\\text{SS}}$  & " <<  mps->getParPtr("delta_p1_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("delta_p1_ss_Run2")->err() << "\\\\" << "\n"
-	<< "&$\\epsilon_{tag}^{\\text{SS}}$  & " <<  mps->getParPtr("tageff_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("tageff_ss_Run2")->err() << "\\\\" << "\n"
-	<< "&$\\Delta\\epsilon_{tag}^{\\text{SS}}$  & " <<  mps->getParPtr("tageff_asym_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("tageff_asym_ss_Run2")->err() << "\\\\" << "\n"
-
-	<< "&$A_{p}$ & " <<  mps->getParPtr("production_asym_Run2")->mean() << " $\\pm$ " << mps->getParPtr("production_asym_Run2")->err() << "\\\\" << "\n";
-
-	resultsfile << "\\\\" << "\n" ;
-	resultsfile << std::fixed << std::setprecision(4) 
-	<< "&$\\Delta m_{s}$ & " 
-	//<<   mps->getParPtr("dm")->mean() 
-	<< " xx.xx " 
-	<< " $\\pm$ " << mps->getParPtr("dm")->err() << "\\\\" << "\n";
+		<< "&$A_{p}$ & " <<  mps->getParPtr("production_asym_Run1")->mean() << " $\\pm$ " << mps->getParPtr("production_asym_Run1")->err() << "\\\\" << "\n";
+	
+		resultsfile << "\\\\" << "\n" ;
+		resultsfile << std::fixed << std::setprecision(4) 
+		<< "Run-II & $p_{0}^{\\text{OS}}$  & " <<  mps->getParPtr("p0_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("p0_os_Run2")->err() << "\\\\" << "\n"
+		<< "&$p_{1}^{\\text{OS}}$  & " <<  mps->getParPtr("p1_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("p1_os_Run2")->err() << "\\\\" << "\n"
+		<< "&$\\Delta p_{0}^{\\text{OS}}$  & " <<  mps->getParPtr("delta_p0_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("delta_p0_os_Run2")->err() << "\\\\" << "\n"
+		<< "&$\\Delta p_{1}^{\\text{OS}}$  & " <<  mps->getParPtr("delta_p1_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("delta_p1_os_Run2")->err() << "\\\\" << "\n"
+		<< "&$\\epsilon_{tag}^{\\text{OS}}$  & " <<  mps->getParPtr("tageff_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("tageff_os_Run2")->err() << "\\\\" << "\n"
+		<< "&$\\Delta\\epsilon_{tag}^{\\text{OS}}$  & " <<  mps->getParPtr("tageff_asym_os_Run2")->mean() << " $\\pm$ " << mps->getParPtr("tageff_asym_os_Run2")->err() << "\\\\" << "\n"
+	
+		<< "& $p_{0}^{\\text{SS}}$  & " <<  mps->getParPtr("p0_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("p0_ss_Run2")->err() << "\\\\" << "\n"
+		<< "&$p_{1}^{\\text{SS}}$  & " <<  mps->getParPtr("p1_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("p1_ss_Run2")->err() << "\\\\" << "\n"
+		<< "&$\\Delta p_{0}^{\\text{SS}}$  & " <<  mps->getParPtr("delta_p0_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("delta_p0_ss_Run2")->err() << "\\\\" << "\n"
+		<< "&$\\Delta p_{1}^{\\text{SS}}$  & " <<  mps->getParPtr("delta_p1_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("delta_p1_ss_Run2")->err() << "\\\\" << "\n"
+		<< "&$\\epsilon_{tag}^{\\text{SS}}$  & " <<  mps->getParPtr("tageff_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("tageff_ss_Run2")->err() << "\\\\" << "\n"
+		<< "&$\\Delta\\epsilon_{tag}^{\\text{SS}}$  & " <<  mps->getParPtr("tageff_asym_ss_Run2")->mean() << " $\\pm$ " << mps->getParPtr("tageff_asym_ss_Run2")->err() << "\\\\" << "\n"
+	
+		<< "&$A_{p}$ & " <<  mps->getParPtr("production_asym_Run2")->mean() << " $\\pm$ " << mps->getParPtr("production_asym_Run2")->err() << "\\\\" << "\n";
+	
+		resultsfile << "\\\\" << "\n" ;
+		resultsfile << std::fixed << std::setprecision(4) 
+		<< "&$\\Delta m_{s}$ & " 
+		//<<   mps->getParPtr("dm")->mean() 
+		<< " xx.xx " 
+		<< " $\\pm$ " << mps->getParPtr("dm")->err() << "\\\\" << "\n";
 	}
 
 	else {
-	resultsfile << std::fixed << std::setprecision(3) 
-	<< "& $C$ & " 
-// 	<<   mps->getParPtr("C")->mean() 
-	<< " xx.xx " 
-	<< " $\\pm$ " << mps->getParPtr("C")->err() << "\\\\" << "\n";
-	resultsfile << std::fixed << std::setprecision(3) 
-	<< "&$D$ & " 
-// 	<<   mps->getParPtr("D")->mean() 
-	<< " xx.xx " 
-	<< " $\\pm$ " << mps->getParPtr("D")->err() << "\\\\" << "\n";
-	resultsfile << std::fixed << std::setprecision(3) 
-	<< "&$\\bar D$ & " 
-// 	<<   mps->getParPtr("D_bar")->mean() 
-	<< " xx.xx " 
-	<< " $\\pm$ " << mps->getParPtr("D_bar")->err() << "\\\\" << "\n";
-	resultsfile << std::fixed << std::setprecision(3) 
-	<< "& $S$ & " 
-// 	<<   mps->getParPtr("S")->mean() 
-	<< " xx.xx " 
-	<< " $\\pm$ " << mps->getParPtr("S")->err() << "\\\\" << "\n";
-	resultsfile << std::fixed << std::setprecision(3) 
-	<< "& $\\bar S$ & " 
-// 	<<   mps->getParPtr("S_bar")->mean() 
-	<< " xx.xx " 
-	<< " $\\pm$ " << mps->getParPtr("S_bar")->err() << "\\\\" << "\n";
+		resultsfile << std::fixed << std::setprecision(3) 
+		<< "& $C$ & " 
+	// 	<<   mps->getParPtr("C")->mean() 
+		<< " xx.xx " 
+		<< " $\\pm$ " << mps->getParPtr("C")->err() << "\\\\" << "\n";
+		resultsfile << std::fixed << std::setprecision(3) 
+		<< "&$D$ & " 
+	// 	<<   mps->getParPtr("D")->mean() 
+		<< " xx.xx " 
+		<< " $\\pm$ " << mps->getParPtr("D")->err() << "\\\\" << "\n";
+		resultsfile << std::fixed << std::setprecision(3) 
+		<< "&$\\bar D$ & " 
+	// 	<<   mps->getParPtr("D_bar")->mean() 
+		<< " xx.xx " 
+		<< " $\\pm$ " << mps->getParPtr("D_bar")->err() << "\\\\" << "\n";
+		resultsfile << std::fixed << std::setprecision(3) 
+		<< "& $S$ & " 
+	// 	<<   mps->getParPtr("S")->mean() 
+		<< " xx.xx " 
+		<< " $\\pm$ " << mps->getParPtr("S")->err() << "\\\\" << "\n";
+		resultsfile << std::fixed << std::setprecision(3) 
+		<< "& $\\bar S$ & " 
+	// 	<<   mps->getParPtr("S_bar")->mean() 
+		<< " xx.xx " 
+		<< " $\\pm$ " << mps->getParPtr("S_bar")->err() << "\\\\" << "\n";
 	}
 
 	resultsfile << "\\hline" << "\n";
@@ -1350,9 +1399,9 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	for(int p = 0 ; p < prefix.size(); p++){
 
 		vector<string> cov_params;
-    		if(!mps->getParPtr("Gamma")->iFixInit())cov_params.push_back("Gamma");
-    		if(!mps->getParPtr("dGamma")->iFixInit())cov_params.push_back("dGamma");
-    		if(!mps->getParPtr("dm")->iFixInit())cov_params.push_back("dm");
+//     		if(!mps->getParPtr("Gamma")->iFixInit())cov_params.push_back("Gamma");
+//     		if(!mps->getParPtr("dGamma")->iFixInit())cov_params.push_back("dGamma");
+//     		if(!mps->getParPtr("dm")->iFixInit())cov_params.push_back("dm");
 
 //     		if(!mps->getParPtr("offset_sigma_dt"+prefix[p])->iFixInit())cov_params.push_back("offset_sigma_dt"+prefix[p]);
 //     		if(!mps->getParPtr("scale_sigma_dt"+prefix[p])->iFixInit())cov_params.push_back("scale_sigma_dt"+prefix[p]);
@@ -1400,7 +1449,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			mu.Print();
 			RooMultiVarGaussian gauss_cov("gauss_cov","gauss_cov",xvec, mu, cov);
 	
-			const int N_toys_cov = 500; 
+			const int N_toys_cov = 1000; 
 			RooDataSet* data_cov = gauss_cov.generate(xvec, N_toys_cov);
 	
 			double N_tot = 0;
@@ -1560,13 +1609,12 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	
 			ofstream datafile;
 			datafile.open(("../../../../../TD-AnaNote/latex/tables/Tagging/"+(string)OutputDir + "tagPower"+ prefix[p] + ".tex").c_str(),std::ofstream::trunc);
-			datafile << "\\begin{table}[h]" << "\n";
-			datafile << "\\centering" << "\n";
-	// 		datafile << "\\small" << "\n";
-			datafile << "\\caption{The flavour tagging performances for only OS tagged, only SS tagged and both OS and SS tagged events";
-			if(A_is_in_B("Run1", prefix[p])) datafile << " for Run-I data"; 
-			else if(A_is_in_B("Run2", prefix[p])) datafile << " for Run-II data"; 
-			datafile << ".}\n";;
+			//datafile << "\\begin{table}[h]" << "\n";
+			//datafile << "\\centering" << "\n";
+			//datafile << "\\caption{The flavour tagging performances for only OS tagged, only SS tagged and both OS and SS tagged events";
+			//if(A_is_in_B("Run1", prefix[p])) datafile << " for Run-I data"; 
+			//else if(A_is_in_B("Run2", prefix[p])) datafile << " for Run-II data"; 
+			//datafile << ".}\n";;
 			datafile << "\\begin{tabular}{c c c c}" << "\n";
 			datafile << "\\hline" << "\n";
 			datafile << "\\hline" << "\n";
@@ -1597,8 +1645,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			datafile << "\\hline" << "\n";
 			datafile << "\\hline" << "\n";
 			datafile << "\\end{tabular}" << "\n";
-			datafile << "\\label{table:tagging" << prefix[p] << "}" << "\n";
-			datafile << "\\end{table}";	
+			//datafile << "\\label{table:tagging" << prefix[p] << "}" << "\n";
+			//datafile << "\\end{table}";	
 		}
 	}
     }
@@ -1935,7 +1983,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	}
     }
    else if (doPlots){ 
-	for(int n = 0; n < 2; n++){   /// Multiple iterations needed to release memory 
+	for(int n = 0; n < 5; n++){   /// Multiple iterations needed to release memory 
 		int N_sample = 250000;
 		DalitzEventList sampleEvents;
    		if(doSimFit) {
@@ -1943,6 +1991,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			sampleEvents.Add(t_pdf_Run1_t1.generateToys(N_sample *N_Run1_t1/N,1,1));
 			sampleEvents.Add(t_pdf_Run2_t0.generateToys(N_sample *N_Run2_t0/N,2,0));
 			sampleEvents.Add(t_pdf_Run2_t1.generateToys(N_sample *N_Run2_t1/N,2,1));
+			sampleEvents.Add(t_pdf_Run2_17_t0.generateToys(N_sample *N_Run2_17_t0/N,3,0));
+			sampleEvents.Add(t_pdf_Run2_17_t1.generateToys(N_sample *N_Run2_17_t1/N,3,1));
 		}
 		else sampleEvents.Add(t_pdf_Run1_t0.generateToys(N_sample));	
 
@@ -2221,6 +2271,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 
 		TH1D* h_asym_fit = (TH1D*) h_N_mixed_fit->GetAsymmetry(h_N_unmixed_fit);	
 		h_asym_fit->SetLineColor(kRed);
+		h_asym_fit->SetLineWidth(3);
 		h_asym->Draw("e");
 		h_asym_fit->Draw("histcsame");
 		c->Print(((string)OutputDir+"h_asym.eps").c_str());
@@ -2456,7 +2507,7 @@ void produceMarginalPdfs(){
     TString prefix = "";
     //TString prefix = "BsTaggingTool_";
     NamedParameter<double> min_year("min_year", 11);
-    NamedParameter<double> max_year("max_year", 16);
+    NamedParameter<double> max_year("max_year", 17);
     NamedParameter<double> min_TAU("min_TAU", 0.4);
     NamedParameter<double> max_TAU("max_TAU", 10.);
     NamedParameter<double> min_TAUERR("min_TAUERR", 0.);
@@ -2549,6 +2600,32 @@ void produceMarginalPdfs(){
     TH1D* h_dt_norm_Run2_t0 = new TH1D("h_dt_norm_Run2_t0",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
     TH1D* h_dt_norm_Run1_t1 = new TH1D("h_dt_norm_Run1_t1",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
     TH1D* h_dt_norm_Run2_t1 = new TH1D("h_dt_norm_Run2_t1",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+
+    TH1D* h_w_OS_norm_Run2_17 = new TH1D("h_w_OS_norm_Run2_17","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm_Run2_17_t0 = new TH1D("h_w_OS_norm_Run2_17_t0","; #eta_{OS}",bins,0,0.5);
+    TH1D* h_w_OS_norm_Run2_17_t1 = new TH1D("h_w_OS_norm_Run2_17_t1","; #eta_{OS}",bins,0,0.5);
+    
+    TH1D* h_w_SS_norm_Run2_17 = new TH1D("h_w_SS_norm_Run2_17","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm_Run2_17_t0 = new TH1D("h_w_SS_norm_Run2_17_t0","; #eta_{SS}",bins,0,0.5);
+    TH1D* h_w_SS_norm_Run2_17_t1 = new TH1D("h_w_SS_norm_Run2_17_t1","; #eta_{SS}",bins,0,0.5);
+    
+    TH1D* h_q_OS_norm_Run2_17 = new TH1D("h_q_OS_norm_Run2_17","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm_Run2_17_t0 = new TH1D("h_q_OS_norm_Run2_17_t0","; q_{OS}",3,-1.5,1.5);
+    TH1D* h_q_OS_norm_Run2_17_t1 = new TH1D("h_q_OS_norm_Run2_17_t1","; q_{OS}",3,-1.5,1.5);
+    
+    TH1D* h_q_SS_norm_Run2_17 = new TH1D("h_q_SS_norm_Run2_17","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm_Run2_17_t0 = new TH1D("h_q_SS_norm_Run2_17_t0","; q_{SS}",3,-1.5,1.5);
+    TH1D* h_q_SS_norm_Run2_17_t1 = new TH1D("h_q_SS_norm_Run2_17_t1","; q_{SS}",3,-1.5,1.5);
+
+    TH1D* h_q_f_norm_Run2_17 = new TH1D("h_q_f_norm_Run2_17","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run2_17_t0 = new TH1D("h_q_f_norm_Run2_17_t0","; q_{f}",2,-2,2);
+    TH1D* h_q_f_norm_Run2_17_t1 = new TH1D("h_q_f_norm_Run2_17_t1","; q_{f}",2,-2,2);
+    
+    TH1D* h_t_norm_Run2_17 = new TH1D("h_t_norm_Run2_17",";t (ps);Events (norm.) ",bins,min_TAU,max_TAU);
+
+    TH1D* h_dt_norm_Run2_17 = new TH1D("h_dt_norm_Run2_17",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run2_17_t0 = new TH1D("h_dt_norm_Run2_17_t0",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run2_17_t1 = new TH1D("h_dt_norm_Run2_17_t1",";#sigma_{t} (ps);Events (norm.) ",bins,min_TAUERR,max_TAUERR);
     
     ///loop over data events
     for(int i=0; i< tree_norm->GetEntries(); i++)
@@ -2600,20 +2677,40 @@ void produceMarginalPdfs(){
             if(q_OS != 0)h_w_OS_norm_Run2->Fill(w_OS,sw);
             if(q_SS != 0)h_w_SS_norm_Run2->Fill(w_SS,sw);
 	    if(trigger == 0){
-		h_dt_norm_Run2_t0->Fill(dt,sw);
-            	h_q_OS_norm_Run2_t0->Fill((double)q_OS,sw);
-            	h_q_SS_norm_Run2_t0->Fill((double)q_SS,sw);
-        	h_q_f_norm_Run2_t0->Fill((double)f,sw);
-	        if(q_OS != 0)h_w_OS_norm_Run2_t0->Fill(w_OS,sw);
-                if(q_SS != 0)h_w_SS_norm_Run2_t0->Fill(w_SS,sw);
+		if(year < 17){
+			h_dt_norm_Run2_t0->Fill(dt,sw);
+			h_q_OS_norm_Run2_t0->Fill((double)q_OS,sw);
+			h_q_SS_norm_Run2_t0->Fill((double)q_SS,sw);
+			h_q_f_norm_Run2_t0->Fill((double)f,sw);
+			if(q_OS != 0)h_w_OS_norm_Run2_t0->Fill(w_OS,sw);
+			if(q_SS != 0)h_w_SS_norm_Run2_t0->Fill(w_SS,sw);
+		}
+		else {
+			h_dt_norm_Run2_17_t0->Fill(dt,sw);
+			h_q_OS_norm_Run2_17_t0->Fill((double)q_OS,sw);
+			h_q_SS_norm_Run2_17_t0->Fill((double)q_SS,sw);
+			h_q_f_norm_Run2_17_t0->Fill((double)f,sw);
+			if(q_OS != 0)h_w_OS_norm_Run2_17_t0->Fill(w_OS,sw);
+			if(q_SS != 0)h_w_SS_norm_Run2_17_t0->Fill(w_SS,sw);
+		}
 	    }
 	    else if(trigger == 1){
-		h_dt_norm_Run2_t1->Fill(dt,sw);
-            	h_q_OS_norm_Run2_t1->Fill((double)q_OS,sw);
-            	h_q_SS_norm_Run2_t1->Fill((double)q_SS,sw);
-        	h_q_f_norm_Run2_t1->Fill((double)f,sw);
-	        if(q_OS != 0)h_w_OS_norm_Run2_t1->Fill(w_OS,sw);
-                if(q_SS != 0)h_w_SS_norm_Run2_t1->Fill(w_SS,sw);
+		if(year < 17){
+			h_dt_norm_Run2_t1->Fill(dt,sw);
+			h_q_OS_norm_Run2_t1->Fill((double)q_OS,sw);
+			h_q_SS_norm_Run2_t1->Fill((double)q_SS,sw);
+			h_q_f_norm_Run2_t1->Fill((double)f,sw);
+			if(q_OS != 0)h_w_OS_norm_Run2_t1->Fill(w_OS,sw);
+			if(q_SS != 0)h_w_SS_norm_Run2_t1->Fill(w_SS,sw);
+		}
+		else {
+			h_dt_norm_Run2_17_t1->Fill(dt,sw);
+			h_q_OS_norm_Run2_17_t1->Fill((double)q_OS,sw);
+			h_q_SS_norm_Run2_17_t1->Fill((double)q_SS,sw);
+			h_q_f_norm_Run2_17_t1->Fill((double)f,sw);
+			if(q_OS != 0)h_w_OS_norm_Run2_17_t1->Fill(w_OS,sw);
+			if(q_SS != 0)h_w_SS_norm_Run2_17_t1->Fill(w_SS,sw);
+		}
 	    }
         }
        
@@ -2671,6 +2768,20 @@ void produceMarginalPdfs(){
     h_q_SS_norm_Run2_t1->Write();
     h_w_SS_norm_Run2_t1->Write();
     h_q_f_norm_Run2_t1->Write();
+
+    h_dt_norm_Run2_17_t0->Write();
+    h_q_OS_norm_Run2_17_t0->Write();
+    h_w_OS_norm_Run2_17_t0->Write();
+    h_q_SS_norm_Run2_17_t0->Write();
+    h_w_SS_norm_Run2_17_t0->Write();
+    h_q_f_norm_Run2_17_t0->Write();
+
+    h_dt_norm_Run2_17_t1->Write();
+    h_q_OS_norm_Run2_17_t1->Write();
+    h_w_OS_norm_Run2_17_t1->Write();
+    h_q_SS_norm_Run2_17_t1->Write();
+    h_w_SS_norm_Run2_17_t1->Write();
+    h_q_f_norm_Run2_17_t1->Write();
 
     out->Write();
 }
@@ -2948,7 +3059,7 @@ int main(int argc, char** argv){
 
 
 //     test_multiGaussConstraints();
-  //produceMarginalPdfs();
+//   produceMarginalPdfs();
   //for(int i = 0; i < 200; i++) fullTimeFit(atoi(argv[1])+i);
       fullTimeFit(atoi(argv[1]),(string)argv[2]);
 //     animate(atoi(argv[1]));

@@ -544,9 +544,9 @@ class TimePdfMaster
 		_r_h_eta_SS = new RooDataHist("r_eta_SS","r_eta_SS",*_r_eta_SS,_h_eta_SS);
 		_pdf_eta_SS = (RooAbsPdf*) (new RooHistPdf("pdf_eta_SS","pdf_eta_SS",*_r_eta_SS,*_r_h_eta_SS));
 
-		_h_q_f = new TH1D( *((TH1D*) _f_pdfs->Get(("h_q_f_norm_"+(string)_marginalPdfsPrefix).c_str())));
-		_h_q_OS = new TH1D( *((TH1D*) _f_pdfs->Get(("h_q_OS_norm_"+(string)_marginalPdfsPrefix).c_str())));
-		_h_q_SS = new TH1D( *((TH1D*) _f_pdfs->Get(("h_q_SS_norm_"+(string)_marginalPdfsPrefix).c_str())));
+// 		_h_q_f = new TH1D( *((TH1D*) _f_pdfs->Get(("h_q_f_norm_"+(string)_marginalPdfsPrefix).c_str())));
+// 		_h_q_OS = new TH1D( *((TH1D*) _f_pdfs->Get(("h_q_OS_norm_"+(string)_marginalPdfsPrefix).c_str())));
+// 		_h_q_SS = new TH1D( *((TH1D*) _f_pdfs->Get(("h_q_SS_norm_"+(string)_marginalPdfsPrefix).c_str())));
     	}
 
 	_resmodel = new RooGaussModel("resmodel", "resmodel", *_r_t,  RooRealConstant::value(0.), *_r_dt_scaled);              

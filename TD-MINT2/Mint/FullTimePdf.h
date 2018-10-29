@@ -467,6 +467,7 @@ public:
 
 		run = eventList[i].getValueFromVector(7);
 		if(run == 2) year = 16;
+		if(run == 3) year = 17;
 		else year = 12;
 		trigger = eventList[i].getValueFromVector(8);
 
