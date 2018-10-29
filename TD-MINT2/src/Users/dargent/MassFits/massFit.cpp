@@ -1426,7 +1426,7 @@ vector<double> fitSignalShape_DCB(TString channel = "signal"){
         pad2->Update();
         canvas->Update();
         canvas->SaveAs("eps/SignalShape/"+channel+"_DCB_MC_pull.eps");
-	if(updateAnaNotePlots && !fitPreselected) canvas->Print("../../../../../TD-AnaNote/latex/figs/MassFit/"+channel+"MC_pull.pdf");
+// 	if(updateAnaNotePlots && !fitPreselected) canvas->Print("../../../../../TD-AnaNote/latex/figs/MassFit/"+channel+"MC_pull.pdf");
 
 	TCanvas* canvas_ghost = new TCanvas();
         canvas_ghost->SetTopMargin(0.05);
@@ -1473,7 +1473,7 @@ vector<double> fitSignalShape_DCB(TString channel = "signal"){
         pad2_ghost->Update();
         canvas_ghost->Update();
         canvas_ghost->SaveAs("eps/SignalShape/"+channel+"_DCB_MC_ghost_pull.eps");
-	if(updateAnaNotePlots && !fitPreselected) canvas_ghost->Print("../../../../../TD-AnaNote/latex/figs/MassFit/"+channel+"MC_ghost_pull.pdf");
+// 	if(updateAnaNotePlots && !fitPreselected) canvas_ghost->Print("../../../../../TD-AnaNote/latex/figs/MassFit/"+channel+"MC_ghost_pull.pdf");
 
 	/// Return fit params
 	vector<double> params;
