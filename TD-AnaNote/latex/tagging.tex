@@ -7,8 +7,10 @@ To identify the initial flavour state of the $\Bs$ meson,
 a number of flavour tagging algorithms are used that either determine the flavour of the non-signal b-hadron produced in the event (opposite site, OS \cite{LHCb-PAPER-2011-027})
 or use particles produced in the fragmentation of the signal candidate $\Bs$/$\Bsb$ (same side, SS \cite{Aaij:2016psi}). 
 For the same side, the algorithm searching for the charge of an additional kaon that accompanies the fragmentation of the signal candidate is used (SS-Kaon). 
-For the opposite site, four different taggers are chosen: 
-the algorithms that use the charge of an electron or a muon from semi-leptonic B decays (OS-$\electron$,$\muon$), the tagger that uses the charge of a kaon from a b $\to$ c $\to$ s decay chain (OS-nnetKaon) 
+For the opposite site, five different taggers are chosen: 
+the algorithms that use the charge of an electron or a muon from semi-leptonic B decays (OS-$\electron$,$\muon$), 
+the tagger that uses the charge of a kaon from a b $\to$ c $\to$ s decay chain (OS-Kaon),
+the algorithm which reconstructs opposite-side charm hadrons from a number of decay channels (OS-c)
 and the algorithm that determines the $\Bs$/$\Bsb$ candidate flavour from the charge of a secondary vertex, reconstructed from the OS b decay product (OS-VtxCharge). 
 %All four taggers are then combined into a single OS tagger. 
 
@@ -31,7 +33,7 @@ For each $\Bs$/$\Bsb$ candidate, the tagging algorithms provide, besides
 a flavour tag $q=1,-1,0$ (for an initial $\Bs$, $\Bsb$ or no tag), 
 a prediction for the mistag probability $\eta$ 
 based on the output of multivariate classifiers.
-These are trained on simulated samples of flavour specific control channels ($\Bs\to\Dsm\pip$ (SS algorithm) and $\Bu\to\jpsi\Kp$ (OS algorithms))
+These are trained on either simulated or \textsf{sWeighted} samples of flavour specific control channels ($\Bs\to\Dsm\pip$ (SS algorithm) and $\Bu\to\jpsi\Kp$ (OS algorithms))
 and are optimized for highest $\epsilon_{eff}$ on data.
 Utilizing flavour-specific final states, the estimated mistag $\eta$ of each tagger has to be calibrated to match the actual mistag probability $\omega$. 
 For the calibration, a linear model
@@ -53,19 +55,40 @@ Therefore, the flavour asymmetry parameters $\Delta p_{0}$, $\Delta p_{1}$ and $
 %The similar selection ensures as close as possible agreement between the $\Bs\to\Ds\pion\pion\pion$ and $\Bs\to\Ds\kaon\pion\pion$ samples in terms of the decay kinematics, which are crucial for the flavour tagging.
 %Section \ref{subsec: TaggingComparison} shows the compatibility of both samples. After applying the calibration, the response of the OS and SS taggers are combined, which is shown in Sec. \ref{subsec: TaggingCombination}.  
 
+\clearpage
 \subsection{OS tagger combination}
 \label{subsec: OScalibration}
 
-First, the OS electron, muon, neural net kaon and the secondary vertex charge taggers are individually calibrated and then combined into a single 
+First, the OS electron, muon, kaon, charm and the secondary vertex charge taggers are individually calibrated and then combined into a single 
 OS-Combo tagger using the \textsf{EspressoPerformanceMonitor} tool.
 We choose the flavour specific decay  $B_s \to D_s \pi\pi\pi$ as calibration mode since it is very similar to the signal decay $B_s \to D_s K\pi\pi$.
 The calibration is performed separately for Run-I and Run-II data.
+The OS-c tagger is not included for Run-I data since the statistics is too low.
 Where available the latest Run-II tuning is used for Run-II data, otherwise the Run-I tuning of the taggers is used.
 Figures \ref{fig:OSdistribution_Run1} and \ref{fig:OSdistribution_Run2} show the fitted calibration functions
 and Tables \ref{tab:OS_Run1} and \ref{tab:OS_Run2} list the measured tagging performances.
+The tagging calibration parameters are listed in Appendix~\ref{a:OStagger}.
 
-\clearpage
-\begin{figure}[h]
+\begin{table}[h]
+\centering
+%\scriptsize
+\caption{The flavour tagging performances for the used OS taggers for Run-I data.}
+\resizebox{\linewidth}{!}{
+	\input{tables/Tagging/Run1/EspressoPerformanceTable_OS.tex}
+}
+\label{tab:OS_Run1}
+%\end{table}
+%
+%\begin{table}[h]
+\caption{The flavour tagging performances for the used OS taggers for Run-II data.}
+\resizebox{\linewidth}{!}{
+	\input{tables/Tagging/Run2/EspressoPerformanceTable_OS.tex}
+}
+\label{tab:OS_Run2}
+\end{table}
+
+%\clearpage
+\begin{figure}[hp]
 \centering
 \includegraphics[height=!,width=0.3\textwidth]{figs/Tagging/Run1/OS_Muon_Calibration.pdf}
 \includegraphics[height=!,width=0.3\textwidth]{figs/Tagging/Run1/OS_Electron_Calibration.pdf}
@@ -91,24 +114,7 @@ A linear fit, including the $1\sigma$ and $2\sigma$ error bands is overlaid for 
 \label{fig:OSdistribution_Run2}
 \end{figure}
 
-\clearpage
-\begin{table}[h]
-\centering
-%\scriptsize
-\caption{The flavour tagging performances for the used OS taggers for Run-I data.}
-\resizebox{\linewidth}{!}{
-	\input{tables/Tagging/Run1/EspressoPerformanceTable_OS.tex}
-}
-\label{tab:OS_Run1}
-%\end{table}
-%
-%\begin{table}[h]
-\caption{The flavour tagging performances for the used OS taggers for Run-II data.}
-\resizebox{\linewidth}{!}{
-	\input{tables/Tagging/Run2/EspressoPerformanceTable_OS.tex}
-}
-\label{tab:OS_Run2}
-\end{table}
+%\clearpage
 
 %\begin{table}[h]
 %\centering
@@ -158,6 +164,8 @@ A linear fit, including the $1\sigma$ and $2\sigma$ error bands is overlaid for 
 %\normalsize
 %\end{table}
 
+
+\clearpage
 \subsection{Tagging performance}
 \label{subsec:TaggingComparison}
 
@@ -167,7 +175,7 @@ are included as per-event observables, effectively giving a larger weight to the
 The tagger responses are combined into a single response on an event-by-event basis during the fit.
 Tables \ref{tab:tagPerfRun1} and \ref{tab:tagPerfRun2} report the tagging performances for the OS and SS combination 
 considering three mutually exclusive categories of tagged events: OS only, SS only and both OS and SS.
-
+The tagging calibration parameters are listed in Table~\ref{tab:normFitResults}.
 
 %To justify the usage of the tagging calibration, obtained using the $\Bs\to\Ds\pion\pion\pion$ sample, for our signal decay, the performance of the taggers in the two decay channels needs to be compatible. 
 %This is verified using both, simulated signal samples of both decays and sweighted data, 

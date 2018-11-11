@@ -100,7 +100,7 @@ For the invariant mass of the $K\pi\pi$ subsystem it extends up to $3.4 \gev$.
 It has however been observed that the decay proceeds predominantly through the low lying axial vector states $K_{1}(1270)$ and $K_{1}(1400)$, while
 the combinatorial background is concentrated at high $K\pi\pi$ invariant masses ($m(K\pi\pi) > 2000 \mev$).
 Moreover, the strange hadron spectrum above $2\gev$ is poorly understood experimentally such that a reliable extraction of the strong phase motion in that region is not possible.
-We consequently choose to limit the considered phase space region to $m(K\pi\pi) < 1950 \mev$, which is right below the charm-strange threshold ($\Bs\to\Dsp\Dsm$).
+We consequently choose to limit the considered phase space region to $m(K\pi\pi) < 1900 \mev$, which is right below the charm-strange threshold ($\Bs\to\Dsp\Dsm$).
  
  \clearpage
 \subsubsection{Physics background vetoes}
@@ -123,9 +123,9 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 	$m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 40$ MeV
 	or the $\Km$ has to fulfill more stringent PID criteria depending on the resonant region (see Table  \ref{table:selDs}).
 	
-	\item $D^{*-} \to (\Dz\to\kaon\kaon) \pim$: \\
-	%$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\kaon\pion$ decay, 
-	Same final state, vetoed by requiring $\left( M(KK\pim) - m(\kaon\kaon) \right) >  155 \mev$. 
+	\item $\Dz\to\kaon\kaon$: \\
+	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\kaon\pion$ decay, 
+%	Same final state, vetoed by requiring $\left( M(KK\pim) - m(\kaon\kaon) \right) >  155 \mev$. 
 \end{enumerate}
 
 \item $\Ds^-\to\pion^+\pion^-\pion^-$
@@ -142,10 +142,10 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 %	$m(\pip \pi^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV
 %	or PIDp($\pim$) $< 0$ for each $\pim$.
 
-	\item $D^{*-} \to (\Dz\to\pion\pion) \pim$: \\
-%	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\pion\pion\pion$ decay, 
-%		vetoed by requiring both possible combinations to have $m(\pion\pion) < 1700 \mev$.
-	Same final state, vetoed by requiring $\left( M(\pi\pi\pim) - m(\pi\pi) \right) >  155 \mev$. 
+	\item $\Dz\to\pion\pion$: \\
+	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\pion\pion\pion$ decay, 
+		vetoed by requiring both possible combinations to have $m(\pion\pion) < 1700 \mev$.
+%	Same final state, vetoed by requiring $\left( M(\pi\pi\pim) - m(\pi\pi) \right) >  155 \mev$. 
 
 \end{enumerate}
 
@@ -168,10 +168,10 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 	$m(K^-_p \pip \pim) \ne m(\Lambda_c) \pm 40$ MeV
 	or PIDK($\Km$) $-$ PIDp($\Km$) $> 5$.
 	
-	\item $D^{*-} \to (\Dz\to\kaon\pion) \pim$: \\
-	Same final state, vetoed by requiring $\left( M(K\pi\pim) - m(K\pi) \right) >  155 \mev$. 
-%	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\pion\pion$ decay, 
-%		vetoed by requiring both possible combinations to have $m(\kaon\pion) < 1750 \mev$.
+	\item $\Dz\to\kaon\pion$: \\
+%	Same final state, vetoed by requiring $\left( M(K\pi\pim) - m(K\pi) \right) >  155 \mev$. 
+	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\pion\pion$ decay, 
+		vetoed by requiring both possible combinations to have $m(\kaon\pion) < 1750 \mev$.
 \end{enumerate}
 
 \end{enumerate}
@@ -250,11 +250,15 @@ The distributions are shown without (black) and with (blue) the $\Lambda_c$-veto
 \end{figure}
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2KKpi_as_D02KK_compareVeto_2.pdf} 
-\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2pipipi_as_D02pipi_compareVeto_2.pdf} 
-\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2Kpipi_as_D02Kpi_compareVeto_2.pdf} 
-\caption{Background contributions to $D_s^- \to KK\pi$ (left), $D_s^- \to \pi\pi\pi$ (middle) and $D_s^- \to K\pi\pi$ (right) from $D^{*-} \to (D^0\to hh) \pim$ decays. 
-The $D^{*-}$ background contribution peaks at $m(hh\pim) - m(hh) \approx 145.5 \mev$ which corresponds to the mass difference of the $D^{*-}$ and $D^0$ mesons. }
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2KKpi_as_D02KK_compareVeto.pdf} 
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2pipipi_as_D02pipi_compareVeto.pdf} 
+\includegraphics[height=!,width=0.32\textwidth]{figs/BkgStudies/norm_Ds2Kpipi_as_D02Kpi_compareVeto.pdf} 
+\caption{
+Background contributions to $D_s \to KK\pi$ (left), $D_s \to \pi\pi\pi$ (middle) and $D_s \to K\pi\pi$ (right) from $D^0\to hh$ decays combined with a random pion.
+The peak at $m(\pi\pi) - m(D^0) \approx -60 \mev$ ($m(K\pi) - m(D^0) \approx -60 \mev$) are due to $D^0\to K\pi$ ($D^0\to KK$) where a kaon is misidentified as pion.
+%Background contributions to $D_s^- \to KK\pi$ (left), $D_s^- \to \pi\pi\pi$ (middle) and $D_s^- \to K\pi\pi$ (right) from $D^{*-} \to (D^0\to hh) \pim$ decays. 
+%The $D^{*-}$ background contribution peaks at $m(hh\pim) - m(hh) \approx 145.5 \mev$ which corresponds to the mass difference of the $D^{*-}$ and $D^0$ mesons. 
+}
 \label{fig:vetoD0}
 \end{figure}
 \begin{figure}[h]
@@ -436,7 +440,7 @@ The signal significance is normalized to be 1 at the optimal BDTG cut value.
 $D_s \to h h h$ &  $m(hhh)$ & = $m_{D_s} \pm 25 \mev$  \\
 %& $p_T $ & $> 1600 \mev$\\
 \\
-$D_s^- \to K K \pi^-$  & $D^{*-}$ veto  & $m(KK\pim) - m(K K) > 155$ MeV \\
+$D_s^- \to K K \pi^-$  & $D^0$ veto  & $m(K K) < 1840$ MeV \\
 \\
 $D_s^- \to \phi \pi^-$ & $m(KK)$  & $= m_{\phi} \pm 12$ MeV \\
 & PIDK($K^+$) & $> -10$ \\
@@ -450,7 +454,7 @@ $D_s^- \to \phi \pi^-$ & $m(KK)$  & $= m_{\phi} \pm 12$ MeV \\
 $D_s^- \to K^{*}(892) K^-$ & $m(KK)$  & $\ne m_{\phi} \pm 12$ MeV \\
 & $m(K^+\pi^-)$  & $= m_{K^{*}(892)} \pm 75$ MeV \\
 & PIDK($K^+$) & $> -10$ \\
-& PIDK($K^-$) & $> -5$ \\
+& PIDK($K^-$) & $> 0$ \\
 & PIDK($\pi^-$) & $< 10$ \\
 &  $\chi^{2}_{FD}$ & $> 0$ \\
 &  FD in $z$  &$ > 0$ \\
@@ -469,14 +473,14 @@ $D_s^- \to (K K \pi^-)_{NR}$ & $m(KK)$  & $\ne m_{\phi} \pm 12$ MeV \\
 \\
 $D_s^- \to \pi \pi \pi$ & PIDK($\pi$) & $< 10$  \\
 & PIDp($\pi$) & $< 20$ \\
-& $D^{*-}$ veto  & $m(\pi \pi \pim) - m(\pi \pi) > 155$ MeV \\
+& $D^0$ veto  & $m(\pip \pim) < 1700$ MeV\\
 &  $\chi^{2}_{FD}$ & $> 9$ \\
 &  FD in $z$  &$ > 0$ \\
 \\
 $D_s^- \to K^- \pip \pim$ & PIDK($K$) & $> 8$  \\
 & PIDK($\pi$) & $< 5$ \\
 & PIDp($\pi$) & $< 20$ \\
-& $D^{*-}$ veto  & $m(K^- \pip \pim) - m(K^- \pip) > 155$ MeV \\
+& $D^0$ veto  & $m(K^- \pip) < 1750$ MeV \\
 &  $\chi^{2}_{FD}$ & $> 9$ \\
 &  FD in $z$  &$ > 0$ \\
 & $D^-$ veto  & $m(K^-_\pi \pip \pim) \ne m(D^-) \pm 40$ MeV  $||$ $\text{PIDK}(K^-) > 15$\\
@@ -513,10 +517,10 @@ $B_s \to D_s h \pi \pi$  & $m(D_s h \pi \pi)$ & $> 5200 \mev$ \\
 & $\delta t$  & $ < 0.15 \ps$ \\
 & Phasespace region & $m(h\pi\pi) < 1.95 \gev$ \\ & & $m(h\pi) < 1.2 \gev$ \\ & & $m(\pi\pi) < 1.2 \gev$ \\
 & Wrong PV veto & nPV = 1 $||$  $\text{min}(\Delta\chi^{2}_{IP}) > 20$ \\
-& BDTG &  $> 0.45$ [Run-I,\textsf{L0-TOS}] \\
-& & $> 0.50$ [Run-I,\textsf{L0-TIS}] \\
-& & $> 0.35$ [Run-II,\textsf{L0-TOS}] \\
-& & $> 0.50$ [Run-II,\textsf{L0-TIS}] \\
+& BDTG &  $> 0.35$ [Run-I,\textsf{L0-TOS}] \\
+& & $> 0.45$ [Run-I,\textsf{L0-TIS}] \\
+& & $> 0.25$ [Run-II,\textsf{L0-TOS}] \\
+& & $> 0.45$ [Run-II,\textsf{L0-TIS}] \\
 \\
 $X_s^+ \to K^+ \pi^+ \pi^-$  & PIDK(K) & $> 10$ \\
 & PIDK($\pi^+$) & $< 10$ \\
@@ -542,6 +546,7 @@ All tracks & hasRich & $= 1$ \\
 
 \clearpage
 \subsection{Simulation}
+\label{sec:Sim}
 
 Several Monte Carlo (MC) samples are used in the analysis for acceptance and
 background studies.
@@ -549,13 +554,13 @@ A full list of them is given in Tab.~\ref{table:mcSamples}.
 In each case, the decay model includes a mixture of non-interfering resonances contributing to the 
 $X_s \to K \pi \pi$ or $X_d \to \pi \pi \pi$ bachelor system and a non-resonant (phase-space) component.
 All MC samples are generated using \textsf{Pythia8}, reconstructed using
-\textsf{Reco14c}, \textsf{Reco15} and \textsf{Reco16} for Run-I,15 and 16 data and
+\textsf{Reco14c}, \textsf{Reco15} and \textsf{Reco16} for Run-I, 15 and 16 data and
 selected using the same criteria as in data.
-\newline
-\\
-\pretextcomment{
-All samples indicated with 'Requested' have been requested in Dec. 17 and are expected to be available soon.
-}
+%\newline
+%\\
+%\pretextcomment{
+%All samples indicated with 'Requested' have been requested in Dec. 17 and are expected to be available soon.
+%}
 
 \begin{table}[h]
 \centering
@@ -571,14 +576,14 @@ Decay & Event Type &  \multicolumn{1}{c}{\textsf{Sim}} &  \multicolumn{4}{c}{Sta
 
 \hline
 $B_s \to (D_s \to K K \pi) K \pi\pi$  & 13266007   & 08i & 1.2 M & 1.2 M & - & -   & Generator Level  \\
-$B_s \to (D_s \to K K \pi) K \pi\pi$  & 13266008  & 09c & Requested & Requested & Requested & Requested  & Generator Level, Stripping  \\
-$B_s \to (D_s \to K \pi \pi) K \pi\pi$  & 13266058 & 09c  & Requested & Requested & Requested & Requested   & Generator Level, Stripping  \\
-$B_s \to (D_s \to \pi \pi \pi) K \pi\pi$  & 13266038  & 09c &  Requested & Requested & Requested & Requested  & Generator Level, Stripping  \\
+$B_s \to (D_s \to K K \pi) K \pi\pi$  & 13266008  & 09c & 70 k & 80 k & 50 k & 100 k  & Generator Level, Stripping  \\
+$B_s \to (D_s \to K \pi \pi) K \pi\pi$  & 13266058 & 09c  & 70 k & 80 k & 50 k & 100 k   & Generator Level, Stripping  \\
+$B_s \to (D_s \to \pi \pi \pi) K \pi\pi$  & 13266038  & 09c &  70 k & 80 k & 50 k & 100 k  & Generator Level, Stripping  \\
 \\
 $B_s \to (D_s \to K K \pi) \pi \pi\pi$  & 13266006 & 08i   & 1.2 M & 1.2 M & - & -   & Generator Level  \\
-$B_s \to (D_s \to K K \pi) \pi \pi\pi$  & 13266068  & 09c & Requested & Requested & Requested & Requested   & Generator Level, Stripping  \\
-$B_s \to (D_s \to K \pi \pi) \pi \pi\pi$  & 13266088  & 09c & Requested & Requested & Requested & Requested   & Generator Level, Stripping  \\
-$B_s \to (D_s \to \pi \pi \pi) \pi \pi\pi$  & 13266078 & 09c  &Requested & Requested & Requested & Requested    & Generator Level, Stripping  \\
+$B_s \to (D_s \to K K \pi) \pi \pi\pi$  & 13266068  & 09c & 70 k & 80 k & 50 k & 100 k   & Generator Level, Stripping  \\
+$B_s \to (D_s \to K \pi \pi) \pi \pi\pi$  & 13266088  & 09c & 70 k & 80 k & 50 k & 100 k   & Generator Level, Stripping  \\
+$B_s \to (D_s \to \pi \pi \pi) \pi \pi\pi$  & 13266078 & 09c  &70 k & 80 k & 50 k & 100 k    & Generator Level, Stripping  \\
 \\
 $B_s \to D_s^* \pi \pi\pi, D_s \to KK \pi$  & 13266201 & 08i   & 1.2 M & 1.2 M & - & -    & Generator Level  \\
 

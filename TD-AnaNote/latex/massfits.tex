@@ -37,17 +37,16 @@ the skewness $\nu$ and the kurtosis $\tau$.
 %and $\delta$ describes the (a)symmetry of the fitted distribution. Higher values of $\delta$ result in a more symmetric, gaussian-like function.  
 %Another Johnson SU function function is used to account for the contribution of the $\B^{0}\to\Ds\kaon\pion\pion$ decay, which is also present in the $m(\Ds\kaon\pion\pion)$ spectrum.
 The tail parameters $\nu$ and $\tau$ are fixed to the values obtained by a fit to the invariant mass distribution of simulated events shown in Fig~\ref{fig: BsMassShapes}. 
-\begin{figure}[h]
+\begin{figure}[b]
 \centering
-\includegraphics[height=!,width=0.45\textwidth]{figs/MassFit/normMC_pull.pdf} \hfill
-\includegraphics[height=!,width=0.45\textwidth]{figs/MassFit/signalMC_pull.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/MassFit/normMC_pull.pdf} 
+\includegraphics[height=!,width=0.32\textwidth]{figs/MassFit/signalMC_pull.pdf}
 \caption{Invariant mass distributions of simulated (left) $\Bs\to\Ds\pion\pion\pion$ and (right) $\Bs\to\Ds\kaon\pion\pion$ events. A fit with a Johnson's SU PDF is overlaid.}
 \label{fig: BsMassShapes}
 \end{figure}
 To account for differences between simulation and real data, linear scaling factors for the mean $\mu$ and width $\sigma$ are determined in the fit to $\Bs\to\Ds\pion\pion\pion$ data  
 and later fixed in the fit to $\Bs\to\Ds\kaon\pion\pion$ decays. 
 The scale factors are determined separately for each data-taking period and each trigger category.
-
 
 
 \subsection{Background models} 
@@ -70,7 +69,7 @@ Partially reconstructed $\Bs\to D_s^{*}\pi\pion\pion$ decays, with $D_s^{*}\to\D
 are expected to be peaking lower than signal in the $m(\Ds\pion\pion\pion)$ spectrum with large tails due to the %missing 
 momentum carried away by the not reconstructed $\piz$ or $\gamma$. 
 An empirical description for the shape of this contribution is derived from a $\Bs\to D_s^{*}\pi\pion\pion$ MC sample subject to the nominal $\Bs\to D_s\pi\pion\pion$ selection.
-Figure \ref{fig:bgkShapes} (left) shows the respective reconstructed $m(D_s\pi\pi\pi)$ distribution.
+Figure \ref{fig:bgkShapes} (top) shows the respective reconstructed $m(D_s\pi\pi\pi)$ distribution.
 A sum of three bifurcated Gaussian functions (\ie Gaussian functions with different widths on the left and the right side of the maximum value) is used to describe it.
 In the fit to data, all parameters are fixed to the ones obtained from MC except for the parameter which describes the width of the right tail of the distribution to account for
 data-simulation differences in mass resolution.
@@ -90,11 +89,16 @@ The \textsf{PIDCalib} package is used to determine the $p_T,\eta$-dependent $\pi
 %For every candidate in our MC sample, a (momentum) $\ptot$ and (pseudorapidity) $\eta$-dependent event weight is computed and assigned. 
 We change the particle hypothesis from pion to kaon for the pion with the higher misidentification probability and recompute the invariant $\Bs$ mass, $m(D_s^- \pi^+_K \pi^+ \pi^- )$. 
 Similarly, the invariant masses $m(\pi^+_K \pi^+ \pi^- )$ and $m(\pi^+_K \pi^-)$ are recomputed and required to be within the considered phasespace region.
-The background distributions are shown in Fig.~\ref{fig:bgkShapes} (middle,right) and modeled by the sum of two Crystal Ball functions. 
+The background distributions are shown in Fig.~\ref{fig:bgkShapes} (middle, bottom) and modeled by the sum of three Crystal Ball functions. 
+\newpage
 The expected yield of misidentified $\Bs\to\Ds\pion\pion\pion$ ($\Bs\to D_s^{*}\pi^+ \pi^+ \pi^-$) candidates in the $\Bs\to\Ds K\pion\pion$ sample is computed 
-by multiplying the fake rate (within the considered $B_s$ mass range) of $0.47\%$ ($0.61\%$) %, which is derived from \textsf{PIDCalib}, 
-by the $\Bs\to\Ds\pion\pion\pion$ ($\Bs\to D_s^{*}\pi^+ \pi^+ \pi^-$) yield as determined in the mass fit to the $\Bs\to\Ds\pion\pion\pion$ data sample which is 
-corrected for the PID($\pip$)$<0$ requirement.  
+by multiplying the fake rate (within the considered $B_s$ mass range) of $0.63 \pm 0.01\%$ ($0.55 \pm 0.02\%$) 
+for Run-I 
+and $0.33 \pm 0.01\%$ ($0.24 \pm 0.01\%$) 
+for Run-II
+ %, which is derived from \textsf{PIDCalib}, 
+by the $\Bs\to\Ds\pion\pion\pion$ ($\Bs\to D_s^{*}\pi^+ \pi^+ \pi^-$) yield as determined in the mass fit to the $\Bs\to\Ds\pion\pion\pion$ data sample.
+The yields are corrected for the PID($\pip$)$<0$ requirement which has an efficiency of $77.1 \pm 0.1 \%$ for Run-I and $81.0 \pm 0.1 \%$ for Run-II data.  
 The $\Bs\to D_s^{*}\pi^+ \pi^+ \pi^-$ yield is additionally corrected for the efficiency of the cut $m(\Ds K\pion\pion)>5200\mev$ evaluated on MC.
 In the fit to data, the misidentified background yields are fixed to the predicted ones.
 %In the same way as mentioned above, we can determine the rate of misidentified, partially reconstructed $\Bs\to\Ds^{*}\pion\pion\pion$ decays in our sample of $\Bs\to\Ds\kaon\pion\pion$ decays using \textsf{PIDCalib} and a MC sample of $\Bs\to\Ds^{*}\pion\pion\pion$ events. The invariant mass distribution we obtain when we exclude the $\gamma$/$\piz$, flip the the particle hypothesis $\pion\rightarrow\kaon$ and apply the event weights given by the fake rate, is shown in Fig.~\ref{fig:bgkShapes} (right). 
@@ -104,25 +108,30 @@ In the fit to data, the misidentified background yields are fixed to the predict
 We consider the $\Bs\to D_s K\pion\pion$ and $\Bs\to D_s^{*}K\pion\pion$ components contributing to the $\Bs\to D_s \pi\pion\pion$ data sample to be negligible 
 due to the low branching fractions and the tight PID cuts on the bachelor pions.
 
-\begin{figure}[t]
+\begin{figure}[b]
 \centering
-\includegraphics[height=!,width=0.32\textwidth]{figs/MassFit/BkgShape/Bs2Dsstartpipipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/MassFit/BkgShape/Bs2Dspipipi_as_DsKpipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/MassFit/BkgShape/Bs2Dsstarpipipi_as_DsKpipi.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/BkgShape/Bs2Dsstartpipipi.pdf}
+
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/BkgShape/Bs2Dspipipi_as_DsKpipi_Run1.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/BkgShape/Bs2Dspipipi_as_DsKpipi_Run2.pdf}
+
+\includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_Run1.pdf}
+\includegraphics[height=!,width=0.4 \textwidth]{figs/MassFit/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_Run2.pdf}
 \caption{
-Left: Invariant mass distribution of simulated $\Bs\to D_s^{*}\pion\pion\pion$ events, where the $\gamma$/$\piz$ is excluded from the reconstruction. 
-Middle: Invariant mass distribution of  simulated $\Bs\to\Ds\pion\pion\pion$ events, where one of the pions is reconstructed as a kaon taking the misidentification probability into account. 
-Right: Invariant mass distribution for simulated $\Bs\to D_s^{*}\pion\pion\pion$ events, where the $\gamma$/$\piz$ from the $D_s^{*}$ is excluded from reconstruction
-and one of the pions is reconstructed as a kaon taking the misidentification probability into account. The fitted PDF is shown in blue.}
+Top: Invariant mass distribution of simulated $\Bs\to D_s^{*}\pion\pion\pion$ events, where the $\gamma$/$\piz$ is excluded from the reconstruction. 
+Middle: Invariant mass distribution of  simulated $\Bs\to\Ds\pion\pion\pion$ events for Run-I (left) and Run-II (right), where one of the pions is reconstructed as a kaon taking the misidentification probability into account. 
+Bottom: Invariant mass distribution for for simulated $\Bs\to D_s^{*}\pion\pion\pion$ events for Run-I (left) and Run-II (right), where the $\gamma$/$\piz$ from the $D_s^{*}$ is excluded from reconstruction
+and one of the pions is reconstructed as a kaon taking the misidentification probability into account. 
+The fitted PDFs are shown in blue.}
 \label{fig:bgkShapes}
 \end{figure}
  
-
+\clearpage
 \subsection{Results}
 \label{subsec:Results}
 
 Figure \ref{fig:massFit} shows the invariant mass distribution for $\Bs\to\Ds\pion\pion\pion$ and  $\Bs\to\Ds\kaon\pion\pion$ candidates passing all selection criteria.
-The projections for all categories of the simultaneous fit are shown in Appendix \ref{sec:DetailedMassfits} together with the results for all fitted parameters.
+The projections for all categories of the simultaneous fit are shown in Appendix \ref{sec:DetailedMassfits}. % together with the results for all fitted parameters.
 The integrated signal and background yields are listed in Tables \ref{tab:massFitNorm} and \ref{tab:massFitSig}.
 
 \begin{figure}[h]
@@ -133,7 +142,7 @@ The integrated signal and background yields are listed in Tables \ref{tab:massFi
 \label{fig:massFit}
 \end{figure}
 
-\clearpage
+
 \begin{table}[h]
 \centering
 \caption{Total signal and background yields for the $B_s \to D_s \pi \pi \pi$ sample (left) and

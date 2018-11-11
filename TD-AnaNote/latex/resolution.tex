@@ -34,7 +34,7 @@ For Run-II data, a new lifetime unbiased stripping line (LTUB) has been implemen
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.6\textwidth]{figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DTF_TAUERR.pdf}
+\includegraphics[height=!,width=0.5\textwidth]{figs/dataVsMC/run1vs2_norm/Ds2all_Bs_DTF_TAUERR.pdf}
 \caption{Distribution of the decay time error for $\Bs\to\Ds\pion\pion\pion$ signal candidates for Run-I (black) and Run-II (red) data (sWeighted).}
 \label{fig:Bs_DTFERR_Comp}
 \end{figure}
@@ -136,7 +136,7 @@ The following calibration functions were used in the $\Bs\to\Ds\kaon$ analysis t
 \sigma_{eff}^{D_sK}(\sigma_t) = \left( 0.0 \pm 0.0 \right) \text{fs} + \left( 1.772 \pm 0.012 \right) \sigma_t
 \label{eq:scaleFactorDsK3}
 \end{equation}
-The difference of the scale factors observed on $\Bs\to\Ds\kaon$ and $\Bs\to\Ds\kaon\pion\pion$ MC is assigned as additional systematic uncertainty.
+%The difference of the scale factors observed on $\Bs\to\Ds\kaon$ and $\Bs\to\Ds\kaon\pion\pion$ MC is assigned as additional systematic uncertainty.
 
 
 \begin{figure}[h]
@@ -151,6 +151,7 @@ The fitted calibration curve is shown in blue.}
 
 %\clearpage
 \subsection{Calibration for Run-II data }
+\label{ssec:ResRun2}
 
 For the resolution calibration of Run-II data, a sample of promptly produced $D_s$ candidates is selected
 using the \textsf{B02DsKPiPiLTUBD2HHHBeauty2CharmLine} stripping line.
@@ -189,9 +190,11 @@ For 2016, the result is in good agreement with the one obtained for the $B_s \to
 %\clearpage
 \begin{table}[h]
 \centering
-\caption{Offline selection requirements for fake $B_s$ candidates from promptly produced $D_s$ candidates combined with random prompt $K\pi\pi$ bachelor tracks.}
+\caption{Offline selection requirements for fake $B_s$ candidates from promptly produced $D_s$ candidates combined with random prompt $K\pi\pi$ bachelor tracks.
+The PID and veto cuts depending on the $D_s$ final state and Dalitz plot position are the same as in Table.~\ref{table:selDs}.
+}
 %\resizebox{\linewidth}{!}{
- \renewcommand{\arraystretch}{1.0}
+ \renewcommand{\arraystretch}{1.1}
  \small
  \begin{tabular}{l l l}
 \hline
@@ -210,30 +213,30 @@ $D_s \to h h h$ &  $\chi^{2}_{vtx}/\text{ndof}  $&$ <  5$  \\
 &  $\chi^{2}_{IP}(h)$ &  $> 5$ \\
 & Wrong PV veto & nPV = 1 $||$  $\text{min}(\Delta\chi^{2}_{IP}) > 20$ \\
 \\
-$D_s^- \to K K \pi^-$  & $D^0$ veto  & $m(K K) < 1840$ MeV \\
-& $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV \\
-& $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV \\
-\\
-$D_s^- \to \phi \pi^-$ & $m(KK)$  & $= m_{\phi} \pm 20$ MeV \\
-& PIDK($K^+$) & $> -10$ \\
-& PIDK($K^-$) & $> -10$ \\
-& PIDK($\pi^-$) & $< 20$ \\
-\\
-$D_s^- \to K^{*}(892) K^-$ & $m(KK)$  & $\ne m_{\phi} \pm 20$ MeV \\
-& $m(K^+\pi^-)$  & $= m_{K^{*}(892)} \pm 75$ MeV \\
-& PIDK($K^+$) & $> -10$ \\
-& PIDK($K^-$) & $> -5$ \\
-& PIDK($\pi^-$) & $< 20$ \\
-\\
-$D_s^- \to (K K \pi^-)_{NR}$ & $m(KK)$  & $\ne m_{\phi} \pm 20$ MeV \\
-& $m(K^+\pi^-)$  & $\ne m_{K^{*}(892)} \pm 75$ MeV \\
-& PIDK($K^+$) & $> 5$ \\
-& PIDK($K^-$) & $> 5$ \\
-& PIDK($\pi^-$) & $< 10$ \\
-\\
-$D_s \to \pi \pi \pi$ & PIDK($h$) & $< 10$  \\
-& PIDp($h$) & $< 10$ \\
-& $D^0$ veto  & $m(\pip \pim) < 1700$ MeV \\
+%$D_s^- \to K K \pi^-$  & $D^0$ veto  & $m(K K) < 1840$ MeV \\
+%& $D^-$ veto  & $m(\Kp K^-_\pi \pim) \ne m(D^-) \pm 30$ MeV \\
+%& $\Lambda_c$ veto  & $m(\Kp K^-_p \pim) \ne m(\Lambda_c) \pm 30$ MeV \\
+%\\
+%$D_s^- \to \phi \pi^-$ & $m(KK)$  & $= m_{\phi} \pm 20$ MeV \\
+%& PIDK($K^+$) & $> -10$ \\
+%& PIDK($K^-$) & $> -10$ \\
+%& PIDK($\pi^-$) & $< 20$ \\
+%\\
+%$D_s^- \to K^{*}(892) K^-$ & $m(KK)$  & $\ne m_{\phi} \pm 20$ MeV \\
+%& $m(K^+\pi^-)$  & $= m_{K^{*}(892)} \pm 75$ MeV \\
+%& PIDK($K^+$) & $> -10$ \\
+%& PIDK($K^-$) & $> -5$ \\
+%& PIDK($\pi^-$) & $< 20$ \\
+%\\
+%$D_s^- \to (K K \pi^-)_{NR}$ & $m(KK)$  & $\ne m_{\phi} \pm 20$ MeV \\
+%& $m(K^+\pi^-)$  & $\ne m_{K^{*}(892)} \pm 75$ MeV \\
+%& PIDK($K^+$) & $> 5$ \\
+%& PIDK($K^-$) & $> 5$ \\
+%& PIDK($\pi^-$) & $< 10$ \\
+%\\
+%$D_s \to \pi \pi \pi$ & PIDK($h$) & $< 10$  \\
+%& PIDp($h$) & $< 10$ \\
+%& $D^0$ veto  & $m(\pip \pim) < 1700$ MeV \\
 \\
 $X_s \to K \pi \pi$  &  $\chi^{2}_{IP}(h)$ &  $< 40$ \\
 & PIDK(K) & $> 10$ \\

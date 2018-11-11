@@ -25,7 +25,7 @@ To account for the different mass resolution we use a different $\sigma$ for eac
 while the mean and the tail parameters are shared between them. 
 The background component is only included for the second category.
 
-A significant fraction of $8\%$ of the true signal candidates are classified as ghosts,
+A significant fraction of $7\%$ of the true signal candidates are classified as ghosts,
 while only $20 \%$ of the events classified with \textsf{BKGCAT}$=60$ are indeed genuine ghosts.
 %We repeat the efficiency determination with an alternative fit model to assign a systematic uncertainty.
 
@@ -49,8 +49,8 @@ decays classified with \textsf{BKGCAT} = 20 or 50 (left) and \textsf{BKGCAT} = 6
 For the evaluation of phase space efficiency and to a lesser extend also the decay-time efficiency we rely on simulated data 
 as discussed in the following sections.
 A number of data-driven corrections are applied to the MC samples to account for known data-simulation differences.
-The MC sample is reweighted to match the two-dimensional $p_T$ and $\eta$ distribution observed on real data.
-An additional reweighting of the track multiplicity is applied on top of that.
+The MC sample is reweighted to match the three-dimensional $p_T$, $\eta$ and track multiplicity distribution observed on real data.
+%An additional reweighting of the track multiplicity is applied on top of that.
 These corrections are derived from the calibration channel $B_s\to D_s \pi\pi\pi$ and applied to both the signal and calibration channel MC samples.
 The distributions before and after reweighting are shown in Appendix \ref{a:DataMC}.
 We use the \textsf{PIDCorr} tool to correct the simulated PID responses based on PID calibration samples \cite{LHCb-INT-2017-007}.
@@ -189,13 +189,6 @@ The acceptances are determined separately for each data-taking period
 and each trigger category as discussed in more detail in Appendix \ref{a:timeAcc}.
 The fit results are shown in Figs.~\ref{fig:accFit} to \ref{fig:accFit4} and the 
 fitted parameters are summarized in Tables~\ref{table:splines} to \ref{table:splines4}.
-\newline
-\\
-\pretextcomment{As currently there are no Run-II MC samples available, we use the Run-I MC samples also for the Run-II fits.
-An alternative approach would be to fit only the $\Bd \to D_sK\pi\pi$ data sample in order to remove the MC dependency. 
-The final strategy will be fixed, depending on the MC availability, during the review.
- }
- 
  
 \begin{table}[h]
 \centering
@@ -293,6 +286,13 @@ As an example, the integral of the total $b \to c$ amplitude squared can be appr
 \end{equation}
 where $A^{\prime}$ labels the amplitude model used for the generation and
 $x_{k}$ is the $k$-th MC event. As a result, the phase-space efficiency can be included in the  fit without explicitly modeling it.
+The size of the fully selected MC sample ($N_{MC} =$380k) is more than 70 times larger as the data sample which results in an integral precision smaller than $0.2 \%$.
+The efficiency projections are shown in Fig.~\ref{fig:PhspEff} for visualization purposes only.
+As discussed in Appendix~\ref{a:phspAcc}, the phase space efficiency differs significantly among L0-trigger categories
+while the differences are small between the data-taking periods 
+and negligible between the $D_s$ final states.
+To account for this, the MC events are scaled such that the relative proportions of the four categories [Run-I,\textsf{L0-TOS}], [Run-I,\textsf{L0-TIS}], [Run-II,\textsf{L0-TOS}] and [Run-II,\textsf{L0-TIS}] are the same as observed on the $B_s \to D_s K \pi\pi$ data sample.
+
 %For $\Dz \to \pi^+ \pi^- \pip \pim$, we use a sample of $N_{\rm MC}  = 600 000$  MC events to 
 %ensure that the uncertainty on the integral is less than $0.5 \%$.
 %\newline
@@ -307,19 +307,19 @@ $x_{k}$ is the $k$-th MC event. As a result, the phase-space efficiency can be i
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_Kpipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_Kpi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_pipi.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/AcceptancePhsp/eff_Kpipi.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/AcceptancePhsp/eff_Kpi.pdf}
 
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_Dspipi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_Dspi.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/AcceptancePhsp/eff_pipi.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/AcceptancePhsp/eff_Dspipi.pdf}
 
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_cosTheta_Kpi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_cosTheta_Dspi.pdf}
-\includegraphics[height=!,width=0.32\textwidth]{figs/AcceptancePhsp/eff_phi_Kpi_Dspi.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/AcceptancePhsp/eff_Dspi.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/AcceptancePhsp/eff_cosTheta_Kpi.pdf}
 
-\caption{Efficiency variation as a function of the phase-space variables obtained from the ratio of selected and generated MC events (data points) 
-and efficiency obtained from a reweigted toy MC sample (blue).
+\includegraphics[height=!,width=0.4\textwidth]{figs/AcceptancePhsp/eff_cosTheta_Dspi.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/AcceptancePhsp/eff_phi_Kpi_Dspi.pdf}
+
+\caption{Efficiency variation as a function of the phase-space variables obtained from the ratio of selected and generated MC events.
 }
 \label{fig:PhspEff}
 \end{figure}
