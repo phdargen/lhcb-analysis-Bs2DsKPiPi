@@ -1,0 +1,129 @@
+\section{Detector and simulation}
+\label{sec:Detector}
+%The paragraph below can be used for the detector
+%description. Modifications may be required in specific papers to fit
+%within page limits, to enhance particular detector elements or to
+%introduce acronyms used later in the text. For journals where strict
+%word counts are applied (for example, PRL), and space is at a premium,
+%it may be sufficient to write, as a minimum: ``The LHCb detector is a 
+%single-arm forward spectrometer covering the pseudorapidity range 
+%$2 < \eta < 5$, 
+%$described in detail in Refs.~\cite{Alves:2008zz,LHCb-DP-2014-002}''. 
+%A slightly longer version could specify the most relevant sub-detectors, {\it e.g} 
+%``The LHCb 
+%detector~\cite{Alves:2008zz,LHCb-DP-2014-002} is a
+%single-arm forward spectrometer covering the pseudorapidity range $2 < \eta < 5$, designed for
+%the study of particles containing \bquark\ or \cquark\ quarks. The detector elements that are particularly
+%relevant to this analysis are: a silicon-strip vertex detector surrounding the $pp$ interaction
+%region that allows \cquark\ and \bquark\ hadrons to be identified from their characteristically long
+%flight distance; a tracking system that provides a measurement of the momentum, $p$, of charged
+%particles; and two ring-imaging Cherenkov detectors that are able to discriminate between
+%different species of charged hadrons.'' LHCb-PUB-2014-046
+
+%\begin{verbatim}
+%In the following paragraph, references to the individual detector 
+%performance papers are marked with a * and should only be included 
+%if the analysis relies on numbers or methods described in the specific 
+%papers. Otherwise, a reference to the overall detector performance 
+%paper~\cite{LHCb-DP-2014-002} will suffice. Note also that the text 
+%defines the acronyms for primary vertex, PV, and impact parameter, IP. 
+%Remove either of those in case it is not used later on.
+%\end{verbatim}
+
+The \lhcb detector~\cite{Alves:2008zz,LHCb-DP-2014-002} is a single-arm forward
+spectrometer covering the \mbox{pseudorapidity} range $2<\eta <5$,
+designed for the study of particles containing \bquark or \cquark
+quarks. The detector includes a high-precision tracking system
+consisting of a silicon-strip vertex detector surrounding the $pp$
+interaction region~\cite{LHCb-DP-2014-001}, a large-area silicon-strip detector located
+upstream of a dipole magnet with a bending power of about
+$4{\mathrm{\,Tm}}$, and three stations of silicon-strip detectors and straw
+drift tubes~\cite{LHCb-DP-2013-003,LHCb-DP-2017-001} placed downstream of the magnet.
+The polarity of the dipole magnet can be reversed, which is done periodically throughout the data-taking process to control systematic asymmetries.
+The tracking system provides a measurement of the momentum, \ptot, of charged particles with
+a relative uncertainty that varies from 0.5\% at low momentum to 1.0\% at 200\gevc.
+The minimum distance of a track to a primary vertex (PV), the impact parameter (IP), 
+is measured with a resolution of $(15+29/\pt)\mum$,
+where \pt is the component of the momentum transverse to the beam, in\,\gevc.
+Different types of charged hadrons are distinguished using information
+from two ring-imaging Cherenkov detectors~\cite{LHCb-DP-2012-003}. 
+The online event selection is performed by a trigger~\cite{LHCb-DP-2012-004}, 
+which consists of a hardware stage, based on information from the calorimeter and muon
+systems, followed by a software stage, which applies a full event
+reconstruction.
+
+%The trigger description has to be specific for the analysis in
+%question. In general, you should not attempt to describe the full
+%trigger system. Below are a few variations that inspiration can be
+%taken from. First from a hadronic analysis, and second from an
+%analysis with muons in the final state. In case you have to look 
+%up specifics of a certain trigger, a detailed description of the trigger 
+%conditions for Run 1 is available in Ref.~\cite{LHCb-PUB-2014-046}. 
+%{\bf Never cite this note in a PAPER or CONF-note.} 
+
+At the hardware trigger stage, events are required to have a muon with high \pt or a
+hadron, photon or electron with high transverse energy in the calorimeters. For hadrons,
+the transverse energy threshold is 3.5\gev.
+The software trigger requires a two-, three- or four-track
+secondary vertex with a significant displacement from any primary
+$pp$ interaction vertex. At least one charged particle
+must have a transverse momentum $\pt > 1.6\gevc$ and be
+inconsistent with originating from a PV.
+A multivariate algorithm~\cite{BBDT} is used for
+the identification of secondary vertices consistent with the decay
+of a \bquark hadron.
+
+%An example to describe the use of both TOS and TIS candidates:
+%\begin{itemize}
+%\item In the offline selection, trigger signals are associated with reconstructed particles.
+%Selection requirements can therefore be made on the trigger selection itself
+%and on whether the decision was due to the signal candidate, other particles produced in the $pp$ collision, or a combination of both.
+%\end{itemize}
+
+%Before describing the simulation, explain in one sentence why simulation is needed.
+%The following paragraph can act as inspiration but
+%with variations according to the level of detail required and if
+%mentioning of \eg \photos is required.
+
+Simulation is necessary to model the effects of the detector acceptance and to optimize the selection requirements.
+In the simulation, $pp$ collisions are generated using
+\pythia~\cite{Sjostrand:2006za,*Sjostrand:2007gs} with a specific \lhcb
+configuration~\cite{LHCb-PROC-2010-056}.  Decays of hadrons
+are described by \evtgen~\cite{Lange:2001uf}, in which final-state
+radiation is generated using \photos~\cite{Golonka:2005pn}. The
+interaction of the generated particles with the detector, and its response,
+are implemented using the \geant
+toolkit~\cite{Allison:2006ve, *Agostinelli:2002hh} as described in
+Ref.~\cite{LHCb-PROC-2011-006}.
+
+
+%A quantity often used in LHCb analyses is \chisqip. When mentioning it in 
+%a paper, the following wording could be used: ``$\ldots$\chisqip\ with respect 
+%to any primary interaction vertex greater than X, where \chisqip\ is defined as 
+%the difference in the vertex-fit \chisq of a given PV reconstructed with and
+%without the track under consideration/being considered.''\footnote{If this
+%sentence is used to define \chisqip\ for a composite particle instead of 
+%for a single track, replace ``track'' by ``particle'' or ``candidate''}
+
+%Many analyses depend on boosted decision trees. It is inappropriate to
+%use TMVA~\cite{Hocker:2007ht,*TMVA4} as sole reference as that is
+%merely an implementation of the BDT algorithm.
+%Rather it is suggested to write: ``In this paper we use a 
+%boosted decision tree~(BDT)~\cite{Breiman,AdaBoost} implemented in the TMVA
+%toolkit~\cite{Hocker:2007ht,*TMVA4} to separate signal from background''. 
+
+%When describing the integrated luminosity of the data set, do not use
+%expressions like ``1.0\invfb of data'', but \eg 
+%``data sample corresponding to an integrated luminosity of 1.0\invfb'', 
+%or ``a sample of data obtained from 3\invfb of integrated luminosity''. 
+
+%For analyses where the periodical reversal of the magnetic field is crucial, 
+%\eg in measurements of direct \CP violation, the following description can be
+%used as an example phrase: 
+%``The magnetic field deflects oppositely charged particles in opposite
+%directions and this can lead to detection asymmetries. Periodically
+%reversing the magnetic field polarity throughout the data-taking almost cancels
+%the effect. The configuration with the magnetic field pointing upwards (downwards), 
+%\MagUp (\MagDown), bends positively (negatively) charged particles
+%in the horizontal plane towards the centre of the LHC ring.''
+%Only use the \MagUp, \MagDown symbols if they are used extensively in tables or figures.

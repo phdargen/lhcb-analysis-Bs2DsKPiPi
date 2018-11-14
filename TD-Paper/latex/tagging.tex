@@ -1,0 +1,78 @@
+\section{Flavour tagging}
+\label{sec:Tagging}
+
+To identify the initial flavour state of the $\Bs$ meson,
+a number of flavour tagging algorithms are used that either exploit the pair-wise production of \bquark quarks and determine the flavour of the non-signal b-hadron produced in the event (opposite site, OS)
+or use particles produced in the fragmentation of the signal candidate $\Bs$/$\Bsb$ (same side, SS).
+The same side kaon tagger searches for the charge of an additional kaon that accompanies the fragmentation of the signal $\Bs$ or $\Bsb$ candidate~\cite{Aaij:2016psi}.
+For the opposite site tagger~\cite{LHCb-PAPER-2011-027}, five different tagging algorithms are chosen:
+the algorithms that use the charge of an electron or a muon from semi-leptonic B decays,
+the tagger that uses the charge of a kaon from a b $\to$ c $\to$ s decay chain,
+the algorithm which reconstructs opposite-side charm hadrons from a number of \cquark-decays
+and the algorithm that determines the $\Bs$/$\Bsb$ candidate flavour from the charge of a secondary vertex, reconstructed from the OS \bquark-decay product.
+All five taggers are then combined into a single OS tagger. \newline
+Every tagging algorithm is prone to misidentify the signal candidate at a certain mistag rate $\omega  = (\text{wrong tags})/ (\text{all tags})$. 
+This might be caused by particle misidentification, flavour oscillation of the neutral opposite site B-meson or by the selection of tracks from the underlying event.
+An imperfect determination of the $\Bs$ production flavour dilutes the observed \CP asymmetry by $D_{tag} = 1 - 2\omega$.
+Therefore, the statistical precision with which the \CP asymmetry can be measured scales as the inverse square root of the effective tagging efficiency:
+\begin{equation}
+\label{eq: taggingEfficiency}
+\epsilon_{eff} = \epsilon_{tag}(1 - 2\omega)^{2},
+\end{equation}
+where $\epsilon_{tag}$ is the fraction of tagged signal candidates.\newline
+For each $\Bs$/$\Bsb$ candidate, the tagging algorithms provide a prediction for the mistag probability $\eta$ based on the output of neural networks that take various variables, 
+such as the kinematics of the tagging particles, as input.
+These are trained on either simulated or \textsf{sWeighted} samples of flavour specific control channels ($\Bs\to\Dsm\pip$ (SS algorithm) and $\Bu\to\jpsi\Kp$ (OS algorithms))
+and are optimized for highest $\epsilon_{eff}$ on data.
+Utilizing flavour-specific final states, the estimated mistag $\eta$ of each tagger has to be calibrated to match the actual mistag probability $\omega$.
+For the calibration, a linear model
+\begin{equation}
+\label{eq: mistagCalibration}
+\omega(\eta) = p_{0} + p_{1} \cdot (\eta - \langle \eta \rangle), 
+\end{equation}
+is used where $\langle \eta \rangle$ is the average estimated mistag probability.
+A perfectly calibrated tagger would lead to $\omega(\eta) = \eta$ and one would expect $p_{1} = 1$ and $p_{0} = \langle \eta \rangle$.
+Due to the different interaction cross-sections of oppositely charged kaons, the tagging calibration parameters depend on the initial state flavour of the $\Bs$.
+Therefore, the flavour asymmetry parameters $\Delta p_{0}$, $\Delta p_{1}$ and $\Delta\epsilon_{tag}$ are introduced and defined as the difference of the corresponding values for $\Bs$ and $\Bsb$ mesons.
+
+\begin{table}[h]
+\centering
+%\scriptsize
+\caption{The flavour tagging performances for the used OS taggers for Run-I data.}
+\resizebox{\linewidth}{!}{
+        \input{tables/Tagging/Run1/EspressoPerformanceTable_OS.tex}
+}
+\label{tab:OS_Run1}
+%\end{table}
+%
+%\begin{table}[h]
+\caption{The flavour tagging performances for the used OS taggers for Run-II data.}
+\resizebox{\linewidth}{!}{
+        \input{tables/Tagging/Run2/EspressoPerformanceTable_OS.tex}
+}
+\label{tab:OS_Run2}
+\end{table}
+
+The OS electron, muon, kaon, charm and the secondary vertex charge tagging algorithms are individually calibrated and then combined into a singleOS tagger. 
+We choose the flavour specific decay  $B_s \to D_s \pi\pi\pi$ as calibration mode due to the portability to the signal mode since its similarity wit the $B_s \to D_s K\pi\pi$ decay.
+The calibration is performed separately for Run-I and Run-II data, while the OS-c tagger is not included for Run-I data since the statistics is too low.
+Tables \ref{tab:OS_Run1} and \ref{tab:OS_Run2} list the measured tagging performances.\newline
+The combined OS and SS-Kaon taggers are calibrated simultaneously by means of a fit to the decay-time distribution of background-subtracted $B_s \to D_s \pi\pi\pi$ candidates, as discussed in Sec.~\ref{sec:timeFit}.
+In this fit, the predicted mistag probabilities $\eta_{OS}$ and $\eta_{SS}$ are included as per-event observables, effectively giving a larger weight to the events that have a lower mistag probability.
+The tagger responses are combined into a single response on an event-by-event basis during the fit.
+Tables \ref{tab:tagPerfRun1} and \ref{tab:tagPerfRun2} report the tagging performances for the OS and SS combination
+considering three mutually exclusive categories of tagged events: OS only, SS only and both OS and SS.
+The tagging calibration parameters are listed in Table~\ref{tab:normFitResults}.
+
+
+\begin{table}[h]
+\centering
+\caption{The flavour tagging performances for only OS tagged, only SS tagged and both OS and SS tagged events for Run-I data.}
+\input{tables/Tagging/norm_taggingCalib/tagPower_Run1.tex}
+\label{tab:tagPerfRun1}
+
+\caption{The flavour tagging performances for only OS tagged, only SS tagged and both OS and SS tagged events for Run-II data.}
+\input{tables/Tagging/norm_taggingCalib/tagPower_Run2.tex}
+\label{tab:tagPerfRun2}
+\end{table}
+
