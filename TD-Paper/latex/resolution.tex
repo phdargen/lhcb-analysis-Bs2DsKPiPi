@@ -1,0 +1,36 @@
+\section{Decay-time resolution}
+\label{sec:Resolution}
+
+The CP-violating parameters measured in the time-dependent fit are prone to dilution due to the fast $\Bs$-$\Bsb$ oscillation frequency, 
+which is of the same order as the average decay-time resolution of the LHCb detector of $\mathcal{O}(50 \fs^{-1})$~\cite{LHCb-DP-2014-002}.
+Therefore, it is crucial to correctly describe the decay-time resolution in order to accurately measure time-dependent CP violation.
+In particular, the parameters related to the amplitudes of the sine and cosine terms in Equation xXx are highly corelated to the chosen resolution model.
+Since the time resolution depends on the particular event, especially the decay time itself,
+the sensitivity on the CP parameters can be significantly improved by using an event-dependent model rather than an average resolution.
+For this purpose, the signal PDF is convolved with a Gaussian resolution function that has a different width for each candidate, 
+obtained from the global kinematic fit to the $\Bs$ vertex and the $\Ds$ mass.
+To ensure the correct application, the per-candidate decay-time uncertainty $\sigma_{t}$ has to be calibrated to match the effective decay-time resolution observed in data, $\sigma(\sigma_{t})$.\newline
+For data taken during Run I, 
+a study of simulated $\Bs\to\Ds\kaon\pion\pion$ events is used to confirm the portability of the calibration relation determined in the closely related analysis of $\Bs\to\Ds\kaon$ decays~\cite{Aaij:2017lff}.
+The spread of the difference between the reconstructed and true decay time, $\Delta t = t - t_{\text{true}}$, 
+follows the shape of a double Gaussian distribution and is a direct measure of the effective decay-time resolution for simulated events. 
+The resulting two Gaussian widths are combined to calculate the dilution $\mathcal{D}$, which describes the effective damping of the CP amplitudes due to the finite time resolution:
+\begin{equation}
+\mathcal{D} = f_{1}e^{-\sigma_{1}^{2}\dms^{2}/2} + (1 - f_{1}) e^{-\sigma_{2}^{2}\dms^{2}/2},
+\label{eq:t-dilution}
+\end{equation}
+where $\sigma_{1}$ and $\sigma_{2}$ are the widths of the Gaussians, $f_{1}$ is the relative fraction of events described by the first Gaussian relative to the second and $\dms$ is the oscillation frequency of $\Bs$ mesons.
+An effective single Gaussian width is calculated from the dilution as,
+\begin{equation}
+\sigma_{eff} = \sqrt{(-2/\dms^{2})\ln{\mathcal{D}}},
+\label{eq:effres}
+\end{equation}
+which converts the resolution into a single-Gaussian function with an effective resolution that causes the same damping effect on the magnitude of the $B_s$ oscillation.
+The calibration relation is found to be portable between the $\Bs\to\Ds\kaon$ and $\Bs\to\Ds\kaon\pion\pion$ decay channels and thus it is used for data taken in Run I.\newline
+For data taken during Run II, the calibration is performed using a sample of prompt $\Ds$ mesons, 
+combined with a kaon and two pions originating from the primary vertex to form 'fake' $\Bs$ candidates with a lifetime of $t = 0$ by construction. 
+The spread of observed decay times of the 'fake' candidates is described by a double Gaussian function, 
+where only negative decay times are used to determine the effective resolution to avoid uncertainties introduced by physical backgrounds. 
+Following the same approach used for data taken during Run I, the effective resolution is calculated from the dilution $\mathcal{D}$. 
+%The scaling relation is found to be $\sigma^{15,16}_{eff} = 0.88\sigma_{t} + 11.6 \fs$ and $\sigma^{17}_{eff} = 0.96\sigma_{t} + 6.5 \fs$ for data taken in 2015, 2016 and 2017, respectively.
+
