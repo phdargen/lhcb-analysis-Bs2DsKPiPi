@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.6)
+The top-level auxiliary file: main.aux
+The style file: LHCb.bst
+Database file #1: main.bib
+Database file #2: LHCb-PAPER.bib
+Database file #3: LHCb-CONF.bib
+Database file #4: LHCb-DP.bib
+Database file #5: LHCb-TDR.bib
+You've used 21 entries,
+            2969 wiz_defined-function locations,
+            837 strings with 8689 characters,
+and the built_in function-call counts, 85755 in all, are:
+= -- 9364
+> -- 177
+< -- 0
++ -- 614
+- -- 43
+* -- 8598
+:= -- 10783
+add.period$ -- 21
+call.type$ -- 21
+change.case$ -- 21
+chr.to.int$ -- 0
+cite$ -- 21
+duplicate$ -- 1604
+empty$ -- 8898
+format.name$ -- 43
+if$ -- 18620
+int.to.chr$ -- 0
+int.to.str$ -- 21
+missing$ -- 114
+newline$ -- 137
+num.names$ -- 21
+pop$ -- 361
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 166
+stack$ -- 0
+substring$ -- 25110
+swap$ -- 0
+text.length$ -- 42
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 591
+width$ -- 23
+write$ -- 340
