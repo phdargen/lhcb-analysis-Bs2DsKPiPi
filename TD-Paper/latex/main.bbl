@@ -220,4 +220,49 @@ T.~M. Karbach, G.~Raven, and M.~Schiller,
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
+\bibitem{Pivk:2004ty}
+M.~Pivk and F.~R. Le~Diberder,
+  \ifthenelse{\boolean{articletitles}}{\emph{{sPlot: A statistical tool to
+  unfold data distributions}},
+  }{}\href{https://doi.org/10.1016/j.nima.2005.08.106}{Nucl.\ Instrum.\ Meth.\
+  \textbf{A555} (2005) 356},
+  \href{http://arxiv.org/abs/physics/0402083}{{\normalfont\ttfamily
+  arXiv:physics/0402083}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{HFAG}
+Heavy Flavor Averaging Group, Y.~Amhis {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Averages of $b$-hadron,
+  $c$-hadron, and $\tau$-lepton properties as of summer 2014}},
+  }{}\href{http://arxiv.org/abs/1412.7515}{{\normalfont\ttfamily
+  arXiv:1412.7515}}, {updated results and plots available at
+  \href{http://www.slac.stanford.edu/xorg/hfag/}{{\texttt{http://www.slac.stan%
+ford.edu/xorg/hfag/}}}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Aaij:2017mso}
+LHCb, R.~Aaij {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of $B^0$, $B^0_s$,
+  $B^+$ and $\Lambda^0_b$ production asymmetries in 7 and 8 TeV proton-proton
+  collisions}}, }{}\href{https://doi.org/10.1016/j.physletb.2017.09.023}{Phys.\
+  Lett.\  \textbf{B774} (2017) 139},
+  \href{http://arxiv.org/abs/1703.08464}{{\normalfont\ttfamily
+  arXiv:1703.08464}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Davis:2310213}
+A.~Davis {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{Measurement
+  of the instrumental asymmetry for $K^{-}\pi^{+}$-pairs at LHCb in Run 2”}},
+  }{} Tech. Rep. LHCb-PUB-2018-004. CERN-LHCb-PUB-2018-004, CERN, Geneva, Mar,
+  2018\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
 \end{mcitethebibliography}

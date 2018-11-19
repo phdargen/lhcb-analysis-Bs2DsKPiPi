@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  16 NOV 2018 12:11
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  19 NOV 2018 17:21
 entering extended mode
  %&-line parsing enabled.
 **main
@@ -1000,23 +1000,61 @@ Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 1.
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 4--11
+
+ []
+
 (./tables/timeFit/norm_taggingCalib/result_table.tex)
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<figs/timeFit/norm_taggingCalib/h_t.pdf, id=254, 569.12625pt x 385.44pt>
+File: figs/timeFit/norm_taggingCalib/h_t.pdf Graphic file (type pdf)
+
+<use figs/timeFit/norm_taggingCalib/h_t.pdf>
+<figs/timeFit/norm_taggingCalib/h_t_mixed.pdf, id=255, 569.12625pt x 385.44pt>
+File: figs/timeFit/norm_taggingCalib/h_t_mixed.pdf Graphic file (type pdf)
+
+<use figs/timeFit/norm_taggingCalib/h_t_mixed.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
 (./tables/timeFit/signal/result_table.tex)
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) [6 <./figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf, page is r
-otated 90 degrees>] [7] (./main.bbl [8
+<figs/timeFit/signal/h_t.pdf, id=259, 569.12625pt x 385.44pt>
+File: figs/timeFit/signal/h_t.pdf Graphic file (type pdf)
 
-]) [9] (./main.aux) ) 
+<use figs/timeFit/signal/h_t.pdf>
+<figs/timeFit/signal/h_t_log.pdf, id=260, 569.12625pt x 385.44pt>
+File: figs/timeFit/signal/h_t_log.pdf Graphic file (type pdf)
+
+<use figs/timeFit/signal/h_t_log.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) [6 <./figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf, page is r
+otated 90 degrees>] [7 <./figs/timeFit/norm_taggingCalib/h_t.pdf, page is rotat
+ed 90 degrees> <./figs/timeFit/norm_taggingCalib/h_t_mixed.pdf, page is rotated
+ 90 degrees>] [8 <./figs/timeFit/signal/h_t.pdf, page is rotated 90 degrees> <.
+/figs/timeFit/signal/h_t_log.pdf, page is rotated 90 degrees>] (./main.bbl
+[9
+
+]
+Missing character: There is no ‚ in font cmti12!
+Missing character: There is no Ä in font cmti12!
+Missing character: There is no ù in font cmti12!
+) [10] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 7472 strings out of 256216
- 104276 string characters out of 1917072
+ 7510 strings out of 256216
+ 105289 string characters out of 1917072
  212607 words of memory out of 1500000
- 10465 multiletter control sequences out of 10000+200000
+ 10491 multiletter control sequences out of 10000+200000
  24906 words of font info for 119 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 37i,14n,39p,1142b,527s stack positions out of 5000i,500n,6000p,200000b,15000s
+ 37i,14n,39p,1142b,529s stack positions out of 5000i,500n,6000p,200000b,15000s
 </usr/share/texmf/fonts/type1/bluesky/cm/cmbsy10.pfb></usr
 /share/texmf/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bl
 uesky/cm/cmbx12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmcsc10.pfb></usr/
@@ -1034,9 +1072,9 @@ e1/bluesky/cm/cmsy7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy8.pfb></us
 r/share/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/type1/b
 luesky/cm/cmtt10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmtt12.pfb></usr/
 share/texmf/fonts/type1/bluesky/ams/eurm10.pfb>
-Output written on main.pdf (11 pages, 296238 bytes).
+Output written on main.pdf (12 pages, 388931 bytes).
 PDF statistics:
- 453 PDF objects out of 1000 (max. 8388607)
- 51 named destinations out of 1000 (max. 131072)
- 21097 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 660 PDF objects out of 1000 (max. 8388607)
+ 58 named destinations out of 1000 (max. 131072)
+ 21117 words of extra memory for PDF output out of 24883 (max. 10000000)
 

@@ -1,6 +1,17 @@
 \section{Decay-time fit to $\Bs\to\Ds\pion\pion\pion$ and $\Bs\to\Ds\kaon\pion\pion$ candidates}
 \label{sec:timeFit}
 
+The sFit technique~\cite{Pivk:2004ty} is used to statistically subtract the background from the $\Bs\to\Ds\pion\pion\pion$ and $\Bs\to\Ds\kaon\pion\pion$ data samples. 
+During the fit procedure, $\Gs$ and $\DGs$ are fixed to the corresponding HFLAV~\cite{HFAG} world average.
+The $\Bs$ production asymmetry $A_{p}$, defined as the relative difference in the production cross sections $\frac{\sigma(\Bsb) - \sigma(\Bs)}{\sigma(\Bsb) + \sigma(\Bs)}$, contributes with a factor $(1 \pm A_{p})$ to the signal PDF,
+where the sign depends on the flavour of the b meson. 
+For data recorded during Run I, $A_{p}$ is taken from~\cite{Aaij:2017mso}.
+The PDFs used for the fits to the $\Bs\to\Ds\pion\pion\pion$ and $\Bs\to\Ds\kaon\pion\pion$ candidates are convolved with a Gaussian function representing the per-candidate decay-time resolution 
+and multiplied by the decay-time acceptance described in Sections \ref{sec:Resolution} and \ref{sec:Acceptance}, respectively.\newline
+
+Since the decay $\Bs\to\Ds\pion\pion\pion$ is flavour specific, the \CP coefficients defined in Equation xXx can be fixed to $C=1$ and $D_{f} = D_{\bar{f}} = S_{f} = S_{\bar{f}} = 0$. 
+In the fit, the calibration parameters for the OS and SS taging algorithms, the $\Bs$ production asymmetry for Run II data, as well as the $\Bs$ oscillation frequency $\dms$, are measured.  
+The fit to the decay-time distribution is shown in Figure \ref{fig:tFitNorm} and the measured observables are summarized in Table \ref{tab:normFitResults}. 
 
 \begin{table}[h]
 \centering
@@ -14,6 +25,26 @@
 \end{table}
 
 
+\begin{figure}[h]
+        \centering
+                \includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t.pdf}
+                %\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t_log.pdf}
+                \includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t_mixed.pdf}
+                %\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_asym.pdf}
+                \caption{
+Left: Flavour averaged decay-time distribution of $\Bs\to\Ds\pion\pion\pion$ candidates.
+Right: Tagged decay-time distribution of mixed (red) and unmixed (blue) signal candidates.}
+%Bottom-right: Time-dependent asymmetry $A_{mix}$ between mixed and unmixed $\Bs$ candidates folded into one oscillation period.}
+                \label{fig:tFitNorm}
+\end{figure}
+
+The fit to $\Bs\to\Ds\kaon\pion\pion$ data is sensitive to a possible charge asymmetry of the kaon, introduced by its charge-dependent nuclear cross-section. 
+Therefore, the detection asymmetry $A_{det}$ is introduced and multiplied as $(1 \pm A_{det})$, where the sign depends on the charge of the kaon, to the signal PDF. 
+It is determined using a data-driven technique described in~\cite{Davis:2310213}.
+The tagging calibration parameters are taken from the fit to the control sample and included in the fit using Gaussian-constrains.
+The measured \CP coefficients are reported in Table \ref{tab:sigFitResults} and the fit projection is shown in Figure \ref{fig:tFitSig}.
+
+
 \begin{table}[h]
 \centering
 \caption{\CP coefficients determined from a fit to the $B_s \to D_s K \pi\pi$ decay-time distribution. The uncertainties are statistical and systematic, respectively.}
@@ -24,3 +55,11 @@
 \label{tab:sigFitResults}
 \end{table}
 
+\begin{figure}[h]
+        \centering
+                \includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal/h_t.pdf}
+                \includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal/h_t_log.pdf}
+%               \includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal/h_asym.pdf}              
+                \caption{Decay-time distribution of $\Bs\to\Ds\kaon\pion\pion$ signal candidates with the fit projection overlaid in (left) regular and (right) logarithmic scale.}
+                \label{fig:tFitSig}
+\end{figure}
