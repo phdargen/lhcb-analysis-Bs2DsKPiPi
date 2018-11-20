@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  19 NOV 2018 17:21
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.10)  20 NOV 2018 16:23
 entering extended mode
  %&-line parsing enabled.
 **main
@@ -297,23 +297,32 @@ Package: longtable 2004/02/01 v4.11 Multi-page Table package (DPC)
 \c@LT@tables=\count125
 \c@LT@chunks=\count126
 \LT@p@ftn=\toks28
-) (./main.aux)
+)
+(/usr/share/texmf/tex/latex/rotating/rotating.sty
+Package: rotating 1997/09/26, v2.13 Rotation package
+\c@r@tfl@t=\count127
+\rot@float@box=\box33
+) (./main.aux
+
+LaTeX Warning: Label `sec:Selection' multiply defined.
+
+)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
 -------------------- Geometry parameters
 paper: a4paper
 landscape: --
@@ -362,8 +371,7 @@ Package microtype Info: Using default expansion set `basictext'.
 Package microtype Info: No tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
-
-(/usr/share/texmf/tex/latex/microtype/mt-cmr.cfg
+ (/usr/share/texmf/tex/latex/microtype/mt-cmr.cfg
 File: mt-cmr.cfg 2005/11/07 v1.9 microtype config. file: Computer Modern Roman 
 (RS)
 )
@@ -390,12 +398,14 @@ LaTeX Info: Redefining \selectfont on input line 125.
 \JustifyingParindent=\skip66
 )
 Package caption Info: hyperref package v6.74m (or newer) detected on input line
- 45.
-Package caption Info: hypcap package v1.0 (or newer) detected on input line 45.
+ 46.
+Package caption Info: hypcap package v1.0 (or newer) detected on input line 46.
 
 Package caption Info: longtable package v3.15 (or newer) detected on input line
- 45.
-Package hyperref Info: Link coloring OFF on input line 45.
+ 46.
+Package caption Info: rotating package v2.0 (or newer) detected on input line 4
+6.
+Package hyperref Info: Link coloring OFF on input line 46.
 
 (/usr/share/texmf/tex/latex/hyperref/nameref.sty
 Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
@@ -403,10 +413,10 @@ Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
 (/usr/share/texmf/tex/latex/oberdiek/refcount.sty
 Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
 )
-\c@section@level=\count127
+\c@section@level=\count128
 )
-LaTeX Info: Redefining \ref on input line 45.
-LaTeX Info: Redefining \pageref on input line 45.
+LaTeX Info: Redefining \ref on input line 46.
+LaTeX Info: Redefining \pageref on input line 46.
  (./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
@@ -434,7 +444,7 @@ File: mt-eur.cfg 2006/07/31 v1.1 microtype config. file: AMS Euler Roman (RS)
 
 pdfTeX warning: pdflatex (file ./figs/lhcb-logo.pdf): PDF inclusion: found PDF 
 version <1.5>, but at most version <1.4> allowed
-<figs/lhcb-logo.pdf, id=39, 1424.32124pt x 855.195pt>
+<figs/lhcb-logo.pdf, id=47, 1424.32124pt x 855.195pt>
 File: figs/lhcb-logo.pdf Graphic file (type pdf)
  <use figs/lhcb-logo.pdf>
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 82.
@@ -447,7 +457,10 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./figs/lhcb-logo.pdf>] [2]
-) (./detector.tex) (./massFit.tex
+) (./detector.tex)
+(./selection.tex [1
+
+]) (./massFit.tex
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 1.
@@ -534,10 +547,6 @@ Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `superscript' on input line 1.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `subscript' on input line 1.
 
 
@@ -620,38 +629,43 @@ Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 1.
 
-[1
-
-] <figs/MassFit/norm_pull.pdf, id=107, 569.12625pt x 385.44pt>
+<figs/MassFit/norm_pull.pdf, id=121, 569.12625pt x 385.44pt>
 File: figs/MassFit/norm_pull.pdf Graphic file (type pdf)
 
 <use figs/MassFit/norm_pull.pdf>
-<figs/MassFit/signal_pull.pdf, id=108, 569.12625pt x 385.44pt>
+<figs/MassFit/signal_pull.pdf, id=122, 569.12625pt x 385.44pt>
 File: figs/MassFit/signal_pull.pdf Graphic file (type pdf)
 
-<use figs/MassFit/signal_pull.pdf>) (./selection.tex) (./tagging.tex [2 <./figs
-/MassFit/norm_pull.pdf, page is rotated 90 degrees> <./figs/MassFit/signal_pull
-.pdf, page is rotated 90 degrees>]
-(./tables/Tagging/Run1/EspressoPerformanceTable_OS.tex)
-(./tables/Tagging/Run2/EspressoPerformanceTable_OS.tex) [3pdfTeX warning (ext4)
-: destination with the same identifier (name{table.2}) has been already used, d
-uplicate ignored
+<use figs/MassFit/signal_pull.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) (./selection.tex [2]) (./tagging.tex [3 <./figs/MassFit/norm_pull.pdf, page i
+s rotated 90 degrees> <./figs/MassFit/signal_pull.pdf, page is rotated 90 degre
+es>] (./tables/Tagging/Run1/EspressoPerformanceTable_OS.tex)
+(./tables/Tagging/Run2/EspressoPerformanceTable_OS.tex)
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: Reference `tab:normFitResults' on page 4 undefined on input line
+ 65.
+
+[4] (./tables/Tagging/norm_taggingCalib/tagPower_Run1.tex)
+(./tables/Tagging/norm_taggingCalib/tagPower_Run2.tex)) (./resolution.tex
+[5pdfTeX warning (ext4): destination with the same identifier (name{table.2}) h
+as been already used, duplicate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.66 
-     ] (./tables/Tagging/norm_taggingCalib/tagPower_Run1.tex)
-(./tables/Tagging/norm_taggingCalib/tagPower_Run2.tex)) (./resolution.tex
-[4]) (./acceptance.tex
-<figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf, id=233, 569.1262
+l.18 \begin{equation}
+                     ]) (./acceptance.tex [6]
+<figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf, id=271, 569.1262
 5pt x 385.44pt>
 File: figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf Graphic file
  (type pdf)
 
-<use figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-) (./timeFit.tex [5]
+<use figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf>)
+(./timeFit.tex
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 1.
@@ -738,10 +752,6 @@ Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `superscript' on input line 1.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `subscript' on input line 1.
 
 
@@ -911,10 +921,6 @@ Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
 (hyperref)                removing `math shift' on input line 1.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `superscript' on input line 1.
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
@@ -1005,76 +1011,84 @@ Underfull \hbox (badness 10000) in paragraph at lines 4--11
 
  []
 
-(./tables/timeFit/norm_taggingCalib/result_table.tex)
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<figs/timeFit/norm_taggingCalib/h_t.pdf, id=254, 569.12625pt x 385.44pt>
+[7 <./figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf, page is rot
+ated 90 degrees>]
+<figs/timeFit/norm_taggingCalib/h_t.pdf, id=331, 569.12625pt x 385.44pt>
 File: figs/timeFit/norm_taggingCalib/h_t.pdf Graphic file (type pdf)
 
 <use figs/timeFit/norm_taggingCalib/h_t.pdf>
-<figs/timeFit/norm_taggingCalib/h_t_mixed.pdf, id=255, 569.12625pt x 385.44pt>
+<figs/timeFit/norm_taggingCalib/h_t_mixed.pdf, id=332, 569.12625pt x 385.44pt>
 File: figs/timeFit/norm_taggingCalib/h_t_mixed.pdf Graphic file (type pdf)
 
 <use figs/timeFit/norm_taggingCalib/h_t_mixed.pdf>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
 (./tables/timeFit/signal/result_table.tex)
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<figs/timeFit/signal/h_t.pdf, id=259, 569.12625pt x 385.44pt>
+<figs/timeFit/signal/h_t.pdf, id=336, 569.12625pt x 385.44pt>
 File: figs/timeFit/signal/h_t.pdf Graphic file (type pdf)
 
 <use figs/timeFit/signal/h_t.pdf>
-<figs/timeFit/signal/h_t_log.pdf, id=260, 569.12625pt x 385.44pt>
+<figs/timeFit/signal/h_t_log.pdf, id=337, 569.12625pt x 385.44pt>
 File: figs/timeFit/signal/h_t_log.pdf Graphic file (type pdf)
 
 <use figs/timeFit/signal/h_t_log.pdf>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) [6 <./figs/Acceptance/adaptive_N4/timeAccRatioFit_norm_Run2_t0.pdf, page is r
-otated 90 degrees>] [7 <./figs/timeFit/norm_taggingCalib/h_t.pdf, page is rotat
-ed 90 degrees> <./figs/timeFit/norm_taggingCalib/h_t_mixed.pdf, page is rotated
- 90 degrees>] [8 <./figs/timeFit/signal/h_t.pdf, page is rotated 90 degrees> <.
-/figs/timeFit/signal/h_t_log.pdf, page is rotated 90 degrees>] (./main.bbl
-[9
+) (./systematics.tex
+Underfull \hbox (badness 10000) in paragraph at lines 4--29
+
+ []
+
+[8 <./figs/timeFit/norm_taggingCalib/h_t.pdf, page is rotated 90 degrees> <./fi
+gs/timeFit/norm_taggingCalib/h_t_mixed.pdf, page is rotated 90 degrees>]
+[9 <./figs/timeFit/signal/h_t.pdf, page is rotated 90 degrees> <./figs/timeFit/
+signal/h_t_log.pdf, page is rotated 90 degrees>]
+(./tables/timeFit/signal/sys_summary_table2.tex)
+(./tables/fullFit/signal/sys_summary_table2.tex) Adding sideways figure on 
+right hand page
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) [10] [11] (./main.bbl [12
 
 ]
 Missing character: There is no ‚ in font cmti12!
 Missing character: There is no Ä in font cmti12!
 Missing character: There is no ù in font cmti12!
-) [10] (./main.aux) ) 
+) [13] (./main.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 7510 strings out of 256216
- 105289 string characters out of 1917072
- 212607 words of memory out of 1500000
- 10491 multiletter control sequences out of 10000+200000
+ 7597 strings out of 256216
+ 106601 string characters out of 1917072
+ 236645 words of memory out of 1500000
+ 10554 multiletter control sequences out of 10000+200000
  24906 words of font info for 119 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 37i,14n,39p,1142b,529s stack positions out of 5000i,500n,6000p,200000b,15000s
-</usr/share/texmf/fonts/type1/bluesky/cm/cmbsy10.pfb></usr
-/share/texmf/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bl
-uesky/cm/cmbx12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmcsc10.pfb></usr/
-share/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/blu
-esky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi12.pfb></usr/sh
-are/texmf/fonts/type1/bluesky/cm/cmmi6.pfb></usr/share/texmf/fonts/type1/bluesk
-y/cm/cmmi7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi8.pfb></usr/share/t
-exmf/fonts/type1/bluesky/cm/cmmib10.pfb></usr/share/texmf/fonts/type1/bluesky/c
-m/cmr10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texm
-f/fonts/type1/bluesky/cm/cmr6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7
-.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/
-type1/bluesky/cm/cmss12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmss8.pfb>
-</usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/typ
-e1/bluesky/cm/cmsy7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy8.pfb></us
-r/share/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/type1/b
-luesky/cm/cmtt10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmtt12.pfb></usr/
-share/texmf/fonts/type1/bluesky/ams/eurm10.pfb>
-Output written on main.pdf (12 pages, 388931 bytes).
+ 37i,16n,39p,1138b,529s stack positions out of 5000i,500n,6000p,200000b,15000s
+</usr/share/texmf/fonts/type1/bluesky/cm/cmbsy10.pfb></usr/share/texmf/fonts/
+type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx12.pfb
+></usr/share/texmf/fonts/type1/bluesky/cm/cmcsc10.pfb></usr/share/texmf/fonts/t
+ype1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi10.pfb>
+</usr/share/texmf/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf/fonts/typ
+e1/bluesky/cm/cmmi6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi8.pfb></us
+r/share/texmf/fonts/type1/bluesky/cm/cmmib10.pfb></usr/share/texmf/fonts/type1/
+bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/s
+hare/texmf/fonts/type1/bluesky/cm/cmr6.pfb></usr/share/texmf/fonts/type1/bluesk
+y/cm/cmr8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmss12.pfb></usr/share/t
+exmf/fonts/type1/bluesky/cm/cmss8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/
+cmsy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy6.pfb></usr/share/texmf
+/fonts/type1/bluesky/cm/cmsy7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy
+8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fon
+ts/type1/bluesky/cm/cmtt10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmtt12.
+pfb></usr/share/texmf/fonts/type1/bluesky/ams/eurm10.pfb>
+Output written on main.pdf (15 pages, 407885 bytes).
 PDF statistics:
- 660 PDF objects out of 1000 (max. 8388607)
- 58 named destinations out of 1000 (max. 131072)
- 21117 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 707 PDF objects out of 1000 (max. 8388607)
+ 70 named destinations out of 1000 (max. 131072)
+ 21133 words of extra memory for PDF output out of 24883 (max. 10000000)
 

@@ -1,2 +1,19 @@
 \section{Selection of signal candidates}
 \label{sec:Selection}
+
+In the first selection step, charged kaons and pions are reconstructed to form a $\Ds$ candidate in the decay modes $\Ds\to\kaon\kaon\pion$, $\Ds\to\kaon\pion\pion$ and $\Ds\to\pion\pion\pion$.
+These candidates are subsequently combined with a kaon and two pions or three pions from the secondary vertex to form $\Bs\to\Ds\kaon\pion\pion$ or $\Bs\to\Ds\pion\pion\pion$ candidates.
+The resolution of the invariant mass of $\Bs$ candidates, as well as the decay-time resolution, are improved using a kinematic fit~\cite{DTF} 
+where the $\Bs$ candidate is constrained to the PV for which it has the smallest IP signficance and the mass of the $\Ds$ is constrained to the world average. \newline
+Further kinematic vetoes and requirements on the particle identification (PID) information are used to distinguish the different $\Ds$ final states and isolate them from physical background, such as decays of $\PLambda_{c}$ or $\Dpm$.
+The most abundant final state of the $\Ds$ meson, $\Ds\to\kaon\kaon\pion$, is subdivided into $\Ds\to\phi\pi$, $\Ds\to\Kstarz\kaon$ and $\Ds\to(\kaon\kaon\pion)_{\text{non-res}}$, 
+where the narrow $\phi$ and $\Kstarz$ resonances allow for looser requirements on the PID variables for those candidates. 
+Additional kinematic selections are applied to the other three hadrons to suppress background from physical cross-feed, e.g. the $\Bs\to\Ds\Ds$ decay.
+The majority of criteria used in this analysis are guided by the selection procedures implemented in~\cite{LHCb-PAPER-2012-033,Aaij:2017lff}. \newline 
+To discriminate signal candidates and combinatorial background, a boosted decision tree~(BDT)~\cite{Breiman,AdaBoost} implemented in the TMVA toolkit~\cite{Hocker:2007ht,*TMVA4} to separate signal from background is used.
+The decision tree is trained using background-subtacted $\Bs\to\Ds\pion\pion\pion$ data as signal proxy, while the upper mass sideband of $\Bs\to\Ds\kaon\pion\pion$ candidates ($m_{\Bs} > 5500 \mevcc$) is used as background proxy.
+Kinematic quantities of the $\Bs$, the $\Ds$ and the reconstructed kaons and pions are used as discriminating variables for the training, while no information from the PID system is taken.
+The working point of the decision tree is chosen to optimize the significance of the $\Bs\to\Ds\kaon\pion\pion$ signal.
+After the full selection procedure is applied, approximately 1.5 $\%$ of events contain more than one signal candidate, off which all are used for the analysis.
+
+

@@ -1,0 +1,65 @@
+\section{Systematic uncertainties}
+\label{sec:Systematics}
+
+Systematic uncertainties derive from the modelling of the background in the invariant $\Bs$ mass distribution, the detection and production asymmetries $A_{det}$ and $A_{p}$, 
+the limited knowledge of the decay-time acceptance and resolution, as well as from the uncertainty on the LHCb length and momentum scale, which directly translates in an uncertainty on $\dms$.
+For the time-dependent amplitude fit, additional sources of systematic uncertainties arise from the description of the phase-space acceptance, the modelling of resonance shapes and the explicit choice of amplitudes used in the fit.
+The systematic uncertainties on the measured observables are summarized in Table \ref{tab:sigSys} for the phase-space integrated decay-time fit
+and in Table \ref{tab:sigSys2} for the full time-dependent amplitude fit to $\Bs\to\Ds\kaon\pion\pion$ data. 
+The individual contributions are discussed below.\newline
+Since the choice of signal and background models for the description of the invariant mass spectrum of $\Bs$ candidates is not unique, several alternative parametrizations are tested. 
+For each case new signal weights are obtained and the sFit procedure is repeated. 
+The sample variance of the obtained differences to the nominal fit value are assigned as systematic uncertainty due to the background subtraction.\newline 
+The fit procedure is validated using a large set of pseudoexperiments, which are generated with the central values of the \CP parameters reported in Table \ref{tab:sigFitResults}. 
+Subsequently, they are processed by the nominal fit procedure and the values obtained by the fits are compared to the generated ones. 
+For each parameter, a distribution is formed by normalizing the differences between fitted and generated values to the uncertainties measured in the nominal fit. 
+The mean and the width of the distribution is added in quadrature and assigned as systematic uncertainty due to a fit bias for the respective parameter.\newline 
+The systematic uncertainty related to the decay-time acceptance, as well as $\Gamma_s$ and $\Delta\Gamma_s$ are studied with the same set of pseudoexperiments. 
+They are fit with the nominal model and a model in which the acceptance parameters together with $\Gamma_s$ and $\Delta\Gamma_s$ are randomized within their uncertainties.
+Distributions are calculated by dividing the difference between the obtained values of the nominal fit and the fit using randomly shifted acceptance parameters by the uncertainty in the nominal fit.
+The bias in the mean of this distribution is added to its width, in quadrature, in order to arrive at the final systematic uncertainty for each parameter.\newline
+This procedure is repeated, varying the production, detection asymmetries and $\dms$ within their respective uncertainties instead of the acceptance parametrization.\newline
+To study systematic effects originating from the scaling of the decay-time error estimate, two alternative decay-time resolution models are tested.
+Due to the high correlation between the decay-time resolution and the tagging calibration, their systematic uncertainty needs to be studied simultaneously.
+First, the decay-time dependent fit to $\Bs\to\Ds\pion\pion\pion$ data is repeated using a alternative decay-time error scaling function.
+In this fit, new tagging calibration parameters are obtained and subsequently used with Gaussian-constrains in the fit to $\Bs\Ds\kaon\pion\pion$ data.
+The largest change in the central value of each \CP observable is assigned as the systematic uncertainty due to the decay-time resolution and flavour tagging for the respective parameter.\newline
+A possible systematic effect is studied by repeating the sFit, randomly keeping only one candidate in events where multiple candidates are found. No shift in the nominal fit values is observed.\newline
+The uncertainty on the LHCb length scale is estimated to be at most $0.020\%$, which translates directly in an uncertainty on $\dms$ of $0.020\%$ with other parameters being unaffected.\newline
+
+DESCRIPTION OF AMPLITUDE SYSTEMATICS HERE
+
+%\begin{sidewaystable}[h]
+%\centering
+%\caption{Systematic uncertainties on the fit parameters of the fit to $B_s \to D_s \pi \pi \pi$ data in units of statistical standard deviations.}
+%\resizebox{0.75\linewidth}{!}{
+%        \renewcommand{\arraystretch}{1.5}
+%        \input{tables/timeFit/norm_taggingCalib/sys_summary_table2.tex}
+%}
+%\label{tab:normSys}
+%\end{sidewaystable}
+
+\begin{table}[h]
+\centering
+\caption{Systematic uncertainties on the fit parameters of the phase-space integrated fit to $B_s \to D_s K\pi \pi$ data in units of statistical standard deviations.}
+\resizebox{\linewidth}{!}{
+        \renewcommand{\arraystretch}{1.5}
+        \input{tables/timeFit/signal/sys_summary_table2.tex}
+}
+\label{tab:sigSys}
+\end{table}
+
+
+\begin{sidewaystable}[h]
+\centering
+\caption{Systematic uncertainties on the fit parameters of the full time-dependent amplitude fit to $B_s \to D_s K\pi \pi$ data in units of statistical standard deviations.}
+\resizebox{\linewidth}{!}{
+        \renewcommand{\arraystretch}{1.5}
+        \input{tables/fullFit/signal/sys_summary_table2.tex}
+}
+\label{tab:sigSys2}
+\end{sidewaystable}
+
+
+
+
