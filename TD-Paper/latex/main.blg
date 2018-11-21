@@ -7,45 +7,46 @@ Database file #3: LHCb-CONF.bib
 Database file #4: LHCb-DP.bib
 Database file #5: LHCb-TDR.bib
 Warning--I didn't find a database entry for "TMVA4"
-You've used 30 entries,
+Warning--empty author in LHCb-CONF-2018-002
+You've used 41 entries,
             2969 wiz_defined-function locations,
-            913 strings with 10643 characters,
-and the built_in function-call counts, 139752 in all, are:
-= -- 15294
-> -- 256
+            1001 strings with 13257 characters,
+and the built_in function-call counts, 190586 in all, are:
+= -- 20874
+> -- 326
 < -- 1
-+ -- 906
-- -- 62
-* -- 14215
-:= -- 17291
-add.period$ -- 30
-call.type$ -- 30
-change.case$ -- 29
++ -- 1224
+- -- 79
+* -- 19470
+:= -- 23489
+add.period$ -- 41
+call.type$ -- 41
+change.case$ -- 40
 chr.to.int$ -- 0
-cite$ -- 30
-duplicate$ -- 2272
-empty$ -- 14644
-format.name$ -- 62
-if$ -- 30422
+cite$ -- 42
+duplicate$ -- 2964
+empty$ -- 20030
+format.name$ -- 79
+if$ -- 41547
 int.to.chr$ -- 0
-int.to.str$ -- 30
-missing$ -- 152
-newline$ -- 191
-num.names$ -- 30
-pop$ -- 510
+int.to.str$ -- 41
+missing$ -- 208
+newline$ -- 257
+num.names$ -- 40
+pop$ -- 663
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 220
+skip$ -- 293
 stack$ -- 0
-substring$ -- 41671
-swap$ -- 2
-text.length$ -- 61
+substring$ -- 56972
+swap$ -- 3
+text.length$ -- 83
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 0
-while$ -- 832
-width$ -- 32
-write$ -- 476
-(There was 1 warning)
+warning$ -- 1
+while$ -- 1085
+width$ -- 43
+write$ -- 649
+(There were 2 warnings)
