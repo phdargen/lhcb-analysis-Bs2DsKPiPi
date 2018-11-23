@@ -12,7 +12,7 @@ The signal PDF is conditional on the tagging decisions $q_i$, the mistag estimat
 \end{equation}
 where $p(t \vert q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})$ is given by Equation \ref{eq:PDF_intX} taking the tagging dilution into account.
 The decay-time acceptance $\epsilon(t)$ (Sec.~\ref{sec:Acceptance}) and the Gaussian time-resolution function $\mathcal{R}(t - t^{'},\delta t)$ (Sec.~\ref{sec:Resolution}) are fixed to the values obtained by the dedicated studies. 
-We fix the values of $\Gs$ and $\DGs$ to the latest HFAG results \cite{HFAG}.
+We fix the values of $\Gs$ and $\DGs$ to the latest HFLAV results \cite{HFAG}.
 
 The  unbinned maximum likelihood fits are performed simultaneously in six categories: 
 [Run-I,\textsf{L0-TOS}], [Run-I,\textsf{L0-TIS}], %[Run-II,\textsf{L0-TOS}] and [Run-II,\textsf{L0-TIS}].
@@ -85,7 +85,7 @@ We included Gaussian-constrains for the tagging calibration parameters with the 
 %\newline
 %\\
 \pretextcomment{
-Currently the mixing frequency is fixed to the HFAG value. 
+Currently the mixing frequency is fixed to the HFLAV value. 
 We intend to update the fit after unblinding our result from the $\Bs\to\Ds\pion\pion\pion$ fit since our precision is significantly higher.
 }
 \begin{figure}[h]
@@ -106,6 +106,29 @@ We intend to update the fit after unblinding our result from the $\Bs\to\Ds\pion
 %}
 \label{tab:sigFitResults}
 \end{table}
+
+
+
+
+\subsection{Determination of $\gamma$ using the measured CP parameters}
+\label{subsec:GammaComb}
+
+The CKM angle $\gamma$, as well as $r$, $\delta$ and $\kappa$ are determined from the measured CP-violating parameters using the \textsf{GammaCombo} package~\cite{GammaCombo}.
+For this, the likelihood 
+
+\begin{equation}
+\mathcal{L}(\alpha) = \exp\left(-\frac{1}{2}(\vec{A}(\vec{\alpha})- \vec{A}_{obs})^{T} V^{-1} (\vec{A}(\vec{\alpha}) - \vec{A}_{obs} ) \right),
+\label{eq:GammaComb}
+\end{equation}
+
+where $\alpha = (\gamma, \beta_{s}, r, \delta)$ is the vector of the physical observables, $\vec{A}$ is the vector of CP-violating observables defined in Equation~\ref{eq:CPcoeff},  
+is the vector of the measured CP parameters given in Table~\ref{tab:sigFitResults} and $V$ is the covariance matrix combining statistics and systematics.
+Following a frequentest approach~\cite{LHCb-PAPER-2013-020}, confidence intervals are given by evaluating the test statistics $\Delta \chi^{2} = \chi^{2}(\vec{\alpha^{'}}_{min}) - \chi^{2}(\vec{\alpha}_{min})$,
+where $\chi^{2}(\vec{\alpha}) = -2 \ln\mathcal{L}(\vec{alpha})$ and $\vec{\alpha}_{min}$ denotes the global maximum of Equation \ref{eq:GammaComb}, 
+while $\vec{alpha^{'}}_{min}$ is the conditional maximum when the parameter of interest is fixed.
+
+
+
 
 %\subsection{\textsf{sFit} model validation using toy studies}
 %The fit model and procedure is validated using pseudo experiments. 1000 toys are generated using the model described in Eq. \ref{eq:TPDF_full} and \ref{eq:PDF_intX}. 
