@@ -17,7 +17,8 @@ We fix the values of $\Gs$ and $\DGs$ to the latest HFLAV results \cite{HFAG}.
 The  unbinned maximum likelihood fits are performed simultaneously in six categories: 
 [Run-I,\textsf{L0-TOS}], [Run-I,\textsf{L0-TIS}], %[Run-II,\textsf{L0-TOS}] and [Run-II,\textsf{L0-TIS}].
  [Year-15/16,\textsf{L0-TOS}], [Year-15/16,\textsf{L0-TIS}],
- [Year-17,\textsf{L0-TOS}] and [Year-17,\textsf{L0-TIS}].
+ [Year-17,\textsf{L0-TOS}] and [Year-17,\textsf{L0-TIS}]
+ to account for different time-acceptance shapes, time-resolution and tagging calibrations. 
  
  
 \subsection{Fit to $\Bs\to\Ds\pion\pion\pion$ data}  
@@ -76,7 +77,7 @@ Bottom-right: Time-dependent asymmetry $A_{mix}$ between mixed and unmixed $\Bs$
 The measured \CP coefficients $C,D_{f},D_{\bar{f}},S_{f} $ and $S_{\bar{f}}$ extracted from a 
 fit to the $B_s \to D_s K \pi\pi$ decay-time distribution are reported in Table \ref{tab:sigFitResults}.
 The fit projection is shown in Fig.~\ref{fig:tFitSig}.
-We included Gaussian-constrains for the tagging calibration parameters with the central values and uncertainties determined in Sec.~\ref{ssec:timeNormFit}.
+We included a multi-dimensional Gaussian-constraint for the tagging calibration parameters (including the tagging asymmetries) with the central values and covariance matrix determined in Sec.~\ref{ssec:timeNormFit}.
 \newline
 \\
 \pretextcomment{
@@ -110,22 +111,22 @@ We intend to update the fit after unblinding our result from the $\Bs\to\Ds\pion
 
 
 
-\subsection{Determination of $\gamma$ using the measured CP parameters}
-\label{subsec:GammaComb}
-
-The CKM angle $\gamma$, as well as $r$, $\delta$ and $\kappa$ are determined from the measured CP-violating parameters using the \textsf{GammaCombo} package~\cite{GammaCombo}.
-For this, the likelihood 
-
-\begin{equation}
-\mathcal{L}(\alpha) = \exp\left(-\frac{1}{2}(\vec{A}(\vec{\alpha})- \vec{A}_{obs})^{T} V^{-1} (\vec{A}(\vec{\alpha}) - \vec{A}_{obs} ) \right),
-\label{eq:GammaComb}
-\end{equation}
-
-where $\alpha = (\gamma, \beta_{s}, r, \delta)$ is the vector of the physical observables, $\vec{A}$ is the vector of CP-violating observables defined in Equation~\ref{eq:CPcoeff},  
-is the vector of the measured CP parameters given in Table~\ref{tab:sigFitResults} and $V$ is the covariance matrix combining statistics and systematics.
-Following a frequentest approach~\cite{LHCb-PAPER-2013-020}, confidence intervals are given by evaluating the test statistics $\Delta \chi^{2} = \chi^{2}(\vec{\alpha^{'}}_{min}) - \chi^{2}(\vec{\alpha}_{min})$,
-where $\chi^{2}(\vec{\alpha}) = -2 \ln\mathcal{L}(\vec{alpha})$ and $\vec{\alpha}_{min}$ denotes the global maximum of Equation \ref{eq:GammaComb}, 
-while $\vec{alpha^{'}}_{min}$ is the conditional maximum when the parameter of interest is fixed.
+%\subsection{Determination of $\gamma$ using the measured CP parameters}
+%\label{subsec:GammaComb}
+%
+%The CKM angle $\gamma$, as well as $r$, $\delta$ and $\kappa$ are determined from the measured CP-violating parameters using the \textsf{GammaCombo} package~\cite{GammaCombo}.
+%For this, the likelihood 
+%
+%\begin{equation}
+%\mathcal{L}(\alpha) = \exp\left(-\frac{1}{2}(\vec{A}(\vec{\alpha})- \vec{A}_{obs})^{T} V^{-1} (\vec{A}(\vec{\alpha}) - \vec{A}_{obs} ) \right),
+%\label{eq:GammaComb}
+%\end{equation}
+%
+%where $\alpha = (\gamma, \beta_{s}, r, \delta)$ is the vector of the physical observables, $\vec{A}$ is the vector of CP-violating observables defined in Equation~\ref{eq:CPcoeff},  
+%is the vector of the measured CP parameters given in Table~\ref{tab:sigFitResults} and $V$ is the covariance matrix combining statistics and systematics.
+%Following a frequentest approach~\cite{LHCb-PAPER-2013-020}, confidence intervals are given by evaluating the test statistics $\Delta \chi^{2} = \chi^{2}(\vec{\alpha^{'}}_{min}) - \chi^{2}(\vec{\alpha}_{min})$,
+%where $\chi^{2}(\vec{\alpha}) = -2 \ln\mathcal{L}(\vec{alpha})$ and $\vec{\alpha}_{min}$ denotes the global maximum of Equation \ref{eq:GammaComb}, 
+%while $\vec{alpha^{'}}_{min}$ is the conditional maximum when the parameter of interest is fixed.
 
 
 
