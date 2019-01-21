@@ -125,7 +125,7 @@ Depending on the $D_s$ final state different vetoes are applied in order to acco
 	
 	\item $\Dz\to\kaon\kaon$: \\
 	$\Dz$ combined with a random $\pion$ can fake a $\Ds\to\kaon\kaon\pion$ decay, 
-%	Same final state, vetoed by requiring $\left( M(KK\pim) - m(\kaon\kaon) \right) >  155 \mev$. 
+	vetoed by requiring $m(\kaon\kaon) <  1840 \mev$. 
 \end{enumerate}
 
 \item $\Ds^-\to\pion^+\pion^-\pion^-$
@@ -278,7 +278,7 @@ The $X_{s,d}$ invariant mass is recomputed applying the kaon mass hypothesis to 
 
 The Toolkit for Multivariate Analysis (TMVA \cite{Hocker:2007ht}) is used to train a multivariate classifier (BDT with gradient boosting, BDTG)
 discriminating signal and combinatorial background.
-We use $B_s\to D_s\pi\pi\pi$ data that passes the preselection as signal proxy. 
+We use $B_s\to D_s\pi\pi\pi$ data that passes all selection steps, including the trigger and stripping selection, offline cuts and physical background vetoes, as signal proxy. 
 The background is statistically subtracted by applying \textsf{sWeights} based on the fit to the reconstructed $B_s$ mass shown in Fig.~\ref{fig:massFit_preselected}.
 This is a simplified version (performed in a reduced mass range) of the final mass fits described in Sec.~\ref{sec:massFits}.
 The sideband data ($m(B_s) > 5500 \mev$) is used as background proxy.
@@ -299,17 +299,17 @@ The following discriminating variables are used for the BDTG training:
 	
 	\item fit quality of the DTF with PV constrain, $\chi^2_{DTF}/ndf$
 	
-	\item logarithm of the minimal vertex quality difference for adding one extra track,  log($\Delta\chi^2_{add-track}$)
+	\item logarithm of the minimal $\Bs$ decay vertex quality difference for adding one extra track,  log($\Delta\chi^2_{add-track}$)
 	
-	\item  the asymmetry between the transverse momentum
+	\item  the normalized difference between the transverse momentum
 	 of the $B_s$- candidate and the transverse momentum of all the particles reconstructed
 	 with a cone of radius $r = \sqrt{(\Delta\Phi)^{2} + (\Delta\eta)^{2}}$ $<$ 1 rad around the $B_s$- candidate, $B_s$ $A^{cone}_{p_T}$ 
 		
 	\item largest ghost probability of all tracks, max(ghostProb)
 
-	\item logarithm of the the smallest $X_{s}$ daughter impact-parameter $\chi^{2}$,  $X_{s}$ log(min($\chi^{2}_{IP}$))
+	\item logarithm of the the smallest $X_{d}$ daughter impact-parameter $\chi^{2}$,  $X_{s}$ log(min($\chi^{2}_{IP}$))
 
-	\item largest distance of closest approach of the $X_{s}$ daughters, max(DOCA)
+	\item largest distance of closest approach of the $X_{d}$ daughters, max(DOCA)
 
 	\item cosine of the largest opening angle between the $\Ds$ and another bachelor track $h_i$ in the plane transverse to the beam, $\cos(\text{max} \, \theta_{\Ds h_{i}})$
 	

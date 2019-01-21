@@ -605,6 +605,12 @@ vector<double> fitPartRecoBkgShape(){
 	//Fill needed variable in RooDataSet
 	RooDataSet* data = new RooDataSet("data","data",RooArgSet(Bs_MM),Import(*tree));
 	
+	TLatex* lhcbtext = new TLatex();
+	lhcbtext->SetTextFont(132);
+	lhcbtext->SetTextColor(1);
+	lhcbtext->SetTextSize(0.05);
+	lhcbtext->SetTextAlign(12);
+
 	/// Fit
 	RooFitResult *result = pdf->fitTo(*data,Save(kTRUE),NumCPU(3));
 	cout << "result is --------------- "<<endl;
@@ -617,11 +623,17 @@ vector<double> fitPartRecoBkgShape(){
         frame_m->GetXaxis()->SetTitle("m(D_{s}^{-}#pi^{+}#pi^{+}#pi^{-}) [MeV/c^{2}]");
 	data->plotOn(frame_m,Name("data"),MarkerSize(1),Binning(50));
 	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlue),LineWidth(3));
-// 	pdf->plotOn(frame_m,Components(BifGauss1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
-// 	pdf->plotOn(frame_m,Components(BifGauss2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
-// 	pdf->plotOn(frame_m,Components(BifGauss3),LineColor(kGreen),LineStyle(kDashed),LineWidth(1));
+ 	pdf->plotOn(frame_m,Components(BifGauss1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
+	pdf->plotOn(frame_m,Components(BifGauss2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
+	pdf->plotOn(frame_m,Components(BifGauss3),LineColor(kGreen),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
+
+	lhcbtext->DrawText(5030,175,"LHCb simulation");
+	lhcbtext->DrawLatex(5030,160,"#sqrt{s} = 8 TeV");
+	lhcbtext->DrawText(5030,145,"my thesis");
+
 	c1->Print("eps/BkgShape/Bs2Dsstartpipipi.eps");
+	c1->Print("eps/BkgShape/Bs2Dsstartpipipi.root");
 	if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dsstartpipipi.pdf");
 	Bs_MM.setRange("signal_range",min_MM,max_MM);
 	double eff_signal_range = pdf->createIntegral(Bs_MM,NormSet(Bs_MM),Range("signal_range"))->getVal();
@@ -650,8 +662,8 @@ vector<double> fitPartRecoBkgShape(){
 vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
-	NamedParameter<int> inverted_misID("inverted_misID", 0);
-	NamedParameter<int> random_misID("random_misID", 0);
+	//NamedParameter<int> inverted_misID("inverted_misID", 0);
+	//NamedParameter<int> random_misID("random_misID", 0);
 	NamedParameter<int>    PIDKcut_for_misID("PIDKcut_for_misID",10);
 
 	/// Define shape of Bs->Ds(*)pipipi BG as 2 crystal balls
@@ -690,12 +702,13 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 	///Load file
 	TFile* file;
 	TTree* tree;
-	if((inverted_misID == 0) && (random_misID == 0)){
+	//if((inverted_misID == 0) && (random_misID == 0)){
 		//file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_Ds2KKpi_bkg.root");
 		//tree = (TTree*) file->Get("DecayTree");
 		file = new TFile(("norm_Ds2KKpi_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_run"+anythingToString(run)+".root").c_str());
 		tree = (TTree*) file->Get("DecayTree");
-	}
+	//}
+/*
 	if(inverted_misID == 1){
 		file = new TFile("norm_Ds2KKpi_bkg_inverted.root");
 		tree = (TTree*) file->Get("DecayTree");
@@ -704,6 +717,7 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 		file = new TFile("norm_Ds2KKpi_bkg_random.root");
 		tree = (TTree*) file->Get("DecayTree");
 	}
+*/
 	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("EventWeight",1);
 	tree->SetBranchStatus("*Bs_MM",1);
@@ -716,6 +730,12 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 	cout << "result is --------------- "<<endl;
 	result->Print(); 
 	
+	TLatex* lhcbtext = new TLatex();
+	lhcbtext->SetTextFont(132);
+	lhcbtext->SetTextColor(1);
+	lhcbtext->SetTextSize(0.05);
+	lhcbtext->SetTextAlign(12);
+
 	TCanvas* c1= new TCanvas("");
 	RooPlot* frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
@@ -724,9 +744,14 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 
 	data->plotOn(frame_m,Name("data"),MarkerSize(1),Binning(40),DataError(RooAbsData::SumW2));
 	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlue),LineWidth(3));
-// 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
-// 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
+ 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
+ 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
+
+	lhcbtext->DrawTextNDC(0.69,0.75,"LHCb simulation");
+	lhcbtext->DrawTextNDC(0.69,0.70,"Run II");
+	lhcbtext->DrawTextNDC(0.69,0.65,"my thesis");
+
 	c1->Print(("eps/BkgShape/Bs2Dspipipi_as_DsKpipi_Run"+anythingToString(run)+".eps").c_str());
 	if(updateAnaNotePlots)c1->Print(("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dspipipi_as_DsKpipi_Run"+anythingToString(run)+".pdf").c_str());
 
@@ -784,8 +809,8 @@ vector<double> fitMisIdBkgShape_Ds3pi(int run = 1){
 vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
 
         NamedParameter<int> updateAnaNotePlots("updateAnaNotePlots", 0);
-	NamedParameter<int> inverted_misID("inverted_misID", 0);
-	NamedParameter<int> random_misID("random_misID", 0);
+	//NamedParameter<int> inverted_misID("inverted_misID", 0);
+	//NamedParameter<int> random_misID("random_misID", 0);
 	NamedParameter<int>    PIDKcut_for_misID("PIDKcut_for_misID",10);
 
 	/// Define shape of Bs->Ds(*)pipipi BG as 2 crystal balls
@@ -815,12 +840,13 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
 	/// Load file
 	TFile* file;
 	TTree* tree;
-	if((inverted_misID == 0) && (random_misID == 0)){
+	//if((inverted_misID == 0) && (random_misID == 0)){
 		//file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_Ds2KKpi_12_Dstar_bkg.root");
 		//tree = (TTree*) file->Get("DecayTree");
 		file = new TFile(("norm_Ds2KKpi_Dstar_bkg_PIDK"+anythingToString((int)PIDKcut_for_misID)+"_run"+anythingToString(run)+".root").c_str());
 		tree = (TTree*) file->Get("DecayTree");
-	}
+	//}
+/*
 	if(inverted_misID == 1){
 		file = new TFile("norm_Ds2KKpi_12_Dstar_bkg_inverted.root");
 		tree = (TTree*) file->Get("DecayTree");
@@ -829,6 +855,7 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
 		file = new TFile("norm_Ds2KKpi_12_Dstar_bkg_random.root");
 		tree = (TTree*) file->Get("DecayTree");
 	}
+*/
 	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("EventWeight",1);
 	tree->SetBranchStatus("fake_Bs_MM",1);
@@ -842,6 +869,12 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
 	cout << "result is --------------- "<<endl;
 	result->Print(); 
 	
+	TLatex* lhcbtext = new TLatex();
+	lhcbtext->SetTextFont(132);
+	lhcbtext->SetTextColor(1);
+	lhcbtext->SetTextSize(0.05);
+	lhcbtext->SetTextAlign(12);
+
 	TCanvas* c1= new TCanvas("");
 	RooPlot* frame_m= Bs_Mass.frame();
 	frame_m->SetTitle("");
@@ -849,9 +882,14 @@ vector<double> fitMisIdBkgShape_Dsstar3pi(int run =1){
         frame_m->GetXaxis()->SetTitle("m(D_{s}^{-}#pi^{+}_{K}#pi^{+}#pi^{-}) [MeV/c^{2}]");
 	data->plotOn(frame_m,Name("data"),MarkerSize(1),Binning(40));
 	pdf->plotOn(frame_m,Name("pdf"),LineColor(kBlue),LineWidth(3));
-// 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
-// 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
+ 	pdf->plotOn(frame_m,Components(CB1),LineColor(kBlue),LineStyle(kDashed),LineWidth(1));
+ 	pdf->plotOn(frame_m,Components(CB2),LineColor(kRed),LineStyle(kDashed),LineWidth(1));
 	frame_m->Draw();
+
+	lhcbtext->DrawTextNDC(0.69,0.75,"LHCb simulation");
+	lhcbtext->DrawTextNDC(0.69,0.70,"Run II");
+	lhcbtext->DrawTextNDC(0.69,0.65,"my thesis");
+
 	c1->Print(("eps/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_Run"+anythingToString(run)+".eps").c_str());
 	if(updateAnaNotePlots)c1->Print(("../../../../../TD-AnaNote/latex/figs/MassFit/BkgShape/Bs2Dsstarpipipi_as_DsKpipi_Run"+anythingToString(run)+".pdf").c_str());
 
@@ -1077,6 +1115,17 @@ vector<double> fitSignalShape(TString channel = "signal"){
 	TCanvas* canvas = new TCanvas();
         canvas->SetTopMargin(0.05);
         canvas->SetBottomMargin(0.05);
+
+	TLatex* lhcbtext = new TLatex();
+	lhcbtext->SetTextFont(132);
+	lhcbtext->SetTextColor(1);
+	lhcbtext->SetTextSize(0.05);
+	lhcbtext->SetTextAlign(12);
+
+	lhcbtext->DrawTextNDC(0.69,0.85,"LHCb simulation");
+	lhcbtext->DrawTextNDC(0.69,0.80,"Run I & II");
+	lhcbtext->DrawTextNDC(0.69,0.75,"my thesis");
+
         
         double max = 5.0 ;
         double min = -5.0 ;
@@ -1103,13 +1152,25 @@ vector<double> fitSignalShape(TString channel = "signal"){
         graph3->SetPoint(2,max_MM,3);
         graph3->SetLineColor(kRed);
        
+	lhcbtext->DrawTextNDC(0.69,0.85,"LHCb simulation");
+	lhcbtext->DrawTextNDC(0.69,0.80,"Run I & II");
+	lhcbtext->DrawTextNDC(0.69,0.75,"my thesis");
         TPad* pad1 = new TPad("upperPad", "upperPad", .0, .3, 1.0, 1.0);
         pad1->SetBorderMode(0);
         pad1->SetBorderSize(-1);
         pad1->SetBottomMargin(0.);
+	lhcbtext->DrawTextNDC(0.69,0.85,"LHCb simulation");
+	lhcbtext->DrawTextNDC(0.69,0.80,"Run I & II");
+	lhcbtext->DrawTextNDC(0.69,0.75,"my thesis");
         pad1->Draw();
+	lhcbtext->DrawTextNDC(0.69,0.85,"LHCb simulation");
+	lhcbtext->DrawTextNDC(0.69,0.80,"Run I & II");
+	lhcbtext->DrawTextNDC(0.69,0.75,"my thesis");
         pad1->cd();
         frame->GetYaxis()->SetRangeUser(0.01,frame->GetMaximum()*1.);
+	lhcbtext->DrawTextNDC(0.69,0.85,"LHCb simulation");
+	lhcbtext->DrawTextNDC(0.69,0.80,"Run I & II");
+	lhcbtext->DrawTextNDC(0.69,0.75,"my thesis");
         frame->Draw();
         
         canvas->cd();
@@ -1144,6 +1205,7 @@ vector<double> fitSignalShape(TString channel = "signal"){
         pad2->Update();
         canvas->Update();
         canvas->SaveAs("eps/SignalShape/"+channel+"MC_pull.eps");
+        canvas->SaveAs("eps/SignalShape/"+channel+"MC_pull.root");
 	if(updateAnaNotePlots && !fitPreselected) canvas->Print("../../../../../TD-AnaNote/latex/figs/MassFit/"+channel+"MC_pull.pdf");
 
 	TCanvas* canvas_ghost = new TCanvas();
@@ -1281,28 +1343,28 @@ vector<double> fitSignalShape_DCB(TString channel = "signal"){
 	
 	/// Signal pdf
 	RooRealVar mean("mean", "mean", 5366.89,5350.,5390.); 
-	RooRealVar sigma("sigma", "sigma", 20.,0.,80.);
+	RooRealVar sigma("sigma", "sigma", 20.,0.,150.);
 
-	RooRealVar gamma("gamma", "gamma", -0.5,-5,5.); 
-	RooRealVar delta("delta", "delta", 0.5,-5,5.); 
+	RooRealVar gamma("gamma", "gamma", -0.5,-1.,5.); 
+	RooRealVar delta("delta", "delta",  0.5, 0.,5.); 
 
-	RooRealVar a1_Sig("a1_Sig","a1_Sig", -2.1977e+00,-10.,0.);
-	RooRealVar n1_Sig("n1_Sig","n1_Sig", 3.1187e+00,0.,100.);
-	RooRealVar a2_Sig("a2_Sig","a2_Sig", 1.9229e+00, 0.,10.);
-	RooRealVar n2_Sig("n2_Sig","n2_Sig", 9.0758e-01, 0., 100.);
-	RooRealVar f_CB_Sig("f_CB_Sig","f_CB_Sig",5.5008e-01, 0., 1.);
+	RooRealVar a1_Sig("a1_Sig","a1_Sig", -2.1977e+00,-15.,0.);
+	RooRealVar n1_Sig("n1_Sig","n1_Sig", 10.);
+	RooRealVar a2_Sig("a2_Sig","a2_Sig", 1.9229e+00, 0.,15.);
+	RooRealVar n2_Sig("n2_Sig","n2_Sig", 10.);
+	RooRealVar f_CB_Sig("f_CB_Sig","f_CB_Sig",5.5008e-01, 0.05, 1.);
 	RooCBShape CB1_Sig("CB1_Sig", "CB1_Sig", DTF_Bs_M, mean, sigma, a1_Sig, n1_Sig);
 	RooCBShape CB2_Sig("CB2_Sig", "CB2_Sig", DTF_Bs_M, mean, sigma, a2_Sig, n2_Sig);
 	RooAddPdf* signal = new RooAddPdf("signal", "signal", RooArgList(CB1_Sig,CB2_Sig),RooArgList(f_CB_Sig));
  
 	RooRealVar mean_ghost("mean_ghost", "mean_ghost", 5366.89,5350.,5390.); 
-	RooRealVar sigma_ghost("sigma_ghost", "sigma_ghost", 20.,0.,80.); 
-	RooRealVar gamma_ghost("gamma_ghost", "gamma_ghost", -0.5,-5,5.); 
+	RooRealVar sigma_ghost("sigma_ghost", "sigma_ghost", 20.,15.,90.); 
+	RooRealVar gamma_ghost("gamma_ghost", "gamma_ghost", -0.5,-1.,5.); 
 	RooRealVar delta_ghost("delta_ghost", "delta_ghost", 0.5,-5,5.); 
 	RooJohnsonSU* signal_ghost= new RooJohnsonSU("signal","signal_ghost",DTF_Bs_M, mean,sigma_ghost,gamma,delta);
 
 	/// Bkg pdf
-	RooRealVar c0_ghost("c0_ghost", "c0_ghost", .0,-10,10); 
+	RooRealVar c0_ghost("c0_ghost", "c0_ghost", .0,-2.,1.); 
 	RooRealVar c1_ghost("c1_ghost", "c1_ghost", .0,-10,10); 
 	RooRealVar c2_ghost("c2_ghost", "c2_ghost", .0,-10,10); 
 	RooChebychev* bkg_ghost= new RooChebychev("bkg_ghost","bkg_ghost",DTF_Bs_M, RooArgList(c0_ghost));
@@ -1646,7 +1708,7 @@ vector< vector<double> > fitNorm(){
         RooRealVar BDTG("BDTG", "BDTG", 0.);              
         RooRealVar pi_plus1_PIDK("pi_plus1_PIDK", "pi_plus1_PIDK", 0.);              
         RooRealVar pi_plus2_PIDK("pi_plus2_PIDK", "pi_plus2_PIDK", 0.);              
-
+	
 	RooArgList list =  RooArgList(DTF_Bs_M,Ds_finalState_mod,year,run,TriggerCat);
 	if(!fitPreselected)list.add(BDTG);	
 	RooDataSet*  data;
@@ -2545,6 +2607,150 @@ vector< vector<double> > fitNorm(){
 		datafile.close();
 	}
 
+	///create table by Run
+
+	///Bs run1
+	double yield_sig = 0;
+	double yield_B0 = 0;
+	double yield_partReco = 0;
+	double yield_comb = 0;
+	double yield_misID = 0;
+	double yield_sig_err = 0;
+	double yield_B0_err = 0;
+	double yield_partReco_err = 0;
+	double yield_comb_err = 0;
+	double yield_misID_err = 0;
+
+	for(int i=0; i<1; i++)for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
+		yield_sig += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_sig_err += pow(((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+
+		yield_B0 += ((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_B0_err += pow(((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);	
+
+		yield_partReco += ((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_partReco_err += pow(((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+
+		yield_comb += ((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_comb_err += pow(((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+	}
+
+	ofstream datafile;
+	datafile.open("yields_norm_run1.tex",std::ofstream::trunc);
+	datafile << " \\begin{tabular}{l r }" << "\n";
+	datafile << "\\hline\\hline" << "\n";
+	datafile << "Component & Yield for Run I\\" << " \\\\" << "\n";
+	datafile << "\\hline" << "\n";
+	datafile << std::fixed << std::setprecision(0) << "$B_s \\to D_s K \\pi \\pi$" << " & "<< yield_sig << " $\\pm$ " << sqrt(yield_sig_err) << " \\\\" << "\n";
+	datafile << std::fixed<< std::setprecision(0) << "$B^{0} \\to D_s K \\pi \\pi$" << " & "<< yield_B0 << " $\\pm$ " << sqrt(yield_B0_err) << " \\\\" << "\n";
+	datafile << std::fixed<< std::setprecision(0) << "Partially reconstructed bkg." << " & "<< yield_partReco << " $\\pm$ " << sqrt(yield_partReco_err) << " \\\\" << "\n";
+	datafile << std::fixed<< std::setprecision(0) << "Combinatorial bkg." << " & "<< yield_comb << " $\\pm$ " << sqrt(yield_comb_err) << " \\\\" << "\n";
+	datafile << "\\hline\\hline" << "\n";
+	datafile << "\\end{tabular}" << "\n";
+	datafile << "\\label{table:normYields_run1}" << "\n";
+	datafile.close();
+
+
+	///Bs run2
+	yield_sig = 0;
+	yield_B0 = 0;
+	yield_partReco = 0;
+	yield_comb = 0;
+	yield_misID = 0;
+	yield_sig_err = 0;
+	yield_B0_err = 0;
+	yield_partReco_err = 0;
+	yield_comb_err = 0;
+	yield_misID_err = 0;
+
+	for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
+		yield_sig += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_sig_err += pow(((RooRealVar*) fitParams->find("n_sig_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+
+		yield_B0 += ((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_B0_err += pow(((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);	
+
+		yield_partReco += ((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_partReco_err += pow(((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+
+		yield_comb += ((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_comb_err += pow(((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+	}
+	ofstream datafile2;
+	datafile2.open("yields_norm_run2.tex",std::ofstream::trunc);
+	datafile2 << " \\begin{tabular}{l r }" << "\n";
+	datafile2 << "\\hline\\hline" << "\n";
+	datafile2 << "Component & Yield for Run II\\" << " \\\\" << "\n";
+	datafile2 << "\\hline" << "\n";
+	datafile2 << std::fixed << std::setprecision(0) << "$B_s \\to D_s K \\pi \\pi$" << " & "<< yield_sig << " $\\pm$ " << sqrt(yield_sig_err) << " \\\\" << "\n";
+	datafile2 << std::fixed<< std::setprecision(0) << "$B^{0} \\to D_s K \\pi \\pi$" << " & "<< yield_B0 << " $\\pm$ " << sqrt(yield_B0_err) << " \\\\" << "\n";
+	datafile2 << std::fixed<< std::setprecision(0) << "Partially reconstructed bkg." << " & "<< yield_partReco << " $\\pm$ " << sqrt(yield_partReco_err) << " \\\\" << "\n";
+	datafile2 << std::fixed<< std::setprecision(0) << "Combinatorial bkg." << " & "<< yield_comb << " $\\pm$ " << sqrt(yield_comb_err) << " \\\\" << "\n";
+	datafile2 << "\\hline\\hline" << "\n";
+	datafile2 << "\\end{tabular}" << "\n";
+	datafile2 << "\\label{table:normYields_run2}" << "\n";
+	datafile2.close();
+
+
+		/// Ds run 1
+		vector<double> yield_sig_Ds(4,0);
+		vector<double> yield_sig_Ds_err(4,0);
+
+		for(int i=0; i<1; i++)for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
+			yield_sig_Ds[j] += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_sig_Ds_err[j] += pow(((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+		}
+
+		ofstream datafileDs;
+		datafileDs.open("yields_normDs_run1.tex",std::ofstream::trunc);
+		datafileDs << " \\begin{tabular}{l r }" << "\n";
+		datafileDs << "\\hline\\hline" << "\n";
+		datafileDs << "$D_s$ final state  & Signal yield for Run I\\" << " \\\\" << "\n";
+		datafileDs << "\\hline" << "\n";
+		for(int j=0; j<str_Ds.size(); j++){ 
+			string caption;
+			if(str_Ds[j]=="phipi")caption = "$D_{s}^{-} \\to \\phi^{0}(1020)\\pi^{-}$";
+			else if(str_Ds[j]=="KsK")caption = "$D_{s}^{-}\\to K^{*0}(892)K^{-}$";
+			else if(str_Ds[j]=="KKpi_NR")caption = "$D_{s}^{-}\\to (K^{-}h^{+}\\pi^{-})$";
+			else if(str_Ds[j]=="pipipi")caption = "$D_{s}^{-}\\to \\pi^{+}\\pi^{-}\\pi^{-}$";
+
+			datafileDs << std::fixed << std::setprecision(0) << caption << " & "<< yield_sig_Ds[j] << " $\\pm$ " << sqrt(yield_sig_Ds_err[j]) << " \\\\" << "\n";
+		}
+		datafileDs << "\\hline\\hline" << "\n";
+		datafileDs << "\\end{tabular}" << "\n";
+		datafileDs << "\\label{table:normYieldsDs_run1}" << "\n";
+		datafileDs.close();
+
+
+		///Ds run2
+		vector<double> yield_sig_Ds_r2(4,0);
+		vector<double> yield_sig_Ds_err_r2(4,0);
+
+		for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
+			yield_sig_Ds_r2[j] += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_sig_Ds_err_r2[j] += pow(((RooRealVar*) fitParams->find("n_sig_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+		}
+
+		ofstream datafileDs_r2;
+		datafileDs_r2.open("yields_normDs_run2.tex",std::ofstream::trunc);
+		datafileDs_r2 << " \\begin{tabular}{l r }" << "\n";
+		datafileDs_r2 << "\\hline\\hline" << "\n";
+		datafileDs_r2 << "$D_s$ final state  & Signal yield for Run II\\" << " \\\\" << "\n";
+		datafileDs_r2 << "\\hline" << "\n";
+		for(int j=0; j<str_Ds.size(); j++){ 
+			string caption;
+			if(str_Ds[j]=="phipi")caption = "$D_{s}^{-} \\to \\phi^{0}(1020)\\pi^{-}$";
+			else if(str_Ds[j]=="KsK")caption = "$D_{s}^{-}\\to K^{*0}(892)K^{-}$";
+			else if(str_Ds[j]=="KKpi_NR")caption = "$D_{s}^{-}\\to (K^{-}h^{+}\\pi^{-})$";
+			else if(str_Ds[j]=="pipipi")caption = "$D_{s}^{-}\\to \\pi^{+}\\pi^{-}\\pi^{-}$";
+
+			datafileDs_r2 << std::fixed << std::setprecision(0) << caption << " & "<< yield_sig_Ds_r2[j] << " $\\pm$ " << sqrt(yield_sig_Ds_err_r2[j]) << " \\\\" << "\n";
+		}
+		datafileDs_r2 << "\\hline\\hline" << "\n";
+		datafileDs_r2 << "\\end{tabular}" << "\n";
+		datafileDs_r2 << "\\label{table:normYieldsDs_run2}" << "\n";
+		datafileDs_r2.close();
+
 
 	if(file!=0)file->Close();
 	return return_vec;
@@ -2621,7 +2827,7 @@ void fitSignal(){
 	tree->SetBranchStatus("m_*",1);
 	tree->SetBranchStatus("*TAU*",1);
 	tree->SetBranchStatus("Ds_FDCHI2_ORIVX",1);
-
+	
         RooRealVar DTF_Bs_M("Bs_DTF_MM", "m(D_{s}^{-}K^{+}#pi^{+}#pi^{-})", min_MM, max_MM,"MeV/c^{2}");
         RooRealVar BDTG_response("BDTG", "BDTG", 0.);        
         RooRealVar K_plus_PIDK("K_plus_PIDK", "K_plus_PIDK", 0.);        
@@ -2634,7 +2840,7 @@ void fitSignal(){
         RooRealVar m_Kpipi("m_Kpipi", "m_Kpipi", 0.);        
         RooRealVar m_Kpi("m_Kpi", "m_Kpi", 0.);        
         RooRealVar m_pipi("m_pipi", "m_pipi", 0.);        
-
+	
 	RooArgList list =  RooArgList(DTF_Bs_M,BDTG_response,Ds_finalState_mod,year,TriggerCat,run);
 	RooArgList list2 =  RooArgList(Bs_BsDTF_TAU,Bs_BsDTF_TAUERR,m_Kpipi,m_Kpi,m_pipi,Ds_FDCHI2_ORIVX,pi_minus_PIDK);
 	list.add(list2);
@@ -4066,6 +4272,157 @@ void fitSignal(){
 		//datafile << "\\end{table}" << "\n";
 		datafile.close();
 	}
+
+	///create table by Run
+
+	///Bs run1
+	double yield_sig = 0;
+	double yield_B0 = 0;
+	double yield_partReco = 0;
+	double yield_comb = 0;
+	double yield_misID = 0;
+	double yield_sig_err = 0;
+	double yield_B0_err = 0;
+	double yield_partReco_err = 0;
+	double yield_comb_err = 0;
+	double yield_misID_err = 0;
+
+	for(int i=0; i<1; i++)for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
+		yield_sig += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_sig_err += pow(((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+
+		yield_B0 += ((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_B0_err += pow(((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);	
+
+		yield_partReco += ((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_partReco_err += pow(((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+
+		yield_comb += ((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_comb_err += pow(((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+
+		yield_misID += ((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_misID_err += pow(((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+	}
+	ofstream datafile;
+	datafile.open("yields_signal_run1.tex",std::ofstream::trunc);
+	datafile << " \\begin{tabular}{l r }" << "\n";
+	datafile << "\\hline\\hline" << "\n";
+	datafile << "Component & Yield for Run I\\" << " \\\\" << "\n";
+	datafile << "\\hline" << "\n";
+	datafile << std::fixed << std::setprecision(0) << "$B_s \\to D_s K \\pi \\pi$" << " & "<< yield_sig << " $\\pm$ " << sqrt(yield_sig_err) << " \\\\" << "\n";
+	datafile << std::fixed<< std::setprecision(0) << "$B^{0} \\to D_s K \\pi \\pi$" << " & "<< yield_B0 << " $\\pm$ " << sqrt(yield_B0_err) << " \\\\" << "\n";
+	datafile << std::fixed<< std::setprecision(0) << "Partially reconstructed bkg." << " & "<< yield_partReco << " $\\pm$ " << sqrt(yield_partReco_err) << " \\\\" << "\n";
+	datafile << std::fixed<< std::setprecision(0) << "Misidentified bkg." << " & "<< yield_misID << " $\\pm$ " << sqrt(yield_misID_err) << " \\\\" << "\n";
+	datafile << std::fixed<< std::setprecision(0) << "Combinatorial bkg." << " & "<< yield_comb << " $\\pm$ " << sqrt(yield_comb_err) << " \\\\" << "\n";
+	datafile << "\\hline\\hline" << "\n";
+	datafile << "\\end{tabular}" << "\n";
+	datafile << "\\label{table:signalYields_run1}" << "\n";
+	datafile.close();
+
+
+	///Bs run2
+	yield_sig = 0;
+	yield_B0 = 0;
+	yield_partReco = 0;
+	yield_comb = 0;
+	yield_misID = 0;
+	yield_sig_err = 0;
+	yield_B0_err = 0;
+	yield_partReco_err = 0;
+	yield_comb_err = 0;
+	yield_misID_err = 0;
+
+	for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
+		yield_sig += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_sig_err += pow(((RooRealVar*) fitParams->find("n_sig_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+
+		yield_B0 += ((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_B0_err += pow(((RooRealVar*) fitParams->find("n_sig_B0_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);	
+
+		yield_partReco += ((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_partReco_err += pow(((RooRealVar*) fitParams->find("n_partReco_bkg_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+
+		yield_comb += ((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_comb_err += pow(((RooRealVar*) fitParams->find("n_exp_bkg_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+
+		yield_misID += ((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+		yield_misID_err += pow(((RooRealVar*) fitParams->find("n_misID_bkg_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+	}
+	ofstream datafile2;
+	datafile2.open("yields_signal_run2.tex",std::ofstream::trunc);
+	datafile2 << " \\begin{tabular}{l r }" << "\n";
+	datafile2 << "\\hline\\hline" << "\n";
+	datafile2 << "Component & Yield for Run II\\" << " \\\\" << "\n";
+	datafile2 << "\\hline" << "\n";
+	datafile2 << std::fixed << std::setprecision(0) << "$B_s \\to D_s K \\pi \\pi$" << " & "<< yield_sig << " $\\pm$ " << sqrt(yield_sig_err) << " \\\\" << "\n";
+	datafile2 << std::fixed<< std::setprecision(0) << "$B^{0} \\to D_s K \\pi \\pi$" << " & "<< yield_B0 << " $\\pm$ " << sqrt(yield_B0_err) << " \\\\" << "\n";
+	datafile2 << std::fixed<< std::setprecision(0) << "Partially reconstructed bkg." << " & "<< yield_partReco << " $\\pm$ " << sqrt(yield_partReco_err) << " \\\\" << "\n";
+	datafile2 << std::fixed<< std::setprecision(0) << "Misidentified bkg." << " & "<< yield_misID << " $\\pm$ " << sqrt(yield_misID_err) << " \\\\" << "\n";
+	datafile2 << std::fixed<< std::setprecision(0) << "Combinatorial bkg." << " & "<< yield_comb << " $\\pm$ " << sqrt(yield_comb_err) << " \\\\" << "\n";
+	datafile2 << "\\hline\\hline" << "\n";
+	datafile2 << "\\end{tabular}" << "\n";
+	datafile2 << "\\label{table:signalYields_run2}" << "\n";
+	datafile2.close();
+
+
+		/// Ds run 1
+		vector<double> yield_sig_Ds(4,0);
+		vector<double> yield_sig_Ds_err(4,0);
+
+		for(int i=0; i<1; i++)for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
+			yield_sig_Ds[j] += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_sig_Ds_err[j] += pow(((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+		}
+
+		ofstream datafileDs;
+		datafileDs.open("yields_signalDs_run1.tex",std::ofstream::trunc);
+		datafileDs << " \\begin{tabular}{l r }" << "\n";
+		datafileDs << "\\hline\\hline" << "\n";
+		datafileDs << "$D_s$ final state  & Signal yield for Run I\\" << " \\\\" << "\n";
+		datafileDs << "\\hline" << "\n";
+		for(int j=0; j<str_Ds.size(); j++){ 
+			string caption;
+			if(str_Ds[j]=="phipi")caption = "$D_{s}^{-} \\to \\phi^{0}(1020)\\pi^{-}$";
+			else if(str_Ds[j]=="KsK")caption = "$D_{s}^{-}\\to K^{*0}(892)K^{-}$";
+			else if(str_Ds[j]=="KKpi_NR")caption = "$D_{s}^{-}\\to (K^{-}h^{+}\\pi^{-})$";
+			else if(str_Ds[j]=="pipipi")caption = "$D_{s}^{-}\\to \\pi^{+}\\pi^{-}\\pi^{-}$";
+
+			datafileDs << std::fixed << std::setprecision(0) << caption << " & "<< yield_sig_Ds[j] << " $\\pm$ " << sqrt(yield_sig_Ds_err[j]) << " \\\\" << "\n";
+		}
+		datafileDs << "\\hline\\hline" << "\n";
+		datafileDs << "\\end{tabular}" << "\n";
+		datafileDs << "\\label{table:signalYieldsDs_run1}" << "\n";
+		datafileDs.close();
+
+
+		///Ds run2
+		vector<double> yield_sig_Ds_r2(4,0);
+		vector<double> yield_sig_Ds_err_r2(4,0);
+
+		for(int j=0; j<str_Ds.size(); j++)for(int k=0; k<str_trigger.size(); k++){
+			yield_sig_Ds_r2[j] += ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+			yield_sig_Ds_err_r2[j] += pow(((RooRealVar*) fitParams->find("n_sig_{"+ str_run[1] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError(),2);
+		}
+
+		ofstream datafileDs_r2;
+		datafileDs_r2.open("yields_signalDs_run2.tex",std::ofstream::trunc);
+		datafileDs_r2 << " \\begin{tabular}{l r }" << "\n";
+		datafileDs_r2 << "\\hline\\hline" << "\n";
+		datafileDs_r2 << "$D_s$ final state  & Signal yield for Run II\\" << " \\\\" << "\n";
+		datafileDs_r2 << "\\hline" << "\n";
+		for(int j=0; j<str_Ds.size(); j++){ 
+			string caption;
+			if(str_Ds[j]=="phipi")caption = "$D_{s}^{-} \\to \\phi^{0}(1020)\\pi^{-}$";
+			else if(str_Ds[j]=="KsK")caption = "$D_{s}^{-}\\to K^{*0}(892)K^{-}$";
+			else if(str_Ds[j]=="KKpi_NR")caption = "$D_{s}^{-}\\to (K^{-}h^{+}\\pi^{-})$";
+			else if(str_Ds[j]=="pipipi")caption = "$D_{s}^{-}\\to \\pi^{+}\\pi^{-}\\pi^{-}$";
+
+			datafileDs_r2 << std::fixed << std::setprecision(0) << caption << " & "<< yield_sig_Ds_r2[j] << " $\\pm$ " << sqrt(yield_sig_Ds_err_r2[j]) << " \\\\" << "\n";
+		}
+		datafileDs_r2 << "\\hline\\hline" << "\n";
+		datafileDs_r2 << "\\end{tabular}" << "\n";
+		datafileDs_r2 << "\\label{table:signalYieldsDs_run2}" << "\n";
+		datafileDs_r2.close();
 }
 
 void AnalyticPartBkg(){
@@ -4154,6 +4511,8 @@ int main(int argc, char** argv){
 
     str_trigger.push_back(TString("t0"));
     str_trigger.push_back(TString("t1"));
+
+
 
     if(channel == "Norm") fitNorm();
     else if(channel == "Signal") fitSignal();

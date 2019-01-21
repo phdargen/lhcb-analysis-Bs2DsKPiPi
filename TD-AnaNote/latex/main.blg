@@ -6,47 +6,46 @@ Database file #2: LHCb-PAPER.bib
 Database file #3: LHCb-CONF.bib
 Database file #4: LHCb-DP.bib
 Database file #5: LHCb-TDR.bib
-Warning--I didn't find a database entry for "Agashe:2014kda"
 Warning--empty booktitle in Blusk:2012it
-You've used 14 entries,
+You've used 51 entries,
             2829 wiz_defined-function locations,
-            754 strings with 7890 characters,
-and the built_in function-call counts, 56602 in all, are:
-= -- 6181
-> -- 102
-< -- 0
-+ -- 330
-- -- 25
-* -- 5746
-:= -- 6998
-add.period$ -- 15
-call.type$ -- 14
-change.case$ -- 14
+            1036 strings with 13965 characters,
+and the built_in function-call counts, 215137 in all, are:
+= -- 23491
+> -- 389
+< -- 2
++ -- 1279
+- -- 93
+* -- 21859
+:= -- 26542
+add.period$ -- 52
+call.type$ -- 51
+change.case$ -- 47
 chr.to.int$ -- 0
-cite$ -- 15
-duplicate$ -- 936
-empty$ -- 5960
-format.name$ -- 25
-if$ -- 12320
+cite$ -- 52
+duplicate$ -- 3476
+empty$ -- 22716
+format.name$ -- 93
+if$ -- 46858
 int.to.chr$ -- 0
-int.to.str$ -- 14
-missing$ -- 55
-newline$ -- 96
-num.names$ -- 14
-pop$ -- 221
+int.to.str$ -- 51
+missing$ -- 187
+newline$ -- 318
+num.names$ -- 51
+pop$ -- 850
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 81
+skip$ -- 283
 stack$ -- 0
-substring$ -- 16842
-swap$ -- 0
-text.length$ -- 28
+substring$ -- 64229
+swap$ -- 6
+text.length$ -- 104
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 1
-while$ -- 333
-width$ -- 16
-write$ -- 219
-(There were 2 warnings)
+while$ -- 1238
+width$ -- 53
+write$ -- 765
+(There was 1 warning)

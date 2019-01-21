@@ -38,7 +38,7 @@ void fit_negative_kpipi()
    data_pad->SetFrameLineWidth(2);
    data_pad->SetFrameBorderMode(0);
    
-   TH1D *frame_76a0700__37 = new TH1D("frame_76a0700__37","A RooPlot of \"#it{m}(#it{K^{#minus}#pi^{+}#pi^{+}}) [MeV/#it{c}^{2}]\"",270,1800,1935);
+   TH1D *frame_76a0700__37 = new TH1D("frame_76a0700__37","A RooPlot of \"#it{m}(#it{K^{+}#pi^{-}#pi^{-}}) [MeV/#it{c}^{2}]\"",270,1800,1935);
    frame_76a0700__37->SetBinContent(1,20635.37);
    frame_76a0700__37->SetMaximum(20635.37);
    frame_76a0700__37->SetEntries(1);
@@ -46,7 +46,7 @@ void fit_negative_kpipi()
    frame_76a0700__37->SetStats(0);
    frame_76a0700__37->SetLineWidth(2);
    frame_76a0700__37->SetMarkerStyle(20);
-   frame_76a0700__37->GetXaxis()->SetTitle("#it{m}(#it{K^{#minus}#pi^{+}#pi^{+}}) [MeV/#it{c}^{2}]");
+   frame_76a0700__37->GetXaxis()->SetTitle("#it{m}(#it{K^{+}#pi^{-}#pi^{-}}) [MeV/#it{c}^{2}]");
    frame_76a0700__37->GetXaxis()->CenterTitle(true);
    frame_76a0700__37->GetXaxis()->SetNdivisions(505);
    frame_76a0700__37->GetXaxis()->SetLabelFont(132);
@@ -5771,7 +5771,7 @@ void fit_negative_kpipi()
    frame_76a0700__38->SetStats(0);
    frame_76a0700__38->SetLineWidth(2);
    frame_76a0700__38->SetMarkerStyle(20);
-   frame_76a0700__38->GetXaxis()->SetTitle("#it{m}(#it{K^{#minus}#pi^{+}#pi^{+}}) [MeV/#it{c}^{2}]");
+   frame_76a0700__38->GetXaxis()->SetTitle("#it{m}(#it{K^{+}#pi^{-}#pi^{-}}) [MeV/#it{c}^{2}]");
    frame_76a0700__38->GetXaxis()->CenterTitle(true);
    frame_76a0700__38->GetXaxis()->SetNdivisions(505);
    frame_76a0700__38->GetXaxis()->SetLabelFont(132);
@@ -6372,7 +6372,7 @@ void fit_negative_kpipi()
    Graph_Graph17->SetStats(0);
    Graph_Graph17->SetLineWidth(2);
    Graph_Graph17->SetMarkerStyle(20);
-   Graph_Graph17->GetXaxis()->SetTitle("#it{m}(#it{K^{#minus}#pi^{+}#pi^{+}}) [MeV/#it{c}^{2}]");
+   Graph_Graph17->GetXaxis()->SetTitle("#it{m}(#it{K^{+}#pi^{-}#pi^{-}}) [MeV/#it{c}^{2}]");
    Graph_Graph17->GetXaxis()->SetNdivisions(4);
    Graph_Graph17->GetXaxis()->SetLabelFont(132);
    Graph_Graph17->GetXaxis()->SetLabelOffset(0.01);
@@ -7000,7 +7000,7 @@ void fit_negative_kpipi()
    Graph_Graph_Graph1718->SetStats(0);
    Graph_Graph_Graph1718->SetLineWidth(2);
    Graph_Graph_Graph1718->SetMarkerStyle(20);
-   Graph_Graph_Graph1718->GetXaxis()->SetTitle("#it{m}(#it{K^{#minus}#pi^{+}#pi^{+}}) [MeV/#it{c}^{2}]");
+   Graph_Graph_Graph1718->GetXaxis()->SetTitle("#it{m}(#it{K^{+}#pi^{-}#pi^{-}}) [MeV/#it{c}^{2}]");
    Graph_Graph_Graph1718->GetXaxis()->SetNdivisions(4);
    Graph_Graph_Graph1718->GetXaxis()->SetLabelFont(132);
    Graph_Graph_Graph1718->GetXaxis()->SetLabelOffset(0.01);

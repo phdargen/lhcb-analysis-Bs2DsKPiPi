@@ -38,7 +38,7 @@ void fit_negative_kspi()
    data_pad->SetFrameLineWidth(2);
    data_pad->SetFrameBorderMode(0);
    
-   TH1D *frame_92722c0__33 = new TH1D("frame_92722c0__33","A RooPlot of \"#it{m}(#it{K^{0}_{S}#pi^{+}}) [MeV/#it{c}^{2}]\"",115,1810,1925);
+   TH1D *frame_92722c0__33 = new TH1D("frame_92722c0__33","A RooPlot of \"#it{m}(#it{K^{0}_{S}#pi^{-}}) [MeV/#it{c}^{2}]\"",115,1810,1925);
    frame_92722c0__33->SetBinContent(1,2346.066);
    frame_92722c0__33->SetMaximum(2346.066);
    frame_92722c0__33->SetEntries(1);
@@ -46,7 +46,7 @@ void fit_negative_kspi()
    frame_92722c0__33->SetStats(0);
    frame_92722c0__33->SetLineWidth(2);
    frame_92722c0__33->SetMarkerStyle(20);
-   frame_92722c0__33->GetXaxis()->SetTitle("#it{m}(#it{K^{0}_{S}#pi^{+}}) [MeV/#it{c}^{2}]");
+   frame_92722c0__33->GetXaxis()->SetTitle("#it{m}(#it{K^{0}_{S}#pi^{-}}) [MeV/#it{c}^{2}]");
    frame_92722c0__33->GetXaxis()->CenterTitle(true);
    frame_92722c0__33->GetXaxis()->SetNdivisions(505);
    frame_92722c0__33->GetXaxis()->SetLabelFont(132);
@@ -2725,7 +2725,7 @@ void fit_negative_kspi()
    frame_92722c0__34->SetStats(0);
    frame_92722c0__34->SetLineWidth(2);
    frame_92722c0__34->SetMarkerStyle(20);
-   frame_92722c0__34->GetXaxis()->SetTitle("#it{m}(#it{K^{0}_{S}#pi^{+}}) [MeV/#it{c}^{2}]");
+   frame_92722c0__34->GetXaxis()->SetTitle("#it{m}(#it{K^{0}_{S}#pi^{-}}) [MeV/#it{c}^{2}]");
    frame_92722c0__34->GetXaxis()->CenterTitle(true);
    frame_92722c0__34->GetXaxis()->SetNdivisions(505);
    frame_92722c0__34->GetXaxis()->SetLabelFont(132);
@@ -3016,7 +3016,7 @@ void fit_negative_kspi()
    Graph_Graph5->SetStats(0);
    Graph_Graph5->SetLineWidth(2);
    Graph_Graph5->SetMarkerStyle(20);
-   Graph_Graph5->GetXaxis()->SetTitle("#it{m}(#it{K^{0}_{S}#pi^{+}}) [MeV/#it{c}^{2}]");
+   Graph_Graph5->GetXaxis()->SetTitle("#it{m}(#it{K^{0}_{S}#pi^{-}}) [MeV/#it{c}^{2}]");
    Graph_Graph5->GetXaxis()->SetNdivisions(4);
    Graph_Graph5->GetXaxis()->SetLabelFont(132);
    Graph_Graph5->GetXaxis()->SetLabelOffset(0.01);
@@ -3334,7 +3334,7 @@ void fit_negative_kspi()
    Graph_Graph_Graph56->SetStats(0);
    Graph_Graph_Graph56->SetLineWidth(2);
    Graph_Graph_Graph56->SetMarkerStyle(20);
-   Graph_Graph_Graph56->GetXaxis()->SetTitle("#it{m}(#it{K^{0}_{S}#pi^{+}}) [MeV/#it{c}^{2}]");
+   Graph_Graph_Graph56->GetXaxis()->SetTitle("#it{m}(#it{K^{0}_{S}#pi^{-}}) [MeV/#it{c}^{2}]");
    Graph_Graph_Graph56->GetXaxis()->SetNdivisions(4);
    Graph_Graph_Graph56->GetXaxis()->SetLabelFont(132);
    Graph_Graph_Graph56->GetXaxis()->SetLabelOffset(0.01);

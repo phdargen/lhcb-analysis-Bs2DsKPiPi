@@ -69,8 +69,8 @@ E.~Byckling and K.~Kajantie, {\em Particle Kinematics}, John Wiley \& Sons,
 S.~Mandelstam, J.~E. Paton, R.~F. Peierls, and A.~Q. Sarker,
   \ifthenelse{\boolean{articletitles}}{\emph{Isobar approximation of production
   processes},
-  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0003-4916(62)90067-2}{Annals
-  of Physics \textbf{18} (1962), no.~2 198 }\relax
+  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0003-4916(62)90067-2}{A%
+nnals of Physics \textbf{18} (1962), no.~2 198 }\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -87,8 +87,8 @@ D.~J. Herndon, P.~S\"oding, and R.~J. Cashmore,
 \bibitem{isobar2}
 J.~J. Brehm, \ifthenelse{\boolean{articletitles}}{\emph{Unitarity and the
   isobar model: Two-body discontinuities},
-  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0003-4916(77)90023-9}{Annals
-  of Physics \textbf{108} (1977), no.~2 454 }\relax
+  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0003-4916(77)90023-9}{A%
+nnals of Physics \textbf{108} (1977), no.~2 454 }\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -145,8 +145,8 @@ G.~J. Gounaris and J.~J. Sakurai,
 \bibitem{Flatte}
 S.~M. Flatt\'{e}, \ifthenelse{\boolean{articletitles}}{\emph{Coupled-channel
   analysis of the $\pi \eta$ and \text{KK} systems near \text{KK} threshold},
-  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0370-2693(76)90654-7}{Physics
-  Letters B \textbf{63} (1976), no.~2 224 }\relax
+  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0370-2693(76)90654-7}{P%
+hysics Letters B \textbf{63} (1976), no.~2 224 }\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -282,7 +282,9 @@ D.~J. Lange, \ifthenelse{\boolean{articletitles}}{\emph{{The EvtGen particle
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
 \bibitem{GammaCombo}
-\ifthenelse{\boolean{articletitles}}{\emph{Gammacombo package}, }{} 2014\relax
+M.~Karbach and M.~Kenzie, \ifthenelse{\boolean{articletitles}}{\emph{Gammacombo
+  package}, }{} \href{http://gammacombo.hepforge.org/web/HTML/index.html}
+  {http://gammacombo.hepforge.org/web/HTML/index.html}, 2014\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -292,18 +294,6 @@ A.~Hoecker {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{TMVA:
   Toolkit for Multivariate Data Analysis}}, }{}PoS \textbf{ACAT} (2007) 040,
   \href{http://arxiv.org/abs/physics/0703039}{{\normalfont\ttfamily
   arXiv:physics/0703039}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{Pivk:2004ty}
-M.~Pivk and F.~R. Le~Diberder,
-  \ifthenelse{\boolean{articletitles}}{\emph{{sPlot: A statistical tool to
-  unfold data distributions}},
-  }{}\href{http://dx.doi.org/10.1016/j.nima.2005.08.106}{Nucl.\ Instrum.\
-  Meth.\  \textbf{A555} (2005) 356},
-  \href{http://arxiv.org/abs/physics/0402083}{{\normalfont\ttfamily
-  arXiv:physics/0402083}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -321,6 +311,58 @@ Particle Data Group, K.~A. Olive {\em et~al.},
   \ifthenelse{\boolean{articletitles}}{\emph{{Review of Particle Physics}},
   }{}\href{http://dx.doi.org/10.1088/1674-1137/38/9/090001}{Chin.\ Phys.\
   \textbf{C38} (2014) 090001}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{LHCb-DP-2014-002}
+LHCb collaboration, R.~Aaij {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{LHCb detector performance}},
+  }{}\href{http://dx.doi.org/10.1142/S0217751X15300227}{Int.\ J.\ Mod.\ Phys.\
+  \textbf{A30} (2015) 1530022},
+  \href{http://arxiv.org/abs/1412.6352}{{\normalfont\ttfamily
+  arXiv:1412.6352}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Aaij:2017lff}
+LHCb, R.~Aaij {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of $CP$ asymmetry in
+  $B_s^0 \to D_s^{\mp} K^{\pm}$ decays}}, }{}Submitted to: JHEP (2017)
+  \href{http://arxiv.org/abs/1712.07428}{{\normalfont\ttfamily
+  arXiv:1712.07428}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{LHCb-ANA-2017-028}
+LHCb collaboration, L.~Zhang,
+  \ifthenelse{\boolean{articletitles}}{\emph{{Measurements of CP violation in
+  $B_s^0 \to J/\psi K^+K^-$ decays in the low $K^+K^-$ mass range with 13 TeV
+  data}}, }{} {LHCb-ANA-2017-028}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{HFAG}
+Heavy Flavor Averaging Group, Y.~Amhis {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Averages of $b$-hadron,
+  $c$-hadron, and $\tau$-lepton properties as of summer 2014}},
+  }{}\href{http://arxiv.org/abs/1412.7515}{{\normalfont\ttfamily
+  arXiv:1412.7515}}, {updated results and plots available at
+  \href{http://www.slac.stanford.edu/xorg/hfag/}{{\texttt{http://www.slac.stan%
+ford.edu/xorg/hfag/}}}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Karbach:2014qba}
+T.~M. Karbach, G.~Raven, and M.~Schiller,
+  \ifthenelse{\boolean{articletitles}}{\emph{{Decay time integrals in neutral
+  meson mixing and their efficient evaluation}},
+  }{}\href{http://arxiv.org/abs/1407.0748}{{\normalfont\ttfamily
+  arXiv:1407.0748}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -344,48 +386,6 @@ LHCb collaboration, R.~Aaij {\em et~al.},
   \textbf{C72} (2012) 2022},
   \href{http://arxiv.org/abs/1202.4979}{{\normalfont\ttfamily
   arXiv:1202.4979}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{HFAG}
-Heavy Flavor Averaging Group, Y.~Amhis {\em et~al.},
-  \ifthenelse{\boolean{articletitles}}{\emph{{Averages of $b$-hadron,
-  $c$-hadron, and $\tau$-lepton properties as of summer 2014}},
-  }{}\href{http://arxiv.org/abs/1412.7515}{{\normalfont\ttfamily
-  arXiv:1412.7515}}, {updated results and plots available at
-  \href{http://www.slac.stanford.edu/xorg/hfag/}{{\texttt{http://www.slac.stanford.edu/xorg/hfag/}}}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{Karbach:2014qba}
-T.~M. Karbach, G.~Raven, and M.~Schiller,
-  \ifthenelse{\boolean{articletitles}}{\emph{{Decay time integrals in neutral
-  meson mixing and their efficient evaluation}},
-  }{}\href{http://arxiv.org/abs/1407.0748}{{\normalfont\ttfamily
-  arXiv:1407.0748}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{LHCb-DP-2014-002}
-LHCb collaboration, R.~Aaij {\em et~al.},
-  \ifthenelse{\boolean{articletitles}}{\emph{{LHCb detector performance}},
-  }{}\href{http://dx.doi.org/10.1142/S0217751X15300227}{Int.\ J.\ Mod.\ Phys.\
-  \textbf{A30} (2015) 1530022},
-  \href{http://arxiv.org/abs/1412.6352}{{\normalfont\ttfamily
-  arXiv:1412.6352}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{Aaij:2017lff}
-LHCb, R.~Aaij {\em et~al.},
-  \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of $CP$ asymmetry in
-  $B_s^0 \to D_s^{\mp} K^{\pm}$ decays}}, }{}Submitted to: JHEP (2017)
-  \href{http://arxiv.org/abs/1712.07428}{{\normalfont\ttfamily
-  arXiv:1712.07428}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -433,6 +433,18 @@ I.~I.~Y. Bigi and H.~Yamamoto,
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
+\bibitem{Pivk:2004ty}
+M.~Pivk and F.~R. Le~Diberder,
+  \ifthenelse{\boolean{articletitles}}{\emph{{sPlot: A statistical tool to
+  unfold data distributions}},
+  }{}\href{http://dx.doi.org/10.1016/j.nima.2005.08.106}{Nucl.\ Instrum.\
+  Meth.\  \textbf{A555} (2005) 356},
+  \href{http://arxiv.org/abs/physics/0402083}{{\normalfont\ttfamily
+  arXiv:physics/0402083}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
 \bibitem{Guegan:2015mea}
 B.~Guegan, J.~Hardin, J.~Stevens, and M.~Williams,
   \ifthenelse{\boolean{articletitles}}{\emph{{Model selection for amplitude
@@ -465,6 +477,31 @@ H.~Akaike, \ifthenelse{\boolean{articletitles}}{\emph{A new look at the
   statistical model identification},
   }{}\href{http://dx.doi.org/10.1109/TAC.1974.1100705}{IEEE Transactions on
   Automatic Control \textbf{19} (1974) 716}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{CB}
+T.~Skwarnicki, {\em {A study of the radiative cascade transitions between the
+  Upsilon-prime and Upsilon resonances}}, PhD thesis, Institute of Nuclear
+  Physics, Krakow, 1986,
+  {\href{http://inspirehep.net/record/230779/files/230779.pdf}{DESY-F31-86-02}%
+}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Hill:2253246}
+D.~Hill, M.~John, and P.~Gandini, \ifthenelse{\boolean{articletitles}}{\emph{{A
+  study of partially reconstructed $B^\pm \to D^{\ast 0} h^\pm$ decays using
+  the $D^0 \to K\pi, KK, \pi\pi$ final states}}, }{}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Golub:1996:MC:248979}
+G.~H. Golub and C.~F. Van~Loan, {\em Matrix Computations (3rd Ed.)}, Johns
+  Hopkins University Press, Baltimore, MD, USA, 1996\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax

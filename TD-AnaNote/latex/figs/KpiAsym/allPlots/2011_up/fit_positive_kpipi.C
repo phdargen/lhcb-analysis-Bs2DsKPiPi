@@ -46,7 +46,7 @@ void fit_positive_kpipi()
    frame_b07dde0__39->SetStats(0);
    frame_b07dde0__39->SetLineWidth(2);
    frame_b07dde0__39->SetMarkerStyle(20);
-   frame_b07dde0__39->GetXaxis()->SetTitle("#it{m}(#it{K^{#minus}#pi^{+}#pi^{+}}) [MeV/#it{c}^{2}]");
+   frame_b07dde0__39->GetXaxis()->SetTitle("#it{m}(#it{K^{+}#pi^{-}#pi^{-}}) [MeV/#it{c}^{2}]");
    frame_b07dde0__39->GetXaxis()->CenterTitle(true);
    frame_b07dde0__39->GetXaxis()->SetNdivisions(505);
    frame_b07dde0__39->GetXaxis()->SetLabelFont(132);
@@ -5771,7 +5771,7 @@ void fit_positive_kpipi()
    frame_b07dde0__40->SetStats(0);
    frame_b07dde0__40->SetLineWidth(2);
    frame_b07dde0__40->SetMarkerStyle(20);
-   frame_b07dde0__40->GetXaxis()->SetTitle("#it{m}(#it{K^{#minus}#pi^{+}#pi^{+}}) [MeV/#it{c}^{2}]");
+   frame_b07dde0__40->GetXaxis()->SetTitle("#it{m}(#it{K^{+}#pi^{-}#pi^{-}}) [MeV/#it{c}^{2}]");
    frame_b07dde0__40->GetXaxis()->CenterTitle(true);
    frame_b07dde0__40->GetXaxis()->SetNdivisions(505);
    frame_b07dde0__40->GetXaxis()->SetLabelFont(132);
@@ -6372,7 +6372,7 @@ void fit_positive_kpipi()
    Graph_Graph23->SetStats(0);
    Graph_Graph23->SetLineWidth(2);
    Graph_Graph23->SetMarkerStyle(20);
-   Graph_Graph23->GetXaxis()->SetTitle("#it{m}(#it{K^{#minus}#pi^{+}#pi^{+}}) [MeV/#it{c}^{2}]");
+   Graph_Graph23->GetXaxis()->SetTitle("#it{m}(#it{K^{+}#pi^{-}#pi^{-}}) [MeV/#it{c}^{2}]");
    Graph_Graph23->GetXaxis()->SetNdivisions(4);
    Graph_Graph23->GetXaxis()->SetLabelFont(132);
    Graph_Graph23->GetXaxis()->SetLabelOffset(0.01);
@@ -7000,7 +7000,7 @@ void fit_positive_kpipi()
    Graph_Graph_Graph2324->SetStats(0);
    Graph_Graph_Graph2324->SetLineWidth(2);
    Graph_Graph_Graph2324->SetMarkerStyle(20);
-   Graph_Graph_Graph2324->GetXaxis()->SetTitle("#it{m}(#it{K^{#minus}#pi^{+}#pi^{+}}) [MeV/#it{c}^{2}]");
+   Graph_Graph_Graph2324->GetXaxis()->SetTitle("#it{m}(#it{K^{+}#pi^{-}#pi^{-}}) [MeV/#it{c}^{2}]");
    Graph_Graph_Graph2324->GetXaxis()->SetNdivisions(4);
    Graph_Graph_Graph2324->GetXaxis()->SetLabelFont(132);
    Graph_Graph_Graph2324->GetXaxis()->SetLabelOffset(0.01);
