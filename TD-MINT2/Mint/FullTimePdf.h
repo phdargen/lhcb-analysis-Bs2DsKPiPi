@@ -467,7 +467,7 @@ public:
 
 		run = eventList[i].getValueFromVector(7);
 		if(run == 2) year = 16;
-		if(run == 3) year = 17;
+		else if(run == 3) year = 17;
 		else year = 12;
 		trigger = eventList[i].getValueFromVector(8);
 
@@ -507,6 +507,7 @@ public:
 
 	while(true){
 		double t_MC = gRandom->Exp(1./_Gamma);
+// 		double t_MC = gRandom->Exp(1./_Gamma)+_min_TAU;
                 if(t_MC > _max_TAU || t_MC < _min_TAU)continue;
 
 		DalitzEvent evt(_pat,gRandom);
@@ -539,7 +540,9 @@ public:
 		evt.setValueInVector(5, q_SS_MC);
 		evt.setValueInVector(6, eta_SS_MC);
 
-		evt.setGeneratorPdfRelativeToPhaseSpace(_Gamma * exp(-t_MC*_Gamma) / ( ( exp(-_min_TAU*_Gamma) - exp(-_max_TAU * _Gamma) )));
+ 		evt.setGeneratorPdfRelativeToPhaseSpace(_Gamma * exp(-t_MC*_Gamma) / ( ( exp(-_min_TAU*_Gamma) - exp(-_max_TAU * _Gamma) )));
+// 		evt.setGeneratorPdfRelativeToPhaseSpace(_Gamma * ( exp(-t_MC*_Gamma) + _min_TAU )  / ( ( 1. - exp(-_max_TAU * _Gamma) ) + _Gamma * _min_TAU * ( _max_TAU - 0.)));
+
 		return evt;
 	}
     }

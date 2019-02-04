@@ -68,12 +68,18 @@ void fitParams(){
     /// Fit bias from toys
     pull p(paraNames,"signal_toy/pull__*.root");
     TMatrixD* cov = new TMatrixD(p.getCov());
+    for(int i = 0 ; i < paraNames.size(); i++)for(int j = 0 ; j < paraNames.size(); j++){
+	(*cov)[i][j] = (*cov)[i][j] * errs_stat[i] * errs_stat[j];
+    }
     covs.push_back(cov);
 
     /// Acc systematics (with cholesky)
-    pull p_acc_chol(paraNames,"signal_toy/pullAccChol_*.root","MinuitParameterSetNtp",false, false, 900);
-    TMatrixD* cov_acc_chol = new TMatrixD(p_acc_chol.getDeltaCovChol("signal_toy/pull__*.root","_accChol",50));
-    covs.push_back(cov_acc_chol);
+//     pull p_acc_chol(paraNames,"signal_toy/pullAccChol_*.root","MinuitParameterSetNtp",false, false, 900);
+//     TMatrixD* cov_acc_chol = new TMatrixD(p_acc_chol.getDeltaCovChol("signal_toy/pull__*.root","_accChol",50));
+//     covs.push_back(cov_acc_chol);
+    pull p_acc(paraNames,"signal_toy/pullAcc_*.root");
+    TMatrixD* cov_acc = new TMatrixD(p_acc.getDeltaCov("signal_toy/pull__*.root","_acc"));
+    covs.push_back(cov_acc);
 
     /// resolution systematics 
     pull p_res_Run1_a(paraNames,"signal_sys_res_Run1_a/pull__*.root");
@@ -88,6 +94,13 @@ void fitParams(){
     pull p_res_Run2_b(paraNames,"signal_sys_res_Run2_b/pull__*.root");
     TMatrixD* cov_res_Run2_b = new TMatrixD(p_res_Run2_b.getDeltaCov("signal/pull__1.root","_res_Run2_b"));
 
+    pull p_res_Run2_c(paraNames,"signal_sys_res_Run2_c/pull__*.root");
+    TMatrixD* cov_res_Run2_c = new TMatrixD(p_res_Run2_c.getDeltaCov("signal/pull__1.root","_res_Run2_c"));
+
+    pull p_res_Run2_d(paraNames,"signal_sys_res_Run2_d/pull__*.root");
+    TMatrixD* cov_res_Run2_d = new TMatrixD(p_res_Run2_d.getDeltaCov("signal/pull__1.root","_res_Run2_d"));
+
+
     vector<TMatrixD*> covs_res_Run1;
     covs_res_Run1.push_back(cov_res_Run1_a);
     covs_res_Run1.push_back(cov_res_Run1_b);
@@ -96,10 +109,11 @@ void fitParams(){
     vector<TMatrixD*> covs_res_Run2;
     covs_res_Run2.push_back(cov_res_Run2_a);
     covs_res_Run2.push_back(cov_res_Run2_b);
+    covs_res_Run2.push_back(cov_res_Run2_c);
+    covs_res_Run2.push_back(cov_res_Run2_d);
     cov_res +=  p_res_Run1_a.combineCov_maxVal(covs_res_Run2) ;
     
     covs.push_back(new TMatrixD(cov_res));
-
 
     /// dms systematics 
     pull p_dm(paraNames,"signal_toy/pull_dm_*.root");
@@ -127,57 +141,76 @@ void fitParams(){
     covs.push_back(new TMatrixD(cov_asym));
 
     /// bkg systematics 
-//     pull p_bkg_1(paraNames,"signal_sys_bkg_1/pull__*.root");
-//     TMatrixD* cov_bkg_1 = new TMatrixD(p_bkg_1.getDeltaCov("signal/pull__1.root","bkg_1"));
-//     vector<double> vals_bkg_1 = p_bkg_1.getVals();
+    pull p_bkg_1(paraNames,"signal_sys_bkg1/pull__*.root");
+    TMatrixD* cov_bkg_1 = new TMatrixD(p_bkg_1.getDeltaCov("signal/pull__1.root","bkg_1"));
+    vector<double> vals_bkg_1 = p_bkg_1.getVals();
 
-    pull p_bkg_2(paraNames,"signal_sys_bkg_2/pull__*.root");
+    pull p_bkg_2(paraNames,"signal_sys_bkg2/pull__*.root");
     TMatrixD* cov_bkg_2 = new TMatrixD(p_bkg_2.getDeltaCov("signal/pull__1.root","bkg_2"));
     vector<double> vals_bkg_2 = p_bkg_2.getVals();
 
-    pull p_bkg_3(paraNames,"signal_sys_bkg_3/pull__*.root");
+    pull p_bkg_3(paraNames,"signal_sys_bkg3/pull__*.root");
     TMatrixD* cov_bkg_3 = new TMatrixD(p_bkg_3.getDeltaCov("signal/pull__1.root","bkg_3"));
     vector<double> vals_bkg_3 = p_bkg_3.getVals();
 
-    pull p_bkg_4(paraNames,"signal_sys_bkg_4/pull__*.root");
+    pull p_bkg_4(paraNames,"signal_sys_bkg4/pull__*.root");
     TMatrixD* cov_bkg_4 = new TMatrixD(p_bkg_4.getDeltaCov("signal/pull__1.root","bkg_4"));
     vector<double> vals_bkg_4 = p_bkg_4.getVals();
 
-    pull p_bkg_5(paraNames,"signal_sys_bkg_5/pull__*.root");
+    pull p_bkg_5(paraNames,"signal_sys_bkg5/pull__*.root");
     TMatrixD* cov_bkg_5 = new TMatrixD(p_bkg_5.getDeltaCov("signal/pull__1.root","bkg_5"));
     vector<double> vals_bkg_5 = p_bkg_5.getVals();
 
-    pull p_bkg_6(paraNames,"signal_sys_bkg_6/pull__*.root");
+    pull p_bkg_6(paraNames,"signal_sys_bkg6/pull__*.root");
     TMatrixD* cov_bkg_6 = new TMatrixD(p_bkg_6.getDeltaCov("signal/pull__1.root","bkg_6"));
     vector<double> vals_bkg_6 = p_bkg_6.getVals();
 
-    pull p_bkg_7(paraNames,"signal_sys_bkg_7/pull__*.root");
+    pull p_bkg_7(paraNames,"signal_sys_bkg7/pull__*.root");
     TMatrixD* cov_bkg_7 = new TMatrixD(p_bkg_7.getDeltaCov("signal/pull__1.root","bkg_7"));
     vector<double> vals_bkg_7 = p_bkg_7.getVals();
 
+    pull p_bkg_8(paraNames,"signal_sys_bkg8/pull__*.root");
+    TMatrixD* cov_bkg_8 = new TMatrixD(p_bkg_8.getDeltaCov("signal/pull__1.root","bkg_8"));
+    vector<double> vals_bkg_8 = p_bkg_8.getVals();
+
+//     pull p_bkg_9(paraNames,"signal_sys_bkg9/pull__*.root");
+//     TMatrixD* cov_bkg_9 = new TMatrixD(p_bkg_9.getDeltaCov("signal/pull__1.root","bkg_9"));
+//     vector<double> vals_bkg_9 = p_bkg_9.getVals();
+
+    pull p_bkg_10(paraNames,"signal_sys_bkg10/pull__*.root");
+    TMatrixD* cov_bkg_10 = new TMatrixD(p_bkg_10.getDeltaCov("signal/pull__1.root","bkg_10"));
+    vector<double> vals_bkg_10 = p_bkg_10.getVals();
+
+
     // Take maximum as systematic
     vector<TMatrixD*> covs_bkg;
-    //covs_bkg.push_back(cov_bkg_1);
+    covs_bkg.push_back(cov_bkg_1);
     covs_bkg.push_back(cov_bkg_2);
     covs_bkg.push_back(cov_bkg_3);
     covs_bkg.push_back(cov_bkg_4);
     covs_bkg.push_back(cov_bkg_5);
     covs_bkg.push_back(cov_bkg_6);
     covs_bkg.push_back(cov_bkg_7);
+    covs_bkg.push_back(cov_bkg_8);
+//     covs_bkg.push_back(cov_bkg_9);
+    covs_bkg.push_back(cov_bkg_10);
 
     TMatrixD cov_bkg_max(p_bkg_2.combineCov_maxVal(covs_bkg));
-//     cov_bkg_max.Print();
+    //cov_bkg_max.Print();
     //covs.push_back(new TMatrixD(cov_bkg_max));
 
     // Take sample variance as systematic 
     vector< vector <double> > vec_vals_bkg;
-    //vec_vals_bkg.push_back(vals_bkg_1);
+    vec_vals_bkg.push_back(vals_bkg_1);
     vec_vals_bkg.push_back(vals_bkg_2);
     vec_vals_bkg.push_back(vals_bkg_3);
     vec_vals_bkg.push_back(vals_bkg_4);
     vec_vals_bkg.push_back(vals_bkg_5);
     vec_vals_bkg.push_back(vals_bkg_6);
     vec_vals_bkg.push_back(vals_bkg_7);
+    vec_vals_bkg.push_back(vals_bkg_8);
+//     vec_vals_bkg.push_back(vals_bkg_9);
+    vec_vals_bkg.push_back(vals_bkg_10);
 
     TMatrixD cov_bkg(p_bkg_2.sampleVariance(vec_vals_bkg));
 //     cov_bkg.Print();
@@ -187,30 +220,56 @@ void fitParams(){
     /// Lineshape models systematics
     pull p_ls_1(paraNames,"signal_sys1/pull_*.root");
     TMatrixD* cov_ls_1 = new TMatrixD(p_ls_1.getDeltaCov("signal/pull__1.root","ls_1"));
+    vector<double> vals_ls_1 = p_ls_1.getVals();
+    cout << "ls 1" << endl;
+    cout << vals_ls_1[4] << endl << endl;
 
-    pull p_ls_2(paraNames,"signal_sys2/pull_*.root");
+    pull p_ls_2(paraNames,"signal_sys2/pull__2.root");
     TMatrixD* cov_ls_2 = new TMatrixD(p_ls_2.getDeltaCov("signal/pull__1.root","ls_2"));
+    vector<double> vals_ls_2 = p_ls_2.getVals();
+    cout << "ls 2" << endl;
+    cout << vals_ls_2[4] << endl << endl;
 
     pull p_ls_3(paraNames,"signal_sys3/pull_*.root");
     TMatrixD* cov_ls_3 = new TMatrixD(p_ls_3.getDeltaCov("signal/pull__1.root","ls_3"));
+    vector<double> vals_ls_3 = p_ls_3.getVals();
+    cout << "ls 3" << endl;
+    cout << vals_ls_3[4] << endl << endl;
 
     pull p_ls_4(paraNames,"signal_sys4/pull_*.root");
     TMatrixD* cov_ls_4 = new TMatrixD(p_ls_4.getDeltaCov("signal/pull__1.root","ls_4"));
+    vector<double> vals_ls_4 = p_ls_4.getVals();
+    cout << "ls 4" << endl;
+    cout << vals_ls_4[4] << endl << endl;
 
     pull p_ls_5(paraNames,"signal_sys5/pull_*.root");
     TMatrixD* cov_ls_5 = new TMatrixD(p_ls_5.getDeltaCov("signal/pull__1.root","ls_5"));
+    vector<double> vals_ls_5 = p_ls_5.getVals();
+    cout << "ls 5" << endl;
+    cout << vals_ls_5[4] << endl << endl;
 
     pull p_ls_6(paraNames,"signal_sys6/pull_*.root");
     TMatrixD* cov_ls_6 = new TMatrixD(p_ls_6.getDeltaCov("signal/pull__1.root","ls_6"));
+    vector<double> vals_ls_6 = p_ls_6.getVals();
+    cout << "ls 6" << endl;
+    cout << vals_ls_6[4] << endl << endl;
 
-    // Add
-    TMatrixD cov_ls(*cov_ls_1);
-    cov_ls +=  *cov_ls_2 ;
-    cov_ls +=  *cov_ls_3 ;
-    cov_ls +=  *cov_ls_4 ;
-    cov_ls +=  *cov_ls_5 ;
-    cov_ls +=  *cov_ls_6 ;
- 
+    pull p_ls_7(paraNames,"signal_sys7/pull_*.root");
+    TMatrixD* cov_ls_7 = new TMatrixD(p_ls_7.getDeltaCov("signal/pull__1.root","ls_7"));
+    vector<double> vals_ls_7 = p_ls_7.getVals();
+    cout << "ls 7" << endl;
+    cout << vals_ls_7[4] << endl << endl;
+
+    vector< vector <double> > vec_vals_ls;
+    vec_vals_ls.push_back(vals_ls_1);
+    vec_vals_ls.push_back(vals_ls_2);
+    vec_vals_ls.push_back(vals_ls_3);
+    vec_vals_ls.push_back(vals_ls_4);
+    vec_vals_ls.push_back(vals_ls_5);
+    vec_vals_ls.push_back(vals_ls_6);
+    vec_vals_ls.push_back(vals_ls_7);
+    TMatrixD cov_ls(p_ls_1.sampleVariance(vec_vals_ls));
+
     covs.push_back(new TMatrixD(cov_ls));
 
 
@@ -222,7 +281,7 @@ void fitParams(){
 
     pull p_rp_3(paraNames,"signal_toy/pull_mass_K_1460_*.root");
     TMatrixD* cov_rp_3 = new TMatrixD(p_rp_3.getDeltaCov("signal_toy/pull__*.root","_mass_K_1460"));
-    pull p_rp_4(paraNames,"signal_toy/pull_width_K_1460_*.root");
+    pull p_rp_4(paraNames,"signal_toy/pull_width_K1_1460_*.root");
     TMatrixD* cov_rp_4 = new TMatrixD(p_rp_4.getDeltaCov("signal_toy/pull__*.root","_width_K_1460"));
 
     pull p_rp_5(paraNames,"signal_toy/pull_mass_Ks_*.root");
@@ -240,14 +299,23 @@ void fitParams(){
     pull p_rp_10(paraNames,"signal_toy/pull_width_K0s_*.root");
     TMatrixD* cov_rp_10 = new TMatrixD(p_rp_10.getDeltaCov("signal_toy/pull__*.root","_width_K0s"));
 
+    cout << "r 1 = " << sqrt((*cov_rp_1)[6][6]) << endl;
+    cout << "r 2 = " << sqrt((*cov_rp_2)[6][6]) << endl;
+    cout << "r 3 = " << sqrt((*cov_rp_3)[6][6]) << endl;
+    cout << "r 4 = " << sqrt((*cov_rp_4)[6][6]) << endl;
+    cout << "r 5 = " << sqrt((*cov_rp_5)[6][6]) << endl;
+    cout << "r 6 = " << sqrt((*cov_rp_6)[6][6]) << endl;
+    cout << "r 7 = " << sqrt((*cov_rp_7)[6][6]) << endl;
+    cout << "r 8 = " << sqrt((*cov_rp_8)[6][6]) << endl;
+
     // Add
     TMatrixD cov_rp(*cov_rp_1);
     cov_rp +=  *cov_rp_2 ;
     cov_rp +=  *cov_rp_3 ;
-//     cov_rp +=  *cov_rp_4 ;
+    //cov_rp +=  *cov_rp_4 ;
     cov_rp +=  *cov_rp_5 ;
     cov_rp +=  *cov_rp_6 ;
-//     cov_rp +=  *cov_rp_7 ;
+    cov_rp +=  *cov_rp_7 ;
     cov_rp +=  *cov_rp_8 ;
     cov_rp +=  *cov_rp_9 ;
     cov_rp +=  *cov_rp_10 ;
@@ -260,9 +328,58 @@ void fitParams(){
     covs.push_back(cov_f_1);
 
     /// Phsp-Acc systematics
-    pull p_phsp_acc_1(paraNames,"signal_sys8/pull_*.root");
+    pull p_phsp_acc_1(paraNames,"signal_sys_acc1/pull_*.root");
     TMatrixD* cov_phsp_acc_1 = new TMatrixD(p_phsp_acc_1.getDeltaCov("signal/pull__1.root","phsp_acc_1"));
-    covs.push_back(cov_phsp_acc_1);
+    vector<double> vals_ps_1 = p_phsp_acc_1.getVals();
+
+    pull p_phsp_acc_2(paraNames,"signal_sys_acc2/pull_*.root");
+    TMatrixD* cov_phsp_acc_2 = new TMatrixD(p_phsp_acc_2.getDeltaCov("signal/pull__1.root","phsp_acc_2"));
+    vector<double> vals_ps_2 = p_phsp_acc_2.getVals();
+
+    pull p_phsp_acc_3(paraNames,"signal_sys_acc3/pull_*.root");
+    TMatrixD* cov_phsp_acc_3 = new TMatrixD(p_phsp_acc_3.getDeltaCov("signal/pull__1.root","phsp_acc_3"));
+    vector<double> vals_ps_3 = p_phsp_acc_3.getVals();
+
+    pull p_phsp_acc_4(paraNames,"signal_sys_acc4/pull_*.root");
+    TMatrixD* cov_phsp_acc_4 = new TMatrixD(p_phsp_acc_4.getDeltaCov("signal/pull__1.root","phsp_acc_4"));
+    vector<double> vals_ps_4 = p_phsp_acc_4.getVals();
+
+    pull p_phsp_acc_5(paraNames,"signal_sys_acc5/pull_*.root");
+    TMatrixD* cov_phsp_acc_5 = new TMatrixD(p_phsp_acc_5.getDeltaCov("signal/pull__1.root","phsp_acc_5"));
+    vector<double> vals_ps_5 = p_phsp_acc_5.getVals();
+
+    pull p_phsp_acc_6(paraNames,"signal_sys_acc6/pull_*.root");
+    TMatrixD* cov_phsp_acc_6 = new TMatrixD(p_phsp_acc_6.getDeltaCov("signal/pull__1.root","phsp_acc_6"));
+    vector<double> vals_ps_6 = p_phsp_acc_6.getVals();
+
+
+    pull p_phsp_acc_7(paraNames,"signal_sys_acc7/pull_*.root");
+    TMatrixD* cov_phsp_acc_7 = new TMatrixD(p_phsp_acc_7.getDeltaCov("signal/pull__1.root","phsp_acc_7"));
+    vector<double> vals_ps_7 = p_phsp_acc_7.getVals();
+
+    pull p_phsp_acc_8(paraNames,"signal_sys_acc8/pull_*.root");
+    TMatrixD* cov_phsp_acc_8 = new TMatrixD(p_phsp_acc_8.getDeltaCov("signal/pull__1.root","phsp_acc_8"));
+    vector<double> vals_ps_8 = p_phsp_acc_8.getVals();
+
+    pull p_phsp_acc_9(paraNames,"signal_sys_acc11/pull_*.root");
+    TMatrixD* cov_phsp_acc_9 = new TMatrixD(p_phsp_acc_9.getDeltaCov("signal/pull__1.root","phsp_acc_9"));
+    vector<double> vals_ps_9 = p_phsp_acc_9.getVals();
+
+
+    vector< vector <double> > vec_vals_ps;
+    vec_vals_ps.push_back(vals_ps_1);
+    vec_vals_ps.push_back(vals_ps_2);
+    vec_vals_ps.push_back(vals_ps_3);
+    vec_vals_ps.push_back(vals_ps_4);
+    vec_vals_ps.push_back(vals_ps_5);
+    vec_vals_ps.push_back(vals_ps_6);
+    vec_vals_ps.push_back(vals_ps_7);
+    vec_vals_ps.push_back(vals_ps_8);
+    vec_vals_ps.push_back(vals_ps_9);
+
+    TMatrixD cov_phsp(p_phsp_acc_1.sampleVariance(vec_vals_ps));
+    covs.push_back(new TMatrixD(cov_phsp));
+
 
 
     /// Alternative amp models 
@@ -326,34 +443,9 @@ void fitParams(){
     TMatrixD* cov_alt_15 = new TMatrixD(p_alt_15.getDeltaCov("signal/pull__1.root"));
     vector<double> vals_alt_15 = p_alt_15.getVals();
 
-    pull p_alt_16(paraNames,"signal_alt24/pull__*.root");
-    TMatrixD* cov_alt_16 = new TMatrixD(p_alt_16.getDeltaCov("signal/pull__1.root"));
-    vector<double> vals_alt_16 = p_alt_16.getVals();
-
-
-    // Take maximum as systematic
-    vector<TMatrixD*> covs_alt;
-    covs_alt.push_back(cov_alt_1);
-    covs_alt.push_back(cov_alt_2);
-    covs_alt.push_back(cov_alt_3);
-    covs_alt.push_back(cov_alt_4);
-    covs_alt.push_back(cov_alt_5);
-    covs_alt.push_back(cov_alt_6);
-    covs_alt.push_back(cov_alt_7);
-    covs_alt.push_back(cov_alt_8);
-    covs_alt.push_back(cov_alt_9);
-    covs_alt.push_back(cov_alt_10);
-    covs_alt.push_back(cov_alt_11);
-    covs_alt.push_back(cov_alt_12);
-    covs_alt.push_back(cov_alt_13);
-    covs_alt.push_back(cov_alt_14);
-    covs_alt.push_back(cov_alt_15);
-    covs_alt.push_back(cov_alt_16);
- 
-    cout << "Max cov " << endl;
-    TMatrixD cov_alt_max(p_alt_1.combineCov_maxVal(covs_alt));
-//     cov_alt_max.Print();
-    //covs.push_back(new TMatrixD(cov_alt_max));
+//     pull p_alt_16(paraNames,"signal_alt24/pull__*.root");
+//     TMatrixD* cov_alt_16 = new TMatrixD(p_alt_16.getDeltaCov("signal/pull__1.root"));
+//     vector<double> vals_alt_16 = p_alt_16.getVals();
 
     // Take sample variance as systematic 
     vector< vector <double> > vec_vals_alt;
@@ -369,10 +461,10 @@ void fitParams(){
     vec_vals_alt.push_back(vals_alt_10);
     vec_vals_alt.push_back(vals_alt_11);
     vec_vals_alt.push_back(vals_alt_12);
-    vec_vals_alt.push_back(vals_alt_13);
-    vec_vals_alt.push_back(vals_alt_14);
-    vec_vals_alt.push_back(vals_alt_15);
-    vec_vals_alt.push_back(vals_alt_16);
+//     vec_vals_alt.push_back(vals_alt_13);
+//     vec_vals_alt.push_back(vals_alt_14);
+//     vec_vals_alt.push_back(vals_alt_15);
+//     vec_vals_alt.push_back(vals_alt_16);
 
     cout << "Sample variance " << endl;
     TMatrixD cov_alt(p_alt_1.sampleVariance(vec_vals_alt));
@@ -534,7 +626,7 @@ void fitParams(){
     SummaryFile3 << vals[19] << " $\\pm$ " << errs_stat[19]  << " $\\pm$ " << errs_sys[19] << " \\\\ " << "\n";
 
     // masses,widths
-    SummaryFile3 << std::fixed << std::setprecision(1);
+    SummaryFile3 << std::fixed << std::setprecision(0);
     SummaryFile3 << "\\hline" << "\n";
     SummaryFile3 << "\\hline" << "\n";
     SummaryFile3 << "\\multicolumn{1}{c}{Fit parameter} & \\multicolumn{4}{c}{Value} " << " \\\\ " << "\n";
@@ -573,20 +665,20 @@ void fractions(){
     paraNames.push_back("Sum");
  
     vector<TString> paraNames_bar;
-    paraNames_bar.push_back("Bs0_K_1__1270_p__Ks_892_0__Kppim_pip_Dsm");
-    paraNames_bar.push_back("Bs0_K_1__1270_p__rho_770_0__pippim_Kp_Dsm");
-    paraNames_bar.push_back("Bs0_K_1__1270_p__K_0_s_1430_0__Kppim_pip_Dsm");
-    paraNames_bar.push_back("Bs0_K_1__1400_p__Ks_892_0__Kppim_pip_Dsm");
-    paraNames_bar.push_back("Bs0_NonResV0__Dsmpip_Ks_892_0__Kppim_");
-    paraNames_bar.push_back("Bs0_K_1460_p__Ks_892_0__Kppim_pip_Dsm");
-    paraNames_bar.push_back("Bs0_NonResV0__DsmKp_rho_770_0__pippim_");
-    paraNames_bar.push_back("Sum");
+    paraNames_bar.push_back("bar_Bs0_K_1__1270_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames_bar.push_back("bar_Bs0_K_1__1270_p__rho_770_0__pippim_Kp_Dsm");
+    paraNames_bar.push_back("bar_Bs0_K_1__1270_p__K_0_s_1430_0__Kppim_pip_Dsm");
+    paraNames_bar.push_back("bar_Bs0_K_1__1400_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames_bar.push_back("bar_Bs0_NonResV0__Dsmpip_Ks_892_0__Kppim_");
+    paraNames_bar.push_back("bar_Bs0_K_1460_p__Ks_892_0__Kppim_pip_Dsm");
+    paraNames_bar.push_back("bar_Bs0_NonResV0__DsmKp_rho_770_0__pippim_");
+    paraNames_bar.push_back("bar_Sum");
 
-    pull p(paraNames,"signal_toy/fitFractions_*_Bar.root","fractions", true, true,100);
+    pull p(paraNames,"signal_toy/pull__*.root","Coherence");
     vector<double> vals = p.sampleMean()  ;
     vector<double> errs_stat = p.sampleSigma()  ;
 
-    pull p_bar(paraNames_bar,"signal_toy/fitFractions_*_Bar.root","fractions", true, false,100);
+    pull p_bar(paraNames_bar,"signal_toy/pull__*.root","Coherence");
     vector<double> vals_bar = p_bar.sampleMean()  ;
     vector<double> errs_stat_bar = p_bar.sampleSigma()  ;
 
@@ -670,7 +762,7 @@ void altModels(){
    /// Fit parameters    
     vector<TString> paraNames;
     paraNames.push_back("Bs0_K_1__1270_p__Ks_892_0__Kppim_pip_Dsm");
-    paraNames.push_back("Bs0_K_1__1270_p_D__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("Bs0_K_1__1270_p_D___Ks_892_0__Kppim_pip_Dsm");
     paraNames.push_back("Bs0_K_1__1270_p__rho_770_0__pippim_Kp_Dsm");
     paraNames.push_back("Bs0_K_1__1270_p__rho_1450_0__pippim_Kp_Dsm");
     paraNames.push_back("Bs0_K_1__1270_p__K_0_s_1430_0__Kppim_pip_Dsm");
@@ -689,24 +781,24 @@ void altModels(){
 //     paraNames.push_back("Bs0_K_2__1770_p__rho_770_0__pippim_Kp_Dsm");
     paraNames.push_back("Bs0_NonResS0__Dsmpip_Ks_892_0__Kppim_");
     paraNames.push_back("Bs0_NonResV0__Dsmpip_Ks_892_0__Kppim_");
-    paraNames.push_back("Bs0_P_NonResV0__Dsmpip_Ks_892_0__Kppim_");
-    paraNames.push_back("Bs0_D_NonResV0__Dsmpip_Ks_892_0__Kppim_");
-    paraNames.push_back("Bs0_K_0_s_1430_0__Kppim_NonResS0__Dsmpip_");
+    paraNames.push_back("Bs0_P__NonResV0__Dsmpip_Ks_892_0__Kppim_");
+    paraNames.push_back("Bs0_D__NonResV0__Dsmpip_Ks_892_0__Kppim_");
+//     paraNames.push_back("Bs0_K_0_s_1430_0__Kppim_NonResS0__Dsmpip_");
     paraNames.push_back("Bs0_NonResS0__DsmKp_sigma10__pippim_");
     paraNames.push_back("Bs0_NonResV0__DsmKp_sigma10__pippim_");
-    paraNames.push_back("Bs0_NonResS0__DsmKp_f_0_980_0__pippim_");
-    paraNames.push_back("Bs0_f_2_1270_0_pippim_NonResS0__DsmKp_");
-    paraNames.push_back("Bs0_f_2_1270_0_pippim_NonResV0__DsmKp_");
-    paraNames.push_back("Bs0_f_0_1370_0_pippim_NonResS0__DsmKp_");
+    paraNames.push_back("Bs0_NonResS0__DsmKp_f_0__980_0__pippim_");
+    paraNames.push_back("Bs0_f_2__1270_0__pippim_NonResS0__DsmKp_");
+    paraNames.push_back("Bs0_f_2__1270_0__pippim_NonResV0__DsmKp_");
+    paraNames.push_back("Bs0_f_0__1370_0__pippim_NonResS0__DsmKp_");
     paraNames.push_back("Bs0_NonResS0__DsmKp_rho_770_0__pippim_");
     paraNames.push_back("Bs0_NonResV0__DsmKp_rho_770_0__pippim_");
-    paraNames.push_back("Bs0_P_NonResV0__DsmKp_rho_770_0__pippim_");
-    paraNames.push_back("Bs0_D_NonResV0__DsmKp_rho_770_0__pippim_");
+    paraNames.push_back("Bs0_P__NonResV0__DsmKp_rho_770_0__pippim_");
+    paraNames.push_back("Bs0_D__NonResV0__DsmKp_rho_770_0__pippim_");
     paraNames.push_back("Sum");
     int N_1 = paraNames.size();
 
     paraNames.push_back("bar_Bs0_K_1__1270_p__Ks_892_0__Kppim_pip_Dsm");
-    paraNames.push_back("bar_Bs0_K_1__1270_p_D__Ks_892_0__Kppim_pip_Dsm");
+    paraNames.push_back("bar_Bs0_K_1__1270_p_D___Ks_892_0__Kppim_pip_Dsm");
     paraNames.push_back("bar_Bs0_K_1__1270_p__rho_770_0__pippim_Kp_Dsm");
     paraNames.push_back("bar_Bs0_K_1__1270_p__rho_1450_0__pippim_Kp_Dsm");
     paraNames.push_back("bar_Bs0_K_1__1270_p__K_0_s_1430_0__Kppim_pip_Dsm");
@@ -725,19 +817,19 @@ void altModels(){
 //     paraNames.push_back("bar_Bs0_K_2__1770_p__rho_770_0__pippim_Kp_Dsm");
     paraNames.push_back("bar_Bs0_NonResS0__Dsmpip_Ks_892_0__Kppim_");
     paraNames.push_back("bar_Bs0_NonResV0__Dsmpip_Ks_892_0__Kppim_");
-    paraNames.push_back("bar_Bs0_P_NonResV0__Dsmpip_Ks_892_0__Kppim_");
-    paraNames.push_back("bar_Bs0_D_NonResV0__Dsmpip_Ks_892_0__Kppim_");
-    paraNames.push_back("bar_Bs0_K_0_s_1430_0__Kppim_NonResS0__Dsmpip_");
+    paraNames.push_back("bar_Bs0_P__NonResV0__Dsmpip_Ks_892_0__Kppim_");
+    paraNames.push_back("bar_Bs0_D__NonResV0__Dsmpip_Ks_892_0__Kppim_");
+//     paraNames.push_back("bar_Bs0_K_0_s_1430_0__Kppim_NonResS0__Dsmpip_");
     paraNames.push_back("bar_Bs0_NonResS0__DsmKp_sigma10__pippim_");
     paraNames.push_back("bar_Bs0_NonResV0__DsmKp_sigma10__pippim_");
-    paraNames.push_back("bar_Bs0_NonResS0__DsmKp_f_0_980_0__pippim_");
-    paraNames.push_back("bar_Bs0_f_2_1270_0_pippim_NonResS0__DsmKp_");
-    paraNames.push_back("bar_Bs0_f_2_1270_0_pippim_NonResV0__DsmKp_");
-    paraNames.push_back("bar_Bs0_f_0_1370_0_pippim_NonResS0__DsmKp_");
+    paraNames.push_back("bar_Bs0_NonResS0__DsmKp_f_0__980_0__pippim_");
+    paraNames.push_back("bar_Bs0_f_2__1270_0__pippim_NonResS0__DsmKp_");
+    paraNames.push_back("bar_Bs0_f_2__1270_0__pippim_NonResV0__DsmKp_");
+    paraNames.push_back("bar_Bs0_f_0__1370_0__pippim_NonResS0__DsmKp_");
     paraNames.push_back("bar_Bs0_NonResS0__DsmKp_rho_770_0__pippim_");
     paraNames.push_back("bar_Bs0_NonResV0__DsmKp_rho_770_0__pippim_");
-    paraNames.push_back("bar_Bs0_P_NonResV0__DsmKp_rho_770_0__pippim_");
-    paraNames.push_back("bar_Bs0_D_NonResV0__DsmKp_rho_770_0__pippim_");
+    paraNames.push_back("bar_Bs0_P__NonResV0__DsmKp_rho_770_0__pippim_");
+    paraNames.push_back("bar_Bs0_D__NonResV0__DsmKp_rho_770_0__pippim_");
     paraNames.push_back("bar_Sum");
     int N_2 = paraNames.size();
 
@@ -750,46 +842,94 @@ void altModels(){
     paraNames.push_back("k");
     paraNames.push_back("delta");
     paraNames.push_back("gamma");
+//     paraNames.push_back("chi2");
 
-    pull p(paraNames,"signal/pull__301.root","Coherence");
+//     pull p(paraNames,"signal/pull__302.root","Coherence");
+    pull p(paraNames,"signal/pull__1.root","Coherence");
     vector<double> vals = p.getVals()  ;
     vector<double> errs_stat = p.getErrs()  ;
 
-    pull p_1(paraNames,"signal/pull__301.root","Coherence");
+    pull p_1(paraNames,"signal_alt0/pull__*.root","Coherence");
     vector<double> vals_1 = p_1.getVals()  ;
     vector<double> errs_stat_1 = p_1.getErrs()  ;
 
-    pull p_2(paraNames,"signal/pull__301.root","Coherence");
+    pull p_2(paraNames,"signal_alt2/pull__*.root","Coherence");
     vector<double> vals_2 = p_2.getVals()  ;
     vector<double> errs_stat_2 = p_2.getErrs()  ;
 
-    pull p_3(paraNames,"signal/pull__301.root","Coherence");
+    pull p_3(paraNames,"signal_alt5/pull__*.root","Coherence");
     vector<double> vals_3 = p_3.getVals()  ;
     vector<double> errs_stat_3 = p_3.getErrs()  ;
 
-    pull p_4(paraNames,"signal/pull__301.root","Coherence");
+    pull p_4(paraNames,"signal_alt6/pull__*.root","Coherence");
     vector<double> vals_4 = p_4.getVals()  ;
     vector<double> errs_stat_4 = p_4.getErrs()  ;
 
-    pull p_5(paraNames,"signal/pull__301.root","Coherence");
+    pull p_5(paraNames,"signal_alt8/pull__*.root","Coherence");
     vector<double> vals_5 = p_5.getVals()  ;
     vector<double> errs_stat_5 = p_5.getErrs()  ;
 
-    pull p_6(paraNames,"signal/pull__301.root","Coherence");
+    pull p_6(paraNames,"signal_alt10/pull__*.root","Coherence");
     vector<double> vals_6 = p_6.getVals()  ;
     vector<double> errs_stat_6 = p_6.getErrs()  ;
 
-    pull p_7(paraNames,"signal/pull__301.root","Coherence");
+    pull p_7(paraNames,"signal_alt11/pull__*.root","Coherence");
     vector<double> vals_7 = p_7.getVals()  ;
     vector<double> errs_stat_7 = p_7.getErrs()  ;
 
-    pull p_8(paraNames,"signal/pull__301.root","Coherence");
+    pull p_8(paraNames,"signal_alt12/pull__*.root","Coherence");
     vector<double> vals_8 = p_8.getVals()  ;
     vector<double> errs_stat_8 = p_8.getErrs()  ;
 
-    pull p_9(paraNames,"signal/pull__301.root","Coherence");
+    pull p_9(paraNames,"signal_alt15/pull__*.root","Coherence");
     vector<double> vals_9 = p_9.getVals()  ;
     vector<double> errs_stat_9 = p_9.getErrs()  ;
+
+    pull p_10(paraNames,"signal_alt16/pull__*.root","Coherence");
+    vector<double> vals_10 = p_10.getVals()  ;
+    vector<double> errs_stat_10 = p_10.getErrs()  ;
+
+    pull p_11(paraNames,"signal_alt18/pull__*.root","Coherence");
+    vector<double> vals_11 = p_11.getVals()  ;
+    vector<double> errs_stat_11 = p_11.getErrs()  ;
+
+    pull p_12(paraNames,"signal_alt19/pull__*.root","Coherence");
+    vector<double> vals_12 = p_12.getVals()  ;
+    vector<double> errs_stat_12 = p_12.getErrs()  ;
+
+    pull p_13(paraNames,"signal_alt20/pull__*.root","Coherence");
+    vector<double> vals_13 = p_13.getVals()  ;
+    vector<double> errs_stat_13 = p_13.getErrs()  ;
+
+    pull p_14(paraNames,"signal_alt22a/pull__*.root","Coherence");
+    vector<double> vals_14 = p_14.getVals()  ;
+    vector<double> errs_stat_14 = p_14.getErrs()  ;
+
+    //pull p_15(paraNames,"signal_alt24/pull__*.root","Coherence");
+    //vector<double> vals_15 = p_15.getVals()  ;
+    //vector<double> errs_stat_15 = p_15.getErrs()  ;
+
+    pull p_16(paraNames,"signal_alt3/pull__*.root","Coherence");
+    vector<double> vals_16 = p_16.getVals()  ;
+    vector<double> errs_stat_16 = p_16.getErrs()  ;
+
+ //   pull p_17(paraNames,"signal_alt14/pull__*.root","Coherence");
+ //   vector<double> vals_17 = p_17.getVals()  ;
+ //   vector<double> errs_stat_17 = p_17.getErrs()  ;
+
+//     pull p_18(paraNames,"signal_alt0/pull__*.root","Coherence");
+//     vector<double> vals_18 = p_18.getVals()  ;
+//     vector<double> errs_stat_18 = p_18.getErrs()  ;
+// 
+//     pull p_19(paraNames,"signal_alt0/pull__*.root","Coherence");
+//     vector<double> vals_19 = p_19.getVals()  ;
+//     vector<double> errs_stat_19 = p_19.getErrs()  ;
+// 
+//     pull p_20(paraNames,"signal_alt0/pull__*.root","Coherence");
+//     vector<double> vals_20 = p_20.getVals()  ;
+//     vector<double> errs_stat_20 = p_20.getErrs()  ;
+
+
 
     vector< vector<double> > vec_vals;
     vec_vals.push_back(vals);
@@ -802,6 +942,17 @@ void altModels(){
     vec_vals.push_back(vals_7);
     vec_vals.push_back(vals_8);
     vec_vals.push_back(vals_9);
+    vec_vals.push_back(vals_10);
+    vec_vals.push_back(vals_11);
+    //vec_vals.push_back(vals_12);
+    //vec_vals.push_back(vals_13);
+    //vec_vals.push_back(vals_14);
+  //  vec_vals.push_back(vals_15);
+    vec_vals.push_back(vals_16);
+   // vec_vals.push_back(vals_17);
+//     vec_vals.push_back(vals_18);
+//     vec_vals.push_back(vals_19);
+//     vec_vals.push_back(vals_20);
 
     vector< vector<double> > vec_errs;
     vec_errs.push_back(errs_stat);
@@ -814,19 +965,30 @@ void altModels(){
     vec_errs.push_back(errs_stat_7);
     vec_errs.push_back(errs_stat_8);
     vec_errs.push_back(errs_stat_9);
-
-
+    vec_errs.push_back(errs_stat_10);
+    vec_errs.push_back(errs_stat_11);
+    //vec_errs.push_back(errs_stat_12);
+    //vec_errs.push_back(errs_stat_13);
+    //vec_errs.push_back(errs_stat_14);
+//    vec_errs.push_back(errs_stat_15);
+    vec_errs.push_back(errs_stat_16);
+ //   vec_errs.push_back(errs_stat_17);
+/*    vec_errs.push_back(errs_stat_18);
+    vec_errs.push_back(errs_stat_19);
+    vec_errs.push_back(errs_stat_20);*/
+ 
+    int N_modelsPerTable = 7;
     /// Result table   
     ofstream SummaryFile;
     SummaryFile.open("../../../../../TD-AnaNote/latex/tables/fullFit/signal/altModel_table.tex",std::ofstream::trunc);
 
     SummaryFile << "\\begin{tabular}{l l " ;
-    for(int j=0; j < vec_vals.size(); j++) SummaryFile << " r " ;
+    for(int j=0; j < N_modelsPerTable; j++) SummaryFile << " r " ;
     SummaryFile << " } " << "\n";
     SummaryFile << "\\hline" << "\n";
     SummaryFile << "\\hline" << "\n";
     SummaryFile << "& & \\multicolumn{1}{c}{Baseline} " ;
-    for(int j=1; j < vec_vals.size(); j++)SummaryFile << " & \\multicolumn{1}{c}{Alt." << j <<  "} ";
+    for(int j=1; j < N_modelsPerTable; j++)SummaryFile << " & \\multicolumn{1}{c}{Alt." << j <<  "} ";
     SummaryFile << " \\\\ " << "\n";
     SummaryFile << "\\hline" << "\n";
 
@@ -838,12 +1000,14 @@ void altModels(){
 	    if(i==N_1-1) SummaryFile << "\\multirow{" << N_1 << "}{*}{$b \\to u$} ";
             SummaryFile << " & " ;
 	    SummaryFile << p.latexNameMod(paraNames[i]) ;
-	    double scale = (i>N_2) ? 1. : 100.; 
-	    if(i == paraNames.size()-5)SummaryFile << std::fixed << std::setprecision(2);
+	    double scale = (i>N_2-1) ? 1. : 100.; 
+	    if(i == paraNames.size()-8)SummaryFile << std::fixed << std::setprecision(0);
+	    if(i == paraNames.size()-4)SummaryFile << std::fixed << std::setprecision(2);
+	    if(i == paraNames.size()-2)SummaryFile << std::fixed << std::setprecision(0);
 
-	    for(int j=0; j < vec_vals.size(); j++){
-		    if(vec_vals[j][i] == 0) SummaryFile << " & " ;
-		    else SummaryFile << " & "  << (double)((i<paraNames.size()-5) ? vec_vals[j][i] * scale : vec_vals[j][i] - vec_vals[0][i] ) << " $\\pm$ " << vec_errs[j][i]* scale ;
+	    for(int j=0; j < N_modelsPerTable; j++){
+		    if(vec_vals[j][i] < 0.01/100.) SummaryFile << " & " ;
+		    else SummaryFile << " & "  << (double)((i<paraNames.size()-4) ? vec_vals[j][i] * scale : vec_vals[j][i] - vec_vals[0][i] ) << " $\\pm$ " << vec_errs[j][i]* scale ;
 	    }	    
 	    SummaryFile << " \\\\ " << "\n";
 	    if(i==N_1-1 || i==N_2-1) SummaryFile << "\\hline" << "\n";
@@ -853,8 +1017,297 @@ void altModels(){
     SummaryFile << "\\hline" << "\n";
     SummaryFile << "\\end{tabular}" << "\n";
 
+
+    /// Result table   
+    ofstream SummaryFile2;
+    SummaryFile2.open("../../../../../TD-AnaNote/latex/tables/fullFit/signal/altModel_table2.tex",std::ofstream::trunc);
+
+    SummaryFile2 << "\\begin{tabular}{l l " ;
+    for(int j=N_modelsPerTable; j < vec_vals.size(); j++) SummaryFile2 << " r " ;
+    SummaryFile2 << " } " << "\n";
+    SummaryFile2 << "\\hline" << "\n";
+    SummaryFile2 << "\\hline" << "\n";
+    SummaryFile2 << "& " ;
+    for(int j=N_modelsPerTable; j < vec_vals.size(); j++)SummaryFile2 << " & \\multicolumn{1}{c}{Alt." << j <<  "} ";
+    SummaryFile2 << " \\\\ " << "\n";
+    SummaryFile2 << "\\hline" << "\n";
+
+    SummaryFile2 << std::fixed << std::setprecision(1);
+ 
+    for(int i= 0; i < paraNames.size(); i++){
+
+	    if(i==0) SummaryFile2 << "\\multirow{" << N_1 << "}{*}{$b \\to c$} ";
+	    if(i==N_1-1) SummaryFile2 << "\\multirow{" << N_1 << "}{*}{$b \\to u$} ";
+            SummaryFile2 << " & " ;
+	    SummaryFile2 << p.latexNameMod(paraNames[i]) ;
+	    double scale = (i>N_2-1) ? 1. : 100.; 
+	    if(i == paraNames.size()-8)SummaryFile2 << std::fixed << std::setprecision(0);
+	    if(i == paraNames.size()-4)SummaryFile2 << std::fixed << std::setprecision(2);
+	    if(i == paraNames.size()-2)SummaryFile2 << std::fixed << std::setprecision(0);
+
+	    for(int j=N_modelsPerTable; j < vec_vals.size(); j++){
+		    if(vec_vals[j][i] < 0.01/100.) SummaryFile2 << " & " ;
+		    else SummaryFile2 << " & "  << (double)((i<paraNames.size()-4) ? vec_vals[j][i] * scale : vec_vals[j][i] - vec_vals[0][i] ) << " $\\pm$ " << vec_errs[j][i]* scale ;
+	    }	    
+	    SummaryFile2 << " \\\\ " << "\n";
+	    if(i==N_1-1 || i==N_2-1) SummaryFile2 << "\\hline" << "\n";
+    }
+    
+    SummaryFile2 << "\\hline" << "\n";
+    SummaryFile2 << "\\hline" << "\n";
+    SummaryFile2 << "\\end{tabular}" << "\n";
+
+
 }
 
+
+
+
+void corrCP(){
+
+    vector<TString> paraNames;
+    paraNames.push_back("r");
+    paraNames.push_back("delta");
+    paraNames.push_back("gamma");
+    paraNames.push_back("k");
+
+    pull p(paraNames,"signal_toy/pull__*.root","Coherence");
+    vector<double> vals = p.sampleMean()  ;
+    vector<double> sigma; // = p.sampleSigma()  ;
+
+    TMatrixD cov_stat = p.getStatCov();
+    cov_stat.Print();
+
+    sigma.push_back(sqrt(cov_stat[0][0]));
+    sigma.push_back(sqrt(cov_stat[1][1]));
+    sigma.push_back(sqrt(cov_stat[2][2]));
+    sigma.push_back(sqrt(cov_stat[3][3]));
+
+    for(int i=0; i < cov_stat.GetNcols(); i++){
+        for(int j=0; j < cov_stat.GetNcols(); j++){    
+            cov_stat(i,j) = cov_stat(i,j) / sigma[i] / sigma[j];
+        }
+    }
+
+    cov_stat.Print();
+
+
+    vector<TMatrixD*> covs;
+
+    /// Alternative amp models 
+    pull p_alt_1(paraNames,"signal_alt0/pull__*.root","Coherence");
+    TMatrixD* cov_alt_1 = new TMatrixD(p_alt_1.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_1 = p_alt_1.getVals();
+
+    pull p_alt_2(paraNames,"signal_alt2/pull__*.root","Coherence");
+    TMatrixD* cov_alt_2 = new TMatrixD(p_alt_2.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_2 = p_alt_2.getVals();
+
+    pull p_alt_3(paraNames,"signal_alt3/pull__*.root","Coherence");
+    TMatrixD* cov_alt_3 = new TMatrixD(p_alt_3.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_3 = p_alt_3.getVals();
+
+    pull p_alt_4(paraNames,"signal_alt5/pull__*.root","Coherence");
+    TMatrixD* cov_alt_4 = new TMatrixD(p_alt_4.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_4 = p_alt_4.getVals();
+
+    pull p_alt_5(paraNames,"signal_alt6/pull__*.root","Coherence");
+    TMatrixD* cov_alt_5 = new TMatrixD(p_alt_5.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_5 = p_alt_5.getVals();
+
+    pull p_alt_6(paraNames,"signal_alt8/pull__*.root","Coherence");
+    TMatrixD* cov_alt_6 = new TMatrixD(p_alt_6.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_6 = p_alt_6.getVals();
+
+    pull p_alt_7(paraNames,"signal_alt11/pull__*.root","Coherence");
+    TMatrixD* cov_alt_7 = new TMatrixD(p_alt_7.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_7 = p_alt_7.getVals();
+
+    pull p_alt_8(paraNames,"signal_alt12/pull__*.root","Coherence");
+    TMatrixD* cov_alt_8 = new TMatrixD(p_alt_8.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_8 = p_alt_8.getVals();
+
+    pull p_alt_9(paraNames,"signal_alt15/pull__*.root","Coherence");
+    TMatrixD* cov_alt_9 = new TMatrixD(p_alt_9.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_9 = p_alt_9.getVals();
+
+    pull p_alt_10(paraNames,"signal_alt16/pull__*.root","Coherence");
+    TMatrixD* cov_alt_10 = new TMatrixD(p_alt_10.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_10 = p_alt_10.getVals();
+
+    pull p_alt_11(paraNames,"signal_alt10/pull__*.root","Coherence");
+    TMatrixD* cov_alt_11 = new TMatrixD(p_alt_11.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_11 = p_alt_11.getVals();
+
+    pull p_alt_12(paraNames,"signal_alt18/pull__*.root","Coherence");
+    TMatrixD* cov_alt_12 = new TMatrixD(p_alt_12.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_12 = p_alt_12.getVals();
+
+    pull p_alt_13(paraNames,"signal_alt19/pull__*.root","Coherence");
+    TMatrixD* cov_alt_13 = new TMatrixD(p_alt_13.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_13 = p_alt_13.getVals();
+
+    pull p_alt_14(paraNames,"signal_alt20/pull__*.root","Coherence");
+    TMatrixD* cov_alt_14 = new TMatrixD(p_alt_14.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_14 = p_alt_14.getVals();
+
+    pull p_alt_15(paraNames,"signal_alt22/pull__*.root","Coherence");
+    TMatrixD* cov_alt_15 = new TMatrixD(p_alt_15.getDeltaCov("signal/pull__1.root"));
+    vector<double> vals_alt_15 = p_alt_15.getVals();
+
+    vector< vector <double> > vec_vals_alt;
+    vec_vals_alt.push_back(vals_alt_1);
+    vec_vals_alt.push_back(vals_alt_2);
+    vec_vals_alt.push_back(vals_alt_3);
+    vec_vals_alt.push_back(vals_alt_4);
+    vec_vals_alt.push_back(vals_alt_5);
+    vec_vals_alt.push_back(vals_alt_6);
+    vec_vals_alt.push_back(vals_alt_7);
+    vec_vals_alt.push_back(vals_alt_8);
+    vec_vals_alt.push_back(vals_alt_9);
+    vec_vals_alt.push_back(vals_alt_10);
+    vec_vals_alt.push_back(vals_alt_11);
+    vec_vals_alt.push_back(vals_alt_12);
+
+    cout << "Sample variance " << endl;
+    TMatrixD cov_alt(p_alt_1.sampleVariance(vec_vals_alt));
+
+
+   /// Lineshape models systematics
+    pull p_ls_1(paraNames,"signal_sys1/pull_*.root","Coherence");
+    TMatrixD* cov_ls_1 = new TMatrixD(p_ls_1.getDeltaCov("signal/pull__1.root","ls_1"));
+    vector<double> vals_ls_1 = p_ls_1.getVals();
+
+    pull p_ls_2(paraNames,"signal_sys2/pull__2.root","Coherence");
+    TMatrixD* cov_ls_2 = new TMatrixD(p_ls_2.getDeltaCov("signal/pull__1.root","ls_2"));
+    vector<double> vals_ls_2 = p_ls_2.getVals();
+
+    pull p_ls_3(paraNames,"signal_sys3/pull_*.root","Coherence");
+    TMatrixD* cov_ls_3 = new TMatrixD(p_ls_3.getDeltaCov("signal/pull__1.root","ls_3"));
+    vector<double> vals_ls_3 = p_ls_3.getVals();
+
+    pull p_ls_4(paraNames,"signal_sys4/pull_*.root","Coherence");
+    TMatrixD* cov_ls_4 = new TMatrixD(p_ls_4.getDeltaCov("signal/pull__1.root","ls_4"));
+    vector<double> vals_ls_4 = p_ls_4.getVals();
+
+    pull p_ls_5(paraNames,"signal_sys5/pull_*.root","Coherence");
+    TMatrixD* cov_ls_5 = new TMatrixD(p_ls_5.getDeltaCov("signal/pull__1.root","ls_5"));
+    vector<double> vals_ls_5 = p_ls_5.getVals();
+
+    pull p_ls_6(paraNames,"signal_sys6/pull_*.root","Coherence");
+    TMatrixD* cov_ls_6 = new TMatrixD(p_ls_6.getDeltaCov("signal/pull__1.root","ls_6"));
+    vector<double> vals_ls_6 = p_ls_6.getVals();
+
+    pull p_ls_7(paraNames,"signal_sys7/pull_*.root","Coherence");
+    TMatrixD* cov_ls_7 = new TMatrixD(p_ls_7.getDeltaCov("signal/pull__1.root","ls_7"));
+    vector<double> vals_ls_7 = p_ls_7.getVals();
+
+    vector< vector <double> > vec_vals_ls;
+    vec_vals_ls.push_back(vals_ls_1);
+    vec_vals_ls.push_back(vals_ls_2);
+    vec_vals_ls.push_back(vals_ls_3);
+    vec_vals_ls.push_back(vals_ls_4);
+    vec_vals_ls.push_back(vals_ls_5);
+    vec_vals_ls.push_back(vals_ls_6);
+    vec_vals_ls.push_back(vals_ls_7);
+    TMatrixD cov_ls(p_ls_1.sampleVariance(vec_vals_ls));
+
+    covs.push_back(new TMatrixD(cov_ls));
+
+
+    /// Resonance parameters systematics
+    pull p_rp_1(paraNames,"signal_toy/pull_mass_K1_1270_*.root","Coherence");
+    TMatrixD* cov_rp_1 = new TMatrixD(p_rp_1.getDeltaCov("signal_toy/pull__*.root","_mass_K1_1270"));
+    pull p_rp_2(paraNames,"signal_toy/pull_width_K1_1270_*.root","Coherence");
+    TMatrixD* cov_rp_2 = new TMatrixD(p_rp_2.getDeltaCov("signal_toy/pull__*.root","_width_K1_1270"));
+
+    pull p_rp_3(paraNames,"signal_toy/pull_mass_K_1460_*.root","Coherence");
+    TMatrixD* cov_rp_3 = new TMatrixD(p_rp_3.getDeltaCov("signal_toy/pull__*.root","_mass_K_1460"));
+    pull p_rp_4(paraNames,"signal_toy/pull_width_K1_1460_*.root","Coherence");
+    TMatrixD* cov_rp_4 = new TMatrixD(p_rp_4.getDeltaCov("signal_toy/pull__*.root","_width_K_1460"));
+
+    pull p_rp_5(paraNames,"signal_toy/pull_mass_Ks_*.root","Coherence");
+    TMatrixD* cov_rp_5 = new TMatrixD(p_rp_5.getDeltaCov("signal_toy/pull__*.root","_mass_Ks"));
+    pull p_rp_6(paraNames,"signal_toy/pull_width_Ks_*.root","Coherence");
+    TMatrixD* cov_rp_6 = new TMatrixD(p_rp_6.getDeltaCov("signal_toy/pull__*.root","_width_Ks"));
+
+    pull p_rp_7(paraNames,"signal_toy/pull_mass_rho_*.root","Coherence");
+    TMatrixD* cov_rp_7 = new TMatrixD(p_rp_7.getDeltaCov("signal_toy/pull__*.root","_mass_rho"));
+    pull p_rp_8(paraNames,"signal_toy/pull_width_rho_*.root","Coherence");
+    TMatrixD* cov_rp_8 = new TMatrixD(p_rp_8.getDeltaCov("signal_toy/pull__*.root","_width_rho"));
+
+    pull p_rp_9(paraNames,"signal_toy/pull_mass_K0s_*.root","Coherence");
+    TMatrixD* cov_rp_9 = new TMatrixD(p_rp_9.getDeltaCov("signal_toy/pull__*.root","_mass_K0s"));
+    pull p_rp_10(paraNames,"signal_toy/pull_width_K0s_*.root","Coherence");
+    TMatrixD* cov_rp_10 = new TMatrixD(p_rp_10.getDeltaCov("signal_toy/pull__*.root","_width_K0s"));
+
+    // Add
+    TMatrixD cov_rp(*cov_rp_1);
+    cov_rp +=  *cov_rp_2 ;
+    cov_rp +=  *cov_rp_3 ;
+    //cov_rp +=  *cov_rp_4 ;
+    cov_rp +=  *cov_rp_5 ;
+    cov_rp +=  *cov_rp_6 ;
+    cov_rp +=  *cov_rp_7 ;
+    cov_rp +=  *cov_rp_8 ;
+    cov_rp +=  *cov_rp_9 ;
+    cov_rp +=  *cov_rp_10 ;
+ 
+    covs.push_back(new TMatrixD(cov_rp));
+
+    /// Form factor
+    pull p_f_1(paraNames,"signal_toy/pull_BW_radius_*.root","Coherence");
+    TMatrixD* cov_f_1 = new TMatrixD(p_f_1.getDeltaCov("signal_toy/pull__*.root"));
+    covs.push_back(cov_f_1);
+
+    /// Phsp-Acc systematics
+    pull p_phsp_acc_1(paraNames,"signal_sys_acc1/pull_*.root","Coherence");
+    TMatrixD* cov_phsp_acc_1 = new TMatrixD(p_phsp_acc_1.getDeltaCov("signal/pull__1.root","phsp_acc_1"));
+    vector<double> vals_ps_1 = p_phsp_acc_1.getVals();
+
+    pull p_phsp_acc_2(paraNames,"signal_sys_acc2/pull_*.root","Coherence");
+    TMatrixD* cov_phsp_acc_2 = new TMatrixD(p_phsp_acc_2.getDeltaCov("signal/pull__1.root","phsp_acc_2"));
+    vector<double> vals_ps_2 = p_phsp_acc_2.getVals();
+
+    pull p_phsp_acc_3(paraNames,"signal_sys_acc3/pull_*.root","Coherence");
+    TMatrixD* cov_phsp_acc_3 = new TMatrixD(p_phsp_acc_3.getDeltaCov("signal/pull__1.root","phsp_acc_3"));
+    vector<double> vals_ps_3 = p_phsp_acc_3.getVals();
+
+    pull p_phsp_acc_4(paraNames,"signal_sys_acc4/pull_*.root","Coherence");
+    TMatrixD* cov_phsp_acc_4 = new TMatrixD(p_phsp_acc_4.getDeltaCov("signal/pull__1.root","phsp_acc_4"));
+    vector<double> vals_ps_4 = p_phsp_acc_4.getVals();
+
+    pull p_phsp_acc_5(paraNames,"signal_sys_acc5/pull_*.root","Coherence");
+    TMatrixD* cov_phsp_acc_5 = new TMatrixD(p_phsp_acc_5.getDeltaCov("signal/pull__1.root","phsp_acc_5"));
+    vector<double> vals_ps_5 = p_phsp_acc_5.getVals();
+
+    pull p_phsp_acc_6(paraNames,"signal_sys_acc6/pull_*.root","Coherence");
+    TMatrixD* cov_phsp_acc_6 = new TMatrixD(p_phsp_acc_6.getDeltaCov("signal/pull__1.root","phsp_acc_6"));
+    vector<double> vals_ps_6 = p_phsp_acc_6.getVals();
+
+
+    vector< vector <double> > vec_vals_ps;
+    vec_vals_ps.push_back(vals_ps_1);
+    vec_vals_ps.push_back(vals_ps_2);
+    vec_vals_ps.push_back(vals_ps_3);
+    vec_vals_ps.push_back(vals_ps_4);
+    vec_vals_ps.push_back(vals_ps_5);
+    vec_vals_ps.push_back(vals_ps_6);
+
+    TMatrixD cov_phsp(p_phsp_acc_1.sampleVariance(vec_vals_ps));
+    covs.push_back(new TMatrixD(cov_phsp));
+
+    ///
+    vector<double> errs_sys;    
+    for(int i =0 ; i <paraNames.size() ; i++){
+        double tot = 0.;
+        for(int j =0 ; j <covs.size() ; j++){
+            tot += (*covs[j])[i][i];
+        }
+        cout << "sigma_sys(" <<  paraNames[i] << ") = " <<  sqrt(tot) << endl;
+    }
+
+}
 
 int main(int argc, char** argv){
 
@@ -864,9 +1317,10 @@ int main(int argc, char** argv){
     //gStyle->SetOptFit(111);
     //gStyle->UseCurrentStyle();
 
-//     fitParams();
-//     fractions();
-	altModels();
+     fitParams();
+     //fractions();
+     //altModels();
+    // corrCP();
 
     return 0;
 }

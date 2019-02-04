@@ -859,11 +859,20 @@ class TimePdfMaster
 
    TH1D* plotSpline(){
        setAllFitParameters();
-       TH1D *h_spline = new TH1D("", "", 100, _min_TAU, _max_TAU);
+       TH1D *h_spline = new TH1D("", ";t (ps);Efficiency (a.u.)", 100, _min_TAU, _max_TAU);
        for (int i = 1; i<=h_spline->GetNbinsX(); i++) {
            _r_t->setVal(h_spline->GetXaxis()->GetBinCenter(i));
            h_spline->SetBinContent(i,_spline->getVal());
        }
+       TCanvas* c = new TCanvas();
+       h_spline->SetLineColor(kRed);
+       h_spline->SetLineWidth(5);
+
+       h_spline->SetMinimum(0.);
+       h_spline->SetMaximum(1.2);
+
+       h_spline->Draw("histc");
+       c->Print("spline.eps");
        return h_spline;
    }
 

@@ -684,7 +684,8 @@ bool FitAmpPairList::doFractions(){
     if(this->at(i).isSingleAmp()){
       name = this->at(i).fitAmp1().name();
     }else{
-      name = this->at(i).name();
+//       name = this->at(i).name();
+      name = this->at(i).fitAmp1().name() + "_x_" + this->at(i).fitAmp2().name();
     }
     FitFraction f(name, frac);
 
@@ -852,6 +853,7 @@ bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
     name.ReplaceAll("GS","");
     name.ReplaceAll("SBW","");
     name.ReplaceAll("RhoOmega","");
+    name.ReplaceAll("GLass","");
     name.ReplaceAll("Lass","");
     name.ReplaceAll("Bugg","");
     name.ReplaceAll("Flatte","");
@@ -896,6 +898,7 @@ bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
 	name.ReplaceAll("*","s");
 	name.ReplaceAll(",","");
 	name.ReplaceAll("GS","");
+	name.ReplaceAll("GLass","");
 	name.ReplaceAll("Lass","");
 	name.ReplaceAll("RhoOmega","");
 	name.ReplaceAll("Bugg","");

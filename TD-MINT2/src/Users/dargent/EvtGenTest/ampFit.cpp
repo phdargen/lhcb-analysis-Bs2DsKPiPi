@@ -1743,16 +1743,56 @@ void addGenPdfToMC(){
 		tree->SetBranchStatus("*BKGCAT*",1);
 		tree->SetBranchStatus("Ds_finalState",1);
 		tree->SetBranchStatus("BDTG",1);
+		tree->SetBranchStatus("*TRUE*",1);
+		tree->SetBranchStatus("Bs_PT",1);
+		tree->SetBranchStatus("Bs_*_T*S",1);
 
-		int f,cat,Ds_ID;
+
+		int f,cat,Ds_ID,pi_minus_TRUEID,pi_plus_TRUEID,K_plus_TRUEID;
 		int year,run,Ds_finalState,trigger;	
+		double mB,w,BDTG;
+		bool Bs_L0_TIS;
+
 		double K[4];
 		double pip[4];
 		double pim[4];
 		double Ds_Kp[4],Ds_Km[4],Ds_pim[4],Ds[4];
-		double mB,w,BDTG;
+		double Bs_pt;
+
+		double K_plus_true[4];
+		double pi_plus_true[4];
+		double pi_minus_true[4];
+		double Ds_Kp_true[4],Ds_Km_true[4],Ds_pim_true[4],Ds_true[4];
+
+		tree->SetBranchAddress("Bs_PT",&Bs_pt);
+		tree->SetBranchAddress("Bs_L0Global_TIS",&Bs_L0_TIS);
 	
 		tree->SetBranchAddress("Ds_TRUEID",&Ds_ID);
+		tree->SetBranchAddress("K_plus_TRUEID",&K_plus_TRUEID);
+		tree->SetBranchAddress("pi_plus_TRUEID",&pi_plus_TRUEID);
+		tree->SetBranchAddress("pi_minus_TRUEID",&pi_minus_TRUEID);
+
+		tree->SetBranchAddress("K_plus_TRUEP_X",&K_plus_true[0]);
+		tree->SetBranchAddress("K_plus_TRUEP_Y",&K_plus_true[1]);
+		tree->SetBranchAddress("K_plus_TRUEP_Z",&K_plus_true[2]);
+		tree->SetBranchAddress("K_plus_TRUEP_E",&K_plus_true[3]);
+
+		tree->SetBranchAddress("pi_plus_TRUEP_X",&pi_plus_true[0]);
+		tree->SetBranchAddress("pi_plus_TRUEP_Y",&pi_plus_true[1]);
+		tree->SetBranchAddress("pi_plus_TRUEP_Z",&pi_plus_true[2]);
+		tree->SetBranchAddress("pi_plus_TRUEP_E",&pi_plus_true[3]);
+
+		tree->SetBranchAddress("pi_minus_TRUEP_X",&pi_minus_true[0]);
+		tree->SetBranchAddress("pi_minus_TRUEP_Y",&pi_minus_true[1]);
+		tree->SetBranchAddress("pi_minus_TRUEP_Z",&pi_minus_true[2]);
+		tree->SetBranchAddress("pi_minus_TRUEP_E",&pi_minus_true[3]);
+
+		tree->SetBranchAddress("Ds_TRUEP_X",&Ds_true[0]);
+		tree->SetBranchAddress("Ds_TRUEP_Y",&Ds_true[1]);
+		tree->SetBranchAddress("Ds_TRUEP_Z",&Ds_true[2]);
+		tree->SetBranchAddress("Ds_TRUEP_E",&Ds_true[3]);
+
+
 		tree->SetBranchAddress("year",&year);
 		tree->SetBranchAddress("run",&run);
 		tree->SetBranchAddress("TriggerCat",&trigger);
@@ -1795,6 +1835,15 @@ void addGenPdfToMC(){
 		DalitzEventList eventListMC_KKpi;            
 		DalitzEventList eventListMC_Kpipi;            
 		DalitzEventList eventListMC_pipipi;            
+
+		DalitzEventList eventListMC_Run1_t0;            
+		DalitzEventList eventListMC_Run2_t0;            
+		DalitzEventList eventListMC_Run1_t1;            
+		DalitzEventList eventListMC_Run2_t1;            
+
+		DalitzEventList eventListMC_pt10;            
+		DalitzEventList eventListMC_pt5;            
+		DalitzEventList eventListMC_pt7;            
 
 	        vector<int> s234;
     		s234.push_back(2);
@@ -1920,17 +1969,32 @@ void addGenPdfToMC(){
 				continue;
 			}			
 
+// 			if(Bs_pt<10000)continue;
+
 			double sign = 1.;
 			if(f > 0) sign = -1.;
 	
+			/// reco event
 			TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
 			TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
 			TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
 			TLorentzVector D_p = TLorentzVector(sign*Ds[0],sign*Ds[1],sign*Ds[2],Ds[3]);
 			TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+
+			/// true event
+			TLorentzVector K_p_true(sign*K_plus_true[0],sign*K_plus_true[1],sign*K_plus_true[2],K_plus_true[3]);
+			TLorentzVector pip_p_true(sign*pi_plus_true[0],sign*pi_plus_true[1],sign*pi_plus_true[2],pi_plus_true[3]);
+			TLorentzVector pim_p_true(sign*pi_minus_true[0],sign*pi_minus_true[1],sign*pi_minus_true[2],pi_minus_true[3]);
+			TLorentzVector D_p_true = TLorentzVector(sign*Ds_true[0],sign*Ds_true[1],sign*Ds_true[2],Ds_true[3]);
+
+			if(abs(K_plus_TRUEID) != 321) K_p_true = K_p;
+			if(abs(pi_plus_TRUEID) != 211) pip_p_true = pip_p;
+			if(abs(pi_minus_TRUEID) != 211) pim_p_true = pim_p;
+			if(abs(Ds_ID) != 431) D_p_true = D_p;
+			TLorentzVector B_p_true = K_p_true + pip_p_true + pim_p_true + D_p_true;
 			// array of vectors
-			vector<TLorentzVector> vectorOfvectors;
-		
+
+			vector<TLorentzVector> vectorOfvectors;		
 			vectorOfvectors.push_back(B_p*MeV);
 			vectorOfvectors.push_back(D_p*MeV);
 			vectorOfvectors.push_back(K_p*MeV);
@@ -1938,20 +2002,35 @@ void addGenPdfToMC(){
 			vectorOfvectors.push_back(pim_p*MeV);
 			DalitzEvent evt = DalitzEvent(pat, vectorOfvectors);
 
- 		 	if(sqrt(evt.sij(s234)/(GeV*GeV)) > 1.90 || sqrt(evt.s(2,4)/(GeV*GeV)) > 1.2 || sqrt(evt.s(3,4)/(GeV*GeV)) > 1.2) continue;
-			if(!(evt.phaseSpace() > 0.)){
-// 				cout << "bad" << endl;
-// 				cout << cat << endl;
-// 				cout << sqrt(evt.sij(s234)/(GeV*GeV)) << endl << endl;
+			vector<TLorentzVector> vectorOfvectors_true;
+			vectorOfvectors_true.push_back(B_p_true*MeV);
+			vectorOfvectors_true.push_back(D_p_true*MeV);
+			vectorOfvectors_true.push_back(K_p_true*MeV);
+			vectorOfvectors_true.push_back(pip_p_true*MeV);
+			vectorOfvectors_true.push_back(pim_p_true*MeV);
+			DalitzEvent evt_true = DalitzEvent(pat, vectorOfvectors_true);
+
+			//evt = evt_true;
+			evt_true = evt;
+
+ 		 	if(sqrt(evt.sij(s234)/(GeV*GeV)) > 1.95 || sqrt(evt.s(2,4)/(GeV*GeV)) > 1.2 || sqrt(evt.s(3,4)/(GeV*GeV)) > 1.2) continue;
+			if(!(evt_true.phaseSpace() > 0.)){
 				badEvents++;
 				continue;
 			}
+
+			/*
+			if(!(evt.phaseSpace() > 0.)){
+				badEvents++;
+				continue;
+			}
+			*/
 		
 // 			if(BDTG < 0.6) continue;
 // 			if(cat != 20) continue;
 
 			evt.setWeight(w);
-			evt.setGeneratorPdfRelativeToPhaseSpace(fas.getVal(evt));
+			evt.setGeneratorPdfRelativeToPhaseSpace(fas.getVal(evt_true));
 
 			h_Kpipi->Fill(sqrt(evt.sij(s234))*MeV,w);
 			h_Kpi->Fill(sqrt(evt.s(2,4))*MeV,w);
@@ -1972,6 +2051,8 @@ void addGenPdfToMC(){
 				h_cosTheta_Dspi_Run1->Fill(cosThetaAngle(evt,1,3,2,4),w);
 				h_phi_Kpi_Dspi_Run1->Fill(acoplanarityAngle(evt,2,4,1,3),w);
 				eventListMC_Run1.Add(evt);
+				if(trigger == 0)eventListMC_Run1_t0.Add(evt);
+				else eventListMC_Run1_t1.Add(evt);
 			}
 			else {
 				h_Kpipi_Run2->Fill(sqrt(evt.sij(s234))*MeV,w);
@@ -1983,6 +2064,8 @@ void addGenPdfToMC(){
 				h_cosTheta_Dspi_Run2->Fill(cosThetaAngle(evt,1,3,2,4),w);
 				h_phi_Kpi_Dspi_Run2->Fill(acoplanarityAngle(evt,2,4,1,3),w);
 				eventListMC_Run2.Add(evt);
+				if(trigger == 0)eventListMC_Run2_t0.Add(evt);
+				else eventListMC_Run2_t1.Add(evt);
 			}
 			if(Ds_finalState < 3){
 				h_Kpipi_KKpi->Fill(sqrt(evt.sij(s234))*MeV,w);
@@ -2028,7 +2111,8 @@ void addGenPdfToMC(){
 				h_phi_Kpi_Dspi_t0->Fill(acoplanarityAngle(evt,2,4,1,3),w);
 				eventListMC_t0.Add(evt);		
 			}
-			if(trigger == 1){
+			if(Bs_L0_TIS == 1){
+// 			if(trigger == 1){
 				h_Kpipi_t1->Fill(sqrt(evt.sij(s234))*MeV,w);
 				h_Kpi_t1->Fill(sqrt(evt.s(2,4))*MeV,w);
 				h_pipi_t1->Fill(sqrt(evt.s(3,4))*MeV,w);
@@ -2061,24 +2145,41 @@ void addGenPdfToMC(){
 			}
 
 			eventListMC.Add(evt);
+			if(Bs_pt>10000)eventListMC_pt10.Add(evt);
+			if(Bs_pt>5000)eventListMC_pt5.Add(evt);
+			if(Bs_pt>7000)eventListMC_pt7.Add(evt);
 			evt.CP_conjugateYourself();
 			eventListMC_CP.Add(evt);		
 		}
 		cout << endl << "bad events " << badEvents << " ( " << badEvents/(double) tree->GetEntries() * 100. << " %)" << endl << endl;
-		eventListMC.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC.root");
-		eventListMC_CP.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_CP.root");
+ 	//	eventListMC.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_trueGen_mod.root");
+// 		eventListMC_CP.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_CP.root");
+// 		eventListMC_Run1_t0.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_Run1_t0.root");
+// 		eventListMC_Run1_t1.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_Run1_t1.root");
+// 
+// 		eventListMC_Run2_t0.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_Run2_t0.root");
+// 		eventListMC_Run2_t1.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_Run2_t1.root");
 
-		double chi2_run = getChi2(eventListMC_Run1,eventListMC_Run2);
-		double chi2_trigger = getChi2(eventListMC_t1,eventListMC_t0);
-		double chi2_Ds1 = getChi2(eventListMC_Kpipi,eventListMC_KKpi);
-		double chi2_Ds2 = getChi2(eventListMC_pipipi,eventListMC_KKpi);
-		double chi2_Ds3 = getChi2(eventListMC_Kpipi,eventListMC_pipipi);
+// 		eventListMC_t0.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_t0.root");
+ 		eventListMC_t1.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_t1_TIS.root");
 
-		cout << chi2_run << endl;
-		cout << chi2_trigger << endl;
-		cout << chi2_Ds1 << endl;
-		cout << chi2_Ds2 << endl;
-		cout << chi2_Ds3 << endl;
+		eventListMC_pt10.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_pt10.root");
+// 		eventListMC_pt5.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_pt5.root");
+// 		eventListMC_pt7.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_pt7.root");
+  		return;
+
+
+// 		double chi2_run = getChi2(eventListMC_Run1,eventListMC_Run2);
+// 		double chi2_trigger = getChi2(eventListMC_t1,eventListMC_t0);
+// 		double chi2_Ds1 = getChi2(eventListMC_Kpipi,eventListMC_KKpi);
+// 		double chi2_Ds2 = getChi2(eventListMC_pipipi,eventListMC_KKpi);
+// 		double chi2_Ds3 = getChi2(eventListMC_Kpipi,eventListMC_pipipi);
+
+// 		cout << chi2_run << endl;
+// 		cout << chi2_trigger << endl;
+// 		cout << chi2_Ds1 << endl;
+// 		cout << chi2_Ds2 << endl;
+// 		cout << chi2_Ds3 << endl;
 
 		DiskResidentEventList eventList("/auto/data/dargent/BsDsKpipi/MINT/DecFileTest/GenMC_13266008_PG.root","OPEN");
 		for (int i=0; i<eventList.size(); i++) {

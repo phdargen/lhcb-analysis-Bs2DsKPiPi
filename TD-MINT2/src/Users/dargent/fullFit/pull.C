@@ -52,7 +52,7 @@ TString pull::latexName(TString s){
     if(s == "abar_NS_rho_Phase") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\rho(770) \\, \\text{Phase} (b \\to u)$";
 
     if(s == "Bs0_K_1__1270_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}(892) \\, \\pi )$";
-    if(s == "Bs0_K_1__1270_p_D__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270)[D] \\to K^{*}(892) \\, \\pi )$";
+    if(s == "Bs0_K_1__1270_p_D___Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270)[D] \\to K^{*}(892) \\, \\pi )$";
     if(s == "Bs0_K_1__1270_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K \\, \\rho(770) )$";
     if(s == "Bs0_K_1__1270_p__rho_1450_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K \\, \\rho(1450) )$";
     if(s == "Bs0_K_1__1270_p__K_0_s_1430_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}_{0}(1430) \\, \\pi )$";
@@ -71,22 +71,22 @@ TString pull::latexName(TString s){
     if(s == "Bs0_K_2__1770_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_2(1770) \\to K \\, \\rho(770) )$";
     if(s == "Bs0_NonResS0__Dsmpip_Ks_892_0__Kppim_") return "$B_s \\to ( D_s \\, \\pi)_{S} \\, \\, K^{*}(892)$";
     if(s == "Bs0_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
-    if(s == "Bs0_P_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s[P] \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
-    if(s == "Bs0_D_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s[D] \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
-    if(s == "Bs0_NonResS0__DsmKp_rho_770_0__pippim_") return "$B_s \\to ( D_s \\, K)_{D} \\, \\, \\rho(770)$";
+    if(s == "Bs0_P__NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s[P] \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
+    if(s == "Bs0_D__NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s[D] \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
+    if(s == "Bs0_NonResS0__DsmKp_rho_770_0__pippim_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, \\rho(770)$";
     if(s == "Bs0_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
-    if(s == "Bs0_P_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s[P] \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
-    if(s == "Bs0_D_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s[D] \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
+    if(s == "Bs0_P__NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s[P] \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
+    if(s == "Bs0_D__NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s[D] \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
     if(s == "Bs0_NonResS0__DsmKp_sigma10__pippim_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, \\sigma$";
     if(s == "Bs0_NonResV0__DsmKp_sigma10__pippim_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\sigma$";
-    if(s == "Bs0_NonResS0__DsmKp_f_0_980_0__pippim_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_0(980)$";
-    if(s == "Bs0_f_2_1270_0_pippim_NonResS0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_2(1270)$";
-    if(s == "Bs0_f_2_1270_0_pippim_NonResV0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, f_2(1270)$";
-    if(s == "Bs0_f_0_1370_0_pippim_NonResS0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_0(1370)$";
+    if(s == "Bs0_NonResS0__DsmKp_f_0__980_0__pippim_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_0(980)$";
+    if(s == "Bs0_f_2__1270_0__pippim_NonResS0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_2(1270)$";
+    if(s == "Bs0_f_2__1270_0__pippim_NonResV0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, f_2(1270)$";
+    if(s == "Bs0_f_0__1370_0__pippim_NonResS0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_0(1370)$";
     if(s == "Bs0_K_0_s_1430_0__Kppim_NonResS0__Dsmpip_") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}_{0}(1430)$";
 
     if(s == "bar_Bs0_K_1__1270_p__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}(892) \\, \\pi )$";
-    if(s == "bar_Bs0_K_1__1270_p_D__Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270)[D] \\to K^{*}(892) \\, \\pi )$";
+    if(s == "bar_Bs0_K_1__1270_p_D___Ks_892_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270)[D] \\to K^{*}(892) \\, \\pi )$";
     if(s == "bar_Bs0_K_1__1270_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K \\, \\rho(770) )$";
     if(s == "bar_Bs0_K_1__1270_p__rho_1450_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K \\, \\rho(1450) )$";
     if(s == "bar_Bs0_K_1__1270_p__K_0_s_1430_0__Kppim_pip_Dsm") return "$B_s \\to D_s \\, ( K_1(1270) \\to K^{*}_{0}(1430) \\, \\pi )$";
@@ -105,18 +105,18 @@ TString pull::latexName(TString s){
     if(s == "bar_Bs0_K_2__1770_p__rho_770_0__pippim_Kp_Dsm") return "$B_s \\to D_s \\, ( K_2(1770) \\to K \\, \\rho(770) )$";
     if(s == "bar_Bs0_NonResS0__Dsmpip_Ks_892_0__Kppim_") return "$B_s \\to ( D_s \\, \\pi)_{S} \\, \\, K^{*}(892)$";
     if(s == "bar_Bs0_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
-    if(s == "bar_Bs0_P_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s[P] \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
-    if(s == "bar_Bs0_D_NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s[D] \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
-    if(s == "bar_Bs0_NonResS0__DsmKp_rho_770_0__pippim_") return "$B_s \\to ( D_s \\, K)_{D} \\, \\, \\rho(770)$";
+    if(s == "bar_Bs0_P__NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s[P] \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
+    if(s == "bar_Bs0_D__NonResV0__Dsmpip_Ks_892_0__Kppim_") return "$B_s[D] \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}(892)$";
+    if(s == "bar_Bs0_NonResS0__DsmKp_rho_770_0__pippim_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, \\rho(770)$";
     if(s == "bar_Bs0_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
-    if(s == "bar_Bs0_P_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s[P] \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
-    if(s == "bar_Bs0_D_NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s[D] \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
+    if(s == "bar_Bs0_P__NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s[P] \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
+    if(s == "bar_Bs0_D__NonResV0__DsmKp_rho_770_0__pippim_") return "$B_s[D] \\to ( D_s \\, K)_{P} \\, \\, \\rho(770)$";
     if(s == "bar_Bs0_NonResS0__DsmKp_sigma10__pippim_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, \\sigma$";
     if(s == "bar_Bs0_NonResV0__DsmKp_sigma10__pippim_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, \\sigma$";
-    if(s == "bar_Bs0_NonResS0__DsmKp_f_0_980_0__pippim_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_0(980)$";
-    if(s == "bar_Bs0_f_2_1270_0_pippim_NonResS0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_2(1270)$";
-    if(s == "bar_Bs0_f_2_1270_0_pippim_NonResV0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, f_2(1270)$";
-    if(s == "bar_Bs0_f_0_1370_0_pippim_NonResS0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_0(1370)$";
+    if(s == "bar_Bs0_NonResS0__DsmKp_f_0__980_0__pippim_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_0(980)$";
+    if(s == "bar_Bs0_f_2__1270_0__pippim_NonResS0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_2(1270)$";
+    if(s == "bar_Bs0_f_2__1270_0__pippim_NonResV0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{P} \\, \\, f_2(1270)$";
+    if(s == "bar_Bs0_f_0__1370_0__pippim_NonResS0__DsmKp_") return "$B_s \\to ( D_s \\, K)_{S} \\, \\, f_0(1370)$";
     if(s == "bar_Bs0_K_0_s_1430_0__Kppim_NonResS0__Dsmpip_") return "$B_s \\to ( D_s \\, \\pi)_{P} \\, \\, K^{*}_{0}(1430)$";
 
     if(s == "Sum") return "$\\text{Sum}$";
@@ -291,13 +291,22 @@ TMatrixD pull::getStatCov(TString label){
             throw "ERROR";
     }
     int N = fChain->GetEntries();
-           
+          
+   vector<double> inits(_paraNames.size(),0.); 
+   for (int n=0; n <N ;n++) {
+        fChain->GetEntry(n);  
+	for (int i = 0 ; i < _paraNames.size(); i++) {
+			inits[i] += *_means[i]/(double)N;
+	}
+    }
+
     TMatrixD cov(_paraNames.size(),_paraNames.size());
     for (int n=0; n <N ;n++) {
         fChain->GetEntry(n);  
 	for (int i = 0 ; i < _paraNames.size(); i++) {
-		for (int j = 0 ; j < _paraNames.size(); j++) {
-			cov[i][j] += (*_means[i] - *_inits[i]) * (*_means[j] - *_inits[j])/(N-1.);
+ 		for (int j = 0 ; j < _paraNames.size(); j++) {
+//  			cov[i][j] += (*_means[i] - *_inits[i]) * (*_means[j] - *_inits[j])/(N-1.);
+ 			cov[i][j] += (*_means[i] - inits[i]) * (*_means[j] - inits[j])/((double)N-1.);
 		}
 	}
     }
@@ -342,8 +351,8 @@ TMatrixD pull::getCov(TString label){
     TCanvas* c = new TCanvas();
     TF1 *gaussian = new TF1("gaussian","gaus",-3.,3.);
     gaussian->SetParameters(1.,0.,1.);
-    gaussian->SetParLimits(1,-1., 1.);
-    gaussian->SetParLimits(2, 0., 2.);
+    gaussian->SetParLimits(1,-0.35, 0.35);
+    gaussian->SetParLimits(2, 0.5, 1.5);
     gaussian->SetLineColor(kRed);
         
     ofstream SummaryFile;
@@ -370,10 +379,13 @@ TMatrixD pull::getCov(TString label){
     SummaryFile << "\\end{tabular}" << "\n";
 
     TMatrixD cov_prime(cov);
-    for (int i = 0 ; i < _paraNames.size(); i++)
-        for (int j = 0 ; j < _paraNames.size(); j++) 
-            cov_prime[i][j] = cov[i][j]*abs(fit_means[i])*abs(fit_means[j]);
-    
+    for (int i = 0 ; i < _paraNames.size(); i++){
+        for (int j = 0 ; j < _paraNames.size(); j++){
+            //cov_prime[i][j] = cov[i][j]*abs(fit_means[i])*abs(fit_means[j]);
+            cov_prime[i][j] = fit_means[i]* fit_means[j];
+            //cov_prime[i][j] = h_pulls[i]->GetMean() * h_pulls[j]->GetMean();
+	}
+    }
     return cov_prime;
 }
 
@@ -516,7 +528,8 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
         for (int j = 0 ; j < _paraNames.size(); j++) 
             cov_prime[i][j] = cov[i][j]*sqrt(pow(fit_means[i],2)+pow(fit_sigmas[i],2))*sqrt(pow(fit_means[j],2)+pow(fit_sigmas[j],2))/fit_sigmas[i]/fit_sigmas[j];
     
-    return cov_prime;
+    if(N > 90)return cov_prime;
+    else return cov;
 }
 
 TMatrixD pull::getDeltaCovChol(TString refFileName,TString label,int varPerParChol){
