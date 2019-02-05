@@ -2246,6 +2246,9 @@ vector< vector<double> > fitNorm(){
 	vector< double> expBkg_yields;
 	vector< double> expBkg_yields_err;
 
+	int n_sig_perFit = 0;
+	int n_sig_perFit_err = 0;
+
 
 	/// Loop over pdf slices
 	if(useTriggerCat){
@@ -2280,6 +2283,12 @@ vector< vector<double> > fitNorm(){
 				cout << endl << "chi2/nbin = " << frame->chiSquare("pdf_slice2","data_slice2") << endl << endl;	
 
 				/// Print label
+
+				n_sig_perFit = ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+				n_sig_perFit_err = ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError();
+
+				TString name_n_signal("N_{sig} =" + anythingToString(n_sig_perFit) + "#pm" + anythingToString(n_sig_perFit_err));
+
 				TString label = "LHCb " + str_run[i];
 				label.ReplaceAll("1","I");
 				label.ReplaceAll("2","II");
@@ -2294,6 +2303,9 @@ vector< vector<double> > fitNorm(){
 				lhcbtext->DrawLatex(0.6,0.78,label);
 				if(str_trigger[k]=="t0")lhcbtext->DrawLatex(0.6,0.68,"L0-TOS");
 				else lhcbtext->DrawLatex(0.6,0.68,"L0-TIS");
+
+				lhcbtext->DrawLatex(0.6,0.58, name_n_signal);
+
 				c1->Print("eps/norm_" + str_run[i] + "_" + str_Ds[j]+ "_" + str_trigger[k]  + ".eps");
 				if(updateAnaNotePlots)c1->Print("../../../../../TD-AnaNote/latex/figs/MassFit/norm_" + str_run[i] + "_" + str_Ds[j] + "_" + str_trigger[k]  + ".pdf");
 				hpull = frame->pullHist("data_slice2","pdf_slice2") ;
@@ -3608,6 +3620,9 @@ void fitSignal(){
 	/// Calculate total signal yield
 	double signal_yield = 0.;
 	double comb_bkg_yield = 0.;
+	int n_sig_perFit = 0.;
+	int n_sig_perFit_err = 0.;
+
 	DTF_Bs_M.setRange("signal_range",mean.getVal()-45.,mean.getVal()+45.);
 
 	/// Loop over pdf slices
@@ -3648,6 +3663,11 @@ void fitSignal(){
 				frame->Draw();
 				chi2 += frame->chiSquare("pdf_slice2","data_slice2");
 				cout << endl << "chi2/nbin = " << frame->chiSquare("pdf_slice2","data_slice2") << endl << endl;	
+
+				n_sig_perFit = ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getVal();
+				n_sig_perFit_err = ((RooRealVar*) fitParams->find("n_sig_{"+ str_run[i] + ";" + str_Ds[j]+ ";" + str_trigger[k] + "}"))->getError();
+
+				TString name_n_signal("N_{sig} =" + anythingToString(n_sig_perFit) + "#pm" + anythingToString(n_sig_perFit_err));
 	
 				/// Print label
 				TString label = "LHCb " + str_run[i];
@@ -3664,6 +3684,9 @@ void fitSignal(){
 				lhcbtext->DrawLatex(0.6,0.78,label);
 				if(str_trigger[k]=="t0")lhcbtext->DrawLatex(0.6,0.68,"L0-TOS");
 				else lhcbtext->DrawLatex(0.6,0.68,"L0-TIS");
+
+				lhcbtext->DrawLatex(0.6,0.58, name_n_signal);
+
 				c->Print("eps/signal_" + str_run[i] + "_" + str_Ds[j] + "_" + str_trigger[k] + ".eps");
 				if(updateAnaNotePlots)c->Print("../../../../../TD-AnaNote/latex/figs/MassFit/signal_" + str_run[i] + "_" + str_Ds[j] + "_" + str_trigger[k] + ".pdf");
 				hpull = frame->pullHist("data_slice2","pdf_slice2") ;
