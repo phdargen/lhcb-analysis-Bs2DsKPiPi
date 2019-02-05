@@ -30,15 +30,15 @@ is given by:
 \begin{split}
 \label{eq:PDF_full}
 %	P(x,t,q_t,q_f) &\propto  [
-	\frac{ \text{d}\Gamma(\phsPoint,t,q,f)}{ e^{- \Gamma_s t} \, \text{d}t \, \text{d}\Phi_4} &\propto  
+	\frac{ \text{d}\Gamma(\phsPoint,t,q_t,q_f)}{ e^{- \Gamma_s t} \, \text{d}t \, \text{d}\Phi_4} &\propto  
 	 \left( \vert \mathcal A^c_{f}(\phsPoint) \vert^2 + \vert \mathcal A^u_{f}(\phsPoint) \vert^2 \right) \, \text{cosh} \left( \frac{\Delta \Gamma_s \, t}{2}\right) \\
-	 & + q \, f \,  \left( \vert \mathcal A^c_{f}(\phsPoint) \vert^2 - \vert \mathcal A^u_{f}(\phsPoint)  \vert^2 \right) \, \text{cos} \left(\Delta m_s \, t \right)  \\
-	 & -2 \text{Re}\left( \mathcal A^c_{f}(\phsPoint)^{*}  \, \mathcal A^u_{f}(\phsPoint)  \, e^{-i f (\gamma - 2\beta_s)}  \right) \, \text{sinh} \left( \frac{\Delta \Gamma_s \, t}{2}\right)  \\
-	 & -2 \, q \, f \, \text{Im}\left( \mathcal A^c_{f}(\phsPoint)^{*} \, \mathcal A^u_{f}(\phsPoint)  \, e^{-i f (\gamma - 2\beta_s)}  \right)\, \text{sin} \left(\Delta m_s \, t \right)  
+	 & + q_t \, q_f \,  \left( \vert \mathcal A^c_{f}(\phsPoint) \vert^2 - \vert \mathcal A^u_{f}(\phsPoint)  \vert^2 \right) \, \text{cos} \left(\Delta m_s \, t \right)  \\
+	 & -2 \text{Re}\left( \mathcal A^c_{f}(\phsPoint)^{*}  \, \mathcal A^u_{f}(\phsPoint)  \, e^{-i q_f (\gamma - 2\beta_s)}  \right) \, \text{sinh} \left( \frac{\Delta \Gamma_s \, t}{2}\right)  \\
+	 & -2 \, q_t \, q_f \, \text{Im}\left( \mathcal A^c_{f}(\phsPoint)^{*} \, \mathcal A^u_{f}(\phsPoint)  \, e^{-i q_f (\gamma - 2\beta_s)}  \right)\, \text{sin} \left(\Delta m_s \, t \right)  
 \end{split}
 \end{equation}
-where $q = +1$ (-1) refers to an initially produced $B_s^{0}$ ($\bar B_s^{0}$) flavour eigenstate, $q = 0$ to an undetermined initial flavour,
-$f$ = +1  or -1 denotes $D_s^{-} K^{+} \pi\pi$ or $D_s^{+} K^{-} \pi\pi$ final states
+where $q_t = +1$ (-1) refers to an initially produced $B_s^{0}$ ($\bar B_s^{0}$) flavour eigenstate, $q_t = 0$ to an undetermined initial flavour,
+$q_f$ = +1  or -1 denotes $f = D_s^{-} K^{+} \pi\pi$ or $\bar f = D_s^{+} K^{-} \pi\pi$ final states
 and $\Gamma_s$, $\Delta \Gamma_s$ and $\Delta m_s$ are 
 the width average, the width difference 
 and the mass difference of the two $B_s$ 
@@ -115,24 +115,27 @@ where the \CP-conjugate phase space point $\phsPointCP$ is defined such that it 
 %\phsPoint\left[ (E_{K^-}, -\vec{p}_{K^-}), (E_{K^+}, -\vec{p}_{K^+}), (E_{\pi^-}, -\vec{p}_{\pi^-}), (E_{\pi^+}, -\vec{p}_{\pi^+})\right],
 %\end{align} 
 %and equivalently for \prt{\Dz \to \pi^+\pi^-\pi^+\pi^-}. 
-
 The phenomenological description of the intermediate state amplitudes is discussed in Sec.~\ref{ssec:ampModel}.
-For a model-independent measurement, the differential decay rate can be integrated over the phase space:
+\\
+
+Rather than developing an amplitude model describing the whole phase space,
+it is also possible to determine the CKM angle $\gamma$, in a model-independent way, from the decay-time distribution only.
+The differential decay rate  integrated over the phase space yields:
 \begin{align}
 \label{eq:PDF_intX}
 	\nonumber
-	\int \frac{\text{d}\Gamma(x,t,q,f)}{e^{- \Gamma_s t} \, \text{d}t \,  \text{d}\Phi_4}  \, \text{d}\Phi_4 &\propto    
+	\int \frac{\text{d}\Gamma(x,t,q_t,q_f)}{e^{- \Gamma_s t} \, \text{d}t \,  \text{d}\Phi_4}  \, \text{d}\Phi_4 &\propto    
 	\, \text{cosh} \left( \frac{\Delta \Gamma_s \, t}{2}\right) 
-	  + q \, f \, C \, \text{cos} \left( \Delta m_s \, t \right)   \\
+	  + q_t \, q_f \, C \, \text{cos} \left( \Delta m_s \, t \right)   \\
 	 & +  D_{f} \, \text{sinh} \left( \frac{\Delta \Gamma_s \, t}{2}\right)  
-	  - q  \, S_{f}\, \text{sin} \left(\Delta m_s \, t \right)  
+	  - q_t  \, S_{f}\, \text{sin} \left(\Delta m_s \, t \right)  
 \end{align}
 where the same convention for the \CP coefficients as for the $B_s \to D_s K$ analysis is used:
 \begin{align}
 \label{eq:CPcoeff}
 	C= & \frac{1-r^2}{1+r^2}   \\
 	D_{f} = &  -\frac{2 \, r \, \kappa \, \text{cos}\left(\delta-q_f \, (\gamma-2\beta_s)\right)}{1+r^2}   \\
-	S_{f} = & \,  f \, \frac{2 \, r \, \kappa \, \text{sin}\left(\delta-q_f \, (\gamma-2\beta_s)\right)}{1+r^2}   
+	S_{f} = & \,  q_f \, \frac{2 \, r \, \kappa \, \text{sin}\left(\delta-q_f \, (\gamma-2\beta_s)\right)}{1+r^2}   
 \end{align}
 The coherence factor $\kappa$, the strong phase difference $\delta$ and the ratio of the suppressed ($b\to u$) over favored ($b\to c$) decay mode, averaged over the 
 phase space, are defined as:
@@ -141,7 +144,14 @@ phase space, are defined as:
 	\kappa \, e^{i\delta} &\equiv \, \frac{\int \mathcal A^c_f(x)^{*} \, \mathcal A^u_f(x)  \, \dphs}{\sqrt{\int \vert \mathcal A^c_f(x) \vert^2 \, \dphs} \sqrt{\int \vert \mathcal A^u_f(x) \vert^2 \, \dphs}  } \\
 	r &\equiv \, \frac{\sqrt{\int \vert \mathcal A^u_f(x)\vert^2 \, \dphs }}{\sqrt{\int \vert \mathcal A^c_f(x)\vert^2 \, \dphs}} .
 \end{align}
-The coherence factor dilutes the sensitivity to the weak phase $\gamma$ due to the integration over the interfering amplitudes across the phase space.
+The five \CP coefficients $C,D\equiv D_f,\bar D \equiv D_{\bar{f}},S \equiv S_f,\bar S \equiv S_{\bar{f}}$
+can be extracted from a fit to the decay-time distribution
+which allows to infer the four physical observables $r,\delta,\gamma,\kappa$ 
+as discussed in more detail in Sect.~\ref{sec:validation}.
+This approach will be called phase-space integrated fit in the following.
+In contrast, the approach using Eq.~\ref{eq:PDF_full} will be referred to as full time-dependent amplitude fit. 
+In case of the phase-space integrated fit, 
+the coherence factor dilutes the sensitivity to the weak phase $\gamma$ due to the integration over the interfering amplitudes across the phase space.
 The value of $\kappa$ is bounded between zero and unity.
 The latter corresponds to the limit of only one contributing intermediate state in which case the same sensitivity as in $B_s \to D_s K$ decays is reached, 
 while $\kappa = 0$ would result in no sensitivity to $\gamma$ at all.
@@ -267,7 +277,7 @@ The nominal masses and widths of the resonances are taken from the PDG \cite{PDG
 	\label{eq:Lass}
 	\end{equation}
 	with $\text{cot}\, \delta_L = \frac{1}{aq} + \frac{1}{2} rq$.
-	We use the values for the scattering length $a$ and effective range parameter $r$ from Ref.~\cite{Lass,Aston:1987ir}.
+	We use the values for the scattering length $a = 2.07 \pm 0.1 \gev$ and effective range parameter $r=3.32\pm0.34 \gev$ from Ref.~\cite{Lass,Aston:1987ir}.
 		\EqnPRDref{eq:gamma2} is used for all other resonances decaying into a two-body final state.
 
 		For the resonances $K_1(1270)$ and $K(1460)$, the energy-dependent widths as well as the nominal mass and width are taken from Ref.~\cite{Aaij:2017kbo}.
@@ -484,9 +494,9 @@ For the differential decay rate follows:
 \label{eq:PDF_full2}
 	\frac{\text{d}\Gamma(\phsPoint,t,q,f)}{ e^{- \Gamma_s t} \, \text{d}t \, \text{d}\Phi_4} &\propto  
 	 \left( \vert \mathcal A^c_{f}(\phsPoint) \vert^2 + r^2 \, \vert \mathcal A^u_{f}(\phsPoint) \vert^2 \right) \, \text{cosh} \left( \frac{\Delta \Gamma_s \, t}{2}\right) \\
-	 & + q \, f \,  \left( \vert \mathcal A^c_{f}(\phsPoint) \vert^2 - r^2 \, \vert \mathcal A^u_{f}(\phsPoint)  \vert^2 \right) \, \text{cos} \left(\Delta m_s \, t \right)  \\
-	 & -2 \, r \text{Re}\left( \mathcal A^c_{f}(\phsPoint)^{*}  \, \mathcal A^u_{f}(\phsPoint)  \, e^{i \delta - i f (\gamma - 2\beta_s)}  \right) \, \text{sinh} \left( \frac{\Delta \Gamma_s \, t}{2}\right)  \\
-	 & -2 \, q \, f \, r \,  \text{Im}\left( \mathcal A^c_{f}(\phsPoint)^{*} \, \mathcal A^u_{f}(\phsPoint)  \, e^{i \delta -i f (\gamma - 2\beta_s)}  \right)\, \text{sin} \left(\Delta m_s \, t \right)  
+	 & + q_t \, q_f \,  \left( \vert \mathcal A^c_{f}(\phsPoint) \vert^2 - r^2 \, \vert \mathcal A^u_{f}(\phsPoint)  \vert^2 \right) \, \text{cos} \left(\Delta m_s \, t \right)  \\
+	 & -2 \, r \text{Re}\left( \mathcal A^c_{f}(\phsPoint)^{*}  \, \mathcal A^u_{f}(\phsPoint)  \, e^{i \delta - i q_f (\gamma - 2\beta_s)}  \right) \, \text{sinh} \left( \frac{\Delta \Gamma_s \, t}{2}\right)  \\
+	 & -2 \, q_t \, q_f \, r \,  \text{Im}\left( \mathcal A^c_{f}(\phsPoint)^{*} \, \mathcal A^u_{f}(\phsPoint)  \, e^{i \delta -i q_f (\gamma - 2\beta_s)}  \right)\, \text{sin} \left(\Delta m_s \, t \right)  
 \end{split}
 \end{equation}
 This renormalization procedure was found to be crucial for the fit stability since it reduces the correlation between the $a_i^c$ and $a_i^u$ amplitude coefficients significantly.
