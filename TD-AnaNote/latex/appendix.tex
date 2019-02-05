@@ -1,14 +1,17 @@
 % !TEX root = main.tex
 
-\section{Parametrization of Ampltidue Lineshapes}
+\section{Parametrization of Amplitude Lineshapes}
 \label{sec:AmpLineShapes}
 
-\subsubsection{Model for $\sigma$ resonance}
+\subsubsection*{Bugg model for $\sigma$ resonance}
 
-The following parametrization is taken from~\cite{BuggSigma}:
-
+ For the broad scalar resonance $\sigma$,
+     the model from Bugg is used \cite{BuggSigma}:
+     %		Besides $\sigma \to \pi \pi$ decays, it includes contributions from the decay modes $\sigma \to K K$, $\sigma \to \eta \eta$ and $\sigma \to \pi \pi \pi \pi$ 
+%		as well as dispersive effects 
+%		due to the channel opening of the latter.
 \begin{eqnarray}
-T_{11}(s) = M\Gamma_{1}(s)[M^{2} - s - g^{2}_{1}\frac{s - s_{A}}{M^{2} - s_{A}} z(s) -iM\Gamma_{tot}(s)]^{-1},\\
+T(s) = [M^{2} - s - g^{2}_{1}\frac{s - s_{A}}{M^{2} - s_{A}} z(s) -iM\Gamma_{tot}(s)]^{-1},\\
 M\Gamma_{1}(s) = g^{2}_{1}\frac{s - s_{A}}{M^{2} - s_{A}}\rho_{1}(s),\\
 g^{2}_{1}(s) = M(b_{1} + b_{2}s)\exp[-(s-M^{2})A^{-1}],\\
 j_{1}(s) = \frac{1}{\pi}[2 + \rho_{1}ln_{e}\frac{1 - \rho_{1}}{1 + \rho_{1}}],\\
@@ -16,13 +19,100 @@ z(s) = j_{1}(s) - j_{1}(M^{2}),\\
 M\Gamma_{2}(s) = 0.6 g^{2}_{1}(s)\frac{s}{M^{2}}\exp(-\alpha \vert s - 4m^{2}_{K}\vert)\rho_{2}(s),\\
 M\Gamma_{3}(s) = 0.2 g^{2}_{1}(s)\frac{s}{M^{2}}\exp(-\alpha \vert s - 4m^{2}_{\eta}\vert)\rho_{3}(s),\\
 M\Gamma_{4}(s) = M g_{4}\frac{\rho_{4\pi}(s)}{\rho_{4\pi}(M^{2})},\\
+\rho_{2}(s) = \sqrt{1-4m_\pi^2/s},   \\
 \rho_{4\pi}(s) = 1.0 [1 + \exp(7.082 - 2.845 s)]^{-1},
 \end{eqnarray}
+where the numerical values for the parameters are~\cite{BuggSigma} $M = 0.953 \gev$, $b_{1} = 1.302 \gev$, $b_{2} = 0.340 \gev^{-1}$, $A = 2.426 \gev^{2}$, $g_{4\pi} = 0.011 \gev$
+and $s_A = 0.41 m_\pi^2$.
 
-where the numerical values for the parameters are~\cite{BuggSigma} $M = 0.953 \gev$, $b_{1} = 1.302 \gev$, $b_{2} = 0.340 \gev^{-1}$, $A = 2.426 \gev^{2}$, $g_{4\pi} = 0.011 \gev$ and the pole is $0.472 - i0.271$.
+\subsubsection*{Model for $K\pi$-S-wave}
+
+The {LASS} parameterization is used to model the $K\pi$ $S-$wave contribution.
+It consists of the $K_0^*(1430)$ resonance together with an effective range non-resonant component ~\cite{Lass,Aston:1987ir,Aubert:2005ce}:
+	\begin{equation}
+			T_{LASS}(s) = 
+			\frac{\sqrt s}{q \, \text{cot}\, \delta_L- i q}   
+			+ e^{2i \, \delta_L} \frac{m_0 \, \Gamma_0 \frac{m_0}{q_0}}{m_0^{2} - s - i\,m_{0}\,\Gamma_{0} \, \frac{m_{0}}{\sqrt s} \, \frac{q}{q_{0}}} 
+	\label{eq:Lass}
+	\end{equation}
+	with $\text{cot}\, \delta_L = \frac{1}{aq} + \frac{1}{2} rq$.
+	We use the values for the scattering length $a = 2.07 \pm 0.1 \gev$ and effective range parameter $r=3.32\pm0.34 \gev$ from Ref.~\cite{Lass,Aston:1987ir}.
+
+       For systematic studies, the GLASS shape is used:
+	\begin{align}
+			T_{GLASS}(s) &= 
+			F \sin(\phi_B) e^{i\phi_B}   + R \sin(\phi_R) e^{i\phi_R} e^{2i\phi_B}    \\
+			\phi_B &= \psi_B + \tan^{-1}\left(\frac{2aq(s)}{2+arq^2(s)}\right)   \\
+			\phi_R &= \psi_R + \tan^{-1}\left(\frac{m\Gamma(s)}{m_0^2-s}\right)  ,
+	\label{eq:Lass}
+	\end{align}
+	with $F=0.62\pm0.04$, $\phi_F = -0.100\pm 0.010$, $R=1$, $\phi_R=1.10\pm0.02$, $a=0.224\pm0.003 \gev^{-1}$
+	and $r=-15.01\pm0.13 \gev^{-1}$.
+
+
+\subsubsection*{Model for $\rho^0(770)$ resonance}
+
+	We use the Gounaris-Sakurai parametrization for the $\rho(770)^{0} \to \pi \pi$ propagator \cite{GS}:
+\begin{equation}
+    T_{GS}(m) = \frac{1+ f(0)/ m_{0}^{2}  }
+	{m_{0}^{2}+f(m)-m^{2}-i\,m_{0}\,\Gamma(m)}  \, ,
+\end{equation}
+%\begin{equation}
+%	k(m) = \sqrt{\frac{m^{2}}{4}-m_{\pi}^{2}}
+%\end{equation}
+where $\Gamma(m)$ takes on the same form as in Eq.~\ref{eq:gamma2} 
+and the function $f(m)$ is defined as
+\begin{align}
+	f(m) &= \Gamma_{0} \, \frac{m_{0}^{2}}{q_{0}^{3}} \left[   
+	q^{2} \left( h(m) - h(m_{0}) \right) + \left(m^{2}-m_{0}^{2}\right) q_{0}^{2} \, \frac{dh}{dm} \Bigg{\vert}_{m_{0}}
+	\, \right]  \\
+	h(m) &= \frac{2}{\pi} \, \frac{q}{m} \,  \text{ln} \left( \frac{m+2\,q}{2 \, m_{\pi}}
+	\right)     \, .
+\end{align}
+
+	For the decay chain $K_1(1270) \to \rho(770) K$, we include $\rho-\omega$ mixing \cite{Akhmetshin:2001ig}:
+	\begin{equation}
+	T(s) = T_{GS}(s) \cdot \left( 1 + \delta \frac{s}{m_\omega^2} T_\omega(s) \right)
+	\end{equation}
+	where $T_\omega$ is the relativistic Breit-Wigner propagator (Eq.~\ref{eq:gamma2}) of the $\omega$ and the relative magnitude and phase between $\rho$ and $\omega$ fixed 
+	to the values determined in Ref.~\cite{Schubiger,Aaij:2648586}:
+	$\vert \delta \vert = 0.159 \pm 0.012 \pm 0.011$ and $\arg(\delta) = 1.36 \pm 0.07 \pm 0.06$.
+
+\subsubsection*{Running width distributions for 3-body resonances}
+
+For the resonances $K_1(1270)$ and $K(1460)$, the energy-dependent widths 
+%as well as the nominal mass and width are taken 
+are reproduced from Ref.~\cite{Aaij:2017kbo}.
+We further use the energy-dependent widths for the $K_1(1400)$, $K^*(1410)$ and $K^*(1680)$ mesons from Ref.~\cite{dArgent:2017gzv}. 	
+For all other resonances decaying into a three-body final state, an energy-dependent width distribution is derived from Equation~\ref{eq:gamma3} assuming an uniform phase space population. 
+The running width distributions of the 3-body resonances included in the baseline model are shown in Fig.~\ref{fig:rw}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.45\textwidth]{figs/Lineshapes/rw_K1_1270.eps}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Lineshapes/rw_K1_1400.eps}
+
+\includegraphics[height=!,width=0.45\textwidth]{figs/Lineshapes/rw_K.eps}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Lineshapes/rw_Ks.eps}
+\caption{Running width distributions of the 3-body resonances included in the baseline model:
+$K_1(1270)$ (top-left), $K_1(1400)$ (top-right), $K(1460)$ (bottom-left)  and $K^*(1410)$ (bottom-right).
+The nominal models are shown in blue, alternative models used for systematic studies in red.
+}
+\label{fig:rw}
+\end{figure}
+
+\subsubsection*{Additional models}
+
+Lineshape models for resonances which are not part of the nominal model, can be found in the References.
+The energy-dependent width of the $f_{0}(980)$ resonance is given by the sum of the partial widths into the $\pi\pi$ and $KK$ channels (\ie the Flatt\'{e} lineshape \cite{Flatte}),
+where the coupling constants %$g_{\pi\pi}$ and $g_{KK}$, 
+as well as the mass and width are taken from a measurement performed by the BES Collaboration~\cite{Flatte2}.
+For the $f_{2}(1270)$ and the $f_{0}(1370)$ mesons we use the total decay widths
+calculated in Ref.~\cite{dArgent:2017gzv} which take the channels $\pi  \pi, K  K, \eta  \eta$ and $\pi \pi \pi \pi$ into account. 	
 
 
 
+\clearpage
 \section{Stripping and Trigger cuts}
 \label{sec:StripAndTrigger}
 
@@ -745,23 +835,26 @@ The various decay channels considered in the model building are listed in Table 
 \end{table}
 
 
-\clearpage\section{Resonances chosen by LASSO approach}
+\clearpage
+\section{Resonance parameters}
 \label{a:ResoParas}
 
 
 \begin{table}[h]
 \centering
-\caption{Parameters of the resonances chosen at the model selection stage. All values are taken from~\cite{PDG2016}.}
+\caption{Parameters of the resonances chosen at the model selection stage.}
+\begin{tabular}{c r r c}
 \hline \hline
-\begin{tabular}{c || l | l }
-Resonance & $m$ $[\mev]$ & $\Gamma$ $[\mev]$ \\
+Resonance & $m$ $[\mev]$ & $\Gamma$ $[\mev]$ & Source \\
 \hline
-$\rho(770)$ & $775.26 \pm 0.25$ & $149.1 \pm 0.8$\\
-$\Kstarz(892)$ & $895.55 \pm 0.20$ & $47.3 \pm 0.5$\\
-$K^{+}_{1}(1270)$ & $1272 \pm 7$ & $90 ± 20$\\
-$K^{+}_{1}(1400)$ & $1403 \pm 7$ & $174 \pm 13$\\
-$K^{*+}(1410)$ & $1421 \pm 9$ & $236 \pm 18$\\
-$K^{0*}(1430)$ & $1425 \pm 50$ & $270 \pm 80$\\
+$\rho(770)$ & $775.26 \pm 0.25$ & $149.1 \pm 0.8$ & ~\cite{PDG2016}\\
+$\Kstarz(892)$ & $895.55 \pm 0.20$ & $47.3 \pm 0.5$ & ~\cite{PDG2016}\\
+$K^{+}_{1}(1270)$ & $1289.81 \pm 1.75$ & $116.11 \pm 3.4$ & ~\cite{Aaij:2017kbo}\\
+$K^{+}(1460)$ & $1482.4 \pm 15.64 $ & $335.6  \pm 10.64$ & ~\cite{Aaij:2017kbo}\\
+%$K^{+}_{1}(1270)$ & $1272 \pm 7$ & $90 \pm 20$ & ~\cite{PDG2016}\\
+$K^{+}_{1}(1400)$ & $1403 \pm 7$ & $174 \pm 13$ & ~\cite{PDG2016} \\
+$K^{*+}(1410)$ & $1421 \pm 9$ & $236 \pm 18$ & ~\cite{PDG2016}\\
+$K^{0*}(1430)$ & $1425 \pm 50$ & $270 \pm 80$ & ~\cite{PDG2016}\\
 \hline \hline
 \end{tabular}
 \end{table}

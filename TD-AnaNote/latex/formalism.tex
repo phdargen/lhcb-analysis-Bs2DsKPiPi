@@ -248,49 +248,22 @@ where the coupling strength to channel $i$, is given by $g_{i}$.
 %where $\mathcal I_{i}(g)$ denotes the right-hand side of \eqnPRDref{eq:BF}.
 \newline
 \\
-\noindent The treatment of the lineshape for various resonances considered in this analysis is described in what follows.
-The nominal masses and widths of the resonances are taken from the PDG \cite{PDG2016} with the exceptions described below.
-The following parametrizations are summarized in Appendix \ref{sec:AmpLineShapes}. 
-
- For the broad scalar resonance $\sigma$,
-     		the model from Bugg is used \cite{BuggSigma}.
-%		Besides $\sigma \to \pi \pi$ decays, it includes contributions from the decay modes $\sigma \to K K$, $\sigma \to \eta \eta$ and $\sigma \to \pi \pi \pi \pi$ 
-%		as well as dispersive effects 
-%		due to the channel opening of the latter.
-	We use the Gounaris-Sakurai parametrization for the $\rho(770)^{0} \to \pi \pi$ propagator \cite{GS}.
-	For the decay chain $K_1(1270) \to \rho(770) K$, we include $\rho-\omega$ mixing with the relative magnitude and phase between $\rho$ and $\omega$ fixed 
-	to the values determined in Ref.~\cite{Schubiger,Aaij:2648586}.
-	The energy-dependent width of the $f_{0}(980)$ resonance is given by the sum of the partial widths into the $\pi\pi$ and $KK$ channels (\ie the Flatt\'{e} lineshape \cite{Flatte}),
-%		\begin{equation}
-%			\Gamma_{f_{0}(980)}(s) = g_{\pi\pi} \, \Gamma^{(2)}_{f_{0}(980) \to \pi \pi}(s) + g_{KK} \, \Gamma^{(2)}_{f_{0}(980) \to KK}(s),
-%		\end{equation}
-		where the coupling constants %$g_{\pi\pi}$ and $g_{KK}$, 
-		as well as the mass and width are taken from a measurement performed by the BES Collaboration~\cite{Flatte2}.
-	     	For the $f_{2}(1270)$ and the $f_{0}(1370)$ mesons we use the total decay widths
-		calculated in Ref.~\cite{dArgent:2017gzv} which take the channels $\pi  \pi, K  K, \eta  \eta$ and $\pi \pi \pi \pi$ into account. 	
+\noindent 
+\EqnPRDref{eq:gamma2} is used by default for resonances decaying into a two-body final state.
+For the $K\pi$ and $\pi\pi$ S-wave resonances as well as for the $\rho(770)$ meson more sophisticated parameterizations are employed.
+Their explicit expressions are given  in Appendix~\ref{sec:AmpLineShapes}. 
+%The treatment of the lineshape for various resonances considered in this analysis is described in what follows.
+The nominal masses and widths of the resonances are taken from the PDG \cite{PDG2016} with the exceptions described in Appendix~\ref{a:ResoParas}.
+%The following parameterizations are summarized in Appendix \ref{sec:AmpLineShapes}. 
 %		The nominal mass and width of the $f_{0}(1370)$ resonance are taken from an LHCb measurement \cite{LHCb:2012ae}.
-	The {Lass} parameterization is used to model the $K\pi$ $S-$wave contribution.
-	It consists of the $K_0^*(1430)$ resonance together with an effective range non-resonant component ~\cite{Lass,Aston:1987ir,Aubert:2005ce}:
-	\begin{equation}
-			T_{Lass}(s) = 
-			\frac{\sqrt s}{q \, \text{cot}\, \delta_L- i q}   
-			+ e^{2i \, \delta_L} \frac{m_0 \, \Gamma_0 \frac{m_0}{q_0}}{m_0^{2} - s - i\,m_{0}\,\Gamma_{0} \, \frac{m_{0}}{\sqrt s} \, \frac{q}{q_{0}}} 
-	\label{eq:Lass}
-	\end{equation}
-	with $\text{cot}\, \delta_L = \frac{1}{aq} + \frac{1}{2} rq$.
-	We use the values for the scattering length $a = 2.07 \pm 0.1 \gev$ and effective range parameter $r=3.32\pm0.34 \gev$ from Ref.~\cite{Lass,Aston:1987ir}.
-		\EqnPRDref{eq:gamma2} is used for all other resonances decaying into a two-body final state.
-
-		For the resonances $K_1(1270)$ and $K(1460)$, the energy-dependent widths as well as the nominal mass and width are taken from Ref.~\cite{Aaij:2017kbo}.
-		We further use the energy-dependent widths for the $K_1(1400)$, $K^*(1410)$ and $K^*(1680)$ mesons from Ref.~\cite{dArgent:2017gzv}. 	
-		For all other resonances decaying into a three-body final state, an energy-dependent width distribution is derived from Equation~\ref{eq:gamma3} assuming an uniform phase space population. 
+The running width distributions for various 3-body resonances, calculated from Eq.~\ref{eq:gamma3}, are shown in Appendix~\ref{sec:AmpLineShapes}.
 
 Some particles may not originate from a resonance but are in a state of relative orbital angular momentum.
 We denote such non-resonant states by surrounding the particle system with brackets  and indicate the partial wave state with an subscript;
 for example $(\pi \pi)_S$ refers to a non-resonant di-pion $S$-wave.
 The lineshape for non-resonant states is set to unity.
 
-\clearpage
+%\clearpage
 \subsubsection{Spin Densities}
 
 The spin amplitudes are phenomenological descriptions
