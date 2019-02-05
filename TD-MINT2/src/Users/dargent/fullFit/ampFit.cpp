@@ -35,6 +35,8 @@
 #include "Mint/FitAmpList.h"
 #include "Mint/DalitzPdfBaseMCInteg.h"
 #include "Neg2LLMultiConstraint.h"
+#include "Mint/FitFractionList.h"
+#include "Mint/FitFraction.h"
 #include "RooRealConstant.h"
 #include "RooAbsReal.h"
 #include "RooRealVar.h"
@@ -3484,6 +3486,7 @@ void ampFit(int step=0, string mode = "fit"){
 			if(i==0)ampsSig_noEff.doFinalStatsAndSave(&mini,(outTableName+".tex").c_str(),(fractionFileName+".root").c_str());
 			if(i==0)ampsSig_bar_noEff.doFinalStatsAndSave(&mini,(outTableName+"_bar.tex").c_str(),(fractionFileName+"_Bar.root").c_str());
 
+			cout << "do fraction iteration " << i << endl << endl;
 			ampsSig_noEff.doFractions();
 			ampsSig_bar_noEff.doFractions();
 			
@@ -3501,7 +3504,7 @@ void ampFit(int step=0, string mode = "fit"){
 					ff_var += pow(ffl[j][i].frac() - ffl[k][i].frac(),2);
 				}
 			}
-			ffl_err.push_back(sqrt(ff_var/((double)N_frac_toys*((double)N_frac_toys-.1))));
+			ffl_err.push_back(sqrt(ff_var/((double)N_frac_toys*((double)N_frac_toys-1.))));
 		    }
 		    vector<double> ffl_sum;
 		    for(int j=0; j < N_frac_toys; j++){
@@ -3518,7 +3521,7 @@ void ampFit(int step=0, string mode = "fit"){
 				}
 		   }
 		   sum_val = ffl_sum[0];
-		   sum_err = sqrt(sum_var/((double)N_frac_toys*((double)N_frac_toys-.1)));
+		   sum_err = sqrt(sum_var/((double)N_frac_toys*((double)N_frac_toys-1.)));
 
 		    vector<double> int_ffl_err;
 		    for(int i=0; i < int_ffl[0].size(); i++){
@@ -3528,7 +3531,7 @@ void ampFit(int step=0, string mode = "fit"){
 					int_ff_var += pow(int_ffl[j][i].frac() - int_ffl[k][i].frac(),2);
 				}
 			}
-			int_ffl_err.push_back(sqrt(int_ff_var/((double)N_frac_toys*((double)N_frac_toys-.1))));
+			int_ffl_err.push_back(sqrt(int_ff_var/((double)N_frac_toys*((double)N_frac_toys-1.))));
 		    }
 
 		    ///
@@ -3541,7 +3544,7 @@ void ampFit(int step=0, string mode = "fit"){
 					ff_var += pow(ffl_bar[j][i].frac() - ffl_bar[k][i].frac(),2);
 				}
 			}
-			ffl_bar_err.push_back(sqrt(ff_var/((double)N_frac_toys*((double)N_frac_toys-.1))));
+			ffl_bar_err.push_back(sqrt(ff_var/((double)N_frac_toys*((double)N_frac_toys-1.))));
 		    }
 		    vector<double> ffl_bar_sum;
 		    for(int j=0; j < N_frac_toys; j++){
@@ -3558,7 +3561,7 @@ void ampFit(int step=0, string mode = "fit"){
 				}
 		   }
 		   sum_bar_val = ffl_bar_sum[0];
-		   sum_bar_err = sqrt(sum_bar_var/((double)N_frac_toys*((double)N_frac_toys-.1)));
+		   sum_bar_err = sqrt(sum_bar_var/((double)N_frac_toys*((double)N_frac_toys-1.)));
 
 		    vector<double> int_ffl_bar_err;
 		    for(int i=0; i < int_ffl_bar[0].size(); i++){
@@ -3568,7 +3571,7 @@ void ampFit(int step=0, string mode = "fit"){
 					int_ff_bar_var += pow(int_ffl_bar[j][i].frac() - int_ffl_bar[k][i].frac(),2);
 				}
 			}
-			int_ffl_bar_err.push_back(sqrt(int_ff_bar_var/((double)N_frac_toys*((double)N_frac_toys-.1))));
+			int_ffl_bar_err.push_back(sqrt(int_ff_bar_var/((double)N_frac_toys*((double)N_frac_toys-1.))));
 		    }
 
 		    /// Save fractions in file
@@ -3650,8 +3653,16 @@ void ampFit(int step=0, string mode = "fit"){
 		SummaryFile << "\\hline" << "\n";
 		SummaryFile << std::fixed << std::setprecision(1);
 
+		FitFractionList int_ff_sorted;
 		for(int i=0; i < int_ffl[0].size(); i++){
-				TString name = int_ffl[0][i].name() ;
+   		    TString name = int_ffl[0][i].name() ;
+		    FitFraction f((string)name,int_ffl[0][i].frac(), int_ffl_err[i]);
+		    int_ff_sorted.add(f);
+		}
+ 		int_ff_sorted.sortByMagnitudeDecending();
+
+		for(int i=0; i < int_ff_sorted.size(); i++){
+				TString name = int_ff_sorted[i].name() ;
 				name.ReplaceAll("A(","");
 				name.ReplaceAll("fit","");
 				name.ReplaceAll("[","_");
@@ -3674,7 +3685,7 @@ void ampFit(int step=0, string mode = "fit"){
 				vector<string> name_ij = split((string)name, "_x_");
 
 				SummaryFile << latexName(name_ij[0]) << " & " << latexName(name_ij[1])  ; 
-				SummaryFile << " & "  << int_ffl[0][i].frac() * 100. << " $\\pm$ " << int_ffl_err[i]* 100. ;
+				SummaryFile << " & "  << int_ff_sorted[i].frac() * 100. << " $\\pm$ " << int_ff_sorted[i].sigmaFit()* 100. ;
 				SummaryFile << " \\\\ " << "\n";
 		    }
 		    SummaryFile << "\\hline" << "\n";
@@ -3692,36 +3703,44 @@ void ampFit(int step=0, string mode = "fit"){
 		    SummaryFile2 << "\\hline" << "\n";
 		    SummaryFile2 << std::fixed << std::setprecision(1);
 			
+		    FitFractionList int_ff_bar_sorted;
 		    for(int i=0; i < int_ffl_bar[0].size(); i++){
-					TString name = int_ffl_bar[0][i].name() ;
-					name.ReplaceAll("A(","");
-					name.ReplaceAll("fit","");
-					name.ReplaceAll("[","_");
-					name.ReplaceAll("]","_");
-					name.ReplaceAll("(","_");
-					name.ReplaceAll(")","_");
-					name.ReplaceAll("->","_");
-					name.ReplaceAll("+","p");
-					name.ReplaceAll("-","m");
-					name.ReplaceAll("*","s");
-					name.ReplaceAll(",","");
-					name.ReplaceAll("GS","");
-					name.ReplaceAll("GLass","");
-					name.ReplaceAll("Lass","");
-					name.ReplaceAll("RhoOmega","");
-					name.ReplaceAll("Bugg","");
-					name.ReplaceAll("Flatte","");
-			
-					name += "_x_";
-					vector<string> name_ij = split((string)name, "_x_");
-		
-					SummaryFile2 << latexName(name_ij[0]) << " & " << latexName(name_ij[1])  ; 
-					SummaryFile2 << " & "  << int_ffl_bar[0][i].frac() * 100. << " $\\pm$ " << int_ffl_bar_err[i]* 100. ;
-		    			SummaryFile2 << " \\\\ " << "\n";
-		      }
-		      SummaryFile2 << "\\hline" << "\n";
-		      SummaryFile2 << "\\hline" << "\n";
-		      SummaryFile2 << "\\end{tabular}" << "\n";	 
+   		    	TString name = int_ffl_bar[0][i].name() ;
+		    	FitFraction f((string)name,int_ffl_bar[0][i].frac(), int_ffl_bar_err[i]);
+		    	int_ff_bar_sorted.add(f);
+		    }
+ 		    int_ff_bar_sorted.sortByMagnitudeDecending();
+
+	   	    for(int i=0; i < int_ff_bar_sorted.size(); i++){
+				TString name = int_ff_bar_sorted[i].name() ;
+				name.ReplaceAll("A(","");
+				name.ReplaceAll("fit","");
+				name.ReplaceAll("[","_");
+				name.ReplaceAll("]","_");
+				name.ReplaceAll("(","_");
+				name.ReplaceAll(")","_");
+				name.ReplaceAll("->","_");
+				name.ReplaceAll("+","p");
+				name.ReplaceAll("-","m");
+				name.ReplaceAll("*","s");
+				name.ReplaceAll(",","");
+				name.ReplaceAll("GS","");
+				name.ReplaceAll("GLass","");
+				name.ReplaceAll("Lass","");
+				name.ReplaceAll("RhoOmega","");
+				name.ReplaceAll("Bugg","");
+				name.ReplaceAll("Flatte","");
+
+				name += "_x_";
+				vector<string> name_ij = split((string)name, "_x_");
+
+				SummaryFile2 << latexName(name_ij[0]) << " & " << latexName(name_ij[1])  ; 
+				SummaryFile2 << " & "  << int_ff_bar_sorted[i].frac() * 100. << " $\\pm$ " << int_ff_bar_sorted[i].sigmaFit()* 100. ;
+				SummaryFile2 << " \\\\ " << "\n";
+		    }
+		    SummaryFile2 << "\\hline" << "\n";
+		    SummaryFile2 << "\\hline" << "\n";
+		    SummaryFile2 << "\\end{tabular}" << "\n";	 
 
 		    vector<double> kl;
 		    for(int i=0; i < N_frac_toys; i++){
@@ -3748,7 +3767,7 @@ void ampFit(int step=0, string mode = "fit"){
 				}
 		   }
 		   k_val = kl[0];
-		   k_err = sqrt(k_var/((double)N_frac_toys*((double)N_frac_toys-.1)));
+		   k_err = sqrt(k_var/((double)N_frac_toys*((double)N_frac_toys-1.)));
 	}
 
 	else pdf.doFinalStatsAndSaveForAmp12(&mini,outTableName,fractionFileName);

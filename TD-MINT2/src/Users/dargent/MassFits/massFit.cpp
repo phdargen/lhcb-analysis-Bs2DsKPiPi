@@ -2653,8 +2653,8 @@ vector< vector<double> > fitNorm(){
 	datafile << "\\hline\\hline" << "\n";
 	datafile << "Component & Yield for Run I\\" << " \\\\" << "\n";
 	datafile << "\\hline" << "\n";
-	datafile << std::fixed << std::setprecision(0) << "$B_s \\to D_s K \\pi \\pi$" << " & "<< yield_sig << " $\\pm$ " << sqrt(yield_sig_err) << " \\\\" << "\n";
-	datafile << std::fixed<< std::setprecision(0) << "$B^{0} \\to D_s K \\pi \\pi$" << " & "<< yield_B0 << " $\\pm$ " << sqrt(yield_B0_err) << " \\\\" << "\n";
+	datafile << std::fixed << std::setprecision(0) << "$B_s \\to D_s \\pi \\pi \\pi$" << " & "<< yield_sig << " $\\pm$ " << sqrt(yield_sig_err) << " \\\\" << "\n";
+	datafile << std::fixed<< std::setprecision(0) << "$B^{0} \\to D_s \\pi \\pi \\pi$" << " & "<< yield_B0 << " $\\pm$ " << sqrt(yield_B0_err) << " \\\\" << "\n";
 	datafile << std::fixed<< std::setprecision(0) << "Partially reconstructed bkg." << " & "<< yield_partReco << " $\\pm$ " << sqrt(yield_partReco_err) << " \\\\" << "\n";
 	datafile << std::fixed<< std::setprecision(0) << "Combinatorial bkg." << " & "<< yield_comb << " $\\pm$ " << sqrt(yield_comb_err) << " \\\\" << "\n";
 	datafile << "\\hline\\hline" << "\n";
@@ -2694,8 +2694,8 @@ vector< vector<double> > fitNorm(){
 	datafile2 << "\\hline\\hline" << "\n";
 	datafile2 << "Component & Yield for Run II\\" << " \\\\" << "\n";
 	datafile2 << "\\hline" << "\n";
-	datafile2 << std::fixed << std::setprecision(0) << "$B_s \\to D_s K \\pi \\pi$" << " & "<< yield_sig << " $\\pm$ " << sqrt(yield_sig_err) << " \\\\" << "\n";
-	datafile2 << std::fixed<< std::setprecision(0) << "$B^{0} \\to D_s K \\pi \\pi$" << " & "<< yield_B0 << " $\\pm$ " << sqrt(yield_B0_err) << " \\\\" << "\n";
+	datafile2 << std::fixed << std::setprecision(0) << "$B_s \\to D_s \\pi \\pi \\pi$" << " & "<< yield_sig << " $\\pm$ " << sqrt(yield_sig_err) << " \\\\" << "\n";
+	datafile2 << std::fixed<< std::setprecision(0) << "$B^{0} \\to D_s \\pi \\pi \\pi$" << " & "<< yield_B0 << " $\\pm$ " << sqrt(yield_B0_err) << " \\\\" << "\n";
 	datafile2 << std::fixed<< std::setprecision(0) << "Partially reconstructed bkg." << " & "<< yield_partReco << " $\\pm$ " << sqrt(yield_partReco_err) << " \\\\" << "\n";
 	datafile2 << std::fixed<< std::setprecision(0) << "Combinatorial bkg." << " & "<< yield_comb << " $\\pm$ " << sqrt(yield_comb_err) << " \\\\" << "\n";
 	datafile2 << "\\hline\\hline" << "\n";

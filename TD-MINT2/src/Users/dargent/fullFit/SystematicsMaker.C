@@ -79,7 +79,6 @@ void fitParams(){
 //     covs.push_back(cov_acc_chol);
     pull p_acc(paraNames,"signal_toy/pullAcc_*.root");
     TMatrixD* cov_acc = new TMatrixD(p_acc.getDeltaCov("signal_toy/pull__*.root","_acc"));
-    covs.push_back(cov_acc);
 
     /// resolution systematics 
     pull p_res_Run1_a(paraNames,"signal_sys_res_Run1_a/pull__*.root");
@@ -112,13 +111,10 @@ void fitParams(){
     covs_res_Run2.push_back(cov_res_Run2_c);
     covs_res_Run2.push_back(cov_res_Run2_d);
     cov_res +=  p_res_Run1_a.combineCov_maxVal(covs_res_Run2) ;
-    
-    covs.push_back(new TMatrixD(cov_res));
 
     /// dms systematics 
     pull p_dm(paraNames,"signal_toy/pull_dm_*.root");
     TMatrixD* cov_dm = new TMatrixD(p_dm.getDeltaCov("signal_toy/pull__*.root","_dm"));
-    covs.push_back(cov_dm);
 
     /// asymmetry systematics
     pull p_production_asym_Run1(paraNames,"signal_toy/pull_production_asym_Run1_*.root");
@@ -137,8 +133,6 @@ void fitParams(){
     cov_asym +=  *cov_production_asym_Run2 ;
     cov_asym +=  *cov_detection_asym_Run1 ;
     cov_asym +=   *cov_detection_asym_Run2;
-
-    covs.push_back(new TMatrixD(cov_asym));
 
     /// bkg systematics 
     pull p_bkg_1(paraNames,"signal_sys_bkg1/pull__*.root");
@@ -214,8 +208,6 @@ void fitParams(){
 
     TMatrixD cov_bkg(p_bkg_2.sampleVariance(vec_vals_bkg));
 //     cov_bkg.Print();
-    covs.push_back(new TMatrixD(cov_bkg));
-
 
     /// Lineshape models systematics
     pull p_ls_1(paraNames,"signal_sys1/pull_*.root");
@@ -270,8 +262,6 @@ void fitParams(){
     vec_vals_ls.push_back(vals_ls_7);
     TMatrixD cov_ls(p_ls_1.sampleVariance(vec_vals_ls));
 
-    covs.push_back(new TMatrixD(cov_ls));
-
 
     /// Resonance parameters systematics
     pull p_rp_1(paraNames,"signal_toy/pull_mass_K1_1270_*.root");
@@ -320,12 +310,9 @@ void fitParams(){
     cov_rp +=  *cov_rp_9 ;
     cov_rp +=  *cov_rp_10 ;
  
-    covs.push_back(new TMatrixD(cov_rp));
-
     /// Form factor
     pull p_f_1(paraNames,"signal_toy/pull_BW_radius_*.root");
     TMatrixD* cov_f_1 = new TMatrixD(p_f_1.getDeltaCov("signal_toy/pull__*.root"));
-    covs.push_back(cov_f_1);
 
     /// Phsp-Acc systematics
     pull p_phsp_acc_1(paraNames,"signal_sys_acc1/pull_*.root");
@@ -378,8 +365,6 @@ void fitParams(){
     vec_vals_ps.push_back(vals_ps_9);
 
     TMatrixD cov_phsp(p_phsp_acc_1.sampleVariance(vec_vals_ps));
-    covs.push_back(new TMatrixD(cov_phsp));
-
 
 
     /// Alternative amp models 
@@ -472,18 +457,27 @@ void fitParams(){
 //     covs.push_back(new TMatrixD(cov_alt));
 
     /// Total systematics table   
+    covs.push_back(new TMatrixD(cov_bkg));
+    covs.push_back(cov_acc);
+    covs.push_back(new TMatrixD(cov_res));
+    covs.push_back(new TMatrixD(cov_asym));
+    covs.push_back(cov_dm);
+    covs.push_back(new TMatrixD(cov_phsp));
+    covs.push_back(new TMatrixD(cov_ls));
+    covs.push_back(new TMatrixD(cov_rp));
+    covs.push_back(cov_f_1);
+
     vector<string> sysNames;
     sysNames.push_back("Fit bias");
+    sysNames.push_back("Background");
     sysNames.push_back("Time-Acc.");
     sysNames.push_back("Resolution");
-    sysNames.push_back("$\\Delta m_{s}$");
     sysNames.push_back("Asymmetries");
-    sysNames.push_back("Background");
-
+    sysNames.push_back("$\\Delta m_{s}$");
+    sysNames.push_back("Phsp-Acc.");
     sysNames.push_back("Lineshapes");
     sysNames.push_back("Resonances $m,\\Gamma$");
     sysNames.push_back("Form-Factors");
-    sysNames.push_back("Phsp-Acc.");
     sysNames.push_back("Amp. Model");
  
     ofstream SummaryFile;

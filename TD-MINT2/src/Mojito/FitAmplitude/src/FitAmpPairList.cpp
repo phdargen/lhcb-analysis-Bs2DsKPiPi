@@ -698,7 +698,8 @@ bool FitAmpPairList::doFractions(){
   }
 
   cout << "filled FitFractionLists" << endl;
-  _interferenceFractions.sortByMagnitudeDecending();
+  FitFractionList interferenceFractionsSorted(_interferenceFractions);
+  interferenceFractionsSorted.sortByMagnitudeDecending();
   
   cout <<   "================================================="
        << "\n================================================="
@@ -709,7 +710,7 @@ bool FitAmpPairList::doFractions(){
        << "\n================================================="
        << "\n Interference terms (sorted by size)"
        << "\n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
-  cout << _interferenceFractions << endl;
+  cout << interferenceFractionsSorted << endl;
   cout <<   "================================================="
        << "\n=================================================" << endl;
 
