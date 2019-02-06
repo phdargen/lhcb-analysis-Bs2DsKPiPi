@@ -324,6 +324,24 @@ in run period (Run-I, Run-II),
 $\Ds$ final state  ($\Ds\to\kaon\kaon\pion$ non-resonant, $\Ds\to\phi\pi$, $\Ds\to\Kstar\kaon$, or $\Ds\to\pion\pion\pion$) 
 and \textsf{L0} trigger category. 
 
+\begin{table}[h]
+\centering
+\caption{Signal and background yields for the $B_s \to D_s \pi \pi \pi$ sample
+split by data-taking period.}
+\input{tables/MassFit/yields_norm_run1.tex} 
+
+\input{tables/MassFit/yields_norm_run2.tex}
+\label{tab:massFitNormA}
+\end{table}
+\begin{table}[h]
+\centering
+\caption{Signal and background yields for the $B_s \to D_s K \pi \pi$ sample split by data-taking period.}
+\input{tables/MassFit/yields_signal_run1.tex} 
+
+\input{tables/MassFit/yields_signal_run2.tex}
+\label{tab:massFitSigA}
+\end{table}
+
 \begin{figure}[h]
 \centering
 \includegraphics[height=!,width=0.4\textwidth]{figs/MassFit/norm_Run1_phipi_t0.pdf}
@@ -836,8 +854,30 @@ The various decay channels considered in the model building are listed in Table 
 
 
 \clearpage
-\section{Resonance parameters}
+
+
+\section{Additional information for the time-dependent amplitude fit}
+%\section{Resonance parameters}
 \label{a:ResoParas}
+
+Table \ref{tab:resoParam} summarizes the fixed parameters for the resonances included in the baseline model.
+The parameters of the resonances $K^{+}_{1}(1400)$ and $K^{*+}(1410)$ are determined in the fit 
+and their PDG values are only shown for comparison.
+Interference fractions are listed in Tables \ref{tab:fullFractionsInt} and \ref{tab:fullFractionsIntBar}.
+
+Figure~\ref{fig:scanLL} shows the distribution of likelihood values 
+for 150 time-dependent amplitude fits with randomized starting parameters.
+The majority of the fits (76\%) converge to the global minimum.
+Two well isolated local minima are detected 
+at $\Delta(2NLL) = 13$ ($3.3\sigma$)
+and $\Delta(2NLL) = 23$ ($4.8\sigma$)
+to which 5\% and 11\%
+of the fits converge, respectively.
+The fits at $\Delta(2NLL) = 11$, $\Delta(2NLL) = 18$ and $\Delta(2NLL) = 33$ did not converge properly to one of the nearby local minima. 
+The remaining fits (5\%) have $\Delta(2NLL) > 500$ and are not show.
+This procedure has been repeatedly performed during the development of the analysis, for both LASSO stages and the final fit,
+to ensure we operate at the global minimum. 
+
 
 
 \begin{table}[h]
@@ -857,4 +897,46 @@ $K^{*+}(1410)$ & $1421 \pm 9$ & $236 \pm 18$ & ~\cite{PDG2016}\\
 $K^{0*}(1430)$ & $1425 \pm 50$ & $270 \pm 80$ & ~\cite{PDG2016}\\
 \hline \hline
 \end{tabular}
+		\label{tab:resoParam}
 \end{table}
+\begin{figure}[h]
+	\centering
+		\includegraphics[width=0.6\textwidth, height = !]{figs/fullFit/scanNLL.eps} 
+
+		\caption{Likelihood differences with respect to the smallest value obtained from 150 fits with randomized starting parameters.} 		
+		\label{fig:scanLL}
+\end{figure}
+
+
+
+\begin{table}[h]
+\centering
+\caption{
+Interference fractions of the amplitudes contributing to $b \to c$ decays.
+}
+%\resizebox{\linewidth}{!}{
+	\renewcommand{\arraystretch}{1.5}
+	\input{tables/fullFit/signal/int_fraction_table.tex}
+%}
+\label{tab:fullFractionsInt}
+\end{table}
+
+
+\begin{table}[h]
+\centering
+\caption{
+Interference fractions of the amplitudes contributing to $b \to u$ decays.
+}
+%\resizebox{\linewidth}{!}{
+	\renewcommand{\arraystretch}{1.5}
+	\input{tables/fullFit/signal/int_fraction_bar_table.tex}
+%}
+\label{tab:fullFractionsIntBar}
+\end{table}
+
+
+
+
+
+
+

@@ -136,13 +136,13 @@ A simultaneous fit to the four datasets ($\Bs\to\Ds\pion\pion\pion$ data, $\Bd\t
 is performed to allow for a straightforward propagation of uncertainties.
 In each case, a PDF of the following form 
 \begin{equation}
-\mathcal{P}(t,\delta t) = \left[ e^{-\Gamma \, t}\cdot \text{cosh}\left(\frac{\Delta\Gamma \, t^\prime}{2}\right) \otimes \mathcal{R}(t - t^{'}, \delta t)\right] \cdot \epsilon(t),
+\mathcal{P}(t,\sigma_t) = \left[ e^{-\Gamma \, t}\cdot \text{cosh}\left(\frac{\Delta\Gamma \, t^\prime}{2}\right) \otimes \mathcal{R}(t - t^{'}, \sigma_t)\right] \cdot \epsilon(t),
 \label{eq:AccPDF}
 \end{equation}
 is used to describe the decay-time distribution. 
 For real data, the values for $\Gamma_{s,d}$ and $\Delta\Gamma_{s,d}$ are fixed to the latest HFLAV results \cite{HFAG},
 while for simulated data, the generated values are used.
-A  single Gaussian resolution function $\mathcal{R}(t - t^{'}, \delta t)$ is used where the decay-time error estimate is scaled with the respective calibration functions determined in
+A  single Gaussian resolution function $\mathcal{R}(t - t^{'}, \sigma_t)$ is used where the decay-time error estimate is scaled with the respective calibration functions determined in
 Sec.~\ref{sec:Resolution}.
 Each decay-time acceptance $\epsilon(t)$ is modeled
 using cubic splines, allowing for the analytical computation of the decay-time integrals appearing in the PDF \cite{Karbach:2014qba}.

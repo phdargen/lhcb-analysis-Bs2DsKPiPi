@@ -8,7 +8,6 @@ The $\Bs$ oscillation frequency $\dms$ is measured from the time-dependent fit t
 \dms = xx.xxx \pm 0.009 \pm 0.006,  
 \end{equation*}
 where the errors are statistical and systematic, respectively.
-
 Table \ref{tab:ResultSummary} summarizes the values for the ratio of the $b\to u$ and $b\to c$ transition amplitudes ($r$)
 %, their coherence ($\kappa$)
 and their strong ($\delta$) and weak phase ($\gamma -2 \beta_s$) difference 
@@ -17,6 +16,41 @@ and their strong ($\delta$) and weak phase ($\gamma -2 \beta_s$) difference
 obtained from the phase-space integrated, as well as the time-dependent amplitude fit to $\Bs\to\Ds\kaon\pion\pion$ data.
 %The values for the CP-violating parameters, measured in the phase-space integrated, time-dependent fit to $\Bs\to\Ds\kaon\pion\pion$ data, summarized in Table~\ref{tab:sigFitResults}, 
 %give rise to a $xx.xx \sigma$ evidence of CP violation in the interference between mixing and decay in this channel.
+%Furthermore, the masses and widths of the $K_{1}(1400)$ and the $K^{*}(1410)$ resonances are measured in the time-dependent amplitude fit:
+%\begin{align*}
+%m_{K_{1}(1400)} [\mevcc]       & = 1398 \pm 9 \pm 4 \pm 6,   \\
+%\Gamma_{K_{1}(1400)} [\mevcc]  & =  204 \pm 14 \pm 9 \pm 9 ,  \\
+% m_{K^{*}(1410)} [\mevcc]      & =   1432 \pm 12 \pm 15 \pm 8, \\
+% m_{K^{*}(1410)} [\mevcc]      & =  344 \pm 25 \pm 35 \pm 18,
+%\end{align*}
+%where the uncertainties are statistical, systematic and due to the choice of amplitude models, respectively.
+\\
+
+\noindent 
+Table \ref{tab:compareCP} compares the difference between the \CP parameters obtained from the phase-space integrated and full
+time-dependent amplitude fit. 
+In the latter case, the \CP coefficients are derived from the fit result using Eq.~\ref{eq:CPcoeff}. 
+Their comparison is not so straightforward as the results are obtained from the same data set. 
+We define a measure of their compatibility as follows:
+For the statistical error we take the difference of the statistical uncertainties of both fits:
+$\Delta \sigma_{stat} = \sqrt{ (\sigma^{MI}_{stat} ){}^2 - (\sigma^{Full}_{stat}) {}^2 }$ ,
+where $\sigma^{MI}_{stat}$ is the statistical uncertainty of the phase-space integrated (model-independent) fit 
+and $\sigma^{Full}_{stat}$ is the statistical uncertainty of the full time-dependent amplitude fit.
+In the limit of equal statistical uncertainties, $\Delta \sigma_{stat} = 0$,  and the results should agree perfectly.
+For the systematic error we assume that the model-dependent error (including resonance line shapes, form factors and alternative amplitude models) of the full time-dependent amplitude fit, 
+$\sigma^{Full}_{model}$, is uncorrelated 
+to the phase-space integrated results.
+The remaining systematics (including time-acceptance, resolution, tagging, etc.) are assumed to be 100\% correlated such that their effect should cancel.
+Hence, the results should agree within a spread given by:
+$\Delta \sigma = \sqrt{ \Delta \sigma_{stat}^2 + (\sigma^{Full}_{model}){}^2}$.
+The \CP parameters agree within a range of 0.3 to 1.2 $\Delta \sigma$. 
+
+There is an additional caveat due to the fact that the phase-space integrated fit does not enforce the conditions 
+$1 = C^2 + D^2 + S^2 = C^2 + \bar D^2 + \bar S^2$.
+This constrain is only implemented afterwards when converting the \CP parameters to $r, \kappa, \delta, \gamma$ with the GammaCombo tool.
+The full time-dependent amplitude fit, on the other hand, has this condition already built in. 
+This means that even for the case of $\Delta \sigma = 0$, one would not expect to observe the very same results for the two methods.
+The final (unblinded) result in terms of $r, \kappa, \delta, \gamma$ will be more straightforward to compare.
 
 \begin{table}[h]
 \centering
@@ -36,12 +70,26 @@ $\gamma - 2 \beta_s$ [$\degrees$] & xx.xx $\pm$ xx.xx  & xx.xx $\pm$ 16.4 $\pm$ 
 \label{tab:ResultSummary}
 \end{table}
 
-Furthermore, the masses and widths of the $K_{1}(1400)$ and the $K^{*}(1410)$ resonances are measured in the time-dependent amplitude fit:
+\begin{table}[h]
+\centering
+\caption{
+Difference between the results of the \CP parameters of the phase-space integrated and full time-dependent fit.
+}
+%\resizebox{\linewidth}{!}{
+	\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c r r} 
+\hline
+\hline
+Fit Parameter & \multicolumn{1}{c}{Difference}  &\multicolumn{1}{c}{ Difference [$\Delta\sigma$]}  \\ 
+\hline
+$C$ & 0.08 & 0.7\\ 
+$D$ & 0.39 & 1.2\\ 
+$\bar{D}$ & 0.33 & 1.1\\ 
+$S$ & 0.04 & 0.3\\ 
+$\bar{S}$ & 0.14  & 0.8\\ 
+\hline
+\hline
+\end{tabular}
+\label{tab:compareCP}
+\end{table}
 
-\begin{align*}
-m_{K_{1}(1400)} [\mevcc]       & = 1398 \pm 9 \pm 4 \pm 6,   \\
-\Gamma_{K_{1}(1400)} [\mevcc]  & =  204 \pm 14 \pm 9 \pm 9 ,  \\
- m_{K^{*}(1410)} [\mevcc]      & =   1432 \pm 12 \pm 15 \pm 8, \\
- m_{K^{*}(1410)} [\mevcc]      & =  344 \pm 25 \pm 35 \pm 18,
-\end{align*}
-where the uncertainties are statistical, systematic and due to the choice of amplitude models, respectively.

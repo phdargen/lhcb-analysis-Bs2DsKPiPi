@@ -1,5 +1,22 @@
 % !TEX root = main.tex
 
+\section{Analysis strategy}
+\label{sec:strategy}
+
+The selection of the signal, $B_s \to D_s K \pi \pi$, and calibration channel, $B_s \to D_s \pi \pi \pi$,
+are outlined in Sect.~\ref{sec:Selection},
+followed by the determination of the signal and background yields.
+The  calibration channel is used to study the decay-time acceptance, see Sect.~\ref{sec:Acceptance},
+and to calibrate the flavor tagging algorithms in Sect.~\ref{sec:Tagging}.
+Moreover, the $B_s$ mixing frequency is measured in Sect.~\ref{ssec:timeNormFit}.
+Afterwards, the CKM angle $\gamma$ is extracted from $B_s \to D_s K \pi \pi$ data using two different approaches:
+the results of the phase-space integrated fit are presented in Sect.~\ref{ssec:timeFit},
+while Sect.~\ref{sec:fullFit} discusses the significantly more complicated full time-dependent amplitude fit.
+The systematic uncertainties of both methods are determined in Sect.~\ref{sec:Systematics},
+before we compare the results and conclude in Sect.~\ref{sec:Summary}.
+
+
+%\clearpage
 \section{Data samples and event selection}
 \label{sec:Selection}
 
@@ -278,10 +295,11 @@ The $X_{s,d}$ invariant mass is recomputed applying the kaon mass hypothesis to 
 
 The Toolkit for Multivariate Analysis (TMVA \cite{Hocker:2007ht}) is used to train a multivariate classifier (BDT with gradient boosting, BDTG)
 discriminating signal and combinatorial background.
-We use $B_s\to D_s\pi\pi\pi$ data that passes all selection steps, including the trigger and stripping selection, offline cuts and physical background vetoes, as signal proxy. 
-The background is statistically subtracted by applying \textsf{sWeights} based on the fit to the reconstructed $B_s$ mass shown in Fig.~\ref{fig:massFit_preselected}.
+We use $B_s\to D_s\pi\pi\pi$ data that passes all previously mentioned selection steps, including the trigger and stripping selection, offline cuts and physical background vetoes, 
+as signal proxy. 
+The background is statistically subtracted by applying \textsf{sWeights} based on the fit to the reconstructed $B_s$ mass shown in Fig.~\ref{fig:massFit_preselected}(left).
 This is a simplified version (performed in a reduced mass range) of the final mass fits described in Sec.~\ref{sec:massFits}.
-The sideband data ($m(B_s) > 5500 \mev$) is used as background proxy.
+The sideband  $B_s\to D_sK\pi\pi$ data ($m(B_s) > 5500 \mev$) is used as background proxy.
 
 Training the classifier on a sub-sample which is supposed to be used in the
 final analysis might cause a bias, as the classifier selects, in case of overtraining,  the training events more efficiently. 
@@ -290,7 +308,11 @@ the background training samples into two disjoint subsamples according to whethe
 event number is even or odd. We then train the classifier on the even sample and apply
 it to the odd one, and vice-versa (cross-training).
 
-The following discriminating variables are used for the BDTG training:
+The following discriminating variables are used for the BDTG training\footnote{
+The following options are chosen: 
+NTrees=500, MinNodeSize=2.5\%, BoostType=Grad:Shrinkage=0.10, UseBaggedBoost:BaggedSampleFraction=0.5, nCuts=40, MaxDepth=3, 
+NegWeightTreatment=Pray.
+}:
 \begin{itemize} 
 
 	\item logarithm of the $B_s$ impact-parameter $\chi^{2}$, $B_{s}$ log($\chi^{2}_{IP}$)
@@ -301,15 +323,16 @@ The following discriminating variables are used for the BDTG training:
 	
 	\item logarithm of the minimal $\Bs$ decay vertex quality difference for adding one extra track,  log($\Delta\chi^2_{add-track}$)
 	
-	\item  the normalized difference between the transverse momentum
+	\item  the difference between the transverse momentum
 	 of the $B_s$- candidate and the transverse momentum of all the particles reconstructed
-	 with a cone of radius $r = \sqrt{(\Delta\Phi)^{2} + (\Delta\eta)^{2}}$ $<$ 1 rad around the $B_s$- candidate, $B_s$ $A^{cone}_{p_T}$ 
+	 with a cone of radius $r = \sqrt{(\Delta\Phi)^{2} + (\Delta\eta)^{2}}$ $<$ 1 rad around the $B_s$- candidate
+	 normalized to the sum of both, $B_s$ $A^{cone}_{p_T}$ 
 		
 	\item largest ghost probability of all tracks, max(ghostProb)
 
-	\item logarithm of the the smallest $X_{d}$ daughter impact-parameter $\chi^{2}$,  $X_{s}$ log(min($\chi^{2}_{IP}$))
+	\item logarithm of the the smallest $X=X_d,X_s$ daughter impact-parameter $\chi^{2}$,  $X$ log(min($\chi^{2}_{IP}$))
 
-	\item largest distance of closest approach of the $X_{d}$ daughters, max(DOCA)
+	\item largest distance of closest approach of the $X=X_d,X_s$ daughters, max(DOCA)
 
 	\item cosine of the largest opening angle between the $\Ds$ and another bachelor track $h_i$ in the plane transverse to the beam, $\cos(\text{max} \, \theta_{\Ds h_{i}})$
 	
@@ -339,13 +362,15 @@ The resulting classifier response is shown in Fig.~\ref{fig:BDTG} for each categ
 %\label{fig:massforBDT}
 %\end{figure}
 
-\newpage
+%\newpage
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.5\textwidth]{figs/MassFit/norm_preselected_pull.pdf}
-\caption{Reconstructed $B_s$ mass for $B_s\to D_s\pi\pi\pi$ events that pass the preselection. The fitted
-PDF is shown in blue, the signal component in red and the background component in black.}
+\includegraphics[height=!,width=0.45\textwidth]{figs/MassFit/norm_preselected_pull.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/MassFit/signal_pull_00.eps}
+\caption{Left: Reconstructed $B_s$ mass for $B_s\to D_s\pi\pi\pi$ events that pass the preselection (all categories combined). The fitted
+PDF is shown in blue, the signal component in red and the background component in black.
+\\Right: Reconstructed $B_s$ mass for $B_s\to D_sK\pi\pi$ events that pass the $BDTG > 0$ requirement (all categories combined). }
 \label{fig:massFit_preselected}
 \end{figure}
 \begin{figure}[h]
@@ -376,7 +401,8 @@ The cut on the BDTG output is optimized using the signal significance as figure 
 where $N_{s}(\text{BDTG})$ is the $B_s \to D_s K \pi \pi$ signal yield for a given BDTG cut and $N_{b}(\text{BDTG})$ is the combinatorial background yield in the signal region ($m(D_sK\pi\pi) = m_{B_s} \pm 40 \mev$).
 To compute the yields as function of the BDTG cut, we use the BDTG efficiencies, $\epsilon_{s,b}$, evaluated on the corresponding test samples.
 To fix the overall scale, it is required to know the yields at (at least) one point of the scanned range.
-We arbitrarily choose this fix point to be BDTG $> 0$ and perform a fit to the reconstructed $B_s$ mass as described in Sec.~\ref{sec:massFits} to obtain the yields $N_{s,b}(0)$.
+We arbitrarily choose this fix point to be BDTG $> 0$ and perform a fit to the reconstructed $B_s$ mass as described in Sec.~\ref{sec:massFits} to obtain the yields $N_{s,b}(0)$,
+see Fig.~\ref{fig:massFit_preselected}(right).
 These yields are then efficiency corrected to calculate the yields for a given BDTG cut: 
 \begin{equation}
 N_{s,b}(\text{BDTG}) = N_{s,b}(0) \cdot \frac{\epsilon_{s,b}(\text{BDTG})}{\epsilon_{s,b}(0)}.
@@ -551,8 +577,15 @@ All tracks & hasRich & $= 1$ \\
 Several Monte Carlo (MC) samples are used in the analysis for acceptance and
 background studies.
 A full list of them is given in Tab.~\ref{table:mcSamples}.
-In each case, the decay model includes a mixture of non-interfering resonances contributing to the 
-$X_s \to K \pi \pi$ or $X_d \to \pi \pi \pi$ bachelor system and a non-resonant (phase-space) component.
+In each case, the decay model includes a mixture of non-interfering resonances contributing to the bachelor system and a non-resonant (phase-space) component.
+For $B_s \to D_s X_s$ these are:
+25\% $X_s \to \pi ( K_1(1270) \to K \rho(770) )$, 
+70\% $X_s \to \pi ( K_1(1400) \to K^*(892) \pi)$
+and 5\% $X_s \to K \pi \pi$ (non-resonant).
+And similar for $B_s \to D_s X_d$:
+85\% $X_d \to \pi ( a_1(1260) \to \rho(770) \pi )$, 
+10\% $X_d \to \pi ( a_1(1260) \to \sigma \pi)$
+and 5\% $X_d \to K \pi \pi$ (non-resonant).
 All MC samples are generated using \textsf{Pythia8}, reconstructed using
 \textsf{Reco14c}, \textsf{Reco15} and \textsf{Reco16} for Run-I, 15 and 16 data and
 selected using the same criteria as in data.

@@ -5,11 +5,11 @@
 The systematic uncertainties on the measured observables are summarized in Table \ref{tab:normSys} for the decay-time fit to $B_s \to D_s \pi\pi\pi$,
 in Table \ref{tab:sigSys} for the decay-time fit to $B_s \to D_s K\pi\pi$
 and in Table \ref{tab:sigSys2} for the full time-dependent amplitude fit to $B_s \to D_s K\pi\pi$ decays. 
-All systematic uncertainties are calculated relative to the statistical errors and are therefore quoted in units of statistical standard deviations. 
 A description of each systematic
 effect is given in the following subsections
 starting with the ones common to all fits.
 Afterwards, systematic effect specific to the amplitude description are discussed.
+Systematic uncertainties estimated from pseudo-experiments (toys) are calculated relative to the statistical error.
 
 %This section covers all relevant systematic uncertainties on the measured observables.
 %In particular, the model dependent description of the invariant $\Bs$ mass spectrum, the parametrization of the time acceptance using cubic splines, 
@@ -21,7 +21,7 @@ Afterwards, systematic effect specific to the amplitude description are discusse
 
 Pseudo-experiments are performed, where a signal toy sample of the same size as the number of observed signal data events is generated according to the nominal fit model 
 and subsequently fitted with the same model.
-The means of the pull distributions are taken as systematic uncertainties of the fit parameters. The width of the pull distributions show no bias since they are compatible with 1.  
+The means of the pull distributions are taken as systematic uncertainties of the fit parameters. The width of the pull distributions are compatible with 1.  
 
 \subsection{Background subtraction}
 \label{subsec:SystMass}
@@ -232,9 +232,11 @@ No shifts in the fit central values are observed.
 The uncertainty on the LHCb length scale is estimated to be at most $0.020\%$\cite{LHCb-ANA-2012-053,LHCb-PAPER-2013-006}, which translates
 directly in an uncertainty on $\Delta m_s$ of $0.020\%$ with other parameters being unaffected.
 The momentum scale uncertainty is at most $0.022\%$.
-
+In the fit to  $B_s \to D_s K \pi\pi$ data, the scale uncertainties are then implicitly included in the systematic due to $\Delta m_s$ which we 
+vary within its uncertainties, see above.
 
 \subsection{Phase space acceptance}
+\label{sec:SysPhspAcc}
 
 For the phase space acceptance we rely on simulated data.
 The integration error due to the limited size of the MC sample 
@@ -261,6 +263,12 @@ In particular, we consider the following variations:
 	\item The raw MC PID variables are used
 	
 	\item Candidates with \textsf{BKGCAT}$=60$ are removed
+	
+	\item A tight cut on the $B_s$ transverse momentum is applied ($p_T > 10 \gev$)
+	
+	\item We require \textsf{L0Hadron}-TOS  instead of (\textsf{L0Hadron}-TOS $\vert \vert$   \textsf{L0Global}-TIS)
+	
+	\item We require \textsf{L0Global}-TIS  instead of (\textsf{L0Hadron}-TOS  $\vert \vert$  \textsf{L0Global}-TIS)
 	
 \end{itemize}
 We assign the sample variance of the fitted values using the alternative phase space acceptances as systematic.

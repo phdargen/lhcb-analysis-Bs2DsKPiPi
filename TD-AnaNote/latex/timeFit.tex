@@ -5,13 +5,13 @@
 This section covers the (phase space integrated) decay-time fits to $\Bs\to\Ds\hadron\pion\pion$ data.
 We use the \textsf{sFit} technique \cite{Pivk:2004ty} to statistically subtract the background, leaving only the signal PDF to describe the decay-time. 
 The \textsf{sWeights} are calculated based on the fit to the reconstructed $B_s$ mass distribution described in Sec.~\ref{sec:massFits}.
-The signal PDF is conditional on the tagging decisions $q_i$, the mistag estimates $\eta_i$ ($i=$OS,SS) and the decay-time error $\delta t$:
+The signal PDF is conditional on the tagging decisions $q_i$, the mistag estimates $\eta_i$ ($i=$OS,SS) and the decay-time error $\sigma_t$:
 \begin{equation}
 \label{eq:TPDF_full}
-\mathcal{P}(t \vert\delta t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS}) \propto \left[ p(t^{'} \vert q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})  \otimes \mathcal{R}(t - t^{'},\delta t) \right] \cdot \epsilon(t)
+\mathcal{P}(t \vert \sigma_t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS}) \propto \left[ p(t^{'} \vert q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})  \otimes \mathcal{R}(t - t^{'},\sigma_t) \right] \cdot \epsilon(t)
 \end{equation}
 where $p(t \vert q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})$ is given by Equation \ref{eq:PDF_intX} taking the tagging dilution into account.
-The decay-time acceptance $\epsilon(t)$ (Sec.~\ref{sec:Acceptance}) and the Gaussian time-resolution function $\mathcal{R}(t - t^{'},\delta t)$ (Sec.~\ref{sec:Resolution}) are fixed to the values obtained by the dedicated studies. 
+The decay-time acceptance $\epsilon(t)$ (Sec.~\ref{sec:Acceptance}) and the Gaussian time-resolution function $\mathcal{R}(t - t^{'},\sigma_t)$ (Sec.~\ref{sec:Resolution}) are fixed to the values obtained by the dedicated studies. 
 We fix the values of $\Gs$ and $\DGs$ to the latest HFLAV results \cite{HFAG}.
 
 The  unbinned maximum likelihood fits are performed simultaneously in six categories: 
@@ -57,6 +57,8 @@ Bottom-right: Time-dependent asymmetry $A_{mix}$ between mixed and unmixed $\Bs$
 
 %\clearpage
 \subsection{Fit to $\Bs\to\Ds\kaon\pion\pion$ data}
+\label{ssec:timeFit}
+
 %The time-dependent fit to the sWeighted sample of $\Bs\to\Ds\kaon\pion\pion$ signal candidates is performed simultaneously in the four bins defined in Sec. \ref{subsec: AccComparison}, 
 %spliting the data into Run I \& II and trigger category 0 (L0Hadron TOS) \& 1 (L0Hadron TIS). 
 %In these four bins, the respective description of the decay-time acceptance (Sec. \ref{sec:Acceptance}) is used as an input. 
@@ -78,15 +80,23 @@ The measured \CP coefficients $C,D_{f},D_{\bar{f}},S_{f} $ and $S_{\bar{f}}$ ext
 fit to the $B_s \to D_s K \pi\pi$ decay-time distribution are reported in Table \ref{tab:sigFitResults}.
 The fit projection is shown in Fig.~\ref{fig:tFitSig}.
 We included a multi-dimensional Gaussian-constraint for the tagging calibration parameters (including the tagging asymmetries) with the central values and covariance matrix determined in Sec.~\ref{ssec:timeNormFit}.
+
+The \CP coefficients are converted to the observables $r,\kappa,\delta,\gamma$ using the GammaCombo package.
+The corresponding confidence levels  are shown in Fig~\ref{fig:FitCL}.
 \newline
 \\
 \pretextcomment{
-	The \CP coefficients will be converted to the observables $r,\kappa,\delta,\gamma$ using the GammaCombo package after unblinding.
-}
+As the central values of the \CP coefficients are blinded, we calculate naive estimates of them assuming the following values for the physical observables:
+$r=0.4, \kappa = 0.5, \delta = 10^\circ, \gamma = 70^\circ$.
+We plug the values of the  \CP coefficients obtained in this way, with the correct  uncertainties as extracted from data,  into the GammaCombo tool. 
+Note that the uncertainties of the physical observables depend strongly on the central values of the \CP coefficients, so this exercise 
+should only be considered as a rough estimated of the expected sensitivity.
+ }
+
 %\newline
 %\\
 \pretextcomment{
-Currently the mixing frequency is fixed to the HFLAV value. 
+Currently the mixing frequency is fixed to the HFLAV value for the fit to $B_s \to D_s K \pi\pi$ data. 
 We intend to update the fit after unblinding our result from the $\Bs\to\Ds\pion\pion\pion$ fit since our precision is significantly higher.
 }
 \begin{figure}[h]
@@ -109,7 +119,16 @@ We intend to update the fit after unblinding our result from the $\Bs\to\Ds\pion
 \end{table}
 
 
-
+\begin{figure}[h]
+	\centering
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_toy/cartesian_cp_coeff_r.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_toy/cartesian_cp_coeff_k.pdf} 
+		
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_toy/cartesian_cp_coeff_d.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_toy/cartesian_cp_coeff_g.pdf} 
+		\caption{The 1-CL contours for the physical observable $r,\kappa,\delta$ and $\gamma$ obtained with the phasespace-integrated fit. }
+		\label{fig:FitCL}	
+\end{figure} 
 
 %\subsection{Determination of $\gamma$ using the measured CP parameters}
 %\label{subsec:GammaComb}

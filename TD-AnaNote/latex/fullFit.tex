@@ -5,10 +5,10 @@
 The signal PDF used for the full time-dependent fit is defined as
 \begin{equation}
 \label{eq:ampPDF_full}
-\mathcal{P}(\phsPoint, t \vert\delta t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS}) \propto \left[ p(\phsPoint, t^{'} \vert q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})  \otimes \mathcal{R}(t - t^{'},\delta t) \right] \cdot \epsilon(t)
+\mathcal{P}(\phsPoint, t \vert\sigma_t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS}) \propto \left[ p(\phsPoint, t^{'} \vert q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})  \otimes \mathcal{R}(t - t^{'},\sigma_t) \right] \cdot \epsilon(t)
 \end{equation}
 where $p(\phsPoint, t \vert q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})$ is given the differential decay rate in Equation \ref{eq:PDF_full2} taking the tagging dilution into account.
-The phase space efficiency $\epsilon(\phsPoint)$ is only included in the normalization of $\mathcal{P}(\phsPoint, t \vert\delta t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})$
+The phase space efficiency $\epsilon(\phsPoint)$ is only included in the normalization of $\mathcal{P}(\phsPoint, t \vert\sigma_t, q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})$
 as discussed in Sec~\ref{sec:phasespaceAcceptance}. 
 The model selection of the amplitude components is described in the following Section.
 The remaining fitting strategy is exactly the same as for the decay-time fits, see Sec.~\ref{sec:timeFit}.
@@ -153,6 +153,13 @@ The corresponding fit fractions for the $b\to c$ and $b\to u$ amplitudes are ind
 	{\int \left\vert  \mathcal A_f^{c,u}(\phsPoint) \right\vert^{2} \, \text{d}\Phi_{4}}  
 \end{equation}
 and shown in Table \ref{tab:fullFractions}.
+The statistical significances, 
+calculated from the likelihood difference, $\sqrt{\Delta(-2LL)}$, assuming Wilk's theorem,
+ of the three smallest contributions are:
+ $4.5\sigma$ for $B_s \to ( D_s \, K)_{P} \, \, \rho(770)$;
+ $6.2\sigma$ for $B_s \to D_s \, ( K(1460) \to K^{*}(892) \, \pi )$
+ and $8.2\sigma$
+for $B_s \to ( D_s \, \pi)_{P} \, \, K^{*}(892)$.
 In addition to the amplitude coefficients, the amplitude ratio and the strong and weak phase differences between the $b\to c$ and $b\to u$ decays are determined.
 Moreover, the masses and widths of the $K_1(1400)$ and $K^{*}(1410)$ resonances are fitted.
 
@@ -245,5 +252,4 @@ Fit fractions of the amplitudes contributing to $b \to c$ and $b \to u$ decays.
 %}
 \label{tab:fullFractions}
 \end{table}
-
 
