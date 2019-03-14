@@ -5433,32 +5433,37 @@ void animate(int step=0){
 	FitParameter  c8("c8",1,1,0.1);
 	FitParameter  c9("c9",1,1,0.1);
 
+
+         gStyle->SetTitleOffset(1.5,"Y");
+        gStyle->SetTitleSize(0.05,"Y");
+        gStyle->SetLabelSize(0.05,"Y");
+
         TH1D* h_t = new TH1D("h_t",";t",50,0,2*pi/dm);
-        TH1D* m_Kpipi = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2}); ",50,1,2);
-	TH1D* m_Kpi = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2}); ",50,0.6,1.2);
-	TH1D* m_pipi = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2}); ",50,0.2,1.2);
-	TH1D* m_Dspipi = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2}); ",50,2,5.5);
-	TH1D* m_Dspi = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});",50,1.5,5);
+        TH1D* m_Kpipi = new TH1D("",";#left[m(K^{#pm} #pi^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.) ",50,1,2);
+	TH1D* m_Kpi = new TH1D("",";#left[m(K^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.)",50,0.6,1.2);
+	TH1D* m_pipi = new TH1D("",";#left[m(#pi^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.)",50,0.2,1.2);
+	TH1D* m_Dspipi = new TH1D("",";#left[m(D_{s}^{#mp} #pi^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.)",50,2,5.5);
+	TH1D* m_Dspi = new TH1D("",";#left[m(D_{s}^{#mp} #pi^{#pm})#right] (GeV);Events (a.u.)",50,1.5,5);
 
-        TH1D* m_Kpipi_CP = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2}); ",50,1,2);
-	TH1D* m_Kpi_CP = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2}); ",50,0.6,1.2);
-	TH1D* m_pipi_CP = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2}); ",50,0.2,1.2);
-	TH1D* m_Dspipi_CP = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2}); ",50,2,5.5);
-	TH1D* m_Dspi_CP = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});",50,1.5,5);
+        TH1D* m_Kpipi_CP = new TH1D("",";#left[m(K^{#pm} #pi^{#pm} #pi^{#mp})#right] (GeV);Events (a.u.) ",50,1,2);
+	TH1D* m_Kpi_CP = new TH1D("",";#left[m(K^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.)",50,0.6,1.2);
+	TH1D* m_pipi_CP = new TH1D("",";#left[m(#pi^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.)",50,0.2,1.2);
+	TH1D* m_Dspipi_CP = new TH1D("",";#left[m(D_{s}^{#mp} #pi^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.)",50,2,5.5);
+	TH1D* m_Dspi_CP = new TH1D("",";#left[m(D_{s}^{#mp} #pi^{#pm})#right] (GeV); Events (a.u.)",50,1.5,5);
 
-        TH1D* m_Kpipi_A = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2}); ",50,1,2);
-	TH1D* m_Kpi_A = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2}); ",50,0.6,1.2);
-	TH1D* m_pipi_A = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2}); ",50,0.2,1.2);
-	TH1D* m_Dspipi_A = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2}); ",50,2,5.5);
-	TH1D* m_Dspi_A = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});",50,1.5,5);
+        TH1D* m_Kpipi_A = new TH1D("",";#left[m(K^{#pm} #pi^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.)",50,1,2);
+	TH1D* m_Kpi_A = new TH1D("",";#left[m(K^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.)",50,0.6,1.2);
+	TH1D* m_pipi_A = new TH1D("",";#left[m(#pi^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.)",50,0.2,1.2);
+	TH1D* m_Dspipi_A = new TH1D("",";#left[m(D_{s}^{#mp} #pi^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.)",50,2,5.5);
+	TH1D* m_Dspi_A = new TH1D("",";#left[m(D_{s}^{#mp} #pi^{#pm})#right] (GeV); Events (a.u.)",50,1.5,5);
 
-        TH1D* m_Kpipi_Abar = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2}); ",50,1,2);
-	TH1D* m_Kpi_Abar = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2}); ",50,0.6,1.2);
-	TH1D* m_pipi_Abar = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2}); ",50,0.2,1.2);
-	TH1D* m_Dspipi_Abar = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2}); ",50,2,5.5);
-	TH1D* m_Dspi_Abar = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});",50,1.5,5);
+        TH1D* m_Kpipi_Abar = new TH1D("",";#left[m(K^{#pm} #pi^{#pm} #pi^{#mp})#right] (GeV);Events (a.u.) ",50,1,2);
+	TH1D* m_Kpi_Abar = new TH1D("",";#left[m(K^{#pm} #pi^{#mp})#right] (GeV);Events (a.u.) ",50,0.6,1.2);
+	TH1D* m_pipi_Abar = new TH1D("",";#left[m(#pi^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.)",50,0.2,1.2);
+	TH1D* m_Dspipi_Abar = new TH1D("",";#left[m(D_{s}^{#mp} #pi^{#pm} #pi^{#mp})#right] (GeV); Events (a.u.) ",50,2,5.5);
+	TH1D* m_Dspi_Abar = new TH1D("",";#left[m(D_{s}^{#mp} #pi^{#pm})#right] (GeV); Events (a.u.)",50,1.5,5);
 
-	TH2D* dalitz = new TH2D("", ";m(K^{+} #pi^{-}) (GeV);m(#pi^{+} #pi^{-}) (GeV); ", 50, 0.6 ,1.2,50,0.25,1.2);
+	TH2D* dalitz = new TH2D("", ";m(K^{#pm} #pi^{#mp}) (GeV);m(#pi^{#pm} #pi^{#mp}) (GeV); Events (a.u.)", 50, 0.6 ,1.2,50,0.25,1.2);
 	dalitz->SetMarkerSize(0.2);
 
 
@@ -5580,7 +5585,7 @@ void animate(int step=0){
 
 		m_Kpipi->SetLineWidth(3);
 		m_Kpipi->Scale(1./m_Kpipi->Integral());
-		m_Kpipi->SetMaximum(0.1);
+		m_Kpipi->SetMaximum(0.12);
 		m_Kpipi->Draw("histc");
 
 		m_Kpipi_A->SetLineColor(kBlue+1);
@@ -5616,7 +5621,7 @@ void animate(int step=0){
 
 		m_Kpi->SetLineWidth(3);
 		m_Kpi->Scale(1./m_Kpi->Integral());
-		m_Kpi->SetMaximum(0.2);	
+		m_Kpi->SetMaximum(0.12);	
 		m_Kpi->Draw("histc");
 		c->Print(((string)OutputDir+"m_Kpi_"+anythingToString(n)+".eps").c_str());
 		c->Print(((string)OutputDir+"m_Kpi_"+anythingToString(n)+".png").c_str());
@@ -5637,14 +5642,14 @@ void animate(int step=0){
 	
 		m_pipi->SetLineWidth(3);
 		m_pipi->Scale(1./m_pipi->Integral());
-		m_pipi->SetMaximum(0.1);
+		m_pipi->SetMaximum(0.12);
 		m_pipi->Draw("histc");
 		c->Print(((string)OutputDir+"m_pipi_"+anythingToString(n)+".eps").c_str());
 		c->Print(((string)OutputDir+"m_pipi_"+anythingToString(n)+".png").c_str());
 	
 		m_Dspipi->SetLineWidth(3);
 		m_Dspipi->Scale(1./m_Dspipi->Integral());
-		m_Dspipi->SetMaximum(0.1);
+		m_Dspipi->SetMaximum(0.12);
 		m_Dspipi->Draw("histc");
 		c->Print(((string)OutputDir+"m_Dspipi_"+anythingToString(n)+".eps").c_str());
 		c->Print(((string)OutputDir+"m_Dspipi_"+anythingToString(n)+".png").c_str());
@@ -5665,7 +5670,7 @@ void animate(int step=0){
 
 		m_Dspi->SetLineWidth(3);
 		m_Dspi->Scale(1./m_Dspi->Integral());
-		m_Dspi->SetMaximum(0.1);	
+		m_Dspi->SetMaximum(0.12);	
 		m_Dspi->Draw("histc");
 		c->Print(((string)OutputDir+"m_Dspi_"+anythingToString(n)+".eps").c_str());
 		c->Print(((string)OutputDir+"m_Dspi_"+anythingToString(n)+".png").c_str());
@@ -5789,9 +5794,9 @@ void animate(int step=0){
 		leg_CP.SetTextAlign(12);
 		
 		leg_CP.AddEntry((TObject*)0,label,"");
-		le = leg_CP.AddEntry(m_Kpipi,"B_{s}(#bar{B_{s}})#rightarrowD_{s}^{-}K^{+}#pi^{+}#pi^{-}","l");
+		le = leg_CP.AddEntry(m_Kpipi,"B^{0}_{s}(t)#rightarrowD_{s}^{-}K^{+}#pi^{+}#pi^{-}","l");
 		le->SetTextColor(kBlack);
-		le = leg_CP.AddEntry(m_Kpipi_CP,"#bar{B_{s}}(B_{s})#rightarrowD_{s}^{+}K^{-}#pi^{-}#pi^{+}","l");
+		le = leg_CP.AddEntry(m_Kpipi_CP,"#bar{B^{0}_{s}}(t)#rightarrowD_{s}^{+}K^{-}#pi^{-}#pi^{+}","l");
 		le->SetTextColor(kGreen+3);
 
 		c_1->cd();
@@ -5820,6 +5825,9 @@ void animate(int step=0){
 		
 		c_1->Print(((string)OutputDir+"dalitz3_"+anythingToString(n)+".eps").c_str());
 		c_1->Print(((string)OutputDir+"dalitz3_"+anythingToString(n)+".png").c_str());
+		c_1->Print(((string)OutputDir+"dalitz3_"+anythingToString(n)+".C").c_str());
+		c_1->Print(((string)OutputDir+"dalitz3_"+anythingToString(n)+".root").c_str());
+
 	//}
 
 }
@@ -6192,8 +6200,8 @@ int main(int argc, char** argv){
   //makeIntegratorFileForToys(atoi(argv[1]));
     
   //for(int i = 0; i < 200; i++)ampFit(atoi(argv[1])+i);
-    ampFit(atoi(argv[1]),(string)argv[2]);
-//   animate(atoi(argv[1]));
+   ampFit(atoi(argv[1]),(string)argv[2]);
+//    animate(atoi(argv[1]));
 
   cout << "==============================================" << endl;
   cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;

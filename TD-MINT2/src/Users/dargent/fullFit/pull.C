@@ -122,6 +122,8 @@ TString pull::latexName(TString s){
     if(s == "Sum") return "$\\text{Sum}$";
     if(s == "bar_Sum") return "$\\text{Sum}$";
 
+    if(s == "n2ll") return "$\\text{-2NLL}$";
+
     return "$" + s + "$";
 }
 
