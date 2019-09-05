@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.1.7)  5 SEP 2019 17:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.1.7)  5 SEP 2019 18:00
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -2370,19 +2370,32 @@ File: figs/lassoFit/Lasso_BIC.pdf Graphic file (type pdf)
 <use figs/lassoFit/Lasso_BIC.pdf>
 Package pdftex.def Info: figs/lassoFit/Lasso_BIC.pdf used on input line 89.
 (pdftex.def)             Requested size: 181.18439pt x 122.70813pt.
+Package epstopdf Info: Source file: <figs/lassoFit/Lasso2_BIC.eps>
+(epstopdf)                    date: 2019-04-12 23:55:52
+(epstopdf)                    size: 7154 bytes
+(epstopdf)             Output file: <figs/lassoFit/Lasso2_BIC-eps-converted-to.
+pdf>
+(epstopdf)                    date: 2019-09-05 17:54:08
+(epstopdf)                    size: 7943 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/lassoFit/Lasso2_BIC-e
+ps-converted-to.pdf figs/lassoFit/Lasso2_BIC.eps>
+(epstopdf)             \includegraphics on input line 90.
+Package epstopdf Info: Output file is already uptodate.
 
-<figs/fullFit/ReLasso_BIC.pdf, id=5592, 569.12625pt x 385.44pt>
-File: figs/fullFit/ReLasso_BIC.pdf Graphic file (type pdf)
+<figs/lassoFit/Lasso2_BIC-eps-converted-to.pdf, id=5592, 569.12625pt x 387.4475
+pt>
+File: figs/lassoFit/Lasso2_BIC-eps-converted-to.pdf Graphic file (type pdf)
+ <use figs/lassoFit/Lasso2_BIC-eps-converted-to.pdf>
+Package pdftex.def Info: figs/lassoFit/Lasso2_BIC-eps-converted-to.pdf used on 
+input line 90.
+(pdftex.def)             Requested size: 181.18439pt x 123.34723pt.
 
-<use figs/fullFit/ReLasso_BIC.pdf>
-Package pdftex.def Info: figs/fullFit/ReLasso_BIC.pdf used on input line 90.
-(pdftex.def)             Requested size: 181.18439pt x 122.70813pt.
- (./tables/lassoFit/LASSO/fitFractions.tex)
+(./tables/lassoFit/LASSO/fitFractions.tex)
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[52 <./figs/lassoFit/Lasso_BIC.pdf, page is rotated 90 degrees> <./figs/fullFit
-/ReLasso_BIC.pdf>] [53]
+[52 <./figs/lassoFit/Lasso_BIC.pdf, page is rotated 90 degrees> <./figs/lassoFi
+t/Lasso2_BIC-eps-converted-to.pdf>] [53]
 <figs/lassoFit/LASSO/leg.pdf, id=5657, 569.12625pt x 385.44pt>
 File: figs/lassoFit/LASSO/leg.pdf Graphic file (type pdf)
 
@@ -2664,7 +2677,7 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 321.
  (./tables/fullFit/signal/altModel_table.tex)
 
-LaTeX Warning: Float too large for page by 12.42377pt on input line 375.
+LaTeX Warning: Float too large for page by 5.41995pt on input line 375.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -4860,8 +4873,8 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 192.
  ) 
 Here is how much of TeX's memory you used:
  24319 strings out of 493014
- 480762 string characters out of 6133352
- 626971 words of memory out of 5000000
+ 480829 string characters out of 6133352
+ 625973 words of memory out of 5000000
  26277 multiletter control sequences out of 15000+600000
  34810 words of font info for 227 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -4895,7 +4908,7 @@ s/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2016/texmf-dist/fonts/
 type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2016/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2016/texmf-dist/fonts/ty
 pe1/public/amsfonts/cm/cmtt12.pfb>
-Output written on main.pdf (113 pages, 8286761 bytes).
+Output written on main.pdf (113 pages, 8287453 bytes).
 PDF statistics:
  16601 PDF objects out of 18468 (max. 8388607)
  7636 compressed objects within 77 object streams
