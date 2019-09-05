@@ -1,51 +1,56 @@
-This is BibTeX, Version 0.99c (Web2C 7.5.6)
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: main.aux
 The style file: LHCb.bst
 Database file #1: main.bib
+Repeated entry---line 279 of file main.bib
+ : @article{Aaij:2017kbo
+ :                      ,
+I'm skipping whatever remains of this entry
 Database file #2: LHCb-PAPER.bib
 Database file #3: LHCb-CONF.bib
 Database file #4: LHCb-DP.bib
 Database file #5: LHCb-TDR.bib
 Warning--empty booktitle in Blusk:2012it
-You've used 51 entries,
+You've used 62 entries,
             2829 wiz_defined-function locations,
-            1036 strings with 13965 characters,
-and the built_in function-call counts, 215137 in all, are:
-= -- 23491
-> -- 389
-< -- 2
-+ -- 1279
-- -- 93
-* -- 21859
-:= -- 26542
-add.period$ -- 52
-call.type$ -- 51
-change.case$ -- 47
+            1114 strings with 16348 characters,
+and the built_in function-call counts, 235782 in all, are:
+= -- 25744
+> -- 453
+< -- 4
++ -- 1491
+- -- 109
+* -- 23824
+:= -- 29317
+add.period$ -- 65
+call.type$ -- 62
+change.case$ -- 58
 chr.to.int$ -- 0
-cite$ -- 52
-duplicate$ -- 3476
-empty$ -- 22716
-format.name$ -- 93
-if$ -- 46858
+cite$ -- 63
+duplicate$ -- 4076
+empty$ -- 24763
+format.name$ -- 109
+if$ -- 51278
 int.to.chr$ -- 0
-int.to.str$ -- 51
-missing$ -- 187
-newline$ -- 318
-num.names$ -- 51
-pop$ -- 850
+int.to.str$ -- 62
+missing$ -- 212
+newline$ -- 385
+num.names$ -- 61
+pop$ -- 972
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 283
+skip$ -- 353
 stack$ -- 0
-substring$ -- 64229
-swap$ -- 6
-text.length$ -- 104
+substring$ -- 69720
+swap$ -- 11
+text.length$ -- 128
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 1
-while$ -- 1238
-width$ -- 53
-write$ -- 765
-(There was 1 warning)
+while$ -- 1461
+width$ -- 64
+write$ -- 935
+(There was 1 error message)

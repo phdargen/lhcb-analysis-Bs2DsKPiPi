@@ -59,7 +59,7 @@ A^{det}(\Km\pip) = \frac{\epsilon^{det}(\Km\pip) -\epsilon^{det}(\Kp\pim)}{\epsi
 \end{equation}
 
 is used.
-
+%
 %$A^{det}(\Km\pip$) can further be expressed, assuming no CP violation in Cabbibo-favoured charm modes, 
 This asymmetry can be measured from the difference in asymmetries in the $\Dp\to\Km\pip\pip$ and $\Dp\to\KS\pip$ modes
 % from Cabbibo-favoured charm calibration modes (assuming no CP violation)
@@ -78,12 +78,12 @@ The small asymmetry in the neutral kaon system, $A(\bar{\Kz})= - A(\Kz) =  (-0.0
 
 We use a dedicated LHCb tool to determine $A^{det}(\Km\pip)$ for all data taking periods used in this analysis. A detailed description can be found in \cite{Davis:2310213}.
 The tool provides large calibration samples of $\Dpm\to\Kpm\pipm\pipm$ and $\Dpm\to\KS\pipm$ decays, which are used to determine the asymmetry following Eq. \ref{eq:KpiDetAsymDef}. 
-Several weighting steps are performed to match the kinematics of the calibration samples to our signal decay sample: 
-
+Several weighting steps are performed to match the kinematics of the calibration samples to our signal decay sample.
+%
 First, weights are assigned to the $\Kpm$ and $\pipm$ of the $\Dpm\to\Kpm\pipm\pipm$ sample, using $\ptot$, $\eta$ of the $\Kpm$ and $\pt$, $\eta$ of the $\pipm$ from our $\Bs\to\Ds\kaon\pion\pion$ signal decay.
 Then, weights are assigned to the $\Dpm$ ($\pt, \eta$) and the $\pipm$ ($\pt$) of the $\Dpm\to\KS\pipm$ sample to match the corresponding, weighted distributions of the $\Dpm\to\Kpm\pipm\pipm$ sample.
 In a last step, weights are assigned to match the bachelor pions $\phi$ distributions between the two calibration samples.
-
+%
 After the samples are weighted, fits are performed to the invariant $m(\Km\pip\pip)$/$m(\Kp\pim\pim)$ and $m(\KS\pip)$/$m(\KS\pim)$ distributions to determine $A^{det}(\Km\pip)$. 
 The PDFs used to describe the invariant mass distributions consist of gaussian functions for the signal component and exponentials describing the residual background.
 
@@ -91,6 +91,14 @@ The detection asymmetry is determined separately for every year and (since it is
 Serving as an example for Run-I and Run-II, the fits used to determine $N(\Dp\to\Km\pip\pip)$/$N(\Dm\to\Kp\pim\pim)$ and $N(\Dp\to\KS\pip)$/$N(\Dm\to\KS\pim)$ 
 for 2011, magnet up data and 2015, magnet up data are shown in Fig.~\ref{fig:KpiAsymFitsRun1} and \ref{fig:KpiAsymFitsRun2} respectively.
 The obtained values of $A^{det}(\Km\pip)$ + $A(\Kz)$ for all years and polarities are shown in Table \ref{table:KpiDetectionAsym}.
+Here, only the decay modes $\Bs\to ( D_s \to KK \pi)\kaon\pion\pion$ and $\Bs\to (  D_s \to \pi\pi\pi)\kaon\pion\pion$ are considered.
+For $\Bs\to ( \Ds \to K \pi \pi)\kaon\pion\pion$,
+the contributions of the two oppositelycharged kaons cancel each other and a detection asymmetry of zero with the same uncertainty as determined for $D_s \to KK \pi$ and $D_s \to \pi\pi\pi$ is assumed.
+In contrast, only the decay mode $D_s \to KK \pi$ is a source of detection asymmetry for $\Bs \to \Ds \pi \pion\pion$
+decays resulting in an average detection asymmetry of 
+$A^{det}(\Km\pip) = -0.07 \pm 0.15 \%$ (Run-I) 
+and $A^{det}(\Km\pip) = -0.08 \pm 0.21 \%$ (Run-II).
+
 
 \begin{figure}[hp]
 \centering
@@ -135,7 +143,7 @@ average & -0.91 $\pm$ 0.22\\
 \hline
 \hline
 \end{tabular}
-\caption{Summary of the $\Km\pip$ detection asymmetry obtained from the fits to the Run-I and Run-II calibration samples.}
+\caption{Summary of the $\Km\pip$ detection asymmetries for $\Bs\to \Ds K \pion\pion$ decays obtained from the fits to the Run-I and Run-II calibration samples.}
 \label{table:KpiDetectionAsym}
 \end{table}
 

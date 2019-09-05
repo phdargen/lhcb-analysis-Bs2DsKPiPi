@@ -8,10 +8,42 @@
 \mciteSetBstSublistLabelBeginEnd{\mcitemaxwidthsubitemform\space}
 {\relax}{\relax}
 
+\bibitem{Blusk:1471393}
+S.~Blusk, \ifthenelse{\boolean{articletitles}}{\emph{{First observations and
+  measurements of the branching fractions for the decays $\bar{B}^0_s\to
+  D_s^+K^-\pi^+\pi^-$ and $\bar{B}^0\to D_s^+K^-\pi^+\pi^-$}}, }{}
+  {LHCb-ANA-2012-076}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Blusk:2012it}
+LHCb, S.~Blusk, \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of the
+  CP observables in $\bar{B}^0_s \to D^+_sK^-$ and first observation of
+  $\bar{B}^0_{(s)}\to D^+_sK^-\pi^+\pi^-$ and $\bar{B}_s^0\to
+  D_{s1}(2536)^+\pi^-$}}, }{} 2012.
+\newblock \href{http://arxiv.org/abs/1212.4180}{{\normalfont\ttfamily
+  arXiv:1212.4180}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{LHCb-PAPER-2012-033}
+LHCb collaboration, R.~Aaij {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{First observation of the decays
+  $\Bzb_{\!\!\!\!(s)} \to\Dsp\Km\pip\pim$ and $\Bsb\to D_{s1}(2536)^+\pim$}},
+  }{}\href{http://dx.doi.org/10.1103/PhysRevD.86.112005}{Phys.\ Rev.\
+  \textbf{D86} (2012) 112005},
+  \href{http://arxiv.org/abs/1211.1541}{{\normalfont\ttfamily
+  arXiv:1211.1541}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
 \bibitem{Fleischer:2003yb}
 R.~Fleischer, \ifthenelse{\boolean{articletitles}}{\emph{{New strategies to
-  obtain insights into CP violation through B(s) ---> D(s)+- K-+, D(s)*+- K-+,
-  ... and B(d) ---> D+- pi-+, D*+- pi-+, ... decays}},
+  obtain insights into CP violation through $B_s \to D_s^\pm K^\mp, D_s^{*\pm}
+  K^{\mp}, ... and B_d \to D^\pm \pi^\mp, D^{*\pm} \pi^{\mp}, ...$ decays}},
   }{}\href{http://dx.doi.org/10.1016/j.nuclphysb.2003.08.010}{Nucl.\ Phys.\
   \textbf{B671} (2003) 459},
   \href{http://arxiv.org/abs/hep-ph/0304027}{{\normalfont\ttfamily
@@ -32,28 +64,23 @@ K.~De~Bruyn {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{Exploring
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
-\bibitem{Blusk:1471393}
-S.~Blusk, \ifthenelse{\boolean{articletitles}}{\emph{{First observations and
-  measurements of the branching fractions for the decays $\bar{B}^0_s\to
-  D_s^+K^-\pi^+\pi^-$ and $\bar{B}^0\to D_s^+K^-\pi^+\pi^-$}}, }{}\relax
+\bibitem{Battista:2196464}
+L.~collaboration, \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of
+  time-dependent $CP$-violation observables in $B^{0}_{s} \rightarrow
+  D_{s}^{\mp} K^{\pm}$}}, }{}
+  \href{http://cdsweb.cern.ch/search?p=LHCb-ANA-2016-052&f=reportnumber&action_search=Search&c=LHCb+Analysis+Notes}
+  {LHCb-ANA-2016-052}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
-\bibitem{Blusk:2012it}
-LHCb, S.~Blusk, \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of the
-  CP observables in $\bar{B}^0_s \to D^+_sK^-$ and first observation of
-  $\bar{B}^0_{(s)}\to D^+_sK^-\pi^+\pi^-$ and $\bar{B}_s^0\to
-  D_{s1}(2536)^+\pi^-$}}, }{} 2012.
-\newblock \href{http://arxiv.org/abs/1212.4180}{{\normalfont\ttfamily
-  arXiv:1212.4180}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{Peskin}
-M.~E. Peskin and D.~V. Schroeder, {\em An Introduction To Quantum Field Theory
-  (Frontiers in Physics)}, Westview Press, 1995\relax
+\bibitem{Aaij:2017lff}
+LHCb, R.~Aaij {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of $CP$ asymmetry in
+  $B_s^0 \to D_s^{\mp} K^{\pm}$ decays}},
+  }{}\href{http://dx.doi.org/10.1007/JHEP03(2018)059}{JHEP \textbf{03} (2018)
+  059}, \href{http://arxiv.org/abs/1712.07428}{{\normalfont\ttfamily
+  arXiv:1712.07428}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -69,8 +96,8 @@ E.~Byckling and K.~Kajantie, {\em Particle Kinematics}, John Wiley \& Sons,
 S.~Mandelstam, J.~E. Paton, R.~F. Peierls, and A.~Q. Sarker,
   \ifthenelse{\boolean{articletitles}}{\emph{Isobar approximation of production
   processes},
-  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0003-4916(62)90067-2}{A%
-nnals of Physics \textbf{18} (1962), no.~2 198 }\relax
+  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0003-4916(62)90067-2}{Annals
+  of Physics \textbf{18} (1962), no.~2 198 }\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -87,8 +114,19 @@ D.~J. Herndon, P.~S\"oding, and R.~J. Cashmore,
 \bibitem{isobar2}
 J.~J. Brehm, \ifthenelse{\boolean{articletitles}}{\emph{Unitarity and the
   isobar model: Two-body discontinuities},
-  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0003-4916(77)90023-9}{A%
-nnals of Physics \textbf{108} (1977), no.~2 454 }\relax
+  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0003-4916(77)90023-9}{Annals
+  of Physics \textbf{108} (1977), no.~2 454 }\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{dArgent:2017gzv}
+P.~d'Argent {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{Amplitude
+  Analyses of $D^0 \to {\pi^+\pi^-\pi^+\pi^-}$ and $D^0 \to {K^+K^-\pi^+\pi^-}$
+  Decays}}, }{}\href{http://dx.doi.org/10.1007/JHEP05(2017)143}{JHEP
+  \textbf{05} (2017) 143},
+  \href{http://arxiv.org/abs/1703.08505}{{\normalfont\ttfamily
+  arXiv:1703.08505}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -117,70 +155,6 @@ Particle Data Group, C.~Patrignani {\em et~al.},
   \ifthenelse{\boolean{articletitles}}{\emph{{Review of Particle Physics}},
   }{}\href{http://dx.doi.org/10.1088/1674-1137/40/10/100001}{Chin.\ Phys.\
   \textbf{C40} (2016), no.~10 100001}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{BuggSigma}
-D.~V. {Bugg}, \ifthenelse{\boolean{articletitles}}{\emph{{The mass of the
-  {$\sigma$} pole}},
-  }{}\href{http://dx.doi.org/10.1088/0954-3899/34/1/011}{Journal of Physics G
-  Nuclear Physics \textbf{34} (2007) 151},
-  \href{http://arxiv.org/abs/hep-ph/0608081}{{\normalfont\ttfamily
-  arXiv:hep-ph/0608081}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{GS}
-G.~J. Gounaris and J.~J. Sakurai,
-  \ifthenelse{\boolean{articletitles}}{\emph{Finite-width corrections to the
-  vector-meson-dominance prediction for $\rho \rightarrow{e}^{+}{e}^{-}$},
-  }{}\href{http://dx.doi.org/10.1103/PhysRevLett.21.244}{Phys.\ Rev.\ Lett.\
-  \textbf{21} (1968) 244}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{Flatte}
-S.~M. Flatt\'{e}, \ifthenelse{\boolean{articletitles}}{\emph{Coupled-channel
-  analysis of the $\pi \eta$ and \text{KK} systems near \text{KK} threshold},
-  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0370-2693(76)90654-7}{P%
-hysics Letters B \textbf{63} (1976), no.~2 224 }\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{Flatte2}
-BES Collaboration, M.~Ablikim {\em et~al.},
-  \ifthenelse{\boolean{articletitles}}{\emph{{Resonances in $\jpsi \to \phi
-  \pip \pim$ and $\phi \Kp \Km$}},
-  }{}\href{http://dx.doi.org/10.1016/j.physletb.2004.12.041}{Phys.\ Lett.\
-  \textbf{B607} (2005) 243},
-  \href{http://arxiv.org/abs/hep-ex/0411001}{{\normalfont\ttfamily
-  arXiv:hep-ex/0411001}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{Buggf0}
-D.~V. Bugg, \ifthenelse{\boolean{articletitles}}{\emph{{A study in depth of
-  f0(1370)}}, }{}\href{http://dx.doi.org/10.1140/epjc/s10052-007-0389-1}{Eur.\
-  Phys.\ J.\  \textbf{C52} (2007) 55},
-  \href{http://arxiv.org/abs/0706.1341}{{\normalfont\ttfamily
-  arXiv:0706.1341}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{LHCb:2012ae}
-LHCb Collaboration, R.~Aaij {\em et~al.},
-  \ifthenelse{\boolean{articletitles}}{\emph{{Analysis of the resonant
-  components in $B_s \to J/\psi\pi^+\pi^-$}},
-  }{}\href{http://dx.doi.org/10.1103/PhysRevD.86.052006}{Phys.\ Rev.\
-  \textbf{D86} (2012) 052006},
-  \href{http://arxiv.org/abs/1204.5643}{{\normalfont\ttfamily
-  arXiv:1204.5643}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -240,17 +214,6 @@ J.-J. Zhu, \ifthenelse{\boolean{articletitles}}{\emph{{Explicit expressions of
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
-\bibitem{dArgent:2017gzv}
-P.~d'Argent {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{Amplitude
-  Analyses of $D^0 \to {\pi^+\pi^-\pi^+\pi^-}$ and $D^0 \to {K^+K^-\pi^+\pi^-}$
-  Decays}}, }{}\href{http://dx.doi.org/10.1007/JHEP05(2017)143}{JHEP
-  \textbf{05} (2017) 143},
-  \href{http://arxiv.org/abs/1703.08505}{{\normalfont\ttfamily
-  arXiv:1703.08505}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
 \bibitem{Williams:2008wu}
 M.~Williams, \ifthenelse{\boolean{articletitles}}{\emph{{Numerical Object
   Oriented Quantum Field Theory Calculations}},
@@ -264,8 +227,10 @@ M.~Williams, \ifthenelse{\boolean{articletitles}}{\emph{{Numerical Object
 \EndOfBibitem
 \bibitem{Aaij:2017kbo}
 LHCb, R.~Aaij {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{Studies
-  of the resonance structure in $D^{0} \to K^\mp \pi^\pm \pi^\pm \pi^\mp$
-  decays}}, }{}Submitted to: Eur.\ Phys.\ J.\ C (2017)
+  of the resonance structure in $D^{0} \rightarrow K^\mp \pi ^\pm \pi ^\pm \pi
+  ^\mp $ decays}},
+  }{}\href{http://dx.doi.org/10.1140/epjc/s10052-018-5758-4}{Eur.\ Phys.\ J.\
+  \textbf{C78} (2018), no.~6 443},
   \href{http://arxiv.org/abs/1712.08609}{{\normalfont\ttfamily
   arXiv:1712.08609}}\relax
 \mciteBstWouldAddEndPuncttrue
@@ -326,12 +291,10 @@ LHCb collaboration, R.~Aaij {\em et~al.},
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
-\bibitem{Aaij:2017lff}
-LHCb, R.~Aaij {\em et~al.},
-  \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of $CP$ asymmetry in
-  $B_s^0 \to D_s^{\mp} K^{\pm}$ decays}}, }{}Submitted to: JHEP (2017)
-  \href{http://arxiv.org/abs/1712.07428}{{\normalfont\ttfamily
-  arXiv:1712.07428}}\relax
+\bibitem{Schiller:1325608}
+M.~Schiller, \ifthenelse{\boolean{articletitles}}{\emph{{Proper time resolution
+  studies in $B_s \longrightarrow D_s \pi$}}, }{} Tech. Rep. LHCb-INT-2011-005.
+  CERN-LHCb-INT-2011-005, CERN, Geneva, Feb, 2011\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -345,14 +308,23 @@ LHCb collaboration, L.~Zhang,
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
+\bibitem{LHCb-INT-2017-007}
+A.~Poluektov, \ifthenelse{\boolean{articletitles}}{\emph{{Correction of
+  simulated particle identification response in LHCb using kernel density
+  estimation}}, }{}
+  \href{http://cdsweb.cern.ch/search?p=LHCb-INT-2017-007&f=reportnumber&action_search=Search&c=LHCb+Internal+Notes}
+  {LHCb-INT-2017-007}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
 \bibitem{HFAG}
 Heavy Flavor Averaging Group, Y.~Amhis {\em et~al.},
   \ifthenelse{\boolean{articletitles}}{\emph{{Averages of $b$-hadron,
   $c$-hadron, and $\tau$-lepton properties as of summer 2014}},
   }{}\href{http://arxiv.org/abs/1412.7515}{{\normalfont\ttfamily
   arXiv:1412.7515}}, {updated results and plots available at
-  \href{http://www.slac.stanford.edu/xorg/hfag/}{{\texttt{http://www.slac.stan%
-ford.edu/xorg/hfag/}}}}\relax
+  \href{http://www.slac.stanford.edu/xorg/hfag/}{{\texttt{http://www.slac.stanford.edu/xorg/hfag/}}}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -367,17 +339,6 @@ T.~M. Karbach, G.~Raven, and M.~Schiller,
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
-\bibitem{Aaij:2016psi}
-LHCb, R.~Aaij {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{A new
-  algorithm for identifying the flavour of $B_s^0$ mesons at LHCb}},
-  }{}\href{http://dx.doi.org/10.1088/1748-0221/11/05/P05010}{JINST \textbf{11}
-  (2016), no.~05 P05010},
-  \href{http://arxiv.org/abs/1602.07252}{{\normalfont\ttfamily
-  arXiv:1602.07252}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
 \bibitem{LHCb-PAPER-2011-027}
 LHCb collaboration, R.~Aaij {\em et~al.},
   \ifthenelse{\boolean{articletitles}}{\emph{{Opposite-side flavour tagging of
@@ -386,6 +347,17 @@ LHCb collaboration, R.~Aaij {\em et~al.},
   \textbf{C72} (2012) 2022},
   \href{http://arxiv.org/abs/1202.4979}{{\normalfont\ttfamily
   arXiv:1202.4979}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Aaij:2016psi}
+LHCb, R.~Aaij {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{A new
+  algorithm for identifying the flavour of $B_s^0$ mesons at LHCb}},
+  }{}\href{http://dx.doi.org/10.1088/1748-0221/11/05/P05010}{JINST \textbf{11}
+  (2016), no.~05 P05010},
+  \href{http://arxiv.org/abs/1602.07252}{{\normalfont\ttfamily
+  arXiv:1602.07252}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -445,6 +417,14 @@ M.~Pivk and F.~R. Le~Diberder,
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
+\bibitem{Tibshirani94regressionshrinkage}
+R.~Tibshirani, \ifthenelse{\boolean{articletitles}}{\emph{Regression shrinkage
+  and selection via the {Lasso}}, }{}Journal of the Royal Statistical Society,
+  Series B \textbf{58} (1994) 267\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
 \bibitem{Guegan:2015mea}
 B.~Guegan, J.~Hardin, J.~Stevens, and M.~Williams,
   \ifthenelse{\boolean{articletitles}}{\emph{{Model selection for amplitude
@@ -452,14 +432,6 @@ B.~Guegan, J.~Hardin, J.~Stevens, and M.~Williams,
   \textbf{10} (2015), no.~09 P09002},
   \href{http://arxiv.org/abs/1505.05133}{{\normalfont\ttfamily
   arXiv:1505.05133}}\relax
-\mciteBstWouldAddEndPuncttrue
-\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
-{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
-\EndOfBibitem
-\bibitem{Tibshirani94regressionshrinkage}
-R.~Tibshirani, \ifthenelse{\boolean{articletitles}}{\emph{Regression shrinkage
-  and selection via the {Lasso}}, }{}Journal of the Royal Statistical Society,
-  Series B \textbf{58} (1994) 267\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -472,11 +444,14 @@ G.~Schwarz, \ifthenelse{\boolean{articletitles}}{\emph{Estimating the dimension
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
-\bibitem{AIC}
-H.~Akaike, \ifthenelse{\boolean{articletitles}}{\emph{A new look at the
-  statistical model identification},
-  }{}\href{http://dx.doi.org/10.1109/TAC.1974.1100705}{IEEE Transactions on
-  Automatic Control \textbf{19} (1974) 716}\relax
+\bibitem{KKpipi}
+CLEO Collaboration, M.~Artuso {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Amplitude analysis of $D^0\to
+  K^+K^-\pi^+\pi^-$}},
+  }{}\href{http://dx.doi.org/10.1103/PhysRevD.85.122002}{Phys.\ Rev.\
+  \textbf{D85} (2012) 122002},
+  \href{http://arxiv.org/abs/1201.5716}{{\normalfont\ttfamily
+  arXiv:1201.5716}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -485,8 +460,7 @@ H.~Akaike, \ifthenelse{\boolean{articletitles}}{\emph{A new look at the
 T.~Skwarnicki, {\em {A study of the radiative cascade transitions between the
   Upsilon-prime and Upsilon resonances}}, PhD thesis, Institute of Nuclear
   Physics, Krakow, 1986,
-  {\href{http://inspirehep.net/record/230779/files/230779.pdf}{DESY-F31-86-02}%
-}\relax
+  {\href{http://inspirehep.net/record/230779/files/230779.pdf}{DESY-F31-86-02}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -494,7 +468,7 @@ T.~Skwarnicki, {\em {A study of the radiative cascade transitions between the
 \bibitem{Hill:2253246}
 D.~Hill, M.~John, and P.~Gandini, \ifthenelse{\boolean{articletitles}}{\emph{{A
   study of partially reconstructed $B^\pm \to D^{\ast 0} h^\pm$ decays using
-  the $D^0 \to K\pi, KK, \pi\pi$ final states}}, }{}\relax
+  the $D^0 \to K\pi, KK, \pi\pi$ final states}}, }{} {LHCb-ANA-2017-018}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
@@ -502,6 +476,154 @@ D.~Hill, M.~John, and P.~Gandini, \ifthenelse{\boolean{articletitles}}{\emph{{A
 \bibitem{Golub:1996:MC:248979}
 G.~H. Golub and C.~F. Van~Loan, {\em Matrix Computations (3rd Ed.)}, Johns
   Hopkins University Press, Baltimore, MD, USA, 1996\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{LHCb-ANA-2012-053}
+L.~collaboration, \ifthenelse{\boolean{articletitles}}{\emph{{Precision
+  measurement of the $B_s$ oscillation frequency with the decay $B_s \to D_s
+  \pi$}}, }{}
+  \href{http://cdsweb.cern.ch/search?p=LHCb-ANA-2012-053&f=reportnumber&action_search=Search&c=LHCb+Analysis+Notes}
+  {LHCb-ANA-2012-053}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{LHCb-PAPER-2013-006}
+LHCb collaboration, R.~Aaij {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Precision measurement of the
+  $\Bs$--$\Bsb$ oscillation frequency in the decay $\Bs\to\Dsm\pip$}},
+  }{}\href{http://dx.doi.org/10.1088/1367-2630/15/5/053021}{New J.\ Phys.\
+  \textbf{15} (2013) 053021},
+  \href{http://arxiv.org/abs/1304.4741}{{\normalfont\ttfamily
+  arXiv:1304.4741}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{delAmoSanchez:2010xz}
+BaBar, P.~del Amo~Sanchez {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of D0-antiD0 mixing
+  parameters using D0 ---> K(S)0 pi+ pi- and D0 ---> K(S)0 K+ K- decays}},
+  }{}\href{http://dx.doi.org/10.1103/PhysRevLett.105.081803}{Phys.\ Rev.\
+  Lett.\  \textbf{105} (2010) 081803},
+  \href{http://arxiv.org/abs/1004.5053}{{\normalfont\ttfamily
+  arXiv:1004.5053}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Aaij:2015lsa}
+LHCb, R.~Aaij {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{Studies
+  of the resonance structure in $D^0\to K^0_S K^{\pm}\pi^{\mp}$ decays}},
+  }{}\href{http://dx.doi.org/10.1103/PhysRevD.93.052018}{Phys.\ Rev.\
+  \textbf{D93} (2016), no.~5 052018},
+  \href{http://arxiv.org/abs/1509.06628}{{\normalfont\ttfamily
+  arXiv:1509.06628}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{BuggSigma}
+D.~V. {Bugg}, \ifthenelse{\boolean{articletitles}}{\emph{{The mass of the
+  {$\sigma$} pole}},
+  }{}\href{http://dx.doi.org/10.1088/0954-3899/34/1/011}{Journal of Physics G
+  Nuclear Physics \textbf{34} (2007) 151},
+  \href{http://arxiv.org/abs/hep-ph/0608081}{{\normalfont\ttfamily
+  arXiv:hep-ph/0608081}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Lass}
+W. Dunwoodie.
+  \href{http://www.slac.stanford.edu/~wmd/kpi_swave/kpi_swave_fit.note} {Fits
+  to $K\pi$ $I=\frac{1}{2}$ $S-$wave amplitude and phase data}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Aston:1987ir}
+D.~Aston {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{A Study of
+  $K^- \pi^+$ Scattering in the Reaction $K^- p \to K^- \pi^+ n$ at
+  $11GeV/c$}}, }{}\href{http://dx.doi.org/10.1016/0550-3213(88)90028-4}{Nucl.\
+  Phys.\  \textbf{B296} (1988) 493}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Aubert:2005ce}
+BaBar, B.~Aubert {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Dalitz-plot analysis of the
+  decays $B^\pm \to K^\pm \pi^\mp \pi^\pm$}},
+  }{}\href{http://dx.doi.org/10.1103/PhysRevD.72.072003,
+  10.1103/PhysRevD.74.099903}{Phys.\ Rev.\  \textbf{D72} (2005) 072003},
+  \href{http://arxiv.org/abs/hep-ex/0507004}{{\normalfont\ttfamily
+  arXiv:hep-ex/0507004}}, [Erratum: Phys. Rev.D74,099903(2006)]\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{GS}
+G.~J. Gounaris and J.~J. Sakurai,
+  \ifthenelse{\boolean{articletitles}}{\emph{Finite-width corrections to the
+  vector-meson-dominance prediction for $\rho \rightarrow{e}^{+}{e}^{-}$},
+  }{}\href{http://dx.doi.org/10.1103/PhysRevLett.21.244}{Phys.\ Rev.\ Lett.\
+  \textbf{21} (1968) 244}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Akhmetshin:2001ig}
+CMD-2, R.~R. Akhmetshin {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Measurement of $e^+ e^- \to \pi^+
+  \pi^-$ cross-section with CMD-2 around rho meson}},
+  }{}\href{http://dx.doi.org/10.1016/S0370-2693(02)01168-1}{Phys.\ Lett.\
+  \textbf{B527} (2002) 161},
+  \href{http://arxiv.org/abs/hep-ex/0112031}{{\normalfont\ttfamily
+  arXiv:hep-ex/0112031}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Schubiger}
+M.~S. et~al.\, \ifthenelse{\boolean{articletitles}}{\emph{{Search for CP
+  violation in the $D^0 \to KK\pi\pi$ decay through a full amplitude
+  analysis}}, }{}
+  \href{http://cdsweb.cern.ch/search?p=LHCb-ANA-2017-064&f=reportnumber&action_search=Search&c=LHCb+Analysis+Notes}
+  {LHCb-ANA-2017-064}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Aaij:2648586}
+LHCb Collaboration, R.~Aaij, \ifthenelse{\boolean{articletitles}}{\emph{{Search
+  for $CP$ violation through an amplitude analysis of $D^0\rightarrow K^+ K^-
+  \pi^+ \pi^-$ decays}}, }{} Tech. Rep. arXiv:1811.08304. LHCB-PAPER-2018-041,
+  CERN, Geneva, Nov, 2018.
+\newblock * Temporary entry *\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Flatte}
+S.~M. Flatt\'{e}, \ifthenelse{\boolean{articletitles}}{\emph{Coupled-channel
+  analysis of the $\pi \eta$ and \text{KK} systems near \text{KK} threshold},
+  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/0370-2693(76)90654-7}{Physics
+  Letters B \textbf{63} (1976), no.~2 224 }\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Flatte2}
+BES Collaboration, M.~Ablikim {\em et~al.},
+  \ifthenelse{\boolean{articletitles}}{\emph{{Resonances in $\jpsi \to \phi
+  \pip \pim$ and $\phi \Kp \Km$}},
+  }{}\href{http://dx.doi.org/10.1016/j.physletb.2004.12.041}{Phys.\ Lett.\
+  \textbf{B607} (2005) 243},
+  \href{http://arxiv.org/abs/hep-ex/0411001}{{\normalfont\ttfamily
+  arXiv:hep-ex/0411001}}\relax
 \mciteBstWouldAddEndPuncttrue
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax

@@ -1,0 +1,68 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Formalism}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Decay rates and CP-observables}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Amplitude model}{section.2}% 4
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Form Factors and Resonance Lineshapes}{subsection.2.2}% 5
+\BOOKMARK [3][-]{subsubsection.2.2.2}{Spin Densities}{subsection.2.2}% 6
+\BOOKMARK [2][-]{subsection.2.3}{Fit implementation}{section.2}% 7
+\BOOKMARK [2][-]{subsection.2.4}{Validation}{section.2}% 8
+\BOOKMARK [1][-]{section.3}{Analysis strategy}{}% 9
+\BOOKMARK [1][-]{section.4}{Data samples and event selection}{}% 10
+\BOOKMARK [2][-]{subsection.4.1}{Stripping and Trigger selection}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.2}{Offline selection}{section.4}% 12
+\BOOKMARK [3][-]{subsubsection.4.2.1}{Phase space region}{subsection.4.2}% 13
+\BOOKMARK [3][-]{subsubsection.4.2.2}{Physics background vetoes}{subsection.4.2}% 14
+\BOOKMARK [3][-]{subsubsection.4.2.3}{Training of multivariate classifier}{subsection.4.2}% 15
+\BOOKMARK [3][-]{subsubsection.4.2.4}{Final selection}{subsection.4.2}% 16
+\BOOKMARK [2][-]{subsection.4.3}{Simulation}{section.4}% 17
+\BOOKMARK [1][-]{section.5}{Yields determination}{}% 18
+\BOOKMARK [2][-]{subsection.5.1}{Signal model}{section.5}% 19
+\BOOKMARK [2][-]{subsection.5.2}{Background models}{section.5}% 20
+\BOOKMARK [2][-]{subsection.5.3}{Results}{section.5}% 21
+\BOOKMARK [1][-]{section.6}{Decay-time Resolution}{}% 22
+\BOOKMARK [2][-]{subsection.6.1}{Calibration for Run-I data}{section.6}% 23
+\BOOKMARK [2][-]{subsection.6.2}{Calibration for Run-II data }{section.6}% 24
+\BOOKMARK [1][-]{section.7}{Acceptance}{}% 25
+\BOOKMARK [2][-]{subsection.7.1}{MC corrections}{section.7}% 26
+\BOOKMARK [3][-]{subsubsection.7.1.1}{Truth matching of simulated candidates}{subsection.7.1}% 27
+\BOOKMARK [3][-]{subsubsection.7.1.2}{Correction of data-simulation differences}{subsection.7.1}% 28
+\BOOKMARK [2][-]{subsection.7.2}{Decay-time acceptance}{section.7}% 29
+\BOOKMARK [2][-]{subsection.7.3}{Phase space acceptance}{section.7}% 30
+\BOOKMARK [1][-]{section.8}{Flavour Tagging}{}% 31
+\BOOKMARK [2][-]{subsection.8.1}{OS tagger combination}{section.8}% 32
+\BOOKMARK [2][-]{subsection.8.2}{Tagging performance}{section.8}% 33
+\BOOKMARK [1][-]{section.9}{Production and Detection Asymmetries}{}% 34
+\BOOKMARK [2][-]{subsection.9.1}{Bs Production Asymmetry}{section.9}% 35
+\BOOKMARK [2][-]{subsection.9.2}{K- + Detection Asymmetry}{section.9}% 36
+\BOOKMARK [1][-]{section.10}{Decay-time fit}{}% 37
+\BOOKMARK [2][-]{subsection.10.1}{Fit to B 0s Ds data}{section.10}% 38
+\BOOKMARK [2][-]{subsection.10.2}{Fit to B 0s DsK data}{section.10}% 39
+\BOOKMARK [1][-]{section.11}{Time-dependent amplitude fit}{}% 40
+\BOOKMARK [2][-]{subsection.11.1}{Signal Model Construction}{section.11}% 41
+\BOOKMARK [2][-]{subsection.11.2}{Results}{section.11}% 42
+\BOOKMARK [1][-]{section.12}{Systematic uncertainties}{}% 43
+\BOOKMARK [2][-]{subsection.12.1}{Fit bias}{section.12}% 44
+\BOOKMARK [2][-]{subsection.12.2}{Background subtraction}{section.12}% 45
+\BOOKMARK [2][-]{subsection.12.3}{Decay-time acceptance}{section.12}% 46
+\BOOKMARK [2][-]{subsection.12.4}{Decay-time resolution and tagging}{section.12}% 47
+\BOOKMARK [2][-]{subsection.12.5}{Production, detection asymmetries and mixing frequency}{section.12}% 48
+\BOOKMARK [2][-]{subsection.12.6}{Multiple candidates}{section.12}% 49
+\BOOKMARK [2][-]{subsection.12.7}{Length and momentum scales}{section.12}% 50
+\BOOKMARK [2][-]{subsection.12.8}{Phase space acceptance}{section.12}% 51
+\BOOKMARK [2][-]{subsection.12.9}{Resonance description}{section.12}% 52
+\BOOKMARK [2][-]{subsection.12.10}{Alternative amplitude models}{section.12}% 53
+\BOOKMARK [1][-]{section.13}{Summary}{}% 54
+\BOOKMARK [1][-]{appendix.A}{Parametrization of Amplitude Lineshapes}{}% 55
+\BOOKMARK [1][-]{appendix.B}{Stripping and Trigger cuts}{}% 56
+\BOOKMARK [1][-]{appendix.C}{Details of multivariate classifier}{}% 57
+\BOOKMARK [1][-]{appendix.D}{Detailed mass fits}{}% 58
+\BOOKMARK [1][-]{appendix.E}{Decay-time Resolution fits}{}% 59
+\BOOKMARK [1][-]{appendix.F}{Comparison of time-acceptance in subsamples}{}% 60
+\BOOKMARK [1][-]{appendix.G}{Comparison of phase-space acceptance in subsamples}{}% 61
+\BOOKMARK [1][-]{appendix.H}{OS tagger calibration parameters}{}% 62
+\BOOKMARK [1][-]{appendix.I}{Spin Amplitudes}{}% 63
+\BOOKMARK [1][-]{appendix.J}{Considered Decay Chains}{}% 64
+\BOOKMARK [1][-]{appendix.K}{Additional information for the time-dependent amplitude fit}{}% 65
+\BOOKMARK [1][-]{appendix.L}{Data-simulation comparisson}{}% 66
+\BOOKMARK [1][-]{appendix.M}{Data distributions}{}% 67
+\BOOKMARK [1][-]{section*.110}{References}{}% 68

@@ -83,27 +83,29 @@ We included a multi-dimensional Gaussian-constraint for the tagging calibration 
 
 The \CP coefficients are converted to the observables $r,\kappa,\delta,\gamma$ using the GammaCombo package.
 The corresponding confidence levels  are shown in Fig~\ref{fig:FitCL}.
-\newline
-\\
-\pretextcomment{
-As the central values of the \CP coefficients are blinded, we calculate naive estimates of them assuming the following values for the physical observables:
-$r=0.4, \kappa = 0.5, \delta = 10^\circ, \gamma = 70^\circ$.
-We plug the values of the  \CP coefficients obtained in this way, with the correct  uncertainties as extracted from data,  into the GammaCombo tool. 
-Note that the uncertainties of the physical observables depend strongly on the central values of the \CP coefficients, so this exercise 
-should only be considered as a rough estimated of the expected sensitivity.
- }
+%\newline
+%\\
+%\pretextcomment{
+%As the central values of the \CP coefficients are blinded, we calculate naive estimates of them assuming the following values for the physical observables:
+%$r=0.4, \kappa = 0.5, \delta = 10^\circ, \gamma = 70^\circ$.
+%We plug the values of the  \CP coefficients obtained in this way, with the correct  uncertainties as extracted from data,  into the GammaCombo tool. 
+%Note that the uncertainties of the physical observables depend strongly on the central values of the \CP coefficients, so this exercise 
+%should only be considered as a rough estimated of the expected sensitivity.
+% }
 
 %\newline
 %\\
-\pretextcomment{
-Currently the mixing frequency is fixed to the HFLAV value for the fit to $B_s \to D_s K \pi\pi$ data. 
-We intend to update the fit after unblinding our result from the $\Bs\to\Ds\pion\pion\pion$ fit since our precision is significantly higher.
-}
+%\pretextcomment{
+%Currently the mixing frequency is fixed to the HFLAV value for the fit to $B_s \to D_s K \pi\pi$ data. 
+%We intend to update the fit after unblinding our result from the $\Bs\to\Ds\pion\pion\pion$ fit since our precision is significantly higher.
+%}
 \begin{figure}[h]
 	\centering
 		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal/h_t.pdf} 
 		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal/h_t_log.pdf} 
-%		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal/h_asym.pdf} 		
+
+%		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal/h_t_mixed_m.eps} 		
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal/h_asym.eps} 		
 		\caption{Decay-time distribution of $\Bs\to\Ds\kaon\pion\pion$ signal candidates with the fit projection overlaid.} 
 		\label{fig:tFitSig}
 \end{figure}	
@@ -121,11 +123,11 @@ We intend to update the fit after unblinding our result from the $\Bs\to\Ds\pion
 
 \begin{figure}[h]
 	\centering
-		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_toy/cartesian_cp_coeff_r.pdf} 
-		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_toy/cartesian_cp_coeff_k.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal/cartesian_cp_coeff_r.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal/cartesian_cp_coeff_k.pdf} 
 		
-		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_toy/cartesian_cp_coeff_d.pdf} 
-		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_toy/cartesian_cp_coeff_g.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal/cartesian_cp_coeff_d.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal/cartesian_cp_coeff_g.pdf} 
 		\caption{The 1-CL contours for the physical observable $r,\kappa,\delta$ and $\gamma$ obtained with the phasespace-integrated fit. }
 		\label{fig:FitCL}	
 \end{figure} 
