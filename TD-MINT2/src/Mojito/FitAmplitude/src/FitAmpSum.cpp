@@ -230,6 +230,23 @@ double FitAmpSum::getAmpSqr(IDalitzEvent& evt, std::vector<string> ampNames, boo
     return norm(result);
 }
 
+std::complex<double> FitAmpSum::getAmpComplex(IDalitzEvent& evt, std::vector<string> ampNames, bool CC){
+    
+    std::complex<double> sum(0);
+    for(unsigned int i=0; i< this->size(); i++){
+        for (unsigned int n=0; n <ampNames.size(); n++) {
+            if(A_is_in_B(ampNames[n], this->getAmpPtr(i)->name())){
+                if(A_is_in_B("Cconj_FS", this->getAmpPtr(i)->name()) && !CC) continue;
+                sum += this->getAmpPtr(i)->getVal(evt);
+            }
+        }
+    }
+    std::complex<double> result(sqrt(fabs(efficiency(evt)))*sum);
+
+    return result;
+}
+
+
 void FitAmpSum::Gradient(IDalitzEvent& evt,vector<double>& grad,MinuitParameterSet* mps){
     
     std::complex<double> val = getVal(evt);

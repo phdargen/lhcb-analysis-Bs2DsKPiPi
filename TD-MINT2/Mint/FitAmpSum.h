@@ -121,6 +121,7 @@ class FitAmpSum
 
   virtual std::complex<double> ComplexVal(IDalitzEvent& evt){return getVal(evt);}
   double getAmpSqr(IDalitzEvent& evt, std::vector<std::string> ampNames, bool CC = false);
+  std::complex<double> getAmpComplex(IDalitzEvent& evt, std::vector<std::string> ampNames, bool CC = false);
 
     
   virtual MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 

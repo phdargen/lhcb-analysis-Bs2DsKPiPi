@@ -109,9 +109,10 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 	if(dataType=="MC")Bs_DeltaTau_func = new RooFormulaVar("Bs_DeltaTau_func","#Deltat","@0 - @1 * 1000.",RooArgList(Bs_TAU,Bs_TRUETAU));
 	else Bs_DeltaTau_func = new RooFormulaVar("Bs_DeltaTau_func","t","@0",RooArgList(Bs_TAU));	
 	RooRealVar* Bs_DeltaTau = (RooRealVar*) data->addColumn(*Bs_DeltaTau_func);
-
+	Bs_DeltaTau->setUnit("ps");
+	
 	/// Pdf
-	RooRealVar* mean1 = new RooRealVar("mean1", "mean1", 0., -0.1*data->mean(Bs_TAUERR), 0.1*data->mean(Bs_TAUERR));
+	RooRealVar* mean1 = new RooRealVar("mean1", "mean1", 0., -0.05, 0.05);
 	if(fixMean)mean1->setConstant();
 	RooRealVar* f = new RooRealVar("f" , "f", (double)gaussFraction,0.,1.);
 	if(fixGaussFraction)f->setConstant();
@@ -155,11 +156,12 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 	}
 	else {
 		fitRange_min = -0.25;
-		fitRange_max = 0.;
+		fitRange_max = 0.05;
 		//fitRange_min = -4.*data->mean(Bs_TAUERR);
 		//fitRange_max = 0.5*data->mean(Bs_TAUERR);
 	}
-	Bs_DeltaTau->setRange(fitRange_min,fitRange_max);
+	if(dataType=="MC")Bs_DeltaTau->setRange(fitRange_min,fitRange_max);
+	else Bs_DeltaTau->setRange(fitRange_min,0.05);
 
 	RooFitResult *result = pdf->fitTo(*data,Save(kTRUE),SumW2Error(kTRUE),Extended(kFALSE),NumCPU(3),Range(fitRange_min,fitRange_max));
 	cout << "result is --------------- "<<endl;
@@ -204,10 +206,72 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 	*/
 
 	/// Plot
+	TCanvas* canvas = new TCanvas();
 	int bin = 50;	
+
+	stringstream ss ;
+    	TString leg_min = " fs";
+    	ss << std::fixed << std::setprecision(1) << min*1000. ;
+    	leg_min = ss.str() + leg_min; 
+	ss.str("");
+    	TString leg_max = " fs";
+    	ss << std::fixed << std::setprecision(1) << max*1000. ;
+    	leg_max = ss.str() + leg_max; 
+
+	ss.str("");
+/*    	TString leg_sigma = "#sigma_{eff} = ";*/
+    	TString leg_sigma = "#LT#sigma_{t}#GT = ";  
+  	ss << std::fixed << std::setprecision(1) << resolution_eff.getVal()*1000 ;
+    	leg_sigma += ss.str(); 
+	ss.str("");
+    	ss << std::fixed << std::setprecision(1) << resolution_eff.getPropagatedError(*result)*1000 ;
+	leg_sigma += " #pm " + ss.str() + " fs";
+        
+	ss.str("");
+    	TString leg_mean = "#LT#mu_{t}#GT = ";  
+  	ss << std::fixed << std::setprecision(2) << mean1->getVal()*1000. ;
+    	leg_mean += ss.str(); 
+	ss.str("");
+    	ss << std::fixed << std::setprecision(2) << mean1->getError()*1000. ;
+	leg_mean += " #pm " + ss.str() + " fs";
+
+	cout << leg_sigma << endl;
+	cout << leg_mean << endl;
+
 	RooPlot* frame_m= Bs_DeltaTau->frame();
 	frame_m->SetTitle("");
+	frame_m->GetXaxis()->SetTitle("#font[132]{t (ps)}");
+        frame_m->SetMinimum(0.0);
+	data->plotOn(frame_m,Name("dataSetCut"),Binning(bin));
+	pdf->plotOn(frame_m,Name("FullPdf"),LineColor(kBlue),LineWidth(3));
+	//DoubleGaussBs.plotOn(frame_m,Components(GaussBs1),LineColor(kRed+1),LineStyle(kDashed),LineWidth(1));
+	//DoubleGaussBs.plotOn(frame_m,Components(GaussBs2),LineColor(kMagenta+3),LineStyle(kDashed),LineWidth(1));
+//         frame_m->GetYaxis()->SetRangeUser(0.01,frame_m->GetMaximum()*1.2);
+        frame_m->SetMinimum(0.0);
+        frame_m->Draw();	
+        
+	TLegend leg(0.15,0.5,0.4,0.9,"");
+        leg.SetLineStyle(0);
+        leg.SetLineColor(0);
+        leg.SetFillColor(0);
+        leg.SetTextFont(132);
+        leg.SetTextColor(1);
+        leg.SetTextSize(0.05);
+        leg.SetTextAlign(12);
+	TString label = dataType;
+	if(dataType=="MC")label = "Simulation";
+// 	leg.AddEntry((TObject*)0,"#font[22]{LHCb " + label+ "}","");
+// 	leg.AddEntry("dataSetCut",leg_min + " < #sigma_{t} < " + leg_max,"ep");
+	leg.AddEntry("dataSetCut",leg_min + " < #delta_{t} < " + leg_max,"ep");
+	//leg.AddEntry("FullPdf","Fit","l");
+	leg.AddEntry("FullPdf",leg_sigma,"l");
+ 	leg.AddEntry((TObject*)0,leg_mean,"");
+
+
+	leg.Draw();
+	canvas->Print("Plots/Signal2"+dataType+"_bin_"+binName+".eps");
 	
+
 	frame_m->GetXaxis()->SetLabelSize( 0.06 );
 	frame_m->GetYaxis()->SetLabelSize( 0.06 );
 	frame_m->GetXaxis()->SetLabelFont( 132 );
@@ -221,14 +285,9 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 	//frame_m->GetYaxis()->SetNdivisions(512);
 	frame_m->GetXaxis()->SetTitleOffset( 1.00 );
 	frame_m->GetYaxis()->SetTitleOffset( 0.5 );
-	frame_m->GetYaxis()->SetTitle("Yield [norm.]");
+// 	frame_m->GetYaxis()->SetTitle("Yield (norm.)");
 
-	data->plotOn(frame_m,Name("dataSetCut"),Binning(bin));
-	pdf->plotOn(frame_m,Name("FullPdf"),LineColor(kBlue),LineWidth(2));
-	//DoubleGaussBs.plotOn(frame_m,Components(GaussBs1),LineColor(kRed+1),LineStyle(kDashed),LineWidth(1));
-	//DoubleGaussBs.plotOn(frame_m,Components(GaussBs2),LineColor(kMagenta+3),LineStyle(kDashed),LineWidth(1));
-	
-	TCanvas* canvas = new TCanvas();
+
 	canvas->cd();
         canvas->SetTopMargin(0.05);
         canvas->SetBottomMargin(0.05);
@@ -239,41 +298,8 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
         pad1->SetBottomMargin(0.);
         pad1->Draw();
         pad1->cd();
-        frame_m->GetYaxis()->SetRangeUser(0.01,frame_m->GetMaximum()*1.2);
         frame_m->Draw();
 
-	stringstream ss ;
-    	TString leg_min = " fs";
-    	ss << std::fixed << std::setprecision(1) << min*1000. ;
-    	leg_min = ss.str() + leg_min; 
-	ss.str("");
-    	TString leg_max = " fs";
-    	ss << std::fixed << std::setprecision(1) << max*1000. ;
-    	leg_max = ss.str() + leg_max; 
-
-	ss.str("");
-    	TString leg_sigma = "#sigma_{eff} = ";
-    	ss << std::fixed << std::setprecision(1) << resolution_eff.getVal()*1000 ;
-    	leg_sigma += ss.str(); 
-	ss.str("");
-    	ss << std::fixed << std::setprecision(1) << resolution_eff.getPropagatedError(*result)*1000 ;
-	leg_sigma += " #pm " + ss.str() + " fs";
-        
-	TLegend leg(0.15,0.5,0.4,0.9,"");
-        leg.SetLineStyle(0);
-        leg.SetLineColor(0);
-        leg.SetFillColor(0);
-        leg.SetTextFont(132);
-        leg.SetTextColor(1);
-        leg.SetTextSize(0.065);
-        leg.SetTextAlign(12);
-	TString label = dataType;
-	if(dataType=="MC")label = "Simulation";
-	leg.AddEntry((TObject*)0,"#font[22]{LHCb " + label+ "}","");
-	leg.AddEntry("dataSetCut",leg_min + " < #sigma_{t} < " + leg_max,"ep");
-	//leg.AddEntry("FullPdf","Fit","l");
-	leg.AddEntry("FullPdf",leg_sigma,"l");
-        leg.Draw();
 
         canvas->cd();
         TPad* pad2 = new TPad("lowerPad", "lowerPad", .0, .005, 1.0, .3);
@@ -292,7 +318,7 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
         frame_p->GetXaxis()->SetTitleOffset(0.75);
         frame_p->GetXaxis()->SetTitleSize(0.2);
 	if(dataType=="MC")frame_p->GetXaxis()->SetTitle("#font[132]{#Deltat [ps]}");
-	else frame_p->GetXaxis()->SetTitle("#font[132]{t [ps]}");        
+	else frame_p->GetXaxis()->SetTitle("#font[132]{t (ps)}");        
 
         RooHist* pullHist  = frame_m->pullHist("dataSetCut","FullPdf");
         frame_p->addPlotable(pullHist,"BX");
@@ -352,6 +378,8 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 		resoValues.push_back(resolution_eff.getVal());
 		resoValues.push_back(resolution_eff.getPropagatedError(*result));
 		resoValues.push_back(data->mean(Bs_TAUERR));
+		resoValues.push_back(mean1->getVal());
+		resoValues.push_back(mean1->getError());
 	}
 
 	if(doSystematics){
@@ -366,7 +394,7 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 TH1D* createBinning(TString Bs_TAU_Var = "Bs_DTF_TAU"){
 
 	NamedParameter<double> TAUERR_min("TAUERR_min", 0.);		
-	NamedParameter<double> TAUERR_max("TAUERR_max", 0.15);		
+	NamedParameter<double> TAUERR_max("TAUERR_max", 0.1);		
         NamedParameter<int> minEventsPerBin("minEventsPerBin", 1000); 
 	int dim = 1;
 
@@ -455,6 +483,8 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
         double xerrH[nBins]; 
         double y[nBins]; 
         double yerr[nBins]; 
+        double y_mean[nBins]; 
+        double yerr_mean[nBins]; 
 
 	for(int i = 1; i <= binning->GetNbinsX(); i++){
 		vector<double> reso_bin = FitTimeRes(binning->GetBinLowEdge(i),binning->GetBinLowEdge(i+1),anythingToString((int)i),Bs_TAU_Var,dataType, year, doSystematics, ngauss);
@@ -466,13 +496,22 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
 		xerr[i-1] = 0.;
 		xerrL[i-1]= reso_bin[2]- binning->GetBinLowEdge(i) ;
 		xerrH[i-1]= binning->GetBinLowEdge(i+1) - reso_bin[2] ;
+
 		y[i-1] = reso_bin[0];
 		yerr[i-1] = reso_bin[1];
+
+		y_mean[i-1] = reso_bin[3]*1000.;
+		yerr_mean[i-1] = reso_bin[4]*1000.;
 	}
 
         TGraphErrors *ResoRelation_g = new TGraphErrors(nBins, x,y,xerr,yerr);
 	TGraphAsymmErrors *ResoRelation_ga = new TGraphAsymmErrors(nBins, x,y,xerrL,xerrH,yerr,yerr);
-	
+	TGraphAsymmErrors *ResoRelation_mean = new TGraphAsymmErrors(nBins, x,y_mean,xerrL,xerrH,yerr_mean,yerr_mean);
+
+	ResoRelation_g->GetXaxis()->SetLimits(0.,0.1);
+	ResoRelation_ga->GetXaxis()->SetLimits(0.,0.1);
+	ResoRelation_mean->GetXaxis()->SetLimits(0.,0.1);
+
 	if(updateAnaNote)datafile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ResoTable_"+dataType+".txt",std::ios_base::app);
 	else datafile.open("ResoTable_"+dataType+".txt", std::ios_base::app);		
 	datafile << "\\hline" << "\n";
@@ -480,7 +519,8 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
 	datafile << "\\end{tabular}" << "\n";
 	datafile.close();
 
-	ResoRelation_ga->SetTitle(";#sigma_{t} [ps];#sigma_{eff} [ps]");
+// 	ResoRelation_ga->SetTitle(";#sigma_{t} [ps];#sigma_{eff} [ps]");
+	ResoRelation_ga->SetTitle(";#delta_{t} (ps);#sigma_{t} (ps)");
 	ResoRelation_ga->SetMinimum(0);
 	ResoRelation_ga->SetMaximum(0.12);
 
@@ -491,7 +531,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
 	fitFunc->SetParameters(0.,1.2);
 	fitFunc->SetParLimits(0,-0.5,0.5);
 	fitFunc->SetParLimits(1,0.,3.);
-	if(dataType=="MC")fitFunc->FixParameter(0,0.);
+	//if(dataType=="MC")fitFunc->FixParameter(0,0.);
 	//fitFunc->FixParameter(1,1.280);
 	
 	TF1 *fitFunc2 = new TF1("fitFunc2", "[0]+[1]*x+[2]*x*x", 0., 0.15);
@@ -554,8 +594,8 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
 	fitFunc->Draw("same");
 	//fitFunc_DsK_data->Draw("same");
 	if(dataType=="MC")fitFunc_DsK_mc->Draw("same");
-	if(dataType!="MC" && year == 16) fitFunc_jpsiPhi_data->Draw("same");
-	fitFunc2->Draw("same");
+// 	if(dataType!="MC" && year == 16) fitFunc_jpsiPhi_data->Draw("same");
+// // 	fitFunc2->Draw("same");
 	//ResoRelation_ga->Draw("Psame");
 
         //leg.AddEntry((TObject*)0,"LHCb Simulation","");
@@ -564,12 +604,19 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
         leg.AddEntry(fitFunc,"Linear Fit","l");
 	leg.AddEntry(fitFunc2,"Quadratic Fit","l");
         if(dataType=="MC")leg.AddEntry(fitFunc_DsK_mc,"B_{s} #rightarrow D_{s}K MC","l");
-	if(dataType!="MC" && year == 16) leg.AddEntry(fitFunc_jpsiPhi_data,"B_{s} #rightarrow J/#psi #phi Data","l");
+// 	if(dataType!="MC" && year == 16) leg.AddEntry(fitFunc_jpsiPhi_data,"B_{s} #rightarrow J/#psi #phi Data","l");
 // 	else leg.AddEntry(fitFunc2,"Quadratic Fit","l");
-	leg.Draw();
+// 	leg.Draw();
 	
 	c->Print("Plots/ScaleFactor_"+dataType+".eps");
         if(updateAnaNote) c->Print("../../../../../TD-AnaNote/latex/figs/Resolution/ScaleFactor_"+dataType+".pdf");
+
+	ResoRelation_mean->SetTitle(";#delta_{t} (ps);#mu_{t} (fs)");
+	ResoRelation_mean->SetMinimum(-10);
+	ResoRelation_mean->SetMaximum(5);
+	ResoRelation_mean->Draw("AP");
+	c->Print("Plots/Bias_"+dataType+".eps");
+
 
 	TString dataTypeLable = dataType.ReplaceAll("_",",");
 	if(updateAnaNote){
@@ -790,8 +837,11 @@ int main(int argc, char** argv){
     NamedParameter<int> fitDsMass("fitDsMass", 0);	
     NamedParameter<int> fitIntegratedResolution("fitIntegratedResolution", 0);	
     NamedParameter<int> fitResoRelation("fitResoRelation", 0);	
+    NamedParameter<string> cut("cut",(string)"");
 
     if(fitDsMass)fitSignalShape("!isRejectedMultipleCandidate", year);
+    //if(fitDsMass)fitSignalShape("", year);
+
 
     if(fitIntegratedResolution || fitResoRelation){
 	  /// Load file
@@ -801,13 +851,17 @@ int main(int argc, char** argv){
        	  tree->SetBranchStatus("*TAU*",1);
 	  tree->SetBranchStatus("weight*",1);
 	  tree->SetBranchStatus("year",1);
+	  tree->SetBranchStatus("run",1);
+	  tree->SetBranchStatus("Ds_FDCHI2_ORIVX",1);
 	  tree->SetBranchStatus("*finalState",1);
+
   	  file_res = new TFile("dummy_res.root","RECREATE");
-	  if(dataType == "Data"){
-                if(year == 0)tree_res = tree->CopyTree("");
-                else tree_res = tree->CopyTree(("year == "+anythingToString((int)year)).c_str());
-          }
-  	  else tree_res = tree->CopyTree("");
+	 // if(dataType == "Data"){
+           //     if(year == 0)tree_res = tree->CopyTree("");
+           //     else tree_res = tree->CopyTree(("year == "+anythingToString((int)year)).c_str());
+         // }
+//  	  else 
+tree_res = tree->CopyTree(((string)cut).c_str());
 	  file->Close();
     }
     if(fitIntegratedResolution)FitTimeRes(TAUERR_min, TAUERR_max, "all", TString((string) Bs_TAU_Var), dataType, year);

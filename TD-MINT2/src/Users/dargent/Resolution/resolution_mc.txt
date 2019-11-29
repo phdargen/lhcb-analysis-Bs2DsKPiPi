@@ -13,20 +13,18 @@
 *"outFileNameForDsMassFit" 		"/auto/data/kecke/BsDsKpipi/Final/Data/signal_LTU_16.root"
 
 "sWeight"			1
-"weightVar"			"weight10"		
+"weightVar"			"weight"		
 	
 * options for scale factor fit
-"dataType"		"Data"
+"dataType"		"MC"
 "Year"			16
-*"inFileName"		"/auto/data/kecke/BsDsKpipi/Final/Data/signal_LTU.root"
+"inFileName"		"/auto/data/dargent/BsDsKpipi/Final/MC/signal_scaled.root"
+*"inFileName"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
+*"inFileName"		"/auto/data/dargent/BsDsKpipi/Preselected/MC/signal_Ds2KKpi_16.root"
 
-*"inFileName"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_17_LTU_noTimeCut.root"
-"inFileName"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_LTU_noTimeCut.root"
+"cut"			"Ds_finalState == 0 && Ds_FDCHI2_ORIVX > 6 && year >= 10 && run >= 1"
 
-"cut"			"Ds_finalState >= 0 && Ds_FDCHI2_ORIVX > 0 && year == 16"
-
-
-"minEventsPerBin"	 1500
+"minEventsPerBin"	 1000
 *"minEventsPerBin"	 4000
 
 "Bs_TAU_Var"		"Bs_DTF_TAU"
@@ -36,7 +34,7 @@
 "useTransformedSigma"	 0
 "nGauss"	 2
 "fixMean"	0
-"fixGaussFraction"	 1
+"fixGaussFraction"	 0
 "gaussFraction"		 0.75
 "DoSystematics"		 0
 

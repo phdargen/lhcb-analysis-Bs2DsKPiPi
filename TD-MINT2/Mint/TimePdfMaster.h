@@ -357,7 +357,7 @@ class TimePdfMaster
 
         //_efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt, *_r_scale_mean_dt, *_r_scale_sigma_dt );
         _r_dt_scaled = (RooRealVar*) new RooFormulaVar( "r_dt_scaled","r_dt_scaled", "@0+@1*@2+@3*@2*@2",RooArgList(*_r_offset_sigma_dt,*_r_scale_sigma_dt,*_r_dt,*_r_scale_sigma_2_dt));
-        _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt_scaled, *_r_scale_mean_dt, RooRealConstant::value(1.) );
+        _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(1.), *_r_dt_scaled, *_r_scale_mean_dt, RooRealConstant::value(1.) );
         
         // CP coefficients
         _r_norm = new RooRealVar("norm", "norm",1);

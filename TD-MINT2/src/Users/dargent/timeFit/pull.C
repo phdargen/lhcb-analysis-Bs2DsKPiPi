@@ -239,7 +239,10 @@ TMatrixD pull::getCov(TString label){
     TMatrixD cov_prime(cov);
     for (int i = 0 ; i < _paraNames.size(); i++)
         for (int j = 0 ; j < _paraNames.size(); j++) 
-            cov_prime[i][j] = cov[i][j]*abs(fit_means[i])*abs(fit_means[j]);
+            //cov_prime[i][j] = cov[i][j]*abs(fit_means[i])*abs(fit_means[j]);
+//             cov_prime[i][j] = fit_means[i]* fit_means[j];
+            cov_prime[i][j] = cov[i][j]/sqrt(cov[i][i])/sqrt(cov[j][j])*abs(fit_means[i])*abs(fit_means[j]);
+
     
     return cov_prime;
 }
@@ -368,6 +371,8 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
             cov_prime[i][j] = cov[i][j]*sqrt(pow(fit_means[i],2)+pow(fit_sigmas[i],2))*sqrt(pow(fit_means[j],2)+pow(fit_sigmas[j],2))/fit_sigmas[i]/fit_sigmas[j];
     
     return cov_prime;
+//     return cov;
+
 }
 
 TMatrixD pull::getDeltaCovChol(TString refFileName,TString label,int varPerParChol){

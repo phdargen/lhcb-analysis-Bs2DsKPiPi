@@ -6,14 +6,14 @@
 "InputFileName"	 "/auto/data/dargent/BsDsKpipi/Final/Data/signal_tagged.root"
 
 *"IntegratorEventFile"	"SignalIntegrationEvents_AccBDT.root"
-"IntegratorEventFile"	"/auto/data/dargent/BsDsKpipi/MINT/signalMC.root"
+"IntegratorEventFile"	"SignalIntegrationEvents_toys_phspCut.root"
 
 "IntegratorEventFileCP"		"/auto/data/dargent/BsDsKpipi/MINT/signalMC_small_CP.root"
 "IntegratorEventFileBkg"	"/auto/data/dargent/BsDsKpipi/MINT/signalMC_small.root"
 
 
-"IntegratorEvents"	300000
-"IntegPrecision"        1.0e-3
+"IntegratorEvents"	400000
+"IntegPrecision"        3.0e-3
 "IntegMethod"           "efficient"
 "IntegratorSource"        "file"
 "channel"	"signal"
@@ -22,7 +22,7 @@
 "updateAnaNote"	 	0
 "nBins" 	50
 "nBinst" 	50
-"N_plot_it"	5
+"N_plot_it"	0
 
 "min_TAU" 	0.4
 "max_TAU" 	10
@@ -37,17 +37,48 @@
 "doTimeFit"		0
 "doDalitzFit"		0
 "do2DScan"		0
-"OutputDir"		"signal/"
+"OutputDir"		"signal_toy_bkg/"
 
 "randomizeStartVals"		0
 "useLASSO"	 	0
 "lambda"	 	1
 
 "useGaussConstrainsTagging"	 0
-"FromFileGenerator::doBootstrap"	0
+"FromFileGenerator::doBootstrap"	1
 
-"doFractions"		1
-"doFractionsErr"	1
+"doFractions"		0
+"doFractionsErr"	0
+
+"doToyStudy"		 1
+"N_scale_toys"		 1
+
+"addBkgToToys"		 	1
+"readBkgData::correlate"	1
+
+
+"doAccSystematics"	 0
+"useCholDec"		 0
+"varPerParChol"		50
+
+*"doSystematic"		"dm"
+*"ConstrainMulti_dm"     "dm "
+*"ConstrainMulti_dm_corr"     "1 "
+
+*"doSystematic"		"production_asym_Run1"
+*"ConstrainMulti_production_asym_Run1"     "production_asym_Run1 "
+*"ConstrainMulti_production_asym_Run1_corr"     "1 "
+
+*"doSystematic"		"production_asym_Run2"
+*"ConstrainMulti_production_asym_Run2"     "production_asym_Run2 "
+*"ConstrainMulti_production_asym_Run2_corr"     "1 "
+
+*"doSystematic"		"detection_asym_Run1"
+*"ConstrainMulti_detection_asym_Run1"     "detection_asym_Run1 "
+*"ConstrainMulti_detection_asym_Run1_corr"     "1 "
+
+*"doSystematic"		"detection_asym_Run2"
+*"ConstrainMulti_detection_asym_Run2"     "detection_asym_Run2 "
+*"ConstrainMulti_detection_asym_Run2_corr"     "1 "
 
 
 ** name		Fix?	init	step	min	max
@@ -55,19 +86,18 @@
 "FullAmpsPdfFlexiFastCPV::useCartCoord"		0
 "FullAmpsPdfFlexiFastCPV::directCPV"		0
 
-"r"		0	0.45	0.05	0.	1.
-"delta"		0	30.	1	-360    360		
-"gamma"		0	70	1	-360    360
+"r"		0	0.5	0.05	0.	1.
+"delta"		0	46.	1	-360    360		
+"gamma"		0	61	1	-360    360
 
 *"xp"	0	0.5	0.01    -2 2
 *"yp"	0	0.2	0.01	-2 2
 *"xm"	0	0.5	0.01    -2 2
 *"ym"	0	0.2 	0.01    -2 2
 
-
-"r_Blind"	1	-0.5   0.5
-"delta_Blind"	2	-180   180
-"gamma_Blind"	3	-180   180
+*"r_Blind"	1	-0.5   0.5
+*"delta_Blind"	2	-180   180
+*"gamma_Blind"	3	-180   180
 
 *"gamma_Scan"	-90 180	
 
@@ -265,7 +295,8 @@
 
 "Gamma"		1	0.6629 	0.0018	0.0	2.0
 "dGamma" 	1 	-0.088 	0.006	0.0	0.0
-"dm" 		1 	17.757  0.021	0.0	0.0
+"dm" 		2 	17.757  0.021	0.0	0.0
+
 
 knot_positions 0.5 1.35 2.5 6.5 
 c0_Run1_t0  1  0.309451  0.0179289
@@ -352,10 +383,9 @@ c3_Run2_t1  1  1.07128  0.0198483
 "offset_sigma_dt_Run2_17"		1	0.0065	0.0014
 "scale_sigma_dt_Run2_17"		1	0.961	0.036
 
-"production_asym_Run1"	1	-0.00045 0.001
-"detection_asym_Run1"	1	0.01 0.001
-"detection_asym_Run2"	  1	0.0091 0.001
-
+"production_asym_Run1"	2	-0.00045 0.01
+"detection_asym_Run1"	2	0.01 0.0022
+"detection_asym_Run2"	2	0.01 0.0022
 
 "ConstrainMulti_Tagging_Run1"     "p0_os_Run1 p1_os_Run1 tageff_os_Run1 p0_ss_Run1 p1_ss_Run1 tageff_ss_Run1 "
 
@@ -364,3 +394,9 @@ c3_Run2_t1  1  1.07128  0.0198483
 "ConstrainMulti_Tagging_Run2"     "p0_os_Run2 p1_os_Run2 tageff_os_Run2 p0_ss_Run2 p1_ss_Run2 tageff_ss_Run2 "
 
 "ConstrainMulti_Tagging_Run2_corr"     "1 0.0645484 7.02621e-09 -0.0160539 0.0284919 2.18567e-08 1 -9.1706e-09 -0.00206847 -0.00881022 1.98965e-08 1 -1.00533e-08 -9.64395e-09 7.75166e-09 1 0.0722799 -8.46498e-09 1 -1.16091e-09 1 "
+
+
+
+"ConstrainMulti_Acc"     "Gamma dGamma c0_Run1_t0 c1_Run1_t0 c2_Run1_t0 c3_Run1_t0 c0_Run1_t1 c1_Run1_t1 c2_Run1_t1 c3_Run1_t1 c0_Run2_t0 c1_Run2_t0 c2_Run2_t0 c3_Run2_t0 c0_Run2_t1 c1_Run2_t1 c2_Run2_t1 c3_Run2_t1 "
+
+"ConstrainMulti_Acc_corr"     "1 0.11 -0.13512 -0.163004 -0.12689 -0.0925396 -0.0834628 -0.104574 -0.109078 -0.0670315 -0.249218 -0.285296 -0.222132 -0.15147 -0.117532 -0.173494 -0.178875 -0.134078 1 -0.0551776 -0.0693684 -0.0591662 -0.0778238 -0.0340978 -0.0431492 -0.0506155 -0.0568522 -0.103138 -0.122348 -0.104624 -0.1271 -0.0482136 -0.0730465 -0.0821008 -0.111345 1 0.122467 0.469895 0.0279773 0 0 0 0 0 0 0 0 0 0 0 0 1 0.0423722 0.215262 0 0 0 0 0 0 0 0 0 0 0 0 1 -0.247966 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0.124466 0.347766 0.0499515 0 0 0 0 0 0 0 0 1 -0.0258893 0.210586 0 0 0 0 0 0 0 0 1 -0.22591 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0.206803 0.420743 0.0590146 0 0 0 0 1 0.0579628 0.219519 0 0 0 0 1 -0.239791 0 0 0 0 1 0 0 0 0 1 -0.132619 0.353006 0.00606986 1 -0.151294 0.236207 1 -0.245142 1 "

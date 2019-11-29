@@ -57,7 +57,7 @@ void fitParams(){
 
     vector<TMatrixD*> covs;
     /// Data fit
-    pull p_data(paraNames,"signal/pull__1.root");
+    pull p_data(paraNames,"signal_rnd5/pull__16.root");
     vector<double> vals = p_data.getVals();
     vector<double> errs_stat = p_data.getErrs();
     
@@ -214,47 +214,54 @@ void fitParams(){
     TMatrixD* cov_ls_1 = new TMatrixD(p_ls_1.getDeltaCov("signal/pull__1.root","ls_1"));
     vector<double> vals_ls_1 = p_ls_1.getVals();
     cout << "ls 1" << endl;
-    cout << vals_ls_1[4] << endl << endl;
+    cout << vals_ls_1[3] << endl << endl;
 
     pull p_ls_2(paraNames,"signal_sys2/pull__2.root");
     TMatrixD* cov_ls_2 = new TMatrixD(p_ls_2.getDeltaCov("signal/pull__1.root","ls_2"));
     vector<double> vals_ls_2 = p_ls_2.getVals();
     cout << "ls 2" << endl;
-    cout << vals_ls_2[4] << endl << endl;
+    cout << vals_ls_2[3] << endl << endl;
 
     pull p_ls_3(paraNames,"signal_sys3/pull_*.root");
     TMatrixD* cov_ls_3 = new TMatrixD(p_ls_3.getDeltaCov("signal/pull__1.root","ls_3"));
     vector<double> vals_ls_3 = p_ls_3.getVals();
     cout << "ls 3" << endl;
-    cout << vals_ls_3[4] << endl << endl;
+    cout << vals_ls_3[3] << endl << endl;
 
     pull p_ls_4(paraNames,"signal_sys4/pull_*.root");
     TMatrixD* cov_ls_4 = new TMatrixD(p_ls_4.getDeltaCov("signal/pull__1.root","ls_4"));
     vector<double> vals_ls_4 = p_ls_4.getVals();
     cout << "ls 4" << endl;
-    cout << vals_ls_4[4] << endl << endl;
+    cout << vals_ls_4[3] << endl << endl;
 
     pull p_ls_5(paraNames,"signal_sys5/pull_*.root");
     TMatrixD* cov_ls_5 = new TMatrixD(p_ls_5.getDeltaCov("signal/pull__1.root","ls_5"));
     vector<double> vals_ls_5 = p_ls_5.getVals();
     cout << "ls 5" << endl;
-    cout << vals_ls_5[4] << endl << endl;
+    cout << vals_ls_5[3] << endl << endl;
 
     pull p_ls_6(paraNames,"signal_sys6/pull_*.root");
     TMatrixD* cov_ls_6 = new TMatrixD(p_ls_6.getDeltaCov("signal/pull__1.root","ls_6"));
     vector<double> vals_ls_6 = p_ls_6.getVals();
     cout << "ls 6" << endl;
-    cout << vals_ls_6[4] << endl << endl;
+    cout << vals_ls_6[3] << endl << endl;
 
     pull p_ls_7(paraNames,"signal_sys7/pull_*.root");
     TMatrixD* cov_ls_7 = new TMatrixD(p_ls_7.getDeltaCov("signal/pull__1.root","ls_7"));
     vector<double> vals_ls_7 = p_ls_7.getVals();
     cout << "ls 7" << endl;
-    cout << vals_ls_7[4] << endl << endl;
+    cout << vals_ls_7[3] << endl << endl;
 
     vector< vector <double> > vec_vals_ls;
     vec_vals_ls.push_back(vals_ls_1);
     vec_vals_ls.push_back(vals_ls_2);
+    vec_vals_ls.push_back(vals_ls_3);
+    vec_vals_ls.push_back(vals_ls_4);
+    vec_vals_ls.push_back(vals_ls_5);
+    vec_vals_ls.push_back(vals_ls_6);
+    vec_vals_ls.push_back(vals_ls_7);
+    vec_vals_ls.push_back(vals_ls_1);
+//     vec_vals_ls.push_back(vals_ls_2);
     vec_vals_ls.push_back(vals_ls_3);
     vec_vals_ls.push_back(vals_ls_4);
     vec_vals_ls.push_back(vals_ls_5);
@@ -537,7 +544,7 @@ void fitParams(){
 	} 
         SummaryFile2 << sqrt(tot)/errs_stat[i] << " \\\\ " << "\n"; 
     }
-    
+
     SummaryFile2 << "\\hline" << "\n";
     SummaryFile2 << "\\hline" << "\n";
     SummaryFile2 << "\\end{tabular}" << "\n";
@@ -633,15 +640,23 @@ void fitParams(){
 
     // r, delta, gamma
     SummaryFile3 << std::fixed << std::setprecision(2);
-    SummaryFile3 << "\\multicolumn{1}{c}{" << p_data.latexNameMod(paraNames[24]) << "} & \\multicolumn{4}{c}{" << "xx.xx" << " $\\pm$ " << errs_stat[24] << " $\\pm$ " << errs_sys[24] << " $\\pm$ " << sqrt(cov_alt[24][24]) << "} \\\\ " << "\n";
-    SummaryFile3 << std::fixed << std::setprecision(1);
-    SummaryFile3 << "\\multicolumn{1}{c}{" << p_data.latexNameMod(paraNames[25]) << "} & \\multicolumn{4}{c}{" << "xx.xx" << " $\\pm$ " << errs_stat[25] << " $\\pm$ " << errs_sys[25] << " $\\pm$ " << sqrt(cov_alt[25][25]) << "} \\\\ " << "\n";
-    SummaryFile3 << "\\multicolumn{1}{c}{" << p_data.latexNameMod(paraNames[26]) << "} & \\multicolumn{4}{c}{" << "xx.xx" << " $\\pm$ " << errs_stat[26] << " $\\pm$ " << errs_sys[26] << " $\\pm$ " << sqrt(cov_alt[26][26]) << "} \\\\ " << "\n";
+    SummaryFile3 << "\\multicolumn{1}{c}{" << p_data.latexNameMod(paraNames[24]) << "} & \\multicolumn{4}{c}{" << vals[24] << " $\\pm$ " << errs_stat[24] << " $\\pm$ " << errs_sys[24] << " $\\pm$ " << sqrt(cov_alt[24][24]) << "} \\\\ " << "\n";
+    SummaryFile3 << std::fixed << std::setprecision(0);
+    SummaryFile3 << "\\multicolumn{1}{c}{" << p_data.latexNameMod(paraNames[25]) << "} & \\multicolumn{4}{c}{" << vals[25] << " $\\pm$ " << errs_stat[25] << " $\\pm$ " << errs_sys[25] << " $\\pm$ " << sqrt(cov_alt[25][25]) << "} \\\\ " << "\n";
+    SummaryFile3 << "\\multicolumn{1}{c}{" << p_data.latexNameMod(paraNames[26]) << "} & \\multicolumn{4}{c}{" << vals[26] << " $\\pm$ " << errs_stat[26] << " $\\pm$ " << errs_sys[26] << " $\\pm$ " << sqrt(cov_alt[26][26]) << "} \\\\ " << "\n";
     
     SummaryFile3 << "\\hline" << "\n";
     SummaryFile3 << "\\hline" << "\n";
     SummaryFile3 << "\\end{tabular}" << "\n";
 
+    for(int i = 24 ; i <paraNames.size() ; i++){
+        double tot = 0.;
+        for(int j =6 ; j <covs.size() ; j++){
+            tot += (*covs[j])[i][i];
+	}
+        tot += cov_alt[i][i];
+        cout << "model sys = " << sqrt(tot) << endl;
+     }
 
 }
 
@@ -772,6 +787,9 @@ void fractions_new(){
     paraNames.push_back("bar_Bs0_K_1460_p__Ks_892_0__Kppim_pip_Dsm");
     paraNames.push_back("bar_Bs0_NonResV0__DsmKp_rho_770_0__pippim_");
     paraNames.push_back("bar_Sum");
+
+    paraNames.push_back("k");
+
 
     vector<TMatrixD*> covs;
 
@@ -1262,6 +1280,8 @@ void fractions_new(){
     SummaryFile3 << "\\hline" << "\n";
     SummaryFile3 << "\\end{tabular}" << "\n";
 
+    cout << "kappa = " << vals[16] << " $\\pm$ " << errs_stat[16] << " $\\pm$ " << errs_sys[16]  << " $\\pm$ " << sqrt(cov_alt[16][16]);  
+
 }
 
 
@@ -1517,8 +1537,12 @@ void altModels(){
 	    for(int j=0; j < N_modelsPerTable; j++){
 		    if(vec_vals[j][i] < 0.01/100.) SummaryFile << " & " ;
  		    else if(i==paraNames.size()-1) SummaryFile << " & "  << (vec_vals[j][i] - vec_vals[0][i])/2.;
-		    else SummaryFile << " & "  << (double)((i<paraNames.size()-5) ? vec_vals[j][i] * scale : vec_vals[j][i] - vec_vals[0][i] ) ;
-// 			 << " $\\pm$ " << vec_errs[j][i]* scale ;
+// 		    else SummaryFile2 << " & "  << (double)((i<paraNames.size()-5) ? vec_vals[j][i] * scale : vec_vals[j][i] - vec_vals[0][i] );
+		    else if(i<paraNames.size()-5)SummaryFile << " & "  << vec_vals[j][i] * scale;
+		    else if(i==paraNames.size()-5)SummaryFile << " & "  << vec_vals[j][i] - vec_vals[0][i] + 0.50;
+		    else if(i==paraNames.size()-4)SummaryFile << " & "  << vec_vals[j][i] - vec_vals[0][i] + 0.52;
+		    else if(i==paraNames.size()-3)SummaryFile << " & "  << vec_vals[j][i] - vec_vals[0][i] + 46.;
+		    else if(i==paraNames.size()-2)SummaryFile << " & "  << vec_vals[j][i] - vec_vals[0][i] + 61.;
 	    }	    
 	    SummaryFile << " \\\\ " << "\n";
 	    if(i==N_1-1 || i==N_2-1) SummaryFile << "\\hline" << "\n";
@@ -1559,7 +1583,12 @@ void altModels(){
 	    for(int j=N_modelsPerTable; j < vec_vals.size(); j++){
 		    if(vec_vals[j][i] < 0.01/100.) SummaryFile2 << " & " ;
  		    else if(i==paraNames.size()-1) SummaryFile2 << " & "  << (vec_vals[j][i] - vec_vals[0][i])/2. ;
-		    else SummaryFile2 << " & "  << (double)((i<paraNames.size()-5) ? vec_vals[j][i] * scale : vec_vals[j][i] - vec_vals[0][i] );
+// 		    else SummaryFile2 << " & "  << (double)((i<paraNames.size()-5) ? vec_vals[j][i] * scale : vec_vals[j][i] - vec_vals[0][i] );
+		    else if(i<paraNames.size()-5)SummaryFile2 << " & "  << vec_vals[j][i] * scale;
+		    else if(i==paraNames.size()-5)SummaryFile2 << " & "  << vec_vals[j][i] - vec_vals[0][i] + 0.50;
+		    else if(i==paraNames.size()-4)SummaryFile2 << " & "  << vec_vals[j][i] - vec_vals[0][i] + 0.52;
+		    else if(i==paraNames.size()-3)SummaryFile2 << " & "  << vec_vals[j][i] - vec_vals[0][i] + 46.;
+		    else if(i==paraNames.size()-2)SummaryFile2 << " & "  << vec_vals[j][i] - vec_vals[0][i] + 61.;
 // 			 << " $\\pm$ " << vec_errs[j][i]* scale ;
 	    }	    
 	    SummaryFile2 << " \\\\ " << "\n";
@@ -1830,8 +1859,8 @@ int main(int argc, char** argv){
     //gStyle->SetOptFit(111);
     //gStyle->UseCurrentStyle();
 
-//      fitParams();
-     fractions_new();
+      fitParams();
+   // fractions_new();
 //      altModels();
     // corrCP();
 
