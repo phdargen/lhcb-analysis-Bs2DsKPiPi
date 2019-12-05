@@ -1,0 +1,54 @@
+* general options
+"updateAnaNote"		0
+
+"fitDsMass"	 		 0
+"fitIntegratedResolution"	 0
+"fitResoRelation"		 1
+
+* options for Ds mass fit
+"inFileNameForDsMassFit"		"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2*_16_LTU_multCand_noTimeCut.root"
+"outFileNameForDsMassFit"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_16_LTU_noTimeCut.root"
+
+"sWeight"			1
+"weightVar"			"weight"		
+	
+* options for scale factor fit
+"dataType"		"MC"
+"Year"			16
+"inFileName"		"/auto/data/dargent/BsDsKpipi/decayTimeBias/norm_0micron.root"
+*"inFileName"		"/auto/data/dargent/BsDsKpipi/decayTimeBias/prompt_4micron.root"
+
+*"cut"			"Ds_finalState == 0 && Ds_FDCHI2_ORIVX > 6 && year >= 10 && run >= 1"
+
+
+"minEventsPerBin"	 10000
+*"minEventsPerBin"	 4000
+"Binning_min"	 0.
+"Binning_max"	 0.1
+
+
+"Bs_TAU_Var"		"Bs_BsDTF_TAU"
+"TAUERR_min"	 0.
+"TAUERR_max"	 0.1
+
+"useTransformedSigma"	 0
+"nGauss"	 2
+
+"fixMean"	0
+"fixGaussFraction"	 0
+"gaussFraction"		 0.75
+"DoSystematics"		 0
+
+
+
+*16
+*   1  c0           1.15515e-02   1.61014e-03   1.37227e-06   5.99161e-02
+*   2  s            8.76548e-01   3.99423e-02   1.24733e-05   7.35494e-03
+
+*17
+*   1  c0           6.46552e-03   1.38810e-03   7.11328e-07   1.06087e-02
+*   2  s            9.61378e-01   3.56128e-02   6.51799e-06   1.26280e-03
+
+*all
+*   1  c0           5.83988e-03   1.47873e-03   3.47843e-06   3.34576e-01
+*   2  s            9.66990e-01   3.41015e-02   2.86064e-05   4.43173e-02

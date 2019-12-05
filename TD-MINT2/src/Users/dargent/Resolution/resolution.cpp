@@ -76,7 +76,7 @@ using namespace MINT;
 TFile* file_res = 0;
 TTree* tree_res = 0;
 
-vector<double> FitTimeRes(double min, double max, string binName = "", TString Bs_TAU_Var = "Bs_DTF_TAU", TString dataType = "MC", int year = 16, int doSystematics= 0, int ngauss = 2){
+vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUERR", string binName = "", TString Bs_TAU_Var = "Bs_DTF_TAU", TString dataType = "MC", int year = 16, int doSystematics= 0, int ngauss = 2){
 	
 	/// Options
         NamedParameter<string> weightVar("weightVar", (string)"weight");
@@ -95,14 +95,20 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 
 	/// Load file
         RooRealVar Bs_TAU(Bs_TAU_Var, Bs_TAU_Var, -20.,20.);
-        RooRealVar Bs_TAUERR(Bs_TAU_Var+"ERR", Bs_TAU_Var+"ERR", min, max,"ps");
+        RooRealVar Bs_TAUERR(Bs_TAU_Var+"ERR", Bs_TAU_Var+"ERR", (double)TAUERR_min, (double)TAUERR_max,"ps");
 	RooRealVar Bs_TRUETAU("Bs_TRUETAU", "Bs_TRUETAU", 0.,20.);
 	RooRealVar weight(((string)weightVar).c_str() , ((string)weightVar).c_str(), 0.);
-        RooRealVar Ds_finalState("Ds_finalState", "Ds_finalState", 0.);
+	RooArgList list =  RooArgList(Bs_TAU,Bs_TAUERR,weight);
 
-	RooArgList list =  RooArgList(Bs_TAU,Bs_TAUERR,weight,Ds_finalState);
+        RooRealVar *var;
+	if(varName != Bs_TAU_Var && varName != Bs_TAU_Var+"ERR"){ 
+		var = new RooRealVar(varName, varName, 0.);
+		list.add(*var);		
+	}
 	if(dataType == "MC")list.add(Bs_TRUETAU);
-	RooDataSet* data = new RooDataSet("data","data",list,Import(*tree_res),WeightVar(((string)weightVar).c_str()));
+	TString cut = varName + " >= " + anythingToString(min) + " && " + varName + "<=" + anythingToString(max);
+
+	RooDataSet* data = new RooDataSet("data","data",list,Import(*tree_res),WeightVar(((string)weightVar).c_str()),Cut(cut));
 
         /// Add residuals to dataset
 	RooFormulaVar* Bs_DeltaTau_func;
@@ -156,12 +162,12 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 	}
 	else {
 		fitRange_min = -0.25;
-		fitRange_max = 0.05;
+		fitRange_max = 0.25;
 		//fitRange_min = -4.*data->mean(Bs_TAUERR);
 		//fitRange_max = 0.5*data->mean(Bs_TAUERR);
 	}
 	if(dataType=="MC")Bs_DeltaTau->setRange(fitRange_min,fitRange_max);
-	else Bs_DeltaTau->setRange(fitRange_min,0.05);
+	else Bs_DeltaTau->setRange(-0.25,0.25);
 
 	RooFitResult *result = pdf->fitTo(*data,Save(kTRUE),SumW2Error(kTRUE),Extended(kFALSE),NumCPU(3),Range(fitRange_min,fitRange_max));
 	cout << "result is --------------- "<<endl;
@@ -377,7 +383,9 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 	if(!doSystematics){
 		resoValues.push_back(resolution_eff.getVal());
 		resoValues.push_back(resolution_eff.getPropagatedError(*result));
-		resoValues.push_back(data->mean(Bs_TAUERR));
+		if(varName == Bs_TAU_Var)resoValues.push_back(data->mean(Bs_TAU));
+		else if(varName == Bs_TAU_Var+"ERR")resoValues.push_back(data->mean(Bs_TAUERR));
+		else resoValues.push_back(data->mean(*var));
 		resoValues.push_back(mean1->getVal());
 		resoValues.push_back(mean1->getError());
 	}
@@ -385,25 +393,27 @@ vector<double> FitTimeRes(double min, double max, string binName = "", TString B
 	if(doSystematics){
 		resoValues.push_back(sig1);
 		resoValues.push_back(dsig1);
-		resoValues.push_back(data->mean(Bs_TAUERR));
+		if(varName == Bs_TAU_Var)resoValues.push_back(data->mean(Bs_TAU));
+		else if(varName == Bs_TAU_Var+"ERR")resoValues.push_back(data->mean(Bs_TAUERR));
+		else resoValues.push_back(data->mean(*var));
 	}
 
 	return resoValues;
 }
 
-TH1D* createBinning(TString Bs_TAU_Var = "Bs_DTF_TAU"){
+TH1D* createBinning(TString var = "Bs_DTF_TAUERR"){
 
-	NamedParameter<double> TAUERR_min("TAUERR_min", 0.);		
-	NamedParameter<double> TAUERR_max("TAUERR_max", 0.1);		
+	NamedParameter<double> Binning_min("Binning_min", 0.);		
+	NamedParameter<double> Binning_max("Binning_max", 0.1);		
         NamedParameter<int> minEventsPerBin("minEventsPerBin", 1000); 
 	int dim = 1;
 
 	double weight,dt;
 	tree_res->SetBranchAddress("weight",&weight);
-	tree_res->SetBranchAddress(Bs_TAU_Var+"ERR",&dt);
+	tree_res->SetBranchAddress(var,&dt);
 	
-	HyperPoint Min((double)TAUERR_min);
-    	HyperPoint Max((double)TAUERR_max);
+	HyperPoint Min((double)Binning_min);
+    	HyperPoint Max((double)Binning_max);
     	HyperCuboid limits(Min, Max );
 	HyperPointSet points( dim );
 
@@ -455,11 +465,11 @@ TH1D* createBinning(TString Bs_TAU_Var = "Bs_DTF_TAU"){
 	return h;
 }
 
-void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", int year = 16, int doSystematics = 0, int ngauss = 2){
+void FitResoRelation(TString varName = "Bs_DTF_TAUERR", TString Bs_TAU_Var = "Bs_DTF_TAU", TString dataType = "MC", int year = 16, int doSystematics = 0, int ngauss = 2){
 
         NamedParameter<int> updateAnaNote("updateAnaNote", 1);
 
-	TH1D* binning = createBinning(Bs_TAU_Var);	
+	TH1D* binning = createBinning(varName);	
 	TH1D* ResoRelation = (TH1D*) binning->Clone("ResoRelation");
 
 	if(dataType == "Data" && year == 0) dataType.Append("_all");
@@ -487,7 +497,7 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
         double yerr_mean[nBins]; 
 
 	for(int i = 1; i <= binning->GetNbinsX(); i++){
-		vector<double> reso_bin = FitTimeRes(binning->GetBinLowEdge(i),binning->GetBinLowEdge(i+1),anythingToString((int)i),Bs_TAU_Var,dataType, year, doSystematics, ngauss);
+		vector<double> reso_bin = FitTimeRes(binning->GetBinLowEdge(i),binning->GetBinLowEdge(i+1),varName, anythingToString((int)i),Bs_TAU_Var,dataType, year, doSystematics, ngauss);
 		
 		ResoRelation->SetBinContent(i, reso_bin[0]);
 		ResoRelation->SetBinError(i, reso_bin[1]);
@@ -611,10 +621,21 @@ void FitResoRelation(TString Bs_TAU_Var = "Bs_DTF_TAU",TString dataType = "MC", 
 	c->Print("Plots/ScaleFactor_"+dataType+".eps");
         if(updateAnaNote) c->Print("../../../../../TD-AnaNote/latex/figs/Resolution/ScaleFactor_"+dataType+".pdf");
 
+
+	fitFunc2->SetParameters(0.,-1.,0.);
+	fitFunc2->SetParLimits(0,-50,50);
+	fitFunc2->SetParLimits(1,-1000.,1000.);
+	fitFunc2->SetParLimits(2,-2000.,2000.);
+	fitFunc2->FixParameter(2,0);
+
+	ResoRelation_mean->Fit(fitFunc2,"RS");
+
 	ResoRelation_mean->SetTitle(";#delta_{t} (ps);#mu_{t} (fs)");
 	ResoRelation_mean->SetMinimum(-10);
 	ResoRelation_mean->SetMaximum(5);
 	ResoRelation_mean->Draw("AP");
+	fitFunc2->Draw("same");
+
 	c->Print("Plots/Bias_"+dataType+".eps");
 
 
@@ -813,7 +834,168 @@ void fitSignalShape(TCut cut = "", int year = 16){
 	return;
 }
 
+void reformatTuple(string input, string output, string tauName = "BeautyTime", string tauErrName = "BeautyTimeErr", double scale = 1., bool useFloat = false ){
+
+	float t_float,dt_float;
+	double t,dt,mB,Bs_TRUETAU;
+	int Bs_ID,Ds_ID;
+	Int_t q;
+	double eta;
+	double sw = 1;
+	int year,run,trigger;
+	double pt,Bs_eta,px,py,pz;
+	double Ds_pt,Ds_eta,Ds_px,Ds_py,Ds_pz,mD;
+	double pi_pt,pi_eta,pi_px,pi_py,pi_pz;
+	double Ds_FDCHI2_ORIVX,Ds_PV_TAU;
+
+	int lab1_TRUEID,lab3_TRUEID,lab4_TRUEID,lab5_TRUEID;
+        double lab1_PIDK;
+	int nPV;
+	
+	TChain* in_tree = new TChain("DecayTree");
+	in_tree->Add(((string)input).c_str());
+	
+	TString cut = "abs(lab2_TRUEID)==431 &&abs(lab1_TRUEID)==211 &&abs(lab2_MC_MOTHER_ID)!=531 &&abs(lab2_MC_MOTHER_ID)!=511 && abs(lab2_MC_MOTHER_ID)!=521 && abs(lab2_MC_MOTHER_ID)!=541 && abs(lab2_MC_MOTHER_ID)<1000 && abs(lab2_MC_GD_MOTHER_ID)!=531 &&abs(lab2_MC_GD_MOTHER_ID)!=511 &&abs(lab2_MC_GD_MOTHER_ID)!=521 &&abs(lab2_MC_GD_MOTHER_ID)!=541 &&abs(lab2_MC_GD_MOTHER_ID)<1000 &&abs(lab3_TRUEID)==321 &&abs(lab4_TRUEID)==321 &&abs(lab5_TRUEID)==211 &&abs(lab3_MC_MOTHER_ID)==431&&abs(lab4_MC_MOTHER_ID)==431 &&abs(lab5_MC_MOTHER_ID)==431 &&abs(lab3_MC_GD_MOTHER_ID)!=531&&abs(lab4_MC_GD_MOTHER_ID)!=531&&abs(lab5_MC_GD_MOTHER_ID)!=531&&abs(lab3_MC_GD_MOTHER_ID)!=511 &&abs(lab4_MC_GD_MOTHER_ID)!=511&&abs(lab5_MC_GD_MOTHER_ID)!=511&&abs(lab3_MC_GD_MOTHER_ID)!=521 &&abs(lab4_MC_GD_MOTHER_ID)!=521&&abs(lab5_MC_GD_MOTHER_ID)!=521&&abs(lab3_MC_GD_MOTHER_ID)!=541 &&abs(lab4_MC_GD_MOTHER_ID)!=541&&abs(lab5_MC_GD_MOTHER_ID)!=541&&abs(lab3_MC_GD_MOTHER_ID)<1000 &&abs(lab4_MC_GD_MOTHER_ID)<1000&&abs(lab5_MC_GD_MOTHER_ID)<1000 &&abs(lab3_MC_GD_GD_MOTHER_ID)!=53&&abs(lab4_MC_GD_GD_MOTHER_ID)!=531 &&abs(lab5_MC_GD_GD_MOTHER_ID)!=531&&abs(lab3_MC_GD_GD_MOTHER_ID)!=511 && abs(lab4_MC_GD_GD_MOTHER_ID)!=511 && abs(lab5_MC_GD_GD_MOTHER_ID)!=511&&abs(lab3_MC_GD_GD_MOTHER_ID)!=521 &&abs(lab4_MC_GD_GD_MOTHER_ID)!=521&&abs(lab5_MC_GD_GD_MOTHER_ID)!=521&&abs(lab3_MC_GD_GD_MOTHER_ID)!=541 &&abs(lab4_MC_GD_GD_MOTHER_ID)!=541&&abs(lab5_MC_GD_GD_MOTHER_ID)!=541&&abs(lab3_MC_GD_GD_MOTHER_ID)<1000 &&abs(lab4_MC_GD_GD_MOTHER_ID)<1000&&abs(lab5_MC_GD_GD_MOTHER_ID)<1000";
+	TTree* tree = in_tree->CopyTree(cut);
+
+	tree->SetBranchAddress("lab0_MM",&mB);
+	tree->SetBranchAddress("lab0_PX",&px);
+	tree->SetBranchAddress("lab0_PY",&py);
+	tree->SetBranchAddress("lab0_PZ",&pz);
+
+	tree->SetBranchAddress("lab2_MM",&mD);
+	tree->SetBranchAddress("lab2_PX",&Ds_px);
+	tree->SetBranchAddress("lab2_PY",&Ds_py);
+	tree->SetBranchAddress("lab2_PZ",&Ds_pz);
+
+	tree->SetBranchAddress("lab1_PX",&pi_px);
+	tree->SetBranchAddress("lab1_PY",&pi_py);
+	tree->SetBranchAddress("lab1_PZ",&pi_pz);
+
+
+	tree->SetBranchAddress("lab0_TRUETAU",&Bs_TRUETAU);
+	if(useFloat){
+		tree->SetBranchAddress(((string)tauName).c_str(),&t_float);
+		tree->SetBranchAddress(((string)tauErrName).c_str(),&dt_float);
+	}
+	else{
+		tree->SetBranchAddress(((string)tauName).c_str(),&t);
+		tree->SetBranchAddress(((string)tauErrName).c_str(),&dt);
+	}
+	tree->SetBranchAddress("lab2_TRUEID",&Ds_ID);
+	tree->SetBranchAddress("lab0_TRUEID",&Bs_ID);
+	tree->SetBranchAddress("lab1_TRUEID",&lab1_TRUEID);
+	tree->SetBranchAddress("lab3_TRUEID",&lab3_TRUEID);
+	tree->SetBranchAddress("lab4_TRUEID",&lab4_TRUEID);
+	tree->SetBranchAddress("lab5_TRUEID",&lab5_TRUEID);
+	tree->SetBranchAddress("lab1_PIDK",&lab1_PIDK);
+	tree->SetBranchAddress("nPV",&nPV);
+	tree->SetBranchAddress("lab2_TAU",&Ds_PV_TAU);
+	tree->SetBranchAddress("lab2_FDCHI2_ORIVX",&Ds_FDCHI2_ORIVX);
+
+	TFile* out = new TFile(((string)output).c_str(),"RECREATE");
+	TTree* out_tree = new TTree("DecayTree","DecayTree");
+
+	TBranch* br_mB = out_tree->Branch( "Bs_DTF_MM", &mB, "Bs_DTF_MM/D" );
+	TBranch* br_sw= out_tree->Branch( "N_Bs_sw", &sw, "N_Bs_sw/D" );
+	TBranch* br_w = out_tree->Branch( "weight", &sw, "weight/D" );
+
+	TBranch* br_pt = out_tree->Branch( "Bs_PT", &pt, "Bs_PT/D" );
+	TBranch* br_eta = out_tree->Branch( "Bs_ETA", &Bs_eta, "Bs_ETA/D" );
+
+	TBranch* br_Dspt = out_tree->Branch( "Ds_PT", &Ds_pt, "Ds_PT/D" );
+	TBranch* br_Dseta = out_tree->Branch( "Ds_ETA", &Ds_eta, "Ds_ETA/D" );
+
+	TBranch* br_Ds_FDCHI2_ORIVX = out_tree->Branch( "Ds_FDCHI2_ORIVX", &Ds_FDCHI2_ORIVX, "Ds_FDCHI2_ORIVX/D" );
+	TBranch* br_Ds_TAU = out_tree->Branch( "Ds_PV_TAU", &Ds_PV_TAU, "Ds_PV_TAU/D" );
+
+	TBranch* br_pipt = out_tree->Branch( "pi_PT", &pi_pt, "pi_PT/D" );
+	TBranch* br_pieta = out_tree->Branch( "pi_ETA", &pi_eta, "pi_ETA/D" );
+
+	TBranch* br_t = out_tree->Branch( "Bs_BsDTF_TAU", &t, "Bs_BsDTF_TAU/D" );
+	TBranch* br_dt = out_tree->Branch( "Bs_BsDTF_TAUERR", &dt, "Bs_BsDTF_TAUERR/D" );
+	TBranch* br_trueTAU = out_tree->Branch( "Bs_TRUETAU", &Bs_TRUETAU, "Bs_TRUETAU/D" );
+
+	TBranch* br_Ds_ID = out_tree->Branch("Ds_ID",&Ds_ID,"Ds_ID/I");
+
+	TBranch* br_q_OS =out_tree->Branch("OS_Combination_DEC",&q,"OS_Combination_DEC/I");
+	TBranch* br_eta_OS =  out_tree->Branch("OS_Combination_PROB",&eta,"OS_Combination_PROB/D");
+	TBranch* br_q_SS = out_tree->Branch("SS_Kaon_DEC",&q,"SS_Kaon_DEC/I");
+	TBranch* br_eta_SS = out_tree->Branch("SS_Kaon_PROB",&eta,"SS_Kaon_PROB/D");
+
+	TBranch* br_run = out_tree->Branch("run",&run,"run/I");
+	TBranch* br_year = out_tree->Branch( "year", &year, "year/I" );
+	TBranch* br_trigger = out_tree->Branch("TriggerCat",&trigger,"TriggerCat/I");
+
+	for(int i=0; i< tree->GetEntries(); i++)
+	{	
+		if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
+		tree->GetEntry(i);
+
+// 		if(abs(lab1_TRUEID)!=211)continue;
+// 		if(abs(Ds_ID)!=431)continue;
+// 		if(abs(lab3_TRUEID)!=321)continue;
+// 		if(abs(lab4_TRUEID)!=321)continue;
+// 		if(abs(lab5_TRUEID)!=211)continue;
+// 
+		//if(lab1_PIDK>0)continue;
+		//if(nPV>1)continue;
+
+		if(useFloat){
+			t = (double)t_float*scale;
+			dt = (double)dt_float*scale;
+		}
+		else{
+			t = t*scale;
+			dt = dt*scale;		
+		}	
+		run = 2;
+		year = 17;
+		trigger = 0;
+
+		if(Bs_ID>0)q=1;
+		else q = -1;
+		eta = 0.;
+
+		TLorentzVector p;
+		p.SetXYZM(px,py,pz,mB);
+
+		pt = p.Pt();
+		Bs_eta = p.PseudoRapidity();
+
+		TLorentzVector p_Ds;
+		p_Ds.SetXYZM(Ds_px,Ds_py,Ds_pz,mD);
+
+		Ds_pt = p_Ds.Pt();
+		Ds_eta = p_Ds.PseudoRapidity();
+
+		TLorentzVector p_pi;
+		p_pi.SetXYZM(pi_px,pi_py,pi_pz, 139.57);
+
+		pi_pt = p_pi.Pt();
+		pi_eta = p_pi.PseudoRapidity();
+
+		out_tree->Fill();
+	}
+
+	out_tree->Write();
+	out->Write();
+	out->Close();
+}
+
 int main(int argc, char** argv){
+
+//     reformatTuple("/auto/data/dargent/BsDsKpipi/decayTimeBias/0micron.root","/auto/data/dargent/BsDsKpipi/decayTimeBias/norm_0micron.root");
+//     reformatTuple("/auto/data/dargent/BsDsKpipi/decayTimeBias/4micron.root","/auto/data/dargent/BsDsKpipi/decayTimeBias/norm_4micron.root");
+
+  //   reformatTuple("/auto/data/dargent/BsDsKpipi/decayTimeBias/PromptDsMCLRMisaligned_0micron_m*_All.root","/auto/data/dargent/BsDsKpipi/decayTimeBias/prompt_0micron.root","lab0_LifetimeFit_ctau0","lab0_LifetimeFit_ctauErr0",3.33564095,true);
+  //   reformatTuple("/auto/data/dargent/BsDsKpipi/decayTimeBias/PromptDsMCLRMisaligned_4micron_m*_All.root","/auto/data/dargent/BsDsKpipi/decayTimeBias/prompt_4micron.root","lab0_LifetimeFit_ctau0","lab0_LifetimeFit_ctauErr0",3.33564095,true);
+// 
+  //   reformatTuple("/auto/data/dargent/BsDsKpipi/decayTimeBias/PromptDsMCLRMisaligned_0micron_m*_All.root","/auto/data/dargent/BsDsKpipi/decayTimeBias/prompt_0micron_TAU.root","lab0_TAU","lab0_TAUERR",1000);
+//     reformatTuple("/auto/data/dargent/BsDsKpipi/decayTimeBias/PromptDsMCLRMisaligned_4micron_m*_All.root","/auto/data/dargent/BsDsKpipi/decayTimeBias/prompt_4micron_TAU.root","lab0_TAU","lab0_TAUERR",1000);
+
+   //  return 0;
+
 
     time_t startTime = time(0);
     gROOT->ProcessLine(".x ../lhcbStyle.C");
@@ -853,7 +1035,7 @@ int main(int argc, char** argv){
 	  tree->SetBranchStatus("year",1);
 	  tree->SetBranchStatus("run",1);
 	  tree->SetBranchStatus("Ds_FDCHI2_ORIVX",1);
-	  tree->SetBranchStatus("*finalState",1);
+	  tree->SetBranchStatus("Bs_PT",1);
 
   	  file_res = new TFile("dummy_res.root","RECREATE");
 	 // if(dataType == "Data"){
@@ -861,11 +1043,13 @@ int main(int argc, char** argv){
            //     else tree_res = tree->CopyTree(("year == "+anythingToString((int)year)).c_str());
          // }
 //  	  else 
-tree_res = tree->CopyTree(((string)cut).c_str());
+	  tree_res = tree->CopyTree(((string)cut).c_str());
 	  file->Close();
     }
-    if(fitIntegratedResolution)FitTimeRes(TAUERR_min, TAUERR_max, "all", TString((string) Bs_TAU_Var), dataType, year);
-    if(fitResoRelation)FitResoRelation(TString((string) Bs_TAU_Var),dataType, year, doSystematics, ngauss);
+    if(fitIntegratedResolution)FitTimeRes(TAUERR_min, TAUERR_max, TString((string) Bs_TAU_Var)+"ERR", "all", TString((string) Bs_TAU_Var), dataType, year, doSystematics, ngauss);
+    if(fitResoRelation)FitResoRelation(TString((string) Bs_TAU_Var)+"ERR",TString((string) Bs_TAU_Var),dataType, year, doSystematics, ngauss);
+    //if(fitResoRelation)FitResoRelation(TString("Bs_PT"),TString((string) Bs_TAU_Var),dataType, year, doSystematics, ngauss);
+
     if(!file_res)file_res->Close();
   
     cout << "==============================================" << endl;
