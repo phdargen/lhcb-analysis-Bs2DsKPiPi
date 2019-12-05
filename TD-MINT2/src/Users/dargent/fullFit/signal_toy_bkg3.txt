@@ -1,0 +1,402 @@
+* general options
+"Event Pattern"         531 -431 321 211 -211
+"RandomSeed"  	0
+"Phases given in"       "degrees"
+
+"InputFileName"	 "/auto/data/dargent/BsDsKpipi/Final/Data/signal_tagged.root"
+
+*"IntegratorEventFile"	"SignalIntegrationEvents_AccBDT.root"
+"IntegratorEventFile"	"SignalIntegrationEvents_toys_phspCut.root"
+
+"IntegratorEventFileCP"		"/auto/data/dargent/BsDsKpipi/MINT/signalMC_small_CP.root"
+"IntegratorEventFileBkg"	"/auto/data/dargent/BsDsKpipi/MINT/signalMC_small.root"
+
+
+"IntegratorEvents"	400000
+"IntegPrecision"        3.0e-3
+"IntegMethod"           "efficient"
+"IntegratorSource"        "file"
+"channel"	"signal"
+
+"doPlots"		0
+"updateAnaNote"	 	0
+"nBins" 	50
+"nBinst" 	50
+"N_plot_it"	0
+
+"min_TAU" 	0.4
+"max_TAU" 	10
+"min_TAUERR" 	0.
+"max_TAUERR" 	0.1
+"max_TAU_ForMixingPlot" 	4
+"w_max"		 0.5
+"nBinsAsym" 	8
+
+"initCPcoeff"	 	0
+"doSimFit"		1
+"doTimeFit"		0
+"doDalitzFit"		0
+"do2DScan"		0
+"OutputDir"		"signal_toy_bkg3/"
+
+"randomizeStartVals"		0
+"useLASSO"	 	0
+"lambda"	 	1
+
+"useGaussConstrainsTagging"	 0
+"FromFileGenerator::doBootstrap"	1
+
+"doFractions"		0
+"doFractionsErr"	0
+
+"doToyStudy"		 1
+"N_scale_toys"		 1
+
+"addBkgToToys"		 	1
+"readBkgData::correlate"	0
+"generateBkgToys::applyPhspCuts"	1
+
+"doAccSystematics"	 0
+"useCholDec"		 0
+"varPerParChol"		50
+
+*"doSystematic"		"dm"
+*"ConstrainMulti_dm"     "dm "
+*"ConstrainMulti_dm_corr"     "1 "
+
+*"doSystematic"		"production_asym_Run1"
+*"ConstrainMulti_production_asym_Run1"     "production_asym_Run1 "
+*"ConstrainMulti_production_asym_Run1_corr"     "1 "
+
+*"doSystematic"		"production_asym_Run2"
+*"ConstrainMulti_production_asym_Run2"     "production_asym_Run2 "
+*"ConstrainMulti_production_asym_Run2_corr"     "1 "
+
+*"doSystematic"		"detection_asym_Run1"
+*"ConstrainMulti_detection_asym_Run1"     "detection_asym_Run1 "
+*"ConstrainMulti_detection_asym_Run1_corr"     "1 "
+
+*"doSystematic"		"detection_asym_Run2"
+*"ConstrainMulti_detection_asym_Run2"     "detection_asym_Run2 "
+*"ConstrainMulti_detection_asym_Run2_corr"     "1 "
+
+
+** name		Fix?	init	step	min	max
+*
+"FullAmpsPdfFlexiFastCPV::useCartCoord"		0
+"FullAmpsPdfFlexiFastCPV::directCPV"		0
+
+"r"		0	0.5	0.05	0.	1.
+"delta"		0	46.	1	-360    360		
+"gamma"		0	61	1	-360    360
+
+*"xp"	0	0.5	0.01    -2 2
+*"yp"	0	0.2	0.01	-2 2
+*"xm"	0	0.5	0.01    -2 2
+*"ym"	0	0.2 	0.01    -2 2
+
+*"r_Blind"	1	-0.5   0.5
+*"delta_Blind"	2	-180   180
+*"gamma_Blind"	3	-180   180
+
+*"gamma_Scan"	-90 180	
+
+"mass_K(1)(1270)+"	1	1289.81 1.75
+"width_K(1)(1270)+"	1	116.11  3.4
+"RunningWidth_K(1)(1270)+"	"../RunningWidth/Histos_KKpipi_LHCb/RunningWidth_K(1)(1270)+.root"
+
+
+"mass_K(1)(1400)+"	0	1397.87 10
+"width_K(1)(1400)+"	0	204.377 15
+"RunningWidth_K(1)(1400)+"	"../RunningWidth/Histos_CLEO/RunningWidth_K(1)(1400)+.root"
+
+"mass_K*(1410)+"	0	1432.07 10
+"width_K*(1410)+"	0	344.149 15
+"RunningWidth_K*(1410)+"	"../RunningWidth/Histos_CLEO/RunningWidth_K*(1410+.root"
+*"RunningWidth_K*(1410)+"	"../RunningWidth/RunningWidth_K*(1410+_it2.root"
+
+"mass_K(1460)+"		1	1482.4 15.64
+"width_K(1460)+"	1	335.6 10.64
+"RunningWidth_K(1460)+"	"../RunningWidth/Histos_K3pi_LHCb/RunningWidth_K(1460)+.root"
+
+"mass_K*(892)0"		1	895.55	0.2 
+"width_K*(892)0"	1	50.3	0.8
+
+"mass_rho(770)0"	1	775.26	0.25 
+"width_rho(770)0"	1	147.8	0.9
+
+"mass_K(0)*(1430)0"	1	1425	50 
+"width_K(0)*(1430)0"	1	270	80
+
+"RhoOmegaGS::Delta_Re_rho(770)0"	1	0.0073		   0.0001
+"RhoOmegaGS::Delta_Im_rho(770)0"	1	1.99		   0.0001
+
+
+*"BW_radius"                     		2	0.0015	0.0001	0.0001	0.025
+
+*"UseGlobalRadiusFor_Bs0"			0
+*"radius_Bs0"					2	0.0015	0.0001			          
+
+*"UseGlobalRadiusFor_K*(892)0"			0
+*"radius_K*(892)0"				2	0.005	0.0001			          
+
+*"UseGlobalRadiusFor_rho(770)0"			0
+*"radius_rho(770)0"				2	0.005	0.0001			          
+
+*"UseGlobalRadiusFor_K*(1410)+"			0
+*"radius_K*(1410)+"				2	0.005	0.0001			          
+
+
+*Baseline:
+*---------------------		
+"Bs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Amp"	1	1 0.01
+"Bs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Phase"	1	0 1
+"Bs0->K(1460)+(->K*(892)0(->K+,pi-),pi+),Ds-_Amp"	1	1 0.01
+"Bs0->K(1460)+(->K*(892)0(->K+,pi-),pi+),Ds-_Phase"	1	0 1
+"Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Amp"	1	1 0.01
+"Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Phase"	1	0 1
+"Bs0->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Amp"	1	1 0.01
+"Bs0->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Phase"	1	0 1
+"GSBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Amp"	1	1 0.01
+"GSBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Phase"	1	0 1
+"RhoOmegaGSBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Amp"		2	1 0.01
+"RhoOmegaGSBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Phase"	2	0 1
+
+"Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Amp"			0	0.713747 0.01
+"Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Phase"			0	49.4567 1
+"GSBs0->K*(1410)+(->rho(770)0(->pi+,pi-),K+),Ds-_Amp"			0	0.632159 0.01
+"GSBs0->K*(1410)+(->rho(770)0(->pi+,pi-),K+),Ds-_Phase"			0	-163.943 1
+"LassBs0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Amp"		0	0.521153 0.01
+"LassBs0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Phase"		0	128.93 1
+"RhoOmegaGSBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Amp"		2	1 0.01
+"RhoOmegaGSBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Phase"	2	0.01
+
+"a_K1_1400_Amp"		0	1.97412 0.01
+"a_K1_1400_Phase"	0	11.4997 1
+"a_Ks_1410_Amp"		0	1.14065 0.01
+"a_Ks_1410_Phase"	0	55.2718 1
+"a_NS_Ks_Amp"		0	0.738952 0.01
+"a_NS_Ks_Phase"		0	-17.8422 1
+*"a_K_1460_Amp"		0	0.213514 0.01
+*"a_K_1460_Phase"	0	-62.9707 1
+*"a_NS_rho_Amp"		0	0.0595002 0.01
+*"a_NS_rho_Phase"	0	42.5571 1
+*"a_sys_Amp"		0	0.0595002 0.01
+*"a_sys_Phase"		0	42.5571 1
+
+"abar_K1_1400_Amp"	0	0.725623 0.01
+"abar_K1_1400_Phase"	0	-65.7478 1
+"abar_K_1460_Amp"	0	0.870591 0.01
+"abar_K_1460_Phase"	0	-97.3576 1
+"abar_NS_Ks_Amp"	0	1.13125 0.01
+"abar_NS_Ks_Phase"	0	-17.7301 1
+"abar_NS_rho_Amp"	0	0.535267 0.01
+"abar_NS_rho_Phase"	0	33.3402 1
+*"abar_Ks_1410_Amp"	0	0.1 0.01
+*"abar_Ks_1410_Phase"	0	1 1
+*"abar_sys_Amp"		0	0.0595002 0.01
+*"abar_sys_Phase"	0	42.5571 1
+
+
+*** Additional amplitudes for systematics
+"addAmpName"		""
+
+*"Bs0->K(1)(1270)+[D](->K*(892)0(->K+,pi-),pi+),Ds-_Amp"	0	0.2	0.05
+*"Bs0->K(1)(1270)+[D](->K*(892)0(->K+,pi-),pi+),Ds-_Phase"	0	0.	5
+*"Bs0->K(1)(1270)+(->rho(1450)0(->pi+,pi-),K+),Ds-_Amp"         0	0.2	0.05
+*"Bs0->K(1)(1270)+(->rho(1450)0(->pi+,pi-),K+),Ds-_Phase"       0	0.	5
+*"Bs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Amp"          0	0.2	0.05
+*"Bs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Phase"        0	0.	5
+*"Bs0->K(1)(1270)+[D](->rho(770)0(->pi+,pi-),K+),Ds-_Amp"       0	0.2	0.05
+*"Bs0->K(1)(1270)+[D](->rho(770)0(->pi+,pi-),K+),Ds-_Phase"     0	0.	5
+
+*"GSBs0->K(1)(1400)+(->rho(770)0(->pi+,pi-),K+),Ds-_Amp"	0	0.2	0.05
+*"GSBs0->K(1)(1400)+(->rho(770)0(->pi+,pi-),K+),Ds-_Phase"	0	0.	5
+
+*"BuggBs0->K(1460)+(->sigma10(->pi+,pi-),K+),Ds-_Amp"		0	0.2	0.05
+*"BuggBs0->K(1460)+(->sigma10(->pi+,pi-),K+),Ds-_Phase"		0	0.	5
+*"Bs0->K(1460)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Amp"          0	0.2	0.05
+*"Bs0->K(1460)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Phase"        0	0.	5
+*"FlatteBs0->K(1460)+(->f(0)(980)0(->pi+,pi-),K+),Ds-_Amp"      0	0.2	0.05
+*"FlatteBs0->K(1460)+(->f(0)(980)0(->pi+,pi-),K+),Ds-_Phase"    0	0.	5
+*"GSBs0->K(1460)+(->rho(770)0(->pi+,pi-),K+),Ds-_Amp"           0	0.2	0.05
+*"GSBs0->K(1460)+(->rho(770)0(->pi+,pi-),K+),Ds-_Phase"         0	0.	5
+
+*"Bs0->NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)_Amp"		1	1.	0.01
+*"Bs0->NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)_Phase"		1	0.	5
+*"Bs0[P]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Amp"		1	0.	5
+*"Bs0[P]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Phase"		1	0.	5
+*"Bs0[D]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Amp"		1	1.	0.01
+*"Bs0[D]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Phase"		1	0.	5
+
+*"GSBs0->NonResS0(->Ds-,K+),rho(770)0(->pi+,pi-)_Amp"		1	1 0.01
+*"GSBs0->NonResS0(->Ds-,K+),rho(770)0(->pi+,pi-)_Phase"		1	0.	5
+*"GSBs0[P]->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Amp"	1	1.	0.01
+*"GSBs0[P]->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Phase"	1	0.	5
+*"GSBs0[D]->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Amp"	1	1.	0.01
+*"GSBs0[D]->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Phase"	1	0.	5
+*"GSBs0->NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+_Amp"           1	1.	0.01
+*"GSBs0->NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+_Phase"         1	0.	5
+
+*"BuggBs0->NonResS0(->Ds-,K+),sigma10(->pi+,pi-)_Amp"		1	1.	0.01
+*"BuggBs0->NonResS0(->Ds-,K+),sigma10(->pi+,pi-)_Phase"		1	0.	5
+*"BuggBs0->NonResV0(->Ds-,K+),sigma10(->pi+,pi-)_Amp"		1	1.	0.01
+*"BuggBs0->NonResV0(->Ds-,K+),sigma10(->pi+,pi-)_Phase"		1	0.	5
+*"BuggBs0->NonResA0(->sigma10(->pi+,pi-),Ds-),K+_Amp"           1	1.	0.01
+*"BuggBs0->NonResA0(->sigma10(->pi+,pi-),Ds-),K+_Phase"         1	0.	5
+
+*"FlatteBs0->NonResS0(->Ds-,K+),f(0)(980)0(->pi+,pi-)_Amp"        1	1.	0.01
+*"FlatteBs0->NonResS0(->Ds-,K+),f(0)(980)0(->pi+,pi-)_Phase"      1	0.	5
+*"FlatteBs0->NonResV0(->Ds-,K+),f(0)(980)0(->pi+,pi-)_Amp"        1	1.	0.01
+*"FlatteBs0->NonResV0(->Ds-,K+),f(0)(980)0(->pi+,pi-)_Phase"      1	0.	5
+
+*"Bs0->f(2)(1270)0(->pi+,pi-),NonResS0(->Ds-,K+)_Amp"             1	1.	0.01
+*"Bs0->f(2)(1270)0(->pi+,pi-),NonResS0(->Ds-,K+)_Phase"           1	0.	5
+
+*"LassBs0->K(0)*(1430)0(->K+,pi-),NonResS0(->Ds-,pi+)_Amp"         1	1.	0.01
+*"LassBs0->K(0)*(1430)0(->K+,pi-),NonResS0(->Ds-,pi+)_Phase"       1	0.	5
+
+*"Bs0->K(2)*(1430)+(->K*(892)0(->K+,pi-),pi+),Ds-_Amp"		1	1.	0.01
+*"Bs0->K(2)*(1430)+(->K*(892)0(->K+,pi-),pi+),Ds-_Phase"	1	0.	5
+*"Bs0->K(2)*(1430)+(->rho(770)0(->pi+,pi-),K+),Ds-_Amp"  	1	1.	0.01
+*"Bs0->K(2)*(1430)+(->rho(770)0(->pi+,pi-),K+),Ds-_Phase" 	1	0.	5
+
+*"Bs0->K*(1680)+(->K*(892)0(->K+,pi-),pi+),Ds-_Amp"		1	1.	0.01
+*"Bs0->K*(1680)+(->K*(892)0(->K+,pi-),pi+),Ds-_Phase"		1	0.	5
+*"GSBs0->K*(1680)+(->rho(770)0(->pi+,pi-),K+),Ds-_Amp"		1	1.	0.01
+*"GSBs0->K*(1680)+(->rho(770)0(->pi+,pi-),K+),Ds-_Phase"	1	0.	5
+
+*"Bs0->K(2)(1770)+(->K(2)*(1430)0(->K+,pi-),pi+),Ds-_Amp"        1	1.	0.01
+*"Bs0->K(2)(1770)+(->K(2)*(1430)0(->K+,pi-),pi+),Ds-_Phase"      1	0.	5
+*"Bs0->K(2)(1770)+(->K*(892)0(->K+,pi-),pi+),Ds-_Amp"            1	1.	0.01
+*"Bs0->K(2)(1770)+(->K*(892)0(->K+,pi-),pi+),Ds-_Phase"          1	0.	5
+*"FlatteBs0->K(2)(1770)+(->f(0)(980)0(->pi+,pi-),K+),Ds-_Amp"    1	1.	0.01
+*"FlatteBs0->K(2)(1770)+(->f(0)(980)0(->pi+,pi-),K+),Ds-_Phase"  1	0.	5
+*“Bs0->K(2)(1770)+(->f(2)(1270)0(->pi+,pi-),K+),Ds-_Amp"         1	1.	0.01
+*"Bs0->K(2)(1770)+(->f(2)(1270)0(->pi+,pi-),K+),Ds-_Phase"       1	0.	5
+*"Bs0->K(2)(1770)+(->rho(770)0(->pi+,pi-),K+),Ds-_Amp"           1	1.	0.01
+*"Bs0->K(2)(1770)+(->rho(770)0(->pi+,pi-),K+),Ds-_Phase"   	 1	0.	5
+
+
+* For toy and integrator event generation:
+"SigFraction"		1	0.999999	0.01
+"Inco_BgSpinZeroBs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"              1	1	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"              1	0.	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"		1       1      0.05     0.0     0.0
+"Inco_BgSpinZeroBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"		1       0     0.05     0.0     0.0
+*"Inco_BgSpinZeroBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Re"              	1	0.7	0.01	0.0	0.0
+*"Inco_BgSpinZeroBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Im"             	1	0.	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Re"	1	0.5	0.01	0.0	0.0
+"Inco_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Im" 1	0.	0.01	0.0	0.0
+
+"Inco_Bkg_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Re"	1	1.0	0.01	0.0	0.0
+"Inco_Bkg_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Im" 	1	0.	0.01	0.0	0.0
+
+
+"Gamma"		1	0.6629 	0.0018	0.0	2.0
+"dGamma" 	1 	-0.088 	0.006	0.0	0.0
+"dm" 		2 	17.757  0.021	0.0	0.0
+
+
+knot_positions 0.5 1.35 2.5 6.5 
+c0_Run1_t0  1  0.309451  0.0179289
+c1_Run1_t0  1  0.693998  0.0305617
+c2_Run1_t0  1  0.857525  0.042757
+c3_Run1_t0  1  1.09021  0.028351
+
+c0_Run1_t1  1  0.158202  0.0139775
+c1_Run1_t1  1  0.422018  0.0288956
+c2_Run1_t1  1  0.801677  0.0473163
+c3_Run1_t1  1  1.09886  0.033694
+
+c0_Run2_t0  1  0.285146  0.00885403
+c1_Run2_t0  1  0.663378  0.0167249
+c2_Run2_t0  1  0.855843  0.0246485
+c3_Run2_t0  1  1.05969  0.0169315
+
+c0_Run2_t1  1  0.117491  0.00818242
+c1_Run2_t1  1  0.421659  0.0186285
+c2_Run2_t1  1  0.73285  0.0267613
+c3_Run2_t1  1  1.07128  0.0198483
+
+
+
+*knot_positions 0.8 1.6 2.5 6.5 
+*c0_Run1_t0  1  0.563896  0.0156214
+*c1_Run1_t0  1  0.786848  0.0254774
+*c2_Run1_t0  1  0.863823  0.0378184
+*c3_Run1_t0  1  1.08294  0.0260858
+
+*c0_Run1_t1  1  0.37519  0.0140891
+*c1_Run1_t1  1  0.586739  0.0253957
+*c2_Run1_t1  1  0.802417  0.0428252
+*c3_Run1_t1  1  1.10292  0.0302337
+
+*c0_Run2_t0  1  0.529075  0.010711
+*c1_Run2_t0  1  0.748935  0.0175113
+*c2_Run2_t0  1  0.872172  0.0271392
+*c3_Run2_t0  1  1.06877  0.0183835
+
+*c0_Run2_t1  1  0.338735  0.00666878
+*c1_Run2_t1  1  0.560701  0.0136496
+*c2_Run2_t1  1  0.740207  0.0258054
+*c3_Run2_t1  1  1.06446  0.0205617
+
+***
+"p0_os_Run1"    2    0.397881    0.00966787
+"p1_os_Run1"    2    0.895483    0.0851807
+"delta_p0_os_Run1"    2    0.0295502    0.0106338
+"delta_p1_os_Run1"    2    0.0114576    0.0949505
+"avg_eta_os_Run1"    1    0.356748    0
+"tageff_os_Run1"    2    0.477748    0.00365126
+"tageff_asym_os_Run1"    2    0.000155002    0.0135347
+"p0_ss_Run1"    2    0.444079    0.00799623
+"p1_ss_Run1"    2    0.948522    0.110611
+"delta_p0_ss_Run1"    2    -0.0186388    0.00882122
+"delta_p1_ss_Run1"    2    0.0641831    0.124493
+"avg_eta_ss_Run1"    2    0.430637    0
+"tageff_ss_Run1"    2    0.684261    0.00339748
+"tageff_asym_ss_Run1"    2    -0.00046247    0.0124222
+
+"p0_os_Run2"    2    0.371521    0.0048509
+"p1_os_Run2"    2    0.787574    0.0429545
+"delta_p0_os_Run2"    2    0.00757015    0.00596291
+"delta_p1_os_Run2"    2    0.0673227    0.0523513
+"avg_eta_os_Run2"    1    0.338161    0
+"tageff_os_Run2"   2    0.403992    0.00181788
+"tageff_asym_os_Run2"    2   0.00315874   0.00617581
+"p0_ss_Run2"    2    0.428425    0.00373149
+"p1_ss_Run2"    2    0.787313    0.0389353
+"delta_p0_ss_Run2"    2    -0.0166119    0.00447389
+"delta_p1_ss_Run2"    2    0.0284228    0.0477364
+"avg_eta_ss_Run2"    2    0.40398    0
+"tageff_ss_Run2"    2    0.69903    0.00169926
+"tageff_asym_ss_Run2"    2    -0.00319471    0.00575487
+"production_asym_Run2"    2    -0.00183088    0.00642004
+
+
+"offset_sigma_dt_Run1"	1	0.0103 0.001
+"scale_sigma_dt_Run1"	1	1.28 0.001
+
+"offset_sigma_dt_Run2"			1	0.0116	0.0016
+"scale_sigma_dt_Run2"			1	0.877	0.040
+"offset_sigma_dt_Run2_17"		1	0.0065	0.0014
+"scale_sigma_dt_Run2_17"		1	0.961	0.036
+
+"production_asym_Run1"	2	-0.00045 0.01
+"detection_asym_Run1"	2	0.01 0.0022
+"detection_asym_Run2"	2	0.01 0.0022
+
+"ConstrainMulti_Tagging_Run1"     "p0_os_Run1 p1_os_Run1 tageff_os_Run1 p0_ss_Run1 p1_ss_Run1 tageff_ss_Run1 "
+
+"ConstrainMulti_Tagging_Run1_corr"     "1 0.0619449 3.56451e-09 -0.0606465 0.0553159 3.07425e-09 1 4.25336e-10 0.00413121 -0.0872366 -1.37478e-09 1 -3.33719e-09 -2.45895e-09 -1.50034e-09 1 0.0451437 -2.17319e-09 1 7.11622e-10 1 "
+
+"ConstrainMulti_Tagging_Run2"     "p0_os_Run2 p1_os_Run2 tageff_os_Run2 p0_ss_Run2 p1_ss_Run2 tageff_ss_Run2 "
+
+"ConstrainMulti_Tagging_Run2_corr"     "1 0.0645484 7.02621e-09 -0.0160539 0.0284919 2.18567e-08 1 -9.1706e-09 -0.00206847 -0.00881022 1.98965e-08 1 -1.00533e-08 -9.64395e-09 7.75166e-09 1 0.0722799 -8.46498e-09 1 -1.16091e-09 1 "
+
+
+
+"ConstrainMulti_Acc"     "Gamma dGamma c0_Run1_t0 c1_Run1_t0 c2_Run1_t0 c3_Run1_t0 c0_Run1_t1 c1_Run1_t1 c2_Run1_t1 c3_Run1_t1 c0_Run2_t0 c1_Run2_t0 c2_Run2_t0 c3_Run2_t0 c0_Run2_t1 c1_Run2_t1 c2_Run2_t1 c3_Run2_t1 "
+
+"ConstrainMulti_Acc_corr"     "1 0.11 -0.13512 -0.163004 -0.12689 -0.0925396 -0.0834628 -0.104574 -0.109078 -0.0670315 -0.249218 -0.285296 -0.222132 -0.15147 -0.117532 -0.173494 -0.178875 -0.134078 1 -0.0551776 -0.0693684 -0.0591662 -0.0778238 -0.0340978 -0.0431492 -0.0506155 -0.0568522 -0.103138 -0.122348 -0.104624 -0.1271 -0.0482136 -0.0730465 -0.0821008 -0.111345 1 0.122467 0.469895 0.0279773 0 0 0 0 0 0 0 0 0 0 0 0 1 0.0423722 0.215262 0 0 0 0 0 0 0 0 0 0 0 0 1 -0.247966 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0.124466 0.347766 0.0499515 0 0 0 0 0 0 0 0 1 -0.0258893 0.210586 0 0 0 0 0 0 0 0 1 -0.22591 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0.206803 0.420743 0.0590146 0 0 0 0 1 0.0579628 0.219519 0 0 0 0 1 -0.239791 0 0 0 0 1 0 0 0 0 1 -0.132619 0.353006 0.00606986 1 -0.151294 0.236207 1 -0.245142 1 "

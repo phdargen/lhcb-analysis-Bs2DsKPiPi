@@ -90,6 +90,8 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TF1.h>
+#include <TF2.h>
+#include "TProfile.h"
 #include <TFile.h>
 #include <TCanvas.h>
 #include <TLorentzVector.h>
@@ -898,10 +900,13 @@ protected:
     const MINT::FitParameter& _detection_asym;
     
     string _marginalPdfsPrefix;
-    // Time pdf master
+    
+// Time pdf master
     TimePdfMaster* _timePdfMaster;
     NamedParameter<int> _useCartCoord;
     NamedParameter<int> _directCPV;
+    DalitzEventPattern _pat;
+    DalitzEventPattern _pat_CP;
 
     // Limits
     NamedParameter<double> _min_TAU;
@@ -915,6 +920,7 @@ protected:
     FitAmpIncoherentSum* _fasGen_CP;
     SignalGenerator* _sg_CP;
     vector<int> _s234;
+    TF2 *_f_bkg;
 
 
 public:
@@ -1283,162 +1289,113 @@ public:
     }
 
 
-    DalitzEventList generateBkgToys(int N, DalitzEventList& eventListData, int run = -1 , int trigger = -1){
-
-	DalitzEventList eventList,eventListDataSideband;
-
-// 	for(int i=0; i< eventListData.size(); i++)
-// 	{	
-// 		DalitzEvent evt = eventListData[i];
-// 		if(abs(evt.getValueFromVector(9) -5370) > 60)eventListDataSideband.Add(evt);
-// 	}
-// 	int N_sample = eventListDataSideband.size();
-
-	int N_sample = eventListData.size();
-
-	vector<int> b_indices;
-	while( b_indices.size() < N )b_indices.push_back(TMath::Nint(gRandom->Uniform(0,N_sample-1)));
-	sort(b_indices.begin(), b_indices.end());
-	
-	TRandom3 rndm;
-	for(int i=0; i< N; i++)
-	{	
-		DalitzEvent evt = eventListData[b_indices[i]];
-		evt.setValueInVector(7, run);
-		evt.setValueInVector(8, trigger);
-		eventList.Add(evt);
-	}
-	//saveEventListToFile(eventList);
-	return eventList;
-    }
-
-    DalitzEventList readBkgData(string input = "/auto/data/dargent/BsDsKpipi/BDT/Data/signal_SS.root"){
-
-        NamedParameter<int>  correlate("readBkgData::correlate", 1);
-
-	double t,dt,mB;
-	int f;
-	int q_OS;
-	double Bs_ID,Ds_ID;
-	Int_t q_SS;
-	double eta_OS;
-	Double_t eta_SS;
-	double sw;
-	int year,run,Ds_finalState,trigger;
-	double K[4];
-	double pip[4];
-	double pim[4];
-	double Ds_Kp[4],Ds_Km[4],Ds_pim[4],Ds[4];
-	
-	TChain* tree_norm;
-
-	tree_norm=new TChain("DecayTree");
-	tree_norm->Add(((string)input).c_str());
-	tree_norm->SetBranchStatus("*",0);
-	tree_norm->SetBranchStatus("year",1);
-	tree_norm->SetBranchStatus("*TAU*",1);
-	tree_norm->SetBranchStatus("*ID*",1);
-	tree_norm->SetBranchStatus("weight",1);
-	tree_norm->SetBranchStatus("TriggerCat",1);
-	tree_norm->SetBranchStatus("run",1);
-	tree_norm->SetBranchStatus("BsDTF_*P*",1);
-	tree_norm->SetBranchStatus("Bs_DTF_MM",1);
-	
-	tree_norm->SetBranchAddress("Bs_DTF_MM",&mB);
-	tree_norm->SetBranchAddress("Bs_DTF_TAU",&t);
-	tree_norm->SetBranchAddress("Bs_DTF_TAUERR",&dt);
-	tree_norm->SetBranchAddress("Ds_ID",&f);
-	tree_norm->SetBranchAddress("year",&year);
-	tree_norm->SetBranchAddress("run",&run);
-	tree_norm->SetBranchAddress("TriggerCat",&trigger);
-	tree_norm->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
-	tree_norm->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
-	tree_norm->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
-	tree_norm->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
-	tree_norm->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
-	tree_norm->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
-	tree_norm->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
-	tree_norm->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);    
-	tree_norm->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
-	tree_norm->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
-	tree_norm->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
-	tree_norm->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);    
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);    
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
-	tree_norm->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
-	
-  	NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
-        DalitzEventPattern pat(EventPattern.getVector());
-        DalitzEventPattern pat_CP = pat.makeCPConjugate();
+    DalitzEventList generateBkgToys(int N, int run = -1, int trigger = -1,string input = "/auto/data/dargent/BsDsKpipi/BDT/Data/signal_SS.root"){
 
 	DalitzEventList eventList;
+	NamedParameter<int>  applyPhspCuts("generateBkgToys::applyPhspCuts", 0);
 
-	for(int i=0; i< tree_norm->GetEntries()-1; i++)
+	if(_f_bkg==0){
+		NamedParameter<int>  correlate("readBkgData::correlate", 1);
+	
+		double t_bkg,dt_bkg,m_bkg;
+		
+		TChain* tree;
+		tree=new TChain("DecayTree");
+		tree->Add(((string)input).c_str());
+		tree->SetBranchStatus("*",0);
+		tree->SetBranchStatus("*DTF*",1);
+		
+		tree->SetBranchAddress("Bs_DTF_MM",&m_bkg);
+		tree->SetBranchAddress("Bs_DTF_TAU",&t_bkg);
+		tree->SetBranchAddress("Bs_DTF_TAUERR",&dt_bkg);
+		
+		TH2D* h_bkg = new TH2D("h_bkg","h_bkg",100,5200,5700,100,_min_TAU,_max_TAU);
+
+		for(int i=0; i< tree->GetEntries(); i++)
+		{	
+			if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
+			tree->GetEntry(i);
+
+			h_bkg->Fill(m_bkg,t_bkg);	
+		}
+
+		TCanvas* c = new TCanvas();
+		h_bkg->SetMarkerSize(0.1);
+		h_bkg->Draw();
+		TProfile* h_bkg_prof = h_bkg->ProfileX("p",1,-1,"");
+		h_bkg_prof->SetLineColor(kRed);
+		h_bkg_prof->SetMarkerColor(kRed);
+		h_bkg_prof->Sumw2();
+		h_bkg_prof->Rebin(4);
+		cout << "bkg correlation = " << h_bkg->GetCorrelationFactor()*100 << endl;
+		h_bkg_prof->Draw("histsame");
+		c->Print("h_bkg.eps");
+
+		 if(correlate)_f_bkg = new TF2("f_bkg","[0]*(1-exp(-[3]*(y-0.4)))*exp(-x*[1])*exp(-y*[2]*(1+(5200-x)*[4]))",5200,5700,_min_TAU,_max_TAU);
+		 else _f_bkg = new TF2("f_bkg","[0]*(1-exp(-[3]*(y-0.4)))*exp(-x*[1])*exp(-y*[2])",5200,5700,_min_TAU,_max_TAU);
+		_f_bkg->SetNpx(100);
+		_f_bkg->SetNpy(100);
+
+		_f_bkg->SetParLimits(0,1,10000000);
+		_f_bkg->SetParLimits(1,0,1);
+		_f_bkg->SetParLimits(2,0,10);
+		_f_bkg->SetParLimits(3,-200,200);
+		if(correlate)_f_bkg->SetParLimits(4,-0.1,0.1);
+
+		_f_bkg->SetParameter(0,1000);
+		_f_bkg->SetParameter(1,0.);
+		_f_bkg->SetParameter(2,1.);
+		_f_bkg->SetParameter(3,0.);
+		if(correlate)_f_bkg->FixParameter(4,0.);
+
+		h_bkg->Fit("f_bkg");
+		if(correlate){ 
+			_f_bkg->ReleaseParameter(4);
+			h_bkg->Fit("f_bkg");
+		}
+		
+		TH2D* h_fit = (TH2D*)_f_bkg->CreateHistogram();	
+		h_fit->SetMarkerSize(0.1);
+		h_fit->Draw();
+		cout << "bkg pdf correlation = " << h_fit->GetCorrelationFactor()*100 << endl;
+		c->Print("f_bkg.eps");
+	}
+
+	while(eventList.size()<N)
 	{	
-		if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << tree_norm->GetEntries() << endl;
-		tree_norm->GetEntry(i);
-		
-		double sign = 1.;
-		TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
-		TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
-		TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
-		TLorentzVector D_p;
-		TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
-		TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
-		TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
-		D_p = D_Kp_p + D_Km_p + D_pim_p;
-		
-		TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
-		// array of vectors
-		vector<TLorentzVector> vectorOfvectors;
-	
-		vectorOfvectors.push_back(B_p*MeV);
-		vectorOfvectors.push_back(D_p*MeV);
-		vectorOfvectors.push_back(K_p*MeV);
-		vectorOfvectors.push_back(pip_p*MeV);
-		vectorOfvectors.push_back(pim_p*MeV);
+
+		double t,m;
+		_f_bkg->GetRandom2(m,t);
+
+		vector<double> marginal_vals = _timePdfMaster->getRandom_marginalVals();
+		double dt = marginal_vals[0] ;
+		double eta_OS = marginal_vals[1] ;
+		double eta_SS = marginal_vals[2] ;
+		int f = (gRandom->Uniform() > 0.5) ? 1 : -1;
+
 		DalitzEvent evt;
-	
-		if(f < 0)evt = DalitzEvent(pat, vectorOfvectors);
-		else evt = DalitzEvent(pat_CP, vectorOfvectors);	
+		if(f < 0)evt = DalitzEvent(_pat,gRandom);
+		else evt = DalitzEvent(_pat_CP,gRandom);	
 		
 		if(!(evt.phaseSpace() > 0.))continue;
-		if(sqrt(evt.sij(_s234))/GeV >= 1.95 || sqrt(evt.s(2,4)/(GeV*GeV)) >= 1.2 || sqrt(evt.s(3,4)/(GeV*GeV)) >= 1.2)continue;	
-
-		run = (run == 2 && year == 17) ? 3 : run;
-		
+		if(applyPhspCuts)if(sqrt(evt.sij(_s234)/(GeV*GeV)) > 1.95 || sqrt(evt.s(2,4)/(GeV*GeV)) > 1.2 || sqrt(evt.s(3,4)/(GeV*GeV)) > 1.2) continue;	
+	
 		evt.setWeight(1.);
 		evt.setValueInVector(0, t);
 		evt.setValueInVector(1, dt);   
 		if(f<0)evt.setValueInVector(2, 1);
 		else if(f > 0)evt.setValueInVector(2, -1);
-		else {
-			cout << "ERROR:: Undefined final state " << f << endl;  
-			throw "ERROR";
-		}
-		evt.setValueInVector(3, 0);
-		evt.setValueInVector(4, 0.5);
-		evt.setValueInVector(5, 0);
-		evt.setValueInVector(6, 0.5);
+		evt.setValueInVector(3, TMath::Nint(gRandom->Uniform(-1,1)));
+		evt.setValueInVector(4, eta_OS);
+		evt.setValueInVector(5, TMath::Nint(gRandom->Uniform(-1,1)));
+		evt.setValueInVector(6, eta_SS);		
 		evt.setValueInVector(7, run);
 		evt.setValueInVector(8, trigger);
+		evt.setValueInVector(9, m);
 
-		if(!correlate)tree_norm->GetEntry(i+1);
-		if(mB <= 5200 || mB >= 5700 )continue;
-
-		evt.setValueInVector(9, mB);
 		eventList.Add(evt);
-        }
-
+	}
+	//saveEventListToFile(eventList);
 	return eventList;
     }
 
@@ -1795,6 +1752,12 @@ public:
         		_s234.push_back(2);
 		        _s234.push_back(3);
         		_s234.push_back(4);
+
+			NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
+			_pat = DalitzEventPattern(EventPattern.getVector());
+			_pat_CP = _pat.makeCPConjugate();
+			
+			_f_bkg = 0;
     }
 };
 
@@ -2923,7 +2886,11 @@ void ampFit(int step=0, string mode = "fit"){
     	}
     	else {
 		tree=new TChain("DecayTree");
-		if(mode == "fit" && doToyStudy == 1)tree->Add(((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
+		if(mode == "fit" && doToyStudy == 1){
+			tree->Add(((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
+			if(addBkgToToys)tree->Add(((string)OutputDir+"sw_toys_"+anythingToString((int)step)+".root").c_str());
+			else tree->Add(((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
+		}		
 		else tree->Add(((string)InputFileName).c_str());
 		tree->SetBranchStatus("*",0);
 		tree->SetBranchStatus("N_Bs_sw",1);
@@ -3560,14 +3527,12 @@ void ampFit(int step=0, string mode = "fit"){
 	else toys.Add(pdf.generateToys(N_scale_toys *N));
 
 	if(addBkgToToys){
-			DalitzEventList toysBkg_template;
-			toysBkg_template.Add(pdf.readBkgData());
-			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run1_t0/N,toysBkg_template,1,0));
-			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run1_t1/N,toysBkg_template,1,1));
-			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_t0/N,toysBkg_template,2,0));
-			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_t1/N,toysBkg_template,2,1));
-			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_17_t0/N,toysBkg_template,3,0));
-			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_17_t1/N,toysBkg_template,3,1));
+			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run1_t0/N,1,0));
+			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run1_t1/N,1,1));
+			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_t0/N,2,0));
+			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_t1/N,2,1));
+			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_17_t0/N,3,0));
+			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_17_t1/N,3,1));
 	}	
 
 	pdf.saveEventListToFile(toys,((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
@@ -7145,16 +7110,22 @@ void calculateSweightsForToys(int step = 0){
 	/// Load file
         NamedParameter<string> OutputDir("OutputDir", (std::string) "", (char*) 0);
 	TString inFileName = ((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str();
-	TFile* f = new TFile(inFileName,"Update");
+	TString outFileName = ((string)OutputDir+"sw_toys_"+anythingToString((int)step)+".root").c_str();
+
+	TFile* f = new TFile(inFileName,"Open");
 	TTree* tree = (TTree*) f->Get("DecayTree");
+	tree->SetBranchStatus("N_Bs_sw",0);
+
+	TFile* out = new TFile(outFileName,"RECREATE");
+	TTree* out_tree = tree->CopyTree("");
 
  	double sw;
-     	TBranch* b_w = tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
+     	TBranch* b_w = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
 
 	TString channelString = "m(D_{s}K#pi#pi)" ;
 	RooRealVar DTF_Bs_M("Bs_DTF_MM", channelString, 5200, 5700,"MeV/c^{2}");
 	RooArgList list =  RooArgList(DTF_Bs_M);
-        RooDataSet* data = new RooDataSet("data","data",list,Import(*tree));
+        RooDataSet* data = new RooDataSet("data","data",list,Import(*out_tree));
 	
 	/// Signal pdf
 	RooRealVar mean("mean", "mean", 5366.89,5350.,5390.); 
@@ -7197,7 +7168,8 @@ void calculateSweightsForToys(int step = 0){
 	frame->Draw();
 	c->Print("toyFit.eps");
 
-	tree->Write();
+	out_tree->Write();
+	out->Close();
 	f->Close();
 }
 
@@ -7219,8 +7191,11 @@ int main(int argc, char** argv){
 
 
   //for(int i = 0; i < 200; i++)ampFit(atoi(argv[1])+i);
-   ampFit(atoi(argv[1]),(string)argv[2]);
-   if((string)argv[2] == "gen" && addBkgToToys)calculateSweightsForToys(atoi(argv[1]));
+     ampFit(atoi(argv[1]),(string)argv[2]);
+     if((string)argv[2] == "gen" && addBkgToToys)calculateSweightsForToys(atoi(argv[1]));
+
+//  	for(int i = 1; i <= 200; i++)calculateSweightsForToys(i);
+
 
 //    animate(atoi(argv[1]));
 

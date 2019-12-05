@@ -152,8 +152,10 @@ std::string MinuitParameterSet::ntpNames() const{
     std::string name = //"p" + anythingToString(i) + "_" + 
 	prtToNtpName(getParPtr(i)->name());
     name = ((string) (TString(name).ReplaceAll("GS","")));
+    name = ((string) (TString(name).ReplaceAll("GLass","")));
     name = ((string) (TString(name).ReplaceAll("Lass","")));
     name = ((string) (TString(name).ReplaceAll("RhoOmega","")));
+    name = ((string) (TString(name).ReplaceAll("Flatte","")));
     if(str != "") str += ":";
     str += (name + "_mean" + ":"); n++;
     str += (name + "_init" + ":"); n++;

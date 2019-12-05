@@ -137,6 +137,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     NamedParameter<double> max_TAU_ForMixingPlot("max_TAU_ForMixingPlot", 4.);
     NamedParameter<double> min_TAUERR("min_TAUERR", 0.);
     NamedParameter<double> max_TAUERR("max_TAUERR", 0.1);
+    NamedParameter<int>  useTrueTau("useTrueTau", 0);
 
     NamedParameter<double> w_min("w_min", 0.);
     NamedParameter<double> w_max("w_max", 1.);
@@ -663,7 +664,11 @@ void fullTimeFit(int step=0, string mode = "fit"){
     }
     else {
 	tree_norm=new TChain("DecayTree");
-	if(mode == "fit" && doToyStudy == 1)tree_norm->Add(((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
+	if(mode == "fit" && doToyStudy == 1){
+		tree_norm->Add(((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
+		if(addBkgToToys)tree_norm->Add(((string)OutputDir+"sw_toys_"+anythingToString((int)step)+".root").c_str());
+		else tree_norm->Add(((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
+	}
 	else tree_norm->Add(((string)InputFileName).c_str());
 	tree_norm->SetBranchStatus("*",0);
 	tree_norm->SetBranchStatus("N_Bs_sw*",1);
@@ -680,7 +685,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	tree_norm->SetBranchStatus("Bs_DTF_MM",1);
 	
 	tree_norm->SetBranchAddress("Bs_DTF_MM",&mB);
-	tree_norm->SetBranchAddress("Bs_BsDTF_TAU",&t);
+	if(useTrueTau)tree_norm->SetBranchAddress("Bs_TRUETAU",&t);
+	else tree_norm->SetBranchAddress("Bs_BsDTF_TAU",&t);
 	tree_norm->SetBranchAddress("Bs_BsDTF_TAUERR",&dt);
 	tree_norm->SetBranchAddress("Ds_ID",&f);
 	tree_norm->SetBranchAddress("OS_Combination_DEC",&q_OS);
@@ -783,6 +789,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	if(doBootstrap) tree_norm->GetEntry(b_indices[i]);
 	else tree_norm->GetEntry(i);
         
+	if(useTrueTau)t= t*1000.+ gRandom->Gaus(0.,offset_sigma_dt_Run2_17+scale_sigma_dt_Run2_17*dt);
+
 	if(fitGenMC){
 			if(Ds_ID<0)f=-1;
 	        	else if(Ds_ID > 0)f= 1;
@@ -1333,14 +1341,17 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	else  toys.Add(t_pdf.generateToys(N_scale_toys *N));
 	
 	if(addBkgToToys){
-			DalitzEventList toysBkg_template;
-			toysBkg_template.Add(t_pdf.readBkgData());
-			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run1_t0/N,toysBkg_template,1,0));
-			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run1_t1/N,toysBkg_template,1,1));
-			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_t0/N,toysBkg_template,2,0));
-			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_t1/N,toysBkg_template,2,1));
-			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_17_t0/N,toysBkg_template,3,0));
-			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_17_t1/N,toysBkg_template,3,1));
+	
+			//t_pdf.saveEventListToFile(toys,((string)OutputDir+"toysSig_"+anythingToString((int)step)+".root").c_str());
+
+			//DalitzEventList toysBkg_template;
+			//toysBkg_template.Add(t_pdf.readBkgData());
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run1_t0/N,1,0));
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run1_t1/N,1,1));
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_t0/N,2,0));
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_t1/N,2,1));
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_17_t0/N,3,0));
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_17_t1/N,3,1));
 			//t_pdf.saveEventListToFile(toysBkg,"toysBkg.root");
 	}	
 
@@ -5196,16 +5207,22 @@ void calculateSweightsForToys(int step = 0){
 	/// Load file
         NamedParameter<string> OutputDir("OutputDir", (std::string) "", (char*) 0);
 	TString inFileName = ((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str();
-	TFile* f = new TFile(inFileName,"Update");
+	TString outFileName = ((string)OutputDir+"sw_toys_"+anythingToString((int)step)+".root").c_str();
+
+	TFile* f = new TFile(inFileName,"Open");
 	TTree* tree = (TTree*) f->Get("DecayTree");
+	tree->SetBranchStatus("N_Bs_sw",0);
+
+	TFile* out = new TFile(outFileName,"RECREATE");
+	TTree* out_tree = tree->CopyTree("");
 
  	double sw;
-     	TBranch* b_w = tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
+     	TBranch* b_w = out_tree->Branch("N_Bs_sw", &sw, "N_Bs_sw/D");
 
 	TString channelString = "m(D_{s}K#pi#pi)" ;
 	RooRealVar DTF_Bs_M("Bs_DTF_MM", channelString, 5200, 5700,"MeV/c^{2}");
 	RooArgList list =  RooArgList(DTF_Bs_M);
-        RooDataSet* data = new RooDataSet("data","data",list,Import(*tree));
+        RooDataSet* data = new RooDataSet("data","data",list,Import(*out_tree));
 	
 	/// Signal pdf
 	RooRealVar mean("mean", "mean", 5366.89,5350.,5390.); 
@@ -5248,7 +5265,8 @@ void calculateSweightsForToys(int step = 0){
 	frame->Draw();
 	c->Print("toyFit.eps");
 
-	tree->Write();
+	out_tree->Write();
+	out->Close();
 	f->Close();
 }
 
@@ -5266,8 +5284,11 @@ int main(int argc, char** argv){
 //     test_multiGaussConstraints();
 //    produceMarginalPdfs();
   //for(int i = 0; i < 200; i++) fullTimeFit(atoi(argv[1])+i);
-  fullTimeFit(atoi(argv[1]),(string)argv[2]);
-  if((string)argv[2] == "gen" && addBkgToToys)calculateSweightsForToys(atoi(argv[1]));
+  //fullTimeFit(atoi(argv[1]),(string)argv[2]);
+//   if((string)argv[2] == "gen" && addBkgToToys)calculateSweightsForToys(atoi(argv[1]));
+
+  for(int i = 1; i <= 100; i++)calculateSweightsForToys(i);
+
          // animate2(atoi(argv[1]));
 // calculateAverageReso();
 
