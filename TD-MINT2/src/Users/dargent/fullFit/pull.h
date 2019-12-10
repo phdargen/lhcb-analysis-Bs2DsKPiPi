@@ -51,7 +51,8 @@ public :
    TMatrixD getCov(TString label = "");
    TMatrixD getDeltaCov(TString refFileName,TString label = "");
    TMatrixD getDeltaCovChol(TString refFileName,TString label,int varPerParChol);
-    
+   TMatrixD getAbsDiff(TMatrixD cov1,TMatrixD cov2);
+
    TMatrixD 	combineCov_maxVal(vector<TMatrixD*> vec);
 
    vector<double> sampleMean();

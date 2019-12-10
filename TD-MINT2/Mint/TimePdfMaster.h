@@ -57,11 +57,30 @@ class TimePdfMaster
     const MINT::FitParameter& _Gamma;
     const MINT::FitParameter& _dGamma;
     const MINT::FitParameter& _dm;
-    
-    const MINT::FitParameter& _offset_sigma_dt;    
+
+    const MINT::FitParameter& _offset_mean_dt;
     const MINT::FitParameter& _scale_mean_dt;
+    const MINT::FitParameter& _scale_mean_2_dt;    
+
+    const MINT::FitParameter& _offset_sigma_dt;    
     const MINT::FitParameter& _scale_sigma_dt;
     const MINT::FitParameter& _scale_sigma_2_dt;    
+
+    const MINT::FitParameter& _offset_sigma2_dt;    
+    const MINT::FitParameter& _scale_sigma2_dt;
+    const MINT::FitParameter& _scale_sigma2_2_dt;    
+
+    const MINT::FitParameter& _offset_sigma3_dt;    
+    const MINT::FitParameter& _scale_sigma3_dt;
+    const MINT::FitParameter& _scale_sigma3_2_dt;    
+
+    const MINT::FitParameter& _offset_f_dt;    
+    const MINT::FitParameter& _scale_f_dt;
+    const MINT::FitParameter& _scale_f_2_dt;    
+
+    const MINT::FitParameter& _offset_f2_dt;    
+    const MINT::FitParameter& _scale_f2_dt;
+    const MINT::FitParameter& _scale_f2_2_dt;    
 
     const MINT::FitParameter& _c0;
     const MINT::FitParameter& _c1;
@@ -96,7 +115,10 @@ class TimePdfMaster
     /// Cast of MINT parameters to B2DX parameters
     RooRealVar* _r_t;
     RooRealVar* _r_dt;
+    RooRealVar* _r_mean_scaled;
     RooRealVar* _r_dt_scaled;
+    RooRealVar* _r_dt_scaled2;
+    RooRealVar* _r_dt_scaled3;
     RooCategory* _r_q_OS;
     RooRealVar* _r_eta_OS;
     RooCategory* _r_q_SS;
@@ -109,11 +131,30 @@ class TimePdfMaster
     RooRealVar* _r_dGamma;
     RooRealVar* _r_dm;
     
+    RooRealVar* _r_offset_mean_dt;
     RooRealVar* _r_scale_mean_dt;
+    RooRealVar* _r_scale_mean_2_dt;  
+
     RooRealVar* _r_offset_sigma_dt;
     RooRealVar* _r_scale_sigma_dt;
     RooRealVar* _r_scale_sigma_2_dt;  
- 
+
+    RooRealVar* _r_offset_sigma2_dt;
+    RooRealVar* _r_scale_sigma2_dt;
+    RooRealVar* _r_scale_sigma2_2_dt;  
+
+    RooRealVar* _r_offset_sigma3_dt;
+    RooRealVar* _r_scale_sigma3_dt;
+    RooRealVar* _r_scale_sigma3_2_dt;  
+
+    RooRealVar* _r_offset_f_dt;
+    RooRealVar* _r_scale_f_dt;
+    RooRealVar* _r_scale_f_2_dt;  
+
+    RooRealVar* _r_offset_f2_dt;
+    RooRealVar* _r_scale_f2_dt;
+    RooRealVar* _r_scale_f2_2_dt;  
+
     RooRealVar* _r_c0;
     RooRealVar* _r_c1;
     RooRealVar* _r_c2;
@@ -148,6 +189,8 @@ class TimePdfMaster
     RooCubicSplineFun* _spline;
     RooProduct* _splinePdf;
     RooGaussEfficiencyModel* _efficiency;
+    RooGaussEfficiencyModel* _efficiency2;
+    RooGaussEfficiencyModel* _efficiency3;
     
     // CP coefficients
     RooRealVar* _r_norm;
@@ -209,7 +252,12 @@ class TimePdfMaster
 
  public:
     TimePdfMaster(const MINT::FitParameter& Gamma, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
-                  ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
+                  ,const MINT::FitParameter& offset_mean_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_mean_2_dt
+		  ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
+		  ,const MINT::FitParameter& offset_sigma2_dt, const MINT::FitParameter& scale_sigma2_dt, const MINT::FitParameter& scale_sigma2_2_dt
+		  ,const MINT::FitParameter& offset_sigma3_dt, const MINT::FitParameter& scale_sigma3_dt, const MINT::FitParameter& scale_sigma3_2_dt
+		  ,const MINT::FitParameter& offset_f_dt, const MINT::FitParameter& scale_f_dt, const MINT::FitParameter& scale_f_2_dt
+		  ,const MINT::FitParameter& offset_f2_dt, const MINT::FitParameter& scale_f2_dt, const MINT::FitParameter& scale_f2_2_dt
                   ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
                   ,const MINT::FitParameter& c3, const MINT::FitParameter& c4, const MINT::FitParameter& c5
                   ,const MINT::FitParameter& c6, const MINT::FitParameter& c7, const MINT::FitParameter& c8
@@ -222,10 +270,24 @@ class TimePdfMaster
         _Gamma(Gamma),
         _dGamma(dGamma),
         _dm(dm),
-        _offset_sigma_dt(offset_sigma_dt),    
+        _offset_mean_dt(offset_mean_dt),
         _scale_mean_dt(scale_mean_dt),
+        _scale_mean_2_dt(scale_mean_2_dt),
+        _offset_sigma_dt(offset_sigma_dt),    
         _scale_sigma_dt(scale_sigma_dt),
         _scale_sigma_2_dt(scale_sigma_2_dt),
+        _offset_sigma2_dt(offset_sigma2_dt),    
+        _scale_sigma2_dt(scale_sigma2_dt),
+        _scale_sigma2_2_dt(scale_sigma2_2_dt),
+        _offset_sigma3_dt(offset_sigma3_dt),    
+        _scale_sigma3_dt(scale_sigma3_dt),
+        _scale_sigma3_2_dt(scale_sigma3_2_dt),
+        _offset_f_dt(offset_f_dt),    
+        _scale_f_dt(scale_f_dt),
+        _scale_f_2_dt(scale_f_2_dt),
+        _offset_f2_dt(offset_f2_dt),    
+        _scale_f2_dt(scale_f2_dt),
+        _scale_f2_2_dt(scale_f2_2_dt),
         _c0(c0),
         _c1(c1),
         _c2(c2),
@@ -290,10 +352,29 @@ class TimePdfMaster
         _r_dGamma = new RooRealVar("dGamma", "dGamma",_dGamma);
         _r_dm = new RooRealVar("dm", "dm",_dm);
         
+        _r_offset_mean_dt = new RooRealVar("offset_mean_dt", "offset_mean_dt", _offset_mean_dt);
         _r_scale_mean_dt = new RooRealVar("scale_mean_dt", "scale_mean_dt", _scale_mean_dt);
+        _r_scale_mean_2_dt = new RooRealVar("scale_mean_2_dt", "scale_mean_2_dt", _scale_mean_2_dt);
+
         _r_offset_sigma_dt = new RooRealVar("offset_sigma_dt", "offset_sigma_dt", _offset_sigma_dt);
         _r_scale_sigma_dt = new RooRealVar("scale_sigma_dt", "scale_sigma_dt", _scale_sigma_dt);
 	_r_scale_sigma_2_dt = new RooRealVar("scale_sigma_2_dt", "scale_sigma_2_dt", _scale_sigma_2_dt);      
+
+        _r_offset_sigma2_dt = new RooRealVar("offset_sigma2_dt", "offset_sigma2_dt", _offset_sigma2_dt);
+        _r_scale_sigma2_dt = new RooRealVar("scale_sigma2_dt", "scale_sigma2_dt", _scale_sigma2_dt);
+	_r_scale_sigma2_2_dt = new RooRealVar("scale_sigma2_2_dt", "scale_sigma2_2_dt", _scale_sigma2_2_dt);      
+
+        _r_offset_sigma3_dt = new RooRealVar("offset_sigma3_dt", "offset_sigma3_dt", _offset_sigma3_dt);
+        _r_scale_sigma3_dt = new RooRealVar("scale_sigma3_dt", "scale_sigma3_dt", _scale_sigma3_dt);
+	_r_scale_sigma3_2_dt = new RooRealVar("scale_sigma3_2_dt", "scale_sigma3_2_dt", _scale_sigma3_2_dt);      
+
+        _r_offset_f_dt = new RooRealVar("offset_f_dt", "offset_f_dt", _offset_f_dt);
+        _r_scale_f_dt = new RooRealVar("scale_f_dt", "scale_f_dt", _scale_f_dt);
+	_r_scale_f_2_dt = new RooRealVar("scale_f_2_dt", "scale_f_2_dt", _scale_f_2_dt);      
+
+        _r_offset_f2_dt = new RooRealVar("offset_f2_dt", "offset_f2_dt", _offset_f2_dt);
+        _r_scale_f2_dt = new RooRealVar("scale_f2_dt", "scale_f2_dt", _scale_f2_dt);
+	_r_scale_f2_2_dt = new RooRealVar("scale_f2_2_dt", "scale_f2_2_dt", _scale_f2_2_dt);      
 
         _r_c0 = new RooRealVar("coeff_0", "coeff_0",_c0);
         _r_c1 = new RooRealVar("coeff_1", "coeff_1",_c1);
@@ -352,13 +433,17 @@ class TimePdfMaster
         
         // Cubic spline function
         _spline = new RooCubicSplineFun("spline", "spline", *_r_t, myBinning, tacc_list);        
-        //_splinePdf = new RooCubicSplinePdf("splinePdf", "splinePdf", *_r_t, myBinning, tacc_list);
 	_splinePdf = new RooProduct("splinePdf", "splinePdf", RooArgList(*_spline,RooRealConstant::value(0.1)));
 
-        //_efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(0.), *_r_dt, *_r_scale_mean_dt, *_r_scale_sigma_dt );
+        _r_mean_scaled = (RooRealVar*) new RooFormulaVar( "r_mean_scaled","r_mean_scaled", "@0+@1*@2+@3*@2*@2",RooArgList(*_r_offset_mean_dt,*_r_scale_mean_dt,*_r_dt,*_r_scale_mean_2_dt));
         _r_dt_scaled = (RooRealVar*) new RooFormulaVar( "r_dt_scaled","r_dt_scaled", "@0+@1*@2+@3*@2*@2",RooArgList(*_r_offset_sigma_dt,*_r_scale_sigma_dt,*_r_dt,*_r_scale_sigma_2_dt));
-        _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, RooRealConstant::value(1.), *_r_dt_scaled, *_r_scale_mean_dt, RooRealConstant::value(1.) );
-        
+        _r_dt_scaled2 = (RooRealVar*) new RooFormulaVar( "r_dt_scaled2","r_dt_scaled2", "@0+@1*@2+@3*@2*@2",RooArgList(*_r_offset_sigma2_dt,*_r_scale_sigma2_dt,*_r_dt,*_r_scale_sigma2_2_dt));
+        _r_dt_scaled3 = (RooRealVar*) new RooFormulaVar( "r_dt_scaled3","r_dt_scaled3", "@0+@1*@2+@3*@2*@2",RooArgList(*_r_offset_sigma3_dt,*_r_scale_sigma3_dt,*_r_dt,*_r_scale_sigma3_2_dt));
+
+        _efficiency = new RooGaussEfficiencyModel("resmodel", "resmodel", *_r_t, *_spline, *_r_mean_scaled, *_r_dt_scaled, RooRealConstant::value(1.),RooRealConstant::value(1.) );
+        _efficiency2 = new RooGaussEfficiencyModel("resmodel2", "resmodel2", *_r_t, *_spline, *_r_mean_scaled, *_r_dt_scaled2, RooRealConstant::value(1.),RooRealConstant::value(1.) );
+        _efficiency3 = new RooGaussEfficiencyModel("resmodel3", "resmodel3", *_r_t, *_spline, *_r_mean_scaled, *_r_dt_scaled3, RooRealConstant::value(1.),RooRealConstant::value(1.) );
+
         // CP coefficients
         _r_norm = new RooRealVar("norm", "norm",1);
         _r_norm_bar = new RooRealVar("norm_bar", "norm_bar",1);
@@ -480,34 +565,54 @@ class TimePdfMaster
                                          *_r_detection_asym );
         
         /// Time pdf integrators
-        _cosh_term = new TimePdfIntegrator(coshBasis,_efficiency,
-                                           _Gamma,_dGamma,_dm,
-                                           _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
+        _cosh_term = new TimePdfIntegrator(coshBasis,_efficiency,_efficiency2,_efficiency3,
+                                           _Gamma,_dGamma,_dm
+					   ,_offset_mean_dt,_scale_mean_dt,_scale_mean_2_dt
+                                           ,_offset_sigma_dt, _scale_sigma_dt, _scale_sigma_2_dt
+                                           ,_offset_sigma2_dt, _scale_sigma2_dt, _scale_sigma2_2_dt
+                                           ,_offset_sigma3_dt, _scale_sigma3_dt, _scale_sigma3_2_dt
+                                           ,_offset_f_dt, _scale_f_dt, _scale_f_2_dt
+                                           ,_offset_f2_dt, _scale_f2_dt, _scale_f2_2_dt
                                            ,_c0, _c1, _c2
                                            ,_c3, _c4, _c5
                                            ,_c6, _c7, _c8
                                            ,_c9);
-        _cos_term = new TimePdfIntegrator(cosBasis,_efficiency,
-                                          _Gamma,_dGamma,_dm,
-                                          _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
-                                          ,_c0, _c1, _c2
-                                          ,_c3, _c4, _c5
-                                          ,_c6, _c7, _c8
-                                          ,_c9);
-        _sinh_term = new TimePdfIntegrator(sinhBasis,_efficiency,
-                                           _Gamma,_dGamma,_dm,
-                                           _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
+        _cos_term = new TimePdfIntegrator(cosBasis,_efficiency,_efficiency2,_efficiency3,
+                                           _Gamma,_dGamma,_dm
+					   ,_offset_mean_dt,_scale_mean_dt,_scale_mean_2_dt
+                                           ,_offset_sigma_dt, _scale_sigma_dt, _scale_sigma_2_dt
+                                           ,_offset_sigma2_dt, _scale_sigma2_dt, _scale_sigma2_2_dt
+                                           ,_offset_sigma3_dt, _scale_sigma3_dt, _scale_sigma3_2_dt
+                                           ,_offset_f_dt, _scale_f_dt, _scale_f_2_dt
+                                           ,_offset_f2_dt, _scale_f2_dt, _scale_f2_2_dt
                                            ,_c0, _c1, _c2
                                            ,_c3, _c4, _c5
                                            ,_c6, _c7, _c8
                                            ,_c9);
-        _sin_term = new TimePdfIntegrator(sinBasis,_efficiency,
-                                          _Gamma,_dGamma,_dm,
-                                          _offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
-                                          ,_c0, _c1, _c2
-                                          ,_c3, _c4, _c5
-                                          ,_c6, _c7, _c8
-                                          ,_c9);
+        _sinh_term = new TimePdfIntegrator(sinhBasis,_efficiency,_efficiency2,_efficiency3,
+                                           _Gamma,_dGamma,_dm
+					   ,_offset_mean_dt,_scale_mean_dt,_scale_mean_2_dt
+                                           ,_offset_sigma_dt, _scale_sigma_dt, _scale_sigma_2_dt
+                                           ,_offset_sigma2_dt, _scale_sigma2_dt, _scale_sigma2_2_dt
+                                           ,_offset_sigma3_dt, _scale_sigma3_dt, _scale_sigma3_2_dt
+                                           ,_offset_f_dt, _scale_f_dt, _scale_f_2_dt
+                                           ,_offset_f2_dt, _scale_f2_dt, _scale_f2_2_dt
+                                           ,_c0, _c1, _c2
+                                           ,_c3, _c4, _c5
+                                           ,_c6, _c7, _c8
+                                           ,_c9);
+        _sin_term = new TimePdfIntegrator(sinBasis,_efficiency,_efficiency2,_efficiency3,
+                                           _Gamma,_dGamma,_dm
+					   ,_offset_mean_dt,_scale_mean_dt,_scale_mean_2_dt
+                                           ,_offset_sigma_dt, _scale_sigma_dt, _scale_sigma_2_dt
+                                           ,_offset_sigma2_dt, _scale_sigma2_dt, _scale_sigma2_2_dt
+                                           ,_offset_sigma3_dt, _scale_sigma3_dt, _scale_sigma3_2_dt
+                                           ,_offset_f_dt, _scale_f_dt, _scale_f_2_dt
+                                           ,_offset_f2_dt, _scale_f2_dt, _scale_f2_2_dt
+                                           ,_c0, _c1, _c2
+                                           ,_c3, _c4, _c5
+                                           ,_c6, _c7, _c8
+                                           ,_c9);
         
         /// Marginal pdfs        
 	cout << (string)_marginalPdfsPrefix << endl;
@@ -761,10 +866,30 @@ class TimePdfMaster
        _r_dGamma->setVal(_dGamma);
        _r_dm->setVal(_dm);
        
+       _r_offset_mean_dt->setVal(_offset_mean_dt);
        _r_scale_mean_dt->setVal(_scale_mean_dt);
+       _r_scale_mean_2_dt->setVal(_scale_mean_2_dt);
+
        _r_offset_sigma_dt->setVal(_offset_sigma_dt);
        _r_scale_sigma_dt->setVal(_scale_sigma_dt);
        _r_scale_sigma_2_dt->setVal(_scale_sigma_2_dt);
+
+       _r_offset_sigma2_dt->setVal(_offset_sigma2_dt);
+       _r_scale_sigma2_dt->setVal(_scale_sigma2_dt);
+       _r_scale_sigma2_2_dt->setVal(_scale_sigma2_2_dt);
+
+       _r_offset_sigma3_dt->setVal(_offset_sigma3_dt);
+       _r_scale_sigma3_dt->setVal(_scale_sigma3_dt);
+       _r_scale_sigma3_2_dt->setVal(_scale_sigma3_2_dt);
+
+       _r_offset_f_dt->setVal(_offset_f_dt);
+       _r_scale_f_dt->setVal(_scale_f_dt);
+       _r_scale_f_2_dt->setVal(_scale_f_2_dt);
+
+       _r_offset_f2_dt->setVal(_offset_f2_dt);
+       _r_scale_f2_dt->setVal(_scale_f2_dt);
+       _r_scale_f2_2_dt->setVal(_scale_f2_2_dt);
+
        _r_c0->setVal(_c0);
        _r_c1->setVal(_c1);
        _r_c2->setVal(_c2);

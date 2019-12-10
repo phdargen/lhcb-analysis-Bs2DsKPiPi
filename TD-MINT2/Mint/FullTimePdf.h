@@ -92,11 +92,30 @@ protected:
     const MINT::FitParameter& _Gamma;
     const MINT::FitParameter& _dGamma;
     const MINT::FitParameter& _dm;
+
+    const MINT::FitParameter& _offset_mean_dt;
+    const MINT::FitParameter& _scale_mean_dt;
+    const MINT::FitParameter& _scale_mean_2_dt;
     
     const MINT::FitParameter& _offset_sigma_dt;    
-    const MINT::FitParameter& _scale_mean_dt;
     const MINT::FitParameter& _scale_sigma_dt;
     const MINT::FitParameter& _scale_sigma_2_dt;
+
+    const MINT::FitParameter& _offset_sigma2_dt;    
+    const MINT::FitParameter& _scale_sigma2_dt;
+    const MINT::FitParameter& _scale_sigma2_2_dt;
+
+    const MINT::FitParameter& _offset_sigma3_dt;    
+    const MINT::FitParameter& _scale_sigma3_dt;
+    const MINT::FitParameter& _scale_sigma3_2_dt;
+
+    const MINT::FitParameter& _offset_f_dt;    
+    const MINT::FitParameter& _scale_f_dt;
+    const MINT::FitParameter& _scale_f_2_dt;
+
+    const MINT::FitParameter& _offset_f2_dt;    
+    const MINT::FitParameter& _scale_f2_dt;
+    const MINT::FitParameter& _scale_f2_2_dt;
 
     const MINT::FitParameter& _c0;
     const MINT::FitParameter& _c1;
@@ -322,7 +341,7 @@ public:
 		tree->SetBranchAddress("Bs_DTF_TAU",&t_bkg);
 		tree->SetBranchAddress("Bs_DTF_TAUERR",&dt_bkg);
 		
-		TH2D* h_bkg = new TH2D("h_bkg","h_bkg",100,5200,5700,100,_min_TAU,_max_TAU);
+		TH2D* h_bkg = new TH2D("h_bkg","h_bkg; m(D_{s}^{+}K^{+}#pi^{+}#pi^{-}) [MeV]; t [ps]",100,5200,5700,100,_min_TAU,_max_TAU);
 
 		for(int i=0; i< tree->GetEntries(); i++)
 		{	
@@ -343,7 +362,7 @@ public:
 		cout << "bkg correlation = " << h_bkg->GetCorrelationFactor()*100 << endl;
 		h_bkg_prof->Draw("histsame");
 		c->Print("h_bkg.eps");
-
+		
 		 if(correlate)_f_bkg = new TF2("f_bkg","[0]*(1-exp(-[3]*(y-0.4)))*exp(-x*[1])*exp(-y*[2]*(1+(5200-x)*[4]))",5200,5700,_min_TAU,_max_TAU);
 		 else _f_bkg = new TF2("f_bkg","[0]*(1-exp(-[3]*(y-0.4)))*exp(-x*[1])*exp(-y*[2])",5200,5700,_min_TAU,_max_TAU);
 		_f_bkg->SetNpx(100);
@@ -835,7 +854,12 @@ public:
     FullTimePdf(const MINT::FitParameter& C, const MINT::FitParameter& D, const MINT::FitParameter& D_bar,
                 const MINT::FitParameter& S, const MINT::FitParameter& S_bar, const MINT::FitParameter& k,
                 const MINT::FitParameter& Gamma, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
-                ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
+		,const MINT::FitParameter& offset_mean_dt,const MINT::FitParameter& scale_mean_dt,const MINT::FitParameter& scale_mean_2_dt
+                ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
+                ,const MINT::FitParameter& offset_sigma2_dt, const MINT::FitParameter& scale_sigma2_dt, const MINT::FitParameter& scale_sigma2_2_dt
+                ,const MINT::FitParameter& offset_sigma3_dt, const MINT::FitParameter& scale_sigma3_dt, const MINT::FitParameter& scale_sigma3_2_dt
+                ,const MINT::FitParameter& offset_f_dt, const MINT::FitParameter& scale_f_dt, const MINT::FitParameter& scale_f_2_dt
+                ,const MINT::FitParameter& offset_f2_dt, const MINT::FitParameter& scale_f2_dt, const MINT::FitParameter& scale_f2_2_dt
                 ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
                 ,const MINT::FitParameter& c3, const MINT::FitParameter& c4, const MINT::FitParameter& c5
                 ,const MINT::FitParameter& c6, const MINT::FitParameter& c7, const MINT::FitParameter& c8
@@ -855,10 +879,24 @@ public:
     _Gamma(Gamma),
     _dGamma(dGamma),
     _dm(dm),
-    _offset_sigma_dt(offset_sigma_dt),    
+    _offset_mean_dt(offset_mean_dt),
     _scale_mean_dt(scale_mean_dt),
+    _scale_mean_2_dt(scale_mean_2_dt),
+    _offset_sigma_dt(offset_sigma_dt),    
     _scale_sigma_dt(scale_sigma_dt),
     _scale_sigma_2_dt(scale_sigma_2_dt),
+    _offset_sigma2_dt(offset_sigma2_dt),    
+    _scale_sigma2_dt(scale_sigma2_dt),
+    _scale_sigma2_2_dt(scale_sigma2_2_dt),
+    _offset_sigma3_dt(offset_sigma3_dt),    
+    _scale_sigma3_dt(scale_sigma3_dt),
+    _scale_sigma3_2_dt(scale_sigma3_2_dt),
+    _offset_f_dt(offset_f_dt),    
+    _scale_f_dt(scale_f_dt),
+    _scale_f_2_dt(scale_f_2_dt),
+    _offset_f2_dt(offset_f2_dt),    
+    _scale_f2_dt(scale_f2_dt),
+    _scale_f2_2_dt(scale_f2_2_dt),
     _c0(c0),
     _c1(c1),
     _c2(c2),
@@ -892,7 +930,12 @@ public:
     _max_TAUERR("max_TAUERR", 0.1)
     {
         _timePdfMaster = new TimePdfMaster(_Gamma, _dGamma, _dm
-                                          ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
+					  ,_offset_mean_dt,_scale_mean_dt,_scale_mean_2_dt
+                                          ,_offset_sigma_dt, _scale_sigma_dt, _scale_sigma_2_dt
+                                          ,_offset_sigma2_dt, _scale_sigma2_dt, _scale_sigma2_2_dt
+                                          ,_offset_sigma3_dt, _scale_sigma3_dt, _scale_sigma3_2_dt
+                                          ,_offset_f_dt, _scale_f_dt, _scale_f_2_dt
+                                          ,_offset_f2_dt, _scale_f2_dt, _scale_f2_2_dt
                                           ,_c0, _c1, _c2
                                           ,_c3, _c4, _c5
                                           ,_c6, _c7, _c8

@@ -864,10 +864,29 @@ protected:
     const MINT::FitParameter& _dGamma;
     const MINT::FitParameter& _dm;
     
-    const MINT::FitParameter& _offset_sigma_dt;    
+    const MINT::FitParameter& _offset_mean_dt;
     const MINT::FitParameter& _scale_mean_dt;
+    const MINT::FitParameter& _scale_mean_2_dt;
+    
+    const MINT::FitParameter& _offset_sigma_dt;    
     const MINT::FitParameter& _scale_sigma_dt;
     const MINT::FitParameter& _scale_sigma_2_dt;
+
+    const MINT::FitParameter& _offset_sigma2_dt;    
+    const MINT::FitParameter& _scale_sigma2_dt;
+    const MINT::FitParameter& _scale_sigma2_2_dt;
+
+    const MINT::FitParameter& _offset_sigma3_dt;    
+    const MINT::FitParameter& _scale_sigma3_dt;
+    const MINT::FitParameter& _scale_sigma3_2_dt;
+
+    const MINT::FitParameter& _offset_f_dt;    
+    const MINT::FitParameter& _scale_f_dt;
+    const MINT::FitParameter& _scale_f_2_dt;
+
+    const MINT::FitParameter& _offset_f2_dt;    
+    const MINT::FitParameter& _scale_f2_dt;
+    const MINT::FitParameter& _scale_f2_2_dt;
 
     const MINT::FitParameter& _c0;
     const MINT::FitParameter& _c1;
@@ -1674,8 +1693,12 @@ public:
                 const MINT::FitParameter& r,const MINT::FitParameter& delta,const MINT::FitParameter& gamma,
                 const MINT::FitParameter& xm,const MINT::FitParameter& ym,const MINT::FitParameter& xp,const MINT::FitParameter& yp,
 		const MINT::FitParameter& Gamma, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
-                ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_mean_dt 
-		,const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
+		,const MINT::FitParameter& offset_mean_dt,const MINT::FitParameter& scale_mean_dt,const MINT::FitParameter& scale_mean_2_dt
+                ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
+                ,const MINT::FitParameter& offset_sigma2_dt, const MINT::FitParameter& scale_sigma2_dt, const MINT::FitParameter& scale_sigma2_2_dt
+                ,const MINT::FitParameter& offset_sigma3_dt, const MINT::FitParameter& scale_sigma3_dt, const MINT::FitParameter& scale_sigma3_2_dt
+                ,const MINT::FitParameter& offset_f_dt, const MINT::FitParameter& scale_f_dt, const MINT::FitParameter& scale_f_2_dt
+                ,const MINT::FitParameter& offset_f2_dt, const MINT::FitParameter& scale_f2_dt, const MINT::FitParameter& scale_f2_2_dt
                 ,const MINT::FitParameter& c0, const MINT::FitParameter& c1, const MINT::FitParameter& c2
                 ,const MINT::FitParameter& c3, const MINT::FitParameter& c4, const MINT::FitParameter& c5
                 ,const MINT::FitParameter& c6, const MINT::FitParameter& c7, const MINT::FitParameter& c8
@@ -1693,10 +1716,24 @@ public:
     _Gamma(Gamma),
     _dGamma(dGamma),
     _dm(dm),
-    _offset_sigma_dt(offset_sigma_dt),    
+    _offset_mean_dt(offset_mean_dt),
     _scale_mean_dt(scale_mean_dt),
+    _scale_mean_2_dt(scale_mean_2_dt),
+    _offset_sigma_dt(offset_sigma_dt),    
     _scale_sigma_dt(scale_sigma_dt),
     _scale_sigma_2_dt(scale_sigma_2_dt),
+    _offset_sigma2_dt(offset_sigma2_dt),    
+    _scale_sigma2_dt(scale_sigma2_dt),
+    _scale_sigma2_2_dt(scale_sigma2_2_dt),
+    _offset_sigma3_dt(offset_sigma3_dt),    
+    _scale_sigma3_dt(scale_sigma3_dt),
+    _scale_sigma3_2_dt(scale_sigma3_2_dt),
+    _offset_f_dt(offset_f_dt),    
+    _scale_f_dt(scale_f_dt),
+    _scale_f_2_dt(scale_f_2_dt),
+    _offset_f2_dt(offset_f2_dt),    
+    _scale_f2_dt(scale_f2_dt),
+    _scale_f2_2_dt(scale_f2_2_dt),
     _c0(c0),
     _c1(c1),
     _c2(c2),
@@ -1736,7 +1773,12 @@ public:
     _sg_CP(0)
     {
 		        _timePdfMaster = new TimePdfMaster(_Gamma, _dGamma, _dm
-                                          ,_offset_sigma_dt, _scale_mean_dt, _scale_sigma_dt, _scale_sigma_2_dt
+					  ,_offset_mean_dt,_scale_mean_dt,_scale_mean_2_dt
+                                          ,_offset_sigma_dt, _scale_sigma_dt, _scale_sigma_2_dt
+                                          ,_offset_sigma2_dt, _scale_sigma2_dt, _scale_sigma2_2_dt
+                                          ,_offset_sigma3_dt, _scale_sigma3_dt, _scale_sigma3_2_dt
+                                          ,_offset_f_dt, _scale_f_dt, _scale_f_2_dt
+                                          ,_offset_f2_dt, _scale_f2_dt, _scale_f2_2_dt
                                           ,_c0, _c1, _c2
                                           ,_c3, _c4, _c5
                                           ,_c6, _c7, _c8
@@ -2538,10 +2580,25 @@ void ampFit(int step=0, string mode = "fit"){
     FitParameter  dGamma("dGamma",2,-0.088,0.006);
     FitParameter  dm("dm",2,17.757,0.1);
     
-    FitParameter  scale_mean_dt("scale_mean_dt",1,1,0.1);
+    FitParameter  offset_mean_dt("offset_mean_dt",1,0,0.1);
+    FitParameter  scale_mean_dt("scale_mean_dt",1,0,0.1);
+    FitParameter  scale_mean_2_dt("scale_mean_2_dt",1,0,0.1);
     FitParameter  offset_sigma_dt("offset_sigma_dt",1,0.,0.1);
-    FitParameter  scale_sigma_dt("scale_sigma_dt",1,1.2,0.1);
+    FitParameter  scale_sigma_dt("scale_sigma_dt",1,1.,0.1);
     FitParameter  scale_sigma_2_dt("scale_sigma_2_dt",1,0.,0.1);
+    FitParameter  offset_sigma2_dt("offset_sigma2_dt",1,0.,0.1);
+    FitParameter  scale_sigma2_dt("scale_sigma2_dt",1,1.,0.1);
+    FitParameter  scale_sigma2_2_dt("scale_sigma2_2_dt",1,0.,0.1);
+    FitParameter  offset_sigma3_dt("offset_sigma3_dt",1,0.,0.1);
+    FitParameter  scale_sigma3_dt("scale_sigma3_dt",1,1.,0.1);
+    FitParameter  scale_sigma3_2_dt("scale_sigma3_2_dt",1,0.,0.1);
+    FitParameter  offset_f_dt("offset_f_dt",1,1,0.1);
+    FitParameter  scale_f_dt("scale_f_dt",1,0.,0.1);
+    FitParameter  scale_f_2_dt("scale_f_2_dt",1,0.,0.1);
+    FitParameter  offset_f2_dt("offset_f2_dt",1,0.,0.1);
+    FitParameter  scale_f2_dt("scale_f2_dt",1,0.,0.1);
+    FitParameter  scale_f2_2_dt("scale_f2_2_dt",1,0.,0.1);
+
     FitParameter  p0_os("p0_os",1,0.,0.);
     FitParameter  p1_os("p1_os",1,0.,0.);
     FitParameter  delta_p0_os("delta_p0_os",1,0.,0.);
@@ -2571,10 +2628,25 @@ void ampFit(int step=0, string mode = "fit"){
     FitParameter  c9("c9",1,1,0.1);
     
     /// Fit parameters per Run    
+    FitParameter  offset_mean_dt_Run1("offset_mean_dt_Run1",1,0,0.1);
     FitParameter  scale_mean_dt_Run1("scale_mean_dt_Run1",1,0,0.1);
+    FitParameter  scale_mean_2_dt_Run1("scale_mean_2_dt_Run1",1,0,0.1);
     FitParameter  offset_sigma_dt_Run1("offset_sigma_dt_Run1",1,0.,0.1);
-    FitParameter  scale_sigma_dt_Run1("scale_sigma_dt_Run1",1,1.2,0.1);
+    FitParameter  scale_sigma_dt_Run1("scale_sigma_dt_Run1",1,1.,0.1);
     FitParameter  scale_sigma_2_dt_Run1("scale_sigma_2_dt_Run1",1,0.,0.1);
+    FitParameter  offset_sigma2_dt_Run1("offset_sigma2_dt_Run1",1,0.,0.1);
+    FitParameter  scale_sigma2_dt_Run1("scale_sigma2_dt_Run1",1,1.,0.1);
+    FitParameter  scale_sigma2_2_dt_Run1("scale_sigma2_2_dt_Run1",1,0.,0.1);
+    FitParameter  offset_sigma3_dt_Run1("offset_sigma3_dt_Run1",1,0.,0.1);
+    FitParameter  scale_sigma3_dt_Run1("scale_sigma3_dt_Run1",1,1.,0.1);
+    FitParameter  scale_sigma3_2_dt_Run1("scale_sigma3_2_dt_Run1",1,0.,0.1);
+    FitParameter  offset_f_dt_Run1("offset_f_dt_Run1",1,1,0.1);
+    FitParameter  scale_f_dt_Run1("scale_f_dt_Run1",1,0.,0.1);
+    FitParameter  scale_f_2_dt_Run1("scale_f_2_dt_Run1",1,0.,0.1);
+    FitParameter  offset_f2_dt_Run1("offset_f2_dt_Run1",1,0.,0.1);
+    FitParameter  scale_f2_dt_Run1("scale_f2_dt_Run1",1,0.,0.1);
+    FitParameter  scale_f2_2_dt_Run1("scale_f2_2_dt_Run1",1,0.,0.1);
+
     FitParameter  p0_os_Run1("p0_os_Run1",1,0.,0.);
     FitParameter  p1_os_Run1("p1_os_Run1",1,0.,0.);
     FitParameter  delta_p0_os_Run1("delta_p0_os_Run1",1,0.,0.);
@@ -2592,10 +2664,25 @@ void ampFit(int step=0, string mode = "fit"){
     FitParameter  production_asym_Run1("production_asym_Run1",1,0.,0.);
     FitParameter  detection_asym_Run1("detection_asym_Run1",1,0.,0.);
     
+    FitParameter  offset_mean_dt_Run2("offset_mean_dt_Run2",1,0,0.1);
     FitParameter  scale_mean_dt_Run2("scale_mean_dt_Run2",1,0,0.1);
+    FitParameter  scale_mean_2_dt_Run2("scale_mean_2_dt_Run2",1,0,0.1);
     FitParameter  offset_sigma_dt_Run2("offset_sigma_dt_Run2",1,0.,0.1);
-    FitParameter  scale_sigma_dt_Run2("scale_sigma_dt_Run2",1,1.2,0.1);
-    FitParameter  scale_sigma_2_dt_Run2("scale_sigma_2_dt_Run2",1,1.2,0.1);
+    FitParameter  scale_sigma_dt_Run2("scale_sigma_dt_Run2",1,1.,0.1);
+    FitParameter  scale_sigma_2_dt_Run2("scale_sigma_2_dt_Run2",1,0.,0.1);
+    FitParameter  offset_sigma2_dt_Run2("offset_sigma2_dt_Run2",1,0.,0.1);
+    FitParameter  scale_sigma2_dt_Run2("scale_sigma2_dt_Run2",1,1.,0.1);
+    FitParameter  scale_sigma2_2_dt_Run2("scale_sigma2_2_dt_Run2",1,0.,0.1);
+    FitParameter  offset_sigma3_dt_Run2("offset_sigma3_dt_Run2",1,0.,0.1);
+    FitParameter  scale_sigma3_dt_Run2("scale_sigma3_dt_Run2",1,1.,0.1);
+    FitParameter  scale_sigma3_2_dt_Run2("scale_sigma3_2_dt_Run2",1,0.,0.1);
+    FitParameter  offset_f_dt_Run2("offset_f_dt_Run2",1,1,0.1);
+    FitParameter  scale_f_dt_Run2("scale_f_dt_Run2",1,0.,0.1);
+    FitParameter  scale_f_2_dt_Run2("scale_f_2_dt_Run2",1,0.,0.1);
+    FitParameter  offset_f2_dt_Run2("offset_f2_dt_Run2",1,0.,0.1);
+    FitParameter  scale_f2_dt_Run2("scale_f2_dt_Run2",1,0.,0.1);
+    FitParameter  scale_f2_2_dt_Run2("scale_f2_2_dt_Run2",1,0.,0.1);
+
     FitParameter  p0_os_Run2("p0_os_Run2",1,0.,0.);
     FitParameter  p1_os_Run2("p1_os_Run2",1,0.,0.);
     FitParameter  delta_p0_os_Run2("delta_p0_os_Run2",1,0.,0.);
@@ -2613,10 +2700,24 @@ void ampFit(int step=0, string mode = "fit"){
     FitParameter  production_asym_Run2("production_asym_Run2",1,0.,0.);
     FitParameter  detection_asym_Run2("detection_asym_Run2",1,0.,0.);
 
+    FitParameter  offset_mean_dt_Run2_17("offset_mean_dt_Run2_17",1,0,0.1);
     FitParameter  scale_mean_dt_Run2_17("scale_mean_dt_Run2_17",1,0,0.1);
+    FitParameter  scale_mean_2_dt_Run2_17("scale_mean_2_dt_Run2_17",1,0,0.1);
     FitParameter  offset_sigma_dt_Run2_17("offset_sigma_dt_Run2_17",1,0.,0.1);
-    FitParameter  scale_sigma_dt_Run2_17("scale_sigma_dt_Run2_17",1,1.2,0.1);
+    FitParameter  scale_sigma_dt_Run2_17("scale_sigma_dt_Run2_17",1,1.,0.1);
     FitParameter  scale_sigma_2_dt_Run2_17("scale_sigma_2_dt_Run2_17",1,0.,0.1);
+    FitParameter  offset_sigma2_dt_Run2_17("offset_sigma2_dt_Run2_17",1,0.,0.1);
+    FitParameter  scale_sigma2_dt_Run2_17("scale_sigma2_dt_Run2_17",1,1.,0.1);
+    FitParameter  scale_sigma2_2_dt_Run2_17("scale_sigma2_2_dt_Run2_17",1,0.,0.1);
+    FitParameter  offset_sigma3_dt_Run2_17("offset_sigma3_dt_Run2_17",1,0.,0.1);
+    FitParameter  scale_sigma3_dt_Run2_17("scale_sigma3_dt_Run2_17",1,1.,0.1);
+    FitParameter  scale_sigma3_2_dt_Run2_17("scale_sigma3_2_dt_Run2_17",1,0.,0.1);
+    FitParameter  offset_f_dt_Run2_17("offset_f_dt_Run2_17",1,1,0.1);
+    FitParameter  scale_f_dt_Run2_17("scale_f_dt_Run2_17",1,0.,0.1);
+    FitParameter  scale_f_2_dt_Run2_17("scale_f_2_dt_Run2_17",1,0.,0.1);
+    FitParameter  offset_f2_dt_Run2_17("offset_f2_dt_Run2_17",1,0.,0.1);
+    FitParameter  scale_f2_dt_Run2_17("scale_f2_dt_Run2_17",1,0.,0.1);
+    FitParameter  scale_f2_2_dt_Run2_17("scale_f2_2_dt_Run2_17",1,0.,0.1);
 
     /// Fit parameters per run and trigger cat
     FitParameter  c0_Run1_t0("c0_Run1_t0",1,1,0.1);
@@ -2704,7 +2805,12 @@ void ampFit(int step=0, string mode = "fit"){
 		      ,r,delta,gamma
 		      , xm, ym, xp, yp
 		      ,Gamma, dGamma, dm
-                      ,offset_sigma_dt, scale_mean_dt, scale_sigma_dt, scale_sigma_2_dt
+		      ,offset_mean_dt,scale_mean_dt,scale_mean_2_dt
+                      ,offset_sigma_dt, scale_sigma_dt, scale_sigma_2_dt
+                      ,offset_sigma2_dt, scale_sigma2_dt, scale_sigma2_2_dt
+                      ,offset_sigma3_dt, scale_sigma3_dt, scale_sigma3_2_dt
+                      ,offset_f_dt, scale_f_dt, scale_f_2_dt
+                      ,offset_f2_dt, scale_f2_dt, scale_f2_2_dt
                       ,c0, c1, c2 ,c3, c4, c5
                       ,c6, c7, c8, c9,
                       p0_os, p1_os, delta_p0_os, delta_p1_os, 
@@ -2716,7 +2822,13 @@ void ampFit(int step=0, string mode = "fit"){
     // Simultaneous pdfs
     FullAmpsPdfFlexiFastCPV pdf_Run1_t0(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP
 		      ,r,delta,gamma, xm, ym, xp, yp,
-		      Gamma, dGamma, dm,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
+		      Gamma, dGamma, dm,
+		      offset_mean_dt_Run1,scale_mean_dt_Run1,scale_mean_2_dt_Run1
+                      ,offset_sigma_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
+                      ,offset_sigma2_dt_Run1, scale_sigma2_dt_Run1, scale_sigma2_2_dt_Run1
+                      ,offset_sigma3_dt_Run1, scale_sigma3_dt_Run1, scale_sigma3_2_dt_Run1
+                      ,offset_f_dt_Run1, scale_f_dt_Run1, scale_f_2_dt_Run1
+                      ,offset_f2_dt_Run1, scale_f2_dt_Run1, scale_f2_2_dt_Run1
                       ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
                       ,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
                       p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -2727,7 +2839,13 @@ void ampFit(int step=0, string mode = "fit"){
 
     FullAmpsPdfFlexiFastCPV pdf_Run1_t1(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP
 		      ,r,delta,gamma, xm, ym, xp, yp,
-		      Gamma, dGamma, dm,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
+		      Gamma, dGamma, dm,
+		      offset_mean_dt_Run1,scale_mean_dt_Run1,scale_mean_2_dt_Run1
+                      ,offset_sigma_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
+                      ,offset_sigma2_dt_Run1, scale_sigma2_dt_Run1, scale_sigma2_2_dt_Run1
+                      ,offset_sigma3_dt_Run1, scale_sigma3_dt_Run1, scale_sigma3_2_dt_Run1
+                      ,offset_f_dt_Run1, scale_f_dt_Run1, scale_f_2_dt_Run1
+                      ,offset_f2_dt_Run1, scale_f2_dt_Run1, scale_f2_2_dt_Run1
                       ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
                       ,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
                       p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
@@ -2738,7 +2856,13 @@ void ampFit(int step=0, string mode = "fit"){
 
     FullAmpsPdfFlexiFastCPV pdf_Run2_t0(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP
 		      ,r,delta,gamma, xm, ym, xp, yp,
-		      Gamma, dGamma, dm,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
+		      Gamma, dGamma, dm,
+		      offset_mean_dt_Run2,scale_mean_dt_Run2,scale_mean_2_dt_Run2
+  		      ,offset_sigma_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
+		      ,offset_sigma2_dt_Run2, scale_sigma2_dt_Run2, scale_sigma2_2_dt_Run2
+		      ,offset_sigma3_dt_Run2, scale_sigma3_dt_Run2, scale_sigma3_2_dt_Run2
+		      ,offset_f_dt_Run2, scale_f_dt_Run2, scale_f_2_dt_Run2
+		      ,offset_f2_dt_Run2, scale_f2_dt_Run2, scale_f2_2_dt_Run2
                       ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
                       ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
                       p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -2749,7 +2873,13 @@ void ampFit(int step=0, string mode = "fit"){
 
     FullAmpsPdfFlexiFastCPV pdf_Run2_t1(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP
 		      ,r,delta,gamma, xm, ym, xp, yp,
-		      Gamma, dGamma, dm,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
+		      Gamma, dGamma, dm,
+		      offset_mean_dt_Run2,scale_mean_dt_Run2,scale_mean_2_dt_Run2
+  		      ,offset_sigma_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
+		      ,offset_sigma2_dt_Run2, scale_sigma2_dt_Run2, scale_sigma2_2_dt_Run2
+		      ,offset_sigma3_dt_Run2, scale_sigma3_dt_Run2, scale_sigma3_2_dt_Run2
+		      ,offset_f_dt_Run2, scale_f_dt_Run2, scale_f_2_dt_Run2
+		      ,offset_f2_dt_Run2, scale_f2_dt_Run2, scale_f2_2_dt_Run2
                       ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
                       ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
                       p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -2762,8 +2892,14 @@ void ampFit(int step=0, string mode = "fit"){
 
     FullAmpsPdfFlexiFastCPV pdf_Run2_17_t0(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP
 		      ,r,delta,gamma, xm, ym, xp, yp,
-		      Gamma, dGamma, dm,offset_sigma_dt_Run2_17, scale_mean_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
-                      ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
+                      Gamma, dGamma, dm
+	              ,offset_mean_dt_Run2_17,scale_mean_dt_Run2_17,scale_mean_2_dt_Run2_17
+	              ,offset_sigma_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
+	  	      ,offset_sigma2_dt_Run2_17, scale_sigma2_dt_Run2_17, scale_sigma2_2_dt_Run2_17
+	              ,offset_sigma3_dt_Run2_17, scale_sigma3_dt_Run2_17, scale_sigma3_2_dt_Run2_17
+		      ,offset_f_dt_Run2_17, scale_f_dt_Run2_17, scale_f_2_dt_Run2_17
+		      ,offset_f2_dt_Run2_17, scale_f2_dt_Run2_17, scale_f2_2_dt_Run2_17                    
+ 		      ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
                       ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
                       p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
                       avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
@@ -2773,7 +2909,13 @@ void ampFit(int step=0, string mode = "fit"){
 
     FullAmpsPdfFlexiFastCPV pdf_Run2_17_t1(&ampsSig,&ampsSig_bar,&ampsSig_CP,&ampsSig_bar_CP,&ampsSum,&ampsSum_CP
 		      ,r,delta,gamma, xm, ym, xp, yp,
-		      Gamma, dGamma, dm,offset_sigma_dt_Run2_17, scale_mean_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
+                      Gamma, dGamma, dm
+	              ,offset_mean_dt_Run2_17,scale_mean_dt_Run2_17,scale_mean_2_dt_Run2_17
+	              ,offset_sigma_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
+	  	      ,offset_sigma2_dt_Run2_17, scale_sigma2_dt_Run2_17, scale_sigma2_2_dt_Run2_17
+	              ,offset_sigma3_dt_Run2_17, scale_sigma3_dt_Run2_17, scale_sigma3_2_dt_Run2_17
+		      ,offset_f_dt_Run2_17, scale_f_dt_Run2_17, scale_f_2_dt_Run2_17
+		      ,offset_f2_dt_Run2_17, scale_f2_dt_Run2_17, scale_f2_2_dt_Run2_17                    
                       ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
                       ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
                       p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
@@ -2887,7 +3029,6 @@ void ampFit(int step=0, string mode = "fit"){
     	else {
 		tree=new TChain("DecayTree");
 		if(mode == "fit" && doToyStudy == 1){
-			tree->Add(((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
 			if(addBkgToToys)tree->Add(((string)OutputDir+"sw_toys_"+anythingToString((int)step)+".root").c_str());
 			else tree->Add(((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
 		}		
@@ -4399,83 +4540,119 @@ void ampFit(int step=0, string mode = "fit"){
 	FitParameter  S_bar("S_bar",1,CP_coeff[5],0.1);
 	FitParameter  k("k",1,1.,0.1);
 	
-	FullTimePdf t_pdf(C, D, D_bar, S, S_bar, k,
-			Gamma, dGamma, dm
-			,offset_sigma_dt, scale_mean_dt, scale_sigma_dt, scale_sigma_2_dt
-			,c0, c1, c2 ,c3, c4, c5
-			,c6, c7, c8, c9,
-			p0_os, p1_os, delta_p0_os, delta_p1_os, 
-			avg_eta_os, tageff_os, tageff_asym_os, 
-			p0_ss, p1_ss, delta_p0_ss, delta_p1_ss, 
-			avg_eta_ss, tageff_ss, tageff_asym_ss, 
-			production_asym, detection_asym, marginalPdfsPrefix );
+        FullTimePdf t_pdf(C, D, D_bar, S, S_bar, k,
+                      Gamma, dGamma, dm
+		      ,offset_mean_dt,scale_mean_dt,scale_mean_2_dt
+                      ,offset_sigma_dt, scale_sigma_dt, scale_sigma_2_dt
+                      ,offset_sigma2_dt, scale_sigma2_dt, scale_sigma2_2_dt
+                      ,offset_sigma3_dt, scale_sigma3_dt, scale_sigma3_2_dt
+                      ,offset_f_dt, scale_f_dt, scale_f_2_dt
+                      ,offset_f2_dt, scale_f2_dt, scale_f2_2_dt
+                      ,c0, c1, c2 ,c3, c4, c5
+                      ,c6, c7, c8, c9,
+                      p0_os, p1_os, delta_p0_os, delta_p1_os, 
+                      avg_eta_os, tageff_os, tageff_asym_os, 
+                      p0_ss, p1_ss, delta_p0_ss, delta_p1_ss, 
+                      avg_eta_ss, tageff_ss, tageff_asym_ss, 
+                      production_asym, detection_asym, marginalPdfsPrefix );
 	
-	FullTimePdf t_pdf_Run1_t0(C, D, D_bar, S, S_bar, k,
-			Gamma, dGamma, dm
-			,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
-			,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
-			,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
-			p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
-			avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
-			p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
-			avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
-			production_asym_Run1, detection_asym_Run1, "Run1_t0" );
-	
-	FullTimePdf t_pdf_Run1_t1(C, D, D_bar, S, S_bar, k,
-				Gamma, dGamma, dm
-				,offset_sigma_dt_Run1, scale_mean_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
-				,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
-				,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
-				p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
-				avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
-				p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
-				avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
-				production_asym_Run1, detection_asym_Run1, "Run1_t1" );
-	
-	FullTimePdf t_pdf_Run2_t0(C, D, D_bar, S, S_bar, k,
-				Gamma, dGamma, dm
-				,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
-				,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
-				,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
-				p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
-				avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
-				p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
-				avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-				production_asym_Run2, detection_asym_Run2, "Run2_t0" );
-	
-	FullTimePdf t_pdf_Run2_t1(C, D, D_bar, S, S_bar, k,
-				Gamma, dGamma, dm
-				,offset_sigma_dt_Run2, scale_mean_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
-				,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
-				,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
-				p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
-				avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
-				p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
-				avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-				production_asym_Run2, detection_asym_Run2, "Run2_t1" );
+    	FullTimePdf t_pdf_Run1_t0(C, D, D_bar, S, S_bar, k,
+                      Gamma, dGamma, dm
+		      ,offset_mean_dt_Run1,scale_mean_dt_Run1,scale_mean_2_dt_Run1
+                      ,offset_sigma_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
+                      ,offset_sigma2_dt_Run1, scale_sigma2_dt_Run1, scale_sigma2_2_dt_Run1
+                      ,offset_sigma3_dt_Run1, scale_sigma3_dt_Run1, scale_sigma3_2_dt_Run1
+                      ,offset_f_dt_Run1, scale_f_dt_Run1, scale_f_2_dt_Run1
+                      ,offset_f2_dt_Run1, scale_f2_dt_Run1, scale_f2_2_dt_Run1
+                      ,c0_Run1_t0, c1_Run1_t0, c2_Run1_t0 ,c3_Run1_t0, c4_Run1_t0, c5_Run1_t0
+                      ,c6_Run1_t0, c7_Run1_t0, c8_Run1_t0, c9_Run1_t0,
+                      p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
+                      avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
+                      p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
+                      avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
+                      production_asym_Run1, detection_asym_Run1, "Run1_t0" );
+    
+    	FullTimePdf t_pdf_Run1_t1(C, D, D_bar, S, S_bar, k,
+                              Gamma, dGamma, dm
+			      ,offset_mean_dt_Run1,scale_mean_dt_Run1,scale_mean_2_dt_Run1
+			      ,offset_sigma_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
+			      ,offset_sigma2_dt_Run1, scale_sigma2_dt_Run1, scale_sigma2_2_dt_Run1
+			      ,offset_sigma3_dt_Run1, scale_sigma3_dt_Run1, scale_sigma3_2_dt_Run1
+			      ,offset_f_dt_Run1, scale_f_dt_Run1, scale_f_2_dt_Run1
+			      ,offset_f2_dt_Run1, scale_f2_dt_Run1, scale_f2_2_dt_Run1
+                              ,c0_Run1_t1, c1_Run1_t1, c2_Run1_t1 ,c3_Run1_t1, c4_Run1_t1, c5_Run1_t1
+                              ,c6_Run1_t1, c7_Run1_t1, c8_Run1_t1, c9_Run1_t1,
+                              p0_os_Run1, p1_os_Run1, delta_p0_os_Run1, delta_p1_os_Run1, 
+                              avg_eta_os_Run1, tageff_os_Run1, tageff_asym_os_Run1, 
+                              p0_ss_Run1, p1_ss_Run1, delta_p0_ss_Run1, delta_p1_ss_Run1, 
+                              avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
+                              production_asym_Run1, detection_asym_Run1, "Run1_t1" );
+    
+    FullTimePdf t_pdf_Run2_t0(C, D, D_bar, S, S_bar, k,
+                              Gamma, dGamma, dm
+			      ,offset_mean_dt_Run2,scale_mean_dt_Run2,scale_mean_2_dt_Run2
+			      ,offset_sigma_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
+			      ,offset_sigma2_dt_Run2, scale_sigma2_dt_Run2, scale_sigma2_2_dt_Run2
+			      ,offset_sigma3_dt_Run2, scale_sigma3_dt_Run2, scale_sigma3_2_dt_Run2
+			      ,offset_f_dt_Run2, scale_f_dt_Run2, scale_f_2_dt_Run2
+			      ,offset_f2_dt_Run2, scale_f2_dt_Run2, scale_f2_2_dt_Run2
+                              ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
+                              ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
+                              p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "Run2_t0" );
+    
+    	FullTimePdf t_pdf_Run2_t1(C, D, D_bar, S, S_bar, k,
+                              Gamma, dGamma, dm
+			      ,offset_mean_dt_Run2,scale_mean_dt_Run2,scale_mean_2_dt_Run2
+			      ,offset_sigma_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
+			      ,offset_sigma2_dt_Run2, scale_sigma2_dt_Run2, scale_sigma2_2_dt_Run2
+			      ,offset_sigma3_dt_Run2, scale_sigma3_dt_Run2, scale_sigma3_2_dt_Run2
+			      ,offset_f_dt_Run2, scale_f_dt_Run2, scale_f_2_dt_Run2
+			      ,offset_f2_dt_Run2, scale_f2_dt_Run2, scale_f2_2_dt_Run2
+                              ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
+                              ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
+                              p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "Run2_t1" );
 
-	FullTimePdf t_pdf_Run2_17_t0(C, D, D_bar, S, S_bar, k,
-				Gamma, dGamma, dm
-				,offset_sigma_dt_Run2_17, scale_mean_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
-				,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
-				,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
-				p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
-				avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
-				p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
-				avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-				production_asym_Run2, detection_asym_Run2, "Run2_17_t0" );
-	
-	
-	FullTimePdf t_pdf_Run2_17_t1(C, D, D_bar, S, S_bar, k,
-				Gamma, dGamma, dm
-				,offset_sigma_dt_Run2_17, scale_mean_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
-				,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
-				,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
-				p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
-				avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
-				p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
-				avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
-				production_asym_Run2, detection_asym_Run2, "Run2_17_t1" );
+
+    	FullTimePdf t_pdf_Run2_17_t0(C, D, D_bar, S, S_bar, k,
+                              Gamma, dGamma, dm
+			      ,offset_mean_dt_Run2_17,scale_mean_dt_Run2_17,scale_mean_2_dt_Run2_17
+			      ,offset_sigma_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
+			      ,offset_sigma2_dt_Run2_17, scale_sigma2_dt_Run2_17, scale_sigma2_2_dt_Run2_17
+			      ,offset_sigma3_dt_Run2_17, scale_sigma3_dt_Run2_17, scale_sigma3_2_dt_Run2_17
+			      ,offset_f_dt_Run2_17, scale_f_dt_Run2_17, scale_f_2_dt_Run2_17
+			      ,offset_f2_dt_Run2_17, scale_f2_dt_Run2_17, scale_f2_2_dt_Run2_17
+                              ,c0_Run2_t0, c1_Run2_t0, c2_Run2_t0 ,c3_Run2_t0, c4_Run2_t0, c5_Run2_t0
+                              ,c6_Run2_t0, c7_Run2_t0, c8_Run2_t0, c9_Run2_t0,
+                              p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "Run2_17_t0" );
+
+
+    	FullTimePdf t_pdf_Run2_17_t1(C, D, D_bar, S, S_bar, k,
+                              Gamma, dGamma, dm
+			      ,offset_mean_dt_Run2_17,scale_mean_dt_Run2_17,scale_mean_2_dt_Run2_17
+			      ,offset_sigma_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
+			      ,offset_sigma2_dt_Run2_17, scale_sigma2_dt_Run2_17, scale_sigma2_2_dt_Run2_17
+			      ,offset_sigma3_dt_Run2_17, scale_sigma3_dt_Run2_17, scale_sigma3_2_dt_Run2_17
+			      ,offset_f_dt_Run2_17, scale_f_dt_Run2_17, scale_f_2_dt_Run2_17
+			      ,offset_f2_dt_Run2_17, scale_f2_dt_Run2_17, scale_f2_2_dt_Run2_17
+                              ,c0_Run2_t1, c1_Run2_t1, c2_Run2_t1 ,c3_Run2_t1, c4_Run2_t1, c5_Run2_t1
+                              ,c6_Run2_t1, c7_Run2_t1, c8_Run2_t1, c9_Run2_t1,
+                              p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "Run2_17_t1" );
 	
 
 	for(int n = 0; n < N_plot_it; n++){   /// Multiple iterations needed to release memory 
@@ -6320,10 +6497,25 @@ void animate(int step=0){
     FitParameter  dGamma("dGamma",2,-0.088,0.006);
     FitParameter  dm("dm",2,17.757,0.1);
 
-	FitParameter  scale_mean_dt("scale_mean_dt",1,1,0.1);
+	FitParameter  offset_mean_dt("offset_mean_dt",1,0,0.1);
+	FitParameter  scale_mean_dt("scale_mean_dt",1,0,0.1);
+	FitParameter  scale_mean_2_dt("scale_mean_2_dt",1,0,0.1);
 	FitParameter  offset_sigma_dt("offset_sigma_dt",1,0.,0.1);
 	FitParameter  scale_sigma_dt("scale_sigma_dt",1,1.,0.1);
 	FitParameter  scale_sigma_2_dt("scale_sigma_2_dt",1,0.,0.1);
+	FitParameter  offset_sigma2_dt("offset_sigma2_dt",1,0.,0.1);
+	FitParameter  scale_sigma2_dt("scale_sigma2_dt",1,1.,0.1);
+	FitParameter  scale_sigma2_2_dt("scale_sigma2_2_dt",1,0.,0.1);
+	FitParameter  offset_sigma3_dt("offset_sigma3_dt",1,0.,0.1);
+	FitParameter  scale_sigma3_dt("scale_sigma3_dt",1,1.,0.1);
+	FitParameter  scale_sigma3_2_dt("scale_sigma3_2_dt",1,0.,0.1);
+	FitParameter  offset_f_dt("offset_f_dt",1,1,0.1);
+	FitParameter  scale_f_dt("scale_f_dt",1,0.,0.1);
+	FitParameter  scale_f_2_dt("scale_f_2_dt",1,0.,0.1);
+	FitParameter  offset_f2_dt("offset_f2_dt",1,0.,0.1);
+	FitParameter  scale_f2_dt("scale_f2_dt",1,0.,0.1);
+	FitParameter  scale_f2_2_dt("scale_f2_2_dt",1,0.,0.1);
+
 	FitParameter  p0_os("p0_os",1,0.,0.);
 	FitParameter  p1_os("p1_os",1,1.,0.);
 	FitParameter  delta_p0_os("delta_p0_os",1,0.,0.);
@@ -6391,7 +6583,12 @@ void animate(int step=0){
 		      ,r,delta,gamma
 		      , xm, ym, xp, yp
 		      ,Gamma, dGamma, dm
-                      ,offset_sigma_dt, scale_mean_dt, scale_sigma_dt, scale_sigma_2_dt
+		      ,offset_mean_dt,scale_mean_dt,scale_mean_2_dt
+                      ,offset_sigma_dt, scale_sigma_dt, scale_sigma_2_dt
+                      ,offset_sigma2_dt, scale_sigma2_dt, scale_sigma2_2_dt
+                      ,offset_sigma3_dt, scale_sigma3_dt, scale_sigma3_2_dt
+                      ,offset_f_dt, scale_f_dt, scale_f_2_dt
+                      ,offset_f2_dt, scale_f2_dt, scale_f2_2_dt
                       ,c0, c1, c2 ,c3, c4, c5
                       ,c6, c7, c8, c9,
                       p0_os, p1_os, delta_p0_os, delta_p1_os, 

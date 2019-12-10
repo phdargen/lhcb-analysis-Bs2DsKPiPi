@@ -3,7 +3,7 @@
 
 "fitDsMass"	 		 0
 "fitIntegratedResolution"	 1
-"fitResoRelation"		 0
+"fitResoRelation"		 1
 
 * options for Ds mass fit
 "inFileNameForDsMassFit"		"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2*_16_LTU_multCand_noTimeCut.root"
@@ -18,16 +18,20 @@
 * options for scale factor fit
 "dataType"		"MC"
 "Year"			16
-"inFileName"		"/auto/data/dargent/BsDsKpipi/Final/MC/signal_scaled.root"
+*"inFileName"		"/auto/data/dargent/BsDsKpipi/Final/MC/signal_scaled.root"
 *"inFileName"		"/auto/data/dargent/BsDsKpipi/BDT/MC/signal.root"
 *"inFileName"		"/auto/data/dargent/BsDsKpipi/Preselected/MC/signal_Ds2KKpi_16.root"
 
-"cut"			"Ds_finalState == 0 && Ds_FDCHI2_ORIVX > 6 && year >= 10 && run >= 1"
+"inFileName"		"/auto/data/dargent/BsDsKpipi/Final/MC/norm.root"
 
-"minEventsPerBin"	 1000
+*"cut"			"Ds_finalState == 0 && Ds_FDCHI2_ORIVX > 6 && year >= 10 && run >= 1"
+"cut"			"bkgCAT==0"
+
+
+"minEventsPerBin"	 40000
 *"minEventsPerBin"	 4000
 
-"Bs_TAU_Var"		"Bs_DTF_TAU"
+"Bs_TAU_Var"		"Bs_BsDTF_TAU"
 "TAUERR_min"	 0.
 "TAUERR_max"	 0.1
 

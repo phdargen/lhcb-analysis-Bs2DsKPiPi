@@ -229,12 +229,28 @@ void signal(){
 	for(int j =0 ; j <paraNames.size() ; j++)
 		 cor_bkg[i][j] = cov_bkg[i][j]/sqrt(cov_bkg[i][i])/sqrt(cov_bkg[j][j]);
 
+    /// m,t correlations
+//     pull p_corr(paraNames,"signal_toy_bkg7/pull__*.root");
+//     TMatrixD* cov_corr = new TMatrixD(p_corr.getDeltaCov("signal_toy_bkg8/pull__*.root","_corr"));
+
+    pull p_corr1(paraNames,"signal_toy_bkg7/pull__*.root");
+    TMatrixD cov_corr1 = p_corr1.getCov();
+
+    pull p_corr2(paraNames,"signal_toy_bkg8/pull__*.root");
+    TMatrixD cov_corr2 = p_corr2.getCov();
+
+    TMatrixD* cov_corr = new TMatrixD(p_corr1.getAbsDiff(cov_corr1,cov_corr2));
+    for(int i = 0 ; i < paraNames.size(); i++)for(int j = 0 ; j < paraNames.size(); j++){
+	(*cov_corr)[i][j] = (*cov_corr)[i][j] * errs_stat[i] * errs_stat[j];
+    }
+
     /// Total sys corr
     covs.push_back(cov_acc);
     covs.push_back(new TMatrixD(cov_bkg));
     covs.push_back(new TMatrixD(cov_asym));
     covs.push_back(new TMatrixD(cov_res));
     covs.push_back(cov_dm);
+    covs.push_back(cov_corr);
 
     TMatrixD cov_sys_tot(paraNames.size(),paraNames.size());
     TMatrixD cor_sys_tot(paraNames.size(),paraNames.size());
@@ -275,6 +291,7 @@ void signal(){
     sysNames.push_back("Resolution");
     sysNames.push_back("Asymmetries");
     sysNames.push_back("$\\Delta m_{s}$");
+    sysNames.push_back("Correlations");
  
     ofstream SummaryFile;
     //SummaryFile.open("pull_results/sys_summary_table.tex",std::ofstream::trunc);
@@ -541,12 +558,25 @@ void norm() {
 //     TMatrixD* cov_mc = new TMatrixD(p_mc.getDeltaCov("norm_taggingCalib/pull__1.root"));
 //     covs.push_back(cov_mc);
 
+    /// m,t correlations
+    pull p_corr1(paraNames,"norm_toy_bkg3/pull__*.root");
+    TMatrixD cov_corr1 = p_corr1.getCov();
+
+    pull p_corr2(paraNames,"norm_toy_bkg4/pull__*.root");
+    TMatrixD cov_corr2 = p_corr2.getCov();
+
+    TMatrixD* cov_corr = new TMatrixD(p_corr1.getAbsDiff(cov_corr1,cov_corr2));
+    for(int i = 0 ; i < paraNames.size(); i++)for(int j = 0 ; j < paraNames.size(); j++){
+	(*cov_corr)[i][j] = (*cov_corr)[i][j] * errs_stat[i] * errs_stat[j];
+    }
+
     /// Total systematics table   
     covs.push_back(new TMatrixD(cov_bkg));
     covs.push_back(cov_acc);
     covs.push_back(new TMatrixD(cov_res));
     covs.push_back(new TMatrixD(cov_bias));
     covs.push_back(new TMatrixD(cov_asym));
+    covs.push_back(cov_corr);
 
     vector<string> sysNames;
     sysNames.push_back("Fit-bias");
@@ -555,6 +585,7 @@ void norm() {
     sysNames.push_back("Resolution");
     sysNames.push_back("Decay-time bias");
     sysNames.push_back("Asymmetries");
+    sysNames.push_back("Correlations");
 //     sysNames.push_back("Mult.-Cand.");
     sysNames.push_back("Mom./z-Scale");
 
@@ -676,7 +707,7 @@ int main(int argc, char** argv){
     //gStyle->SetOptFit(111);
     //gStyle->UseCurrentStyle();
 
-  // signal();
+//    signal();
     norm();
 
     return 0;

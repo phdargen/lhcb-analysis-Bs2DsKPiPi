@@ -1,0 +1,38 @@
+* reweighting
+
+"ReweightFromA"		"/auto/data/dargent/BsDsKpipi/decayTimeBias/prompt_4micron.root"
+"ReweightToB"		"/auto/data/dargent/BsDsKpipi/decayTimeBias/norm_4micron.root"
+"ApplyWeightToC"	""
+
+"OutputDir"		"LTU_MC/"
+
+"legTitle"	"LHCb Data"
+"nameA"		"prompt-D_{s}"
+"weightVarA"	"weight_PT_dt"
+"newWeightVarA"	"weight_dt_FD"
+
+"nameB"		"B_{s}#rightarrowD_{s}#pi#pi#pi"
+"weightVarB"	"N_Bs_sw"
+
+"weightVarC"	"noweight"
+"newWeightVarC"	"noweight"
+
+"reweight"	1
+"reweightInBinsOfRun"    	 -1
+"reweightInBinsOfFinalState"	 0
+"reweightInBinsOfTrigger"	 0
+"maxWeight"	50
+"nIterations"   1
+"minEventsPerBin"  60
+"maxBinsPerDim"    200
+
+"reweightVarSet1"	 0
+"reweightVarSet2"	 0
+"reweightVarSet3"	 0
+"reweightVarSet4"	 1
+"reweightVarSet5"	 0
+
+* plotting MC vs Data
+"nBins"		 40
+"updateAnaNoteHistos"		0
+"updateAnaNotePlots"		0

@@ -152,6 +152,19 @@ TString pull::latexNameMod(TString s){
     else return latexName(s);
 }
 
+TMatrixD pull::getAbsDiff(TMatrixD cov1,TMatrixD cov2){
+
+	TMatrixD cov_diff(_paraNames.size(),_paraNames.size());
+
+	for (int i = 0 ; i < _paraNames.size(); i++)
+        	for (int j = 0 ; j < _paraNames.size(); j++){
+			if(i==j)cov_diff[i][j] = abs(cov1[i][j]-cov2[i][j]);
+			else cov_diff[i][j] = 0.;
+		}
+
+	return cov_diff;
+}
+
 TMatrixD pull::combineCov_maxVal(vector<TMatrixD*> vec){
 
 	TMatrixD m(*vec[0]);

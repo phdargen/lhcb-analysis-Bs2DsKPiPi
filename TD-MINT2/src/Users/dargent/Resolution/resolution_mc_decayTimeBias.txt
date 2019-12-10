@@ -17,14 +17,15 @@
 "Year"			16
 "inFileName"		"/auto/data/dargent/BsDsKpipi/decayTimeBias/norm_0micron.root"
 *"inFileName"		"/auto/data/dargent/BsDsKpipi/decayTimeBias/prompt_4micron.root"
+*"inFileName"		"/auto/data/dargent/BsDsKpipi/Final/MC/norm.root"
 
-*"cut"			"Ds_finalState == 0 && Ds_FDCHI2_ORIVX > 6 && year >= 10 && run >= 1"
+*"cut"			"Ds_finalState >= 0 && year == 16 && bkgCAT==0"
 
 
-"minEventsPerBin"	 10000
+"minEventsPerBin"	 20000
 *"minEventsPerBin"	 4000
-"Binning_min"	 0.
-"Binning_max"	 0.1
+"Binning_min"	 0.	
+"Binning_max"	 10
 
 
 "Bs_TAU_Var"		"Bs_BsDTF_TAU"
@@ -35,8 +36,8 @@
 "nGauss"	 2
 
 "fixMean"	0
-"fixGaussFraction"	 0
-"gaussFraction"		 0.75
+"fixGaussFraction"	 1
+"gaussFraction"		 0.682
 "DoSystematics"		 0
 
 

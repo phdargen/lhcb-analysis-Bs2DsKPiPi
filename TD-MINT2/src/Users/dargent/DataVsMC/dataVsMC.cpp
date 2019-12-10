@@ -83,7 +83,7 @@ void plot(TTree* tree, TTree* treeMC, TString Branch,TString TitleX, int bins, d
     if(newWeightB != "noweight")treeMC->SetBranchAddress(newWeightB,&new_w);
 
     ///Make histograms
-    TString title= ";"+TitleX+";Yield [norm.]";
+    TString title= ";"+TitleX+";Yield (a.u.)";
     TH1D h(Branch,title,bins,min,max);
     TH1D h_MC(Branch+"_MC",title,bins,min,max);
     TH1D h_MC_rw(Branch+"_MC_rw",title,bins,min,max);
@@ -161,7 +161,7 @@ void plot(TTree* tree, TTree* treeMC, TString Branch,TString TitleX, int bins, d
     TString leg_kol = "KS-Test : ";
     ss << std::fixed << std::setprecision(4) << KolmoTest ;
     leg_kol += ss.str();    
-    le = leg->AddEntry((TObject*)0, leg_kol, "");
+//     le = leg->AddEntry((TObject*)0, leg_kol, "");
     le->SetTextColor(kRed);    
 
     if(newWeightB != weightB && newWeightB != "noweight"){
@@ -279,6 +279,8 @@ void compare(TString fileA, TString fileB, TString weightA, TString weightB, TSt
     plot(new_treeA,new_treeB,"Bs_FDCHI2_OWNPV","#chi^{2}_{FD}(B)",nBins,0,100000,weightA, weightB, newWeightB, label,true);     plot(new_treeA,new_treeB,"Bs_ENDVERTEX_CHI2","#chi^{2}_{vtx}(B)",nBins,0,35,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_BsDTF_TAU","t(B) [ps]",nBins,0.4,10.,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_BsDTF_TAUERR","#sigma_{t}(B) [ps]",nBins,0,0.1,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Bs_DTF_TAU","t(B) [ps]",nBins,0.4,10.,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Bs_DTF_TAUERR","#sigma_{t}(B) [ps]",nBins,0,0.1,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_ptasy_1.00","B_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
     plot(new_treeA,new_treeB,"Bs_DTF_MMERR","#sigma_{m} [MeV]",nBins,4.,25.,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_DTF_MM","m(B) [MeV]",100.,5200.,5700.,"noweight", "noweight", "noweight", label);
@@ -298,6 +300,13 @@ void compare(TString fileA, TString fileB, TString weightA, TString weightB, TSt
 //     plot(new_treeA,new_treeB,"Ds_ptasy_1.00","Ds_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
     plot(new_treeA,new_treeB,"Ds_FDCHI2_ORIVX","#chi^{2}_{FD}(D_{s})",nBins,0,40000,weightA, weightB, newWeightB, label,true);
 //     plot(new_treeA,new_treeB,"Ds_RFD","Ds RFD",nBins,0,10,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Ds_PT","p_{T}(Ds) [MeV]",nBins,0,40000,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Ds_ETA","#eta(Ds)",nBins,1,6,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"Ds_PV_TAU","t(Ds) [ps]",nBins,0.,5.,weightA, weightB, newWeightB, label);
+
+    plot(new_treeA,new_treeB,"pi_PT","p_{T}(pi) [MeV]",nBins,0,40000,weightA, weightB, newWeightB, label);
+    plot(new_treeA,new_treeB,"pi_ETA","#eta(pi)",nBins,1,6,weightA, weightB, newWeightB, label);
+
 
 //     plot(new_treeA,new_treeB,"maxCos","maxCos",nBins,-1,1,weightA, weightB, newWeightB, label);    
 //     plot(new_treeA,new_treeB,"max_ghostProb","max(Track_ghostProb)",nBins,0,0.4,weightA, weightB, newWeightB, label);
@@ -1478,7 +1487,17 @@ int main(int argc, char** argv){
     
 //     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/signal.root", "/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
 //     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/norm.root", "/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
-//     return 0;
+
+//     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/signal_PIDGen.root", "/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
+//     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/norm_PIDGen.root", "/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
+// 
+//     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/signal_PIDMC.root", "/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
+//     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/norm_PIDMC.root", "/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
+// 
+//     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/signal_noBDT.root", "/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
+//     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/norm_noBDT.root", "/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
+// 
+//    return 0;
 
     //createSubset("../Files/Final/Data/norm.root","../Files/Final/Data/norm_t0.root","TriggerCat == 0");
     //createSubset("../Files/Final/Data/norm.root","../Files/Final/Data/norm_t1.root","TriggerCat == 1");
@@ -1551,11 +1570,11 @@ int main(int argc, char** argv){
         years.push_back(2); // Means run 2
     }
     else if(reweightInBinsOfRun==0){
-        years.push_back(11);
-        years.push_back(12);
-        years.push_back(15);
+        //years.push_back(11);
+        //years.push_back(12);
+        //years.push_back(15);
         years.push_back(16);
-        years.push_back(17);
+        //years.push_back(17);
     }
     else years.push_back(-1); // Means all 
     
@@ -1602,15 +1621,35 @@ int main(int argc, char** argv){
     vars_3.push_back("Bs_PT");
     min_3.push_back(0.);
     max_3.push_back(200000.);
+    //vars_3.push_back("Bs_ETA");
+    //min_3.push_back(1.5);
+    //max_3.push_back(6.5);
+    vars_3.push_back("Bs_BsDTF_TAUERR");
+    min_3.push_back(0.);
+    max_3.push_back(0.15);
 
-    vars_4.push_back("PV_CHI2NDOF");
+
+    vars_4.push_back("Ds_FDCHI2_ORIVX");
     min_4.push_back(0.);
-    max_4.push_back(10.);
+    max_4.push_back(40000.);
+
+//     vars_4.push_back("Bs_PT");
+//     min_4.push_back(0.);
+//     max_4.push_back(200000.);
+     vars_4.push_back("Bs_BsDTF_TAUERR");
+     min_4.push_back(0.);
+     max_4.push_back(0.15);
     
-    vars_5.push_back("BDTG");
+//     vars_5.push_back("Bs_PT");
+//     min_5.push_back(0.);
+//     max_5.push_back(200000.);
+//     vars_5.push_back("Ds_PT");
+//     min_5.push_back(0.);
+//     max_5.push_back(200000.);
+    vars_5.push_back("pi_PT");
     min_5.push_back(0.);
-    max_5.push_back(1.);
-    
+    max_5.push_back(200000.);
+
     vector< vector<TString> > vars_set;
     vector< vector<double> > min_set;
     vector< vector<double> > max_set;
@@ -1702,7 +1741,7 @@ int main(int argc, char** argv){
 						
     /// Draw comparison plots 
     for(int i= 0; i < years.size(); i++) for(int j= 0; j < Ds_finalStates.size(); j++)for(int k= 0; k < trigger.size(); k++){ 
-//         compare((string) ReweightToB, (string) ReweightFromA, (string) weightVarB, (string) weightVarA, (string) newWeightVarA, (string) cutB, (string) cutA, years[i], Ds_finalStates[j],trigger[k]);
+        compare((string) ReweightToB, (string) ReweightFromA, (string) weightVarB, (string) weightVarA, (string) newWeightVarA, (string) cutB, (string) cutA, years[i], Ds_finalStates[j],trigger[k]);
     }
 
     cout << "==============================================" << endl;

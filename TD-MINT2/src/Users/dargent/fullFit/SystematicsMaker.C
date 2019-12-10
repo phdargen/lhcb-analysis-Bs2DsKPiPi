@@ -346,7 +346,6 @@ void fitParams(){
     TMatrixD* cov_phsp_acc_6 = new TMatrixD(p_phsp_acc_6.getDeltaCov("signal/pull__1.root","phsp_acc_6"));
     vector<double> vals_ps_6 = p_phsp_acc_6.getVals();
 
-
     pull p_phsp_acc_7(paraNames,"signal_sys_acc7/pull_*.root");
     TMatrixD* cov_phsp_acc_7 = new TMatrixD(p_phsp_acc_7.getDeltaCov("signal/pull__1.root","phsp_acc_7"));
     vector<double> vals_ps_7 = p_phsp_acc_7.getVals();
@@ -372,6 +371,26 @@ void fitParams(){
     vec_vals_ps.push_back(vals_ps_9);
 
     TMatrixD cov_phsp(p_phsp_acc_1.sampleVariance(vec_vals_ps));
+
+    /// Phsp acc factorization
+    pull p_phsp_acc2_1(paraNames,"signal_t1/pull_*.root");
+    TMatrixD* cov_phsp_acc2_1 = new TMatrixD(p_phsp_acc2_1.getDeltaCov("signal_t0/pull__1.root","phsp_acc2_1"));
+    vector<double> vals_ps_acc1 = p_phsp_acc2_1.getVals();
+
+    pull p_phsp_acc2_2(paraNames,"signal_t2/pull_*.root");
+    TMatrixD* cov_phsp_acc2_2 = new TMatrixD(p_phsp_acc2_2.getDeltaCov("signal_t0/pull__1.root","phsp_acc2_2"));
+    vector<double> vals_ps_acc2 = p_phsp_acc2_2.getVals();
+
+    pull p_phsp_acc2_3(paraNames,"signal_t3/pull_*.root");
+    TMatrixD* cov_phsp_acc2_3 = new TMatrixD(p_phsp_acc2_3.getDeltaCov("signal_t0/pull__1.root","phsp_acc2_3"));
+    vector<double> vals_ps_acc3 = p_phsp_acc2_3.getVals();
+	
+    vector< vector <double> > vec_vals_ps2;
+    vec_vals_ps2.push_back(vals_ps_acc1);
+    vec_vals_ps2.push_back(vals_ps_acc2);
+    vec_vals_ps2.push_back(vals_ps_acc3);
+
+    TMatrixD cov_phsp2(p_phsp_acc2_1.sampleVariance(vec_vals_ps2));
 
 
     /// Alternative amp models 
@@ -463,25 +482,41 @@ void fitParams(){
 //     cov_alt.Print();
 //     covs.push_back(new TMatrixD(cov_alt));
 
+    /// m,t correlations
+    pull p_corr1(paraNames,"signal_toy_bkg3/pull__*.root");
+    TMatrixD cov_corr1 = p_corr1.getCov();
+
+    pull p_corr2(paraNames,"signal_toy_bkg4/pull__*.root");
+    TMatrixD cov_corr2 = p_corr2.getCov();
+
+    TMatrixD* cov_corr = new TMatrixD(p_corr1.getAbsDiff(cov_corr1,cov_corr2));
+    for(int i = 0 ; i < paraNames.size(); i++)for(int j = 0 ; j < paraNames.size(); j++){
+	(*cov_corr)[i][j] = (*cov_corr)[i][j] * errs_stat[i] * errs_stat[j];
+    }
+
     /// Total systematics table   
     covs.push_back(new TMatrixD(cov_bkg));
+    covs.push_back(cov_corr);
     covs.push_back(cov_acc);
     covs.push_back(new TMatrixD(cov_res));
     covs.push_back(new TMatrixD(cov_asym));
     covs.push_back(cov_dm);
     covs.push_back(new TMatrixD(cov_phsp));
+    covs.push_back(new TMatrixD(cov_phsp2));
     covs.push_back(new TMatrixD(cov_ls));
     covs.push_back(new TMatrixD(cov_rp));
     covs.push_back(cov_f_1);
 
     vector<string> sysNames;
     sysNames.push_back("Fit bias");
+    sysNames.push_back("Correlations");
     sysNames.push_back("Background");
     sysNames.push_back("Time-Acc.");
     sysNames.push_back("Resolution");
     sysNames.push_back("Asymmetries");
     sysNames.push_back("$\\Delta m_{s}$");
     sysNames.push_back("Phsp-Acc.");
+    sysNames.push_back("Acc. Factor.");
     sysNames.push_back("Lineshapes");
     sysNames.push_back("Resonances $m,\\Gamma$");
     sysNames.push_back("Form-Factors");
@@ -1086,6 +1121,27 @@ void fractions_new(){
     TMatrixD cov_phsp(p_phsp_acc_1.sampleVariance(vec_vals_ps));
 
 
+    /// Phsp acc factorization
+    pull p_phsp_acc2_1(paraNames,"signal_t1/pull_*.root","Coherence");
+    TMatrixD* cov_phsp_acc2_1 = new TMatrixD(p_phsp_acc2_1.getDeltaCov("signal_t0/pull__1.root","phsp_acc2_1"));
+    vector<double> vals_ps_acc1 = p_phsp_acc2_1.getVals();
+
+    pull p_phsp_acc2_2(paraNames,"signal_t2/pull_*.root","Coherence");
+    TMatrixD* cov_phsp_acc2_2 = new TMatrixD(p_phsp_acc2_2.getDeltaCov("signal_t0/pull__1.root","phsp_acc2_2"));
+    vector<double> vals_ps_acc2 = p_phsp_acc2_2.getVals();
+
+    pull p_phsp_acc2_3(paraNames,"signal_t3/pull_*.root","Coherence");
+    TMatrixD* cov_phsp_acc2_3 = new TMatrixD(p_phsp_acc2_3.getDeltaCov("signal_t0/pull__1.root","phsp_acc2_3"));
+    vector<double> vals_ps_acc3 = p_phsp_acc2_3.getVals();
+	
+    vector< vector <double> > vec_vals_ps2;
+    vec_vals_ps2.push_back(vals_ps_acc1);
+    vec_vals_ps2.push_back(vals_ps_acc2);
+    vec_vals_ps2.push_back(vals_ps_acc3);
+
+    TMatrixD cov_phsp2(p_phsp_acc2_1.sampleVariance(vec_vals_ps2));
+
+
     /// Alternative amp models 
     pull p_alt_1(paraNames,"signal_alt0/pull__100.root","Coherence");
     TMatrixD* cov_alt_1 = new TMatrixD(p_alt_1.getDeltaCov("signal/pull__1.root"));
@@ -1174,25 +1230,41 @@ void fractions_new(){
     TMatrixD cov_alt(p_alt_1.sampleVariance(vec_vals_alt));
 
 
+    /// m,t correlations
+    pull p_corr1(paraNames,"signal_toy_bkg3/pull__*.root","Coherence");
+    TMatrixD cov_corr1 = p_corr1.getCov();
+
+    pull p_corr2(paraNames,"signal_toy_bkg4/pull__*.root","Coherence");
+    TMatrixD cov_corr2 = p_corr2.getCov();
+
+    TMatrixD* cov_corr = new TMatrixD(p_corr1.getAbsDiff(cov_corr1,cov_corr2));
+    for(int i = 0 ; i < paraNames.size(); i++)for(int j = 0 ; j < paraNames.size(); j++){
+	(*cov_corr)[i][j] = (*cov_corr)[i][j] * errs_stat[i] * errs_stat[j];
+    }
+
     /// Total systematics table   
     covs.push_back(new TMatrixD(cov_bkg));
+    covs.push_back(cov_corr);
     covs.push_back(cov_acc);
     covs.push_back(new TMatrixD(cov_res));
     covs.push_back(new TMatrixD(cov_asym));
     covs.push_back(cov_dm);
     covs.push_back(new TMatrixD(cov_phsp));
+    covs.push_back(new TMatrixD(cov_phsp2));
     covs.push_back(new TMatrixD(cov_ls));
     covs.push_back(new TMatrixD(cov_rp));
     covs.push_back(cov_f_1);
 
     vector<string> sysNames;
     sysNames.push_back("Fit bias");
+    sysNames.push_back("Correlations");
     sysNames.push_back("Background");
     sysNames.push_back("Time-Acc.");
     sysNames.push_back("Resolution");
     sysNames.push_back("Asymmetries");
     sysNames.push_back("$\\Delta m_{s}$");
     sysNames.push_back("Phsp-Acc.");
+    sysNames.push_back("Acc. Factor.");
     sysNames.push_back("Lineshapes");
     sysNames.push_back("Resonances $m,\\Gamma$");
     sysNames.push_back("Form-Factors");

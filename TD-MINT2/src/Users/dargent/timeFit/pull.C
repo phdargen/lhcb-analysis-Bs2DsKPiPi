@@ -172,6 +172,19 @@ TMatrixD pull::getStatCov(TString label){
     return cov;
 }
 
+TMatrixD pull::getAbsDiff(TMatrixD cov1,TMatrixD cov2){
+
+	TMatrixD cov_diff(_paraNames.size(),_paraNames.size());
+
+	for (int i = 0 ; i < _paraNames.size(); i++)
+        	for (int j = 0 ; j < _paraNames.size(); j++){
+			if(i==j)cov_diff[i][j] = abs(cov1[i][j]-cov2[i][j]);
+			else cov_diff[i][j] = 0.;
+		}
+
+	return cov_diff;
+}
+
 TMatrixD pull::getCov(TString label){
     
     if(fChain == 0){
@@ -247,7 +260,7 @@ TMatrixD pull::getCov(TString label){
     return cov_prime;
 }
 
-TMatrixD pull::getDeltaCov(TString refFileName,TString label){
+TMatrixD pull::getDeltaCov(TString refFileName,TString label, double pull_max , bool scaleCov ){
     
     int N = fChain->GetEntries();
 
@@ -315,8 +328,9 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
            if(abs(val) > max) max = abs(val);
 	}
     }
-    max *= 1.1;
-    
+    //max *= 1.;
+    max = max>5 ? 5: max;   
+
     vector<TH1D*> h_pulls;
     for (int i = 0 ; i < _paraNames.size(); i++) 
         h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 25, -max,max));
@@ -324,8 +338,10 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
     for (int n=0; n <N ;n++) {
         fChain->GetEntry(n);  
         chain->GetEntry(n);
-        for (int i = 0 ; i < _paraNames.size(); i++)
+        for (int i = 0 ; i < _paraNames.size(); i++){
+	    if(abs(*_pulls[i])>pull_max || abs(*pulls[i])>pull_max) continue;
             h_pulls[i]->Fill((*_means[i]-*means[i])/(*errs[i]));
+	}
     }
     
     TCanvas* c = new TCanvas();
@@ -361,8 +377,11 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
         fChain->GetEntry(n);  
         chain->GetEntry(n);
         for (int i = 0 ; i < _paraNames.size(); i++)
-            for (int j = 0 ; j < _paraNames.size(); j++) 
-                cov[i][j] += (*_means[i] - *means[i]) * (*_means[j] - *means[j])/(N-1.);
+            for (int j = 0 ; j < _paraNames.size(); j++) {
+	     	   if(abs(*_pulls[i])>pull_max || abs(*pulls[i])>pull_max) continue;
+	     	   if(abs(*_pulls[j])>pull_max || abs(*pulls[j])>pull_max) continue;
+	           cov[i][j] += (*_means[i] - *means[i]) * (*_means[j] - *means[j])/(N-1.);
+	    }
     }
     
     TMatrixD cov_prime(cov);
@@ -370,8 +389,8 @@ TMatrixD pull::getDeltaCov(TString refFileName,TString label){
         for (int j = 0 ; j < _paraNames.size(); j++) 
             cov_prime[i][j] = cov[i][j]*sqrt(pow(fit_means[i],2)+pow(fit_sigmas[i],2))*sqrt(pow(fit_means[j],2)+pow(fit_sigmas[j],2))/fit_sigmas[i]/fit_sigmas[j];
     
-    return cov_prime;
-//     return cov;
+   if(scaleCov) return cov_prime;
+   else return cov;
 
 }
 

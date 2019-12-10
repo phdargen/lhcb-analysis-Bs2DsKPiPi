@@ -43,9 +43,10 @@ public :
    vector <double> getErrs();
    TMatrixD getStatCov(TString label = "");
    TMatrixD getCov(TString label = "");
-   TMatrixD getDeltaCov(TString refFileName,TString label = "");
+   TMatrixD getDeltaCov(TString refFileName,TString label = "",double pull_max = 10, bool scaleCov = "true");
    TMatrixD getDeltaCovChol(TString refFileName,TString label,int varPerParChol);
-    
+   TMatrixD getAbsDiff(TMatrixD cov1,TMatrixD cov2);
+
    TMatrixD 	combineCov_maxVal(vector<TMatrixD*> vec);
    TMatrixD     sampleVariance(vector< vector<double> > vec_vals);
 
