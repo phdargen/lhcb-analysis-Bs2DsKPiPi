@@ -21,10 +21,16 @@ Systematic uncertainties estimated from pseudo-experiments (toys) are calculated
 
 Pseudo-experiments are performed, where a signal toy sample of the same size as the number of observed signal data events is generated according to the nominal fit model 
 and subsequently fitted with the same model.
-The means of the pull distributions are taken as systematic uncertainties of the fit parameters. The width of the pull distributions are compatible with 1.  
+The means of the pull distributions are taken as systematic uncertainties of the fit parameters. The width of the pull distributions are compatible with unity.  
+
+As the determination of the mixing frequency is a high precision measurement, 
+a closure test is performed to further validate the fit procedure.
+A fit to the decay-time distribution of the high-statistics fully simulated signal $B_s \to D_s \pi\pi\pi$ and $B_s \to D_s K\pi\pi$ candidates (using the \textsf{TRUEID} of the candidates for the tagging information) is performed to extract the mixing frequency  resulting in $\Delta m_s = 17.8027 \pm 0.0009 \invps$ and $\Delta m_s = 17.8017 \pm 0.0009 \invps$, respectively.
+The larger shift with respect to the generated value of $\Delta m_s = 17.800\invps$ is assigned as additional systematic uncertainty (even though it could, at least to some extent, be explained by statistical fluctuations of the MC sample). 
 
 \subsection{Background subtraction}
 \label{subsec:SystMass}
+\enlargethispage{2\baselineskip}
 
 The statistical subtraction of the residual background \cite{Pivk:2004ty}, left after the full selection, relies on the correct description of the invariant $\Bs$ mass distribution.
 Since the choice of signal and background models is not unique, alternative parameterizations are tested:
@@ -80,11 +86,32 @@ vary the default PIDK cut (PIDK $> 10$) by $\pm 2$ when calculating the misID we
 
 In total 10 (7) different combinations of the modifications discussed above are tested for the fit to the $\Ds \kaon \pion\pion$ ($\Ds \pi \pion\pion$) mass distribution.
 For each case, new signal \textsf{sWeights} are calculated and the \textsf{sFits} to data are repeated. 
-The sample variance of the obtained differences to the nominal fit value are used as systematic uncertainty due to the background subtraction.
+The sample variance of the obtained differences to the nominal fit value are used as systematic uncertainty due to the background modelling.
 
+The subtraction of the background via the sPlot technique relies on the assumption of no correlation between the reconstructed mass and the observables 
+that are used in the final fit. 
+To assess the impact of ignoring the small correlation between reconstructed mass and decay-time ($\rho \approx -0.04$) observed for the combinatorial background, 
+we perform a toy study including signal and background candidates.
+%we generate toys with signal and background candidates.
+%fit the mass to calculate the sWeights and fit the decay-time distribution afterwards.
+The two-dimensional reconstructed mass vs. decay-time distribution for background candidates, shown in Fig.~\ref{fig:bkg2D}, 
+is taken from a (same-sign) $D_s^+ K^+ \pip\pim$ data sample.
+For simplicity, a flat phase-space distribution is assumed for the background.
+The toy study including the small correlation in the generation of the background candidates 
+is contrasted to one where uncorrelated masses and decay-times are generated.
+The difference of the pull means is assigned as systematic for each fit parameter.
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.4\textwidth]{figs/Systematics/h_bkg.eps}
+\caption{\small Scatter plot of reconstructed mass against decay-time for (same-sign) $D_s^+ K^+ \pip\pim$ candidates.
+The average decay-time in a given mass bin is overlaid in red.}
+\label{fig:bkg2D}
+\end{figure}
 
 \subsection{Decay-time acceptance}
 \label{subsec:SystTime}
+\enlargethispage{2\baselineskip}
 
 %To investigate the systematic uncertainty related to the decay-time dependent efficiency, we vary our parametrization of the acceptance using cubic splines.
 %This is explicitly done by choosing slightly different knot positions, 
@@ -160,6 +187,7 @@ For the correlation between $\Gamma_s$ and $\Delta\Gamma_s$ we use the HFLAV val
 
 
 \subsection{Decay-time resolution and tagging}
+\label{ssec:biasSys}
 
 To study systematic effects originating from the scaling of the decay-time error estimate, 
 %the decay-time distribution of fake $\Bs$ candidates using prompt $\Ds$ canidates is described by single Gaussian function.
@@ -192,8 +220,7 @@ For each case, a new scaling function is derived:
 %\sigma_{eff}^{single-Gauss}(\sigma_t) = \left(8.3  \pm 1.5 \right) \text{fs} + \left( 0.997 \pm 0.037 \right) \sigma_t
 %\label{eq:ResoSyst2}
 %\end{equation}
-
-Thy are compared to the nominal result in Fig.~\ref{fig:SystscaleFactor}.
+They are compared to the nominal result in Fig.~\ref{fig:SystscaleFactor}.
 
 Due to the high correlation between the decay-time resolution and the tagging calibration, their systematic uncertainty has to be studied simultaneously.
 First, the decay-time fits to $B_s \to D_s \pi\pi\pi$ data are repeated using the alternative decay-time error scaling functions.
@@ -205,10 +232,22 @@ Finally, we take the biggest change in fit central value as the systematic for e
 %As discussed in Sec.~\ref{sec:timeFit}, the tagging calibration parameters are Gaussian-constrained 
 %such that the  systematic uncertainty due to the tagging calibration is contained in the statistical uncertainty of the fit.  
 
+A systematic uncertainty due to the limited knowledge of the decay-time bias which is fixed in the fit
+is evaluated by means of a toy study, where the value is randomized within its uncertainty.
+This source of systematic uncertainty is only relevant for the measurement of $\Delta m_s$, 
+while the impact on all parameters extracted from the fit to  $B_s \to D_s K\pi\pi$ data is negligible.
+
+The procedure of accounting for the VELO misalignment with a constant decay-time bias in the resolution model 
+(\ie ignoring the event-per-event dependency on the decay-time error estimate) is validated with a $\Bs\to\Ds\pion$ MC sample processed with a realistic VELO misalignment.
+A fit to the decay-time distribution (using the \textsf{TRUEID} of the candidates for the tagging information) is performed to extract $\Delta m_s$, 
+where a constant decay-time bias is included in the resolution model.
+The result differs by $0.003\invps$ from the result obtained by fitting simulated $\Bs\to\Ds\pion$ candidates processed without VELO misalignment. 
+This difference is added as additional systematic uncertainty on $\Delta m_s$ due to the decay-time bias correction method.
+
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ResoSyst_16.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ResoSyst_17.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/Resolution/ResoSyst_16.pdf}
+\includegraphics[height=!,width=0.4\textwidth]{figs/Resolution/ResoSyst_17.pdf}
 \caption{\small The measured resolution scaling function of the per-event decay time error estimate $\sigma_t$ for fake $B_s$ candidates (Run-II data) 
 for (black line) the nominal scaling, (blue line) only using the narrow gaussian width of the double gaussian fit model or (red line) when determining the resolution using a single gaussian model. 
 Data taken in (left) 2016 and (right) 2017.}
@@ -219,7 +258,8 @@ Data taken in (left) 2016 and (right) 2017.}
 \subsection{Production, detection asymmetries and mixing frequency}
 
 The systematic from the production, detection asymmetries and $\Delta m_s$ (in case of  $B_s \to D_s K \pi\pi$ decays) which are fixed in the fit
-are evaluated by means of a toy study similar to the procedure performed for the time-acceptance. The parameters are assumed to be uncorrelated.
+are evaluated by means of a toy study similar to the procedure performed for the time-acceptance.
+The parameters are assumed to be uncorrelated.
 
 \subsection{Multiple candidates}
 
@@ -235,6 +275,7 @@ The momentum scale uncertainty is at most $0.022\%$.
 In the fit to  $B_s \to D_s K \pi\pi$ data, the scale uncertainties are then implicitly included in the systematic due to $\Delta m_s$ which we 
 vary within its uncertainties, see above.
 
+%\clearpage
 \subsection{Phase space acceptance}
 \label{sec:SysPhspAcc}
 
@@ -243,7 +284,7 @@ The integration error due to the limited size of the MC sample
 used to normalize the signal PDF is below $0.2\%$ and thus negligible small.
 %evaluated by bootstrapping the MC sample and repeating the full time-dependent amplitude fit.
 
-To asses the uncertainty due to possible data-simulation differences, we determine
+To assess the uncertainty due to possible data-simulation differences, we determine
 alternative phase space efficiencies by varying the selection requirements on quantities that
 are expected not to be well described by the simulation. 
 In particular, we consider the following variations:
@@ -272,6 +313,10 @@ In particular, we consider the following variations:
 	
 \end{itemize}
 We assign the sample variance of the fitted values using the alternative phase space acceptances as systematic.
+
+It is assumed that the phase space acceptance is independent of the decay-time. 
+This assumption is tested by using only simulated candidates within specific decay-time intervals to calculate the MC normalization integrals described in Sec.~\ref{sec:phasespaceAcceptance}. Four approximately equally populated decay-time bins are chosen and the sample variance of the fitted values is assigned as systematic.
+
 %\pretextcomment{
 %	This will be done when the final MC samples are available. 
 %	We expect the integration error to be negligible and the systematic error from data-simulation differences to be small.

@@ -300,3 +300,102 @@ The fitted calibration curve is shown in blue. Data taken in 2017.}
 %\end{figure}
 %
 %\subsubsection{DTF constraints}
+
+
+
+
+\clearpage
+\subsection{Decay-time bias}
+\label{ssec:bias}
+
+
+The analyses of $B_s \to J/\psi \phi$\cite{Aaij:2019vot} and $B_s \to D_s \pi$\cite{DspiRun2} decays 
+reported that the mean of the resolution model is not centered around zero for Run-II data.
+This decay-time bias is understood to be an effect of a misalignment
+between the VELO halves in the order of $8\mum$ in $x$-direction.
+To determine the decay-time bias from the prompt $D_sK\pi\pi$ sample, the requirement $t<0$ used for the calibration of the decay-time error estimate is removed.
+Since the decay-time bias shows a significant dependence on kinematic and geometric properties of the decay, 
+the prompt sample is reweighted to match the three-dimensional $p_T(B_s),\sigma_t$ and $\chi^{2}_{FD}(D_s)$
+distribution observed on $B_s \to D_s \pi\pi\pi$ signal data as shown in Fig.~\ref{fig:rwLTU}.
+The decay-time bias is extracted from a fit to the (reweighted) decay-time distribution of the prompt candidates shown in Fig.~\ref{fig:decayTimeBiasData}.
+A systematic error is estimated by utilizing different reweighting schemes: a 2D reweighting in $p_T(B_s),\sigma_t$ 
+and three consecutive 1D reweightings in $p_T(B_s),\sigma_t$ and $\chi^{2}_{FD}(D_s)$.
+Additionally, a fit is performed which includes an exponential decay-time distribution to account for a potential long-lived background component from true $B$ decays
+and the fit range is adjusted from $[-0.25,0.25]\ps$ to $[-0.2,0.05]\ps$.
+The largest deviation from the nominal result is assigned as systematic.
+
+The procedure is validated using simulated $B_s \to D_s \pi$ signal and prompt $D_s \pi$  samples, 
+which are processed including a realistic VELO misalignment (as observed for data).
+As shown in Fig.~\ref{fig:decayTimeBiasMC}, the decay-time biases extracted from the two samples differ significantly before the reweighting 
+and are in a good agreement afterwards.
+
+It was further observed that the offline selection, in particular the requirement on the $D_s$ flight distance significance, introduces an additional decay-time bias of the order $-1\fs$
+for signal decays, while prompt candidates are not affected.
+The decay-time bias originating from the candidate selection is thus 
+determined from the $B_s \to D_s  \pi\pi\pi$ MC sample, see Fig.~\ref{fig:biasSel}.
+Identical results are obtained with the $B_s \to D_s  K\pi\pi$ MC sample.
+
+Table~\ref{table:bias} summarizes the decay-time biases due to the selection and VELO misalignment as well as the combined decay-time bias 
+to be used in the resolution model for different data-taking periods.
+It is verified on the $\Bs\to\Ds\pion$ MC sample (with VELO misalignment) that the decay-time biases of these two sources add linearly.
+
+\begin{figure}[h]
+\centering
+	\includegraphics[width=0.32\textwidth, height = !]{figs/dataVsMC/LTU_noTimeCut/Ds2all_16_Bs_PT.eps} 
+	\includegraphics[width=0.32\textwidth, height = !]{figs/dataVsMC/LTU_noTimeCut/Ds2all_16_Bs_DTF_TAUERR.eps} 
+	\includegraphics[width=0.32\textwidth, height = !]{figs/dataVsMC/LTU_noTimeCut/Ds2all_16_Ds_FDCHI2_ORIVX.eps} 
+\caption{Comparison of selected variables for $B_s \to D_s \pi\pi\pi$ signal data (black) and prompt $D_sK\pi\pi$ data before (red) and after (blue) reweighting.}
+\label{fig:rwLTU}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+	\includegraphics[width=0.32\textwidth, height = !]{figs/Resolution/decayTimeBias/Signal2Data_16_bin_all.eps} 
+	\includegraphics[width=0.32\textwidth, height = !]{figs/Resolution/decayTimeBias/Signal2Data_17_bin_all.eps} 
+\caption{Reweighted decay-time distribution for fake $B_s$ candidates from promptly produced $D_s$ candidates, combined with random prompt $K\pi\pi$ bachelor tracks 
+for 2016 (left) and 2017 (right) data. }
+\label{fig:decayTimeBiasData}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+	\includegraphics[width=0.32\textwidth, height = !]{figs/Resolution/decayTimeBiasMC/Signal2MC_bin_all.eps} 
+	\includegraphics[width=0.32\textwidth, height = !]{figs/Resolution/decayTimeBiasMC/Signal2Data_16_bin_all.eps} 
+	\includegraphics[width=0.32\textwidth, height = !]{figs/Resolution/decayTimeBiasMC/Signal2Data_16_bin_all_rw2.eps} 
+\caption{ Difference of the true and measured decay time of $\Bs\to\Ds\pion$ MC candidates processed with a realistic VELO misalignment (left).
+Decay-time distribution of prompt $D_s \pi$ MC candidates processed with a realistic VELO misalignment before (middle) and after (right) reweighting.
+  }
+\label{fig:decayTimeBiasMC}
+\end{figure}
+
+
+
+\begin{figure}[h]
+\centering
+	\includegraphics[width=0.32\textwidth, height = !]{figs/Resolution/decayTimeBiasSel/Signal2MC_phipi_preselection.eps} 
+	\includegraphics[width=0.32\textwidth, height = !]{figs/Resolution/decayTimeBiasSel/Signal2MC_run2.eps} 
+\caption{Difference of the true and measured decay time of $\Bs\to\Ds \pi\pi\pi$ MC (Run-II) candidates after passing the stripping and trigger selection (left) and after full selection (right).}
+\label{fig:biasSel}
+\end{figure}
+
+
+\begin{table}[h]
+\centering
+\caption{Decay-time biases due to the selection and VELO misalignment as well as the total decay-time bias used in the resolution model. }
+%\resizebox{\linewidth}{!}{
+ \renewcommand{\arraystretch}{1.}
+  \begin{tabular}{ l  r r r } 
+  \hline 
+  \hline
+ &  &  Decay-time bias [fs]   &  \\
+ & Selection & Alignment   & Total \\
+  \hline			
+  Run-1 &   $-1.20 \pm 0.11$ & - &  $-1.20 \pm 0.11$ \\
+  15/16 &  $-1.10 \pm 0.10$ & $-1.07 \pm 0.90  \pm 1.30$ & $-2.17 \pm 1.68$   \\
+  17 &   $-1.10 \pm 0.10$ & $-1.17 \pm 0.77 \pm 1.58$ & $-2.27 \pm 1.78$ \\
+  \hline  
+ \hline   
+\end{tabular}
+\label{table:bias}
+\end{table}
+
