@@ -297,9 +297,10 @@ public:
 	return _timePdfMaster->sampleEvents(N);
     }
 
-    DalitzEventList generateBkgToysBootstrap(int N, DalitzEventList& eventListData, int run = -1 , int trigger = -1){
+    DalitzEventList generateBkgToysBootstrap(int N,int run = -1 , int trigger = -1,string input = "/auto/data/dargent/BsDsKpipi/BDT/Data/signal_SS.root"){
 
 	DalitzEventList eventList;
+	DalitzEventList eventListData = readBkgData(input);
 	int N_sample = eventListData.size();
 
 	vector<int> b_indices;
@@ -568,6 +569,7 @@ public:
 		evt.setValueInVector(8, trigger);
 
 		if(!correlate)tree->GetEntry(i+1);
+		mB = mB - 200;
 		if(mB <= 5200 || mB >= 5700 )continue;
 
 		evt.setValueInVector(9, mB);
@@ -838,7 +840,7 @@ public:
 		evt.setValueInVector(4, eta_OS_MC);
 		evt.setValueInVector(5, q_SS_MC);
 		evt.setValueInVector(6, eta_SS_MC);
-		evt.setValueInVector(9, gRandom->Gaus(5379,20));
+		evt.setValueInVector(9, gRandom->Gaus(5367,20));
 
  		evt.setGeneratorPdfRelativeToPhaseSpace(_Gamma * exp(-t_MC*_Gamma) / ( ( exp(-_min_TAU*_Gamma) - exp(-_max_TAU * _Gamma) )));
 // 		evt.setGeneratorPdfRelativeToPhaseSpace(_Gamma * ( exp(-t_MC*_Gamma) + _min_TAU )  / ( ( 1. - exp(-_max_TAU * _Gamma) ) + _Gamma * _min_TAU * ( _max_TAU - 0.)));

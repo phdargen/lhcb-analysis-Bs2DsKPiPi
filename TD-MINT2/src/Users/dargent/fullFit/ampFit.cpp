@@ -1418,6 +1418,171 @@ public:
 	return eventList;
     }
 
+   DalitzEventList readBkgData(string input = "/auto/data/dargent/BsDsKpipi/BDT/Data/signal_SS.root"){
+
+        NamedParameter<int>  correlate("readBkgData::correlate", 1);
+
+	double t,dt,mB;
+	int f;
+	int q_OS;
+	double Bs_ID,Ds_ID;
+	Int_t q_SS;
+	double eta_OS;
+	Double_t eta_SS;
+	double sw;
+	int year,run,Ds_finalState,trigger;
+	double K[4];
+	double pip[4];
+	double pim[4];
+	double Ds_Kp[4],Ds_Km[4],Ds_pim[4],Ds[4];
+	
+	TChain* tree;
+
+	tree=new TChain("DecayTree");
+	tree->Add(((string)input).c_str());
+	tree->SetBranchStatus("*",0);
+	tree->SetBranchStatus("year",1);
+	tree->SetBranchStatus("*TAU*",1);
+	tree->SetBranchStatus("*ID*",1);
+	tree->SetBranchStatus("weight",1);
+	tree->SetBranchStatus("TriggerCat",1);
+	tree->SetBranchStatus("run",1);
+	tree->SetBranchStatus("BsDTF_*P*",1);
+	tree->SetBranchStatus("Bs_DTF_MM",1);
+	
+	tree->SetBranchAddress("Bs_DTF_MM",&mB);
+	tree->SetBranchAddress("Bs_DTF_TAU",&t);
+	tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+	tree->SetBranchAddress("Ds_ID",&f);
+	tree->SetBranchAddress("year",&year);
+	tree->SetBranchAddress("run",&run);
+	tree->SetBranchAddress("TriggerCat",&trigger);
+	tree->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
+	tree->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
+	tree->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
+	tree->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
+	tree->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
+	tree->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
+	tree->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
+	tree->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);    
+	tree->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
+	tree->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
+	tree->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
+	tree->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);    
+	tree->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
+	tree->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
+	tree->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
+	tree->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);    
+	tree->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
+	tree->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
+	tree->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
+	tree->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
+	tree->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
+	tree->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
+	tree->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
+	tree->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
+	
+	DalitzEventList eventList;
+
+	for(int i=0; i< tree->GetEntries()-1; i++)
+	{	
+		if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << tree->GetEntries() << endl;
+		tree->GetEntry(i);
+
+		vector<double> marginal_vals = _timePdfMaster->getRandom_marginalVals();
+		dt = marginal_vals[0] ;
+		double eta_OS = marginal_vals[1] ;
+		double eta_SS = marginal_vals[2] ;
+		f = (gRandom->Uniform() > 0.5) ? 1 : -1;		
+		
+		double sign = 1.;
+		TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
+		TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
+		TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
+		TLorentzVector D_p;
+		TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
+		TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
+		TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
+		D_p = D_Kp_p + D_Km_p + D_pim_p;
+		
+		TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+		// array of vectors
+		vector<TLorentzVector> vectorOfvectors;
+	
+		vectorOfvectors.push_back(B_p*MeV);
+		vectorOfvectors.push_back(D_p*MeV);
+		vectorOfvectors.push_back(K_p*MeV);
+		vectorOfvectors.push_back(pip_p*MeV);
+		vectorOfvectors.push_back(pim_p*MeV);
+		DalitzEvent evt;
+	
+		if(f < 0)evt = DalitzEvent(_pat, vectorOfvectors);
+		else evt = DalitzEvent(_pat_CP, vectorOfvectors);
+	
+		if(correlate==2){
+			if(f < 0)evt = DalitzEvent(_pat,gRandom);
+			else evt = DalitzEvent(_pat_CP,gRandom);
+		}
+
+		if(correlate==3) t = gRandom->Exp(1./_Gamma*0.75);
+	
+// 		t = gRandom->Exp(1./_Gamma);
+// 		if(t < _min_TAU || t > _max_TAU )continue;
+/*		if( dt < min_TAUERR || dt > max_TAUERR )continue;
+		if(year < min_year || year > max_year) continue;
+		if(eta_SS < w_min || eta_SS > w_max )continue;*/
+	
+		if(!(evt.phaseSpace() > 0.))continue;
+			
+		evt.setWeight(1.);
+		evt.setValueInVector(0, t);
+		evt.setValueInVector(1, dt);   
+		if(f<0)evt.setValueInVector(2, 1);
+		else if(f > 0)evt.setValueInVector(2, -1);
+		else {
+			cout << "ERROR:: Undefined final state " << f << endl;  
+			throw "ERROR";
+		}
+		evt.setValueInVector(3, TMath::Nint(gRandom->Uniform(-1,1)));
+		evt.setValueInVector(4, eta_OS);
+		evt.setValueInVector(5, TMath::Nint(gRandom->Uniform(-1,1)));
+		evt.setValueInVector(6, eta_SS);
+		evt.setValueInVector(7, run);
+		evt.setValueInVector(8, trigger);
+
+		if(correlate==0)tree->GetEntry(i+1);
+		mB = mB - 200;
+		if(mB <= 5200 || mB >= 5700 )continue;
+
+		evt.setValueInVector(9, mB);
+		eventList.Add(evt);
+        }
+	return eventList;
+    }
+
+    DalitzEventList generateBkgToysBootstrap(int N,int run = -1 , int trigger = -1,string input = "/auto/data/dargent/BsDsKpipi/BDT/Data/signal_SS.root"){
+
+	DalitzEventList eventList;
+	DalitzEventList eventListData = readBkgData(input);
+	int N_sample = eventListData.size();
+
+	vector<int> b_indices;
+	while( b_indices.size() < N )b_indices.push_back(TMath::Nint(gRandom->Uniform(0,N_sample-1)));
+	sort(b_indices.begin(), b_indices.end());
+
+	for(int i=0; i< N; i++)
+	{	
+		DalitzEvent evt = eventListData[b_indices[i]];
+
+		evt.setValueInVector(7, run);
+		evt.setValueInVector(8, trigger);
+		//if(t < _min_TAU || t > _max_TAU )continue;
+
+		eventList.Add(evt);
+	}
+	//saveEventListToFile(eventList);
+	return eventList;
+    }
 
     DalitzEvent generateWeightedEvent(){
 
@@ -1460,7 +1625,7 @@ public:
 		evt.setValueInVector(4, eta_OS_MC);
 		evt.setValueInVector(5, q_SS_MC);
 		evt.setValueInVector(6, eta_SS_MC);
-		evt.setValueInVector(9, gRandom->Gaus(5379,20));
+		evt.setValueInVector(9, gRandom->Gaus(5367,20));
 
 		evt.setGeneratorPdfRelativeToPhaseSpace(_Gamma * evt.getGeneratorPdfRelativeToPhaseSpace() * (exp(-t_MC*_Gamma) / ( ( exp(-_min_TAU*_Gamma) - exp(-_max_TAU*_Gamma) ))));
 		return evt;
@@ -2276,6 +2441,13 @@ void ampFit(int step=0, string mode = "fit"){
     NamedParameter<double> min_TAUERR("min_TAUERR", 0.);
     NamedParameter<double> max_TAUERR("max_TAUERR", 0.1);
     NamedParameter<double> w_max("w_max", 0.5);
+
+    NamedParameter<double> min_year("min_year", 10);
+    NamedParameter<double> max_year("max_year", 20);
+    NamedParameter<double> min_trigger("min_trigger", -10);
+    NamedParameter<double> max_trigger("max_trigger", 10);
+    NamedParameter<double> min_Ds_finalState("min_Ds_finalState", -10);
+    NamedParameter<double> max_Ds_finalState("max_Ds_finalState", 10);
 
     NamedParameter<int>  doPlots("doPlots", 1);
     NamedParameter<int>  nBins("nBins", 50);
@@ -3204,6 +3376,10 @@ void ampFit(int step=0, string mode = "fit"){
 		if(t < min_TAU || t > max_TAU )continue;
 		if( dt < min_TAUERR || dt > max_TAUERR )continue;	
 
+        	if(year < min_year || year > max_year) continue;
+        	if(trigger < min_trigger || trigger > max_trigger) continue;
+        	if(Ds_finalState < min_Ds_finalState || Ds_finalState > max_Ds_finalState) continue;
+
 // 		if( abs(sw > 1.4) continue;
 // 		if(sqrt(evt.sij(s234)/(GeV*GeV)) > 1.9) continue;
 
@@ -3668,12 +3844,14 @@ void ampFit(int step=0, string mode = "fit"){
 	else toys.Add(pdf.generateToys(N_scale_toys *N));
 
 	if(addBkgToToys){
-			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run1_t0/N,1,0));
-			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run1_t1/N,1,1));
-			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_t0/N,2,0));
-			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_t1/N,2,1));
-			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_17_t0/N,3,0));
-			toys.Add(pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_17_t1/N,3,1));
+// 			string bkg_template_input = "/auto/data/dargent/BsDsKpipi/BDT/Data/signal_SS.root";
+			string bkg_template_input = "../fullFit/bkg_template_test2.root";
+			toys.Add(pdf.generateBkgToysBootstrap(N_scale_toys * (eventList.size()-N) * N_Run1_t0/N,1,0,bkg_template_input));
+			toys.Add(pdf.generateBkgToysBootstrap(N_scale_toys * (eventList.size()-N) * N_Run1_t1/N,1,1,bkg_template_input));
+			toys.Add(pdf.generateBkgToysBootstrap(N_scale_toys * (eventList.size()-N) * N_Run2_t0/N,2,0,bkg_template_input));
+			toys.Add(pdf.generateBkgToysBootstrap(N_scale_toys * (eventList.size()-N) * N_Run2_t1/N,2,1,bkg_template_input));
+			toys.Add(pdf.generateBkgToysBootstrap(N_scale_toys * (eventList.size()-N) * N_Run2_17_t0/N,3,0,bkg_template_input));
+			toys.Add(pdf.generateBkgToysBootstrap(N_scale_toys * (eventList.size()-N) * N_Run2_17_t1/N,3,1,bkg_template_input));
 	}	
 
 	pdf.saveEventListToFile(toys,((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
