@@ -317,9 +317,13 @@ To determine the decay-time bias from the prompt $D_sK\pi\pi$ sample, the requir
 Since the decay-time bias shows a significant dependence on kinematic and geometric properties of the decay, 
 the prompt sample is reweighted to match the three-dimensional $p_T(B_s),\sigma_t$ and $\chi^{2}_{FD}(D_s)$
 distribution observed on $B_s \to D_s \pi\pi\pi$ signal data as shown in Fig.~\ref{fig:rwLTU}.
+An adaptive binning algorithm is used ensuring sufficient statistics in each bin.
 The decay-time bias is extracted from a fit to the (reweighted) decay-time distribution of the prompt candidates shown in Fig.~\ref{fig:decayTimeBiasData}.
-A systematic error is estimated by utilizing different reweighting schemes: a 2D reweighting in $p_T(B_s),\sigma_t$ 
-and three consecutive 1D reweightings in $p_T(B_s),\sigma_t$ and $\chi^{2}_{FD}(D_s)$.
+A systematic error is estimated by utilizing different reweighting schemes: 
+a 2D reweighting in $p_T(B_s),\sigma_t$; 
+three consecutive 1D reweightings in $p_T(B_s),\sigma_t$ and $\chi^{2}_{FD}(D_s)$;
+an additional 1D reweighting in $\eta(B_s)$ after the nominal 3D weighting;
+two 2D weightings in $(p_T(B_s), \eta(B_s))$ and $(\sigma_t, \chi^{2}_{FD}(D_s))$.
 Additionally, a fit is performed which includes an exponential decay-time distribution to account for a potential long-lived background component from true $B$ decays
 and the fit range is adjusted from $[-0.25,0.25]\ps$ to $[-0.2,0.05]\ps$.
 The largest deviation from the nominal result is assigned as systematic.
