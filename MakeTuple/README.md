@@ -16,6 +16,14 @@ loeschen control-x rk
 ssh -p28 sigma0
 source collect-output.sh LFNs.txt
 
+# Replicate to CERN site
+
+for i in [35,36,31]:
+	for sj in jobs(i).subjobs.select(status="completed"):
+  		for df in sj.outputfiles.get(DiracFile):
+    			if 'CERN-USER' not in df.locations:
+      				df.replicate('CERN-USER')
+
 # ganga tricks 
 
 start ganga without monitoring: 
