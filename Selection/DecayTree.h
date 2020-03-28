@@ -24,7 +24,7 @@ struct Decay{
 };
 
 struct Year{
-    enum  Type { y11 = 11, y12 = 12, y15 = 15, y16 = 16, y17 = 17 };
+    enum  Type { y11 = 11, y12 = 12, y15 = 15, y16 = 16, y17 = 17, y18 = 18 };
 };
 
 struct DataType{
