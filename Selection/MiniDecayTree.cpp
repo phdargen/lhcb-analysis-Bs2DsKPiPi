@@ -1501,7 +1501,7 @@ void MiniDecayTree::Loop()
 
 	//if(track_min_P < 2500) continue;
 	if(!_ltu){
- 		if(Bs_BsDTF_TAU < 0.4 || Bs_BsDTF_TAU > 10.) continue;
+ 		//if(Bs_BsDTF_TAU < 0.4 || Bs_BsDTF_TAU > 10.) continue;
 		if(Bs_BsDTF_TAUERR < 0. || Bs_BsDTF_TAUERR > 0.1) continue;
 	}
 	else {
