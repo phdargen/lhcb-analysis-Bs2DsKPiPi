@@ -531,6 +531,14 @@ pi_minus_fromDs_PIDp_corr_MagUp;
  Int_t         Bs_OS_Charm_TAGDEC;
  Double_t         Bs_OS_Charm_TAGETA;
 
+ Int_t         Bs_OS_Muon_TAGDEC_Run1;
+ Double_t         Bs_OS_Muon_TAGETA_Run1;
+ Int_t         Bs_OS_Electron_TAGDEC_Run1;
+ Double_t         Bs_OS_Electron_TAGETA_Run1;
+ Int_t         Bs_OS_Kaon_TAGDEC_Run1;
+ Double_t         Bs_OS_Kaon_TAGETA_Run1;
+ Int_t         Bs_SS_nnetKaon_TAGDEC_Run1;
+ Double_t         Bs_SS_nnetKaon_TAGETA_Run1;
 
 /*
  Short_t         Bs_OS_Muon_DEC;
@@ -1222,6 +1230,8 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("Bs_SS_nnetKaon_PROB", &Bs_SS_nnetKaon_PROB);
         fChain->SetBranchAddress("Bs_OS_Charm_DEC", &Bs_OS_Charm_DEC);
         fChain->SetBranchAddress("Bs_OS_Charm_PROB", &Bs_OS_Charm_PROB);
+        fChain->SetBranchAddress("Bs_OS_Kaon_DEC", &Bs_OS_Kaon_DEC);
+        fChain->SetBranchAddress("Bs_OS_Kaon_PROB", &Bs_OS_Kaon_PROB);
     }
     else if(_ltu ==false && _ss == false){
 	fChain->SetBranchAddress("Bs_OSMuonLatest_TAGDEC", &Bs_OS_Muon_TAGDEC);
@@ -1230,12 +1240,21 @@ void MiniDecayTree::Init()
         fChain->SetBranchAddress("Bs_OSElectronLatest_TAGETA", &Bs_OS_Electron_TAGETA);
         fChain->SetBranchAddress("Bs_OSVtxCh_TAGDEC", &Bs_VtxCharge_TAGDEC);
         fChain->SetBranchAddress("Bs_OSVtxCh_TAGETA", &Bs_VtxCharge_TAGETA);
-        fChain->SetBranchAddress("Bs_OSKaonLatest_TAGDEC", &Bs_OS_nnetKaon_TAGDEC);
-        fChain->SetBranchAddress("Bs_OSKaonLatest_TAGETA", &Bs_OS_nnetKaon_TAGETA);
+        fChain->SetBranchAddress("Bs_OSKaonLatest_TAGDEC", &Bs_OS_Kaon_TAGDEC);
+        fChain->SetBranchAddress("Bs_OSKaonLatest_TAGETA", &Bs_OS_Kaon_TAGETA);
         fChain->SetBranchAddress("Bs_SSKaonLatest_TAGDEC", &Bs_SS_nnetKaon_TAGDEC);
         fChain->SetBranchAddress("Bs_SSKaonLatest_TAGETA", &Bs_SS_nnetKaon_TAGETA);
         fChain->SetBranchAddress("Bs_OSCharm_TAGDEC", &Bs_OS_Charm_TAGDEC);
         fChain->SetBranchAddress("Bs_OSCharm_TAGETA", &Bs_OS_Charm_TAGETA);
+        
+        fChain->SetBranchAddress("Bs_OSMuon_TAGDEC", &Bs_OS_Muon_TAGDEC_Run1);
+        fChain->SetBranchAddress("Bs_OSMuon_TAGETA", &Bs_OS_Muon_TAGETA_Run1);
+        fChain->SetBranchAddress("Bs_OSElectron_TAGDEC", &Bs_OS_Electron_TAGDEC_Run1);
+        fChain->SetBranchAddress("Bs_OSElectron_TAGETA", &Bs_OS_Electron_TAGETA_Run1);
+        fChain->SetBranchAddress("Bs_OSKaon_TAGDEC", &Bs_OS_Kaon_TAGDEC_Run1);
+        fChain->SetBranchAddress("Bs_OSKaon_TAGETA", &Bs_OS_Kaon_TAGETA_Run1);
+        fChain->SetBranchAddress("Bs_SSKaon_TAGDEC", &Bs_SS_nnetKaon_TAGDEC_Run1);
+        fChain->SetBranchAddress("Bs_SSKaon_TAGETA", &Bs_SS_nnetKaon_TAGETA_Run1);
     }
 
     if(_decay == Decay::signal){

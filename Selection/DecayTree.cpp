@@ -3384,7 +3384,7 @@ inline Bool_t DecayTree::LooseCuts(Long64_t i){
 	if(Bs_BsDTF_K_1_1270_plus_M[0] > 2000) return false;
         if(_data){
 		b_K_plus_PIDK->GetEntry(i);
-        	if(K_plus_PIDK<5) return false;
+        	if(K_plus_PIDK<7) return false;
 	}else {
 		b_Bs_BKGCAT->GetEntry(i);
 		if(Bs_BKGCAT != 20 && Bs_BKGCAT != 60) return false;
@@ -3415,8 +3415,8 @@ inline Bool_t DecayTree::LooseCutsLTU(Long64_t i){
     //b_nPV->GetEntry(i);
     //if(nPV > 5) return false;
 
-    b_Bs_DTF_ctau->GetEntry(i);
-    if(Bs_DTF_ctau[0] * 3.33564095 > 0.05) return false;
+    //b_Bs_DTF_ctau->GetEntry(i);
+    //if(Bs_DTF_ctau[0] * 3.33564095 > 0.05) return false;
 
     b_Bs_MM->GetEntry(i);
     if(Bs_MM < 5200. || Bs_MM > 5700.) return false;

@@ -69,6 +69,9 @@ public :
     virtual void     Show(Long64_t entry = -1);
     virtual TTree* GetInputTree();
     
+    void set_outFileName( TString s){ _outFileName = s; }
+    const TString get_outFileName(){ return _outFileName; }
+    
     inline  Bool_t TriggerCuts(Long64_t entry);
     inline  Bool_t LooseCuts(Long64_t entry);
     inline  Bool_t LooseCutsLTU(Long64_t entry);

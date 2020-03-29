@@ -16,7 +16,7 @@ using namespace std;
 inline Bool_t MiniDecayTree::PhaseSpace_Cuts(){
 
     if(_decay == Decay::signal){
-        if((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() > 1900.) return false;
+        if((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() > 1950.) return false;
         if((BsDTF_K_plus + BsDTF_pi_minus).M()  > 1200.) return false;
         if((BsDTF_pi_plus + BsDTF_pi_minus).M() > 1200.) return false;
 
@@ -25,7 +25,7 @@ inline Bool_t MiniDecayTree::PhaseSpace_Cuts(){
         if((BsDTF_pi_plus + BsDTF_pi_minus).M() < 2. * massPion) return false;
     }
     else {
-    	if((BsDTF_pi_plus1 + BsDTF_pi_plus2 + BsDTF_pi_minus).M() > 1900.) return false;
+    	if((BsDTF_pi_plus1 + BsDTF_pi_plus2 + BsDTF_pi_minus).M() > 1950.) return false;
         if((BsDTF_pi_plus1 + BsDTF_pi_minus).M()  > 1200.) return false;
         if((BsDTF_pi_plus2 + BsDTF_pi_minus).M()  > 1200.) return false;
 
@@ -136,7 +136,7 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
 
     else if(_Ds_finalState == Ds_finalState::KsK){
         if(K_plus_fromDs_PIDK < -10) return false;
-        else if(K_minus_fromDs_PIDK < 0) return false;
+        else if(K_minus_fromDs_PIDK < -5) return false;
         else if(pi_minus_fromDs_PIDK > 10) return false;        
     }
 
@@ -184,7 +184,7 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
     if(_decay == Decay::signal){
         if(K_plus_PIDK < 10) return false;
         else if(pi_plus_PIDK > 10) return false;
-        else if(pi_minus_PIDK > 2) return false;
+        else if(pi_minus_PIDK > 0) return false;
 	// remove events with no PID info
 	if( K_plus_hasRich == 0  ) return false;        
 	if( pi_plus_hasRich == 0  ) return false;        
@@ -195,8 +195,8 @@ inline Bool_t MiniDecayTree::PID_Cuts(){
     }
 
     else if(_decay == Decay::norm){
-        if(pi_plus1_PIDK >= 0) return false;
-        else if(pi_plus2_PIDK >= 0) return false;
+        if(pi_plus1_PIDK > 0) return false;
+        else if(pi_plus2_PIDK > 0) return false;
         else if(pi_minus_PIDK > 10) return false;
 	// remove events with no PID info
 	if( pi_plus1_hasRich == 0  ) return false;        
@@ -215,7 +215,8 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
     if(_Ds_finalState == Ds_finalState::phipi || _Ds_finalState == Ds_finalState::KsK || _Ds_finalState == Ds_finalState::KKpi_NR){
         
         //D0 veto
-        if((K_plus_fromDs + K_minus_fromDs + pi_minus_fromDs).M() - (K_plus_fromDs + K_minus_fromDs).M() < 155.) return false;
+        //if((K_plus_fromDs + K_minus_fromDs + pi_minus_fromDs).M() - (K_plus_fromDs + K_minus_fromDs).M() < 155.) return false;
+        if((K_plus_fromDs + K_minus_fromDs).M() > 1840.) return false;
         
         if(_Ds_finalState == Ds_finalState::phipi){
             // Charmless veto
@@ -248,11 +249,12 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
 
     else if(_Ds_finalState == Ds_finalState::pipipi){
         // D0 veto
-        if( ((pi_plus_fromDs + pi_minus_fromDs + pi_minus2_fromDs).M() - (pi_plus_fromDs + pi_minus_fromDs).M()) < 155. 
-	||  ((pi_plus_fromDs + pi_minus_fromDs + pi_minus2_fromDs).M() - (pi_plus_fromDs + pi_minus2_fromDs).M()) < 155.) return false;
+        //if( ((pi_plus_fromDs + pi_minus_fromDs + pi_minus2_fromDs).M() - (pi_plus_fromDs + pi_minus_fromDs).M()) < 155. 
+	//||  ((pi_plus_fromDs + pi_minus_fromDs + pi_minus2_fromDs).M() - (pi_plus_fromDs + pi_minus2_fromDs).M()) < 155.) return false;
+        if( (pi_plus_fromDs + pi_minus_fromDs).M() > 1700. || (pi_plus_fromDs + pi_minus2_fromDs).M() > 1700.) return false;
         // Charmless veto
         if(!_ltu)if((Ds_ENDVERTEX_Z - Bs_ENDVERTEX_Z) < 0) return false;
-        if(Ds_FDCHI2_ORIVX < 9) return false;
+        if(Ds_FDCHI2_ORIVX < 6) return false;
         //Lambda_c veto
         //if( TMath::Abs((pi_plus_fromDs + piminus_fromDs_asProton_MissID + pi_minus2_fromDs).M() - massLambda_c) < 30. && pi_minus_fromDs_PIDp < 0 ) return false;
         //if( TMath::Abs((pi_plus_fromDs + piminus2_fromDs_asProton_MissID + pi_minus_fromDs).M() - massLambda_c) < 30. && pi_minus2_fromDs_PIDp < 0 ) return false;
@@ -260,7 +262,8 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
     
     else if(_Ds_finalState == Ds_finalState::Kpipi){
 	// D0 veto
-        if((pi_plus_fromDs + K_minus_fromDs + pi_minus_fromDs).M() - (pi_plus_fromDs + K_minus_fromDs).M() < 155.) return false;
+        //if((pi_plus_fromDs + K_minus_fromDs + pi_minus_fromDs).M() - (pi_plus_fromDs + K_minus_fromDs).M() < 155.) return false;
+        if((pi_plus_fromDs + K_minus_fromDs).M() > 1750.) return false;
         // Charmless veto
         if(!_ltu)if((Ds_ENDVERTEX_Z - Bs_ENDVERTEX_Z) < 0) return false;
         if(Ds_FDCHI2_ORIVX < 6) return false;
@@ -272,8 +275,8 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
     
     if(_decay == Decay::signal){
         // Ds veto
-        if(TMath::Abs((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() - massDs) < 20) return false;
-        if(TMath::Abs((K_plus + pi_plus + pi_minus_asK_MissID).M() - massDs) < 20 && pi_minus_PIDK > -5) return false;
+        //if(TMath::Abs((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() - massDs) < 20) return false;
+        //if(TMath::Abs((K_plus + pi_plus + pi_minus_asK_MissID).M() - massDs) < 20 && pi_minus_PIDK > -5) return false;
 	// Semi-lep. veto
 	//if( K_plus_isMuon == 1 ) return false;
     }
@@ -555,12 +558,23 @@ void MiniDecayTree::Loop()
     Double_t      OS_Electron_PROB;
     Int_t         OS_Kaon_DEC;
     Double_t      OS_Kaon_PROB;
+    Int_t         OS_nnetKaon_DEC;
+    Double_t      OS_nnetKaon_PROB;
     Int_t         OS_Charm_DEC;
     Double_t      OS_Charm_PROB;
     Int_t         OS_VtxCharge_DEC;
     Double_t      OS_VtxCharge_PROB;
     Int_t         SS_Kaon_DEC;
     Double_t      SS_Kaon_PROB;
+    
+    Int_t         OS_Muon_DEC_Run1;
+    Double_t      OS_Muon_PROB_Run1;
+    Int_t         OS_Electron_DEC_Run1;
+    Double_t      OS_Electron_PROB_Run1;
+    Int_t         OS_Kaon_DEC_Run1;
+    Double_t      OS_Kaon_PROB_Run1;
+    Int_t         SS_Kaon_DEC_Run1;
+    Double_t      SS_Kaon_PROB_Run1;
  
     summary_tree->Branch("OS_Muon_DEC", &OS_Muon_DEC, "OS_Muon_DEC/I");
     summary_tree->Branch("OS_Electron_DEC", &OS_Electron_DEC, "OS_Electron_DEC/I");
@@ -575,6 +589,17 @@ void MiniDecayTree::Loop()
     summary_tree->Branch("OS_Charm_PROB", &OS_Charm_PROB, "OS_Charm_PROB/D");
     summary_tree->Branch("OS_VtxCharge_PROB", &OS_VtxCharge_PROB, "OS_VtxCharge_PROB/D");
     summary_tree->Branch("SS_Kaon_PROB", &SS_Kaon_PROB, "SS_Kaon_PROB/D");
+    
+    summary_tree->Branch("OS_nnetKaon_DEC", &OS_nnetKaon_DEC, "OS_nnetKaon_DEC/I");
+    summary_tree->Branch("OS_nnetKaon_PROB", &OS_nnetKaon_PROB, "OS_nnetKaon_PROB/D");
+    summary_tree->Branch("OS_Muon_DEC_Run1", &OS_Muon_DEC_Run1, "OS_Muon_DEC_Run1/I");
+    summary_tree->Branch("OS_Electron_DEC_Run1", &OS_Electron_DEC_Run1, "OS_Electron_DEC_Run1/I");
+    summary_tree->Branch("OS_Kaon_DEC_Run1", &OS_Kaon_DEC_Run1, "OS_Kaon_DEC_Run1/I");
+    summary_tree->Branch("SS_Kaon_DEC_Run1", &SS_Kaon_DEC_Run1, "SS_Kaon_DEC_Run1/I");
+    summary_tree->Branch("OS_Muon_PROB_Run1", &OS_Muon_PROB_Run1, "OS_Muon_PROB_Run1/D");
+    summary_tree->Branch("OS_Electron_PROB_Run1", &OS_Electron_PROB_Run1, "OS_Electron_PROB_Run1/D");
+    summary_tree->Branch("OS_Kaon_PROB_Run1", &OS_Kaon_PROB_Run1, "OS_Kaon_PROB_Run1/D");
+    summary_tree->Branch("SS_Kaon_PROB_Run1", &SS_Kaon_PROB_Run1, "SS_Kaon_PROB_Run1/D");
 
     // Bkg studies
     double bkg_D_as_Ds_m, bkg_Lambdac_as_Ds_m;
@@ -1475,8 +1500,8 @@ void MiniDecayTree::Loop()
 		OS_Kaon_PROB= (double)Bs_OS_Kaon_PROB;
 		OS_VtxCharge_DEC = (int)Bs_VtxCharge_DEC;
 		OS_VtxCharge_PROB = (double)Bs_VtxCharge_PROB;
-		OS_Kaon_DEC= (int)Bs_OS_nnetKaon_DEC;
-		OS_Kaon_PROB= (double)Bs_OS_nnetKaon_PROB;
+		OS_nnetKaon_DEC= (int)Bs_OS_nnetKaon_DEC;
+		OS_nnetKaon_PROB= (double)Bs_OS_nnetKaon_PROB;
 		SS_Kaon_DEC= (int)Bs_SS_nnetKaon_DEC;
 		SS_Kaon_PROB = (double)Bs_SS_nnetKaon_PROB;
 		OS_Charm_DEC= (int)Bs_OS_Charm_DEC;
@@ -1491,12 +1516,21 @@ void MiniDecayTree::Loop()
 		OS_Kaon_PROB= Bs_OS_Kaon_TAGETA;
 		OS_VtxCharge_DEC = Bs_VtxCharge_TAGDEC;
 		OS_VtxCharge_PROB = Bs_VtxCharge_TAGETA;
-		OS_Kaon_DEC= Bs_OS_nnetKaon_TAGDEC;
-		OS_Kaon_PROB=  Bs_OS_nnetKaon_TAGETA;
+		OS_Kaon_DEC= Bs_OS_Kaon_TAGDEC;
+		OS_Kaon_PROB=  Bs_OS_Kaon_TAGETA;
 		SS_Kaon_DEC= Bs_SS_nnetKaon_TAGDEC;
 		SS_Kaon_PROB = Bs_SS_nnetKaon_TAGETA;
 		OS_Charm_DEC= Bs_OS_Charm_TAGDEC;
 		OS_Charm_PROB = Bs_OS_Charm_TAGETA;
+        
+        OS_Muon_DEC_Run1 = Bs_OS_Muon_TAGDEC_Run1;
+        OS_Muon_PROB_Run1 = Bs_OS_Muon_TAGETA_Run1;
+        OS_Electron_DEC_Run1 = Bs_OS_Electron_TAGDEC_Run1;
+        OS_Electron_PROB_Run1= Bs_OS_Electron_TAGETA_Run1;
+        OS_Kaon_DEC_Run1= Bs_OS_Kaon_TAGDEC_Run1;
+        OS_Kaon_PROB_Run1=  Bs_OS_Kaon_TAGETA_Run1;
+        SS_Kaon_DEC_Run1= Bs_SS_nnetKaon_TAGDEC_Run1;
+        SS_Kaon_PROB_Run1 = Bs_SS_nnetKaon_TAGETA_Run1;
 	}
 
 	//if(track_min_P < 2500) continue;
