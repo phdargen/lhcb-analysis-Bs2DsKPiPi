@@ -9,7 +9,9 @@
 #  This is the file/directory that you want to run (LAST ONE IS TAKEN):
 #  if a directory is given all root files in it will be read:
   
-datafile = "/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+datafile = "/auto/data/dargent/BsDsKpipi/BDT/Data/norm_18_newBDT.root"
+#datafile = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/TD-MINT2/src/Users/dargent/MassFits/testNorm8.root"
+
 TupleName = "DecayTree"
 
 ###########
@@ -40,8 +42,8 @@ PlotStatBox = 0
 ###################
 
 BranchID             = "Bs_ID"
-UseWeight            = 1
-BranchWeight         = "N_Bs_sw"
+#UseWeight            = 1
+#BranchWeight         = "N_Bs_sw"
 UseTau  = 1
 TypeTau = "Double_t"
 TauUnits = "ps"
@@ -132,6 +134,7 @@ OS_Muon_InOSComb = 1
 OS_Electron_InOSComb = 1
 OS_nnetKaon_InOSComb = 1
 VtxCharge_InOSComb = 1
+OS_Charm_InOSComb = 1
 
 #PerformOfflineCombination_OSplusSS = 1
 #OS_Combination_InComb = 1

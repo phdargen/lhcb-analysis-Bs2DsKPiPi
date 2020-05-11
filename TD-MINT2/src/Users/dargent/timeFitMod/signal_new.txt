@@ -1,0 +1,219 @@
+"RandomSeed"		0
+"Event Pattern"         531 -431 321 211 -211
+
+*"InputFileName"	 "/auto/data/dargent/BsDsKpipi/Final/Data/signal_18_newBDT.root"
+"InputFileName"	 "/auto/data/dargent/BsDsKpipi/Final/Data/signal_18_newBDT_opt.root"
+
+"OutputDir"	"signal_new3/"
+"channel"	"signal"
+
+
+"doAccSystematics"	 0
+"useCholDec"		 0
+
+"dilutionWeight"	1
+"N_plot_it" 	1
+"scale_asym"	 1
+
+"doPlots"	 	0
+"updateAnaNote"		0
+
+"nBinst" 	40
+"nBinsAsym"	 5
+"min_TAU" 	0.4
+"max_TAU" 	10
+"min_TAUERR" 	0.
+"max_TAUERR" 	0.1
+"max_TAU_ForMixingPlot" 	3
+
+"min_year" 	15
+"max_year" 	18
+
+"min_trigger"	1
+
+"doSimFit"			 1
+"useGaussConstrainsTagging"	 0
+"randomizeStartVals"		 0
+
+** name		Fix?	init	step	min	max
+"Gamma"		2	0.6629 	0.0018	0.0	2.0
+"dGamma" 	2 	0.088 	0.006	0.0	0.0
+"dm" 		2 	17.7537  0.021	0.0	0.0
+*"dm_Blind"	6	-1   1
+
+"C"	1	0.5	0.05		
+"D"	1	0.	0.05	
+"D_bar"	1	0.	0.05	
+"S"	1	0.	0.05	
+"S_bar" 1	0.	0.05	
+
+"doScanParam"	1
+
+*"scanParam"	"gamma"
+"scanParam_min" 0
+"scanParam_max" 180.
+"scanParam_steps" 50
+
+"scanParam2"	"c3_Run2_t1"
+"scanParam2_min" 0.5
+"scanParam2_max" 1.5
+"scanParam2_steps" 50
+
+
+*"C_Blind"	1	-0.5   0.5
+*"D_Blind"	2	-1   1
+*"D_bar_Blind"	3	-1   1
+*"S_Blind"	4	-1   1
+*"S_bar_Blind"	5	-1   1
+
+"r" 		0	0.5	0.01	0.	1.
+"k" 		0	0.5	0.01	0.	1.
+"delta" 	0	10.	1	-360	360
+"gamma" 	0	70.	1	0	180.
+
+
+***
+*"D_Scan"	-4 4	
+*"D_bar_Scan"	-4 4	
+
+
+knot_positions 0.5 1.35 2.5 6.5 
+c0_Run1_t0  2  0.305952  0.0161919
+c1_Run1_t0  2  0.709632  0.0293261
+c2_Run1_t0  2  0.894747  0.0418766
+c3_Run1_t0  2  1.0938  0.0274941
+
+c0_Run1_t1  2  0.158321  0.0124926
+c1_Run1_t1  2  0.416987  0.026871
+c2_Run1_t1  2  0.819509  0.0465914
+c3_Run1_t1  2  1.10378  0.0329216
+
+c0_Run2_t0  2  0.283138  0.00805794
+c1_Run2_t0  2  0.674037  0.0148808
+c2_Run2_t0  2  0.840813  0.0211289
+c3_Run2_t0  2  1.06913  0.013908
+
+c0_Run2_t1  2  0.12069  0.00646097
+c1_Run2_t1  2  0.408278  0.0147082
+c2_Run2_t1  2  0.736627  0.0221378
+c3_Run2_t1  2  1.06363  0.0173855
+
+
+*knot_positions 0.5 1.35 2.5 6.5 
+*c0_Run1_t0  1  0.309451  0.0179289
+*c1_Run1_t0  1  0.693998  0.0305617
+*c2_Run1_t0  1  0.857525  0.042757
+*c3_Run1_t0  1  1.09021  0.028351
+
+*c0_Run1_t1  1  0.158202  0.0139775
+*c1_Run1_t1  1  0.422018  0.0288956
+*c2_Run1_t1  1  0.801677  0.0473163
+*c3_Run1_t1  1  1.09886  0.033694
+
+
+*c0_Run2_t0  2  0.291722  0.0084453
+*c1_Run2_t0  2  0.688226  0.0153701
+*c2_Run2_t0  2  0.849589  0.0213554
+*c3_Run2_t0  2  1.07467  0.0141442
+
+*c0_Run2_t1  2  0.124145  0.00678173
+*c1_Run2_t1  2  0.421059  0.0152576
+*c2_Run2_t1  2  0.739193  0.0223619
+*c3_Run2_t1  2  1.06324  0.0175414
+
+
+*c0_Run2_t0  2  0.278705  0.0108919
+*c1_Run2_t0  2  0.653882  0.0208372
+*c2_Run2_t0  2  0.866969  0.0308549
+*c3_Run2_t0  2  1.07118  0.0206488
+
+*c0_Run2_t1  2  0.106545  7.9948e-10
+*c1_Run2_t1  2  0.410126  1.7557e-06
+*c2_Run2_t1  2  0.75302  0.0247565
+*c3_Run2_t1  2  1.0605  0.0211778
+
+*c0_Run2_17_t0  2  0.291255  0.0117452
+*c1_Run2_17_t0  2  0.669768  0.0215873
+*c2_Run2_17_t0  2  0.833915  0.0308135
+*c3_Run2_17_t0  2  1.05525  0.0216936
+
+*c0_Run2_17_t1  2  0.133953  0.00868625
+*c1_Run2_17_t1  2  0.427618  0.0198755
+*c2_Run2_17_t1  2  0.715886  0.0315308
+*c3_Run2_17_t1  2  1.08903  0.02437
+
+*c0_Run2_18_t0  2  0.310774  0.0120614
+*c1_Run2_18_t0  2  0.728812  0.0220537
+*c2_Run2_18_t0  2  0.851683  0.0306827
+*c3_Run2_18_t0  2  1.08771  0.0206768
+
+*c0_Run2_18_t1  2  0.134081  0.00895561
+*c1_Run2_18_t1  2  0.412752  0.0195296
+*c2_Run2_18_t1  2  0.742551  0.0309438
+*c3_Run2_18_t1  2  1.02617  0.0251842
+ 
+
+
+***
+"p0_os_Run1"    2    0.397881    0.00966787
+"p1_os_Run1"    2    0.895483    0.0851807
+"delta_p0_os_Run1"    2    0.0295502    0.0106338
+"delta_p1_os_Run1"    2    0.0114576    0.0949505
+"avg_eta_os_Run1"    2    0.356748    0
+"tageff_os_Run1"    2    0.477748    0.00365126
+"tageff_asym_os_Run1"    2    0.000155002    0.0135347
+"p0_ss_Run1"    2    0.444079    0.00799623
+"p1_ss_Run1"    2    0.948522    0.110611
+"delta_p0_ss_Run1"    2    -0.0186388    0.00882122
+"delta_p1_ss_Run1"    2    0.0641831    0.124493
+"avg_eta_ss_Run1"    2    0.430637    0
+"tageff_ss_Run1"    2    0.684261    0.00339748
+"tageff_asym_ss_Run1"    2    -0.00046247    0.0124222
+
+"p0_os_Run2"    2    0.371521    0.0048509
+"p1_os_Run2"    2    0.787574    0.0429545
+"delta_p0_os_Run2"    2    0.00757015    0.00596291
+"delta_p1_os_Run2"    2    0.0673227    0.0523513
+"avg_eta_os_Run2"    2    0.338161    0
+"tageff_os_Run2"   2    0.403992    0.00181788
+"tageff_asym_os_Run2"    2    0.00315874    0.00617581
+"p0_ss_Run2"    2    0.428425    0.00373149
+"p1_ss_Run2"    2    0.787313    0.0389353
+"delta_p0_ss_Run2"    2    -0.0166119    0.00447389
+"delta_p1_ss_Run2"    2    0.0284228    0.0477364
+"avg_eta_ss_Run2"    2    0.40398    0
+"tageff_ss_Run2"    2    0.69903    0.00169926
+"tageff_asym_ss_Run2"    2    -0.00319471    0.00575487
+"production_asym_Run2"    2    -0.00183088    0.00642004
+
+"offset_sigma_dt_Run1"			1	0.0103 0.001
+"scale_sigma_dt_Run1"			1	1.28 0.001
+"offset_sigma_dt_Run2"			1	0.0116	0.0016
+"scale_sigma_dt_Run2"			1	0.877	0.040
+"offset_sigma_dt_Run2_17"		1	0.0065	0.0014
+"scale_sigma_dt_Run2_17"		1	0.961	0.036
+"offset_sigma_dt_Run2_18"		1	0.0065	0.0014
+"scale_sigma_dt_Run2_18"		1	0.961	0.036
+
+"offset_mean_dt_Run1"		2	-0.0012 0.00011
+"offset_mean_dt_Run2"		2	-0.00217 0.00168
+"offset_mean_dt_Run2_17"	2	-0.00227 0.00178
+"offset_mean_dt_Run2_18"	2	-0.00180 0.00178
+
+
+"production_asym_Run1"	2	-0.00045 0.001
+"detection_asym_Run1"	2	0.00927 	0.001	-0.02 0.02
+"detection_asym_Run2"	2	0.00846 	0.001	-0.02 0.02
+
+
+"ConstrainMulti_Tagging_Run1"     "p0_os_Run1 p1_os_Run1 tageff_os_Run1 p0_ss_Run1 p1_ss_Run1 tageff_ss_Run1 "
+
+"ConstrainMulti_Tagging_Run1_corr"     "1 0.0619449 3.56451e-09 -0.0606465 0.0553159 3.07425e-09 1 4.25336e-10 0.00413121 -0.0872366 -1.37478e-09 1 -3.33719e-09 -2.45895e-09 -1.50034e-09 1 0.0451437 -2.17319e-09 1 7.11622e-10 1 "
+
+"ConstrainMulti_Tagging_Run2"     "p0_os_Run2 p1_os_Run2 tageff_os_Run2 p0_ss_Run2 p1_ss_Run2 tageff_ss_Run2 "
+
+"ConstrainMulti_Tagging_Run2_corr"     "1 0.0645484 7.02621e-09 -0.0160539 0.0284919 2.18567e-08 1 -9.1706e-09 -0.00206847 -0.00881022 1.98965e-08 1 -1.00533e-08 -9.64395e-09 7.75166e-09 1 0.0722799 -8.46498e-09 1 -1.16091e-09 1 "
+
+"ConstrainMulti_Acc"     "Gamma dGamma c0_Run1_t0 c1_Run1_t0 c2_Run1_t0 c3_Run1_t0 c0_Run1_t1 c1_Run1_t1 c2_Run1_t1 c3_Run1_t1 c0_Run2_t0 c1_Run2_t0 c2_Run2_t0 c3_Run2_t0 c0_Run2_t1 c1_Run2_t1 c2_Run2_t1 c3_Run2_t1 "
+
+"ConstrainMulti_Acc_corr"     "1 0.11 -0.13512 -0.163004 -0.12689 -0.0925396 -0.0834628 -0.104574 -0.109078 -0.0670315 -0.249218 -0.285296 -0.222132 -0.15147 -0.117532 -0.173494 -0.178875 -0.134078 1 -0.0551776 -0.0693684 -0.0591662 -0.0778238 -0.0340978 -0.0431492 -0.0506155 -0.0568522 -0.103138 -0.122348 -0.104624 -0.1271 -0.0482136 -0.0730465 -0.0821008 -0.111345 1 0.122467 0.469895 0.0279773 0 0 0 0 0 0 0 0 0 0 0 0 1 0.0423722 0.215262 0 0 0 0 0 0 0 0 0 0 0 0 1 -0.247966 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0.124466 0.347766 0.0499515 0 0 0 0 0 0 0 0 1 -0.0258893 0.210586 0 0 0 0 0 0 0 0 1 -0.22591 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0.206803 0.420743 0.0590146 0 0 0 0 1 0.0579628 0.219519 0 0 0 0 1 -0.239791 0 0 0 0 1 0 0 0 0 1 -0.132619 0.353006 0.00606986 1 -0.151294 0.236207 1 -0.245142 1 "

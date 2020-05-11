@@ -72,9 +72,9 @@ OS_Muon_BranchProb      = "OS_Muon_PROB"
 
 OS_nnetKaon_Use = 1
 OS_nnetKaon_TypeDec        = "Int_t"
-OS_nnetKaon_BranchDec      = "OS_Kaon_DEC"
+OS_nnetKaon_BranchDec      = "OS_nnetKaon_DEC"
 OS_nnetKaon_TypeProb      = "Double_t"
-OS_nnetKaon_BranchProb    = "OS_Kaon_PROB"
+OS_nnetKaon_BranchProb    = "OS_nnetKaon_PROB"
 
 OS_Electron_Use = 1
 OS_Electron_TypeDec      = "Int_t"
@@ -82,11 +82,11 @@ OS_Electron_BranchDec    = "OS_Electron_DEC"
 OS_Electron_TypeProb    = "Double_t"
 OS_Electron_BranchProb  = "OS_Electron_PROB"
 
-#OS_Kaon_Use = 1
-#OS_Kaon_TypeDec        = "Short_t"
-#OS_Kaon_BranchDec      = "Bs_OS_Kaon_DEC"
-#OS_Kaon_TypeProb      = "Float_t"
-#OS_Kaon_BranchProb    = "Bs_OS_Kaon_PROB"
+OS_Kaon_Use = 1
+OS_Kaon_TypeDec        = "Int_t"
+OS_Kaon_BranchDec      = "OS_Kaon_DEC"
+OS_Kaon_TypeProb      = "Double_t"
+OS_Kaon_BranchProb    = "OS_Kaon_PROB"
 
 VtxCharge_Use = 1
 VtxCharge_TypeDec     = "Int_t"
@@ -152,4 +152,4 @@ VtxCharge_BranchProb = "OS_VtxCharge_PROB"
 ############################
 
 #import EspressoCalibrations.py
-SaveCalibrationsToXML = 1
+#SaveCalibrationsToXML = 1

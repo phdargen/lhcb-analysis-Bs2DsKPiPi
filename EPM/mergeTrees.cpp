@@ -15,6 +15,7 @@ void mergeTrees(string old_fileName , string tagging_fileName_Run1, string taggi
 	string oldFileName = old_fileName.append(".root");
 	TFile* old_file= new TFile(oldFileName.c_str());
 	TTree* old_tree = (TTree*) old_file->Get("DecayTree");
+	old_tree->SetBranchStatus("OS_Combination_*",0);
 	
 	string taggingFileName_Run1 = tagging_fileName_Run1.append(".root");
 	TFile* tagging_file_Run1= new TFile(taggingFileName_Run1.c_str());
@@ -143,7 +144,8 @@ void mergeTrees(string old_fileName , string tagging_fileName_Run1, string taggi
 }
 
 int main(int argc, char** argv){
-	mergeTrees("/auto/data/dargent/BsDsKpipi/Final/Data/norm","OS_combo_Run1","OS_combo_Run2");
- 	mergeTrees("/auto/data/dargent/BsDsKpipi/Final/Data/signal","OS_combo_Run1_signal","OS_combo_Run2_signal");
+  	mergeTrees("/auto/data/dargent/BsDsKpipi/BDT/Data/signal_18_newBDT","OS_combo_Run1_signal","OS_combo_Run2_signal");
+ 	mergeTrees("/auto/data/dargent/BsDsKpipi/BDT/Data/norm_18_newBDT","OS_combo_Run1","OS_combo_Run2");
+//  	mergeTrees("/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/TD-MINT2/src/Users/dargent/MassFits/test8","OS_combo_Run1_signal","OS_combo_Run2_signal");
 	return 0;
 }

@@ -57,7 +57,8 @@ void fitParams(){
 
     vector<TMatrixD*> covs;
     /// Data fit
-    pull p_data(paraNames,"signal_rnd5/pull__16.root");
+//     pull p_data(paraNames,"signal_rnd5/pull__16.root");
+    pull p_data(paraNames,"signal_decayTimeBias/pull__1.root");   
     vector<double> vals = p_data.getVals();
     vector<double> errs_stat = p_data.getErrs();
     
@@ -111,6 +112,10 @@ void fitParams(){
     covs_res_Run2.push_back(cov_res_Run2_c);
     covs_res_Run2.push_back(cov_res_Run2_d);
     cov_res +=  p_res_Run1_a.combineCov_maxVal(covs_res_Run2) ;
+
+    /// decay time bias systematics 
+    pull p_bias(paraNames,"signal_decayTimeBias/pull__2.root");
+    TMatrixD* cov_bias = new TMatrixD(p_bias.getDeltaCov("signal_decayTimeBias/pull__1.root","_bias"));
 
     /// dms systematics 
     pull p_dm(paraNames,"signal_toy/pull_dm_*.root");
@@ -208,6 +213,39 @@ void fitParams(){
 
     TMatrixD cov_bkg(p_bkg_2.sampleVariance(vec_vals_bkg));
 //     cov_bkg.Print();
+
+
+    pull p_bkg_bs1(paraNames,"signal_toy_bkg_bs4/pull__*.root");
+    vector<double> mean_bkg_bs1 = p_bkg_bs1.getPullMean();
+    vector<double> sigma_bkg_bs1 = p_bkg_bs1.getPullSigma();
+
+    pull p_bkg_bs2(paraNames,"signal_toy_bkg_bs4/signal_pull__*.root");
+    vector<double> mean_bkg_bs2 = p_bkg_bs2.getPullMean();
+    vector<double> sigma_bkg_bs2 = p_bkg_bs2.getPullSigma();
+
+    TMatrixD* cov_bkg_bs = new TMatrixD(cov_bkg);    
+    for(int i =0 ; i <paraNames.size() ; i++)
+	for(int j =0 ; j <paraNames.size() ; j++){
+	if(i==j){
+// 		 (*cov_bkg_bs)[i][j] = pow(min(mean_bkg_bs1[i]-mean_bkg_bs2[i],mean_bkg_bs1[i]),2)*errs_stat[i] * errs_stat[j];
+//  		 (*cov_bkg_bs)[i][j] += pow((sigma_bkg_bs1[i]-sigma_bkg_bs2[i],0.),2)*errs_stat[i] * errs_stat[j];
+//		 (*cov_bkg_bs)[i][j] = max(pow(sigma_bkg_bs1[i],2)-pow(sigma_bkg_bs2[i],2),0.)*errs_stat[i] * errs_stat[j];;
+ 		(*cov_bkg_bs)[i][j] = min(pow(min(mean_bkg_bs1[i]-mean_bkg_bs2[i],mean_bkg_bs1[i]),2) , pow(max(sigma_bkg_bs1[i]-sigma_bkg_bs2[i],0.),2))*errs_stat[i] * errs_stat[j];
+		//(*cov_bkg_bs)[i][j] = (sqrt((pow(min(mean_bkg_bs1[i]-mean_bkg_bs2[i],mean_bkg_bs1[i]),2))) + sqrt((pow(max(sigma_bkg_bs1[i]-sigma_bkg_bs2[i],0.),2))) )/2.*errs_stat[i] * errs_stat[j];
+
+		cout << paraNames[i] << endl;
+		cout << mean_bkg_bs1[i] << endl;
+		cout << mean_bkg_bs2[i] << endl;
+		cout << mean_bkg_bs1[i]-mean_bkg_bs2[i] << endl;
+		cout << sigma_bkg_bs1[i]  << endl;
+		cout << sigma_bkg_bs2[i]  << endl;
+		cout << sigma_bkg_bs1[i]-sigma_bkg_bs2[i] << endl << endl;
+		cout << (sqrt((pow(min(mean_bkg_bs1[i]-mean_bkg_bs2[i],mean_bkg_bs1[i]),2))) + sqrt((pow(max(sigma_bkg_bs1[i]-sigma_bkg_bs2[i],0.),2))) )/2. << endl << endl;
+	}
+	else (*cov_bkg_bs)[i][j] = 0.;
+     }
+     //cov_bkg+= *cov_bkg_bs;
+
 
     /// Lineshape models systematics
     pull p_ls_1(paraNames,"signal_sys1/pull_*.root");
@@ -483,10 +521,16 @@ void fitParams(){
 //     covs.push_back(new TMatrixD(cov_alt));
 
     /// m,t correlations
-    pull p_corr1(paraNames,"signal_toy_bkg3/pull__*.root");
+//     pull p_corr1(paraNames,"signal_toy_bkg3/pull__*.root");
+//     TMatrixD cov_corr1 = p_corr1.getCov();
+// 
+//     pull p_corr2(paraNames,"signal_toy_bkg4/pull__*.root");
+//     TMatrixD cov_corr2 = p_corr2.getCov();
+   
+    pull p_corr1(paraNames,"signal_toy_bkg_bs0/pull__*.root");
     TMatrixD cov_corr1 = p_corr1.getCov();
 
-    pull p_corr2(paraNames,"signal_toy_bkg4/pull__*.root");
+    pull p_corr2(paraNames,"signal_toy_bkg_bs1/pull__*.root");
     TMatrixD cov_corr2 = p_corr2.getCov();
 
     TMatrixD* cov_corr = new TMatrixD(p_corr1.getAbsDiff(cov_corr1,cov_corr2));
@@ -494,11 +538,16 @@ void fitParams(){
 	(*cov_corr)[i][j] = (*cov_corr)[i][j] * errs_stat[i] * errs_stat[j];
     }
 
+//      pull p_corr(paraNames,"signal_toy_bkg_bs0/pull__*.root");
+//      TMatrixD* cov_corr = new TMatrixD(p_corr.getDeltaCov("signal_toy_bkg_bs1/pull__*.root","_corr"));
+
+
     /// Total systematics table   
     covs.push_back(new TMatrixD(cov_bkg));
     covs.push_back(cov_corr);
     covs.push_back(cov_acc);
     covs.push_back(new TMatrixD(cov_res));
+    covs.push_back(cov_bias);
     covs.push_back(new TMatrixD(cov_asym));
     covs.push_back(cov_dm);
     covs.push_back(new TMatrixD(cov_phsp));
@@ -509,10 +558,11 @@ void fitParams(){
 
     vector<string> sysNames;
     sysNames.push_back("Fit bias");
-    sysNames.push_back("Correlations");
     sysNames.push_back("Background");
+    sysNames.push_back("Correlations");
     sysNames.push_back("Time-Acc.");
     sysNames.push_back("Resolution");
+    sysNames.push_back("Decay-time bias");
     sysNames.push_back("Asymmetries");
     sysNames.push_back("$\\Delta m_{s}$");
     sysNames.push_back("Phsp-Acc.");
@@ -800,7 +850,6 @@ void fractions(){
 
 }
 
-
 void fractions_new(){
 
    /// Fit parameters    
@@ -875,6 +924,10 @@ void fractions_new(){
     covs_res_Run2.push_back(cov_res_Run2_c);
     covs_res_Run2.push_back(cov_res_Run2_d);
     cov_res +=  p_res_Run1_a.combineCov_maxVal(covs_res_Run2) ;
+
+    /// decay time bias systematics 
+    pull p_bias(paraNames,"signal_decayTimeBias/pull__2.root","Coherence");
+    TMatrixD* cov_bias = new TMatrixD(p_bias.getDeltaCov("signal_decayTimeBias/pull__1.root","_bias"));
 
     /// dms systematics 
     pull p_dm(paraNames,"signal_toy/pull_dm_*.root","Coherence");
@@ -975,6 +1028,25 @@ void fractions_new(){
 
     TMatrixD cov_bkg(p_bkg_2.sampleVariance(vec_vals_bkg));
 //     cov_bkg.Print();
+
+    pull p_bkg_bs1(paraNames,"signal_toy_bkg_bs4/pull__*.root");
+    vector<double> mean_bkg_bs1 = p_bkg_bs1.getPullMean();
+    vector<double> sigma_bkg_bs1 = p_bkg_bs1.getPullSigma();
+
+    pull p_bkg_bs2(paraNames,"signal_toy_bkg_bs4/signal_pull__*.root");
+    vector<double> mean_bkg_bs2 = p_bkg_bs2.getPullMean();
+    vector<double> sigma_bkg_bs2 = p_bkg_bs2.getPullSigma();
+
+    TMatrixD* cov_bkg_bs = new TMatrixD(cov_bkg);    
+    for(int i =0 ; i <paraNames.size() ; i++)
+	for(int j =0 ; j <paraNames.size() ; j++){
+	if(i==j){
+ 		(*cov_bkg_bs)[i][j] = min(pow(min(mean_bkg_bs1[i]-mean_bkg_bs2[i],mean_bkg_bs1[i]),2) , pow(max(sigma_bkg_bs1[i]-sigma_bkg_bs2[i],0.),2))*errs_stat[i] * errs_stat[j];
+	}
+	else (*cov_bkg_bs)[i][j] = 0.;
+     }
+     cov_bkg+= *cov_bkg_bs;
+
 
     /// Lineshape models systematics
     pull p_ls_1(paraNames,"signal_sys1/pull_*.root","Coherence");
@@ -1247,6 +1319,7 @@ void fractions_new(){
     covs.push_back(cov_corr);
     covs.push_back(cov_acc);
     covs.push_back(new TMatrixD(cov_res));
+    covs.push_back(cov_bias);
     covs.push_back(new TMatrixD(cov_asym));
     covs.push_back(cov_dm);
     covs.push_back(new TMatrixD(cov_phsp));
@@ -1261,6 +1334,7 @@ void fractions_new(){
     sysNames.push_back("Background");
     sysNames.push_back("Time-Acc.");
     sysNames.push_back("Resolution");
+    sysNames.push_back("Decay-time bias");
     sysNames.push_back("Asymmetries");
     sysNames.push_back("$\\Delta m_{s}$");
     sysNames.push_back("Phsp-Acc.");
@@ -1355,8 +1429,6 @@ void fractions_new(){
     cout << "kappa = " << vals[16] << " $\\pm$ " << errs_stat[16] << " $\\pm$ " << errs_sys[16]  << " $\\pm$ " << sqrt(cov_alt[16][16]);  
 
 }
-
-
 
 void altModels(){
 
@@ -1674,9 +1746,6 @@ void altModels(){
 
 }
 
-
-
-
 void corrCP(){
 
     vector<TString> paraNames;
@@ -1923,6 +1992,79 @@ void corrCP(){
 
 }
 
+void crossCheck_signal() {
+
+    /// Fit parameters    
+    vector<TString> paraNames;
+    paraNames.push_back("mass_K_1__1400_p");
+    paraNames.push_back("width_K_1__1400_p");
+    paraNames.push_back("mass_Ks_1410_p");
+    paraNames.push_back("width_Ks_1410_p");
+
+    paraNames.push_back("r");
+    paraNames.push_back("delta");
+    paraNames.push_back("gamma");
+
+    pull p_data(paraNames,"signal_decayTimeBias/pull__1.root");
+    vector<double> vals = p_data.getVals();
+    vector<double> errs_stat = p_data.getErrs();
+
+    pull p_1(paraNames,"signal_crossCheck_trigger1/pull__1.root");
+    vector<double> vals1 = p_1.getVals();
+    vector<double> errs_stat1 = p_1.getErrs();
+
+    pull p_2(paraNames,"signal_crossCheck_trigger2/pull__1.root");
+    vector<double> vals2 = p_2.getVals();
+    vector<double> errs_stat2 = p_2.getErrs();
+
+    pull p_3(paraNames,"signal_crossCheck_run1/pull__1.root");
+    vector<double> vals3 = p_3.getVals();
+    vector<double> errs_stat3 = p_3.getErrs();
+
+    pull p_4(paraNames,"signal_crossCheck_run2/pull__1.root");
+    vector<double> vals4 = p_4.getVals();
+    vector<double> errs_stat4 = p_4.getErrs();
+
+    pull p_5(paraNames,"signal_crossCheck_Ds1/pull__1.root");
+    vector<double> vals5 = p_5.getVals();
+    vector<double> errs_stat5 = p_5.getErrs();
+
+    pull p_6(paraNames,"signal_crossCheck_Ds2/pull__1.root");
+    vector<double> vals6 = p_6.getVals();
+    vector<double> errs_stat6 = p_6.getErrs();
+
+    pull p_7(paraNames,"signal_crossCheck_OS/pull__1.root");
+    vector<double> vals7 = p_7.getVals();
+    vector<double> errs_stat7 = p_7.getErrs();
+
+    pull p_8(paraNames,"signal_crossCheck_SS/pull__1.root");
+    vector<double> vals8 = p_8.getVals();
+    vector<double> errs_stat8 = p_8.getErrs();
+
+    ofstream SummaryFile;
+    SummaryFile.open("../../../../../TD-AnaNote/latex/tables/fullFit/signal/crossCheck_table.tex",std::ofstream::trunc);
+
+    for(int i =0 ; i <paraNames.size() ; i++){
+        SummaryFile << p_1.latexName(paraNames[i])  << " & " ;
+        SummaryFile << std::fixed << std::setprecision(2) << vals[i] << " $\\pm$ " << errs_stat[i] << " & ";
+
+        SummaryFile << std::fixed << std::setprecision(2) << vals1[i] << " $\\pm$ " << errs_stat1[i] << " & ";
+        SummaryFile << std::fixed << std::setprecision(2) << vals2[i] << " $\\pm$ " << errs_stat2[i] << " & ";
+
+        SummaryFile << std::fixed << std::setprecision(2) << vals3[i] << " $\\pm$ " << errs_stat3[i] << " & ";
+        SummaryFile << std::fixed << std::setprecision(2) << vals4[i] << " $\\pm$ " << errs_stat4[i] << " & ";
+
+        SummaryFile << std::fixed << std::setprecision(2) << vals5[i] << " $\\pm$ " << errs_stat5[i] << " & ";
+        SummaryFile << std::fixed << std::setprecision(2) << vals6[i] << " $\\pm$ " << errs_stat6[i] << " & ";
+
+        SummaryFile << std::fixed << std::setprecision(2) << vals7[i] << " $\\pm$ " << errs_stat7[i] << " & ";
+        SummaryFile << std::fixed << std::setprecision(2) << vals8[i] << " $\\pm$ " << errs_stat8[i];
+
+        SummaryFile  << " \\\\ " << "\n"; 
+    }  
+}
+
+
 int main(int argc, char** argv){
 
     TH1::SetDefaultSumw2();
@@ -1931,10 +2073,12 @@ int main(int argc, char** argv){
     //gStyle->SetOptFit(111);
     //gStyle->UseCurrentStyle();
 
-      fitParams();
-   // fractions_new();
+   //   fitParams();
+   fractions_new();
 //      altModels();
     // corrCP();
+
+//crossCheck_signal();
 
     return 0;
 }

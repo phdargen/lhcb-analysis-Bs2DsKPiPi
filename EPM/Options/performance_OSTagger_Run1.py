@@ -10,6 +10,8 @@
 #  if a directory is given all root files in it will be read:
   
 datafile = "/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+#datafile = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/TD-MINT2/src/Users/dargent/MassFits/testNorm8.root"
+
 TupleName = "DecayTree"
 
 ###########
@@ -72,9 +74,9 @@ OS_Muon_BranchProb      = "OS_Muon_PROB"
 
 OS_nnetKaon_Use = 1
 OS_nnetKaon_TypeDec        = "Int_t"
-OS_nnetKaon_BranchDec      = "OS_Kaon_DEC"
+OS_nnetKaon_BranchDec      = "OS_nnetKaon_DEC"
 OS_nnetKaon_TypeProb      = "Double_t"
-OS_nnetKaon_BranchProb    = "OS_Kaon_PROB"
+OS_nnetKaon_BranchProb    = "OS_nnetKaon_PROB"
 
 OS_Electron_Use = 1
 OS_Electron_TypeDec      = "Int_t"
@@ -82,11 +84,11 @@ OS_Electron_BranchDec    = "OS_Electron_DEC"
 OS_Electron_TypeProb    = "Double_t"
 OS_Electron_BranchProb  = "OS_Electron_PROB"
 
-#OS_Kaon_Use = 1
-#OS_Kaon_TypeDec        = "Short_t"
-#OS_Kaon_BranchDec      = "Bs_OS_Kaon_DEC"
-#OS_Kaon_TypeProb      = "Float_t"
-#OS_Kaon_BranchProb    = "Bs_OS_Kaon_PROB"
+OS_Kaon_Use = 1
+OS_Kaon_TypeDec        = "Int_t"
+OS_Kaon_BranchDec      = "OS_Kaon_DEC"
+OS_Kaon_TypeProb      = "Double_t"
+OS_Kaon_BranchProb    = "OS_Kaon_PROB"
 
 VtxCharge_Use = 1
 VtxCharge_TypeDec     = "Int_t"
@@ -158,5 +160,6 @@ VtxCharge_BranchProb = "OS_VtxCharge_PROB"
 OS_Muon_CalibrationArchive = "out_OS_Run1/OS_Muon_Calibration.xml"
 OS_Electron_CalibrationArchive = "out_OS_Run1/OS_Electron_Calibration.xml"
 OS_nnetKaon_CalibrationArchive = "out_OS_Run1/OS_nnetKaon_Calibration.xml"
+OS_Kaon_CalibrationArchive = "out_OS_Run1/OS_Kaon_Calibration.xml"
 VtxCharge_CalibrationArchive = "out_OS_Run1/VtxCharge_Calibration.xml"
 

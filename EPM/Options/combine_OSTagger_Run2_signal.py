@@ -9,7 +9,9 @@
 #  This is the file/directory that you want to run (LAST ONE IS TAKEN):
 #  if a directory is given all root files in it will be read:
   
-datafile = "/auto/data/dargent/BsDsKpipi/Final/Data/signal.root"
+datafile = "/auto/data/dargent/BsDsKpipi/BDT/Data/signal_18_newBDT.root"
+#datafile = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/TD-MINT2/src/Users/dargent/MassFits/test8.root"
+
 TupleName = "DecayTree"
 
 ###########
@@ -40,8 +42,8 @@ PlotStatBox = 0
 ###################
 
 BranchID             = "Bs_ID"
-UseWeight            = 1
-BranchWeight         = "N_Bs_sw"
+#UseWeight            = 1
+#BranchWeight         = "N_Bs_sw"
 UseTau  = 1
 TypeTau = "Double_t"
 TauUnits = "ps"
@@ -50,8 +52,8 @@ UseTauErr = 1
 TypeTauErr = "Double_t"
 BranchTauErr = "Bs_BsDTF_TAUERR"
 
-ResolutionGaussian1_A = 0.0097
-ResolutionGaussian1_B = 0.915
+ResolutionGaussian1_A = 0.0076
+ResolutionGaussian1_B = 0.958
 
 DrawOscillationPlots = 1
 #OscillationPlotsMaximum = 1.1
@@ -93,6 +95,12 @@ VtxCharge_BranchDec   = "OS_VtxCharge_DEC"
 VtxCharge_TypeProb   = "Double_t"
 VtxCharge_BranchProb = "OS_VtxCharge_PROB"
 
+OS_Charm_Use = 1
+OS_Charm_TypeDec = "Int_t"
+OS_Charm_BranchDec = "OS_Charm_DEC"
+OS_Charm_TypeProb = "Double_t"
+OS_Charm_BranchProb = "OS_Charm_PROB"
+
 #SS_nnetKaon_Use = 1
 #SS_nnetKaon_TypeDec      = "Int_t"
 #SS_nnetKaon_BranchDec    = "SS_Kaon_DEC"
@@ -126,6 +134,7 @@ OS_Muon_InOSComb = 1
 OS_Electron_InOSComb = 1
 OS_nnetKaon_InOSComb = 1
 VtxCharge_InOSComb = 1
+OS_Charm_InOSComb = 1
 
 #PerformOfflineCombination_OSplusSS = 1
 #OS_Combination_InComb = 1
@@ -141,6 +150,7 @@ OS_Muon_Write = 1
 OS_Electron_Write = 1
 OS_nnetKaon_Write = 1
 VtxCharge_Write = 1
+OS_Charm_Write = 1
 #SS_nnetKaon_Write = 1
 #Combination_Write = 1
 
@@ -158,4 +168,5 @@ OS_Muon_CalibrationArchive = "out_OS_Run2/OS_Muon_Calibration.xml"
 OS_Electron_CalibrationArchive = "out_OS_Run2/OS_Electron_Calibration.xml"
 OS_nnetKaon_CalibrationArchive = "out_OS_Run2/OS_nnetKaon_Calibration.xml"
 VtxCharge_CalibrationArchive = "out_OS_Run2/VtxCharge_Calibration.xml"
+OS_Charm_CalibrationArchive = "out_OS_Run2/OS_Charm_Calibration.xml"
 

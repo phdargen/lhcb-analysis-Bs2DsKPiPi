@@ -47,6 +47,10 @@ public :
 
    vector <double> getVals();   
    vector <double> getErrs();
+
+   vector <double> getPullMean();
+   vector <double> getPullSigma();
+
    TMatrixD getStatCov(TString label = "");
    TMatrixD getCov(TString label = "");
    TMatrixD getDeltaCov(TString refFileName,TString label = "");

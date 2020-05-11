@@ -9,9 +9,9 @@
 "updateAnaNote"		0
 
 * binning options
-"BinningName"		"adaptive_N4"
+"BinningName"		"adaptive_N8"
 "min_TAU"	 0.4
-"max_TAU" 	 10.
+"max_TAU" 	 10
 "min_TAUERR"	 0.0001
 "max_TAUERR" 	 0.1
 "nBins"		 100
@@ -21,11 +21,12 @@
 "fixFirstKnot"	0
 
 "useAdaptiveBinningKnots"	 0
-"minEventsPerBin"	 	70000
+"minEventsPerBin"	 	40000
 
 "offset_sigma_dt_Run1"		0.0103
 "scale_sigma_dt_Run1"		1.28	
 
+*"offset_mean_dt_Run2"		-0.00217
 "offset_sigma_dt_Run2"		0.0076
 "scale_sigma_dt_Run2"		0.958	
 
@@ -41,8 +42,12 @@
 *"knot_values"	 	 3.7571e-01 5.2204e-01 6.6662e-01 8.5160e-01
 
 * N = 4
-"knot_positions"	0.5 1.35 2.5 6.5
-"knot_values"	 	 0.5 0.7 1 1
+*"knot_positions"	0.5 1.35 2.5 6.5
+*"knot_values"	 	 0.5 0.7 1 1
+*"knot_values"	 	 0.4 0.7 0.9 1.
+
+*"knot_positions"	0.8 1.6 2.5 6.5
+*"knot_values"	 	 0.5 0.7 1 1
 
 * N = 5
 *"knot_positions" 	0.7 1.2 1.7 2.2 6.3
@@ -50,7 +55,8 @@
 
 * N = 8
 *"knot_positions"	0.6 1.0  1.4  1.7  2.1  2.6  3.4  7.0
-*"knot_values"	 	0.5 0.7  1     1   1    1    1    1
+knot_positions 	0.609149 0.977136 1.28494 1.63883 2.07668 2.62627 3.45981 6.98834 
+"knot_values"	 	0.5 0.7  1     1   1    1    1    1
 
 * fit options
 "numCPU"         10

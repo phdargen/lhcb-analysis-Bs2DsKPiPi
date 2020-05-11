@@ -110,9 +110,10 @@ class TimePdfIntegrator
   }
 
   virtual std::complex<double> getNewVal(IDalitzEvent& evt){
-      //return std::complex<double>(_tau,_dGamma);
 
        std::complex<double> val = std::complex<double>(_efficiency->evaluate(_basisType,1./_Gamma,_dm,_dGamma),_efficiency->analyticalIntegral(_basisType,1./_Gamma,_dm,_dGamma));
+
+       return val;
 
        std::complex<double> val2 = std::complex<double>(_efficiency2->evaluate(_basisType,1./_Gamma,_dm,_dGamma),_efficiency2->analyticalIntegral(_basisType,1./_Gamma,_dm,_dGamma));
 
@@ -121,9 +122,6 @@ class TimePdfIntegrator
 	double f = _offset_f_dt + _scale_f_dt * evt.getValueFromVector(1) + _scale_f_2_dt * evt.getValueFromVector(1) * evt.getValueFromVector(1);
 	
 	return f * val + (1.-f) * val2;
-
-
-       return std::complex<double>(_efficiency->evaluate(_basisType,1./_Gamma,_dm,_dGamma),_efficiency->analyticalIntegral(_basisType,1./_Gamma,_dm,_dGamma));
   }
 
   virtual std::complex<double> ComplexVal(IDalitzEvent& evt){

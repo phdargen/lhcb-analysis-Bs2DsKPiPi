@@ -804,7 +804,13 @@ class TimePdfMaster
     double get_spline_Val(IDalitzEvent& evt){
         return  _spline->getVal();
     }
+
+    double get_spline_Val(double t){
+        _r_t->setVal(t);
+        return  _spline->getVal();
+    }
     
+
     double get_tau_Val(){
         return (double) 1./_Gamma;
     }
@@ -962,6 +968,17 @@ class TimePdfMaster
         _r_S_bar->setVal(S_bar);
     }
 
+    void setCP_coeff(double norm, double norm_bar,double r, double k, double delta, double gamma ){
+        _r_norm->setVal(norm);
+        _r_norm_bar->setVal(norm_bar);
+        _r_C->setVal((1.-r*r)/(1.+r*r));
+        _r_C_bar->setVal(-(1.-r*r)/(1.+r*r));
+        _r_D->setVal(-2.*r*k*cos((delta - gamma)/360.*2*pi)/(1.+r*r));
+        _r_D_bar->setVal(-2.*r*k*cos((delta+gamma)/360.*2*pi)/(1.+r*r));
+        _r_S->setVal(2.*r*k*sin((delta-gamma)/360.*2*pi)/(1.+r*r));
+        _r_S_bar->setVal(-2.*r*k*sin((delta+gamma)/360.*2*pi)/(1.+r*r));
+    }
+
     vector<double> getCP_coeff(){
 
 	vector<double> vals;
@@ -1009,6 +1026,7 @@ class TimePdfMaster
        h_spline->Draw("histc");
        c->Print("spline.eps");
        //c->Print("spline.pdf");
+	_f_pdfs->Close();
    }
 
 };

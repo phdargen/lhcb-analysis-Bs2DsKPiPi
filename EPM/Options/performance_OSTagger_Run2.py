@@ -10,6 +10,8 @@
 #  if a directory is given all root files in it will be read:
   
 datafile = "/auto/data/dargent/BsDsKpipi/Final/Data/norm.root"
+#datafile = "/work/dargent/Bs2DsKpipi/lhcb-analysis-Bs2DsKPiPi/TD-MINT2/src/Users/dargent/MassFits/testNorm8.root"
+
 TupleName = "DecayTree"
 
 ###########
@@ -23,7 +25,7 @@ CalibrationDegree = 1
 CalibrationModel = "POLY"
 UseNewtonRaphson = 0
 
-Selection = "run == 2"
+Selection = "run == 2 && year < 17"
 #DBGLEVEL    =  5
 Nmax        = -1  # Events to run, -1 means all
 
@@ -50,10 +52,10 @@ UseTauErr = 1
 TypeTauErr = "Double_t"
 BranchTauErr = "Bs_BsDTF_TAUERR"
 
-ResolutionGaussian1_A = 0.0076
-ResolutionGaussian1_B = 0.958
-#ResolutionGaussian1_A = 0.0097
-#ResolutionGaussian1_B = 0.915
+#ResolutionGaussian1_A = 0.0076
+#ResolutionGaussian1_B = 0.958
+ResolutionGaussian1_A = 0.0097
+ResolutionGaussian1_B = 0.915
 DrawOscillationPlots = 1
 #OscillationPlotsMaximum = 1.1
 

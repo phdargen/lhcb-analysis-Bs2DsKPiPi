@@ -363,43 +363,43 @@ int ampFit(int step=0){
     s124.push_back(2);
     s124.push_back(4);
             
-    FitAmpSum fas_tmp(pat);
-    FitAmpIncoherentSum fasBkg(pat);
+    FitAmpSum fas(pat);
+    FitAmpIncoherentSum fasBkg(pat,"","Bkg_");
     {
-	fas_tmp.print();    
+	fas.print();    
     	DalitzEventList eventListNorm;
   	TFile *file =  TFile::Open("SignalIntegrationEvents_toys_phspCut.root");
   	TTree* tree=dynamic_cast<TTree*>(file->Get("DalitzEventList"));
   	eventListNorm.fromNtuple(tree,0.5);
-  	fas_tmp.normalizeAmps(eventListNorm);
+  	fas.normalizeAmps(eventListNorm);
         fasBkg.normalizeAmps(eventListNorm);
     }
     
-    counted_ptr<FitAmpList> List_1 = fas_tmp.GetCloneOfSubsetSameFitParameters("K(1)(1400)+");
-    FitAmpSum fas(*List_1);
-
-    /// Fix relative decay modes from charm input
-    FitParameter a_K1_1270_re("a_K1_1270_Re",2,1,0.01);
-    FitParameter a_K1_1270_im("a_K1_1270_Im",2,0,0.01); 
-    counted_ptr<IReturnComplex> a_K1_1270 = new AmpRatio(a_K1_1270_re,a_K1_1270_im);
-
-    FitParameter a_K_1460_re("a_K_1460_Re",2,1,0.01);
-    FitParameter a_K_1460_im("a_K_1460_Im",2,0,0.01); 
-    counted_ptr<IReturnComplex> a_K_1460 = new AmpRatio(a_K_1460_re,a_K_1460_im);
-
-    FitParameter a_Ks_1410_re("a_Ks_1410_Re",2,1,0.01);
-    FitParameter a_Ks_1410_im("a_Ks_1410_Im",2,0,0.01); 
-    counted_ptr<IReturnComplex> a_Ks_1410 = new AmpRatio(a_Ks_1410_re,a_Ks_1410_im);
-
-    AddScaledAmpsToList(fas_tmp, fas, "K(1)(1270)+",a_K1_1270);
-    AddScaledAmpsToList(fas_tmp, fas, "K(1460)",a_K_1460);
-    AddScaledAmpsToList(fas_tmp, fas, "K*(1410)+",a_Ks_1410);
-//     AddAmpsToList(fas_tmp, fas, "K*(1680)+");
-/*    AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,pi+)");*/
-//     AddAmpsToList(fas_tmp, fas, "NonResV0(->Ds-,pi+)");
-//     AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,K+)");
-//     AddAmpsToList(fas_tmp, fas, "NonResV0(->Ds-,K+)");
-    AddAmpsToList(fas_tmp, fas, "NonRes");
+//     counted_ptr<FitAmpList> List_1 = fas_tmp.GetCloneOfSubsetSameFitParameters("K(1)(1400)+");
+//     FitAmpSum fas(*List_1);
+// 
+//     /// Fix relative decay modes from charm input
+//     FitParameter a_K1_1270_re("a_K1_1270_Re",2,1,0.01);
+//     FitParameter a_K1_1270_im("a_K1_1270_Im",2,0,0.01); 
+//     counted_ptr<IReturnComplex> a_K1_1270 = new AmpRatio(a_K1_1270_re,a_K1_1270_im);
+// 
+//     FitParameter a_K_1460_re("a_K_1460_Re",2,1,0.01);
+//     FitParameter a_K_1460_im("a_K_1460_Im",2,0,0.01); 
+//     counted_ptr<IReturnComplex> a_K_1460 = new AmpRatio(a_K_1460_re,a_K_1460_im);
+// 
+//     FitParameter a_Ks_1410_re("a_Ks_1410_Re",2,1,0.01);
+//     FitParameter a_Ks_1410_im("a_Ks_1410_Im",2,0,0.01); 
+//     counted_ptr<IReturnComplex> a_Ks_1410 = new AmpRatio(a_Ks_1410_re,a_Ks_1410_im);
+// 
+//     AddScaledAmpsToList(fas_tmp, fas, "K(1)(1270)+",a_K1_1270);
+//     AddScaledAmpsToList(fas_tmp, fas, "K(1460)",a_K_1460);
+//     AddScaledAmpsToList(fas_tmp, fas, "K*(1410)+",a_Ks_1410);
+// //     AddAmpsToList(fas_tmp, fas, "K*(1680)+");
+// /*    AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,pi+)");*/
+// //     AddAmpsToList(fas_tmp, fas, "NonResV0(->Ds-,pi+)");
+// //     AddAmpsToList(fas_tmp, fas, "NonResS0(->Ds-,K+)");
+// //     AddAmpsToList(fas_tmp, fas, "NonResV0(->Ds-,K+)");
+//     AddAmpsToList(fas_tmp, fas, "NonRes");
 
     FitParameter sigfraction("SigFraction",2,1.,0.01);
     DalitzEventList eventList;
@@ -431,7 +431,7 @@ int ampFit(int step=0){
         
         TChain* tree;
 	tree=new TChain("DecayTree");
-	tree->Add(((string)InputDir+"Data/"+(string)channel+".root").c_str());
+ 	tree->Add(((string)InputFileName).c_str());
 	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("N_Bs_sw",1);
 	tree->SetBranchStatus("year",1);
@@ -539,7 +539,7 @@ int ampFit(int step=0){
 			continue;
 		}
 
-// 		if(sqrt(evt.sij(s234)/(GeV*GeV))<1) continue;
+//  		if(sqrt(evt.sij(s234)/(GeV*GeV)) > 1.85 || sqrt(evt.s(2,4)/(GeV*GeV)) > 1.3 || sqrt(evt.s(3,4)/(GeV*GeV)) > 1.3) continue;
 		
 		evt.setWeight(sw);
 		eventList.Add(evt);	
@@ -550,7 +550,7 @@ int ampFit(int step=0){
         DalitzHistoSet datH = eventList.weightedHistoSet();
         
         AmpsPdfFlexiFast* ampsSig;
-	if(useLASSO) ampsSig = new AmpsPdfFlexiFast(pat, &fas_tmp, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
+	if(useLASSO) ampsSig = new AmpsPdfFlexiFast(pat, &fas, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
 	else ampsSig = new AmpsPdfFlexiFast(pat, &fas, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
         AmpsPdfFlexiFast ampsBkg(pat, &fasBkg, 0, integPrecision,integMethod, (std::string) IntegratorEventFile);
         DalitzSumPdf amps(sigfraction,*ampsSig,ampsBkg);
@@ -581,7 +581,6 @@ int ampFit(int step=0){
             
 	    double N_sig = 0;
             for (int i=0; i<eventList.size(); i++) N_sig += eventList[i].getWeight();
-
 
             TFile* out_LASSO = new TFile(((string)OutputDir+"LASSO_"+anythingToString(step)+".root").c_str(),"RECREATE");
             Double_t x[1],y[1];
@@ -713,7 +712,7 @@ int ampFit(int step=0){
 //             std::vector<DalitzHistoSet> EachAmpsHistos = ampsSig.GetEachAmpsHistograms();
 //             datH.drawWithFitAndEachAmps(datH, fitH, EachAmpsHistos, ((string)OutputDir+(string)"WithAmps").c_str(), "eps");
 
-            int nBins = 50;
+            int nBins = 60;
 	    TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,1,4);
 	    TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.3,1.6);
 	    TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,1.6);
@@ -724,11 +723,11 @@ int ampFit(int step=0){
             TH1D* s_Dspim = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
 		
  	    TH1D* m_Kpipi = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
-	    TH1D* m_Kpi = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
-	    TH1D* m_pipi = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
-	    TH1D* m_Dspipi = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
-	    TH1D* m_DsK = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
-	    TH1D* m_DsKpi = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Kpi = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.4);
+	    TH1D* m_pipi = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.4);
+	    TH1D* m_Dspipi = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.);
+	    TH1D* m_DsK = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5)  ;
+	    TH1D* m_DsKpi = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5);
 	    TH1D* m_Dspi = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
 	    TH1D* m_Dspim = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
 
@@ -768,9 +767,9 @@ int ampFit(int step=0){
 		h_phi_Kpi_Dspi->Fill(acoplanarityAngle(eventList[i],2,4,1,3),eventList[i].getWeight());
             }    
             
-	    TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,1,4);
-	    TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.3,1.6);
-	    TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,1.6);
+	    TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,1,2);
+	    TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.3,1.5);
+	    TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,1.3);
 	    TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
 	    TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
 	    TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
@@ -778,11 +777,11 @@ int ampFit(int step=0){
 	    TH1D* s_Dspim_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
 	
 	    TH1D* m_Kpipi_fit = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
-	    TH1D* m_Kpi_fit = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
-	    TH1D* m_pipi_fit = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
-	    TH1D* m_Dspipi_fit = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
-	    TH1D* m_DsK_fit = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
-	    TH1D* m_DsKpi_fit = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Kpi_fit = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.4);
+	    TH1D* m_pipi_fit = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.4);
+	    TH1D* m_Dspipi_fit = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2.,5.);
+	    TH1D* m_DsK_fit = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5)  ;
+	    TH1D* m_DsKpi_fit = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5);
 	    TH1D* m_Dspi_fit = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
 	    TH1D* m_Dspim_fit = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);	
 	    TH1D* h_cosTheta_Kpi_fit= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
@@ -790,11 +789,11 @@ int ampFit(int step=0){
     	    TH1D* h_phi_Kpi_Dspi_fit= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
 
 	    TH1D* m_Kpipi_fit_1 = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
-	    TH1D* m_Kpi_fit_1 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
-	    TH1D* m_pipi_fit_1 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
-	    TH1D* m_Dspipi_fit_1 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
-	    TH1D* m_DsK_fit_1 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
-	    TH1D* m_DsKpi_fit_1 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Kpi_fit_1 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.4);
+	    TH1D* m_pipi_fit_1 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.4);
+	    TH1D* m_Dspipi_fit_1 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.);
+	    TH1D* m_DsK_fit_1 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5)  ;
+	    TH1D* m_DsKpi_fit_1 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5);
 	    TH1D* m_Dspi_fit_1 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
 	    TH1D* m_Dspim_fit_1 = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);	
 	    TH1D* h_cosTheta_Kpi_fit_1= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
@@ -802,11 +801,11 @@ int ampFit(int step=0){
     	    TH1D* h_phi_Kpi_Dspi_fit_1= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
 
 	    TH1D* m_Kpipi_fit_2 = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
-	    TH1D* m_Kpi_fit_2 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
-	    TH1D* m_pipi_fit_2 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
-	    TH1D* m_Dspipi_fit_2 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
-	    TH1D* m_DsK_fit_2 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
-	    TH1D* m_DsKpi_fit_2 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Kpi_fit_2 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.4);
+	    TH1D* m_pipi_fit_2 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.4);
+	    TH1D* m_Dspipi_fit_2 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.);
+	    TH1D* m_DsK_fit_2 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5)  ;
+	    TH1D* m_DsKpi_fit_2 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5);
 	    TH1D* m_Dspi_fit_2 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
 	    TH1D* m_Dspim_fit_2 = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);	
 	    TH1D* h_cosTheta_Kpi_fit_2= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
@@ -814,11 +813,11 @@ int ampFit(int step=0){
     	    TH1D* h_phi_Kpi_Dspi_fit_2= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
 
 	    TH1D* m_Kpipi_fit_3 = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
-	    TH1D* m_Kpi_fit_3 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
-	    TH1D* m_pipi_fit_3 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
-	    TH1D* m_Dspipi_fit_3 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
-	    TH1D* m_DsK_fit_3 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
-	    TH1D* m_DsKpi_fit_3 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Kpi_fit_3 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.4);
+	    TH1D* m_pipi_fit_3 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.4);
+	    TH1D* m_Dspipi_fit_3 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.);
+	    TH1D* m_DsK_fit_3 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5)  ;
+	    TH1D* m_DsKpi_fit_3 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5);
 	    TH1D* m_Dspi_fit_3 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
 	    TH1D* m_Dspim_fit_3 = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);	
 	    TH1D* h_cosTheta_Kpi_fit_3= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
@@ -826,11 +825,11 @@ int ampFit(int step=0){
     	    TH1D* h_phi_Kpi_Dspi_fit_3= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
 
 	    TH1D* m_Kpipi_fit_4 = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
-	    TH1D* m_Kpi_fit_4 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
-	    TH1D* m_pipi_fit_4 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
-	    TH1D* m_Dspipi_fit_4 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
-	    TH1D* m_DsK_fit_4 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
-	    TH1D* m_DsKpi_fit_4 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Kpi_fit_4 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.4);
+	    TH1D* m_pipi_fit_4 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.4);
+	    TH1D* m_Dspipi_fit_4 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.);
+	    TH1D* m_DsK_fit_4 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5)  ;
+	    TH1D* m_DsKpi_fit_4 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5);
 	    TH1D* m_Dspi_fit_4 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
 	    TH1D* m_Dspim_fit_4 = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);	
 	    TH1D* h_cosTheta_Kpi_fit_4= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
@@ -838,11 +837,11 @@ int ampFit(int step=0){
     	    TH1D* h_phi_Kpi_Dspi_fit_4= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
 
 	    TH1D* m_Kpipi_fit_5 = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,2);
-	    TH1D* m_Kpi_fit_5 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.3);
-	    TH1D* m_pipi_fit_5 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.3);
-	    TH1D* m_Dspipi_fit_5 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
-	    TH1D* m_DsK_fit_5 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5.)  ;
-	    TH1D* m_DsKpi_fit_5 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.5);
+	    TH1D* m_Kpi_fit_5 = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.6,1.4);
+	    TH1D* m_pipi_fit_5 = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,0.2,1.4);
+	    TH1D* m_Dspipi_fit_5 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.);
+	    TH1D* m_DsK_fit_5 = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5)  ;
+	    TH1D* m_DsKpi_fit_5 = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5);
 	    TH1D* m_Dspi_fit_5 = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
 	    TH1D* m_Dspim_fit_5 = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);	
 	    TH1D* h_cosTheta_Kpi_fit_5= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
@@ -856,7 +855,7 @@ int ampFit(int step=0){
 	    TFile *FileMC =  TFile::Open(((string) IntegratorEventFile).c_str());
 	    TTree* treeMC = dynamic_cast<TTree*>(FileMC->Get("DalitzEventList"));
 	    eventListMC.fromNtuple(treeMC,1);
-	    FileMC->Close();
+// 	    FileMC->Close();
 
 	    vector<string> ampNames1;
 	    ampNames1.push_back("K(1)(1270)+");
@@ -1571,6 +1570,25 @@ int ampFit(int step=0){
             if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"h_phi_Kpi_Dspi_mod_log.pdf").c_str());
             gPad->SetLogy(0);
 
+	    c->Clear();
+	    TLegend leg(0.,0.,1,1,"");
+	    leg.SetLineStyle(0);
+	    leg.SetLineColor(0);
+	    leg.SetFillColor(0);
+	    leg.SetTextFont(22);
+	    leg.SetTextColor(1);
+	    leg.SetTextSize(0.075);
+	    leg.SetTextAlign(12);
+	    leg.AddEntry(m_Kpipi_fit_1,"B_{s}#rightarrowD_{s} K_{1}(1270)","f");
+	    leg.AddEntry(m_Kpipi_fit_2,"B_{s}#rightarrowD_{s} K_{1}(1400)","f");
+	    leg.AddEntry(m_Kpipi_fit_3,"B_{s}#rightarrowD_{s} K^{*}(1410)","f");
+	    leg.AddEntry(m_Kpipi_fit_4,"B_{s}#rightarrow(D_{s} #pi) K^{*}(892) + (D_{s} K) #rho(770)","l");
+	    leg.AddEntry(m_Kpipi_fit_5,"B_{s}#rightarrowD_{s} K(1460)","f");
+	    leg.Draw();
+	    c->Print(((string)OutputDir+"leg.eps").c_str());
+	    c->Print(((string)OutputDir+"leg.C").c_str());
+	    if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/lassoFit/"+(string)OutputDir +"leg.pdf").c_str());
+			
 	    getChi2(eventList,eventListMC);
         }
     return 0;
@@ -1677,6 +1695,236 @@ void makeIntegratorFileEvtGen(){
     return;
 }
 
+
+void plotData(){
+
+    NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
+    DalitzEventPattern pat(EventPattern.getVector());
+    cout << " got event pattern: " << pat << endl;
+	
+    vector<int> s123;
+    s123.push_back(1);
+    s123.push_back(2);
+    s123.push_back(3);
+	
+    vector<int> s234;
+    s234.push_back(2);
+    s234.push_back(3);
+    s234.push_back(4);
+	
+    vector<int> s134;
+    s134.push_back(1);
+    s134.push_back(3);
+    s134.push_back(4);
+	
+    vector<int> s124;
+    s124.push_back(1);
+    s124.push_back(2);
+    s124.push_back(4);
+
+        /// Load data
+        double t,dt;
+        int f;
+        double Bs_ID,Ds_ID;
+        int q_OS;
+        Short_t q_SS;
+        double eta_OS;
+        Float_t eta_SS;
+        double sw;
+        int year,run,Ds_finalState,trigger;
+
+        double K[4];
+        double pip[4];
+        double pim[4];
+        double Ds_Kp[4],Ds_Km[4],Ds_pim[4];
+        double mB;
+        
+        TChain* tree;
+	tree=new TChain("DecayTree");
+// 	tree->Add(((string)InputDir+"Data/"+(string)channel+".root").c_str());
+	tree->Add("../MassFits/test.root");
+	tree->SetBranchStatus("*",0);
+	tree->SetBranchStatus("N_Bs_sw",1);
+	tree->SetBranchStatus("year",1);
+	tree->SetBranchStatus("*DEC",1);
+	tree->SetBranchStatus("*PROB",1);
+	tree->SetBranchStatus("*OS",1);
+	tree->SetBranchStatus("*TAU*",1);
+	tree->SetBranchStatus("*ID*",1);
+	tree->SetBranchStatus("weight",1);
+	tree->SetBranchStatus("Bs_DTF_MM",1);
+	tree->SetBranchStatus("BsDTF_*P*",1);
+	tree->SetBranchStatus("TriggerCat",1);
+	tree->SetBranchStatus("run",1);
+
+	tree->SetBranchAddress("Bs_DTF_TAU",&t);
+	tree->SetBranchAddress("Bs_DTF_TAUERR",&dt);
+	tree->SetBranchAddress("Ds_ID",&f);
+	tree->SetBranchAddress("N_Bs_sw",&sw);
+	tree->SetBranchAddress("year",&year);
+	tree->SetBranchAddress("run",&run);
+	tree->SetBranchAddress("Ds_finalState",&Ds_finalState);
+	tree->SetBranchAddress("TriggerCat",&trigger);
+	tree->SetBranchAddress("Bs_DTF_MM",&mB);
+	
+	tree->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
+	tree->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
+	tree->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
+	tree->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
+	
+	tree->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
+	tree->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
+	tree->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
+	tree->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);
+	
+	tree->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
+	tree->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
+	tree->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
+	tree->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);
+	
+	tree->SetBranchAddress("BsDTF_Ds_Kplus_PX",&Ds_Kp[0]);
+	tree->SetBranchAddress("BsDTF_Ds_Kplus_PY",&Ds_Kp[1]);
+	tree->SetBranchAddress("BsDTF_Ds_Kplus_PZ",&Ds_Kp[2]);
+	tree->SetBranchAddress("BsDTF_Ds_Kplus_PE",&Ds_Kp[3]);
+	
+	tree->SetBranchAddress("BsDTF_Ds_Kminus_PX",&Ds_Km[0]);
+	tree->SetBranchAddress("BsDTF_Ds_Kminus_PY",&Ds_Km[1]);
+	tree->SetBranchAddress("BsDTF_Ds_Kminus_PZ",&Ds_Km[2]);
+	tree->SetBranchAddress("BsDTF_Ds_Kminus_PE",&Ds_Km[3]);
+
+	tree->SetBranchAddress("BsDTF_Ds_piminus_PX",&Ds_pim[0]);
+	tree->SetBranchAddress("BsDTF_Ds_piminus_PY",&Ds_pim[1]);
+	tree->SetBranchAddress("BsDTF_Ds_piminus_PZ",&Ds_pim[2]);
+	tree->SetBranchAddress("BsDTF_Ds_piminus_PE",&Ds_pim[3]);
+
+ 	TH1D* m_Kpipi_bad = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",40,1,3);
+ 	TH1D* m_bad = new TH1D("",";#left[m #right] (GeV/c^{2});Events (norm.) ",50,5200,5700);
+
+	int N_sample = tree->GetEntries();
+	int badEvents = 0;
+
+	DalitzEventList eventList;
+	for(int i=0; i< N_sample; i++){
+		if (0ul == (i % 10000ul)) cout << "Read event " << i << "/" << N_sample << endl;
+		tree->GetEntry(i);
+
+		double sign = 1.;
+		if(f > 0) sign = -1.;
+		TLorentzVector K_p(sign*K[0],sign*K[1],sign*K[2],K[3]);
+		TLorentzVector pip_p(sign*pip[0],sign*pip[1],sign*pip[2],pip[3]);
+		TLorentzVector pim_p(sign*pim[0],sign*pim[1],sign*pim[2],pim[3]);
+		TLorentzVector D_Kp_p(sign*Ds_Kp[0],sign*Ds_Kp[1],sign*Ds_Kp[2],Ds_Kp[3]);
+		TLorentzVector D_Km_p(sign*Ds_Km[0],sign*Ds_Km[1],sign*Ds_Km[2],Ds_Km[3]);
+		TLorentzVector D_pim_p(sign*Ds_pim[0],sign*Ds_pim[1],sign*Ds_pim[2],Ds_pim[3]);
+		TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+		TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+		// array of vectors
+		vector<TLorentzVector> vectorOfvectors;
+		
+		vectorOfvectors.push_back(B_p*MeV);
+		vectorOfvectors.push_back(D_p*MeV);
+		vectorOfvectors.push_back(K_p*MeV);
+		vectorOfvectors.push_back(pip_p*MeV);
+		vectorOfvectors.push_back(pim_p*MeV);
+	
+		DalitzEvent evt = DalitzEvent(pat, vectorOfvectors);
+	
+		if(!(evt.phaseSpace() > 0.)){
+			m_bad->Fill(mB);
+			m_Kpipi_bad->Fill((K_p+pip_p+pim_p).M()/GeV,sw);
+			badEvents++;
+			continue;
+		}
+
+		if(sqrt(evt.sij(s234)/(GeV*GeV))>1.85) continue;
+		
+		evt.setWeight(sw);
+		eventList.Add(evt);	
+	}
+	cout << endl << "bad events " << badEvents << " ( " << badEvents/(double) N_sample * 100. << " %)" << endl << endl;
+
+            int nBins = 100;
+	    TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,1,4);
+	    TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.3,1.6);
+	    TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,1.6);
+	    TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
+	    TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30)  ;
+	    TH1D* s_DsKpi = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,5,30);
+	    TH1D* s_Dspi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+            TH1D* s_Dspim = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+		
+ 	    TH1D* m_Kpipi = new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,2.5);
+	    TH1D* m_Kpi = new TH1D("",";#left[m(K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,1.7);
+	    TH1D* m_pipi = new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1,1.5);
+	    TH1D* m_Dspipi = new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2,5.);
+	    TH1D* m_DsK = new TH1D("",";#left[m(D_{s}^{-} K^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5)  ;
+	    TH1D* m_DsKpi = new TH1D("",";#left[m(D_{s}^{-} K^{+} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,2.5,5.5);
+	    TH1D* m_Dspi = new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+	    TH1D* m_Dspim = new TH1D("",";#left[m(D_{s}^{-} #pi^{-})#right] (GeV/c^{2});Events (norm.) ",nBins,1.5,5);
+
+	    TH1D* h_cosTheta_Kpi= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
+	    TH1D* h_cosTheta_Dspi= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+    	    TH1D* h_phi_Kpi_Dspi= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
+            
+            TH2D* s_Kpi_pipi = new TH2D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4}) ",60,0.2,1.6,60,0.,1.6);
+            TH2D* s_DsKpi_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",80,5,30,80,0,25);
+            TH2D* s_DsK_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",60,0,30,60,0,25);
+
+            for (int i=0; i<eventList.size(); i++) {
+                s_Kpipi->Fill(eventList[i].sij(s234)/(GeV*GeV),eventList[i].getWeight());
+                s_Kpi->Fill(eventList[i].s(2,4)/(GeV*GeV),eventList[i].getWeight());
+                s_pipi->Fill(eventList[i].s(3,4)/(GeV*GeV),eventList[i].getWeight());
+                s_Dspipi->Fill(eventList[i].sij(s134)/(GeV*GeV),eventList[i].getWeight());
+                s_DsK->Fill(eventList[i].s(1,2)/(GeV*GeV),eventList[i].getWeight());
+                s_DsKpi->Fill(eventList[i].sij(s124)/(GeV*GeV),eventList[i].getWeight());
+                s_Dspi->Fill(eventList[i].s(1,3)/(GeV*GeV),eventList[i].getWeight());
+                s_Dspim->Fill(eventList[i].s(1,4)/(GeV*GeV),eventList[i].getWeight());
+
+                m_Kpipi->Fill(sqrt(eventList[i].sij(s234)/(GeV*GeV)),eventList[i].getWeight());
+                m_Kpi->Fill(sqrt(eventList[i].s(2,4)/(GeV*GeV)),eventList[i].getWeight());
+                m_pipi->Fill(sqrt(eventList[i].s(3,4)/(GeV*GeV)),eventList[i].getWeight());
+                m_Dspipi->Fill(sqrt(eventList[i].sij(s134)/(GeV*GeV)),eventList[i].getWeight());
+                m_DsK->Fill(sqrt(eventList[i].s(1,2)/(GeV*GeV)),eventList[i].getWeight());
+                m_DsKpi->Fill(sqrt(eventList[i].sij(s124)/(GeV*GeV)),eventList[i].getWeight());
+                m_Dspi->Fill(sqrt(eventList[i].s(1,3)/(GeV*GeV)),eventList[i].getWeight());
+                m_Dspim->Fill(sqrt(eventList[i].s(1,4)/(GeV*GeV)),eventList[i].getWeight());
+
+                s_Kpi_pipi->Fill(eventList[i].s(2,4)/(GeV*GeV),eventList[i].s(3,4)/(GeV*GeV),eventList[i].getWeight());
+                s_DsKpi_Dspi->Fill(eventList[i].sij(s124)/(GeV*GeV),eventList[i].s(1,3)/(GeV*GeV),eventList[i].getWeight());
+                s_DsK_Dspi->Fill(eventList[i].s(1,2)/(GeV*GeV),eventList[i].s(1,3)/(GeV*GeV),eventList[i].getWeight());
+
+		h_cosTheta_Kpi->Fill(cosThetaAngle(eventList[i],2,4,1,3),eventList[i].getWeight());
+		h_cosTheta_Dspi->Fill(cosThetaAngle(eventList[i],1,3,2,4),eventList[i].getWeight());
+		h_phi_Kpi_Dspi->Fill(acoplanarityAngle(eventList[i],2,4,1,3),eventList[i].getWeight());
+            }  
+
+	    TCanvas* c = new TCanvas();
+            m_bad->SetMinimum(0);
+            m_bad->SetLineColor(kBlack);
+            m_bad->Draw("e1");
+            c->Print("m_bad.eps");
+
+            m_Kpipi_bad->SetMinimum(0);
+            m_Kpipi_bad->SetLineColor(kBlack);
+            m_Kpipi_bad->DrawNormalized("e1",1);
+            c->Print("m_Kpipi_bad.eps");
+
+            m_Kpipi->SetMinimum(0);
+            m_Kpipi->SetLineColor(kBlack);
+            m_Kpipi->DrawNormalized("e1",1);
+            c->Print("m_Kpipi.eps");
+
+            m_Kpi->SetMinimum(0);
+            m_Kpi->SetLineColor(kBlack);
+            m_Kpi->DrawNormalized("e1",1);
+            c->Print("m_Kpi.eps");
+
+	    m_pipi->SetMinimum(0);            
+            m_pipi->SetLineColor(kBlack);
+            m_pipi->DrawNormalized("e1",1);
+            c->Print("m_pipi.eps");
+}
+
 int main(int argc, char** argv){
     
     time_t startTime = time(0);
@@ -1688,9 +1936,10 @@ int main(int argc, char** argv){
 
 //makeIntegratorFileEvtGen(); return 0;
 
-    NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
-    if(! std::ifstream(((string)IntegratorEventFile).c_str()).good()) makeIntegratorFilePhsp();
+//     NamedParameter<string> IntegratorEventFile("IntegratorEventFile", (std::string) "SignalIntegrationEvents.root", (char*) 0);
+//     if(! std::ifstream(((string)IntegratorEventFile).c_str()).good()) makeIntegratorFilePhsp();
   
+// plotData();
     ampFit(atoi(argv[1]));
     
     cout << "==============================================" << endl;

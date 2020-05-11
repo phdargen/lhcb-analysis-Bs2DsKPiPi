@@ -151,6 +151,81 @@ vector <double> pull::getErrs(){
 }   
 
 
+vector <double> pull::getPullMean(){
+    
+    if(fChain == 0){
+            cout << "ERROR:: No file found" << endl;
+            throw "ERROR";
+    }
+
+    TMatrixD cov(_paraNames.size(),_paraNames.size());
+    int N = fChain->GetEntries();
+    
+    vector<TH1D*> h_pulls;
+    for (int i = 0 ; i < _paraNames.size(); i++) 
+        h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 40, -5.,5.));
+        
+    for (int n=0; n <N ;n++) {
+        fChain->GetEntry(n);  
+        for (int i = 0 ; i < _paraNames.size(); i++){
+            h_pulls[i]->Fill(*_pulls[i]);
+        }
+    }
+
+    TF1 *gaussian = new TF1("gaussian","gaus",-3.,3.);
+    gaussian->SetParameters(1.,0.,1.);
+    gaussian->SetParLimits(1,-1., 1.);
+    gaussian->SetParLimits(2, 0., 2.);
+    gaussian->SetLineColor(kRed);
+        
+    vector<double> fit_means,fit_sigmas;
+    for(int i = 0 ; i < _paraNames.size(); i++) {
+        h_pulls[i]->Fit(gaussian);
+        fit_means.push_back(gaussian->GetParameter(1));
+        fit_sigmas.push_back(gaussian->GetParameter(2));
+    }
+
+    return fit_means;
+}
+
+vector <double> pull::getPullSigma(){
+    
+    if(fChain == 0){
+            cout << "ERROR:: No file found" << endl;
+            throw "ERROR";
+    }
+
+    TMatrixD cov(_paraNames.size(),_paraNames.size());
+    int N = fChain->GetEntries();
+    
+    vector<TH1D*> h_pulls;
+    for (int i = 0 ; i < _paraNames.size(); i++) 
+        h_pulls.push_back(new TH1D("pull_"+_paraNames[i],"; Pull " + _paraNames[i] + "; Toy experiments", 40, -5.,5.));
+        
+    for (int n=0; n <N ;n++) {
+        fChain->GetEntry(n);  
+        for (int i = 0 ; i < _paraNames.size(); i++){
+            h_pulls[i]->Fill(*_pulls[i]);
+        }
+    }
+
+    TF1 *gaussian = new TF1("gaussian","gaus",-3.,3.);
+    gaussian->SetParameters(1.,0.,1.);
+    gaussian->SetParLimits(1,-1., 1.);
+    gaussian->SetParLimits(2, 0., 2.);
+    gaussian->SetLineColor(kRed);
+        
+    vector<double> fit_means,fit_sigmas;
+    for(int i = 0 ; i < _paraNames.size(); i++) {
+        h_pulls[i]->Fit(gaussian);
+        fit_means.push_back(gaussian->GetParameter(1));
+        fit_sigmas.push_back(gaussian->GetParameter(2));
+    }
+
+    return fit_sigmas;
+}
+
+
 TMatrixD pull::getStatCov(TString label){
     
     if(fChain == 0){
@@ -164,6 +239,7 @@ TMatrixD pull::getStatCov(TString label){
         fChain->GetEntry(n);  
 	for (int i = 0 ; i < _paraNames.size(); i++) {
 		for (int j = 0 ; j < _paraNames.size(); j++) {
+			if( abs(*_means[i] - *_inits[i]) > 5 || abs(*_means[j] - *_inits[j]) > 5 ) continue;
 			cov[i][j] += (*_means[i] - *_inits[i]) * (*_means[j] - *_inits[j])/(N-1.);
 		}
 	}

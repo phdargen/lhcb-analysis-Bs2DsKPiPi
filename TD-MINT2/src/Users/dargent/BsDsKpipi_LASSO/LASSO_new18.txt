@@ -1,0 +1,229 @@
+RandomSeed  0
+
+"Phases given in"       "degrees"
+"Event Pattern"         531 -431 321 211 -211
+
+"IntegratorEvents"	1000000
+"IntegPrecision"        5.0e-3
+"IntegMethod"           "efficient"
+"IntegratorSource"        "file"
+"channel"	"signal"
+
+"Nevents"               1000
+"useLASSO"		1
+"lambda"		0.1
+
+"updateAnaNote"		1
+"InputFileName"	 "/auto/data/dargent/BsDsKpipi/Final/Data/signal2_18.root"
+"IntegratorEventFile"	"/auto/data/dargent/BsDsKpipi/MINT/signalMC_trueGen.root"
+"OutputRootFile"	"toys.root"
+"OutputDir"		"LASSO_new18/"
+"doPlots"		0
+
+"Default3bodyBW"	"PhaseSpace"
+
+** name								Fix?	init	step	min	max
+*
+"SigFraction"                     				2	0.999	0.1	0.0	0.0
+
+"mass_K(1)(1270)+"	1	1289.81 1.75
+"width_K(1)(1270)+"	1	116.11  3.4
+"RunningWidth_K(1)(1270)+"	"../RunningWidth/Histos_KKpipi_LHCb/RunningWidth_K(1)(1270)+.root"
+
+
+"mass_K(1)(1400)+"	2	1397.87 10
+"width_K(1)(1400)+"	2	204.377 15
+"RunningWidth_K(1)(1400)+"	"../RunningWidth/Histos_CLEO/RunningWidth_K(1)(1400)+.root"
+
+"mass_K*(1410)+"	2	1432.07 10
+"width_K*(1410)+"	2	344.149 15
+"RunningWidth_K*(1410)+"	"../RunningWidth/Histos_CLEO/RunningWidth_K*(1410+.root"
+*"RunningWidth_K*(1410)+"	"../RunningWidth/RunningWidth_K*(1410+_it2.root"
+
+"mass_K(1460)+"		1	1482.4 15.64
+"width_K(1460)+"	1	335.6 10.64
+"RunningWidth_K(1460)+"	"../RunningWidth/Histos_K3pi_LHCb/RunningWidth_K(1460)+.root"
+
+"mass_K*(892)0"		1	895.55	0.2 
+"width_K*(892)0"	1	50.3	0.8
+
+"mass_rho(770)0"	1	775.26	0.25 
+"width_rho(770)0"	1	147.8	0.9
+
+"mass_K(0)*(1430)0"	1	1425	50 
+"width_K(0)*(1430)0"	1	270	80
+
+"RhoOmegaGS::Delta_Re_rho(770)0"	1	0.0073		   0.0001
+"RhoOmegaGS::Delta_Im_rho(770)0"	1	1.99		   0.0001
+
+"mass_D(s1)(2536)+"	                     		2	3800	 1	3700	3900
+"width_D(s1)(2536)+"	                     		2	200	 1	50.0	350.0
+
+*"UseGlobalRadiusFor_Bs0"			1
+*"radius_Bs0"					0	0.0015	0.0001	0.0001	0.025		          
+*"BW_radius"                     		0	0.0015	0.0001	0.0001	0.025
+
+*Baseline:
+*---------------------		
+"Bs0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Re"	0	-0.205916 0.01
+"Bs0->K(1)(1270)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Im"	0	0.162188 0.01
+"Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"	0	0.264886 0.01
+"Bs0->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"	0	0.433533 0.01
+"Bs0->K(1)(1270)+[D](->K*(892)0(->K+,pi-),pi+),Ds-_Re"	0	0.0763228 0.01
+"Bs0->K(1)(1270)+[D](->K*(892)0(->K+,pi-),pi+),Ds-_Im"	0	0.21243 0.01
+"Bs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"	2	1 0.01
+"Bs0->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"	2	0 0.01
+
+"Bs0->K(1460)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"	0	0.13779 0.01
+"Bs0->K(1460)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"	0	0.0556468 0.01
+
+"Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"	0	0.244936 0.01
+"Bs0->K*(1410)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"	0	0.44107 0.01
+
+"Bs0->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Re"	0	0.574209 0.01
+"Bs0->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Im"	0	0.255446 0.01
+*"Bs0[D]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Re"	0	0.255741 0.01
+*"Bs0[D]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Im"	0	0.21171 0.01
+"Bs0[P]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Re"	0	-0.00913313 0.01
+"Bs0[P]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Im"	0	0.295765 0.01
+
+"BuggBs0->K(1460)+(->sigma10(->pi+,pi-),K+),Ds-_Re"	0	0.0512395 0.01
+"BuggBs0->K(1460)+(->sigma10(->pi+,pi-),K+),Ds-_Im"	0	-0.0508458 0.01
+
+"GSBs0->K*(1410)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"	0	-0.214641 0.01
+"GSBs0->K*(1410)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"	0	-0.201041 0.01
+
+"GSBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Re"	0	0.0197677 0.01
+"GSBs0->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Im"	0	0.354955 0.01
+
+"RhoOmegaGSBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"	0	0.452424 0.01
+"RhoOmegaGSBs0->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"	0	0.130561 0.01
+
+
+
+"SigFraction"	2	0.999 0.01
+"Inco_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Re"	2	1 0.01
+"Inco_BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Im"	2	0 0.01
+
+
+*"BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Re"	0	-0.0433992 0.01
+*"BgSpinZeroBs0->NonResS0(->Ds-,K+),NonResS0(->pi+,pi-)_Im"	0	0.638541 0.01
+
+
+*"Bs0->K(2)*(1430)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"	0	0.0665821 0.01
+*"Bs0->K(2)*(1430)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"	0	-0.0126133 0.01
+
+*"Bs0->K(1460)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Re"                                           	 0	0.0	0.01	0.0	0.0
+*"Bs0->K(1460)+(->K(0)*(1430)0(->K+,pi-),pi+),Ds-_Im"                                         	 0	0.0	0.01	0.0	0.0
+*"FlatteBs0->K(1460)+(->f(0)(980)0(->pi+,pi-),K+),Ds-_Re"                                             	 0	0.0	0.01	0.0	0.0
+*"FlatteBs0->K(1460)+(->f(0)(980)0(->pi+,pi-),K+),Ds-_Im"                                           	 0	0.0	0.01	0.0	0.0
+*"Bs0->K(1460)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"                                              	 0	0.0	0.01	0.0	0.0
+*"Bs0->K(1460)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"                                            	 0	0.0	0.01	0.0	0.0
+
+*"GSBs0->NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+_Re"               0	0.1	0.01	0.0	0.0
+*"GSBs0->NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+_Im"               0	0.3	0.01	0.0	0.0
+*"BuggBs0->NonResA0(->sigma10(->pi+,pi-),Ds-),K+_Re"               0	0.1	0.01	0.0	0.0
+*"BuggBs0->NonResA0(->sigma10(->pi+,pi-),Ds-),K+_Im"               0	0.3	0.01	0.0	0.0
+
+*"Bs0->K(2)(1580)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"                                           	 0	0.1	0.01	0.0	0.0
+*"Bs0->K(2)(1580)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"                                         	 0	0.1	0.01	0.0	0.0
+*"FlatteBs0->K(2)(1770)+(->f(0)(980)0(->pi+,pi-),K+),Ds-_Re"                                          	 0	0.1	0.01	0.0	0.0
+*"FlatteBs0->K(2)(1770)+(->f(0)(980)0(->pi+,pi-),K+),Ds-_Im"                                        	 0	0.1	0.01	0.0	0.0
+*“Bs0->K(2)(1770)+(->f(2)(1270)0(->pi+,pi-),K+),Ds-_Re"                                         	 0	0.1	0.01	0.0	0.0
+*"Bs0->K(2)(1770)+(->f(2)(1270)0(->pi+,pi-),K+),Ds-_Im"                                       	 0	0.1	0.01	0.0	0.0
+*"Bs0->K(2)(1770)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"                                           	 0	0.1	0.01	0.0	0.0
+*"Bs0->K(2)(1770)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"                                         	 0	0.1	0.01	0.0	0.0
+*"Bs0->K(2)*(1430)+(->rho(770)0(->pi+,pi-),K+),Ds-_Re"                                          	 0	0.1	0.01	0.0	0.0
+*"Bs0->K(2)*(1430)+(->rho(770)0(->pi+,pi-),K+),Ds-_Im"                                        	 0	0.1	0.01	0.0	0.0
+
+*"Bs0->K(2)(1580)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"                                            	 0	0.1	0.01	0.0	0.0
+*"Bs0->K(2)(1580)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"                                          	 0	0.1	0.01	0.0	0.0
+*"Bs0->K(2)(1770)+(->K(2)*(1430)0(->K+,pi-),pi+),Ds-_Re"                                        	 0	0.1	0.01	0.0	0.0
+*"Bs0->K(2)(1770)+(->K(2)*(1430)0(->K+,pi-),pi+),Ds-_Im"                                      	 0	0.1	0.01	0.0	0.0
+*"Bs0->K(2)(1770)+(->K*(892)0(->K+,pi-),pi+),Ds-_Re"                                            	 0	0.1	0.01	0.0	0.0
+*"Bs0->K(2)(1770)+(->K*(892)0(->K+,pi-),pi+),Ds-_Im"                                          	 0	0.1	0.01	0.0	0.0
+
+*
+*"FlatteBs0->NonResS0(->Ds-,K+),f(0)(980)0(->pi+,pi-)_Re"                                             	 0	0.1	0.01	0.0	0.0
+*"FlatteBs0->NonResS0(->Ds-,K+),f(0)(980)0(->pi+,pi-)_Im"                                           	 0	0.1	0.01	0.0	0.0
+*"FlatteBs0->NonResV0(->Ds-,K+),f(0)(980)0(->pi+,pi-)_Re"                                             	 0	0.1	0.01	0.0	0.0
+*"FlatteBs0->NonResV0(->Ds-,K+),f(0)(980)0(->pi+,pi-)_Im"                                           	 0	0.1	0.01	0.0	0.0
+*
+*"Bs0->f(0)(1370)0(->pi+,pi-),NonResS0(->Ds-,K+)_Re"                                            	 0	0.1	0.01	0.0	0.0
+*"Bs0->f(0)(1370)0(->pi+,pi-),NonResS0(->Ds-,K+)_Im"                                          	 0	0.1	0.01	0.0	0.0
+*"Bs0->f(0)(1370)0(->pi+,pi-),NonResV0(->Ds-,K+)_Re"                                            	 0	0.1	0.01	0.0	0.0
+*"Bs0->f(0)(1370)0(->pi+,pi-),NonResV0(->Ds-,K+)_Im"                                          	 0	0.1	0.01	0.0	0.0
+*
+"Bs0->f(2)(1270)0(->pi+,pi-),NonResS0(->Ds-,K+)_Re"                                            	 0	0.1	0.01	0.0	0.0
+"Bs0->f(2)(1270)0(->pi+,pi-),NonResS0(->Ds-,K+)_Im"                                          	 0	0.1	0.01	0.0	0.0
+*"Bs0->f(2)(1270)0(->pi+,pi-),NonResT0(->Ds-,K+)_Re"                                            	 0	0.1	0.01	0.0	0.0
+*"Bs0->f(2)(1270)0(->pi+,pi-),NonResT0(->Ds-,K+)_Im"                                          	 0	0.1	0.01	0.0	0.0
+*"Bs0->f(2)(1270)0(->pi+,pi-),NonResV0(->Ds-,K+)_Re"                                            	 0	0.1	0.01	0.0	0.0
+*"Bs0->f(2)(1270)0(->pi+,pi-),NonResV0(->Ds-,K+)_Im"                                          	 0	0.1	0.01	0.0	0.0
+
+*"Bs0->K(0)*(1430)0(->K+,pi-),NonResS0(->Ds-,pi+)_Re"                                           	 0	0.1	0.01	0.0	0.0
+*"Bs0->K(0)*(1430)0(->K+,pi-),NonResS0(->Ds-,pi+)_Im"                                         	 0	0.1	0.01	0.0	0.0
+
+*
+*"Bs0->D(s1)(2536)-(->rho(770)0(->pi+,pi-),Ds-),K+_Re"                                          	 0	0.2	0.01	0.0	0.0
+*"Bs0->D(s1)(2536)-(->rho(770)0(->pi+,pi-),Ds-),K+_Im"                                        	 0	0.2	0.01	0.0	0.0
+*
+*"Bs0->D(s1)(2536)-(->sigma10(->pi+,pi-),Ds-),K+_Re"                                            	 0	0.2	0.01	0.0	0.0
+*"Bs0->D(s1)(2536)-(->sigma10(->pi+,pi-),Ds-),K+_Im"                                          	 0	0.2	0.01	0.0	0.0
+*
+
+"Bs0->NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)_Amp"		0	0.1.	0.01 0 1
+"Bs0->NonResS0(->Ds-,pi+),K*(892)0(->K+,pi-)_Phase"		0	0.	5
+*"Bs0[P]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Amp"		1	0.	5
+*"Bs0[P]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Phase"		1	0.	5
+*"Bs0[D]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Amp"		1	1.	0.01
+*"Bs0[D]->NonResV0(->Ds-,pi+),K*(892)0(->K+,pi-)_Phase"		1	0.	5
+
+"GSBs0->NonResS0(->Ds-,K+),rho(770)0(->pi+,pi-)_Amp"		0	0.1.	0.01 0 1
+"GSBs0->NonResS0(->Ds-,K+),rho(770)0(->pi+,pi-)_Phase"		0	0.	5
+*"GSBs0[P]->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Amp"	1	1.	0.01
+*"GSBs0[P]->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Phase"	1	0.	5
+*"GSBs0[D]->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Amp"	1	1.	0.01
+*"GSBs0[D]->NonResV0(->Ds-,K+),rho(770)0(->pi+,pi-)_Phase"	1	0.	5
+*"GSBs0->NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+_Amp"           1	1.	0.01
+*"GSBs0->NonResA0(->rho(770)0(->pi+,pi-),Ds-),K+_Phase"         1	0.	5
+
+"BuggBs0->NonResS0(->Ds-,K+),sigma10(->pi+,pi-)_Amp"		0	0.1.	0.01 0 1
+"BuggBs0->NonResS0(->Ds-,K+),sigma10(->pi+,pi-)_Phase"		0	0.	5
+*"BuggBs0->NonResV0(->Ds-,K+),sigma10(->pi+,pi-)_Amp"		1	1.	0.01
+*"BuggBs0->NonResV0(->Ds-,K+),sigma10(->pi+,pi-)_Phase"		1	0.	5
+*"BuggBs0->NonResA0(->sigma10(->pi+,pi-),Ds-),K+_Amp"           1	1.	0.01
+*"BuggBs0->NonResA0(->sigma10(->pi+,pi-),Ds-),K+_Phase"         1	0.	5
+
+*"FlatteBs0->NonResS0(->Ds-,K+),f(0)(980)0(->pi+,pi-)_Amp"        1	1.	0.01
+*"FlatteBs0->NonResS0(->Ds-,K+),f(0)(980)0(->pi+,pi-)_Phase"      1	0.	5
+*"FlatteBs0->NonResV0(->Ds-,K+),f(0)(980)0(->pi+,pi-)_Amp"        1	1.	0.01
+*"FlatteBs0->NonResV0(->Ds-,K+),f(0)(980)0(->pi+,pi-)_Phase"      1	0.	5
+
+*"LassBs0->K(0)*(1430)0(->K+,pi-),NonResS0(->Ds-,pi+)_Amp"         1	1.	0.01
+*"LassBs0->K(0)*(1430)0(->K+,pi-),NonResS0(->Ds-,pi+)_Phase"       1	0.	5
+
+*"Bs0->K(2)*(1430)+(->K*(892)0(->K+,pi-),pi+),Ds-_Amp"		1	1.	0.01
+*"Bs0->K(2)*(1430)+(->K*(892)0(->K+,pi-),pi+),Ds-_Phase"	1	0.	5
+*"Bs0->K(2)*(1430)+(->rho(770)0(->pi+,pi-),K+),Ds-_Amp"  	1	1.	0.01
+*"Bs0->K(2)*(1430)+(->rho(770)0(->pi+,pi-),K+),Ds-_Phase" 	1	0.	5
+
+"Bs0->K*(1680)+(->K*(892)0(->K+,pi-),pi+),Ds-_Amp"		0	0.1.	0.01 0 1
+"Bs0->K*(1680)+(->K*(892)0(->K+,pi-),pi+),Ds-_Phase"		0	0.	5
+"GSBs0->K*(1680)+(->rho(770)0(->pi+,pi-),K+),Ds-_Amp"		0	0.1	0.01 0 1
+"GSBs0->K*(1680)+(->rho(770)0(->pi+,pi-),K+),Ds-_Phase"	1	0.	5
+
+*"Bs0->K(2)(1770)+(->K(2)*(1430)0(->K+,pi-),pi+),Ds-_Amp"        1	1.	0.01
+*"Bs0->K(2)(1770)+(->K(2)*(1430)0(->K+,pi-),pi+),Ds-_Phase"      1	0.	5
+"Bs0->K(2)(1770)+(->K*(892)0(->K+,pi-),pi+),Ds-_Amp"           0	0.1.	0.01 0 1
+"Bs0->K(2)(1770)+(->K*(892)0(->K+,pi-),pi+),Ds-_Phase"          0	0.	5
+*"FlatteBs0->K(2)(1770)+(->f(0)(980)0(->pi+,pi-),K+),Ds-_Amp"    1	1.	0.01
+*"FlatteBs0->K(2)(1770)+(->f(0)(980)0(->pi+,pi-),K+),Ds-_Phase"  1	0.	5
+*“Bs0->K(2)(1770)+(->f(2)(1270)0(->pi+,pi-),K+),Ds-_Amp"         1	1.	0.01
+*"Bs0->K(2)(1770)+(->f(2)(1270)0(->pi+,pi-),K+),Ds-_Phase"       1	0.	5
+*"Bs0->K(2)(1770)+(->rho(770)0(->pi+,pi-),K+),Ds-_Amp"           1	1.	0.01
+*"Bs0->K(2)(1770)+(->rho(770)0(->pi+,pi-),K+),Ds-_Phase"   	 1	0.	5
+
+
+
+

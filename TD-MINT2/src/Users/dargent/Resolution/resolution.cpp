@@ -85,6 +85,8 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
         NamedParameter<double> TAUERR_max("TAUERR_max", 0.15);
 	NamedParameter<int> useTransformedSigma("useTransformedSigma", 0);
 
+        NamedParameter<int> addExpBkg("addExpBkg", 0);
+
         NamedParameter<int> fixMean("fixMean", 0);
         NamedParameter<int> fixGaussFraction("fixGaussFraction", 0);
         NamedParameter<double> gaussFraction("gaussFraction", 0.75);
@@ -92,6 +94,7 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
 	if(dataType == "Data" && year == 0) dataType.Append("_all");
 	if(dataType == "Data" && year == 16) dataType.Append("_16");
 	if(dataType == "Data" && year == 17) dataType.Append("_17");
+	if(dataType == "Data" && year == 18) dataType.Append("_18");
 
 	/// Load file
         RooRealVar Bs_TAU(Bs_TAU_Var, Bs_TAU_Var, -20.,20.);
@@ -109,6 +112,7 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
 	TString cut = varName + " >= " + anythingToString(min) + " && " + varName + "<=" + anythingToString(max);
 
 	RooDataSet* data = new RooDataSet("data","data",list,Import(*tree_res),WeightVar(((string)weightVar).c_str()),Cut(cut));
+// 	RooDataSet* data = new RooDataSet("data","data",list,Import(*tree_res),Cut(cut));
 
         /// Add residuals to dataset
 	RooFormulaVar* Bs_DeltaTau_func;
@@ -140,20 +144,36 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
 	}
 	RooRealVar* sigma3 = new RooRealVar("sigma3", "sigma3", 0.040,0.,0.2);
 
-	RooGaussian Gauss1("Gauss1", "Gauss1", *Bs_DeltaTau, *mean1, *sigma1);
-	RooGaussian Gauss2("Gauss2", "Gauss2", *Bs_DeltaTau, *mean1, *sigma2);
-	RooGaussian Gauss3("Gauss3", "Gauss3", *Bs_DeltaTau, *mean1, *sigma3);
+	RooGaussModel Gauss1("Gauss1", "Gauss1", *Bs_DeltaTau, *mean1, *sigma1);
+	RooGaussModel Gauss2("Gauss2", "Gauss2", *Bs_DeltaTau, *mean1, *sigma2);
+	RooGaussModel Gauss3("Gauss3", "Gauss3", *Bs_DeltaTau, *mean1, *sigma3);
 	
-	RooAddPdf* pdf;
-	if(ngauss<3)pdf = new RooAddPdf("pdf", "pdf", RooArgList(Gauss1,Gauss2),RooArgList(*f));
-	else pdf = new RooAddPdf("pdf", "pdf", RooArgList(Gauss1,Gauss2,Gauss3),RooArgList(*f,*f2));
-	if(ngauss==1){
-		f->setVal(1);
-		f->setConstant();
-		sigma2->setConstant();
-		scale->setConstant();
-	}	
+	/// Add optionally exponential 
+        RooRealVar exp_tau("exp_tau", "exp_tau", 0.2);
+	RooRealVar* f_exp = new RooRealVar("f_exp" , "f_exp", 0.95,0.9,1);
+        RooTruthModel tm("tm","truth model",*Bs_DeltaTau) ;
 
+	RooDecay *exp1,*exp2;
+        RooAddPdf *exp;
+
+	RooAddPdf* pdf;
+	if(addExpBkg){
+			RooAddPdf* pdf_reso = new RooAddPdf("pdf_reso", "pdf_reso", RooArgList(Gauss1,Gauss2),RooArgList(*f));
+			exp1 = new RooDecay("exp1","exp1",*Bs_DeltaTau,exp_tau,Gauss1,RooDecay::SingleSided) ;
+			exp2 = new RooDecay("exp2","exp2",*Bs_DeltaTau,exp_tau,Gauss2,RooDecay::SingleSided) ;
+			exp = new RooAddPdf("exp", "exp", RooArgList(*exp1,*exp2),RooArgList(*f));
+			pdf = new RooAddPdf("pdf", "pdf", RooArgList(*pdf_reso,*exp),RooArgList(*f_exp));
+	}
+	else{
+		if(ngauss<3)pdf = new RooAddPdf("pdf", "pdf", RooArgList(Gauss1,Gauss2),RooArgList(*f));
+		else pdf = new RooAddPdf("pdf", "pdf", RooArgList(Gauss1,Gauss2,Gauss3),RooArgList(*f,*f2));
+		if(ngauss==1){
+			f->setVal(1);
+			f->setConstant();
+			sigma2->setConstant();
+			scale->setConstant();
+		}	
+	}
         /// Fit
 	double fitRange_min, fitRange_max;
 	if(dataType=="MC"){
@@ -161,13 +181,13 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
 		fitRange_max = 0.2;
 	}
 	else {
-		fitRange_min = -0.2;
-		fitRange_max = 0.2;
+		fitRange_min = -0.25;
+		fitRange_max = 0.25;
 		//fitRange_min = -4.*data->mean(Bs_TAUERR);
 		//fitRange_max = 0.5*data->mean(Bs_TAUERR);
 	}
 	if(dataType=="MC")Bs_DeltaTau->setRange(fitRange_min,fitRange_max);
-	else Bs_DeltaTau->setRange(-0.2,0.2);
+	else Bs_DeltaTau->setRange(-0.25,0.25);
 
 	RooFitResult *result = pdf->fitTo(*data,Save(kTRUE),SumW2Error(kTRUE),Extended(kFALSE),NumCPU(3),Range(fitRange_min,fitRange_max));
 	cout << "result is --------------- "<<endl;
@@ -252,8 +272,10 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
 	pdf->plotOn(frame_m,Name("FullPdf"),LineColor(kBlue),LineWidth(3));
 	//DoubleGaussBs.plotOn(frame_m,Components(GaussBs1),LineColor(kRed+1),LineStyle(kDashed),LineWidth(1));
 	//DoubleGaussBs.plotOn(frame_m,Components(GaussBs2),LineColor(kMagenta+3),LineStyle(kDashed),LineWidth(1));
+	//if(addExpBkg)pdf->plotOn(frame_m,Components(*exp),LineColor(kBlue),LineWidth(2));
+
 //         frame_m->GetYaxis()->SetRangeUser(0.01,frame_m->GetMaximum()*1.2);
-        frame_m->SetMinimum(0.0);
+        frame_m->SetMinimum(0.001);
         frame_m->Draw();	
         
 	TLegend leg(0.15,0.5,0.4,0.9,"");
@@ -276,6 +298,10 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
 
 	leg.Draw();
 	canvas->Print("Plots/Signal2"+dataType+"_bin_"+binName+".eps");
+
+	gPad->SetLogy(1);
+	canvas->Print("Plots/Signal2"+dataType+"_bin_"+binName+"_log.eps");
+	gPad->SetLogy(0);
 	
 
 	frame_m->GetXaxis()->SetLabelSize( 0.06 );

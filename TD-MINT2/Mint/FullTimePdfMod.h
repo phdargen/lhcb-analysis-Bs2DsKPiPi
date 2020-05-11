@@ -1,5 +1,5 @@
-#ifndef FULLTIMEPDF_HH
-#define FULLTIMEPDF_HH
+#ifndef FULLTIMEPDFMOD_HH
+#define FULLTIMEPDFMOD_HH
 // author: Philippe d'Argent
 #include "Mint/FitParameter.h"
 #include "Mint/NamedParameter.h"
@@ -78,7 +78,7 @@ using namespace MINT;
 
 
 // Full DsK like time PDF with additional coherence factor 
-class FullTimePdf : public MINT::PdfBase<IDalitzEvent>
+class FullTimePdfMod : public MINT::PdfBase<IDalitzEvent>
 {
 protected:
     /// fit parameters
@@ -87,7 +87,11 @@ protected:
     const FitParameter& _D_bar;
     const FitParameter& _S;
     const FitParameter& _S_bar;
+
+    const FitParameter& _r;
     const FitParameter& _k;
+    const FitParameter& _delta;
+    const FitParameter& _gamma;
    
     const MINT::FitParameter& _Gamma;
     const MINT::FitParameter& _dGamma;
@@ -172,22 +176,11 @@ public:
     }
     
     inline double un_normalised(IDalitzEvent& evt){
-        
-        //const double t = (double) evt.getValueFromVector(0);
-        //if(t < _min_TAU || t > _max_TAU )return 0.;
-
-        _timePdfMaster->setAllObservablesAndFitParameters(evt);
+         
+       _timePdfMaster->setAllObservablesAndFitParameters(evt);
         
         // C,Cbar,D,Dbar,S,Sbar
-        _timePdfMaster->setCP_coeff(1.,
-				   1.,
-                                   _C,
-                                   -_C,
-                                   _k * _D,
-                                   _k * _D_bar,
-                                   _k * _S,
-                                   _k * _S_bar
-                                   );
+        _timePdfMaster->setCP_coeff(1.,1.,_r,_k,_delta,_gamma);
         
         double val =
         (
@@ -218,15 +211,7 @@ public:
         _timePdfMaster->setAllObservablesAndFitParameters(evt);
         
         // C,Cbar,D,Dbar,S,Sbar
-        _timePdfMaster->setCP_coeff(1.,
-				   1.,
-                                   _C,
-                                   -_C,
-                                   _k * _D,
-                                   _k * _D_bar,
-                                   _k * _S,
-                                   _k * _S_bar
-                                   );
+        _timePdfMaster->setCP_coeff(1.,1.,_r,_k,_delta,_gamma);
 
         double norm =
         _timePdfMaster->get_cosh_term_Integral(evt)
@@ -871,8 +856,9 @@ public:
 	 return _timePdfMaster->plotSpline();
     }
     
-    FullTimePdf(const MINT::FitParameter& C, const MINT::FitParameter& D, const MINT::FitParameter& D_bar,
-                const MINT::FitParameter& S, const MINT::FitParameter& S_bar, const MINT::FitParameter& k,
+    FullTimePdfMod(const MINT::FitParameter& C, const MINT::FitParameter& D, const MINT::FitParameter& D_bar,
+                const MINT::FitParameter& S, const MINT::FitParameter& S_bar, 
+		const MINT::FitParameter& r,const MINT::FitParameter& k, const MINT::FitParameter& delta, const MINT::FitParameter& gamma,
                 const MINT::FitParameter& Gamma, const MINT::FitParameter& dGamma, const MINT::FitParameter& dm
 		,const MINT::FitParameter& offset_mean_dt,const MINT::FitParameter& scale_mean_dt,const MINT::FitParameter& scale_mean_2_dt
                 ,const MINT::FitParameter& offset_sigma_dt, const MINT::FitParameter& scale_sigma_dt, const MINT::FitParameter& scale_sigma_2_dt
@@ -895,7 +881,10 @@ public:
     _D_bar(D_bar),
     _S(S),
     _S_bar(S_bar),
+    _r(r),
     _k(k),
+    _delta(delta),
+    _gamma(gamma),
     _Gamma(Gamma),
     _dGamma(dGamma),
     _dm(dm),
@@ -967,11 +956,7 @@ public:
                                           _production_asym, _detection_asym,_marginalPdfsPrefix);
 
 	_timePdfMaster->setAllFitParameters();
-
-        _timePdfMaster->setCP_coeff(1., 1.,
-                                   _C,-_C,
-                                   _k * _D, _k * _D_bar,
-                                   _k * _S, _k * _S_bar  );  
+        _timePdfMaster->setCP_coeff(1.,1.,_r,_k,_delta,_gamma);
 
         NamedParameter<int> EventPattern("Event Pattern", 521, 321, 211, -211, 443);
         _pat = DalitzEventPattern(EventPattern.getVector());

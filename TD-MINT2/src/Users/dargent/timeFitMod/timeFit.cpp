@@ -37,6 +37,7 @@
 #include "Mint/DalitzPdfBaseMCInteg.h"
 #include "Mint/TimePdfMaster.h"
 #include "Mint/FullTimePdf.h"
+#include "Mint/FullTimePdfMod.h"
 
 #include "RooRealConstant.h"
 #include "RooAbsReal.h"
@@ -113,13 +114,14 @@ using namespace RooFit;
 using namespace RooStats;
 using namespace MINT;
 
-void fullTimeFit(int step=0, string mode = "fit"){
+void fullTimeFit(int step=0, int step2=0, string mode = "fit"){
 
     /// Options
     NamedParameter<int> updateAnaNote("updateAnaNote", 0);
     TRandom3 ranLux;
     NamedParameter<int> RandomSeed("RandomSeed", 0);
     int seed = RandomSeed + step;
+    int seed2 = RandomSeed + step2;
     ranLux.SetSeed((int)seed);
     gRandom = &ranLux;
     RooRandom::randomGenerator()->SetSeed(seed);
@@ -161,6 +163,11 @@ void fullTimeFit(int step=0, string mode = "fit"){
     NamedParameter<double>  scanParam_min("scanParam_min", 0.);
     NamedParameter<double>  scanParam_max("scanParam_max", 1.);
     NamedParameter<double>  scanParam_steps("scanParam_steps", 100.);
+
+    NamedParameter<string> scanParam2("scanParam2", (std::string) "", (char*) 0);
+    NamedParameter<double>  scanParam2_min("scanParam2_min", 0.);
+    NamedParameter<double>  scanParam2_max("scanParam2_max", 1.);
+    NamedParameter<double>  scanParam2_steps("scanParam2_steps", 100.);
 
     NamedParameter<int>  doSimFit("doSimFit", 0);
     NamedParameter<int>  doSimFitInBins("doSimFitInBins", 0);
@@ -475,7 +482,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     //FullTimePdf_mod t_pdf(r,delta,gamma,k);
     string marginalPdfsPrefix = "comb";
     if(fitGenMC)marginalPdfsPrefix = "Uniform";
-    FullTimePdf t_pdf(C, D, D_bar, S, S_bar, k,
+    FullTimePdfMod t_pdf(C, D, D_bar, S, S_bar, r, k, delta, gamma,
                       Gamma, dGamma, dm
 		      ,offset_mean_dt,scale_mean_dt,scale_mean_2_dt
                       ,offset_sigma_dt, scale_sigma_dt, scale_sigma_2_dt
@@ -492,7 +499,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                       production_asym, detection_asym, marginalPdfsPrefix );
 
     /// Simultaneous pdfs
-    FullTimePdf t_pdf_Run1_t0(C, D, D_bar, S, S_bar, k,
+    FullTimePdfMod t_pdf_Run1_t0(C, D, D_bar, S, S_bar, r, k, delta, gamma,
                       Gamma, dGamma, dm
 		      ,offset_mean_dt_Run1,scale_mean_dt_Run1,scale_mean_2_dt_Run1
                       ,offset_sigma_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
@@ -508,7 +515,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                       avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
                       production_asym_Run1, detection_asym_Run1, "Run1_t0" );
     
-    FullTimePdf t_pdf_Run1_t1(C, D, D_bar, S, S_bar, k,
+    FullTimePdfMod t_pdf_Run1_t1(C, D, D_bar, S, S_bar, r, k, delta, gamma,
                               Gamma, dGamma, dm
 			      ,offset_mean_dt_Run1,scale_mean_dt_Run1,scale_mean_2_dt_Run1
 			      ,offset_sigma_dt_Run1, scale_sigma_dt_Run1, scale_sigma_2_dt_Run1
@@ -524,7 +531,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               avg_eta_ss_Run1, tageff_ss_Run1, tageff_asym_ss_Run1, 
                               production_asym_Run1, detection_asym_Run1, "Run1_t1" );
     
-    FullTimePdf t_pdf_Run2_t0(C, D, D_bar, S, S_bar, k,
+    FullTimePdfMod t_pdf_Run2_t0(C, D, D_bar, S, S_bar, r, k, delta, gamma,
                               Gamma, dGamma, dm
 			      ,offset_mean_dt_Run2,scale_mean_dt_Run2,scale_mean_2_dt_Run2
 			      ,offset_sigma_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
@@ -540,7 +547,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
                               production_asym_Run2, detection_asym_Run2, "Run2_t0" );
     
-    FullTimePdf t_pdf_Run2_t1(C, D, D_bar, S, S_bar, k,
+    FullTimePdfMod t_pdf_Run2_t1(C, D, D_bar, S, S_bar, r, k, delta, gamma,
                               Gamma, dGamma, dm
 			      ,offset_mean_dt_Run2,scale_mean_dt_Run2,scale_mean_2_dt_Run2
 			      ,offset_sigma_dt_Run2, scale_sigma_dt_Run2, scale_sigma_2_dt_Run2
@@ -557,7 +564,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run2, detection_asym_Run2, "Run2_t1" );
 
 
-    FullTimePdf t_pdf_Run2_17_t0(C, D, D_bar, S, S_bar, k,
+    FullTimePdfMod t_pdf_Run2_17_t0(C, D, D_bar, S, S_bar, r, k, delta, gamma,
                               Gamma, dGamma, dm
 			      ,offset_mean_dt_Run2_17,scale_mean_dt_Run2_17,scale_mean_2_dt_Run2_17
 			      ,offset_sigma_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
@@ -574,7 +581,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run2, detection_asym_Run2, "Run2_17_t0" );
 
 
-    FullTimePdf t_pdf_Run2_17_t1(C, D, D_bar, S, S_bar, k,
+    FullTimePdfMod t_pdf_Run2_17_t1(C, D, D_bar, S, S_bar, r, k, delta, gamma,
                               Gamma, dGamma, dm
 			      ,offset_mean_dt_Run2_17,scale_mean_dt_Run2_17,scale_mean_2_dt_Run2_17
 			      ,offset_sigma_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
@@ -591,7 +598,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run2, detection_asym_Run2, "Run2_17_t1" );
     
 
-    FullTimePdf t_pdf_Run2_18_t0(C, D, D_bar, S, S_bar, k,
+    FullTimePdfMod t_pdf_Run2_18_t0(C, D, D_bar, S, S_bar, r, k, delta, gamma,
                               Gamma, dGamma, dm
 			      ,offset_mean_dt_Run2_18,scale_mean_dt_Run2_18,scale_mean_2_dt_Run2_18
 			      ,offset_sigma_dt_Run2_18, scale_sigma_dt_Run2_18, scale_sigma_2_dt_Run2_18
@@ -608,7 +615,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               production_asym_Run2, detection_asym_Run2, "Run2_18_t0" );
 
 
-    FullTimePdf t_pdf_Run2_18_t1(C, D, D_bar, S, S_bar, k,
+    FullTimePdfMod t_pdf_Run2_18_t1(C, D, D_bar, S, S_bar, r, k, delta, gamma,
                               Gamma, dGamma, dm
 			      ,offset_mean_dt_Run2_18,scale_mean_dt_Run2_18,scale_mean_2_dt_Run2_18
 			      ,offset_sigma_dt_Run2_18, scale_sigma_dt_Run2_18, scale_sigma_2_dt_Run2_18
@@ -653,6 +660,12 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	for(int i=0; i < mps->size(); i++){
 		if((string)scanParam==((FitParameter*)mps->getParPtr(i))->name()){
 			double val = scanParam_min + step * (scanParam_max - scanParam_min)/scanParam_steps; 
+			((FitParameter*)mps->getParPtr(i))->setInit(val);
+			((FitParameter*)mps->getParPtr(i))->fix();		
+			cout << "Setting " << ((FitParameter*)mps->getParPtr(i))->name() << "  to  " << val << endl; 
+		}
+		if((string)scanParam2==((FitParameter*)mps->getParPtr(i))->name()){
+			double val = scanParam2_min + step2 * (scanParam2_max - scanParam2_min)/scanParam2_steps; 
 			((FitParameter*)mps->getParPtr(i))->setInit(val);
 			((FitParameter*)mps->getParPtr(i))->fix();		
 			cout << "Setting " << ((FitParameter*)mps->getParPtr(i))->name() << "  to  " << val << endl; 
@@ -1473,7 +1486,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
     
     /// Save pulls
     gDirectory->cd();
-    string paraFileName = (string)OutputDir+"pull_"+ (string)doSystematic+ "_" + anythingToString((int)step)+".root";
+    string paraFileName = (string)OutputDir+"pull_"+ (string)doSystematic+ "_" + anythingToString((int)step)+"_" + anythingToString((int)step2)+".root";
     if(doAccSystematics) paraFileName = (string)OutputDir+"pullAcc_"+anythingToString((int)step)+".root";
     if(doAccSystematics && useCholDec) paraFileName = (string)OutputDir+"pullAccChol_"+anythingToString((int)step)+".root";
     cout << paraFileName << endl;
@@ -1490,7 +1503,9 @@ void fullTimeFit(int step=0, string mode = "fit"){
     double Cbar_val,Dbar_val,Sbar_val;
     double C_err,D_err,S_err;
     double Cbar_err,Dbar_err,Sbar_err;
-   
+    double r_val,k_val,delta_val,gamma_val;
+    double r_err,k_err,delta_err,gamma_err;   
+
     TBranch* br_C = pull_tree->Branch( "C", &C_val, "C_val/D" );
     TBranch* br_Cbar = pull_tree->Branch( "Cbar", &Cbar_val, "Cbar_val/D" );
     TBranch* br_D = pull_tree->Branch( "D", &D_val, "D_val/D" );
@@ -1505,11 +1520,31 @@ void fullTimeFit(int step=0, string mode = "fit"){
     TBranch* br_S_err = pull_tree->Branch( "S_err", &S_err, "S_err/D" );
     TBranch* br_Sbar_err = pull_tree->Branch( "Sbar_err", &Sbar_err, "Sbar_err/D" );
 
+    TBranch* br_r = pull_tree->Branch( "r", &r_val, "r_val/D" );
+    TBranch* br_r_err = pull_tree->Branch( "r_err", &r_err, "r_err/D" );
+    TBranch* br_k = pull_tree->Branch( "k", &k_val, "k_val/D" );
+    TBranch* br_k_err = pull_tree->Branch( "k_err", &k_err, "k_err/D" );
+
+    TBranch* br_delta = pull_tree->Branch( "delta", &delta_val, "delta_val/D" );
+    TBranch* br_delta_err = pull_tree->Branch( "delta_err", &delta_err, "delta_err/D" );
+    TBranch* br_gamma = pull_tree->Branch( "gamma", &gamma_val, "gamma_val/D" );
+    TBranch* br_gamma_err = pull_tree->Branch( "gamma_err", &gamma_err, "gamma_err/D" );
+
     TBranch* br_n2ll = pull_tree->Branch( "n2ll_mean", &n2ll, "n2ll/D" );
     TBranch* br_seed = pull_tree->Branch( "seed", &seed, "seed/I" );
+    TBranch* br_seed2 = pull_tree->Branch( "seed2", &seed2, "seed2/I" );
         
     if(doSimFit)n2ll = neg2LL_sim.getVal();
     else n2ll = neg2LL.getVal();
+
+    double scan,scan2;
+    TBranch* br_scan = pull_tree->Branch( "scan", &scan, "scan/D" );
+    TBranch* br_scan2 = pull_tree->Branch( "scan2", &scan2, "scan2/D" );
+
+    for(int i=0; i < mps->size(); i++){
+		if((string)scanParam==((FitParameter*)mps->getParPtr(i))->name())scan = ((FitParameter*)mps->getParPtr(i))->mean();		
+		if((string)scanParam2==((FitParameter*)mps->getParPtr(i))->name())scan2 = ((FitParameter*)mps->getParPtr(i))->mean();		
+    }
 
     C_val = C.blindedMean();
     C_err = C.err();
@@ -1523,6 +1558,15 @@ void fullTimeFit(int step=0, string mode = "fit"){
     S_err = S.err();
     Sbar_val = S_bar.blindedMean();
     Sbar_err = S_bar.err();
+
+    r_val = r.blindedMean();
+    r_err = r.err();
+    k_val = k.blindedMean();
+    k_err = k.err();
+    delta_val = delta.blindedMean();
+    delta_err = delta.err();
+    gamma_val = gamma.blindedMean();
+    gamma_err = gamma.err();
 
     paraFile->cd();
     pull_tree->Fill();
@@ -5681,10 +5725,11 @@ int main(int argc, char** argv){
 
 //  calib();
 //     test_multiGaussConstraints();
-   produceMarginalPdfs();
-  //for(int i = 0; i < 100; i++) fullTimeFit(atoi(argv[1])+i);
-   fullTimeFit(atoi(argv[1]),(string)argv[2]);
-   if((string)argv[2] == "gen" && addBkgToToys)calculateSweightsForToys(atoi(argv[1]));
+//    produceMarginalPdfs();
+//  for(int i = 0; i < 10; i++)for(int j = 0; j < 10; j++) fullTimeFit(atoi(argv[1])+i,atoi(argv[2])+j);
+fullTimeFit(atoi(argv[1]),atoi(argv[2]));
+//    fullTimeFit(atoi(argv[1]),(string)argv[2]);
+//    if((string)argv[2] == "gen" && addBkgToToys)calculateSweightsForToys(atoi(argv[1]));
 
   //for(int i = 1; i <= 100; i++)calculateSweightsForToys(i);
 

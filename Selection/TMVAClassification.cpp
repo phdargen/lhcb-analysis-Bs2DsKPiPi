@@ -34,13 +34,15 @@ void TMVAClassification( TString myMethodList = "BDTG", TString trainOn = "MC", 
   	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_12.root");
 // 	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2KKpi_12_SS.root");
    }
-   else if(run == "run2" || run == "all") {
+   if(run == "run2" || run == "all") {
 	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2*_15.root");
 	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2*_16.root");
 	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2*_17.root");
+	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2*_18.root");
 	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_15.root");
 	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_16.root");
 	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_17.root");
+	   background->Add("/auto/data/dargent/BsDsKpipi/Preselected/Data/norm_Ds2*_18.root");
    }
 
    TChain* signal = new TChain("DecayTree");
@@ -125,6 +127,12 @@ void TMVAClassification( TString myMethodList = "BDTG", TString trainOn = "MC", 
    signal->SetBranchStatus("eventNumber",1);
    signal->SetBranchStatus("run",1);
    signal->SetBranchStatus("Ds_finalState",1);
+   signal->SetBranchStatus("Ds_finalState",1);
+   signal->SetBranchStatus("Bs_PV_nPV",1);
+   signal->SetBranchStatus("Bs_MINIPCHI2NEXTBEST",1);
+   signal->SetBranchStatus("Bs_IPCHI2_OWNPV",1);
+   signal->SetBranchStatus("Bs_BsDTF_TAU",1);
+   //signal->SetBranchStatus("K_1_1270_plus_MM",1);
 
    background->SetBranchStatus("*",0);  // disable all branches
    background->SetBranchStatus("*CHI2*",1); 
@@ -147,6 +155,11 @@ void TMVAClassification( TString myMethodList = "BDTG", TString trainOn = "MC", 
    background->SetBranchStatus("eventNumber",1);
    background->SetBranchStatus("run",1);
    background->SetBranchStatus("Ds_finalState",1);
+   background->SetBranchStatus("Bs_PV_nPV",1);
+   background->SetBranchStatus("Bs_MINIPCHI2NEXTBEST",1);
+   background->SetBranchStatus("Bs_IPCHI2_OWNPV",1);
+   background->SetBranchStatus("Bs_BsDTF_TAU",1);
+   //background->SetBranchStatus("K_1_1270_plus_MM",1);
 
    // Define the input variables that shall be used for the MVA training
 
@@ -219,13 +232,13 @@ void TMVAClassification( TString myMethodList = "BDTG", TString trainOn = "MC", 
 
    // Apply additional cuts on the signal and background samples (can be different)
    TCut mycuts; 
-   mycuts = "maxCos > -0.95 && Bs_IPCHI2_OWNPV < 16 && Bs_SmallestDeltaChi2OneTrack > 5 && Ds_finalState < 5 && PV_CHI2NDOF < 15 && Xs_max_DOCA < 0.5 && m_pipi < 1200 && m_Kpi < 1200";
+   mycuts = "maxCos > -0.95 && Bs_IPCHI2_OWNPV < 16 && Bs_SmallestDeltaChi2OneTrack > 5 && Ds_finalState < 5 && PV_CHI2NDOF < 15 && Xs_max_DOCA < 0.5 && m_pipi < 1200 && m_Kpi < 1200 && (Bs_PV_nPV ==1 || (Bs_MINIPCHI2NEXTBEST-Bs_IPCHI2_OWNPV) > 20) && Bs_BsDTF_TAU >= 0.4";
    if(run != "all")mycuts += "run == " + run.ReplaceAll("run","");
    if(trigger != "all")mycuts += "TriggerCat == " + trigger.ReplaceAll("t","");
    if(trainOn == "MC") mycuts += "Bs_MM > 5300 && Bs_MM < 5420 && Bs_BKGCAT == 20";
 
    TCut mycutb = "Bs_MM > 5500";
-   mycutb += "maxCos > -0.95 && Bs_IPCHI2_OWNPV < 16 && Bs_SmallestDeltaChi2OneTrack > 5 && Ds_finalState < 5 && PV_CHI2NDOF < 15 && Xs_max_DOCA < 0.5 && m_pipi < 1200 && m_Kpi < 1200" ;
+   mycutb += "maxCos > -0.95 && Bs_IPCHI2_OWNPV < 16 && Bs_SmallestDeltaChi2OneTrack > 5 && Ds_finalState < 5 && PV_CHI2NDOF < 15 && Xs_max_DOCA < 0.5 && m_pipi < 1200 && m_Kpi < 1200 && (Bs_PV_nPV ==1 || (Bs_MINIPCHI2NEXTBEST-Bs_IPCHI2_OWNPV) > 20) && Bs_BsDTF_TAU >= 0.4" ;
    if(run != "all")mycutb += "run == " + run;
    if(trigger != "all")mycutb += "TriggerCat == " + trigger ;
    
@@ -324,6 +337,8 @@ void TMVAClassification( TString myMethodList = "BDTG", TString trainOn = "MC", 
 void trainAll( TString myMethodList = "BDTG", TString trainOn = "Data") {
 
 	gROOT->SetBatch(true);
+	TMVAClassification( myMethodList, trainOn , "all",  "all", "all" );
+
 	TMVAClassification( myMethodList, trainOn , "run1",  "t0", "even" );
  	TMVAClassification( myMethodList, trainOn , "run1",  "t1", "even" );
  	TMVAClassification( myMethodList, trainOn , "run2",  "t0", "even" );
