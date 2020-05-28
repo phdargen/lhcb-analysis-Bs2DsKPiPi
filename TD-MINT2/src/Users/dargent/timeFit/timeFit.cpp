@@ -3109,7 +3109,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 
 void produceMarginalPdfs(){
     
-    NamedParameter<string> InputDir("InputDir", (std::string) "/auto/data/dargent/BsDsKpipi/Final/", (char*) 0);
+    NamedParameter<string> InputDir("InputDir", (std::string) "", (char*) 0);
     TString prefix = "";
     //TString prefix = "BsTaggingTool_";
     NamedParameter<double> min_year("min_year", 11);
@@ -5696,7 +5696,7 @@ int main(int argc, char** argv){
 
 //  calib();
 //     test_multiGaussConstraints();
-   produceMarginalPdfs();
+   //produceMarginalPdfs();
   //for(int i = 0; i < 100; i++) fullTimeFit(atoi(argv[1])+i);
    fullTimeFit(atoi(argv[1]),(string)argv[2]);
    if((string)argv[2] == "gen" && addBkgToToys)calculateSweightsForToys(atoi(argv[1]));
