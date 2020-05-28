@@ -306,7 +306,7 @@ public:
 	return _timePdfMaster->sampleEvents(N);
     }
 
-    DalitzEventList generateBkgToysBootstrap(int N,int run = -1 , int trigger = -1,string input = "/auto/data/dargent/BsDsKpipi/BDT/Data/signal_SS.root"){
+    DalitzEventList generateBkgToysBootstrap(int N,int run = -1 , int trigger = -1,string input = "signal_SS.root"){
 
 	DalitzEventList eventList;
 	DalitzEventList eventListData = readBkgData(input);
@@ -331,10 +331,11 @@ public:
     }
 
 
-    DalitzEventList generateBkgToys(int N, int run = -1, int trigger = -1,string input = "/auto/data/dargent/BsDsKpipi/BDT/Data/signal_SS.root"){
+    DalitzEventList generateBkgToys(int N, int run = -1, int trigger = -1,string input = "signal_SS.root"){
 
 	DalitzEventList eventList;
 	NamedParameter<int>  applyPhspCuts("generateBkgToys::applyPhspCuts", 0);
+        NamedParameter<double>  f_bkg("readBkgData::f_bkg", 0.);
 
 	if(_f_bkg==0){
 		NamedParameter<int>  correlate("readBkgData::correlate", 1);
@@ -420,6 +421,14 @@ public:
 		double t,m;
 		_f_bkg->GetRandom2(m,t);
 
+		if(gRandom->Uniform(0,1)<f_bkg){
+			while(true){
+				m=gRandom->Gaus(5241.,37.);
+				if(m >= 5200 )break;
+			}		
+		}
+		if(m <= 5200 || m >= 5700 )continue;
+
 		vector<double> marginal_vals = _timePdfMaster->getRandom_marginalVals();
 		double dt = marginal_vals[0] ;
 		double eta_OS = marginal_vals[1] ;
@@ -452,7 +461,7 @@ public:
 	return eventList;
     }
 
-    DalitzEventList readBkgData(string input = "/auto/data/dargent/BsDsKpipi/BDT/Data/signal_SS.root"){
+    DalitzEventList readBkgData(string input = "signal_SS.root"){
 
         NamedParameter<int>  correlate("readBkgData::correlate", 1);
         NamedParameter<double>  f_bkg("readBkgData::f_bkg", 0.);

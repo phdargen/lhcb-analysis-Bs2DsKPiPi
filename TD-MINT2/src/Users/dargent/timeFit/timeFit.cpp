@@ -1407,11 +1407,24 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	}
 	else  toys.Add(t_pdf.generateToys(N_scale_toys *N));
 	
-	if(addBkgToToys){
+	if(addBkgToToys == 1){
 			t_pdf.saveEventListToFile(toys,((string)OutputDir+"signal_toys_"+anythingToString((int)step)+".root").c_str());
 
-// 			string bkg_template_input = "/auto/data/dargent/BsDsKpipi/BDT/Data/signal_SS.root";
-			string bkg_template_input = "../fullFit/bkg_template_test2.root";
+ 			string bkg_template_input = "signal_SS.root";
+
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run1_t0/N,1,0,bkg_template_input));
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run1_t1/N,1,1,bkg_template_input));
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_t0/N,2,0,bkg_template_input));
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_t1/N,2,1,bkg_template_input));
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_17_t0/N,3,0,bkg_template_input));
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_17_t1/N,3,1,bkg_template_input));
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_18_t0/N,4,0,bkg_template_input));
+			toys.Add(t_pdf.generateBkgToys(N_scale_toys * (eventList.size()-N) * N_Run2_18_t1/N,4,1,bkg_template_input));
+	}
+	if(addBkgToToys == 2){
+			t_pdf.saveEventListToFile(toys,((string)OutputDir+"signal_toys_"+anythingToString((int)step)+".root").c_str());
+
+			string bkg_template_input = "bkg_template_test2.root";
 
 			toys.Add(t_pdf.generateBkgToysBootstrap(N_scale_toys * (eventList.size()-N) * N_Run1_t0/N,1,0,bkg_template_input));
 			toys.Add(t_pdf.generateBkgToysBootstrap(N_scale_toys * (eventList.size()-N) * N_Run1_t1/N,1,1,bkg_template_input));
@@ -1422,6 +1435,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			toys.Add(t_pdf.generateBkgToysBootstrap(N_scale_toys * (eventList.size()-N) * N_Run2_18_t0/N,4,0,bkg_template_input));
 			toys.Add(t_pdf.generateBkgToysBootstrap(N_scale_toys * (eventList.size()-N) * N_Run2_18_t1/N,4,1,bkg_template_input));
 	}	
+
+	
 	t_pdf.saveEventListToFile(toys,((string)OutputDir+"toys_"+anythingToString((int)step)+".root").c_str());
 	return;
     }
@@ -1708,7 +1723,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 				int run_evt = eventList[i].getValueFromVector(7);   
 				int trigger_evt = eventList[i].getValueFromVector(8);   
 	
-				if(A_is_in_B("Run1",prefix[p]) && (run_evt == 2 || run_evt == 3)) continue;
+				if(A_is_in_B("Run1",prefix[p]) && run_evt > 1) continue;
 				else if(A_is_in_B("Run2",prefix[p]) && run_evt == 1) continue;
 	
 				N_tot += eventList[i].getWeight();
