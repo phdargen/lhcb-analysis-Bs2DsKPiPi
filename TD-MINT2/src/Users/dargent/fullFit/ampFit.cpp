@@ -2492,7 +2492,7 @@ void ampFit(int step=0, string mode = "fit"){
     NamedParameter<int>  initCPcoeff("initCPcoeff", 0);
     NamedParameter<int>  fitGenMC("fitGenMC", 0);
     NamedParameter<int>  doBootstrap("doBootstrap", 0);
-    NamedParameter<int>  N_bootstrap("N_bootstrap", 10000);
+    NamedParameter<int>  N_bootstrap("N_bootstrap", -1);
     NamedParameter<int> doFractions("doFractions",1);
     NamedParameter<int> doFractionsErr("doFractionsErr",0);
 
@@ -2674,7 +2674,7 @@ void ampFit(int step=0, string mode = "fit"){
     counted_ptr<IReturnComplex> abar_sys = new AmpRatio(abar_sys_Amp,abar_sys_Phase);
 
     /// Randomize start vals
-    if(randomizeStartVals){
+    if(randomizeStartVals==1){
 	for(int i=0; i < mps->size(); i++){
 		if(((FitParameter*)mps->getParPtr(i))->iFixInit()!=0)continue;
  		if(A_is_in_B("abar_",((FitParameter*)mps->getParPtr(i))->name()) || A_is_in_B("a_",((FitParameter*)mps->getParPtr(i))->name()) ){
@@ -2717,7 +2717,11 @@ void ampFit(int step=0, string mode = "fit"){
 
     /// Add amps to A and Abar
     string refAmpName2 = ((string)refAmpName == "K(1)(1270)+") ? "K(1)(1400)+" : "K(1)(1270)+";
-    if(!fitGenMC)AddScaledAmpsToList(fas_tmp, fas, fas_bar,refAmpName2,a_K1_1400,abar_K1_1400);
+    //if(!fitGenMC)AddScaledAmpsToList(fas_tmp, fas, fas_bar,refAmpName2,a_K1_1400,abar_K1_1400);
+
+    if(a_K1_1400_Amp.iFixInit() != 1 && abar_K1_1400_Amp.iFixInit() != 1)AddScaledAmpsToList(fas_tmp, fas, fas_bar,refAmpName2,a_K1_1400,abar_K1_1400);
+    else if(a_K1_1400_Amp.iFixInit() != 1 && abar_K1_1400_Amp.iFixInit() == 1)AddScaledAmpsToList(fas_tmp, fas,refAmpName2,a_K1_1400);
+    else if(a_K1_1400_Amp.iFixInit() == 1 && abar_K1_1400_Amp.iFixInit() != 1)AddScaledAmpsBarToList(fas_tmp, fas_bar,refAmpName2,abar_K1_1400);
     
     if(a_Ks_1410_Amp.iFixInit() != 1 && abar_Ks_1410_Amp.iFixInit() != 1)AddScaledAmpsToList(fas_tmp, fas, fas_bar,"K*(1410)+",a_Ks_1410,abar_Ks_1410);
     else if(a_Ks_1410_Amp.iFixInit() != 1 && abar_Ks_1410_Amp.iFixInit() == 1)AddScaledAmpsToList(fas_tmp, fas,"K*(1410)+",a_Ks_1410);
@@ -4001,7 +4005,7 @@ void ampFit(int step=0, string mode = "fit"){
     TNtupleD* ntp=0;
 
     TTree* pull_tree = new TTree("Coherence","Coherence");
-    double r_val,delta_val,gamma_val,k_val,n2ll;
+    double r_val,delta_val,gamma_val,k_val,n2ll,delta_val2,gamma_val2;
     double r_err,delta_err,gamma_err,k_err;
     double sum_val,sum_bar_val,sum_err,sum_bar_err;
     double C_val,D_val,S_val;
@@ -4024,6 +4028,9 @@ void ampFit(int step=0, string mode = "fit"){
     TBranch* br_r = pull_tree->Branch( "r_mean", &r_val, "r_val/D" );
     TBranch* br_delta = pull_tree->Branch( "delta_mean", &delta_val, "delta_val/D" );
     TBranch* br_gamma = pull_tree->Branch( "gamma_mean", &gamma_val, "gamma_val/D" );
+    TBranch* br_delta2 = pull_tree->Branch( "delta_mean2", &delta_val2, "delta_val2/D" );
+    TBranch* br_gamma2 = pull_tree->Branch( "gamma_mean2", &gamma_val2, "gamma_val2/D" );
+
     TBranch* br_k = pull_tree->Branch( "k_mean", &k_val, "k_val/D" );
 
     TBranch* br_r_err = pull_tree->Branch( "r_err", &r_err, "r_err/D" );
@@ -4064,6 +4071,17 @@ void ampFit(int step=0, string mode = "fit"){
     r_val = r.blindedMean();
     delta_val = delta.blindedMean();
     gamma_val = gamma.blindedMean();
+
+    delta_val2 = delta.blindedMean();
+    //if(delta_val2>360.)delta_val -= 360.;
+    if(delta_val2>180.)delta_val -= 180.;
+    else if(delta_val2<-180.)delta_val += 180.;
+    //if(delta_val2<-360.)delta_val += 360.;
+    gamma_val2 = gamma.blindedMean();
+    //if(gamma_val2>360.)gamma_val2 -= 360.;
+    if(gamma_val2>180.)gamma_val2 -= 180.;
+    if(gamma_val2<-180.)gamma_val2 += 180.;
+    //if(gamma_val2<-360.)gamma_val2 += 360.;
 
     r_err = r.err();
     delta_err = delta.err();
