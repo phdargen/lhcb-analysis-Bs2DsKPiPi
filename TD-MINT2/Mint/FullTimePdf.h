@@ -421,13 +421,13 @@ public:
 		double t,m;
 		_f_bkg->GetRandom2(m,t);
 
-		if(gRandom->Uniform(0,1)<f_bkg){
+		/*if(gRandom->Uniform(0,1)<f_bkg){
 			while(true){
 				m=gRandom->Gaus(5241.,37.);
 				if(m >= 5200 )break;
 			}		
 		}
-		if(m <= 5200 || m >= 5700 )continue;
+		if(m <= 5200 || m >= 5700 )continue;*/
 
 		vector<double> marginal_vals = _timePdfMaster->getRandom_marginalVals();
 		double dt = marginal_vals[0] ;
@@ -727,7 +727,8 @@ public:
 
     	    TBranch* br_mB = tree->Branch( "Bs_DTF_MM", &mB, "Bs_DTF_MM/D" );
     	    TBranch* br_sw;
-	    if(!addBkgToToys) br_sw = tree->Branch( "N_Bs_sw", &sw, "N_Bs_sw/D" );
+	    //if(!addBkgToToys) 
+	    br_sw = tree->Branch( "N_Bs_sw", &sw, "N_Bs_sw/D" );
     	    TBranch* br_w = tree->Branch( "weight", &w, "weight/D" );
 
     	    TBranch* br_t = tree->Branch( "Bs_BsDTF_TAU", &t, "Bs_BsDTF_TAU/D" );
