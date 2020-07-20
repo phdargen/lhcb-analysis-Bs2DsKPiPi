@@ -275,8 +275,8 @@ inline Bool_t MiniDecayTree::Veto_Cuts(){
     
     if(_decay == Decay::signal){
         // Ds veto
-        //if(TMath::Abs((BsDTF_K_plus + BsDTF_pi_plus + BsDTF_pi_minus).M() - massDs) < 20) return false;
-        //if(TMath::Abs((K_plus + pi_plus + pi_minus_asK_MissID).M() - massDs) < 20 && pi_minus_PIDK > -5) return false;
+        if(TMath::Abs((K_plus + pi_plus + pi_minus).M() - massDs) < 20) return false;
+        if(TMath::Abs((K_plus + pi_plus + pi_minus_asK_MissID).M() - massDs) < 20 && pi_minus_PIDK > -5) return false;
 	// Semi-lep. veto
 	//if( K_plus_isMuon == 1 ) return false;
     }

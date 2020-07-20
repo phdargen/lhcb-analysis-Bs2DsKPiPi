@@ -503,6 +503,24 @@ The fits are performed in bins of the decay time error $\sigma_{t}$, where an ad
 \label{fig:}
 \end{figure}
 
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.32\textwidth]{figs/Resolution/SignalData_18_bin_1.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/Resolution/SignalData_18_bin_2.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/Resolution/SignalData_18_bin_3.pdf}
+
+\includegraphics[height=!,width=0.32\textwidth]{figs/Resolution/SignalData_18_bin_4.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/Resolution/SignalData_18_bin_5.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/Resolution/SignalData_18_bin_6.pdf}
+
+\includegraphics[height=!,width=0.32\textwidth]{figs/Resolution/SignalData_18_bin_7.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/Resolution/SignalData_18_bin_8.pdf}
+
+
+\caption{Decay-time distribution for fake $B_s$ candidates from promptly produced $D_s$ candidates, combined with random prompt $K\pi\pi$ bachelor tracks, for bins in the per-event decay time error estimate. Data taken in 2018.}
+\label{fig:}
+\end{figure}
+
 \clearpage
 
 
@@ -520,6 +538,14 @@ The fits are performed in bins of the decay time error $\sigma_{t}$, where an ad
 \caption{Measured time resolution for prompt-$D_s$ data in bins of the per-event decay time error estimate. Data taken in 2017.}
 \input{tables/Resolution/ResoTable_Data_17.txt}
 \label{table:ResoParamsData_17}
+\end{table}
+
+\begin{table}[h]
+\centering
+\small
+\caption{Measured time resolution for prompt-$D_s$ data in bins of the per-event decay time error estimate. Data taken in 2018.}
+\input{tables/Resolution/ResoTable_Data_18.txt}
+\label{table:ResoParamsData_18}
 \end{table}
 
 \clearpage
@@ -554,7 +580,7 @@ The largest deviations are observed between the different \textsf{L0} categories
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/timeAcc_comparison_by_year_t1_adaptive_N4.pdf}
+\includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/timeAcc_comparison_by_year_adaptive_N4.pdf}
 \includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/timeAcc_comparison_by_run_adaptive_N4.pdf}
 
 \includegraphics[height=!,width=0.45\textwidth]{figs/Acceptance/timeAcc_comparison_by_DsFinalState_mod_adaptive_N4.pdf}
@@ -878,15 +904,17 @@ and their PDG values are only shown for comparison.
 Interference fractions are listed in Tables \ref{tab:fullFractionsInt} and \ref{tab:fullFractionsIntBar}.
 
 Figure~\ref{fig:scanLL} shows the distribution of likelihood values 
-for 150 time-dependent amplitude fits with randomized starting parameters.
-The majority of the fits (76\%) converge to the global minimum.
-Two well isolated local minima are detected 
-at $\Delta(2NLL) = 13$ ($3.3\sigma$)
-and $\Delta(2NLL) = 23$ ($4.8\sigma$)
-to which 5\% and 11\%
+for 200 time-dependent amplitude fits with randomized starting parameters.
+%Less than 10\% of the fits did not converge.
+The majority of the fits (66\%) converge to the global minimum. 
+Three well isolated local minima are detected 
+at $\Delta(2NLL) = 14$ ($3.7\sigma$),
+$\Delta(2NLL) = 23$ ($4.8\sigma$)
+and $\Delta(2NLL) = 30$ ($5.5\sigma$)
+to which 8\%, 4\% and 3\%
 of the fits converge, respectively.
-The fits at $\Delta(2NLL) = 11$, $\Delta(2NLL) = 18$ and $\Delta(2NLL) = 33$ did not converge properly to one of the nearby local minima. 
-The remaining fits (5\%) have $\Delta(2NLL) > 500$ and are not show.
+The fits at $\Delta(2NLL) = 1,2,4,8,15,20,26,27,34,36,39$ did not converge properly to one of the nearby local minima. 
+The remaining fits (12\%) are not converged or have $\Delta(2NLL) > 60$ and are not show.
 This procedure has been repeatedly performed during the development of the analysis, for both LASSO stages and the final fit,
 to ensure we operate at the global minimum. 
 

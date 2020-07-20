@@ -70,10 +70,11 @@ where we choose the decay fraction threshold to be $0.5 \%$.
 At the optimal value of $\lambda=50$, the set of amplitudes with a decay fraction above the threshold 
 are considered further for step two of the model selection.
 The selected amplitudes and their fractions are summarized in Table \ref{tab:lassoFit}.
-The fit projections are shown in Fig.~\ref{fig:lassoFit}.
-The set of selected amplitudes is stable for thresholds between $0.1\%$ and $1\%.$. 
+%The fit projections are shown in Fig.~\ref{fig:lassoFit}.
+The set of selected amplitudes is stable for thresholds between $0.1\%$ and $1\%$. 
 Other choices result in marginally different models containing one component more or less. These are included in the set of alternative models used for the systematic studies presented in Sec.~\ref{ssec:altModels}.
 
+\enlargethispage{3\baselineskip}
 In Stage 2, the LASSO procedure is again performed by fitting the full time-dependent amplitude PDF.
 The components selected by Stage 1 are included for both $b\to c$ and $b\to u$ transitions and the likelihood is extended as follows:
 \begin{equation}
@@ -81,64 +82,63 @@ The components selected by Stage 1 are included for both $b\to c$ and $b\to u$ t
 \end{equation}
 Figure \ref{fig:BIC}(right) shows a plot of the complexity factor
 $\lambda$, against the resulting BIC values. 
-The final set of $b\to c$ and $b\to u$ amplitudes is selected using the optimal value of $\lambda=6$, and is henceforth called the LASSO model.
+The final set of $b\to c$ and $b\to u$ amplitudes is selected using the optimal value of $\lambda=14$, and is henceforth called the LASSO model.
 The parameters of chosen resonances are summarized in Appendix \ref{a:ResoParas}.
-
-\begin{figure}[b]
+%
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.4\textwidth, height=!]{figs/lassoFit/Lasso_BIC.eps} 
   \includegraphics[width=0.4\linewidth, height=!]{figs/lassoFit/Lasso2_BIC.eps}
   \caption{Difference in the BIC value from its minimum as function of the LASSO parameter $\lambda$ for step 1 (left) and step 2 (right) of the model selection.}
   \label{fig:BIC}
 \end{figure}
-
+%
 \begin{table}[h]
 \centering
 \caption{
 \small Fit fractions of the amplitudes selected by Stage 1 of the model selection procedure.
 }
-\input{tables/lassoFit/LASSO/fitFractions.tex}
+\input{tables/lassoFit/signal_new/fitFractions.tex}
 \label{tab:lassoFit}
 \end{table}
 
-\clearpage
-\begin{figure}[h]
-	\centering
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/leg.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Kpipi_mod.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspipi_mod.pdf} 
-%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspim_mod.pdf} 
-
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Kpi_mod.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_pipi_mod.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspi_mod.pdf} 
-		
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_cosTheta_Kpi_mod.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_cosTheta_Dspi_mod.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_phi_Kpi_Dspi_mod.pdf} 
-
-		\caption{\small Projections of the fit result to the time-integrated and flavour averaged phase-space distribution of $B_s \to D_s K \pi \pi$  decays.
-		The incoherent contributions of the selected decay channels are plotted as well.   } 		
-				\label{fig:lassoFit}
-
-	\centering
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/leg.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Kpipi_mod_log.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspipi_mod_log.pdf} 
-%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspim_mod.pdf} 
-
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Kpi_mod_log.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_pipi_mod_log.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspi_mod_log.pdf} 
-		
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_cosTheta_Kpi_mod_log.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_cosTheta_Dspi_mod_log.pdf} 
-		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_phi_Kpi_Dspi_mod_log.pdf} 
-
-		\caption{\small Projections of the fit result to the time-integrated and flavour averaged phase-space distribution of $B_s \to D_s K \pi \pi$  decays in logarithmic scale.
-		The incoherent contributions of the selected decay channels are plotted as well. } 		
-		\label{fig:lassoFit2}
-\end{figure}
+%\begin{figure}[h]
+%	\centering
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/leg.pdf} 
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Kpipi_mod.pdf} 
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspipi_mod.pdf} 
+%%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspim_mod.pdf} 
+%
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Kpi_mod.pdf} 
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_pipi_mod.pdf} 
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspi_mod.pdf} 
+%		
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_cosTheta_Kpi_mod.pdf} 
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_cosTheta_Dspi_mod.pdf} 
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_phi_Kpi_Dspi_mod.pdf} 
+%
+%		\caption{\small Projections of the fit result to the time-integrated and flavour averaged phase-space distribution of $B_s \to D_s K \pi \pi$  decays.
+%		The incoherent contributions of the selected decay channels are plotted as well.   } 		
+%				\label{fig:lassoFit}
+%
+%	\centering
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/leg.pdf} 
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Kpipi_mod_log.pdf} 
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspipi_mod_log.pdf} 
+%%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspim_mod.pdf} 
+%
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Kpi_mod_log.pdf} 
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_pipi_mod_log.pdf} 
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/m_Dspi_mod_log.pdf} 
+%		
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_cosTheta_Kpi_mod_log.pdf} 
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_cosTheta_Dspi_mod_log.pdf} 
+%		\includegraphics[width=0.32\textwidth, height = !]{figs/lassoFit/LASSO/h_phi_Kpi_Dspi_mod_log.pdf} 
+%
+%		\caption{\small Projections of the fit result to the time-integrated and flavour averaged phase-space distribution of $B_s \to D_s K \pi \pi$  decays in logarithmic scale.
+%		The incoherent contributions of the selected decay channels are plotted as well. } 		
+%		\label{fig:lassoFit2}
+%\end{figure}
 
 \clearpage
 \subsection{Results}
@@ -155,18 +155,19 @@ The corresponding fit fractions for the $b\to c$ and $b\to u$ amplitudes are ind
 and shown in Table \ref{tab:fullFractions}.
 The statistical significances
  of the three smallest contributions are:
- $4.5\sigma$ for $B_s \to ( D_s \, K)_{P} \, \, \rho(770)$;
- $6.2\sigma$ for $B_s \to D_s \, ( K(1460) \to K^{*}(892) \, \pi )$
- and $8.2\sigma$
+ $3.1\sigma$ for $B_s \to ( D_s \, K)_{P} \, \, \rho(770)$;
+ $5.1\sigma$ for $B_s \to D_s \, ( K(1460) \to K^{*}(892) \, \pi )$
+ and $10.1\sigma$
 for $B_s \to ( D_s \, \pi)_{P} \, \, K^{*}(892)$.
 These are calculated from the likelihood difference $\sqrt{\Delta(-2LL)}$ between a fit with and without the respective component assuming Wilk's theorem.
 In addition to the amplitude coefficients, the amplitude ratio and the strong and weak phase differences between the $b\to c$ and $b\to u$ decays are determined.
 Moreover, the masses and widths of the $K_1(1400)$ and $K^{*}(1410)$ resonances are fitted.
 
-Figure \ref{fig:fullFit} shows the distributions of 
+Figures \ref{fig:fullFit} and \ref{fig:fullFitb}  show the distributions of 
 selected phase space observables, which demonstrate 
 reasonable agreement between data and the fit model. 
-We also project into the transversity basis to demonstrate good description of the overall angular structure (see \ref{fig:fullFit} bottom row).
+We also project into the transversity basis to demonstrate good description of the overall angular structure.
+% (see \ref{fig:fullFit} bottom row).
 The acoplanarity angle 
 ${\chi}$, is the angle between the two decay planes formed by 
 the $K^+\pi^-$ system and the $D_s^- \pip$ system
@@ -191,8 +192,19 @@ The number of degrees of freedom $\nu$, in an unbinned fit is bounded by $N_{\rm
 where $N_{\rm par}$ is the number of free fit parameters.
 We use the \chisq value divided by $\nu = (N_{\rm bins}-1) - N_{\rm par}$ as a conservative estimate.
 For the LASSO model, this 
-amounts to $\chisq/\nu = 1.40$ with $\nu = 137$,
+amounts to $\chisq/\nu = 1.23$ with $\nu = 222$,
 indicating a decent fit quality.
+
+\begin{figure}[h]
+	\centering		
+		\includegraphics[width=0.4\textwidth, height = !]{figs/fullFit/signal_new/h_t.eps} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/fullFit/signal_new/h_asym.eps} 		
+		\caption{Decay-time distribution (left) and (dilution weighted) mixing asymmetry (right)
+		 of background-subtracted $B_s\to\Ds\kaon\pion\pion$  candidates along with the projections of the time-dependent amplitude fit (blue solid line).
+		 		 The decay-time acceptance (top) is overlaid in an arbitrary scale (dashed line).
+		 } 		
+		\label{fig:fullFit2}		
+\end{figure}
 
 \begin{table}[h]
 \centering
@@ -211,36 +223,6 @@ The third uncertainty arises from the alternative models considered.
 \label{tab:fullResult}
 \end{table}
 
-\clearpage
-
-\begin{figure}[h]
-	\centering
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_t.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Kpipi.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Dspipi.pdf} 
-
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Kpi.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_pipi.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Dspi.pdf} 
-
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_cosTheta_Kpi.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_cosTheta_Dspi.pdf} 
-		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_phi_Kpi_Dspi.pdf} 
-		
-%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Kpipi_mod.pdf} 
-%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Dspipi_mod.pdf} 
-
-%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Kpi_mod.pdf} 
-%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_pipi_mod.pdf} 
-%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Dspi_mod.pdf} 
-%
-%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_cosTheta_Kpi_mod.pdf} 
-%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_cosTheta_Dspi_mod.pdf} 
-%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_phi_Kpi_Dspi_mod.pdf} 
-
-		\caption{Projections of the full time-dependent amplitude fit.} 		
-		\label{fig:fullFit}
-\end{figure}	
 \begin{table}[h]
 \centering
 \caption{
@@ -252,4 +234,91 @@ Fit fractions of the amplitudes contributing to $b \to c$ and $b \to u$ decays.
 %}
 \label{tab:fullFractions}
 \end{table}
+
+
+\begin{figure}[h]
+	\centering
+	
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/leg_mod.eps} 		
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_Kpipi_mod.eps} 	
+			
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_Kpi_mod.eps} 
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_pipi_mod.eps} 
+		
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_Dspipi_mod.eps} 
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_Dspi_mod.eps} 
+
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_DsKpi_mod.eps} 
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_DsK_mod.eps} 
+		
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_Dspim_mod.eps} 
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/h_cosTheta_Kpi_mod.eps} 
+		
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/h_cosTheta_Dspi_mod.eps} 
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/h_phi_Kpi_Dspi_mod.eps} 
+		
+		\caption{
+		Invariant-mass distribution of background-subtracted $B_s\to D_s K \pi \pi$ candidates (data points) and fit projections (blue solid line).
+			Contributions from $b\to c$ and $b\to u$ decay amplitudes are overlaid.
+		} 		
+		  \label{fig:fullFit}
+\end{figure}
+
+
+\begin{figure}[h]
+\centering
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/leg_mod2.eps} 		
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_Kpipi_mod2.eps} 	
+			
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_Kpi_mod2.eps} 
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_pipi_mod2.eps} 
+	
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_Dspipi_mod2.eps} 
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_Dspi_mod2.eps} 
+		
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_DsKpi_mod2.eps} 
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_DsK_mod2.eps} 
+		
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/m_Dspim_mod2.eps} 
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/h_cosTheta_Kpi_mod2.eps} 
+		
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/h_cosTheta_Dspi_mod2.eps} 
+		\includegraphics[width=0.35\textwidth, height = !]{figs/fullFit/signal_new/h_phi_Kpi_Dspi_mod2.eps} 
+		
+		\caption{Invariant-mass distribution of background-subtracted $B_s\to D_s K \pi \pi$ candidates (data points) and fit projections (blue solid line). Incoherent contributions from intermediate-state components are overlaid. } 		
+		\label{fig:fullFitb}
+\end{figure}
+
+\clearpage
+
+
+%\begin{figure}[h]
+%	\centering
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_new/h_t.pdf} 
+%%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Kpipi.pdf} 
+%%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Dspipi.pdf} 
+%%
+%%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Kpi.pdf} 
+%%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_pipi.pdf} 
+%%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/m_Dspi.pdf} 
+%%
+%%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_cosTheta_Kpi.pdf} 
+%%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_cosTheta_Dspi.pdf} 
+%%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal/h_phi_Kpi_Dspi.pdf} 
+%%		
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_new/m_Kpipi_mod.pdf} 
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_new/m_Dspipi_mod.pdf} 
+%
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_new/m_Kpi_mod.pdf} 
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_new/m_pipi_mod.pdf} 
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_new/m_Dspi_mod.pdf} 
+%
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_new/h_cosTheta_Kpi_mod.pdf} 
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_new/h_cosTheta_Dspi_mod.pdf} 
+%		\includegraphics[width=0.3\textwidth, height = !]{figs/fullFit/signal_new/h_phi_Kpi_Dspi_mod.pdf} 
+%
+%		\caption{Projections of the full time-dependent amplitude fit.} 		
+%		\label{fig:fullFit}
+%\end{figure}	
+
 

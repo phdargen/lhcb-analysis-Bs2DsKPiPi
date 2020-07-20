@@ -171,11 +171,12 @@ Even after the full selection, a significant number of multiple candidates is ob
 These are predominantly fake $B_s$ candidates that share the same $D_s$ candidate combined with different random tracks from the PV.
 We select one of these multiple candidates randomly which retains approximately $20\%$ of the total candidates.
 As can be seen in Figure \ref{fig:Norm_16v17}, the shapes of the distributions of the unscaled decay time error $\sigma_{t}$ for data taken in 2016 and 2017 are significantly different. 
-Therefore, the scaling of the decay time error is treated separately for 2015+2016 and 2017 data.
+The distribution for data taken in 2018 is marginally different than for the 2017 data sample, see Figure \ref{fig:Norm_18v17}.
+Therefore, the scaling of the decay time error is treated separately for 2015+2016, 2017 and 2018 data.
 The invariant mass distribution of the selected $D_s$ candidates is shown in Fig.~\ref{fig:ResoFit_Ds}.
 To separate true $D_s$ candidates from random combinations, the \textsf{sPlot} method is used to statistically subtract combinatorial background from the sample.
 
-Figure \ref{fig:scaleFactorData_16} and \ref{fig:scaleFactorData_17} show the \textsf{sWeighted} decay-time distributions for fake $B_s$ candidates from 2016 and 2017 data, respectively.
+Figure \ref{fig:scaleFactorData_16}, \ref{fig:scaleFactorData_17} and  \ref{fig:scaleFactorData_18} show the \textsf{sWeighted} decay-time distributions for fake $B_s$ candidates from 2016, 2017 and 2018 data, respectively.
 Similar as in the previous section, the decay-time distribution is fitted with a double-Gaussian resolution model in slices of the per-event decay time error.
 Since some $D_s$ candidates might actually originate from true $B_s$ decays, the decay-time distribution of the fake $B_s$ candidates 
 might show a bias towards positive decay times. 
@@ -184,6 +185,10 @@ Details of the fit results in each slice are shown in appendix \ref{sec:DecResFi
 The resulting calibration functions are:
 \input{tables/Resolution/ScaleFactor_Data_16.txt}
 \input{tables/Resolution/ScaleFactor_Data_17.txt}
+\begin{equation}
+\sigma_{eff}^{Data,18}(\sigma_t) = \left( 8.5 \pm 1.4 \right) \text{fs} + \left( 0.964 \pm 0.036 \right) \sigma_t
+\label{eq:scaleFactorData_18}
+\end{equation}
 For 2016, the result is in good agreement with the one obtained for the $B_s \to J/\psi \phi$ (Run-II) analysis that uses 2016 data \cite{LHCb-ANA-2017-028}. 
 \begin{equation}
 \sigma_{eff}^{J/\psi\phi}(\sigma_t) = \left( 12.25 \pm 0.33 \right) \text{fs} + \left( 0.8721 \pm 0.0080 \right) \sigma_t
@@ -258,9 +263,10 @@ All tracks  & $p_T$ & $> 500$ MeV \\
 
 \begin{figure}[h]
 \centering
-\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/Ds_M_pull_16.pdf}
-\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/Ds_M_pull_17.pdf}
-\caption{The invariant mass distribution for prompt $D_s$ candidates for data taken from the LTUB stripping line in (left) 2016 and (right) 2017. }
+\includegraphics[height=!,width=0.32\textwidth]{figs/Resolution/Ds_M_pull_16.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/Resolution/Ds_M_pull_17.pdf}
+\includegraphics[height=!,width=0.32\textwidth]{figs/Resolution/Ds_M_pull_18.pdf}
+\caption{The invariant mass distribution for prompt $D_s$ candidates for data taken from the LTUB stripping line in (left) 2016, (middle) 2017 and 2018 (right). }
 \label{fig:ResoFit_Ds}
 \end{figure}
 
@@ -282,6 +288,16 @@ The fitted calibration curve is shown in blue. Data taken in 2016.}
 (Right) The measured resolution $\sigma_{eff}$ as function of the per-event decay time error estimate $\sigma_t$ for fake $B_s$ candidates (Run-II data).
 The fitted calibration curve is shown in blue. Data taken in 2017.}
 \label{fig:scaleFactorData_17}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/SignalData_18_bin_all.pdf}
+\includegraphics[height=!,width=0.49\textwidth]{figs/Resolution/ScaleFactor_Data_18.pdf}
+\caption{ (Left) Decay-time distribution for fake $B_s$ candidates from promptly produced $D_s$ candidates, combined with random prompt $K\pi\pi$ bachelor tracks.
+(Right) The measured resolution $\sigma_{eff}$ as function of the per-event decay time error estimate $\sigma_t$ for fake $B_s$ candidates (Run-II data).
+The fitted calibration curve is shown in blue. Data taken in 2018.}
+\label{fig:scaleFactorData_18}
 \end{figure}
 
 
@@ -342,6 +358,7 @@ Identical results are obtained with the $B_s \to D_s  K\pi\pi$ MC sample.
 Table~\ref{table:bias} summarizes the decay-time biases due to the selection and VELO misalignment as well as the combined decay-time bias 
 to be used in the resolution model for different data-taking periods.
 It is verified on the $\Bs\to\Ds\pion$ MC sample (with VELO misalignment) that the decay-time biases of these two sources add linearly.
+A re-alignment of the VELO modules in mid-2018 reduced the misalignment decay-time bias of the 2018 data sample with respect to the 2015-2017 data samples.
 
 \begin{figure}[h]
 \centering
@@ -356,8 +373,9 @@ It is verified on the $\Bs\to\Ds\pion$ MC sample (with VELO misalignment) that t
 \centering
 	\includegraphics[width=0.32\textwidth, height = !]{figs/Resolution/decayTimeBias/Signal2Data_16_bin_all.eps} 
 	\includegraphics[width=0.32\textwidth, height = !]{figs/Resolution/decayTimeBias/Signal2Data_17_bin_all.eps} 
+		\includegraphics[width=0.32\textwidth, height = !]{figs/Resolution/decayTimeBias/Signal2Data_18_bin_all.eps} 
 \caption{Reweighted decay-time distribution for fake $B_s$ candidates from promptly produced $D_s$ candidates, combined with random prompt $K\pi\pi$ bachelor tracks 
-for 2016 (left) and 2017 (right) data. }
+for 2016 (left), 2017 (middle) and 2018 (right) data. }
 \label{fig:decayTimeBiasData}
 \end{figure}
 
@@ -397,6 +415,7 @@ Decay-time distribution of prompt $D_s \pi$ MC candidates processed with a reali
   Run-1 &   $-1.20 \pm 0.11$ & - &  $-1.20 \pm 0.11$ \\
   15/16 &  $-1.10 \pm 0.10$ & $-1.07 \pm 0.90  \pm 1.30$ & $-2.17 \pm 1.68$   \\
   17 &   $-1.10 \pm 0.10$ & $-1.17 \pm 0.77 \pm 1.58$ & $-2.27 \pm 1.78$ \\
+    18 &   $-1.10 \pm 0.10$ & $-0.67 \pm 0.83 \pm 1.20$ & $-1.77 \pm 1.46$ \\
   \hline  
  \hline   
 \end{tabular}

@@ -206,11 +206,18 @@ Due to the tails of the distribution, which broaden the width of the Gaussian fu
 \end{itemize}
 %
 For each case, a new scaling function is derived: 
-
 \input{tables/Resolution/ScaleFactor_Data_16_coreGauss.txt}
 \input{tables/Resolution/ScaleFactor_Data_16_singleGauss.txt}
 \input{tables/Resolution/ScaleFactor_Data_17_coreGauss.txt}
 \input{tables/Resolution/ScaleFactor_Data_17_singleGauss.txt}
+\begin{equation}
+\sigma_{eff, Data,18}^{core-Gauss}(\sigma_t) = \left( -1.8 \pm 1.2 \right) \text{fs} + \left( 1.030 \pm 0.032 \right) \sigma_t
+\label{eq:scaleFactorData_18,core}
+\end{equation}
+\begin{equation}
+\sigma_{eff Data,18}^{single-Gauss}(\sigma_t) = \left( 9.3 \pm 1.1 \right) \text{fs} + \left( 0.994 \pm 0.029 \right) \sigma_t
+\label{eq:scaleFactorData_18,single}
+\end{equation}
 %\begin{equation}
 %\sigma_{eff}^{core-Gauss}(\sigma_t) = \left(4.9  \pm 2.0 \right) \text{fs} + \left( 0.821 \pm 0.050 \right) \sigma_t
 %\label{eq:ResoSyst1}
@@ -273,11 +280,11 @@ No shifts in the fit central values are observed.
 \subsection{Length and momentum scales}
 The uncertainty on the LHCb length scale is estimated to be at most $0.020\%$\cite{LHCb-ANA-2012-053,LHCb-PAPER-2013-006}, which translates
 directly in an uncertainty on $\Delta m_s$ of $0.020\%$ with other parameters being unaffected.
-The momentum scale uncertainty is at most $0.022\%$.
-In the fit to  $B_s \to D_s K \pi\pi$ data, the scale uncertainties are then implicitly included in the systematic due to $\Delta m_s$ which we 
+%The momentum scale uncertainty is at most $0.022\%$.
+In the fit to  $B_s \to D_s K \pi\pi$ data, the z-scale uncertainty is then implicitly included in the systematic due to $\Delta m_s$ which we 
 vary within its uncertainties, see above.
 
-%\clearpage
+\clearpage
 \subsection{Phase space acceptance}
 \label{sec:SysPhspAcc}
 
@@ -319,13 +326,6 @@ We assign the sample variance of the fitted values using the alternative phase s
 It is assumed that the phase space acceptance is independent of the decay-time. 
 This assumption is tested by using only simulated candidates within specific decay-time intervals to calculate the MC normalization integrals described in Sec.~\ref{sec:phasespaceAcceptance}. Four approximately equally populated decay-time bins are chosen and the sample variance of the fitted values is assigned as systematic.
 
-%\pretextcomment{
-%	This will be done when the final MC samples are available. 
-%	We expect the integration error to be negligible and the systematic error from data-simulation differences to be small.
-%	At the moment we estimate a systematic by assuming a flat phase space acceptance. 
-%	The resulting uncertainties shown in Table \ref{tab:sigSys2} should be considered as upper limit and illustrate that we are not highly sensitive 
-%	to the details of the phase space acceptance shape.
-%}
 
 \subsection{Resonance description}
 \label{ssec:lineshapeSys}
@@ -370,23 +370,29 @@ The fit results of the following alternative models (Alt.~1 - Alt.~12) are summa
 	\item The decay channel $K_1(1270)[D] \to K^*(892) \, \pi$, where the $K^*(892) \, \pi$ system is in relative a D-wave state, is added (Alt.~2)
 %	and $K_1(1400) \to K \, \rho(1450)$ are added (Alt.~2)
 
-	\item The decay channel $K_1(1400) \to K \, \rho(770)$ is added (Alt.~12)
-		
-	\item The decay channels $K(1460) \to K \, \rho(770)$ and $K(1460) \to K \, \sigma$ are added (Alt.~3)
-	
+	\item The decay channel $K_1(1400) \to K \, \rho(770)$ is added (Alt.~3)
+
+	\item The decay channels $K(1460) \to K \, \rho(770)$ and $K(1460) \to K \, \sigma$ are added (Alt.~4)
+			
 %	\item The $K(1460)$ resonance is removed (Alt.~12)
 	
-	\item The decay channels $K^*(1680) \to K \, \rho(770)$ and $K^*(1680) \to K^*(892) \, \pi$ are added (Alt.~9)
+	\item The decay channels $K^*(1680) \to K \, \rho(770)$ and $K^*(1680) \to K^*(892) \, \pi$ are added (Alt.~5)
 	
-	\item The decay channel $K_2(1770)  \to K^*(892) \, \pi$ is added (Alt.~10)
+	\item The decay channel $K_2(1770)  \to K^*(892) \, \pi$ is added (Alt.~6)
 		
-	\item The amplitude $B_s \to (D_s \, K)_{P} \, \rho(770)$ is replaced by $B_s \to (D_s \, K)_{S} \, \rho(770)$  (Alt.~11)
+	\item The amplitude $B_s \to (D_s \, K)_{P} \, \rho(770)$ is replaced by $B_s \to (D_s \, K)_{S} \, \rho(770)$  (Alt.~7)
 	
-	\item Higher orbital angular momentum states are added for the amplitudes: $B_s \to (D_s \, \pi)_{P} \, K^{*}(892)$ and $B_s \to (D_s \, K)_{P} \, \rho(770)$  (Alt.~4 and Alt.~5)
+	\item Higher orbital angular momentum states are added for the amplitudes: $B_s \to (D_s \, \pi)_{P} \, K^{*}(892)$ and $B_s \to (D_s \, K)_{P} \, \rho(770)$  (Alt.~8 and Alt.~9)
+	
+	\item The amplitude $B_s \to(D_s \, \pi)_{P} \, K^{*}(892)$ is replaced by $B_s \to (D_s \, \pi)_{S} \, K^{*}(892)$  (Alt.~10)
 	
 %	\item The amplitudes $B_s \to (D_s \, \pi)_{P} \, K^{*}(892)$ and $B_s \to (D_s \, K)_{P} \, \rho(770)$ are removed (Alt.~14 and Alt.~13)
 
-	\item The amplitudes $B_s \to (D_s \, K) \, \sigma$, $B_s \to (D_s \, K) \, f_0(980)$, $B_s \to (D_s \, K) \, f_2(1270)$ and $B_s \to (D_s \, K) \, f_0(1370)$ are added in different combinations and angular momentum configurations (Alt.~6, Alt.~7 and Alt.~8 )
+	\item The amplitudes $B_s \to (D_s \, K) \, \sigma$, $B_s \to (D_s \, K) \, f_0(980)$, $B_s \to (D_s \, K) \, f_2(1270)$ are added in different combinations and angular momentum configurations (Alt.~11)
+	
+	\item The old baseline model obtained with 2011-2017 data and a bug in the pdf (see v7.0 of the note) (Alt.~12)
+	
+	\item The amplitude $B_s \to (D_s \, K)_{P} \, \rho(770)$ is removed (Alt.~13)
 
 	\item The decay channels $K_2^*(1430) \to K \, \rho(770)$ and $K_2^*(1430) \to K^*(892) \, \pi$ are added (not used)
 
@@ -396,9 +402,13 @@ The fit results of the following alternative models (Alt.~1 - Alt.~12) are summa
 
 \end{itemize}
 %
-In total 15 different sets of amplitudes are fitted. In some cases, the fit fractions of additionally added amplitudes turn out to be exactly zero.
+In total 16 different sets of amplitudes are fitted. In some cases, the fit fractions of additionally added amplitudes turn out to be exactly zero.
 These model are effectively not distinguishable from the baseline LASSO model and are not considered further.
-From the remaining 12 models, we compute the sample variance for each observable and take it as model uncertainty.
+From the remaining 13 models, we compute the sample variance for each observable and take it as model uncertainty.
+
+
+\clearpage
+
 
 %\subsection{Summary of systematic uncertainties}
 %
@@ -469,4 +479,3 @@ The uncertainties are statistical only.}
 }
 \label{tab:sigSys2}
 \end{sidewaystable}
-
