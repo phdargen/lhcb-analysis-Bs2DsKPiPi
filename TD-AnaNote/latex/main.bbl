@@ -308,6 +308,28 @@ LHCb collaboration, L.~Zhang,
 \mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
 {\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
 \EndOfBibitem
+\bibitem{Aaij:2019vot}
+LHCb, R.~Aaij {\em et~al.}, \ifthenelse{\boolean{articletitles}}{\emph{{Updated
+  measurement of time-dependent {\it CP}-violating observables in $B^{0}_{s}\to
+  J/\psi K^+ K^-$ decays}},
+  }{}\href{http://dx.doi.org/10.1140/epjc/s10052-019-7159-8}{Eur.\ Phys.\ J.\
+  \textbf{C79} (2019), no.~8 706},
+  \href{http://arxiv.org/abs/1906.08356}{{\normalfont\ttfamily
+  arXiv:1906.08356}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{DspiRun2}
+{LHCb collaboration}, \ifthenelse{\boolean{articletitles}}{\emph{{Precision
+  measurement of the $B_s-\bar B_s$ oscillation frequency with the decay
+  $B_s\to D_s \pi$ }}, }{}
+  \href{http://cdsweb.cern.ch/search?p=LHCb-ANA-2019-XXX&f=reportnumber&action_search=Search&c=LHCb+Analysis+Notes}
+  {LHCb-ANA-2019-XXX}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
 \bibitem{LHCb-INT-2017-007}
 A.~Poluektov, \ifthenelse{\boolean{articletitles}}{\emph{{Correction of
   simulated particle identification response in LHCb using kernel density

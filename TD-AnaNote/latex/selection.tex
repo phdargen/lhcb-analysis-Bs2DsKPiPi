@@ -30,8 +30,9 @@ Candidate $\Bs\to\Ds\kaon\pion\pion$ ($\Bs\to\Ds\pion\pion\pion$) decays are rec
 \textsf{B02DKPiPiD2HHHPIDBeauty2CharmLine} (\textsf{B02DPiPiPiD2HHHPIDBeauty2CharmLine})
 line of the \textsf{BHadronCompleteEvent} stream of  
 \textsf{Stripping21r1} (2011), \textsf{Stripping21} (2012),
-\textsf{Stripping24r1} (2015)  and \textsf{Stripping28r1p1} (2016)
-and \textsf{Stripping29r2} (2017).
+\textsf{Stripping24r1} (2015), \textsf{Stripping28r1p1} (2016)
+\textsf{Stripping29r2} (2017)
+and \textsf{Stripping34} (2018).
 Both stripping lines employ the same selection cuts, listed in Appendix \ref{sec:StripAndTrigger}, except for the PID requirement on the bachelor kaon/pion.
 
 Events that pass the stripping selection are further required to fulfill the following trigger requirements:
@@ -587,7 +588,7 @@ And similar for $B_s \to D_s X_d$:
 10\% $X_d \to \pi ( a_1(1260) \to \sigma \pi)$
 and 5\% $X_d \to K \pi \pi$ (non-resonant).
 All MC samples are generated using \textsf{Pythia8}, reconstructed using
-\textsf{Reco14c}, \textsf{Reco15} and \textsf{Reco16} for Run-I, 15 and 16 data and
+\textsf{Reco14c}, \textsf{Reco15}, \textsf{Reco16} and \textsf{Reco17}  for Run-I, 15, 16 and 17 data and
 selected using the same criteria as in data.
 %\newline
 %\\
@@ -605,20 +606,22 @@ selected using the same criteria as in data.
 \hline
 \hline
 Decay & Event Type &  \multicolumn{1}{c}{\textsf{Sim}} &  \multicolumn{4}{c}{Statistics} & Filter \\
- &  &  & 11 & 12 & 15 & 16 &  \\
+ &  &  & 11 & 12 & 15 & 16 & 17 & \\
 
 \hline
-$B_s \to (D_s \to K K \pi) K \pi\pi$  & 13266007   & 08i & 1.2 M & 1.2 M & - & -   & Generator Level  \\
-$B_s \to (D_s \to K K \pi) K \pi\pi$  & 13266008  & 09c & 70 k & 80 k & 50 k & 100 k  & Generator Level, Stripping  \\
-$B_s \to (D_s \to K \pi \pi) K \pi\pi$  & 13266058 & 09c  & 70 k & 80 k & 50 k & 100 k   & Generator Level, Stripping  \\
-$B_s \to (D_s \to \pi \pi \pi) K \pi\pi$  & 13266038  & 09c &  70 k & 80 k & 50 k & 100 k  & Generator Level, Stripping  \\
+$B_s \to (D_s \to K K \pi) K \pi\pi$  & 13266007   & 08i & 1.2 M & 1.2 M & - & -  & -  & Generator Level  \\
+$B_s \to (D_s \to K K \pi) K \pi\pi$  & 13266008  & 09c & 70 k & 80 k & 50 k & 100 k & - & Generator Level, Stripping  \\
+$B_s \to (D_s \to K K \pi) K \pi\pi$  & 13266008  & 09e & - & - & - & - & 180 k & Generator Level, Stripping  \\
+$B_s \to (D_s \to K \pi \pi) K \pi\pi$  & 13266058 & 09c  & 70 k & 80 k & 50 k & 100 k & -  & Generator Level, Stripping  \\
+$B_s \to (D_s \to \pi \pi \pi) K \pi\pi$  & 13266038  & 09c &  70 k & 80 k & 50 k & 100 k  & - & Generator Level, Stripping  \\
 \\
-$B_s \to (D_s \to K K \pi) \pi \pi\pi$  & 13266006 & 08i   & 1.2 M & 1.2 M & - & -   & Generator Level  \\
-$B_s \to (D_s \to K K \pi) \pi \pi\pi$  & 13266068  & 09c & 70 k & 80 k & 50 k & 100 k   & Generator Level, Stripping  \\
-$B_s \to (D_s \to K \pi \pi) \pi \pi\pi$  & 13266088  & 09c & 70 k & 80 k & 50 k & 100 k   & Generator Level, Stripping  \\
-$B_s \to (D_s \to \pi \pi \pi) \pi \pi\pi$  & 13266078 & 09c  &70 k & 80 k & 50 k & 100 k    & Generator Level, Stripping  \\
+$B_s \to (D_s \to K K \pi) \pi \pi\pi$  & 13266006 & 08i   & 1.2 M & 1.2 M & - & -  & - & Generator Level  \\
+$B_s \to (D_s \to K K \pi) \pi \pi\pi$  & 13266068  & 09c & 70 k & 80 k & 50 k & 100 k  & - & Generator Level, Stripping  \\
+$B_s \to (D_s \to K K \pi) \pi \pi\pi$  & 13266008  & 09e & - & - & - & - & 180 k & Generator Level, Stripping  \\
+$B_s \to (D_s \to K \pi \pi) \pi \pi\pi$  & 13266088  & 09c & 70 k & 80 k & 50 k & 100 k & -  & Generator Level, Stripping  \\
+$B_s \to (D_s \to \pi \pi \pi) \pi \pi\pi$  & 13266078 & 09c  &70 k & 80 k & 50 k & 100 k  & -  & Generator Level, Stripping  \\
 \\
-$B_s \to D_s^* \pi \pi\pi, D_s \to KK \pi$  & 13266201 & 08i   & 1.2 M & 1.2 M & - & -    & Generator Level  \\
+$B_s \to D_s^* \pi \pi\pi, D_s \to KK \pi$  & 13266201 & 08i   & 1.2 M & 1.2 M & - & -   & -  & Generator Level  \\
 
 
 \hline

@@ -14,10 +14,11 @@ where $p(t \vert q_{OS}, \eta_{OS}, q_{SS}, \eta_{SS})$ is given by Equation \re
 The decay-time acceptance $\epsilon(t)$ (Sec.~\ref{sec:Acceptance}) and the Gaussian time-resolution function $\mathcal{R}(t - t^{'},\sigma_t)$ (Sec.~\ref{sec:Resolution}) are fixed to the values obtained by the dedicated studies. 
 We fix the values of $\Gs$ and $\DGs$ to the latest HFLAV results \cite{HFAG}.
 
-The  unbinned maximum likelihood fits are performed simultaneously in six categories: 
+The  unbinned maximum likelihood fits are performed simultaneously in eight categories: 
 [Run-I,\textsf{L0-TOS}], [Run-I,\textsf{L0-TIS}], %[Run-II,\textsf{L0-TOS}] and [Run-II,\textsf{L0-TIS}].
  [Year-15/16,\textsf{L0-TOS}], [Year-15/16,\textsf{L0-TIS}],
- [Year-17,\textsf{L0-TOS}] and [Year-17,\textsf{L0-TIS}]
+ [Year-17,\textsf{L0-TOS}], [Year-17,\textsf{L0-TIS}],
+  [Year-18,\textsf{L0-TOS}] and [Year-18,\textsf{L0-TIS}]
  to account for different time-acceptance shapes, time-resolution and tagging calibrations. 
  
  
@@ -44,10 +45,10 @@ are shown in Fig.~\ref{fig:tFitNorm} along with the fit projections.
 
 \begin{figure}[h]
 	\centering
-		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t.pdf} 
-		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t_log.pdf} 
-		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_t_mixed.pdf} 
-		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_taggingCalib/h_asym.pdf} 		
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_new/h_t.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_new/h_t_log.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_new/h_t_mixed.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/norm_new/h_asym.pdf} 		
 		\caption{
 		\footnotesize Top: Flavour averaged decay time distribution of $\Bs\to\Ds\pion\pion\pion$ candidates. 
 Bottom-left: Tagged decay time distribution of mixed (red) and unmixed (blue) signal candidates. 
@@ -101,11 +102,11 @@ The corresponding confidence levels  are shown in Fig~\ref{fig:FitCL} and are do
 %}
 \begin{figure}[h]
 	\centering
-		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal/h_t.pdf} 
-		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal/h_t_log.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal_new2/h_t.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal_new2/h_t_log.eps} 
 
 %		\includegraphics[width=0.45\textwidth, height = !]{figs/timeFit/signal/h_t_mixed_m.eps} 		
-		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal/h_asym.eps} 		
+		\includegraphics[width=0.4\textwidth, height = !]{figs/timeFit/signal_new2/h_asym.eps} 		
 		\caption{Decay-time distribution of $\Bs\to\Ds\kaon\pion\pion$ signal candidates with the fit projection overlaid.} 
 		\label{fig:tFitSig}
 \end{figure}	
@@ -130,10 +131,10 @@ The corresponding confidence levels  are shown in Fig~\ref{fig:FitCL} and are do
 \hline
  & $C$ & $D$ & $\bar D$ & $S$ & $\bar S$  \\ 
 \hline
-$C$ &  1.000 & -0.134 & -0.181 & 0.048 & 0.074 \\
-$D$ &  & 1.000 & 0.542 & 0.019 &  0.060 \\
-$\bar{D}$ &  & &  1.000 &  0.005 & 0.118  \\
-$S$ &  &&& 1.000 & 0.006 \\
+$C$ &  1.000 & 0.135 & 0.168 & 0.040 & 0.042 \\
+$D$ &  & 1.000 & 0.504 & -0.082 &  -0.052 \\
+$\bar{D}$ &  & &  1.000 &  -0.036 & -0.113  \\
+$S$ &  &&& 1.000 & 0.014 \\
 $\bar{S}$ & &&&& 1.000 \\
 \hline
 \hline
@@ -143,6 +144,25 @@ $\bar{S}$ & &&&& 1.000 \\
 %
 %\begin{table}[h]
 %\centering
+%\caption{Systematic correlation of the \CP coefficients.}
+%%\resizebox{\linewidth}{!}{
+%	\renewcommand{\arraystretch}{1}
+%\begin{tabular}{l | c c c c c } 
+%\hline
+%\hline
+% & $C$ & $D$ & $\bar D$ & $S$ & $\bar S$  \\ 
+%\hline
+%$C$ &  1.000  &  -0.048  &  -0.058  &   -0.100   &    0.080 \\
+%$D$ &  & 1.000 &  0.171    & 0.016  &   0.021 \\
+%$\bar{D}$ &  & &  1.000 &  0.002  &   0.044  \\
+%$S$ &  &&& 1.000 &  -0.235 \\
+%$\bar{S}$ & &&&& 1.000 \\
+%\hline
+%\hline
+%\end{tabular}
+%\label{tab:systCorr}
+%\end{table}
+%
 \caption{Systematic correlation of the \CP coefficients.}
 %\resizebox{\linewidth}{!}{
 	\renewcommand{\arraystretch}{1}
@@ -151,10 +171,10 @@ $\bar{S}$ & &&&& 1.000 \\
 \hline
  & $C$ & $D$ & $\bar D$ & $S$ & $\bar S$  \\ 
 \hline
-$C$ &  1.000  &  -0.057  &  -0.069  &   -0.109   &    0.102 \\
-$D$ &  & 1.000 &  0.206    & 0.022  &   0.040 \\
-$\bar{D}$ &  & &  1.000 &  0.008  &   0.071  \\
-$S$ &  &&& 1.000 &  -0.342 \\
+$C$ &  1.000  &  0.039  &  0.042  &   -0.136   &    -0.006 \\
+$D$ &  & 1.000 &  0.208    & -0.031  &   -0.023 \\
+$\bar{D}$ &  & &  1.000 &  -0.021  &   -0.035  \\
+$S$ &  &&& 1.000 &  -0.278 \\
 $\bar{S}$ & &&&& 1.000 \\
 \hline
 \hline
@@ -162,13 +182,14 @@ $\bar{S}$ & &&&& 1.000 \\
 \label{tab:systCorr}
 \end{table}
 
+
 \begin{figure}[h]
 	\centering
-		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal2/cartesian_cp_coeff_r.pdf} 
-		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal2/cartesian_cp_coeff_k.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_new/cartesian_cp_coeff_r.eps} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_new/cartesian_cp_coeff_k.eps} 
 		
-		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal2/cartesian_cp_coeff_d.pdf} 
-		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal2/cartesian_cp_coeff_g.pdf} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_new/cartesian_cp_coeff_d.eps} 
+		\includegraphics[width=0.4\textwidth, height = !]{figs/GammaCombo/signal_new/cartesian_cp_coeff_g.eps} 
 		\caption{The 1-CL contours for the physical observable $r,\kappa,\delta$ and $\gamma$ obtained with the phasespace-integrated fit. }
 		\label{fig:FitCL}	
 \end{figure} 

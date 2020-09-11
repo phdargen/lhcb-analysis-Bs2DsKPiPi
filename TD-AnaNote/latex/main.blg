@@ -3,7 +3,7 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: main.aux
 The style file: LHCb.bst
 Database file #1: main.bib
-Repeated entry---line 279 of file main.bib
+Repeated entry---line 304 of file main.bib
  : @article{Aaij:2017kbo
  :                      ,
 I'm skipping whatever remains of this entry
@@ -12,45 +12,45 @@ Database file #3: LHCb-CONF.bib
 Database file #4: LHCb-DP.bib
 Database file #5: LHCb-TDR.bib
 Warning--empty booktitle in Blusk:2012it
-You've used 62 entries,
+You've used 64 entries,
             2829 wiz_defined-function locations,
-            1114 strings with 16348 characters,
-and the built_in function-call counts, 235782 in all, are:
-= -- 25744
-> -- 453
+            1128 strings with 16686 characters,
+and the built_in function-call counts, 240111 in all, are:
+= -- 26215
+> -- 465
 < -- 4
-+ -- 1491
-- -- 109
-* -- 23824
-:= -- 29317
-add.period$ -- 65
-call.type$ -- 62
-change.case$ -- 58
++ -- 1529
+- -- 112
+* -- 24244
+:= -- 29891
+add.period$ -- 67
+call.type$ -- 64
+change.case$ -- 60
 chr.to.int$ -- 0
-cite$ -- 63
-duplicate$ -- 4076
-empty$ -- 24763
-format.name$ -- 109
-if$ -- 51278
+cite$ -- 65
+duplicate$ -- 4189
+empty$ -- 25198
+format.name$ -- 112
+if$ -- 52202
 int.to.chr$ -- 0
-int.to.str$ -- 62
-missing$ -- 212
-newline$ -- 385
-num.names$ -- 61
-pop$ -- 972
+int.to.str$ -- 64
+missing$ -- 217
+newline$ -- 397
+num.names$ -- 63
+pop$ -- 997
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 353
+skip$ -- 361
 stack$ -- 0
-substring$ -- 69720
-swap$ -- 11
-text.length$ -- 128
+substring$ -- 70915
+swap$ -- 12
+text.length$ -- 132
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 1
-while$ -- 1461
-width$ -- 64
-write$ -- 935
+while$ -- 1504
+width$ -- 66
+write$ -- 964
 (There was 1 error message)
