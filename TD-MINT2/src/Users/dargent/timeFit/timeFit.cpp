@@ -624,6 +624,74 @@ void fullTimeFit(int step=0, string mode = "fit"){
                               avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
                               production_asym_Run2, detection_asym_Run2, "Run2_18_t1" );
 
+/*
+    FullTimePdf t_pdf_Run2_17_t0(C, D, D_bar, S, S_bar, k,
+                              Gamma, dGamma, dm
+			      ,offset_mean_dt_Run2_17,scale_mean_dt_Run2_17,scale_mean_2_dt_Run2_17
+			      ,offset_sigma_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
+			      ,offset_sigma2_dt_Run2_17, scale_sigma2_dt_Run2_17, scale_sigma2_2_dt_Run2_17
+			      ,offset_sigma3_dt_Run2_17, scale_sigma3_dt_Run2_17, scale_sigma3_2_dt_Run2_17
+			      ,offset_f_dt_Run2_17, scale_f_dt_Run2_17, scale_f_2_dt_Run2_17
+			      ,offset_f2_dt_Run2_17, scale_f2_dt_Run2_17, scale_f2_2_dt_Run2_17
+                              ,c0_Run2_17_t0, c1_Run2_17_t0, c2_Run2_17_t0 ,c3_Run2_17_t0, c4_Run2_17_t0, c5_Run2_17_t0
+                              ,c6_Run2_17_t0, c7_Run2_17_t0, c8_Run2_17_t0, c9_Run2_17_t0,
+                              p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "Run2_17_t0" );
+
+
+    FullTimePdf t_pdf_Run2_17_t1(C, D, D_bar, S, S_bar, k,
+                              Gamma, dGamma, dm
+			      ,offset_mean_dt_Run2_17,scale_mean_dt_Run2_17,scale_mean_2_dt_Run2_17
+			      ,offset_sigma_dt_Run2_17, scale_sigma_dt_Run2_17, scale_sigma_2_dt_Run2_17
+			      ,offset_sigma2_dt_Run2_17, scale_sigma2_dt_Run2_17, scale_sigma2_2_dt_Run2_17
+			      ,offset_sigma3_dt_Run2_17, scale_sigma3_dt_Run2_17, scale_sigma3_2_dt_Run2_17
+			      ,offset_f_dt_Run2_17, scale_f_dt_Run2_17, scale_f_2_dt_Run2_17
+			      ,offset_f2_dt_Run2_17, scale_f2_dt_Run2_17, scale_f2_2_dt_Run2_17
+                              ,c0_Run2_17_t1, c1_Run2_17_t1, c2_Run2_17_t1 ,c3_Run2_17_t1, c4_Run2_17_t1, c5_Run2_17_t1
+                              ,c6_Run2_17_t1, c7_Run2_17_t1, c8_Run2_17_t1, c9_Run2_17_t1,
+                              p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "Run2_17_t1" );
+    
+
+    FullTimePdf t_pdf_Run2_18_t0(C, D, D_bar, S, S_bar, k,
+                              Gamma, dGamma, dm
+			      ,offset_mean_dt_Run2_18,scale_mean_dt_Run2_18,scale_mean_2_dt_Run2_18
+			      ,offset_sigma_dt_Run2_18, scale_sigma_dt_Run2_18, scale_sigma_2_dt_Run2_18
+			      ,offset_sigma2_dt_Run2_18, scale_sigma2_dt_Run2_18, scale_sigma2_2_dt_Run2_18
+			      ,offset_sigma3_dt_Run2_18, scale_sigma3_dt_Run2_18, scale_sigma3_2_dt_Run2_18
+			      ,offset_f_dt_Run2_18, scale_f_dt_Run2_18, scale_f_2_dt_Run2_18
+			      ,offset_f2_dt_Run2_18, scale_f2_dt_Run2_18, scale_f2_2_dt_Run2_18
+                              ,c0_Run2_18_t0, c1_Run2_18_t0, c2_Run2_18_t0 ,c3_Run2_18_t0, c4_Run2_18_t0, c5_Run2_18_t0
+                              ,c6_Run2_18_t0, c7_Run2_18_t0, c8_Run2_18_t0, c9_Run2_18_t0,
+                              p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "Run2_18_t0" );
+
+
+    FullTimePdf t_pdf_Run2_18_t1(C, D, D_bar, S, S_bar, k,
+                              Gamma, dGamma, dm
+			      ,offset_mean_dt_Run2_18,scale_mean_dt_Run2_18,scale_mean_2_dt_Run2_18
+			      ,offset_sigma_dt_Run2_18, scale_sigma_dt_Run2_18, scale_sigma_2_dt_Run2_18
+			      ,offset_sigma2_dt_Run2_18, scale_sigma2_dt_Run2_18, scale_sigma2_2_dt_Run2_18
+			      ,offset_sigma3_dt_Run2_18, scale_sigma3_dt_Run2_18, scale_sigma3_2_dt_Run2_18
+			      ,offset_f_dt_Run2_18, scale_f_dt_Run2_18, scale_f_2_dt_Run2_18
+			      ,offset_f2_dt_Run2_18, scale_f2_dt_Run2_18, scale_f2_2_dt_Run2_18
+                              ,c0_Run2_18_t1, c1_Run2_18_t1, c2_Run2_18_t1 ,c3_Run2_18_t1, c4_Run2_18_t1, c5_Run2_18_t1
+                              ,c6_Run2_18_t1, c7_Run2_18_t1, c8_Run2_18_t1, c9_Run2_18_t1,
+                              p0_os_Run2, p1_os_Run2, delta_p0_os_Run2, delta_p1_os_Run2, 
+                              avg_eta_os_Run2, tageff_os_Run2, tageff_asym_os_Run2, 
+                              p0_ss_Run2, p1_ss_Run2, delta_p0_ss_Run2, delta_p1_ss_Run2, 
+                              avg_eta_ss_Run2, tageff_ss_Run2, tageff_asym_ss_Run2, 
+                              production_asym_Run2, detection_asym_Run2, "Run2_18_t1" );*/
+
 
     /// Randomize start vals
     MinuitParameterSet* mps = MinuitParameterSet::getDefaultSet();
@@ -964,7 +1032,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
         if(trigger < min_trigger || trigger > max_trigger) continue;
         //if(Ds_finalState < min_Ds_finalState || Ds_finalState > max_Ds_finalState) continue;
         if(eta_SS < w_min || eta_SS > w_max )continue;
- 	if((string)channel=="signal")if(!(evt.phaseSpace() > 0.))continue;
+ 	//if((string)channel=="signal")if(!(evt.phaseSpace() > 0.))continue;
 
     	if(!(doToyStudy && mode == "fit"))run = (run == 2 && year == 17) ? 3 : run;
     	if(!(doToyStudy && mode == "fit"))run = (run == 2 && year == 18) ? 4 : run;
@@ -1336,8 +1404,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
         }
 //         else { 	
             if(q_eff == 0)h_t_untagegged->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
-                else if(q_eff*f_evt > 0  ){
-                        h_t_mixed->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
+                else if(q_eff*f_evt < 0  ){
+                        h_t_mixed->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
                         //if(w_eff<w_max)
 			h_N_mixed->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight()*D_tot);
 
@@ -1348,7 +1416,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			if(q2 != 0)h_N_mixed_SS->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight()*D_tot);
                     }
                 else {
-                    h_t_unmixed->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight()*D_tot);
+                    h_t_unmixed->Fill(eventList[i].getValueFromVector(0),eventList[i].getWeight());
                     //if(w_eff<w_max)
 		    h_N_unmixed->Fill(fmod(eventList[i].getValueFromVector(0),2.*pi/dm),eventList[i].getWeight()*D_tot);
 
@@ -2413,8 +2481,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
 			}
 //  			else {   
 				if(q_eff == 0)h_t_untagegged_fit->Fill(t_MC,weight);
-				else if(q_eff*f_evt > 0  ){
-					h_t_mixed_fit->Fill(t_MC,weight*D_tot);
+				else if(q_eff*f_evt < 0  ){
+					h_t_mixed_fit->Fill(t_MC,weight);
 					//if(w_eff<w_max)
 					h_N_mixed_fit->Fill(fmod(t_MC,2.*pi/dm),weight*D_tot);
 
@@ -2425,7 +2493,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 					if( q2 != 0)h_N_mixed_SS_fit->Fill(fmod(t_MC,2.*pi/dm),weight*D_tot);
 				}
 				else{ 
-					h_t_unmixed_fit->Fill(t_MC,weight*D_tot);
+					h_t_unmixed_fit->Fill(t_MC,weight);
 					//if(w_eff<w_max)
 					h_N_unmixed_fit->Fill(fmod(t_MC,2.*pi/dm),weight*D_tot);
 
@@ -2458,6 +2526,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	cout << "Combined | " << (N_OS_MC+N_SS_MC+N_OS_SS_MC)/N_MC << " | "<<  (w_OS_MC+w_SS_MC+w_OS_SS_MC)/(N_OS_MC+N_SS_MC+N_OS_SS_MC) << " | " << (N_OS_MC+N_SS_MC+N_OS_SS_MC)/N_MC * D_comb_MC/(N_OS_MC+N_SS_MC+N_OS_SS_MC) << endl << endl ;
 	
 	/// Plots
+	c->Clear();
 	TGraph* graph = new TGraph(2);
 	graph->SetPoint(1,min_TAU,0);
 	graph->SetPoint(2,max_TAU,0);
@@ -2467,8 +2536,8 @@ void fullTimeFit(int step=0, string mode = "fit"){
         for (int i = 1; i<=h_t_acc->GetNbinsX(); i++) {
 		double val_acc = N_Run1_t0*t_pdf_Run1_t0.get_spline_Val(h_t_acc->GetXaxis()->GetBinCenter(i));
 		val_acc += N_Run1_t1*t_pdf_Run1_t1.get_spline_Val(h_t_acc->GetXaxis()->GetBinCenter(i));
-		val_acc += (N_Run2_t0+N_Run2_17_t0)*t_pdf_Run2_t0.get_spline_Val(h_t_acc->GetXaxis()->GetBinCenter(i));
-		val_acc += (N_Run2_t1+N_Run2_17_t1)*t_pdf_Run2_t1.get_spline_Val(h_t_acc->GetXaxis()->GetBinCenter(i));
+		val_acc += (N_Run2_t0+N_Run2_17_t0+N_Run2_18_t0)*t_pdf_Run2_t0.get_spline_Val(h_t_acc->GetXaxis()->GetBinCenter(i));
+		val_acc += (N_Run2_t1+N_Run2_17_t1+N_Run2_18_t1)*t_pdf_Run2_t1.get_spline_Val(h_t_acc->GetXaxis()->GetBinCenter(i));
 		h_t_acc->SetBinContent(i,val_acc/N);
         }
 
@@ -2510,12 +2579,14 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	c->Print(((string)OutputDir+"h_t.C").c_str());
 	if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t.pdf").c_str());
 	
-	h_t_acc->DrawNormalized("histcsame",N/2);
-	c->Print(((string)OutputDir+"h_acc.eps").c_str());
-
+	//h_t_acc->DrawNormalized("histcsame",N/2);
+	//c->Print(((string)OutputDir+"h_acc.eps").c_str());
 
 	gPad->SetLogy(1);
 	c->Print(((string)OutputDir+"h_t_log.eps").c_str());
+	c->Print(((string)OutputDir+"h_t_log.pdf").c_str());
+	c->Print(((string)OutputDir+"h_t_log.png").c_str());
+	c->Print(((string)OutputDir+"h_t_log.C").c_str());
 	if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t_log.pdf").c_str());
 	gPad->SetLogy(0);
 	
@@ -2602,6 +2673,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	
 	if((string)channel=="norm"){
 	
+		c->Clear();
 		ss.str("");
 		title_t = "Yield / (";
 		ss << std::fixed << std::setprecision(1) << (h_t_mixed->GetXaxis()->GetXmax() -h_t_mixed->GetXaxis()->GetXmin())/h_t_mixed->GetNbinsX();  
@@ -2648,14 +2720,16 @@ void fullTimeFit(int step=0, string mode = "fit"){
 		leg.SetTextAlign(12);
 
 		leg.AddEntry((TObject*)0,"#font[22]{LHCb}","h");
-		TLegendEntry* le = leg.AddEntry(h_t_mixed,"B^{0}_{s}(t)#rightarrow D_{s}^{-}#pi^{+}#pi^{-}#pi^{+}","l");
-		le->SetTextColor(kRed);
-		le->SetTextSize(0.05);
-		le = leg.AddEntry(h_t_unmixed,"#bar{B^{0}_{s}}(t)#rightarrow D_{s}^{-}#pi^{+}#pi^{-}#pi^{+}","l");
+		TLegendEntry* le = leg.AddEntry(h_t_unmixed,"B^{0}_{s}(t)#rightarrow D_{s}^{-}#pi^{+}#pi^{-}#pi^{+}","l");
 	        le->SetTextColor(kBlue);    
 		le->SetTextSize(0.05);
+		le = leg.AddEntry(h_t_mixed,"#bar{B^{0}_{s}}(t)#rightarrow D_{s}^{-}#pi^{+}#pi^{-}#pi^{+}","l");
+		le->SetTextColor(kRed);
+		le->SetTextSize(0.05);
 		leg.Draw();
-	
+
+		c->Print(((string)OutputDir+"h_t_mixed.pdf").c_str());
+		c->Print(((string)OutputDir+"h_t_mixed.png").c_str());	
 		c->Print(((string)OutputDir+"h_t_mixed.eps").c_str());
 		c->Print(((string)OutputDir+"h_t_mixed.C").c_str());
 		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_t_mixed.pdf").c_str());
@@ -2675,12 +2749,12 @@ void fullTimeFit(int step=0, string mode = "fit"){
 		leg2.AddEntry((TObject*)0,"","");
 
 		
-		TH1D* h_asym = (TH1D*) h_N_mixed->GetAsymmetry(h_N_unmixed);	
+		TH1D* h_asym = (TH1D*) h_N_unmixed->GetAsymmetry(h_N_mixed);	
 		double max_asym = 0.5; //max(h_asym->GetMaximum(),fabs(h_asym->GetMinimum())) *1.25;
 		h_asym->SetMaximum(max_asym);
 		h_asym->SetMinimum(-max_asym);
 
-		TH1D* h_asym_fit = (TH1D*) h_N_mixed_fit->GetAsymmetry(h_N_unmixed_fit);	
+		TH1D* h_asym_fit = (TH1D*) h_N_unmixed_fit->GetAsymmetry(h_N_mixed_fit);	
 		h_asym_fit->SetLineColor(kBlue);
 		h_asym_fit->SetLineWidth(3);
 
@@ -2734,6 +2808,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 	
 	else{
 	
+		c->Clear();
 		h_t_mp->Scale(1./h_t_mp->Integral());
 		double maxY= h_t_mp->GetMaximum()*1.3;        
 		h_t_mp->SetMinimum(0.);  
@@ -2804,7 +2879,7 @@ void fullTimeFit(int step=0, string mode = "fit"){
 		c->Print(((string)OutputDir+"h_asym_m.eps").c_str());
 		if(updateAnaNote)c->Print(("../../../../../TD-AnaNote/latex/figs/timeFit/"+(string)OutputDir +"h_asym_m.pdf").c_str());
 	
-
+		c->Clear();
 		h_asym_m->SetName("h_asym_m");
 		h_asym_p->SetName("h_asym_p");
 		h_asym_p_fit->SetName("h_asym_p_fit");
@@ -5268,7 +5343,7 @@ void calculateAverageReso(){
     double K_P;
 
     TChain* tree_norm=new TChain("DecayTree");
-    tree_norm->Add( ((string)InputDir + "Data/norm_tagged.root").c_str());
+    tree_norm->Add( ((string)InputDir + "Data/norm_18.root").c_str());
     tree_norm->SetBranchStatus("*",0);
     tree_norm->SetBranchStatus("*TAU*",1);
     tree_norm->SetBranchStatus("N_Bs_sw",1);
@@ -5299,12 +5374,21 @@ void calculateAverageReso(){
     FitParameter  scale_sigma_dt_Run2("scale_sigma_dt_Run2",1,1.2,0.1);
     FitParameter  offset_sigma_dt_Run2_17("offset_sigma_dt_Run2_17",1,0.,0.1);
     FitParameter  scale_sigma_dt_Run2_17("scale_sigma_dt_Run2_17",1,1.2,0.1);
+    FitParameter  offset_sigma_dt_Run2_18("offset_sigma_dt_Run2_18",1,0.,0.1);
+    FitParameter  scale_sigma_dt_Run2_18("scale_sigma_dt_Run2_18",1,1.2,0.1);
+
+    FitParameter  offset_mean_dt_Run1("offset_mean_dt_Run1",1,0.,0.1);
+    FitParameter  offset_mean_dt_Run2("offset_mean_dt_Run2",1,0.,0.1);
+    FitParameter  offset_mean_dt_Run2_17("offset_mean_dt_Run2_17",1,0.,0.1);
+    FitParameter  offset_mean_dt_Run2_18("offset_mean_dt_Run2_18",1,0.,0.1);
+
 
     int bins = 60;
     TH1D* h_dt_norm = new TH1D("h_dt_norm_comb",";#sigma_{t} [ps];Events (a.u.) ",bins,min_TAUERR,max_TAUERR);
     TH1D* h_dt_norm_Run1 = new TH1D("h_dt_norm_Run1",";#sigma_{t} [ps];Events (a.u.) ",bins,min_TAUERR,max_TAUERR);
     TH1D* h_dt_norm_Run2 = new TH1D("h_dt_norm_Run2",";#sigma_{t} [ps];Events (a.u.) ",bins,min_TAUERR,max_TAUERR);
     TH1D* h_dt_norm_Run2_17 = new TH1D("h_dt_norm_Run2_17",";#sigma_{t} [ps];Events (a.u.) ",bins,min_TAUERR,max_TAUERR);
+    TH1D* h_dt_norm_Run2_18 = new TH1D("h_dt_norm_Run2_18",";#sigma_{t} [ps];Events (a.u.) ",bins,min_TAUERR,max_TAUERR);
 
     TFile* f_det_asym_Run1 = new TFile("../Asymmetries/AsymmetryHistos/det_asym_Run1.root");
     TH1D* det_asym_Run1 = (TH1D*) f_det_asym_Run1->Get("det_asym_Run1");
@@ -5317,9 +5401,18 @@ void calculateAverageReso(){
     double sigma_dt_Run1 = 0.;
     double sigma_dt_Run2 = 0.;
     double sigma_dt_Run2_17 = 0.;
+    double sigma_dt_Run2_18 = 0.;
+
+    double mean_dt = 0;
+    double mean_dt_Run1 = 0;
+    double mean_dt_Run2 = 0;
+    double mean_dt_Run2_17 = 0;
+    double mean_dt_Run2_18 = 0;
+
     double N_Run1 = 0.;
     double N_Run2 = 0.;
     double N_Run2_17 = 0.;
+    double N_Run2_18 = 0.;
 
     double det_asy_Run1= 0.;
     double det_asy_Run2= 0.;
@@ -5339,18 +5432,36 @@ void calculateAverageReso(){
 		sigma_dt_Run1 += sw*(offset_sigma_dt_Run1 + scale_sigma_dt_Run1 * dt);
 		N_Run1 += sw;
 		h_dt_norm_Run1->Fill(offset_sigma_dt_Run1 + scale_sigma_dt_Run1 * dt,sw);
+
+		mean_dt += sw*(offset_mean_dt_Run1);
+		mean_dt_Run1 += sw*(offset_mean_dt_Run1);
 	}
 	else if(year < 17){
 		sigma_dt += sw*(offset_sigma_dt_Run2 + scale_sigma_dt_Run2 * dt);
 		sigma_dt_Run2 += sw*(offset_sigma_dt_Run2 + scale_sigma_dt_Run2 * dt);
 		N_Run2 += sw;
 		h_dt_norm_Run2->Fill(offset_sigma_dt_Run2 + scale_sigma_dt_Run2 * dt,sw);
+
+		mean_dt += sw*(offset_mean_dt_Run2);
+		mean_dt_Run2 += sw*(offset_mean_dt_Run2);
 	}
-	else{
+	else if(year == 17){
 		sigma_dt += sw*(offset_sigma_dt_Run2_17 + scale_sigma_dt_Run2_17 * dt);
 		sigma_dt_Run2_17 += sw*(offset_sigma_dt_Run2_17 + scale_sigma_dt_Run2_17 * dt);
 		N_Run2_17 += sw;
 		h_dt_norm_Run2_17->Fill(offset_sigma_dt_Run2_17 + scale_sigma_dt_Run2_17 * dt,sw);
+
+		mean_dt += sw*(offset_mean_dt_Run2_17);
+		mean_dt_Run2_17 += sw*(offset_mean_dt_Run2_17);
+	}
+	else if(year == 18){
+		sigma_dt += sw*(offset_sigma_dt_Run2_18 + scale_sigma_dt_Run2_18 * dt);
+		sigma_dt_Run2_18 += sw*(offset_sigma_dt_Run2_18 + scale_sigma_dt_Run2_18 * dt);
+		N_Run2_18 += sw;
+		h_dt_norm_Run2_18->Fill(offset_sigma_dt_Run2_18 + scale_sigma_dt_Run2_18 * dt,sw);
+
+		mean_dt += sw*(offset_mean_dt_Run2_18);
+		mean_dt_Run2_18 += sw*(offset_mean_dt_Run2_18);
 	}
 
 	if(Ds_finalState == 4)n_4 += sw;
@@ -5376,7 +5487,21 @@ void calculateAverageReso(){
 
     }
 
-    cout << "n4 = " << n_4/(N_Run1+N_Run2+N_Run2_17) <<  endl;
+    cout << "Run 1 = " << N_Run1/(N_Run1+N_Run2+N_Run2_17+N_Run2_18) *100. <<  endl;
+    cout << "Run 2 = " << N_Run2/(N_Run1+N_Run2+N_Run2_17+N_Run2_18) *100. <<  endl;
+    cout << "Run 2_17 = " << N_Run2_17/(N_Run1+N_Run2+N_Run2_17+N_Run2_18) *100. <<  endl;
+    cout << "Run 2_18 = " << N_Run2_18/(N_Run1+N_Run2+N_Run2_17+N_Run2_18) *100. <<  endl;
+
+    double f1 =  N_Run1/(N_Run1+N_Run2+N_Run2_17+N_Run2_18);
+    double f2 = N_Run2/(N_Run1+N_Run2+N_Run2_17+N_Run2_18) ;
+    double f3 = N_Run2_17/(N_Run1+N_Run2+N_Run2_17+N_Run2_18) ;
+    double f4 = N_Run2_18/(N_Run1+N_Run2+N_Run2_17+N_Run2_18) ;
+
+    cout << endl <<  "mean = " << (f1 * offset_mean_dt_Run1 + f2 * offset_mean_dt_Run2 + f3 * offset_mean_dt_Run2_17 + f4 * offset_mean_dt_Run2_18)*1000. ;
+    cout <<  " pm  " << (f1 * offset_mean_dt_Run1.stepInit() + f2 * offset_mean_dt_Run2.stepInit() + f3 * offset_mean_dt_Run2_17.stepInit() + f4 * offset_mean_dt_Run2_18.stepInit())*1000. << endl << endl;
+
+
+    cout << "n4 = " << n_4/(N_Run1+N_Run2+N_Run2_17+N_Run2_18) <<  endl;
 
     cout << "det_asy_Run1 = " << det_asy_Run1/det_asy_N_Run1 <<  endl;
     cout << "det_asy_Run2 = " << det_asy_Run2/det_asy_N_Run2 <<  endl;
@@ -5384,7 +5509,15 @@ void calculateAverageReso(){
     cout << "Reso Run1 = " << sigma_dt_Run1/N_Run1 *1000.<< endl;
     cout << "Reso Run2 = " << sigma_dt_Run2/N_Run2 *1000.<< endl;
     cout << "Reso Run2_17 = " << sigma_dt_Run2_17/N_Run2_17 *1000.<< endl;
-    cout << "Reso tot = " << sigma_dt/(N_Run1+N_Run2+N_Run2_17) *1000.<< endl;
+    cout << "Reso Run2_18 = " << sigma_dt_Run2_18/N_Run2_18 *1000.<< endl;
+    cout << "Reso tot = " << sigma_dt/(N_Run1+N_Run2+N_Run2_17+N_Run2_18) *1000.<< endl;
+
+    cout << "Mean Run1 = " << mean_dt_Run1/N_Run1 *1000.<< endl;
+    cout << "Mean Run2 = " << mean_dt_Run2/N_Run2 *1000.<< endl;
+    cout << "Mean Run2_17 = " << mean_dt_Run2_17/N_Run2_17 *1000.<< endl;
+    cout << "Mean Run2_18 = " << mean_dt_Run2_18/N_Run2_18 *1000.<< endl;
+    cout << "Mean tot = " << mean_dt/(N_Run1+N_Run2+N_Run2_17+N_Run2_18) *1000.<< endl;
+
 
 return;
 
@@ -5392,15 +5525,17 @@ return;
     h_dt_norm_Run1->DrawNormalized("e1",1);
     h_dt_norm_Run2->SetMarkerColor(kRed);
     h_dt_norm_Run2->SetLineColor(kRed);
+    h_dt_norm_Run2->DrawNormalized("histcsame",1);
     h_dt_norm_Run2_17->SetMarkerColor(kBlue);
     h_dt_norm_Run2_17->SetLineColor(kBlue);
-    h_dt_norm_Run2->DrawNormalized("histcsame",1);
     h_dt_norm_Run2_17->DrawNormalized("histcsame",1);
+    h_dt_norm_Run2_18->SetMarkerColor(kGreen);
+    h_dt_norm_Run2_18->SetLineColor(kGreen);
+    h_dt_norm_Run2_18->DrawNormalized("histcsame",1);
     c->Print("dt_calib.eps");
-
 // 	return;
 
-    int N_toys = 100;
+    int N_toys = 1000;
     double rho = -0.9 ;    
     TMatrixDSym cov(2);
     cov(0,0) = 1.;
@@ -5478,15 +5613,53 @@ return;
     RooMultiVarGaussian* gauss_cov_Run2_17 = new RooMultiVarGaussian("gauss_cov_Run2_17","gauss_cov_Run2_17",x_Run2_17, m_Run2_17, cov_Run2_17);
     RooDataSet* data_Run2_17 = gauss_cov_Run2_17->generate(x_Run2_17,N_toys);
 
+
+  RooArgList x_Run2_18;
+    RooArgList m_Run2_18;
+    RooRealVar* off_Run2_18 = new  RooRealVar("off_Run2_18", "off_Run2_18", offset_sigma_dt_Run2_18);
+    RooRealVar* scale_Run2_18 = new  RooRealVar("scale_Run2_18", "scale_Run2_18", scale_sigma_dt_Run2_18);
+    x_Run2_18.add(*off_Run2_18); 
+    x_Run2_18.add(*scale_Run2_18);
+    m_Run2_18.add(RooRealConstant::value(offset_sigma_dt_Run2_18));
+    m_Run2_18.add(RooRealConstant::value(scale_sigma_dt_Run2_18));
+        
+    vector<double> sigma_Run2_18;    
+    sigma_Run2_18.push_back(1.5/1000.);
+    sigma_Run2_18.push_back(0.042);    
     
-    vector<double> sigma_dt_vec,sigma_dt_Run1_vec,sigma_dt_Run2_vec,sigma_dt_Run2_17_vec;
+    TMatrixDSym cov_Run2_18(cov);
+    for(int i=0; i < cov.GetNcols(); i++){
+        for(int j=0; j < cov.GetNcols(); j++){    
+            cov_Run2_18(i,j) = cov(i,j) * sigma_Run2_18[i] * sigma_Run2_18[j];
+        }
+    }
+
+    RooMultiVarGaussian* gauss_cov_Run2_18 = new RooMultiVarGaussian("gauss_cov_Run2_18","gauss_cov_Run2_18",x_Run2_18, m_Run2_18, cov_Run2_18);
+    RooDataSet* data_Run2_18 = gauss_cov_Run2_18->generate(x_Run2_18,N_toys);
+
+
+    
+    vector<double> sigma_dt_vec,sigma_dt_Run1_vec,sigma_dt_Run2_vec,sigma_dt_Run2_17_vec,sigma_dt_Run2_18_vec;
+    vector<double> mean_dt_vec,mean_dt_Run1_vec,mean_dt_Run2_vec,mean_dt_Run2_17_vec,mean_dt_Run2_18_vec;
     vector<double> det_asy_Run1_vec,det_asy_Run2_vec;
-    sigma_dt_vec.push_back(sigma_dt/(N_Run1+N_Run2+N_Run2_17));       
+
+    sigma_dt_vec.push_back(sigma_dt/(N_Run1+N_Run2+N_Run2_17+N_Run2_18));       
     sigma_dt_Run1_vec.push_back(sigma_dt_Run1/N_Run1);       
     sigma_dt_Run2_vec.push_back(sigma_dt_Run2/N_Run2);       
-    sigma_dt_Run2_17_vec.push_back(sigma_dt_Run2_17/N_Run2_17);   
+    sigma_dt_Run2_17_vec.push_back(sigma_dt_Run2_17/N_Run2_17);  
+    sigma_dt_Run2_18_vec.push_back(sigma_dt_Run2_18/N_Run2_18);    
+
+    mean_dt_vec.push_back(mean_dt/(N_Run1+N_Run2+N_Run2_17+N_Run2_18));       
+    mean_dt_Run1_vec.push_back(mean_dt_Run1/N_Run1);       
+    mean_dt_Run2_vec.push_back(mean_dt_Run2/N_Run2);       
+    mean_dt_Run2_17_vec.push_back(mean_dt_Run2_17/N_Run2_17);  
+    mean_dt_Run2_18_vec.push_back(mean_dt_Run2_18/N_Run2_18);    
+
     det_asy_Run1_vec.push_back(det_asy_Run1/det_asy_N_Run1);
     det_asy_Run2_vec.push_back(det_asy_Run2/det_asy_N_Run2);  
+
+    //cout << "offset_mean_dt_Run2_18.stepInit() = " << offset_mean_dt_Run2_18.stepInit() *1000. << endl;
+
 
     for(Int_t j=0;j<N_toys;j++) 
     {
@@ -5502,10 +5675,28 @@ return;
         double off_Run2_17_val = ((RooRealVar *) l_Run2_17->at(0))->getVal();
         double scale_Run2_17_val = ((RooRealVar *) l_Run2_17->at(1))->getVal();
 
+        RooArgList* l_Run2_18 = (RooArgList*) data_Run2_18->get(j);    
+        double off_Run2_18_val = ((RooRealVar *) l_Run2_18->at(0))->getVal();
+        double scale_Run2_18_val = ((RooRealVar *) l_Run2_18->at(1))->getVal();
+
 	sigma_dt = 0.;
 	sigma_dt_Run1 = 0.;
 	sigma_dt_Run2 = 0.;
 	sigma_dt_Run2_17 = 0.;
+	sigma_dt_Run2_18 = 0.;
+
+	double mean_Run1_val = gRandom->Gaus(offset_mean_dt_Run1,offset_mean_dt_Run1.stepInit());
+	double mean_Run2_val = gRandom->Gaus(offset_mean_dt_Run2,offset_mean_dt_Run2.stepInit());
+	double mean_Run2_17_val = gRandom->Gaus(offset_mean_dt_Run2_17,offset_mean_dt_Run2_17.stepInit());
+	double mean_Run2_18_val = gRandom->Gaus(offset_mean_dt_Run2_18,offset_mean_dt_Run2_18.stepInit());
+
+	//cout << "mean_Run2_18_val = " << mean_Run2_18_val *1000. << endl;
+
+	mean_dt = 0.;
+	mean_dt_Run1 = 0.;
+	mean_dt_Run2 = 0.;
+	mean_dt_Run2_17 = 0.;
+	mean_dt_Run2_18 = 0.;
 
 	det_asy_Run1= 0.;
     	det_asy_Run2= 0.;
@@ -5520,7 +5711,6 @@ return;
 		det_asym_Run2_toy->SetBinContent(n, det_asym_Run2->GetBinContent(n) + gRandom->Gaus(0.,det_asym_Run2->GetBinError(n)) );
 	}
 
-
 	
 	for(int i=0; i< tree_norm->GetEntries(); i++)
 	{    
@@ -5531,14 +5721,26 @@ return;
 		if(run==1){
 			sigma_dt += sw*(off_Run1_val + scale_Run1_val * dt);
 			sigma_dt_Run1 += sw*(off_Run1_val + scale_Run1_val * dt);
+			mean_dt += sw*(mean_Run1_val);
+			mean_dt_Run1 += sw*(mean_Run1_val);
 		}
 		else if(year < 17){
 			sigma_dt += sw*(off_Run2_val + scale_Run2_val * dt);
 			sigma_dt_Run2 += sw*(off_Run2_val + scale_Run2_val * dt);
+			mean_dt += sw*(mean_Run2_val);
+			mean_dt_Run2 += sw*(mean_Run2_val);
 		}
-		else{
+		else if (year==17){
 			sigma_dt += sw*(off_Run2_17_val + scale_Run2_17_val * dt);
 			sigma_dt_Run2_17 += sw*(off_Run2_17_val + scale_Run2_17_val * dt);
+			mean_dt += sw*(mean_Run2_17_val);
+			mean_dt_Run2_17 += sw*(mean_Run2_17_val);
+		}
+		else if (year==18){
+			sigma_dt += sw*(off_Run2_18_val + scale_Run2_18_val * dt);
+			sigma_dt_Run2_18 += sw*(off_Run2_18_val + scale_Run2_18_val * dt);
+			mean_dt += sw*(mean_Run2_18_val);
+			mean_dt_Run2_18 += sw*(mean_Run2_18_val);
 		}
 
 		double det_asy= 0.;
@@ -5560,10 +5762,18 @@ return;
 		}
 
     	}
-	sigma_dt_vec.push_back(sigma_dt/(N_Run1+N_Run2+N_Run2_17));       
+	sigma_dt_vec.push_back(sigma_dt/(N_Run1+N_Run2+N_Run2_17+N_Run2_18));       
 	sigma_dt_Run1_vec.push_back(sigma_dt_Run1/N_Run1);       
 	sigma_dt_Run2_vec.push_back(sigma_dt_Run2/N_Run2);       
 	sigma_dt_Run2_17_vec.push_back(sigma_dt_Run2_17/N_Run2_17);   
+	sigma_dt_Run2_18_vec.push_back(sigma_dt_Run2_18/N_Run2_18);  
+
+	mean_dt_vec.push_back(mean_dt/(N_Run1+N_Run2+N_Run2_17+N_Run2_18));       
+	mean_dt_Run1_vec.push_back(mean_dt_Run1/N_Run1);       
+	mean_dt_Run2_vec.push_back(mean_dt_Run2/N_Run2);       
+	mean_dt_Run2_17_vec.push_back(mean_dt_Run2_17/N_Run2_17);   
+	mean_dt_Run2_18_vec.push_back(mean_dt_Run2_18/N_Run2_18);  
+ 
 	det_asy_Run1_vec.push_back(det_asy_Run1/det_asy_N_Run1);
 	det_asy_Run2_vec.push_back(det_asy_Run2/det_asy_N_Run2);     
     }
@@ -5572,6 +5782,13 @@ return;
     double sigma_dt_var_Run1 = 0;
     double sigma_dt_var_Run2 = 0;
     double sigma_dt_var_Run2_17 = 0;
+    double sigma_dt_var_Run2_18 = 0;
+
+    double mean_dt_var = 0;
+    double mean_dt_var_Run1 = 0;
+    double mean_dt_var_Run2 = 0;
+    double mean_dt_var_Run2_17 = 0;
+    double mean_dt_var_Run2_18 = 0;
 
     double sigma_det_asy_Run1 = 0;
     double sigma_det_asy_Run2 = 0;
@@ -5582,6 +5799,13 @@ return;
             sigma_dt_var_Run1 += pow(sigma_dt_Run1_vec[j] - sigma_dt_Run1_vec[k],2);
             sigma_dt_var_Run2 += pow(sigma_dt_Run2_vec[j] - sigma_dt_Run2_vec[k],2);
             sigma_dt_var_Run2_17 += pow(sigma_dt_Run2_17_vec[j] - sigma_dt_Run2_17_vec[k],2);
+            sigma_dt_var_Run2_18 += pow(sigma_dt_Run2_18_vec[j] - sigma_dt_Run2_18_vec[k],2);
+
+            mean_dt_var += pow(mean_dt_vec[j] - mean_dt_vec[k],2);
+            mean_dt_var_Run1 += pow(mean_dt_Run1_vec[j] - mean_dt_Run1_vec[k],2);
+            mean_dt_var_Run2 += pow(mean_dt_Run2_vec[j] - mean_dt_Run2_vec[k],2);
+            mean_dt_var_Run2_17 += pow(mean_dt_Run2_17_vec[j] - mean_dt_Run2_17_vec[k],2);
+            mean_dt_var_Run2_18 += pow(mean_dt_Run2_18_vec[j] - mean_dt_Run2_18_vec[k],2);
 
             sigma_det_asy_Run1 += pow(det_asy_Run1_vec[j] - det_asy_Run1_vec[k],2);
             sigma_det_asy_Run2 += pow(det_asy_Run2_vec[j] - det_asy_Run2_vec[k],2);
@@ -5590,7 +5814,16 @@ return;
     cout << "Reso Run1 = " << sigma_dt_Run1/N_Run1 *1000.<< " +- " <<  sqrt(sigma_dt_var_Run1/((double)N_toys*((double)N_toys-.1))) *1000 << endl;
     cout << "Reso Run2 = " << sigma_dt_Run2/N_Run2 *1000.<< " +- " <<  sqrt(sigma_dt_var_Run2/((double)N_toys*((double)N_toys-.1))) *1000 << endl;
     cout << "Reso Run2_17 = " << sigma_dt_Run2_17/N_Run2_17 *1000.<< " +- " <<  sqrt(sigma_dt_var_Run2_17/((double)N_toys*((double)N_toys-.1))) *1000 << endl;
-    cout << "Reso tot = " << sigma_dt/(N_Run1+N_Run2+N_Run2_17) *1000.<< " +- " <<  sqrt(sigma_dt_var/((double)N_toys*((double)N_toys-.1))) *1000 << endl;
+    cout << "Reso Run2_18 = " << sigma_dt_Run2_18/N_Run2_18 *1000.<< " +- " <<  sqrt(sigma_dt_var_Run2_18/((double)N_toys*((double)N_toys-.1))) *1000 << endl;
+    cout << "Reso tot = " << sigma_dt/(N_Run1+N_Run2+N_Run2_17+N_Run2_18) *1000.<< " +- " <<  sqrt(sigma_dt_var/((double)N_toys*((double)N_toys-.1))) *1000 << endl;
+
+
+    cout << "Mean Run1 = " << mean_dt_Run1/N_Run1 *1000.<< " +- " <<  sqrt(mean_dt_var_Run1/((double)N_toys*((double)N_toys-.1))) *1000 << endl;
+    cout << "Mean Run2 = " << mean_dt_Run2/N_Run2 *1000.<< " +- " <<  sqrt(mean_dt_var_Run2/((double)N_toys*((double)N_toys-.1))) *1000 << endl;
+    cout << "Mean Run2_17 = " << mean_dt_Run2_17/N_Run2_17 *1000.<< " +- " <<  sqrt(mean_dt_var_Run2_17/((double)N_toys*((double)N_toys-.1))) *1000 << endl;
+    cout << "Mean Run2_18 = " << mean_dt_Run2_18/N_Run2_18 *1000.<< " +- " <<  sqrt(mean_dt_var_Run2_18/((double)N_toys*((double)N_toys-.1))) *1000 << endl;
+    cout << "Mean tot = " << mean_dt/(N_Run1+N_Run2+N_Run2_17+N_Run2_18) *1000.<< " +- " <<  sqrt(mean_dt_var/((double)N_toys*((double)N_toys-.1))) *1000 << endl;
+
 
     cout << "DA Run1 = " <<  det_asy_Run1_vec[0] *100.<< " +- " <<  sqrt(sigma_det_asy_Run1/((double)N_toys*((double)N_toys-.1))) *100 << endl;
     cout << "DA Run2 = " <<  det_asy_Run2_vec[0] *100.<< " +- " <<  sqrt(sigma_det_asy_Run2/((double)N_toys*((double)N_toys-.1))) *100 << endl;
@@ -5698,13 +5931,14 @@ int main(int argc, char** argv){
 //     test_multiGaussConstraints();
    //produceMarginalPdfs();
   //for(int i = 0; i < 100; i++) fullTimeFit(atoi(argv[1])+i);
+   
    fullTimeFit(atoi(argv[1]),(string)argv[2]);
    if((string)argv[2] == "gen" && addBkgToToys)calculateSweightsForToys(atoi(argv[1]));
 
   //for(int i = 1; i <= 100; i++)calculateSweightsForToys(i);
 
          // animate2(atoi(argv[1]));
-// calculateAverageReso();
+ //calculateAverageReso();
 
   cout << "==============================================" << endl;
   cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;

@@ -16,7 +16,6 @@ using namespace std;
 
 void signal(){
 
-
     /// Fit parameters    
     vector<TString> paraNames;
     paraNames.push_back("C");
@@ -29,17 +28,20 @@ void signal(){
 
     /// Data fit
 //     pull p_data(paraNames,"signal_test5/pull__1.root");
-    pull p_data(paraNames,"signal_decayTimeBias/pull__2.root");
+    //pull p_data(paraNames,"signal_new/pull__2.root");
+    pull p_data(paraNames,"signal_new2/pull__2.root");
+    pull p_data_err(paraNames,"signal_new2/pull__1.root");
+
     vector<double> vals = p_data.getVals();
-    vector<double> errs_stat = p_data.getErrs();
+    vector<double> errs_stat = p_data_err.getErrs();
     
     /// Stat cov from toys
-    pull p_stat(paraNames,"signal_toy_ub/pull__*.root");
+    pull p_stat(paraNames,"out_signal_new_toy/pull__*.root");
     TMatrixD* cov_stat = new TMatrixD(p_stat.getStatCov());
     cov_stat->Print();
 
     /// Fit bias from toys
-    pull p(paraNames,"signal_toy_ub/pull__*.root");
+    pull p(paraNames,"out_signal_new_toy/pull__*.root");
     TMatrixD* cov = new TMatrixD(p.getCov());
 //     cov->Print();
     for(int i = 0 ; i < paraNames.size(); i++)for(int j = 0 ; j < paraNames.size(); j++){
@@ -54,8 +56,8 @@ void signal(){
 		 cor[i][j] = (*cov)[i][j]/sqrt((*cov)[i][i])/sqrt((*cov)[j][j]);
 
     /// Acc systematics 
-    pull p_acc(paraNames,"signal_toy_ub/pullAcc_*.root");
-    TMatrixD* cov_acc = new TMatrixD(p_acc.getDeltaCov("signal_toy_ub/pull__*.root","_acc"));
+    pull p_acc(paraNames,"out_signal_new_toy/pullAcc_*.root");
+    TMatrixD* cov_acc = new TMatrixD(p_acc.getDeltaCov("out_signal_new_toy/pull__*.root","_acc"));
     cov_acc->Print();
 
     TMatrixD cor_acc(*cov_acc);    
@@ -106,19 +108,31 @@ void signal(){
     pull p_res_Run2_h(paraNames,"signal_sys_res_Run2_h/pull__*.root");
     TMatrixD* cov_res_Run2_h = new TMatrixD(p_res_Run2_h.getDeltaCov("signal/pull__1.root","_res_Run2_h"));
 
+    pull p_res_18_a(paraNames,"signal_new_sys_res_18_a/pull__*.root");
+    TMatrixD* cov_res_18_a = new TMatrixD(p_res_18_a.getDeltaCov("signal_new/pull__1.root","_res_18_a"));
+
+    pull p_res_18_b(paraNames,"signal_new_sys_res_18_b/pull__*.root");
+    TMatrixD* cov_res_18_b = new TMatrixD(p_res_18_b.getDeltaCov("signal_new/pull__1.root","_res_18_b"));
+
 
     vector<TMatrixD*> covs_res_Run1;
     covs_res_Run1.push_back(cov_res_Run1_a);
     covs_res_Run1.push_back(cov_res_Run1_b);
     TMatrixD cov_res(p.combineCov_maxVal(covs_res_Run1));
 
-    vector<TMatrixD*> covs_res_Run2;
+    vector<TMatrixD*> covs_res_Run2,covs_res_Run2_17,covs_res_Run2_18;
     covs_res_Run2.push_back(cov_res_Run2_a);
     covs_res_Run2.push_back(cov_res_Run2_b);
-    covs_res_Run2.push_back(cov_res_Run2_c);
-    covs_res_Run2.push_back(cov_res_Run2_d);
+
+    covs_res_Run2_17.push_back(cov_res_Run2_c);
+    covs_res_Run2_17.push_back(cov_res_Run2_d);
+
+    covs_res_Run2_18.push_back(cov_res_18_a);
+    covs_res_Run2_18.push_back(cov_res_18_b);
 
     cov_res +=  p.combineCov_maxVal(covs_res_Run2) ;
+    cov_res +=  p.combineCov_maxVal(covs_res_Run2_17) ;
+    cov_res +=  p.combineCov_maxVal(covs_res_Run2_18) ;
 
     TMatrixD cor_res(cov_res);    
     for(int i =0 ; i <paraNames.size() ; i++)
@@ -128,11 +142,18 @@ void signal(){
 
     /// decay time bias systematics 
     pull p_bias(paraNames,"signal_decayTimeBias/pull__2.root");
-    TMatrixD* cov_bias = new TMatrixD(p_bias.getDeltaCov("signal_decayTimeBias/pull__1.root","_bias"));
+    TMatrixD cov_bias = p_bias.getDeltaCov("signal_decayTimeBias/pull__1.root","_bias");
+
+    pull p_bias_18(paraNames,"out_signal_new_toy/pull_offset_mean_dt_Run218_*.root");
+    TMatrixD cov_bias_18 = p_bias_18.getDeltaCov("out_signal_new_toy/pull__*.root","_bias18");
+
+    cov_bias += cov_bias_18;
 
     /// dms systematics 
-    pull p_dm(paraNames,"signal_toy_ub2/pull_dm_*.root");
-    TMatrixD* cov_dm = new TMatrixD(p_dm.getDeltaCov("signal_toy_ub/pull__*.root","_dm"));
+//     pull p_dm(paraNames,"signal_toy_ub2/pull_dm_*.root");
+//     TMatrixD* cov_dm = new TMatrixD(p_dm.getDeltaCov("signal_toy_ub/pull__*.root","_dm"));
+    pull p_dm(paraNames,"out_signal_new_toy/pull_dm_*.root");
+    TMatrixD* cov_dm = new TMatrixD(p_dm.getDeltaCov("out_signal_new_toy/pull__*.root","_dm"));
     cov_dm->Print();
 
     TMatrixD cor_dm(*cov_dm);    
@@ -247,12 +268,13 @@ void signal(){
 	for(int j =0 ; j <paraNames.size() ; j++)
 		 cor_bkg[i][j] = cov_bkg[i][j]/sqrt(cov_bkg[i][i])/sqrt(cov_bkg[j][j]);
 
-
-    pull p_bkg_bs1(paraNames,"signal_toy_bkg_bs2/pull__*.root");
+//     pull p_bkg_bs1(paraNames,"signal_toy_bkg_bs2/pull__*.root");
+    pull p_bkg_bs1(paraNames,"out_signal_new_toy_bkg/sw_pull__*.root");
     vector<double> mean_bkg_bs1 = p_bkg_bs1.getPullMean();
     vector<double> sigma_bkg_bs1 = p_bkg_bs1.getPullSigma();
 
-    pull p_bkg_bs2(paraNames,"signal_toy_bkg_bs2/signal_pull__*.root");
+//     pull p_bkg_bs2(paraNames,"signal_toy_bkg_bs2/signal_pull__*.root");*/
+    pull p_bkg_bs2(paraNames,"out_signal_new_toy_bkg/pull__*.root");   
     vector<double> mean_bkg_bs2 = p_bkg_bs2.getPullMean();
     vector<double> sigma_bkg_bs2 = p_bkg_bs2.getPullSigma();
 
@@ -268,31 +290,51 @@ void signal(){
 	}
 	else (*cov_bkg_bs)[i][j] = 0.;
      }
+
+//      TMatrixD* cov_bkg_bs = new TMatrixD(p_bkg_bs2.getDeltaCov("out_signal_new_toy_bkg3/pull__*.root","_bkg_bs"));
      cov_bkg+= *cov_bkg_bs;
 
 
     /// m,t correlations
-//     pull p_corr(paraNames,"signal_toy_bkg7/pull__*.root");
-//     TMatrixD* cov_corr = new TMatrixD(p_corr.getDeltaCov("signal_toy_bkg8/pull__*.root","_corr"));
+//      pull p_corr(paraNames,"out_signal_new_toy_bkg/sw_pull__*.root");
+//      TMatrixD* cov_corr = new TMatrixD(p_corr.getDeltaCov("out_signal_new_toy_bkg2/sw_pull__*.root","_corr"));
 
-    pull p_corr1(paraNames,"signal_toy_bkg7/pull__*.root");
+//     pull p_corr1(paraNames,"signal_toy_bkg7/pull__*.root");
+//     TMatrixD cov_corr1 = p_corr1.getCov();
+// 
+//     pull p_corr2(paraNames,"signal_toy_bkg8/pull__*.root");
+//     TMatrixD cov_corr2 = p_corr2.getCov();
+// 
+//     pull p_corr3(paraNames,"signal_toy_bkg_bs0/pull__*.root");
+//     TMatrixD cov_corr3 = p_corr3.getCov();
+// 
+//     pull p_corr4(paraNames,"signal_toy_bkg_bs1/pull__*.root");
+//     TMatrixD cov_corr4 = p_corr4.getCov();
+// 
+//     TMatrixD* cov_corr = new TMatrixD(p_corr1.getAbsDiff(cov_corr1,cov_corr2));
+//     TMatrixD* cov_corr34 = new TMatrixD(p_corr3.getAbsDiff(cov_corr3,cov_corr4));
+// 
+//     for(int i = 0 ; i < paraNames.size(); i++)for(int j = 0 ; j < paraNames.size(); j++){
+// 	if((*cov_corr)[i][j]>(*cov_corr34)[i][j]) (*cov_corr)[i][j] = (*cov_corr)[i][j] * errs_stat[i] * errs_stat[j];
+// 	else (*cov_corr)[i][j] = (*cov_corr34)[i][j] * errs_stat[i] * errs_stat[j];
+//     }
+
+    pull p_corr1(paraNames,"out_signal_new_toy_bkg/sw_pull__*.root");
     TMatrixD cov_corr1 = p_corr1.getCov();
 
-    pull p_corr2(paraNames,"signal_toy_bkg8/pull__*.root");
+    pull p_corr2(paraNames,"out_signal_new_toy_bkg2/sw_pull__*.root");
     TMatrixD cov_corr2 = p_corr2.getCov();
 
-    pull p_corr3(paraNames,"signal_toy_bkg_bs0/pull__*.root");
+    pull p_corr3(paraNames,"out_signal_new_toy_bkg3/sw_pull__*.root");
     TMatrixD cov_corr3 = p_corr3.getCov();
 
-    pull p_corr4(paraNames,"signal_toy_bkg_bs1/pull__*.root");
-    TMatrixD cov_corr4 = p_corr4.getCov();
-
     TMatrixD* cov_corr = new TMatrixD(p_corr1.getAbsDiff(cov_corr1,cov_corr2));
-    TMatrixD* cov_corr34 = new TMatrixD(p_corr3.getAbsDiff(cov_corr3,cov_corr4));
+     TMatrixD* cov_corr34 = new TMatrixD(p_corr3.getAbsDiff(cov_corr3,cov_corr1));
 
     for(int i = 0 ; i < paraNames.size(); i++)for(int j = 0 ; j < paraNames.size(); j++){
-	if((*cov_corr)[i][j]>(*cov_corr34)[i][j]) (*cov_corr)[i][j] = (*cov_corr)[i][j] * errs_stat[i] * errs_stat[j];
-	else (*cov_corr)[i][j] = (*cov_corr34)[i][j] * errs_stat[i] * errs_stat[j];
+	(*cov_corr)[i][j] = (*cov_corr)[i][j] * errs_stat[i] * errs_stat[j];
+// 	if((*cov_corr)[i][j]>(*cov_corr34)[i][j]) (*cov_corr)[i][j] = (*cov_corr)[i][j] * errs_stat[i] * errs_stat[j];
+// 	else (*cov_corr)[i][j] = (*cov_corr34)[i][j] * errs_stat[i] * errs_stat[j];
     }
 
     /// Total sys corr
@@ -300,7 +342,7 @@ void signal(){
     covs.push_back(cov_corr);
     covs.push_back(cov_acc);
     covs.push_back(new TMatrixD(cov_res));
-    covs.push_back(cov_bias);
+    covs.push_back(new TMatrixD(cov_bias));
     covs.push_back(new TMatrixD(cov_asym));
     covs.push_back(cov_dm);
 
@@ -414,7 +456,7 @@ void signal(){
         double tot = 0.;
         SummaryFile3 << p.latexName(paraNames[i])  << " & " ;
         //SummaryFile3 << std::fixed << std::setprecision(2) << "x.xx" << " $\\pm$ " << errs_stat[i]  << " $\\pm$ " << errs_sys[i];
-        SummaryFile3 << std::fixed << std::setprecision(2) << vals[i] << " $\\pm$ " << errs_stat[i]  << " $\\pm$ " << errs_sys[i];
+        SummaryFile3 << std::fixed << std::setprecision(3) << vals[i] << " $\\pm$ " << errs_stat[i]  << " $\\pm$ " << errs_sys[i];
         SummaryFile3  << " \\\\ " << "\n"; 
     }
     
@@ -464,13 +506,14 @@ void norm() {
 
     /// Data fit
 //     pull p_data(paraNames,"norm_taggingCalib/pull__1.root");
-    pull p_data(paraNames,"norm_decayTimeBias/pull__1.root");
+//    pull p_data(paraNames,"norm_decayTimeBias/pull__1.root");
+     pull p_data(paraNames,"norm_new/pull__1.root");
     vector<double> vals = p_data.getVals();
     vector<double> errs_stat = p_data.getErrs();
     
     /// Fit bias from toys
-    pull p(paraNames,"norm_toy/pull__*.root");
-    TMatrixD* cov = new TMatrixD(p.getCov());
+    pull p(paraNames,"out_norm_new_toy/pull__*.root");
+    TMatrixD* cov = new TMatrixD(p.getCov("",5,false));
     for(int i = 0 ; i < paraNames.size(); i++)for(int j = 0 ; j < paraNames.size(); j++){
 	(*cov)[i][j] = (*cov)[i][j] * errs_stat[i] * errs_stat[j];
     }
@@ -481,8 +524,8 @@ void norm() {
 //     TMatrixD* cov_acc_chol = new TMatrixD(p_acc_chol.getDeltaCovChol("norm_toy/pull__*.root","_accChol",50));
 //     covs.push_back(cov_acc_chol);
 
-    pull p_acc(paraNames,"norm_toy/pullAcc_*.root");
-    TMatrixD* cov_acc = new TMatrixD(p_acc.getDeltaCov("norm_toy/pull__*.root","_acc"));
+    pull p_acc(paraNames,"out_norm_new_toy/pullAcc_*.root");
+    TMatrixD* cov_acc = new TMatrixD(p_acc.getDeltaCov("out_norm_new_toy/pull__*.root","_acc",0.25));
 
     /// resolution systematics 
     pull p_res_Run1_a(paraNames,"norm_sys_res_Run1_a/pull__*.root");
@@ -515,33 +558,45 @@ void norm() {
     pull p_res_Run2_h(paraNames,"norm_sys_res_Run2_h/pull__*.root");
     TMatrixD* cov_res_Run2_h = new TMatrixD(p_res_Run2_h.getDeltaCov("norm_taggingCalib/pull__1.root","_res_Run2_h"));
 
+    pull p_res_18_a(paraNames,"norm_new_sys_res_18_a/pull__*.root");
+    TMatrixD* cov_res_18_a = new TMatrixD(p_res_18_a.getDeltaCov("norm_new/pull__1.root","_res_18_a"));
+
+    pull p_res_18_b(paraNames,"norm_new_sys_res_18_b/pull__*.root");
+    TMatrixD* cov_res_18_b = new TMatrixD(p_res_18_b.getDeltaCov("norm_new/pull__1.root","_res_18_b"));
+
 
     vector<TMatrixD*> covs_res_Run1;
     covs_res_Run1.push_back(cov_res_Run1_a);
     covs_res_Run1.push_back(cov_res_Run1_b);
     TMatrixD cov_res(p_res_Run1_a.combineCov_maxVal(covs_res_Run1));
 
-    vector<TMatrixD*> covs_res_Run2;
+    vector<TMatrixD*> covs_res_Run2,covs_res_Run2_17,covs_res_Run2_18;
     covs_res_Run2.push_back(cov_res_Run2_a);
     covs_res_Run2.push_back(cov_res_Run2_b);
+    //covs_res_Run2.push_back(cov_res_Run2_e);
+    //covs_res_Run2.push_back(cov_res_Run2_f);
+
     covs_res_Run2.push_back(cov_res_Run2_c);
     covs_res_Run2.push_back(cov_res_Run2_d);
-    covs_res_Run2.push_back(cov_res_Run2_e);
-    covs_res_Run2.push_back(cov_res_Run2_f);
-    covs_res_Run2.push_back(cov_res_Run2_g);
-    covs_res_Run2.push_back(cov_res_Run2_h);
+    //covs_res_Run2_17.push_back(cov_res_Run2_g);
+    //covs_res_Run2_17.push_back(cov_res_Run2_h);
+
+    covs_res_Run2.push_back(cov_res_18_a);
+    covs_res_Run2.push_back(cov_res_18_b);
 
     cov_res +=  p_res_Run1_a.combineCov_maxVal(covs_res_Run2) ;
+    //cov_res +=  p_res_Run1_a.combineCov_maxVal(covs_res_Run2_17) ;
+    //cov_res +=  p_res_Run1_a.combineCov_maxVal(covs_res_Run2_18) ;
     
     /// asymmetry systematics
     pull p_production_asym_Run1(paraNames,"norm_toy/pull_production_asym_Run1_*.root");
-    TMatrixD* cov_production_asym_Run1 = new TMatrixD(p_production_asym_Run1.getDeltaCov("norm_toy/pull__*.root","_production_asym_Run1"));
+    TMatrixD* cov_production_asym_Run1 = new TMatrixD(p_production_asym_Run1.getDeltaCov("norm_toy/pull__*.root","_production_asym_Run1",0.25,true));
 
     pull p_detection_asym_Run1(paraNames,"norm_toy/pull_detection_asym_Run1_*.root");
-    TMatrixD* cov_detection_asym_Run1 = new TMatrixD(p_detection_asym_Run1.getDeltaCov("norm_toy/pull__*.root","_detection_asym_Run1"));
+    TMatrixD* cov_detection_asym_Run1 = new TMatrixD(p_detection_asym_Run1.getDeltaCov("norm_toy/pull__*.root","_detection_asym_Run1",0.25,true));
 
     pull p_detection_asym_Run2(paraNames,"norm_toy/pull_detection_asym_Run2_*.root");
-    TMatrixD* cov_detection_asym_Run2 = new TMatrixD(p_detection_asym_Run2.getDeltaCov("norm_toy/pull__*.root","_detection_asym_Run2"));
+    TMatrixD* cov_detection_asym_Run2 = new TMatrixD(p_detection_asym_Run2.getDeltaCov("norm_toy/pull__*.root","_detection_asym_Run2",0.25,true));
 
     TMatrixD cov_asym(*cov_production_asym_Run1);
     cov_asym +=  *cov_detection_asym_Run1 ;
@@ -558,9 +613,13 @@ void norm() {
     pull p_scale_mean_dt_Run2_17(paraNames,"norm_toy/pull_offset_mean_dt_Run217_*.root");
     TMatrixD* cov_scale_mean_dt_Run2_17 = new TMatrixD(p_scale_mean_dt_Run2_17.getDeltaCov("norm_toy/pull__*.root","_offset_mean_dt_Run217"));
 
+    pull p_scale_mean_dt_Run2_18(paraNames,"out_norm_new_toy/pull_offset_mean_dt_Run218_*.root");
+    TMatrixD* cov_scale_mean_dt_Run2_18 = new TMatrixD(p_scale_mean_dt_Run2_18.getDeltaCov("out_norm_new_toy/pull__*.root","_offset_mean_dt_Run218"));
+
     TMatrixD cov_bias(*cov_scale_mean_dt_Run1);
     cov_bias +=   *cov_scale_mean_dt_Run2;
     cov_bias +=   *cov_scale_mean_dt_Run2_17;
+    cov_bias +=   *cov_scale_mean_dt_Run2_18;
 
     /// bkg systematics 
     pull p_bkg_1(paraNames,"norm_sys_bkg1/pull__*.root");
@@ -618,11 +677,13 @@ void norm() {
     TMatrixD cov_bkg(p.sampleVariance(vec_vals_bkg));
     //cov_bkg.Print();
 
-    pull p_bkg_bs1(paraNames,"norm_toy_bkg_bs2/pull__*.root");
+//     pull p_bkg_bs1(paraNames,"norm_toy_bkg_bs2/pull__*.root");
+    pull p_bkg_bs1(paraNames,"out_norm_new_toy_bkg/sw_pull__*.root");
     vector<double> mean_bkg_bs1 = p_bkg_bs1.getPullMean();
     vector<double> sigma_bkg_bs1 = p_bkg_bs1.getPullSigma();
 
-    pull p_bkg_bs2(paraNames,"norm_toy_bkg_bs2/signal_pull__*.root");
+//     pull p_bkg_bs2(paraNames,"norm_toy_bkg_bs2/signal_pull__*.root");
+    pull p_bkg_bs2(paraNames,"out_norm_new_toy_bkg/pull__*.root");
     vector<double> mean_bkg_bs2 = p_bkg_bs2.getPullMean();
     vector<double> sigma_bkg_bs2 = p_bkg_bs2.getPullSigma();
 
@@ -647,10 +708,12 @@ void norm() {
 //     covs.push_back(cov_mc);
 
     /// m,t correlations
-    pull p_corr1(paraNames,"norm_toy_bkg3/pull__*.root");
+    //pull p_corr1(paraNames,"norm_toy_bkg3/pull__*.root");
+    pull p_corr1(paraNames,"out_norm_new_toy_bkg/sw_pull__*.root");
     TMatrixD cov_corr1 = p_corr1.getCov();
 
     pull p_corr2(paraNames,"norm_toy_bkg4/pull__*.root");
+    //pull p_corr2(paraNames,"out_norm_new_toy_bkg3/sw_pull__*.root");
     TMatrixD cov_corr2 = p_corr2.getCov();
 
     TMatrixD* cov_corr = new TMatrixD(p_corr1.getAbsDiff(cov_corr1,cov_corr2));
@@ -806,6 +869,13 @@ void norm() {
     SummaryFile3 << "\\hline" << "\n";
     SummaryFile3 << "\\hline" << "\n";
     SummaryFile3 << "\\end{tabular}" << "\n";
+
+
+    for(int i =0 ; i < vals.size() ; i++){
+        cout << p_data.latexNameMod(paraNames[i])  << " = " ;
+        cout << vals[i] << " $\\pm$ " << sqrt(pow(errs_stat[i],2) + pow(errs_sys[i],2) ) << endl;
+    }
+
 }
 
 
@@ -954,8 +1024,8 @@ int main(int argc, char** argv){
     //gStyle->SetOptFit(111);
     //gStyle->UseCurrentStyle();
 
-   // signal();
-   norm();
+    signal();
+   //norm();
 
 //  crossCheck_norm();
 // crossCheck_signal();

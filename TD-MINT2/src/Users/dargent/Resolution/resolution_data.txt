@@ -7,12 +7,12 @@
 
 * options for Ds mass fit
 "inFileNameForDsMassFit"		"/auto/data/dargent/BsDsKpipi/Preselected/Data/signal_Ds2*_18_LTU_multCand_noTimeCut2.root"
-"outFileNameForDsMassFit"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_18_LTU_noTimeCut2.root"
+"outFileNameForDsMassFit"		"/auto/data/dargent/BsDsKpipi/Final/Data/signal_18_LTU_noTimeCut3.root"
 
 *"inFileNameForDsMassFit"   		"/auto/data/kecke/BsDsKpipi/signal_Ds2KKpi_16_LTU_multCand.root"
 *"outFileNameForDsMassFit" 		"/auto/data/kecke/BsDsKpipi/Final/Data/signal_LTU_16.root"
 
-"sWeight"			1
+"sWeight"			0
 "weightVar"			"weight"		
 *"weightVar"			"weight_pt_dt_FD"		
 
@@ -39,9 +39,9 @@
 "useTransformedSigma"	 0
 "nGauss"	 2
 "fixMean"	1
-"fixGaussFraction"	 0
+"fixGaussFraction"	 1
 "gaussFraction"		 0.75
-"DoSystematics"		 0
+"DoSystematics"		 1
 
 
 

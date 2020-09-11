@@ -7,10 +7,10 @@
 "max_MM_reduced"	5700.
 
 *old BDT
-"cut_BDT" 	"( ( (run ==1 && TriggerCat == 0 && BDTG > 0.45) || (run ==1 && TriggerCat == 1 && BDTG > 0.45) || (run ==2 && TriggerCat == 0 && BDTG > 0.35) || (run == 2 && TriggerCat == 1 && BDTG > 0.45) ) && (Bs_PV_nPV ==1 || (Bs_MINIPCHI2NEXTBEST-Bs_IPCHI2_OWNPV) > 20) && (Bs_BsDTF_TAU>=0.4 && Bs_BsDTF_TAU<=10) )"
+*"cut_BDT" 	"( ( (run ==1 && TriggerCat == 0 && BDTG > 0.45) || (run ==1 && TriggerCat == 1 && BDTG > 0.45) || (run ==2 && TriggerCat == 0 && BDTG > 0.35) || (run == 2 && TriggerCat == 1 && BDTG > 0.45) ) && (Bs_PV_nPV ==1 || (Bs_MINIPCHI2NEXTBEST-Bs_IPCHI2_OWNPV) > 20) && (Bs_BsDTF_TAU>=0.4 && Bs_BsDTF_TAU<=10) )"
 
 *new BDT
-*"cut_BDT" 	"( ( (run ==1 && TriggerCat == 0 && BDTG > 0.142683) || (run ==1 && TriggerCat == 1 && BDTG > 0.335194) || (run ==2 && TriggerCat == 0 && BDTG > 0.242298) || (run == 2 && TriggerCat == 1 && BDTG > 0.342426) ) && (Bs_PV_nPV ==1 || (Bs_MINIPCHI2NEXTBEST-Bs_IPCHI2_OWNPV) > 20) && (Bs_BsDTF_TAU>=0.4 && Bs_BsDTF_TAU<=10) )"
+"cut_BDT" 	"( ( (run ==1 && TriggerCat == 0 && BDTG > 0.142683) || (run ==1 && TriggerCat == 1 && BDTG > 0.335194) || (run ==2 && TriggerCat == 0 && BDTG > 0.242298) || (run == 2 && TriggerCat == 1 && BDTG > 0.342426) ) && (Bs_PV_nPV ==1 || (Bs_MINIPCHI2NEXTBEST-Bs_IPCHI2_OWNPV) > 20) && (Bs_BsDTF_TAU>=0.4 && Bs_BsDTF_TAU<=10) )"
 
 "cut_Signal"	"(abs(K_1_1270_plus_MM-1968.30)>20 && (abs(bkg_KKpi_as_Xs_m-1968.30)>20 || pi_minus_PIDK < -5 ) )"
 
@@ -18,7 +18,7 @@
 *"cut_BDT" 	"(BDTG > 0.3 && (Bs_PV_nPV ==1 || (Bs_MINIPCHI2NEXTBEST-Bs_IPCHI2_OWNPV) > 20) && (Bs_BsDTF_TAU>=0.4 && Bs_BsDTF_TAU<=10) )"
 
 "numCPU"	 10
-"updateAnaNotePlots"  0
+"updateAnaNotePlots"  1
 "useTriggerCat"		1
 
 * for Systematics
@@ -37,8 +37,8 @@
 "altPartBkg"     0
 "useB0"     	 1	
 "fixSignalShapeFromMC"	 0
-"inFileNameNorm"        "/auto/data/dargent/BsDsKpipi/BDT/Data/norm_18_tagged.root"
-"outFileNameNorm"       "/auto/data/dargent/BsDsKpipi/Final/Data/norm_18.root"
+"inFileNameNorm"        "/auto/data/dargent/BsDsKpipi/BDT/Data/norm_18_newBDT_tagged.root"
+"outFileNameNorm"       "/auto/data/dargent/BsDsKpipi/Final/Data/norm_newBDT.root"
 
 * Signal fit:
 "fixMisIDyields"	 1
@@ -50,8 +50,8 @@
 
 "sWeightSignal"	 	1
 "calculateSweightsInReducedRange"	0
-"inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/BDT/Data/signal_18_tagged.root"
-"outFileNameSignal"	"/auto/data/dargent/BsDsKpipi/Final/Data/signal_18.root"
+"inFileNameSignal"	"/auto/data/dargent/BsDsKpipi/BDT/Data/signal_18_newBDT_tagged.root"
+"outFileNameSignal"	"/auto/data/dargent/BsDsKpipi/Final/Data/signal_newBDT.root"
 
 * MC fit:
 "sWeightMC"	1

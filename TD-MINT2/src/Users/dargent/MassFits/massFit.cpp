@@ -953,7 +953,7 @@ vector<double> fitSignalShape(TString channel = "signal"){
 	double max_MM = 5420. ;
 
 	/// Load file
-	TString inFileName = "/auto/data/dargent/BsDsKpipi/BDT/MC/"+channel+"_18_newBDT.root";
+	TString inFileName = "/auto/data/dargent/BsDsKpipi/BDT/MC/"+channel+"_17.root";
 	TFile* f = new TFile(inFileName);
 	TTree* tree = (TTree*) f->Get("DecayTree");
 
@@ -1001,7 +1001,7 @@ vector<double> fitSignalShape(TString channel = "signal"){
 
 	TFile* output;
 	if(!sWeight || fitPreselected) output = new TFile("dummy.root","RECREATE");
-	else output = new TFile((inFileName.ReplaceAll("/BDT/","/Final/")).ReplaceAll(".root",".root"),"RECREATE");
+	else output = new TFile((inFileName.ReplaceAll("/BDT/","/Final/")).ReplaceAll("_17.root","_newBDT.root"),"RECREATE");
 
 	string cut;
 	if(channel == "signal" && (string)cut_Signal != "") cut = "( " + (string) cut_BDT + " && " + (string)cut_Signal + ")";

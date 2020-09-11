@@ -1,0 +1,184 @@
+"RandomSeed"		0
+"Event Pattern"         531 -431 211 211 -211
+
+"InputFileName"	 "/auto/data/dargent/BsDsKpipi/Final/Data/norm_18.root"
+"OutputDir"	"paper/norm/"
+"channel"	"norm"
+
+"doPlots"	 1
+"N_plot_it"	 8
+"updateAnaNote"	 1
+"nBinst" 	80
+"min_TAU" 	0.4
+"max_TAU" 	10
+"min_TAUERR" 	0.0
+"max_TAUERR" 	0.1
+"max_TAU_ForMixingPlot" 	5
+"w_max"		 0.5
+"nBinsAsym" 	20
+"dilutionWeight"	 0
+
+*"min_year" 	17
+*"max_year" 	18
+"doSimFit"	1
+
+"Gamma"		2	0.6624 	0.0018	0.0	2.0
+"dGamma" 	2 	0.090 	0.005	0.0	0.0
+"dm" 		0 	17.757  0.021	0.0	0.0
+*"dm_Blind"	6	-1   1
+
+"C"	1	1	0.05	
+"D"	1	0.	0.05	
+"D_bar"	1	0.	0.05	
+"S"	1	0.	0.05	
+"S_bar" 1	0.	0.05	
+*"C_Blind"	1	-1   1
+*"D_Blind"	1	-1   1
+*"D_bar_Blind"	1	-1   1
+*"S_Blind"	1	-1   1
+*"S_bar_Blind"	1	-1   1
+
+knot_positions 0.5 1.35 2.5 6.5 
+c0_Run1_t0  2  0.324905  0.0152093
+c1_Run1_t0  2  0.654511  0.0256196
+c2_Run1_t0  2  0.869282  0.0373822
+c3_Run1_t0  2  1.08289  0.0260835
+
+c0_Run1_t1  2  0.151937  0.0115618
+c1_Run1_t1  2  0.408369  0.0243863
+c2_Run1_t1  2  0.768442  0.0404983
+c3_Run1_t1  2  1.10952  0.0296985
+
+*all data:
+c0_Run2_t0  2  0.310845  0.00597572
+c1_Run2_t0  2  0.620443  0.0102842
+c2_Run2_t0  2  0.866742  0.0153978
+c3_Run2_t0  2  1.06349  0.0108388
+
+c0_Run2_t1  2  0.122897  0.00395097
+c1_Run2_t1  2  0.381234  0.00901119
+c2_Run2_t1  2  0.721766  0.0147712
+c3_Run2_t1  2  1.03759  0.012345
+
+
+
+****
+*knot_positions 0.609149 0.977136 1.28494 1.63883 2.07668 2.62627 3.45981 6.98834 
+*c0_Run1_t0  2  0.458549  0.0209854
+*c1_Run1_t0  2  0.601235  0.0346056
+*c2_Run1_t0  2  0.718397  0.0522648
+*c3_Run1_t0  2  0.784884  0.0498765
+*c4_Run1_t0  2  0.978123  0.0601635
+*c5_Run1_t0  2  0.930205  0.0502464
+*c6_Run1_t0  2  1.02739  0.0608132
+*c7_Run1_t0  2  1.08099  0.0345713
+
+*c0_Run1_t1  2  0.250628  0.0169546
+*c1_Run1_t1  2  0.356843  0.0302463
+*c2_Run1_t1  2  0.540748  0.0510605
+*c3_Run1_t1  2  0.665783  0.0519456
+*c4_Run1_t1  2  0.797171  0.0644026
+*c5_Run1_t1  2  0.957021  0.0601054
+*c6_Run1_t1  2  0.991096  0.0714256
+*c7_Run1_t1  2  1.10339  0.0395137
+
+*c0_Run2_t0  2  0.445051  0.00855338
+*c1_Run2_t0  2  0.586703  0.0138469
+*c2_Run2_t0  2  0.63853  0.0206425
+*c3_Run2_t0  2  0.847422  0.0209241
+*c4_Run2_t0  2  0.909348  0.0243256
+*c5_Run2_t0  2  0.932361  0.0208964
+*c6_Run2_t0  2  1.03888  0.0252609
+*c7_Run2_t0  2  1.04847  0.0145852
+
+*c0_Run2_t1  2  0.21388  0.00589334
+*c1_Run2_t1  2  0.318158  0.0107056
+*c2_Run2_t1  2  0.475146  0.0180913
+*c3_Run2_t1  2  0.623902  0.0187522
+*c4_Run2_t1  2  0.745094  0.0231948
+*c5_Run2_t1  2  0.814223  0.0209905
+*c6_Run2_t1  2  0.913051  0.0252388
+*c7_Run2_t1  2  1.0459  0.0163019
+
+
+
+***
+
+*"useGaussConstrainsBias"		1
+*"ConstrainMulti_bias"     "scale_mean_dt_Run1 scale_mean_dt_Run2 scale_mean_dt_Run2_17 "
+*"ConstrainMulti_bias_corr"     "1 0 0 1 0 1 "
+*"ConstrainMulti_bias_corr"     "1 1 1 1 1 1 "
+*"scale_mean_dt_Run1"	0	-0.0012 0.00011
+*"scale_mean_dt_Run2"	0	-0.00235 0.00175
+*"scale_mean_dt_Run2_17"	0	-0.00235 0.00107
+
+"offset_mean_dt_Run1"		2	-0.0012 0.00011
+"offset_mean_dt_Run2"		2	-0.00217 0.00160
+"offset_mean_dt_Run2_17"	2	-0.00227 0.00170
+"offset_mean_dt_Run2_18"	2	-0.00177 0.00140
+
+"offset_sigma_dt_Run1"	1 	0.0103	0.001
+"scale_sigma_dt_Run1"	1	1.28	0.005
+*"offset_sigma_dt_Run1"	1 	-0.000568	0.001
+*"scale_sigma_dt_Run1"	1	1.243	0.005
+*"offset_sigma_dt_Run1"	1 	0.0	0.001
+*"scale_sigma_dt_Run1"	1	1.772	0.005
+
+"offset_sigma_dt_Run2"			1	0.0116	0.0016
+"scale_sigma_dt_Run2"			1	0.877	0.040
+*"offset_sigma_dt_Run2"			1	0.0068	0.0016
+*"scale_sigma_dt_Run2"			1	0.797	0.040
+*"offset_sigma_dt_Run2"			1	0.0101	0.0016
+*"scale_sigma_dt_Run2"			1	0.959	0.040
+
+"offset_sigma_dt_Run2_17"		1	0.0065	0.0014
+"scale_sigma_dt_Run2_17"		1	0.961	0.036
+*"offset_sigma_dt_Run2_17"		1	0.0001	0.0014
+*"scale_sigma_dt_Run2_17"		1	0.957	0.036
+*"offset_sigma_dt_Run2_17"		1	0.0056	0.0014
+*"scale_sigma_dt_Run2_17"		1	1.012	0.036
+
+"offset_sigma_dt_Run2_18"		1	0.0085	0.0014
+"scale_sigma_dt_Run2_18"		1	0.964	0.037
+*"offset_sigma_dt_Run2_18"		1	-0.0018	0.0015
+*"scale_sigma_dt_Run2_18"		1	1.030	0.041
+*"offset_sigma_dt_Run2_18"		1	0.0093	0.0011
+*"scale_sigma_dt_Run2_18"		1	0.994	0.029
+
+"p0_os_Run1"    0    0.397485    0.00971012
+"p1_os_Run1"    0    0.910694    0.0828984
+"avg_eta_os_Run1"    2    0.356748    0
+"delta_p0_os_Run1"    0    0.0286676    0.010701
+"delta_p1_os_Run1"    0    0.013201    0.0955253
+"tageff_os_Run1"    0    0.477731    0.00367486
+"tageff_asym_os_Run1"    0    0.00220015    0.0136159
+"p0_ss_Run1"    0    0.444128    0.00804004
+"p1_ss_Run1"    0    0.949074    0.109675
+"avg_eta_ss_Run1"    2    0.430637    0
+"delta_p0_ss_Run1"    0    -0.0186804    0.00887897
+"delta_p1_ss_Run1"    0    0.0642276    0.125327
+"tageff_ss_Run1"    0    0.684137    0.00340852
+"tageff_asym_ss_Run1"    0    -0.000121203    0.0124923
+"production_asym_Run1"	2	-0.00045 0.01
+"detection_asym_Run1"	2	0.0007 0.0015
+
+"p0_os_Run2"    0    0.375037    0.00392937
+"p1_os_Run2"    0    0.775778    0.0342455
+"avg_eta_os_Run2"    2    0.338161    0
+"delta_p0_os_Run2"    0    0.0089394    0.00482535
+"delta_p1_os_Run2"    0    0.0182596    0.0422563
+"tageff_os_Run2"    0    0.408728    0.00148461
+"tageff_asym_os_Run2"    0    -0.000554503    0.00503645
+"p0_ss_Run2"    0    0.426806    0.00302371
+"p1_ss_Run2"    0    0.776273    0.0314976
+"avg_eta_ss_Run2"    2    0.40398    0
+"delta_p0_ss_Run2"    0    -0.0200653    0.00363213
+"delta_p1_ss_Run2"    0    0.0160608    0.0387546
+"tageff_ss_Run2"   0    0.699088    0.00138429
+"tageff_asym_ss_Run2"    0    -0.00362549    0.00469555
+"production_asym_Run2"   0    0.000744349    0.00522936
+"detection_asym_Run2"	 2	0.0008 0.002
+
+"ConstrainMulti_Acc"     "Gamma dGamma c0_Run1_t0 c1_Run1_t0 c2_Run1_t0 c3_Run1_t0 c0_Run1_t1 c1_Run1_t1 c2_Run1_t1 c3_Run1_t1 c0_Run2_t0 c1_Run2_t0 c2_Run2_t0 c3_Run2_t0 c0_Run2_t1 c1_Run2_t1 c2_Run2_t1 c3_Run2_t1 "
+
+"ConstrainMulti_Acc_corr"     "1 -0.08 -0.127623 -0.164992 -0.124552 -0.0923504 -0.0823389 -0.101632 -0.107726 -0.0681961 -0.266165 -0.31795 -0.244415 -0.167138 -0.143883 -0.205437 -0.195842 -0.153825 1 0.0453719 0.0592331 0.0505084 0.0655858 0.0278364 0.0357829 0.0424556 0.0485322 0.0929973 0.11576 0.0976343 0.119676 0.051156 0.0747181 0.0774595 0.108639 1 0.0705498 0.492856 0.0102336 0 0 0 0 0 0 0 0 0 0 0 0 1 0.0171747 0.212695 0 0 0 0 0 0 0 0 0 0 0 0 1 -0.266595 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0.0868565 0.366864 0.0430368 0 0 0 0 0 0 0 0 1 -0.0358524 0.213808 0 0 0 0 0 0 0 0 1 -0.235966 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0.251536 0.453655 0.0503298 0 0 0 0 1 0.109913 0.201618 0 0 0 0 1 -0.245758 0 0 0 0 1 0 0 0 0 1 0.0364339 0.331048 0.0417582 1 -0.0670835 0.232007 1 -0.245921 1 "

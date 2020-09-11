@@ -412,14 +412,14 @@ int ampFit(int step=0){
             s124.push_back(2);
             s124.push_back(4);
             
-            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,14);
-            TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,12);
-            TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,10);
-            TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_DsKpi = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_Dspi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
-            TH1D* s_Dspim = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+            TH1D* s_Kpipi = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,14);
+            TH1D* s_Kpi = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0.,12);
+            TH1D* s_pipi = new TH1D("",";#left[m^{2}(#pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,10);
+            TH1D* s_Dspipi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,30);
+            TH1D* s_DsK = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,30);
+            TH1D* s_DsKpi = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,30);
+            TH1D* s_Dspi = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,25);
+            TH1D* s_Dspim = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,25);
             
 	    TH1D* s_Kpipi_rw = (TH1D*)s_Kpipi->Clone();
 	    TH1D* s_Kpi_rw = (TH1D*)s_Kpi->Clone();
@@ -446,14 +446,14 @@ int ampFit(int step=0){
             TH2D* s_DsKpi_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",80,5,30,80,0,25);
             TH2D* s_DsK_Dspi = new TH2D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4}); #left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4}) ",60,0,30,60,0,25);
 
-            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,14);
-            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0.,12);
-            TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,10);
-            TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,30);
-            TH1D* s_Dspi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
-            TH1D* s_Dspim_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (norm.) ",nBins,0,25);
+            TH1D* s_Kpipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,14);
+            TH1D* s_Kpi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0.,12);
+            TH1D* s_pipi_fit = new TH1D("",";#left[m^{2}(K^{+} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,10);
+            TH1D* s_Dspipi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,30);
+            TH1D* s_DsK_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,30);
+            TH1D* s_DsKpi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} K^{+} #pi^{-})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,30);
+            TH1D* s_Dspi_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{+})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,25);
+            TH1D* s_Dspim_fit = new TH1D("",";#left[m^{2}(D_{s}^{-} #pi^{-})#right] (GeV^{2}/c^{4});Events (a.u.) ",nBins,0,25);
 
 	    s_Kpipi->Sumw2();
   	    s_Kpipi_rw->Sumw2();
@@ -1725,7 +1725,7 @@ void addGenPdfToMC(){
 		NamedParameter<int> EventPattern("Event Pattern", 421, -321, 211, 211, -211);
 		DalitzEventPattern pat(EventPattern);
 
-		TFile* file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal_scaled.root");
+		TFile* file = new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal_newBDT_scaled.root");
 		TTree* tree= (TTree*) file->Get("DecayTree");
 
 		tree->SetBranchStatus("*",0);
@@ -1764,6 +1764,10 @@ void addGenPdfToMC(){
 		double pi_minus_true[4];
 		double Ds_Kp_true[4],Ds_Km_true[4],Ds_pim_true[4],Ds_true[4];
 
+		double t;
+
+		tree->SetBranchAddress("Bs_BsDTF_TAU",&t);
+	
 		tree->SetBranchAddress("Bs_PT",&Bs_pt);
 		tree->SetBranchAddress("Bs_L0Global_TIS",&Bs_L0_TIS);
 	
@@ -1823,6 +1827,8 @@ void addGenPdfToMC(){
 		tree->SetBranchAddress("BsDTF_Ds_PE",&Ds[3]);    
 
 		FitAmpIncoherentSumEvtGen fas(pat);
+		fas.print();
+
 		DalitzEventList eventListMC;            
 		DalitzEventList eventListMC_CP;            
 
@@ -1845,6 +1851,12 @@ void addGenPdfToMC(){
 		DalitzEventList eventListMC_pt5;            
 		DalitzEventList eventListMC_pt7;            
 
+		DalitzEventList eventListMC_t_0;            
+		DalitzEventList eventListMC_t_1;            
+		DalitzEventList eventListMC_t_2;            
+		DalitzEventList eventListMC_t_3;            
+
+
 	        vector<int> s234;
     		s234.push_back(2);
 		s234.push_back(3);
@@ -1854,7 +1866,7 @@ void addGenPdfToMC(){
 		s134.push_back(3);
 		s134.push_back(4);
 
-		TH1D* h_Kpipi= new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,1000,1950);
+		TH1D* h_Kpipi= new TH1D("",";m(K^{+} #pi^{+} #pi^{-}) (MeV);Events (a.u.) ",50,1000,1950);
 		TH1D* h_Kpipi_gen= (TH1D*)h_Kpipi->Clone();
 
 		TH1D* h_Kpipi_Run1= (TH1D*)h_Kpipi->Clone();
@@ -1867,7 +1879,7 @@ void addGenPdfToMC(){
 		TH1D* h_Kpipi_Kpipi = (TH1D*)h_Kpipi->Clone();
 		TH1D* h_Kpipi_pipipi = (TH1D*)h_Kpipi->Clone();
 
-		TH1D* h_Kpi= new TH1D("",";#left[m(K^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,600,1200);
+		TH1D* h_Kpi= new TH1D("",";m(K^{+} #pi^{-}) (MeV);Events (a.u.) ",50,600,1200);
 		TH1D* h_Kpi_gen= (TH1D*)h_Kpi->Clone();
 	
 		TH1D* h_Kpi_Run1= (TH1D*)h_Kpi->Clone();
@@ -1880,7 +1892,7 @@ void addGenPdfToMC(){
 		TH1D* h_Kpi_Kpipi = (TH1D*)h_Kpi->Clone();
 		TH1D* h_Kpi_pipipi = (TH1D*)h_Kpi->Clone();
 		
-		TH1D* h_pipi= new TH1D("",";#left[m(#pi^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,200,1200);
+		TH1D* h_pipi= new TH1D("",";m(#pi^{+} #pi^{-}) (MeV);Events (a.u.) ",50,200,1200);
 		TH1D* h_pipi_gen= (TH1D*)h_pipi->Clone();
 
 		TH1D* h_pipi_Run1= (TH1D*)h_pipi->Clone();
@@ -1893,7 +1905,7 @@ void addGenPdfToMC(){
 		TH1D* h_pipi_Kpipi = (TH1D*)h_pipi->Clone();
 		TH1D* h_pipi_pipipi = (TH1D*)h_pipi->Clone();
 		
-		TH1D* h_Dspi= new TH1D("",";#left[m(D_{s}^{-} #pi^{+})#right] (MeV);Events (norm.) ",40,1900,5000);
+		TH1D* h_Dspi= new TH1D("",";m(D_{s}^{-} #pi^{+}) (MeV);Events (a.u.) ",50,1900,5000);
 		TH1D* h_Dspi_gen= (TH1D*)h_Dspi->Clone();
 
 		TH1D* h_Dspi_Run1= (TH1D*)h_Dspi->Clone();
@@ -1906,7 +1918,7 @@ void addGenPdfToMC(){
 		TH1D* h_Dspi_Kpipi = (TH1D*)h_Dspi->Clone();
 		TH1D* h_Dspi_pipipi = (TH1D*)h_Dspi->Clone();
 		
-		TH1D* h_Dspipi= new TH1D("",";#left[m(D_{s}^{-} #pi^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,2400,5100);
+		TH1D* h_Dspipi= new TH1D("",";m(D_{s}^{-} #pi^{+} #pi^{-}) (MeV);Events (a.u.) ",50,2400,5100);
 		TH1D* h_Dspipi_gen= (TH1D*)h_Dspipi->Clone();
 
 		TH1D* h_Dspipi_Run1= (TH1D*)h_Dspipi->Clone();
@@ -1919,7 +1931,7 @@ void addGenPdfToMC(){
 		TH1D* h_Dspipi_Kpipi = (TH1D*)h_Dspipi->Clone();
 		TH1D* h_Dspipi_pipipi = (TH1D*)h_Dspipi->Clone();
 		
-		TH1D* h_cosTheta_Kpi= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (norm.) ",40,-1,1);
+		TH1D* h_cosTheta_Kpi= new TH1D("",";cos #theta_{K^{+}#pi^{-}}; Events (a.u.) ",40,-1,1);
 		TH1D* h_cosTheta_Kpi_gen= (TH1D*)h_cosTheta_Kpi->Clone();
 
 		TH1D* h_cosTheta_Kpi_Run1= (TH1D*)h_cosTheta_Kpi->Clone();
@@ -1932,7 +1944,7 @@ void addGenPdfToMC(){
 		TH1D* h_cosTheta_Kpi_Kpipi = (TH1D*)h_cosTheta_Kpi->Clone();
 		TH1D* h_cosTheta_Kpi_pipipi = (TH1D*)h_cosTheta_Kpi->Clone();
 		
-		TH1D* h_cosTheta_Dspi= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (norm.) ",40,0,1);
+		TH1D* h_cosTheta_Dspi= new TH1D("",";cos #theta_{D_{s}#pi^{+}}; Events (a.u.) ",40,0,1);
 		TH1D* h_cosTheta_Dspi_gen= (TH1D*)h_cosTheta_Dspi->Clone();
 
 		TH1D* h_cosTheta_Dspi_Run1= (TH1D*)h_cosTheta_Dspi->Clone();
@@ -1945,7 +1957,7 @@ void addGenPdfToMC(){
 		TH1D* h_cosTheta_Dspi_Kpipi = (TH1D*)h_cosTheta_Dspi->Clone();
 		TH1D* h_cosTheta_Dspi_pipipi = (TH1D*)h_cosTheta_Dspi->Clone();
 		
-		TH1D* h_phi_Kpi_Dspi= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (norm.)",40,-3.141,3.141);
+		TH1D* h_phi_Kpi_Dspi= new TH1D("",";#phi_{K^{+}#pi^{-},D_{s}#pi^{+}}; Events (a.u.)",40,-3.141,3.141);
 		TH1D* h_phi_Kpi_Dspi_gen= (TH1D*)h_phi_Kpi_Dspi->Clone();
 
 		TH1D* h_phi_Kpi_Dspi_Run1= (TH1D*)h_phi_Kpi_Dspi->Clone();
@@ -2011,10 +2023,12 @@ void addGenPdfToMC(){
 			DalitzEvent evt_true = DalitzEvent(pat, vectorOfvectors_true);
 
 			//evt = evt_true;
-			evt_true = evt;
+			//evt_true = evt;
 
  		 	if(sqrt(evt.sij(s234)/(GeV*GeV)) > 1.95 || sqrt(evt.s(2,4)/(GeV*GeV)) > 1.2 || sqrt(evt.s(3,4)/(GeV*GeV)) > 1.2) continue;
-			if(!(evt_true.phaseSpace() > 0.)){
+// 			if(!(evt_true.phaseSpace() > 0.)){
+			if(!(evt.phaseSpace() > 0.)){
+
 				badEvents++;
 				continue;
 			}
@@ -2028,6 +2042,8 @@ void addGenPdfToMC(){
 		
 // 			if(BDTG < 0.6) continue;
 // 			if(cat != 20) continue;
+
+			if(i<10) cout << fas.getVal(evt_true) << endl;
 
 			evt.setWeight(w);
 			evt.setGeneratorPdfRelativeToPhaseSpace(fas.getVal(evt_true));
@@ -2148,11 +2164,18 @@ void addGenPdfToMC(){
 			if(Bs_pt>10000)eventListMC_pt10.Add(evt);
 			if(Bs_pt>5000)eventListMC_pt5.Add(evt);
 			if(Bs_pt>7000)eventListMC_pt7.Add(evt);
+
+			if(eventListMC_t_0.size()<125000)eventListMC_t_0.Add(evt);
+			if(t> 0 && t<= 1.35)eventListMC_t_1.Add(evt);
+			if(t> 1.35 && t<= 2.5)eventListMC_t_2.Add(evt);
+			if(t> 2.5 )eventListMC_t_3.Add(evt);
+
+
 			evt.CP_conjugateYourself();
 			eventListMC_CP.Add(evt);		
 		}
 		cout << endl << "bad events " << badEvents << " ( " << badEvents/(double) tree->GetEntries() * 100. << " %)" << endl << endl;
- 	//	eventListMC.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_trueGen_mod.root");
+ 		eventListMC.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_newBDT_mod.root");
 // 		eventListMC_CP.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_CP.root");
 // 		eventListMC_Run1_t0.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_Run1_t0.root");
 // 		eventListMC_Run1_t1.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_Run1_t1.root");
@@ -2161,12 +2184,19 @@ void addGenPdfToMC(){
 // 		eventListMC_Run2_t1.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_Run2_t1.root");
 
 // 		eventListMC_t0.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_t0.root");
- 		eventListMC_t1.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_t1_TIS.root");
+ 		//eventListMC_t1.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_t1_TIS.root");
 
-		eventListMC_pt10.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_pt10.root");
+// 		eventListMC_t_0.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_t_0.root");
+// 		eventListMC_t_1.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_t_1.root");
+// 		eventListMC_t_2.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_t_2.root");
+// 		eventListMC_t_3.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_t_3.root");
+
+	return;
+
+		//eventListMC_pt10.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_pt10.root");
 // 		eventListMC_pt5.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_pt5.root");
 // 		eventListMC_pt7.save("/auto/data/dargent/BsDsKpipi/MINT/signalMC_pt7.root");
-  		return;
+  		//return;
 
 
 // 		double chi2_run = getChi2(eventListMC_Run1,eventListMC_Run2);
@@ -2185,7 +2215,7 @@ void addGenPdfToMC(){
 		for (int i=0; i<eventList.size(); i++) {
 			DalitzEvent evt(eventList.getEvent(i));
 	
- 		 	if(sqrt(evt.sij(s234)/(GeV*GeV)) > 1.90 || sqrt(evt.s(2,4)/(GeV*GeV)) > 1.2 || sqrt(evt.s(3,4)/(GeV*GeV)) > 1.2) continue;
+ 		 	if(sqrt(evt.sij(s234)/(GeV*GeV)) > 1.95 || sqrt(evt.s(2,4)/(GeV*GeV)) > 1.2 || sqrt(evt.s(3,4)/(GeV*GeV)) > 1.2) continue;
 			if(!(evt.phaseSpace() > 0.)){
 				badEvents++;
 				continue;
@@ -2201,7 +2231,44 @@ void addGenPdfToMC(){
 			h_phi_Kpi_Dspi_gen->Fill(acoplanarityAngle(evt,2,4,1,3));
 		}
 
+
+double s_Kpipi,s_Kpi,s_pipi,s_Dspi,s_Dspipi,s_Kpip,s_Dspip,s_DsK,s_DsKpi;
+double sw;
+TChain* tree_data=new TChain("DecayTree");
+tree_data->Add("signal_tagged.root");
+tree_data->SetBranchAddress("m_Kpipi",&s_Kpipi);
+tree_data->SetBranchAddress("m_Kpi",&s_Kpi);
+tree_data->SetBranchAddress("m_pipi",&s_pipi);
+tree_data->SetBranchAddress("m_Dspipi",&s_Dspipi);
+tree_data->SetBranchAddress("m_Dspi",&s_Dspi);
+tree_data->SetBranchAddress("N_Bs_sw",&sw);
+
+		TH1D* h_Kpipi_data= (TH1D*)h_Kpipi->Clone();
+		TH1D* h_Kpi_data= (TH1D*)h_Kpi->Clone();
+		TH1D* h_pipi_data= (TH1D*)h_pipi->Clone();
+		TH1D* h_Dspipi_data= (TH1D*)h_Dspipi->Clone();
+		TH1D* h_Dspi_data= (TH1D*)h_Dspi->Clone();
+
+
+		for(int i = 0; i < tree_data->GetEntries(); i++){          
+			tree_data->GetEntry(i);     
+			//sw=1; 
+			h_Kpipi_data->Fill(s_Kpipi,sw);
+			h_Kpi_data->Fill(s_pipi,sw);
+			h_pipi_data->Fill(s_pipi,sw);
+			h_Dspipi_data->Fill(s_Dspipi,sw);
+			h_Dspi_data->Fill(s_Dspi,sw);
+		}
+
+
 		TCanvas*c = new TCanvas();
+
+		h_Kpipi_data->SetFillColor(kGray);
+		h_Kpi_data->SetFillColor(kGray);
+		h_pipi_data->SetFillColor(kGray);
+		h_Dspipi_data->SetFillColor(kGray);
+		h_Dspi_data->SetFillColor(kGray);
+
 
 		h_Kpipi->Scale(1./h_Kpipi->Integral());
 		h_Kpipi_gen->Scale(1./h_Kpipi_gen->Integral());
@@ -2252,12 +2319,15 @@ void addGenPdfToMC(){
 		
 		TH1D* h_Kpipi_eff = (TH1D*)h_Kpipi->Clone();
 		h_Kpipi_eff->Divide(h_Kpipi,h_Kpipi_gen);
-		h_Kpipi_eff->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Kpipi_eff->GetYaxis()->SetTitle("Efficiency (a.u.)");
 		h_Kpipi_eff->SetMinimum(0);
 		h_Kpipi_eff->SetMaximum(1.4);
-		h_Kpipi_eff->Draw("e");
+		//
+		//h_Kpipi_data->DrawNormalized("hist",1);
+		h_Kpipi_eff->DrawNormalized("e",1);
 		c->Print("eff_Kpipi.eps");
 		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Kpipi.pdf");
+
 
 		h_Kpi->DrawNormalized("",1);
 		h_Kpi_gen->SetLineColor(kRed);
@@ -2267,7 +2337,7 @@ void addGenPdfToMC(){
 		
 		TH1D* h_Kpi_eff = (TH1D*)h_Kpi->Clone();
 		h_Kpi_eff->Divide(h_Kpi,h_Kpi_gen);
-		h_Kpi_eff->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Kpi_eff->GetYaxis()->SetTitle("Efficiency (a.u.)");
 		h_Kpi_eff->SetMinimum(0);
 		h_Kpi_eff->SetMaximum(1.4);
 		h_Kpi_eff->Draw("e");
@@ -2282,7 +2352,7 @@ void addGenPdfToMC(){
 		
 		TH1D* h_pipi_eff = (TH1D*)h_pipi->Clone();
 		h_pipi_eff->Divide(h_pipi,h_pipi_gen);
-		h_pipi_eff->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_pipi_eff->GetYaxis()->SetTitle("Efficiency (a.u.)");
 		h_pipi_eff->SetMinimum(0);
 		h_pipi_eff->SetMaximum(1.4);
 		h_pipi_eff->Draw("e");
@@ -2297,7 +2367,7 @@ void addGenPdfToMC(){
 		
 		TH1D* h_Dspipi_eff = (TH1D*)h_Dspipi->Clone();
 		h_Dspipi_eff->Divide(h_Dspipi,h_Dspipi_gen);
-		h_Dspipi_eff->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Dspipi_eff->GetYaxis()->SetTitle("Efficiency (a.u.)");
 		h_Dspipi_eff->SetMinimum(0);
 		h_Dspipi_eff->SetMaximum(1.4);
 		h_Dspipi_eff->Draw("e");
@@ -2312,7 +2382,7 @@ void addGenPdfToMC(){
 		
 		TH1D* h_Dspi_eff = (TH1D*)h_Dspi->Clone();
 		h_Dspi_eff->Divide(h_Dspi,h_Dspi_gen);
-		h_Dspi_eff->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Dspi_eff->GetYaxis()->SetTitle("Efficiency (a.u.)");
 		h_Dspi_eff->SetMinimum(0);
 		h_Dspi_eff->SetMaximum(1.4);
 		h_Dspi_eff->Draw("e");
@@ -2327,7 +2397,7 @@ void addGenPdfToMC(){
 		
 		TH1D* h_cosTheta_Kpi_eff = (TH1D*)h_cosTheta_Kpi->Clone();
 		h_cosTheta_Kpi_eff->Divide(h_cosTheta_Kpi,h_cosTheta_Kpi_gen);
-		h_cosTheta_Kpi_eff->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_cosTheta_Kpi_eff->GetYaxis()->SetTitle("Efficiency (a.u.)");
 		h_cosTheta_Kpi_eff->SetMinimum(0);
 		h_cosTheta_Kpi_eff->SetMaximum(1.4);
 		h_cosTheta_Kpi_eff->Draw("e");
@@ -2342,7 +2412,7 @@ void addGenPdfToMC(){
 		
 		TH1D* h_cosTheta_Dspi_eff = (TH1D*)h_cosTheta_Dspi->Clone();
 		h_cosTheta_Dspi_eff->Divide(h_cosTheta_Dspi,h_cosTheta_Dspi_gen);
-		h_cosTheta_Dspi_eff->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_cosTheta_Dspi_eff->GetYaxis()->SetTitle("Efficiency (a.u.)");
 		h_cosTheta_Dspi_eff->SetMinimum(0);
 		h_cosTheta_Dspi_eff->SetMaximum(1.4);
 		h_cosTheta_Dspi_eff->Draw("e");
@@ -2357,7 +2427,7 @@ void addGenPdfToMC(){
 		
 		TH1D* h_phi_Kpi_Dspi_eff = (TH1D*)h_phi_Kpi_Dspi->Clone();
 		h_phi_Kpi_Dspi_eff->Divide(h_phi_Kpi_Dspi,h_phi_Kpi_Dspi_gen);
-		h_phi_Kpi_Dspi_eff->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_phi_Kpi_Dspi_eff->GetYaxis()->SetTitle("Efficiency (a.u.)");
 		h_phi_Kpi_Dspi_eff->SetMinimum(0);
 		h_phi_Kpi_Dspi_eff->SetMaximum(1.4);
 		h_phi_Kpi_Dspi_eff->Draw("e");
@@ -2365,9 +2435,53 @@ void addGenPdfToMC(){
 		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_phi_Kpi_Dspi.pdf");
 
 		///
+
+		h_Kpipi_data->GetYaxis()->SetTitle("Efficiency (a.u.)");
+		h_Kpipi_data->SetMinimum(0);
+		h_Kpipi_data->DrawNormalized("hist",1);
+		h_Kpipi_eff->DrawNormalized("esame",1);
+		c->Print("eff_Kpipi2.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Kpipi2.pdf");
+
+
+		h_Kpi_data->GetYaxis()->SetTitle("Efficiency (a.u.)");
+		h_Kpi_data->SetMinimum(0);
+		h_Kpi_data->DrawNormalized("hist",1);
+		h_Kpi_eff->DrawNormalized("esame",1);
+		c->Print("eff_Kpi2.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Kpi2.pdf");
+
+
+		h_pipi_data->GetYaxis()->SetTitle("Efficiency (a.u.)");
+		h_pipi_data->SetMinimum(0);
+		h_pipi_data->DrawNormalized("hist",1);
+		h_pipi_eff->DrawNormalized("esame",1);
+		c->Print("eff_pipi2.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_pipi2.pdf");
+
+
+		h_Dspipi_data->GetYaxis()->SetTitle("Efficiency (a.u.)");
+		h_Dspipi_data->SetMinimum(0);
+		h_Dspipi_data->DrawNormalized("hist",1);
+		h_Dspipi_eff->DrawNormalized("esame",1);
+		c->Print("eff_Dspipi2.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Dspipi2.pdf");
+
+		h_Dspi_data->GetYaxis()->SetTitle("Efficiency (a.u.)");
+		h_Dspi_data->SetMinimum(0);
+		h_Dspi_data->DrawNormalized("hist",1);
+		h_Dspi_eff->DrawNormalized("esame",1);
+		c->Print("eff_Dspi2.eps");
+		c->Print("../../../../../TD-AnaNote/latex/figs/AcceptancePhsp/eff_Dspi2.pdf");
+
+
+
+
+
+		///
 		TH1D* h_Kpipi_eff_Run1 = (TH1D*)h_Kpipi->Clone();
 		h_Kpipi_eff_Run1->Divide(h_Kpipi_Run1,h_Kpipi_gen);
-		h_Kpipi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Kpipi_eff_Run1->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Kpipi_eff_Run2 = (TH1D*)h_Kpipi->Clone();
 		h_Kpipi_eff_Run2->Divide(h_Kpipi_Run2,h_Kpipi_gen);
@@ -2401,7 +2515,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Kpipi_eff_t0 = (TH1D*)h_Kpipi->Clone();
 		h_Kpipi_eff_t0->Divide(h_Kpipi_t0,h_Kpipi_gen);
-		h_Kpipi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Kpipi_eff_t0->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Kpipi_eff_t1 = (TH1D*)h_Kpipi->Clone();
 		h_Kpipi_eff_t1->Divide(h_Kpipi_t1,h_Kpipi_gen);
@@ -2435,7 +2549,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Kpipi_eff_p = (TH1D*)h_Kpipi->Clone();
 		h_Kpipi_eff_p->Divide(h_Kpipi_p,h_Kpipi_gen);
-		h_Kpipi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Kpipi_eff_p->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Kpipi_eff_m = (TH1D*)h_Kpipi->Clone();
 		h_Kpipi_eff_m->Divide(h_Kpipi_m,h_Kpipi_gen);
@@ -2470,7 +2584,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Kpipi_eff_KKpi = (TH1D*)h_Kpipi->Clone();
 		h_Kpipi_eff_KKpi->Divide(h_Kpipi_KKpi,h_Kpipi_gen);
-		h_Kpipi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Kpipi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Kpipi_eff_pipipi = (TH1D*)h_Kpipi->Clone();
 		h_Kpipi_eff_pipipi->Divide(h_Kpipi_pipipi,h_Kpipi_gen);
@@ -2518,7 +2632,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Kpi_eff_Run1 = (TH1D*)h_Kpi->Clone();
 		h_Kpi_eff_Run1->Divide(h_Kpi_Run1,h_Kpi_gen);
-		h_Kpi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Kpi_eff_Run1->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Kpi_eff_Run2 = (TH1D*)h_Kpi->Clone();
 		h_Kpi_eff_Run2->Divide(h_Kpi_Run2,h_Kpi_gen);
@@ -2538,7 +2652,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Kpi_eff_t0 = (TH1D*)h_Kpi->Clone();
 		h_Kpi_eff_t0->Divide(h_Kpi_t0,h_Kpi_gen);
-		h_Kpi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Kpi_eff_t0->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Kpi_eff_t1 = (TH1D*)h_Kpi->Clone();
 		h_Kpi_eff_t1->Divide(h_Kpi_t1,h_Kpi_gen);
@@ -2558,7 +2672,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Kpi_eff_p = (TH1D*)h_Kpi->Clone();
 		h_Kpi_eff_p->Divide(h_Kpi_p,h_Kpi_gen);
-		h_Kpi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Kpi_eff_p->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Kpi_eff_m = (TH1D*)h_Kpi->Clone();
 		h_Kpi_eff_m->Divide(h_Kpi_m,h_Kpi_gen);
@@ -2578,7 +2692,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Kpi_eff_KKpi = (TH1D*)h_Kpi->Clone();
 		h_Kpi_eff_KKpi->Divide(h_Kpi_KKpi,h_Kpi_gen);
-		h_Kpi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Kpi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Kpi_eff_pipipi = (TH1D*)h_Kpi->Clone();
 		h_Kpi_eff_pipipi->Divide(h_Kpi_pipipi,h_Kpi_gen);
@@ -2606,7 +2720,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_pipi_eff_Run1 = (TH1D*)h_pipi->Clone();
 		h_pipi_eff_Run1->Divide(h_pipi_Run1,h_pipi_gen);
-		h_pipi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_pipi_eff_Run1->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_pipi_eff_Run2 = (TH1D*)h_pipi->Clone();
 		h_pipi_eff_Run2->Divide(h_pipi_Run2,h_pipi_gen);
@@ -2626,7 +2740,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_pipi_eff_t0 = (TH1D*)h_pipi->Clone();
 		h_pipi_eff_t0->Divide(h_pipi_t0,h_pipi_gen);
-		h_pipi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_pipi_eff_t0->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_pipi_eff_t1 = (TH1D*)h_pipi->Clone();
 		h_pipi_eff_t1->Divide(h_pipi_t1,h_pipi_gen);
@@ -2646,7 +2760,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_pipi_eff_p = (TH1D*)h_pipi->Clone();
 		h_pipi_eff_p->Divide(h_pipi_p,h_pipi_gen);
-		h_pipi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_pipi_eff_p->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_pipi_eff_m = (TH1D*)h_pipi->Clone();
 		h_pipi_eff_m->Divide(h_pipi_m,h_pipi_gen);
@@ -2666,7 +2780,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_pipi_eff_KKpi = (TH1D*)h_pipi->Clone();
 		h_pipi_eff_KKpi->Divide(h_pipi_KKpi,h_pipi_gen);
-		h_pipi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_pipi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_pipi_eff_pipipi = (TH1D*)h_pipi->Clone();
 		h_pipi_eff_pipipi->Divide(h_pipi_pipipi,h_pipi_gen);
@@ -2694,7 +2808,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Dspi_eff_Run1 = (TH1D*)h_Dspi->Clone();
 		h_Dspi_eff_Run1->Divide(h_Dspi_Run1,h_Dspi_gen);
-		h_Dspi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Dspi_eff_Run1->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Dspi_eff_Run2 = (TH1D*)h_Dspi->Clone();
 		h_Dspi_eff_Run2->Divide(h_Dspi_Run2,h_Dspi_gen);
@@ -2714,7 +2828,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Dspi_eff_t0 = (TH1D*)h_Dspi->Clone();
 		h_Dspi_eff_t0->Divide(h_Dspi_t0,h_Dspi_gen);
-		h_Dspi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Dspi_eff_t0->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Dspi_eff_t1 = (TH1D*)h_Dspi->Clone();
 		h_Dspi_eff_t1->Divide(h_Dspi_t1,h_Dspi_gen);
@@ -2734,7 +2848,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Dspi_eff_p = (TH1D*)h_Dspi->Clone();
 		h_Dspi_eff_p->Divide(h_Dspi_p,h_Dspi_gen);
-		h_Dspi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Dspi_eff_p->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Dspi_eff_m = (TH1D*)h_Dspi->Clone();
 		h_Dspi_eff_m->Divide(h_Dspi_m,h_Dspi_gen);
@@ -2754,7 +2868,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Dspi_eff_KKpi = (TH1D*)h_Dspi->Clone();
 		h_Dspi_eff_KKpi->Divide(h_Dspi_KKpi,h_Dspi_gen);
-		h_Dspi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Dspi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Dspi_eff_pipipi = (TH1D*)h_Dspi->Clone();
 		h_Dspi_eff_pipipi->Divide(h_Dspi_pipipi,h_Dspi_gen);
@@ -2782,7 +2896,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Dspipi_eff_Run1 = (TH1D*)h_Dspipi->Clone();
 		h_Dspipi_eff_Run1->Divide(h_Dspipi_Run1,h_Dspipi_gen);
-		h_Dspipi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Dspipi_eff_Run1->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Dspipi_eff_Run2 = (TH1D*)h_Dspipi->Clone();
 		h_Dspipi_eff_Run2->Divide(h_Dspipi_Run2,h_Dspipi_gen);
@@ -2802,7 +2916,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Dspipi_eff_t0 = (TH1D*)h_Dspipi->Clone();
 		h_Dspipi_eff_t0->Divide(h_Dspipi_t0,h_Dspipi_gen);
-		h_Dspipi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Dspipi_eff_t0->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Dspipi_eff_t1 = (TH1D*)h_Dspipi->Clone();
 		h_Dspipi_eff_t1->Divide(h_Dspipi_t1,h_Dspipi_gen);
@@ -2822,7 +2936,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Dspipi_eff_p = (TH1D*)h_Dspipi->Clone();
 		h_Dspipi_eff_p->Divide(h_Dspipi_p,h_Dspipi_gen);
-		h_Dspipi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Dspipi_eff_p->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Dspipi_eff_m = (TH1D*)h_Dspipi->Clone();
 		h_Dspipi_eff_m->Divide(h_Dspipi_m,h_Dspipi_gen);
@@ -2842,7 +2956,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_Dspipi_eff_KKpi = (TH1D*)h_Dspipi->Clone();
 		h_Dspipi_eff_KKpi->Divide(h_Dspipi_KKpi,h_Dspipi_gen);
-		h_Dspipi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_Dspipi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_Dspipi_eff_pipipi = (TH1D*)h_Dspipi->Clone();
 		h_Dspipi_eff_pipipi->Divide(h_Dspipi_pipipi,h_Dspipi_gen);
@@ -2870,7 +2984,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_cosTheta_Kpi_eff_Run1 = (TH1D*)h_cosTheta_Kpi->Clone();
 		h_cosTheta_Kpi_eff_Run1->Divide(h_cosTheta_Kpi_Run1,h_cosTheta_Kpi_gen);
-		h_cosTheta_Kpi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_cosTheta_Kpi_eff_Run1->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_cosTheta_Kpi_eff_Run2 = (TH1D*)h_cosTheta_Kpi->Clone();
 		h_cosTheta_Kpi_eff_Run2->Divide(h_cosTheta_Kpi_Run2,h_cosTheta_Kpi_gen);
@@ -2890,7 +3004,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_cosTheta_Kpi_eff_t0 = (TH1D*)h_cosTheta_Kpi->Clone();
 		h_cosTheta_Kpi_eff_t0->Divide(h_cosTheta_Kpi_t0,h_cosTheta_Kpi_gen);
-		h_cosTheta_Kpi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_cosTheta_Kpi_eff_t0->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_cosTheta_Kpi_eff_t1 = (TH1D*)h_cosTheta_Kpi->Clone();
 		h_cosTheta_Kpi_eff_t1->Divide(h_cosTheta_Kpi_t1,h_cosTheta_Kpi_gen);
@@ -2910,7 +3024,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_cosTheta_Kpi_eff_p = (TH1D*)h_cosTheta_Kpi->Clone();
 		h_cosTheta_Kpi_eff_p->Divide(h_cosTheta_Kpi_p,h_cosTheta_Kpi_gen);
-		h_cosTheta_Kpi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_cosTheta_Kpi_eff_p->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_cosTheta_Kpi_eff_m = (TH1D*)h_cosTheta_Kpi->Clone();
 		h_cosTheta_Kpi_eff_m->Divide(h_cosTheta_Kpi_m,h_cosTheta_Kpi_gen);
@@ -2930,7 +3044,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_cosTheta_Kpi_eff_KKpi = (TH1D*)h_cosTheta_Kpi->Clone();
 		h_cosTheta_Kpi_eff_KKpi->Divide(h_cosTheta_Kpi_KKpi,h_cosTheta_Kpi_gen);
-		h_cosTheta_Kpi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_cosTheta_Kpi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_cosTheta_Kpi_eff_pipipi = (TH1D*)h_cosTheta_Kpi->Clone();
 		h_cosTheta_Kpi_eff_pipipi->Divide(h_cosTheta_Kpi_pipipi,h_cosTheta_Kpi_gen);
@@ -2957,7 +3071,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_cosTheta_Dspi_eff_Run1 = (TH1D*)h_cosTheta_Dspi->Clone();
 		h_cosTheta_Dspi_eff_Run1->Divide(h_cosTheta_Dspi_Run1,h_cosTheta_Dspi_gen);
-		h_cosTheta_Dspi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_cosTheta_Dspi_eff_Run1->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_cosTheta_Dspi_eff_Run2 = (TH1D*)h_cosTheta_Dspi->Clone();
 		h_cosTheta_Dspi_eff_Run2->Divide(h_cosTheta_Dspi_Run2,h_cosTheta_Dspi_gen);
@@ -2977,7 +3091,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_cosTheta_Dspi_eff_t0 = (TH1D*)h_cosTheta_Dspi->Clone();
 		h_cosTheta_Dspi_eff_t0->Divide(h_cosTheta_Dspi_t0,h_cosTheta_Dspi_gen);
-		h_cosTheta_Dspi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_cosTheta_Dspi_eff_t0->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_cosTheta_Dspi_eff_t1 = (TH1D*)h_cosTheta_Dspi->Clone();
 		h_cosTheta_Dspi_eff_t1->Divide(h_cosTheta_Dspi_t1,h_cosTheta_Dspi_gen);
@@ -2997,7 +3111,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_cosTheta_Dspi_eff_p = (TH1D*)h_cosTheta_Dspi->Clone();
 		h_cosTheta_Dspi_eff_p->Divide(h_cosTheta_Dspi_p,h_cosTheta_Dspi_gen);
-		h_cosTheta_Dspi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_cosTheta_Dspi_eff_p->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_cosTheta_Dspi_eff_m = (TH1D*)h_cosTheta_Dspi->Clone();
 		h_cosTheta_Dspi_eff_m->Divide(h_cosTheta_Dspi_m,h_cosTheta_Dspi_gen);
@@ -3017,7 +3131,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_cosTheta_Dspi_eff_KKpi = (TH1D*)h_cosTheta_Dspi->Clone();
 		h_cosTheta_Dspi_eff_KKpi->Divide(h_cosTheta_Dspi_KKpi,h_cosTheta_Dspi_gen);
-		h_cosTheta_Dspi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_cosTheta_Dspi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_cosTheta_Dspi_eff_pipipi = (TH1D*)h_cosTheta_Dspi->Clone();
 		h_cosTheta_Dspi_eff_pipipi->Divide(h_cosTheta_Dspi_pipipi,h_cosTheta_Dspi_gen);
@@ -3045,7 +3159,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_phi_Kpi_Dspi_eff_Run1 = (TH1D*)h_phi_Kpi_Dspi->Clone();
 		h_phi_Kpi_Dspi_eff_Run1->Divide(h_phi_Kpi_Dspi_Run1,h_phi_Kpi_Dspi_gen);
-		h_phi_Kpi_Dspi_eff_Run1->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_phi_Kpi_Dspi_eff_Run1->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_phi_Kpi_Dspi_eff_Run2 = (TH1D*)h_phi_Kpi_Dspi->Clone();
 		h_phi_Kpi_Dspi_eff_Run2->Divide(h_phi_Kpi_Dspi_Run2,h_phi_Kpi_Dspi_gen);
@@ -3065,7 +3179,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_phi_Kpi_Dspi_eff_t0 = (TH1D*)h_phi_Kpi_Dspi->Clone();
 		h_phi_Kpi_Dspi_eff_t0->Divide(h_phi_Kpi_Dspi_t0,h_phi_Kpi_Dspi_gen);
-		h_phi_Kpi_Dspi_eff_t0->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_phi_Kpi_Dspi_eff_t0->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_phi_Kpi_Dspi_eff_t1 = (TH1D*)h_phi_Kpi_Dspi->Clone();
 		h_phi_Kpi_Dspi_eff_t1->Divide(h_phi_Kpi_Dspi_t1,h_phi_Kpi_Dspi_gen);
@@ -3085,7 +3199,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_phi_Kpi_Dspi_eff_p = (TH1D*)h_phi_Kpi_Dspi->Clone();
 		h_phi_Kpi_Dspi_eff_p->Divide(h_phi_Kpi_Dspi_p,h_phi_Kpi_Dspi_gen);
-		h_phi_Kpi_Dspi_eff_p->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_phi_Kpi_Dspi_eff_p->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_phi_Kpi_Dspi_eff_m = (TH1D*)h_phi_Kpi_Dspi->Clone();
 		h_phi_Kpi_Dspi_eff_m->Divide(h_phi_Kpi_Dspi_m,h_phi_Kpi_Dspi_gen);
@@ -3105,7 +3219,7 @@ void addGenPdfToMC(){
 		///
 		TH1D* h_phi_Kpi_Dspi_eff_KKpi = (TH1D*)h_phi_Kpi_Dspi->Clone();
 		h_phi_Kpi_Dspi_eff_KKpi->Divide(h_phi_Kpi_Dspi_KKpi,h_phi_Kpi_Dspi_gen);
-		h_phi_Kpi_Dspi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (norm.)");
+		h_phi_Kpi_Dspi_eff_KKpi->GetYaxis()->SetTitle("Efficiency (a.u.)");
 
 		TH1D* h_phi_Kpi_Dspi_eff_pipipi = (TH1D*)h_phi_Kpi_Dspi->Clone();
 		h_phi_Kpi_Dspi_eff_pipipi->Divide(h_phi_Kpi_Dspi_pipipi,h_phi_Kpi_Dspi_gen);

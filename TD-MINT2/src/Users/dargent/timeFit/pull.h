@@ -46,8 +46,8 @@ public :
    vector <double> getPullSigma();
 
    TMatrixD getStatCov(TString label = "");
-   TMatrixD getCov(TString label = "");
-   TMatrixD getDeltaCov(TString refFileName,TString label = "",double pull_max = 10, bool scaleCov = "true");
+   TMatrixD getCov(TString label = "",double pull_max = -1, bool scaleCov = true);
+   TMatrixD getDeltaCov(TString refFileName,TString label = "",double pull_max = 10, bool scaleCov = true);
    TMatrixD getDeltaCovChol(TString refFileName,TString label,int varPerParChol);
    TMatrixD getAbsDiff(TMatrixD cov1,TMatrixD cov2);
 

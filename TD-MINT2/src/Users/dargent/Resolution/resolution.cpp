@@ -233,7 +233,7 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
 
 	/// Plot
 	TCanvas* canvas = new TCanvas();
-	int bin = 50;	
+	int bin = 100;	
 
 	stringstream ss ;
     	TString leg_min = " fs";
@@ -266,7 +266,7 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
 
 	RooPlot* frame_m= Bs_DeltaTau->frame();
 	frame_m->SetTitle("");
-	frame_m->GetXaxis()->SetTitle("#font[132]{t (ps)}");
+	frame_m->GetXaxis()->SetTitle("#font[132]{t [ps]}");
         frame_m->SetMinimum(0.0);
 	data->plotOn(frame_m,Name("dataSetCut"),Binning(bin));
 	pdf->plotOn(frame_m,Name("FullPdf"),LineColor(kBlue),LineWidth(3));
@@ -289,20 +289,48 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
 	TString label = dataType;
 	if(dataType=="MC")label = "Simulation";
 // 	leg.AddEntry((TObject*)0,"#font[22]{LHCb " + label+ "}","");
-// 	leg.AddEntry("dataSetCut",leg_min + " < #sigma_{t} < " + leg_max,"ep");
+ 	//leg.AddEntry("dataSetCut",leg_min + " < #sigma_{t} < " + leg_max,"ep");
 	leg.AddEntry("dataSetCut",leg_min + " < #delta_{t} < " + leg_max,"ep");
 	//leg.AddEntry("FullPdf","Fit","l");
 	leg.AddEntry("FullPdf",leg_sigma,"l");
  	leg.AddEntry((TObject*)0,leg_mean,"");
 
+	TLegend leg_lhcb(0.75,0.8,0.9,0.9);
+    	leg_lhcb.SetLineStyle(0);
+    	leg_lhcb.SetLineColor(0);
+	leg_lhcb.SetFillColor(0);
+	leg_lhcb.SetTextFont(132);
+	leg_lhcb.SetTextColor(1);
+	leg_lhcb.SetTextSize(0.06);
+	leg_lhcb.SetTextAlign(12);
+	leg_lhcb.AddEntry((TObject*)0,"#font[22]{LHCb}","");
 
+	if(year==0){
+	leg_lhcb.Draw();
+	}
+	else{
 	leg.Draw();
+	}
+
+	canvas->Update();
 	canvas->Print("Plots/Signal2"+dataType+"_bin_"+binName+".eps");
+
+	if(year==0){
+ 		frame_m->GetYaxis()->SetTitle(TString(frame_m->GetYaxis()->GetTitle()).ReplaceAll("Events","Yield"));
+
+		canvas->Print("Plots/resolution.eps");
+		canvas->Print("Plots/resolution.pdf");
+		canvas->Print("Plots/resolution.png");
+		canvas->Print("Plots/resolution.C");
+	}
 
 	gPad->SetLogy(1);
 	canvas->Print("Plots/Signal2"+dataType+"_bin_"+binName+"_log.eps");
 	gPad->SetLogy(0);
 	
+
+	frame_m= Bs_DeltaTau->frame(-0.25,0.);
+	frame_m->SetTitle("");
 
 	frame_m->GetXaxis()->SetLabelSize( 0.06 );
 	frame_m->GetYaxis()->SetLabelSize( 0.06 );
@@ -317,9 +345,12 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
 	//frame_m->GetYaxis()->SetNdivisions(512);
 	frame_m->GetXaxis()->SetTitleOffset( 1.00 );
 	frame_m->GetYaxis()->SetTitleOffset( 0.5 );
-// 	frame_m->GetYaxis()->SetTitle("Yield (norm.)");
+ 	frame_m->GetYaxis()->SetTitle("Yield (norm.)");
 
+	data->plotOn(frame_m,Name("dataSetCut"),Binning(bin));
+	pdf->plotOn(frame_m,Name("FullPdf"),LineColor(kBlue),LineWidth(2));
 
+	canvas = new TCanvas();
 	canvas->cd();
         canvas->SetTopMargin(0.05);
         canvas->SetBottomMargin(0.05);
@@ -330,8 +361,24 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
         pad1->SetBottomMargin(0.);
         pad1->Draw();
         pad1->cd();
+        frame_m->GetYaxis()->SetRangeUser(0.01,frame_m->GetMaximum()*1.2);
         frame_m->Draw();
 
+	TLegend leg2(0.15,0.5,0.4,0.9,"");
+        leg2.SetLineStyle(0);
+        leg2.SetLineColor(0);
+        leg2.SetFillColor(0);
+        leg2.SetTextFont(132);
+        leg2.SetTextColor(1);
+        leg2.SetTextSize(0.065);
+        leg2.SetTextAlign(12);
+	label = dataType;
+	if(dataType=="MC")label = "Simulation";
+	leg2.AddEntry((TObject*)0,"#font[22]{LHCb " + label+ "}","");
+	leg2.AddEntry("dataSetCut",leg_min + " < #sigma_{t} < " + leg_max,"ep");
+	//leg.AddEntry("FullPdf","Fit","l");
+	leg2.AddEntry("FullPdf",leg_sigma,"l");
+        leg2.Draw();
 
         canvas->cd();
         TPad* pad2 = new TPad("lowerPad", "lowerPad", .0, .005, 1.0, .3);
@@ -343,7 +390,7 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
         pad2->Draw();
         pad2->cd();
         
-	RooPlot* frame_p = Bs_DeltaTau->frame();
+	RooPlot* frame_p = Bs_DeltaTau->frame(-0.25,0.);
         frame_p->GetYaxis()->SetNdivisions(5);
         frame_p->GetYaxis()->SetLabelSize(0.12);
         frame_p->GetXaxis()->SetLabelSize(0.12);
@@ -361,20 +408,20 @@ vector<double> FitTimeRes(double min, double max, TString varName = "Bs_DTF_TAUE
         graph->SetMaximum(maxPull);
         graph->SetMinimum(minPull);
         graph->SetPoint(0,Bs_DeltaTau->getMin(),0);
-        graph->SetPoint(1,Bs_DeltaTau->getMax(),0);
+        graph->SetPoint(1,0,0);
         
         TGraph* graph2 = new TGraph(2);
         graph2->SetMaximum(maxPull);
         graph2->SetMinimum(minPull);
         graph2->SetPoint(0,Bs_DeltaTau->getMin(),-3);
-        graph2->SetPoint(1,Bs_DeltaTau->getMax(),-3);
+        graph2->SetPoint(1,0,-3);
         graph2->SetLineColor(kRed);
         
         TGraph* graph3 = new TGraph(2);
         graph3->SetMaximum(maxPull);
         graph3->SetMinimum(minPull);
         graph3->SetPoint(0,Bs_DeltaTau->getMin(),3);
-        graph3->SetPoint(1,Bs_DeltaTau->getMax(),3);
+        graph3->SetPoint(1,0,3);
         graph3->SetLineColor(kRed);
 	
 	pullHist->GetXaxis()->SetLabelFont( 132 );
@@ -512,6 +559,7 @@ void FitResoRelation(TString varName = "Bs_DTF_TAUERR", TString Bs_TAU_Var = "Bs
 	if(dataType == "Data" && year == 0) dataType.Append("_all");
 	if(dataType == "Data" && year == 16) dataType.Append("_16");
 	if(dataType == "Data" && year == 17) dataType.Append("_17");
+	if(dataType == "Data" && year == 18) dataType.Append("_18");
 	
 	ofstream datafile;
 	if(updateAnaNote)datafile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ResoTable_"+dataType+".txt",std::ofstream::trunc);
@@ -675,19 +723,18 @@ void FitResoRelation(TString varName = "Bs_DTF_TAUERR", TString Bs_TAU_Var = "Bs
 	fitFunc->Draw("same");
 	//fitFunc_DsK_data->Draw("same");
 	if(dataType=="MC")fitFunc_DsK_mc->Draw("same");
-// 	if(dataType!="MC" && year == 16) fitFunc_jpsiPhi_data->Draw("same");
-// // 	fitFunc2->Draw("same");
+ 	if(dataType!="MC" && year == 16) fitFunc_jpsiPhi_data->Draw("same");
+ 	fitFunc2->Draw("same");
 	//ResoRelation_ga->Draw("Psame");
 
         //leg.AddEntry((TObject*)0,"LHCb Simulation","");
         if(dataType=="MC")leg.AddEntry(ResoRelation_ga,"B_{s} #rightarrow D_{s}K#pi#pi MC","ep");
 	else leg.AddEntry(ResoRelation_ga,"Prompt-D_{s} Data","ep");
         leg.AddEntry(fitFunc,"Linear Fit","l");
-	leg.AddEntry(fitFunc2,"Quadratic Fit","l");
         if(dataType=="MC")leg.AddEntry(fitFunc_DsK_mc,"B_{s} #rightarrow D_{s}K MC","l");
-// 	if(dataType!="MC" && year == 16) leg.AddEntry(fitFunc_jpsiPhi_data,"B_{s} #rightarrow J/#psi #phi Data","l");
-// 	else leg.AddEntry(fitFunc2,"Quadratic Fit","l");
-// 	leg.Draw();
+ 	if(dataType!="MC" && year == 16) leg.AddEntry(fitFunc_jpsiPhi_data,"B_{s} #rightarrow J/#psi #phi Data","l");
+ 	else leg.AddEntry(fitFunc2,"Quadratic Fit","l");
+ 	leg.Draw();
 	
 	c->Print("Plots/ScaleFactor_"+dataType+".eps");
         if(updateAnaNote) c->Print("../../../../../TD-AnaNote/latex/figs/Resolution/ScaleFactor_"+dataType+".pdf");
@@ -743,7 +790,8 @@ void FitResoRelation(TString varName = "Bs_DTF_TAUERR", TString Bs_TAU_Var = "Bs
 	c->Print("Plots/f_"+dataType+".eps");
 
 
-	TString dataTypeLable = dataType.ReplaceAll("_",",");
+	TString dataTypeLable = dataType;
+	dataTypeLable.ReplaceAll("_",",");
 	if(updateAnaNote){
 		ofstream eqfile;
 		eqfile.open("../../../../../TD-AnaNote/latex/tables/Resolution/ScaleFactor_"+dataType+".txt",std::ofstream::trunc);

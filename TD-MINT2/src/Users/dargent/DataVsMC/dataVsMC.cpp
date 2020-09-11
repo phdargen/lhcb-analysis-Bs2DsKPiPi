@@ -161,7 +161,7 @@ void plot(TTree* tree, TTree* treeMC, TString Branch,TString TitleX, int bins, d
     TString leg_kol = "KS-Test : ";
     ss << std::fixed << std::setprecision(4) << KolmoTest ;
     leg_kol += ss.str();    
-//     le = leg->AddEntry((TObject*)0, leg_kol, "");
+    le = leg->AddEntry((TObject*)0, leg_kol, "");
     le->SetTextColor(kRed);    
 
     if(newWeightB != weightB && newWeightB != "noweight"){
@@ -284,6 +284,8 @@ void compare(TString fileA, TString fileB, TString weightA, TString weightB, TSt
     plot(new_treeA,new_treeB,"Bs_ptasy_1.00","B_ptasy_1.00",nBins, -1, 1 ,weightA, weightB, newWeightB, label,false,true);
     plot(new_treeA,new_treeB,"Bs_DTF_MMERR","#sigma_{m} [MeV]",nBins,4.,25.,weightA, weightB, newWeightB, label);
     plot(new_treeA,new_treeB,"Bs_DTF_MM","m(B) [MeV]",100.,5200.,5700.,"noweight", "noweight", "noweight", label);
+    //plot(new_treeA,new_treeB,"Bs_DTF_MM","m(B) [MeV]",100.,5200.,5700.,weightA, weightB, newWeightB, label);
+
 
     /// BDT
 //     plot(new_treeA,new_treeB,"PV_CHI2NDOF","DTF #chi^{2}",nBins,0.,7,weightA, weightB, newWeightB, label);    
@@ -1085,7 +1087,7 @@ void plotEff(TString Branch,TString TitleX, int bins, double min, double max, ve
 			gPad->SetLogy(1);
 		}
 		else gPad->SetLogy(0);
-		histos[n]->SetMaximum(histos[n]->GetMaximum()*2.0);
+		histos[n]->SetMaximum(histos[n]->GetMaximum()*1.2);
 		histos[n]->SetMarkerColor(colors[n]);
 		histos[n]->SetLineColor(colors[n]);
 		if(n==0)histos[n]->Draw("e");
@@ -1188,15 +1190,25 @@ void compareEff(vector<TString> files, vector<TString> weights, vector<TString> 
     if(A_is_in_B("Final",(string)files[0]) && A_is_in_B("Final",(string)files[1])) selection = "Final";
 
     /// TAU
-    plotEff("Bs_DTF_TAU","t(B) [ps]",nBins,0.,10.,new_trees, weights, titles, colors, label,false,true,true);
+    plotEff("Bs_BsDTF_TAU","t(B) [ps]",nBins,0.,7.,new_trees, weights, titles, colors, label,false,false,false);
+    plotEff("Bs_BsDTF_TAU","t(B) [ps]",nBins,0.,7.,new_trees, weights, titles, colors, label,false,false,true);
+    plotEff("Bs_DTF_TAU","t(B) [ps]",nBins,0.,7.,new_trees, weights, titles, colors, label,false,false,false);
+    plotEff("Bs_DTF_TAU","t(B) [ps]",nBins,0.,7.,new_trees, weights, titles, colors, label,false,false,true);
+   
     if(plotOnlyTau)return;
 
-    //if(selection == "Final")plotEff("BDTG_response","BDTG",nBins,0,1.,new_trees, weights, titles, colors, label,false,true);
+    //if(selection == "Final")
+    plotEff("BDTG","BDTG",nBins,0,1.,new_trees, weights, titles, colors, label);
 
     /// Bs
     plotEff("Bs_PT","p_{T}(B) [MeV]",nBins,0,40000,new_trees, weights, titles, colors,  label);
     plotEff("Bs_ETA","#eta(B)",nBins,1,6,new_trees, weights, titles, colors, label);
     plotEff("Bs_DTF_TAUERR","#sigma_{t}(B) [ps]",nBins,0,0.15,new_trees, weights, titles, colors, label);
+
+    plotEff("Ds_FDCHI2_ORIVX","#chi^{2}_{FD}(D_{s})",nBins,0,40000,new_trees, weights, titles, colors, label);
+
+    plotEff("track_min_IPCHI2","min(#chi^{2}_{IP})",nBins, 0, 3000 ,new_trees, weights, titles, colors, label, true);
+
 
     /// Dalitz
     plotEff("m_Kpipi","m(K^{+}#pi^{+}#pi^{-})[MeV]",nBins,1000,1950,new_trees, weights, titles, colors, label,false,false,true);
@@ -1485,8 +1497,8 @@ int main(int argc, char** argv){
     
     time_t startTime = time(0);
     
-//     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/signal.root", "/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
-//     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/norm.root", "/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
+//       rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/signal_newBDT.root", "/auto/data/dargent/BsDsKpipi/Final/Data/signal_newBDT.root");
+//       rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/norm_newBDT.root", "/auto/data/dargent/BsDsKpipi/Final/Data/norm_newBDT.root");
 
 //     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/signal_PIDGen.root", "/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
 //     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/norm_PIDGen.root", "/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
@@ -1496,8 +1508,8 @@ int main(int argc, char** argv){
 // 
 //     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/signal_noBDT.root", "/auto/data/dargent/BsDsKpipi/Final/Data/signal.root");
 //     rescaleMC("/auto/data/dargent/BsDsKpipi/Final/MC/norm_noBDT.root", "/auto/data/dargent/BsDsKpipi/Final/Data/norm.root");
-// 
-//    return 0;
+
+//      return 0;
 
     //createSubset("../Files/Final/Data/norm.root","../Files/Final/Data/norm_t0.root","TriggerCat == 0");
     //createSubset("../Files/Final/Data/norm.root","../Files/Final/Data/norm_t1.root","TriggerCat == 1");
@@ -1566,15 +1578,16 @@ int main(int argc, char** argv){
     
     vector<int> years;
     if(reweightInBinsOfRun==1){
-        years.push_back(1); // Means run 1
+        //years.push_back(1); // Means run 1
         years.push_back(2); // Means run 2
     }
     else if(reweightInBinsOfRun==0){
-        //years.push_back(11);
-        //years.push_back(12);
+        years.push_back(11);
+        years.push_back(12);
         //years.push_back(15);
-        years.push_back(16);
+	//years.push_back(16);
         //years.push_back(17);
+        //years.push_back(18);
     }
     else years.push_back(-1); // Means all 
     
@@ -1589,7 +1602,7 @@ int main(int argc, char** argv){
     vector<int> trigger;
     if(reweightInBinsOfTrigger){
         trigger.push_back(0);
-        trigger.push_back(1);
+        //trigger.push_back(1);
     }
     else trigger.push_back(-1);
 
@@ -1601,9 +1614,9 @@ int main(int argc, char** argv){
     vars_1.push_back("Bs_PT");
     min_1.push_back(0.);
     max_1.push_back(100000.);
-    vars_1.push_back("Bs_ETA");
-    min_1.push_back(1.5);
-    max_1.push_back(5.5);
+    //vars_1.push_back("Bs_ETA");
+    //min_1.push_back(1.5);
+    //max_1.push_back(5.5);
     vars_1.push_back("NTracks");
     min_1.push_back(0.);
     max_1.push_back(1000.);
@@ -1624,7 +1637,7 @@ int main(int argc, char** argv){
     //vars_3.push_back("Bs_ETA");
     //min_3.push_back(1.5);
     //max_3.push_back(6.5);
-    vars_3.push_back("Bs_BsDTF_TAUERR");
+    vars_3.push_back("Bs_DTF_TAUERR");
     min_3.push_back(0.);
     max_3.push_back(0.15);
 
@@ -1632,13 +1645,12 @@ int main(int argc, char** argv){
     vars_4.push_back("Ds_FDCHI2_ORIVX");
     min_4.push_back(0.);
     max_4.push_back(40000.);
-
-//     vars_4.push_back("Bs_PT");
-//     min_4.push_back(0.);
-//     max_4.push_back(200000.);
-     vars_4.push_back("Bs_BsDTF_TAUERR");
-     min_4.push_back(0.);
-     max_4.push_back(0.15);
+    vars_4.push_back("Bs_PT");
+    min_4.push_back(0.);
+    max_4.push_back(200000.);
+    vars_4.push_back("Bs_DTF_TAUERR");
+    min_4.push_back(0.);
+    max_4.push_back(0.15);
     
 //     vars_5.push_back("Bs_PT");
 //     min_5.push_back(0.);
@@ -1646,9 +1658,12 @@ int main(int argc, char** argv){
 //     vars_5.push_back("Ds_PT");
 //     min_5.push_back(0.);
 //     max_5.push_back(200000.);
-    vars_5.push_back("pi_PT");
-    min_5.push_back(0.);
-    max_5.push_back(200000.);
+//     vars_5.push_back("pi_PT");
+//     min_5.push_back(0.);
+//     max_5.push_back(200000.);
+    vars_5.push_back("Bs_DTF_MM");
+    min_5.push_back(5200.);
+    max_5.push_back(5700.);
 
     vector< vector<TString> > vars_set;
     vector< vector<double> > min_set;

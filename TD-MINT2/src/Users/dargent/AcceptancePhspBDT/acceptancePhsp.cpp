@@ -95,294 +95,395 @@ double acoplanarityAngle(const DalitzEvent& evt, int a, int b, int c, int d){
 	return (sinPhi > 0.0 ? phi : -phi);
 }
 
-void prepareFilesForBDT(){
-
-    NamedParameter<string> InputGenMC("InputGenMC", (std::string) "/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_13266007.root");
-
-    TChain* tree_gen=new TChain("MCDecayTreeTuple/MCDecayTree");
-    tree_gen->Add(((string)InputGenMC).c_str());
-    double K_gen[5]; 
-    double pip_gen[5]; 
-    double pim_gen[5]; 
-    double Ds_Kp_gen[5],Ds_Km_gen[5],Ds_pim_gen[5];
-    
-    tree_gen->SetBranchAddress("Kplus_TRUEP_X",&K_gen[0]);
-    tree_gen->SetBranchAddress("Kplus_TRUEP_Y",&K_gen[1]);
-    tree_gen->SetBranchAddress("Kplus_TRUEP_Z",&K_gen[2]); 
-    tree_gen->SetBranchAddress("Kplus_TRUEP_E",&K_gen[3]); 
-    tree_gen->SetBranchAddress("Kplus_TRUEPT",&K_gen[4]); 
-	
-    tree_gen->SetBranchAddress("piplus_TRUEP_X",&pip_gen[0]);
-    tree_gen->SetBranchAddress("piplus_TRUEP_Y",&pip_gen[1]);
-    tree_gen->SetBranchAddress("piplus_TRUEP_Z",&pip_gen[2]); 
-    tree_gen->SetBranchAddress("piplus_TRUEP_E",&pip_gen[3]); 
-    tree_gen->SetBranchAddress("piplus_TRUEPT",&pip_gen[4]); 
-
-    tree_gen->SetBranchAddress("piminus_TRUEP_X",&pim_gen[0]);
-    tree_gen->SetBranchAddress("piminus_TRUEP_Y",&pim_gen[1]);
-    tree_gen->SetBranchAddress("piminus_TRUEP_Z",&pim_gen[2]); 
-    tree_gen->SetBranchAddress("piminus_TRUEP_E",&pim_gen[3]); 
-    tree_gen->SetBranchAddress("piminus_TRUEPT",&pim_gen[4]); 
-	
-    tree_gen->SetBranchAddress("Kplus0_TRUEP_X",&Ds_Kp_gen[0]);
-    tree_gen->SetBranchAddress("Kplus0_TRUEP_Y",&Ds_Kp_gen[1]);
-    tree_gen->SetBranchAddress("Kplus0_TRUEP_Z",&Ds_Kp_gen[2]); 
-    tree_gen->SetBranchAddress("Kplus0_TRUEP_E",&Ds_Kp_gen[3]); 
-    tree_gen->SetBranchAddress("Kplus0_TRUEPT",&Ds_Kp_gen[4]); 
-    
-    tree_gen->SetBranchAddress("Kminus_TRUEP_X",&Ds_Km_gen[0]);
-    tree_gen->SetBranchAddress("Kminus_TRUEP_Y",&Ds_Km_gen[1]);
-    tree_gen->SetBranchAddress("Kminus_TRUEP_Z",&Ds_Km_gen[2]); 
-    tree_gen->SetBranchAddress("Kminus_TRUEP_E",&Ds_Km_gen[3]); 
-    tree_gen->SetBranchAddress("Kminus_TRUEPT",&Ds_Km_gen[4]); 
-
-    tree_gen->SetBranchAddress("piminus0_TRUEP_X",&Ds_pim_gen[0]);
-    tree_gen->SetBranchAddress("piminus0_TRUEP_Y",&Ds_pim_gen[1]);
-    tree_gen->SetBranchAddress("piminus0_TRUEP_Z",&Ds_pim_gen[2]); 
-    tree_gen->SetBranchAddress("piminus0_TRUEP_E",&Ds_pim_gen[3]); 
-    tree_gen->SetBranchAddress("piminus0_TRUEPT",&Ds_pim_gen[4]); 
-
-    TFile* output_gen = new TFile("GenMC.root","RECREATE");
-    TTree* summary_tree_gen = tree_gen->CloneTree(0);
-
-    double s_Kpipi,s_Kpi,s_pipi,s_Dspi,s_Dspipi,s_Kpip,s_Dspip,s_DsK,s_DsKpi;
-    double cos_theta_Kpi,cos_theta_Dspi,phi_Kpi_Dspi;
-    double cos_theta_pipi,cos_theta_DsK,phi_pipi_DsK;
-
-    summary_tree_gen->Branch("s_Kpipi", &s_Kpipi, "s_Kpipi/D");
-    summary_tree_gen->Branch("s_Kpi", &s_Kpi, "s_Kpi/D");
-    summary_tree_gen->Branch("s_pipi", &s_pipi, "s_pipi/D");
-    summary_tree_gen->Branch("s_Dspi", &s_Dspi, "s_Dspi/D");
-    summary_tree_gen->Branch("s_Dspipi", &s_Dspipi, "s_Dspipi/D");
-    summary_tree_gen->Branch("s_Dspip", &s_Dspip, "s_Dspip/D");
-    summary_tree_gen->Branch("s_DsK", &s_DsK, "s_DsK/D");
-    summary_tree_gen->Branch("s_DsKpi", &s_DsKpi, "s_DsKpi/D");
-    summary_tree_gen->Branch("s_Kpip", &s_Kpip, "s_Kpip/D");
-
-    summary_tree_gen->Branch("cos_theta_Kpi", &cos_theta_Kpi, "cos_theta_Kpi/D");
-    summary_tree_gen->Branch("cos_theta_Dspi", &cos_theta_Dspi, "cos_theta_Dspi/D");
-    summary_tree_gen->Branch("phi_Kpi_Dspi", &phi_Kpi_Dspi, "phi_Kpi_Dspi/D");
-
-    summary_tree_gen->Branch("cos_theta_pipi", &cos_theta_pipi, "cos_theta_pipi/D");
-    summary_tree_gen->Branch("cos_theta_DsK", &cos_theta_DsK, "cos_theta_DsK/D");
-    summary_tree_gen->Branch("phi_pipi_DsK", &phi_pipi_DsK, "phi_pipi_DsK/D");
-
-    for(int i=0; i< tree_gen->GetEntries(); i++)
-    {	
-        tree_gen->GetEntry(i);
-
-        TLorentzVector K_p(K_gen[0],K_gen[1],K_gen[2],K_gen[3]);
-        TLorentzVector pip_p(pip_gen[0],pip_gen[1],pip_gen[2],pip_gen[3]);
-        TLorentzVector pim_p(pim_gen[0],pim_gen[1],pim_gen[2],pim_gen[3]);
-        TLorentzVector D_Kp_p(Ds_Kp_gen[0],Ds_Kp_gen[1],Ds_Kp_gen[2],Ds_Kp_gen[3]);
-        TLorentzVector D_Km_p(Ds_Km_gen[0],Ds_Km_gen[1],Ds_Km_gen[2],Ds_Km_gen[3]);
-        TLorentzVector D_pim_p(Ds_pim_gen[0],Ds_pim_gen[1],Ds_pim_gen[2],Ds_pim_gen[3]);
-        TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
-        TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
-
-	s_Kpipi = (K_p + pip_p + pim_p).M()*MeV;
-	s_Kpi = (K_p + pim_p).M()*MeV;
-	s_pipi = (pip_p + pim_p).M()*MeV;
-	s_Dspi = (D_p + pip_p ).M()*MeV;
-	s_Dspipi = (D_p + pip_p + pim_p).M()*MeV;
-
-	s_Dspip = (D_p + pip_p).M()*MeV;
-	s_DsKpi = (D_p + K_p + pim_p).M()*MeV;
-	s_DsK = (D_p + K_p).M()*MeV;
-	s_Kpip = (K_p + pip_p).M()*MeV;
-
-	cos_theta_Kpi = cosThetaAngle(K_p,pim_p,D_p,pip_p);
-	cos_theta_Dspi = cosThetaAngle(D_p,pip_p,K_p,pim_p);
-	phi_Kpi_Dspi = acoplanarityAngle(K_p,pim_p,D_p,pip_p);
-
-	cos_theta_pipi = cosThetaAngle(pip_p,pim_p,D_p,K_p);
-	cos_theta_DsK = cosThetaAngle(D_p,K_p,pip_p,pim_p);
-	phi_pipi_DsK = acoplanarityAngle(pip_p,pim_p,D_p,K_p);
-
-	if(s_Kpipi > 1950. || s_Kpi > 1200. || s_pipi > 1200.) continue;
-
-	summary_tree_gen->Fill();
-    }
-
-    summary_tree_gen->Write();
-    output_gen->Close();
-
-    NamedParameter<string> InputSelectedMC("InputSelectedMC", (std::string) "/auto/data/dargent/BsDsKpipi/Final/MC/signal.root");
-    TChain* tree=new TChain("DecayTree");
-    tree->Add(((string)InputSelectedMC).c_str());
-
-    double K[5]; 
-    double pip[5]; 
-    double pim[5]; 
-    double Ds_Kp[5],Ds_Km[5],Ds_pim[5];
-    int cat;
-
-    tree->SetBranchAddress("Bs_BKGCAT",&cat);
-    tree->SetBranchAddress("K_plus_TRUEP_X",&K[0]);
-    tree->SetBranchAddress("K_plus_TRUEP_Y",&K[1]);
-    tree->SetBranchAddress("K_plus_TRUEP_Z",&K[2]); 
-    tree->SetBranchAddress("K_plus_TRUEP_E",&K[3]); 
-    tree->SetBranchAddress("K_plus_TRUEPT",&K[4]); 
-	
-    tree->SetBranchAddress("pi_plus_TRUEP_X",&pip[0]);
-    tree->SetBranchAddress("pi_plus_TRUEP_Y",&pip[1]);
-    tree->SetBranchAddress("pi_plus_TRUEP_Z",&pip[2]); 
-    tree->SetBranchAddress("pi_plus_TRUEP_E",&pip[3]); 
-    tree->SetBranchAddress("pi_plus_TRUEPT",&pip[4]); 
-
-    tree->SetBranchAddress("pi_minus_TRUEP_X",&pim[0]);
-    tree->SetBranchAddress("pi_minus_TRUEP_Y",&pim[1]);
-    tree->SetBranchAddress("pi_minus_TRUEP_Z",&pim[2]); 
-    tree->SetBranchAddress("pi_minus_TRUEP_E",&pim[3]); 
-    tree->SetBranchAddress("pi_minus_TRUEPT",&pim[4]); 
-	
-    tree->SetBranchAddress("K_plus_fromDs_TRUEP_X",&Ds_Kp[0]);
-    tree->SetBranchAddress("K_plus_fromDs_TRUEP_Y",&Ds_Kp[1]);
-    tree->SetBranchAddress("K_plus_fromDs_TRUEP_Z",&Ds_Kp[2]); 
-    tree->SetBranchAddress("K_plus_fromDs_TRUEP_E",&Ds_Kp[3]); 
-    tree->SetBranchAddress("K_plus_fromDs_TRUEPT",&Ds_Kp[4]); 
-    
-    tree->SetBranchAddress("K_minus_fromDs_TRUEP_X",&Ds_Km[0]);
-    tree->SetBranchAddress("K_minus_fromDs_TRUEP_Y",&Ds_Km[1]);
-    tree->SetBranchAddress("K_minus_fromDs_TRUEP_Z",&Ds_Km[2]); 
-    tree->SetBranchAddress("K_minus_fromDs_TRUEP_E",&Ds_Km[3]); 
-    tree->SetBranchAddress("K_minus_fromDs_TRUEPT",&Ds_Km[4]); 
-
-    tree->SetBranchAddress("pi_minus_fromDs_TRUEP_X",&Ds_pim[0]);
-    tree->SetBranchAddress("pi_minus_fromDs_TRUEP_Y",&Ds_pim[1]);
-    tree->SetBranchAddress("pi_minus_fromDs_TRUEP_Z",&Ds_pim[2]); 
-    tree->SetBranchAddress("pi_minus_fromDs_TRUEP_E",&Ds_pim[3]); 
-    tree->SetBranchAddress("pi_minus_fromDs_TRUEPT",&Ds_pim[4]); 
-
-    TFile* output = new TFile("SelMC.root","RECREATE");
-    TTree* summary_tree = tree->CloneTree(0);
-
-    summary_tree->Branch("s_Kpipi", &s_Kpipi, "s_Kpipi/D");
-    summary_tree->Branch("s_Kpi", &s_Kpi, "s_Kpi/D");
-    summary_tree->Branch("s_pipi", &s_pipi, "s_pipi/D");
-    summary_tree->Branch("s_Dspi", &s_Dspi, "s_Dspi/D");
-    summary_tree->Branch("s_Dspipi", &s_Dspipi, "s_Dspipi/D");
-    summary_tree->Branch("s_Dspip", &s_Dspip, "s_Dspip/D");
-    summary_tree->Branch("s_DsK", &s_DsK, "s_DsK/D");
-    summary_tree->Branch("s_DsKpi", &s_DsKpi, "s_DsKpi/D");
-    summary_tree->Branch("s_Kpip", &s_Kpip, "s_Kpip/D");
-    summary_tree->Branch("cos_theta_Kpi", &cos_theta_Kpi, "cos_theta_Kpi/D");
-    summary_tree->Branch("cos_theta_Dspi", &cos_theta_Dspi, "cos_theta_Dspi/D");
-    summary_tree->Branch("phi_Kpi_Dspi", &phi_Kpi_Dspi, "phi_Kpi_Dspi/D");
-    summary_tree->Branch("cos_theta_pipi", &cos_theta_pipi, "cos_theta_pipi/D");
-    summary_tree->Branch("cos_theta_DsK", &cos_theta_DsK, "cos_theta_DsK/D");
-    summary_tree->Branch("phi_pipi_DsK", &phi_pipi_DsK, "phi_pipi_DsK/D");
-
-    int numEvents = tree->GetEntries();
-    for(int i=0; i< numEvents; i++)
-    {
-        tree->GetEntry(i);
-        
-        // Lorentz vectors: P=(Px,Py,Pz,E)
-        TLorentzVector K_p(K[0],K[1],K[2],K[3]);
-        TLorentzVector pip_p(pip[0],pip[1],pip[2],pip[3]);
-        TLorentzVector pim_p(pim[0],pim[1],pim[2],pim[3]);
-        TLorentzVector D_Kp_p(Ds_Kp[0],Ds_Kp[1],Ds_Kp[2],Ds_Kp[3]);
-        TLorentzVector D_Km_p(Ds_Km[0],Ds_Km[1],Ds_Km[2],Ds_Km[3]);
-        TLorentzVector D_pim_p(Ds_pim[0],Ds_pim[1],Ds_pim[2],Ds_pim[3]);
-        TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
-        TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
-	
-	s_Kpipi = (K_p + pip_p + pim_p).M()*MeV;
-	s_Kpi = (K_p + pim_p).M()*MeV;
-	s_pipi = (pip_p + pim_p).M()*MeV;
-	s_Dspi = (D_p + pip_p ).M()*MeV;
-	s_Dspipi = (D_p + pip_p + pim_p).M()*MeV;
-
-	s_Dspip = (D_p + pip_p).M()*MeV;
-	s_DsKpi = (D_p + K_p + pim_p).M()*MeV;
-	s_DsK = (D_p + K_p).M()*MeV;
-	s_Kpip = (K_p + pip_p).M()*MeV;
-
-	cos_theta_Kpi = cosThetaAngle(K_p,pim_p,D_p,pip_p);
-	cos_theta_Dspi = cosThetaAngle(D_p,pip_p,K_p,pim_p);
-	phi_Kpi_Dspi = acoplanarityAngle(K_p,pim_p,D_p,pip_p);
-
-	cos_theta_pipi = cosThetaAngle(pip_p,pim_p,D_p,K_p);
-	cos_theta_DsK = cosThetaAngle(D_p,K_p,pip_p,pim_p);
-	phi_pipi_DsK = acoplanarityAngle(pip_p,pim_p,D_p,K_p);
-
-	if(cat != 20) continue;
-	if(s_Kpipi > 1950. || s_Kpi > 1200. || s_pipi > 1200.) continue;
-
-	summary_tree->Fill();
-    }
-
-    summary_tree->Write();
-    output->Close();
-
-    DalitzEventPattern pdg(531, -431, 321, 211, -211);
-    DalitzEventList eventList;
-    TFile *file_MINT =  TFile::Open("SignalIntegrationEvents_toys_phspCut.root");
-    TTree* tree_MINT=dynamic_cast<TTree*>(file_MINT->Get("DalitzEventList"));
-
-    TFile* output_MINT = new TFile("MintMC.root","RECREATE");
-    TTree* summary_tree_MINT = tree_MINT->CloneTree();
-
-    eventList.fromNtuple(tree_MINT,1);
-    cout << " I've got " << eventList.size() << " events." << endl;
-    file_MINT->Close();
-
-    TBranch* b_Kpipi = summary_tree_MINT->Branch("s_Kpipi", &s_Kpipi, "s_Kpipi/D");
-    TBranch* b_Kpi = summary_tree_MINT->Branch("s_Kpi", &s_Kpi, "s_Kpi/D");
-    TBranch* b_pipi =summary_tree_MINT->Branch("s_pipi", &s_pipi, "s_pipi/D");
-    TBranch* b_Dspi =summary_tree_MINT->Branch("s_Dspi", &s_Dspi, "s_Dspi/D");
-    TBranch* b_Dspipi =summary_tree_MINT->Branch("s_Dspipi", &s_Dspipi, "s_Dspipi/D");
-    TBranch* b_Dspip =summary_tree_MINT->Branch("s_Dspip", &s_Dspip, "s_Dspip/D");
-    TBranch* b_DsK =summary_tree_MINT->Branch("s_DsK", &s_DsK, "s_DsK/D");
-    TBranch* b_cos_theta_Kpi =summary_tree_MINT->Branch("cos_theta_Kpi", &cos_theta_Kpi, "cos_theta_Kpi/D");
-    TBranch* b_cos_theta_Dspi =summary_tree_MINT->Branch("cos_theta_Dspi", &cos_theta_Dspi, "cos_theta_Dspi/D");
-    TBranch* b_phi_Kpi_Dspi =summary_tree_MINT->Branch("phi_Kpi_Dspi", &phi_Kpi_Dspi, "phi_Kpi_Dspi/D");
-
-    vector<int> s234;
-    s234.push_back(2);
-    s234.push_back(3);
-    s234.push_back(4);
-    vector<int> s134;
-    s134.push_back(1);
-    s134.push_back(3);
-    s134.push_back(4);
-
-    for(int i=0; i<eventList.size();i++){
-
-	s_Kpipi = sqrt(eventList[i].sij(s234))*MeV;
-	s_Kpi = sqrt(eventList[i].s(2,4))*MeV;
-	s_pipi = sqrt(eventList[i].s(3,4))*MeV;
-	s_Dspi = sqrt(eventList[i].s(1,3))*MeV;
-	s_Dspipi = sqrt(eventList[i].sij(s134))*MeV;
-	s_Dspip = sqrt(eventList[i].s(1,4))*MeV;
-	s_DsK = sqrt(eventList[i].s(1,2))*MeV;
-	cos_theta_Kpi = cosThetaAngle(eventList[i],2,4,1,3);
-	cos_theta_Dspi = cosThetaAngle(eventList[i],1,3,2,4);
-	phi_Kpi_Dspi = acoplanarityAngle(eventList[i],2,4,1,3);
-
-	summary_tree_MINT->GetEntry(i);
-
-	b_Kpipi->Fill();
-        b_Kpi->Fill();
-        b_pipi->Fill();
-        b_Dspi->Fill();
-        b_Dspipi->Fill();
-        b_Dspip->Fill();
-        b_DsK->Fill();
-        b_cos_theta_Kpi->Fill();
-        b_cos_theta_Dspi->Fill();
-        b_phi_Kpi_Dspi->Fill();
-    }
-    summary_tree_MINT->Write();
-    output_MINT->Close();
-}
+// void prepareDataFilesForBDT(){
+// 
+//     NamedParameter<string> InputGenMC("InputGenMC", (std::string) "/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_13266008_PG.root");
+// 
+//     TChain* tree_gen=new TChain("MCDecayTreeTuple/MCDecayTree");
+//     tree_gen->Add(((string)InputGenMC).c_str());
+//     double K_gen[5]; 
+//     double pip_gen[5]; 
+//     double pim_gen[5]; 
+//     double Ds_Kp_gen[5],Ds_Km_gen[5],Ds_pim_gen[5];
+//     
+//     tree_gen->SetBranchAddress("Kplus_TRUEP_X",&K_gen[0]);
+//     tree_gen->SetBranchAddress("Kplus_TRUEP_Y",&K_gen[1]);
+//     tree_gen->SetBranchAddress("Kplus_TRUEP_Z",&K_gen[2]); 
+//     tree_gen->SetBranchAddress("Kplus_TRUEP_E",&K_gen[3]); 
+//     tree_gen->SetBranchAddress("Kplus_TRUEPT",&K_gen[4]); 
+// 	
+//     tree_gen->SetBranchAddress("piplus_TRUEP_X",&pip_gen[0]);
+//     tree_gen->SetBranchAddress("piplus_TRUEP_Y",&pip_gen[1]);
+//     tree_gen->SetBranchAddress("piplus_TRUEP_Z",&pip_gen[2]); 
+//     tree_gen->SetBranchAddress("piplus_TRUEP_E",&pip_gen[3]); 
+//     tree_gen->SetBranchAddress("piplus_TRUEPT",&pip_gen[4]); 
+// 
+//     tree_gen->SetBranchAddress("piminus_TRUEP_X",&pim_gen[0]);
+//     tree_gen->SetBranchAddress("piminus_TRUEP_Y",&pim_gen[1]);
+//     tree_gen->SetBranchAddress("piminus_TRUEP_Z",&pim_gen[2]); 
+//     tree_gen->SetBranchAddress("piminus_TRUEP_E",&pim_gen[3]); 
+//     tree_gen->SetBranchAddress("piminus_TRUEPT",&pim_gen[4]); 
+// 	
+//     tree_gen->SetBranchAddress("Kplus0_TRUEP_X",&Ds_Kp_gen[0]);
+//     tree_gen->SetBranchAddress("Kplus0_TRUEP_Y",&Ds_Kp_gen[1]);
+//     tree_gen->SetBranchAddress("Kplus0_TRUEP_Z",&Ds_Kp_gen[2]); 
+//     tree_gen->SetBranchAddress("Kplus0_TRUEP_E",&Ds_Kp_gen[3]); 
+//     tree_gen->SetBranchAddress("Kplus0_TRUEPT",&Ds_Kp_gen[4]); 
+//     
+//     tree_gen->SetBranchAddress("Kminus_TRUEP_X",&Ds_Km_gen[0]);
+//     tree_gen->SetBranchAddress("Kminus_TRUEP_Y",&Ds_Km_gen[1]);
+//     tree_gen->SetBranchAddress("Kminus_TRUEP_Z",&Ds_Km_gen[2]); 
+//     tree_gen->SetBranchAddress("Kminus_TRUEP_E",&Ds_Km_gen[3]); 
+//     tree_gen->SetBranchAddress("Kminus_TRUEPT",&Ds_Km_gen[4]); 
+// 
+//     tree_gen->SetBranchAddress("piminus0_TRUEP_X",&Ds_pim_gen[0]);
+//     tree_gen->SetBranchAddress("piminus0_TRUEP_Y",&Ds_pim_gen[1]);
+//     tree_gen->SetBranchAddress("piminus0_TRUEP_Z",&Ds_pim_gen[2]); 
+//     tree_gen->SetBranchAddress("piminus0_TRUEP_E",&Ds_pim_gen[3]); 
+//     tree_gen->SetBranchAddress("piminus0_TRUEPT",&Ds_pim_gen[4]); 
+// 
+//     TFile* output_gen = new TFile("GenMC.root","RECREATE");
+//     TTree* summary_tree_gen = tree_gen->CloneTree(0);
+// 
+//     double s_Kpipi,s_Kpi,s_pipi,s_Dspi,s_Dspipi,s_Kpip,s_Dspip,s_DsK,s_DsKpi;
+//     double cos_theta_Kpi,cos_theta_Dspi,phi_Kpi_Dspi;
+//     double cos_theta_pipi,cos_theta_DsK,phi_pipi_DsK;
+//     double w;
+// 
+//     summary_tree_gen->Branch("s_Kpipi", &s_Kpipi, "s_Kpipi/D");
+//     summary_tree_gen->Branch("s_Kpi", &s_Kpi, "s_Kpi/D");
+//     summary_tree_gen->Branch("s_pipi", &s_pipi, "s_pipi/D");
+//     summary_tree_gen->Branch("s_Dspi", &s_Dspi, "s_Dspi/D");
+//     summary_tree_gen->Branch("s_Dspipi", &s_Dspipi, "s_Dspipi/D");
+//     summary_tree_gen->Branch("s_Dspip", &s_Dspip, "s_Dspip/D");
+//     summary_tree_gen->Branch("s_DsK", &s_DsK, "s_DsK/D");
+//     summary_tree_gen->Branch("s_DsKpi", &s_DsKpi, "s_DsKpi/D");
+//     summary_tree_gen->Branch("s_Kpip", &s_Kpip, "s_Kpip/D");
+// 
+//     summary_tree_gen->Branch("cos_theta_Kpi", &cos_theta_Kpi, "cos_theta_Kpi/D");
+//     summary_tree_gen->Branch("cos_theta_Dspi", &cos_theta_Dspi, "cos_theta_Dspi/D");
+//     summary_tree_gen->Branch("phi_Kpi_Dspi", &phi_Kpi_Dspi, "phi_Kpi_Dspi/D");
+// 
+//     summary_tree_gen->Branch("cos_theta_pipi", &cos_theta_pipi, "cos_theta_pipi/D");
+//     summary_tree_gen->Branch("cos_theta_DsK", &cos_theta_DsK, "cos_theta_DsK/D");
+//     summary_tree_gen->Branch("phi_pipi_DsK", &phi_pipi_DsK, "phi_pipi_DsK/D");
+//     summary_tree_gen->Branch("weight", &w, "weight/D");
+// 
+//     for(int i=0; i< tree_gen->GetEntries(); i++)
+//     {	
+//         tree_gen->GetEntry(i);
+// 
+//         TLorentzVector K_p(K_gen[0],K_gen[1],K_gen[2],K_gen[3]);
+//         TLorentzVector pip_p(pip_gen[0],pip_gen[1],pip_gen[2],pip_gen[3]);
+//         TLorentzVector pim_p(pim_gen[0],pim_gen[1],pim_gen[2],pim_gen[3]);
+//         TLorentzVector D_Kp_p(Ds_Kp_gen[0],Ds_Kp_gen[1],Ds_Kp_gen[2],Ds_Kp_gen[3]);
+//         TLorentzVector D_Km_p(Ds_Km_gen[0],Ds_Km_gen[1],Ds_Km_gen[2],Ds_Km_gen[3]);
+//         TLorentzVector D_pim_p(Ds_pim_gen[0],Ds_pim_gen[1],Ds_pim_gen[2],Ds_pim_gen[3]);
+//         TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+//         TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+// 
+// 	s_Kpipi = (K_p + pip_p + pim_p).M()*MeV;
+// 	s_Kpi = (K_p + pim_p).M()*MeV;
+// 	s_pipi = (pip_p + pim_p).M()*MeV;
+// 	s_Dspi = (D_p + pip_p ).M()*MeV;
+// 	s_Dspipi = (D_p + pip_p + pim_p).M()*MeV;
+// 
+// 	s_Dspip = (D_p + pip_p).M()*MeV;
+// 	s_DsKpi = (D_p + K_p + pim_p).M()*MeV;
+// 	s_DsK = (D_p + K_p).M()*MeV;
+// 	s_Kpip = (K_p + pip_p).M()*MeV;
+// 
+// 	cos_theta_Kpi = cosThetaAngle(K_p,pim_p,D_p,pip_p);
+// 	cos_theta_Dspi = cosThetaAngle(D_p,pip_p,K_p,pim_p);
+// 	phi_Kpi_Dspi = acoplanarityAngle(K_p,pim_p,D_p,pip_p);
+// 
+// 	cos_theta_pipi = cosThetaAngle(pip_p,pim_p,D_p,K_p);
+// 	cos_theta_DsK = cosThetaAngle(D_p,K_p,pip_p,pim_p);
+// 	phi_pipi_DsK = acoplanarityAngle(pip_p,pim_p,D_p,K_p);
+// 
+// 	if(s_Kpipi > 1950. || s_Kpi > 1200. || s_pipi > 1200.) continue;
+// 
+// 	w = 1;
+// 	summary_tree_gen->Fill();
+//     }
+// 
+//     summary_tree_gen->Write();
+//     output_gen->Close();
+// 
+//     NamedParameter<string> InputSelectedMC("InputSelectedMC", (std::string) "/auto/data/dargent/BsDsKpipi/Final/MC/signal_scaled.root");
+//     TChain* tree=new TChain("DecayTree");
+//     tree->Add(((string)InputSelectedMC).c_str());
+// 
+//     double K[5]; 
+//     double pip[5]; 
+//     double pim[5]; 
+//     double Ds[5];
+//     int cat;
+//     tree->SetBranchAddress("Bs_BKGCAT",&cat);
+//     tree->SetBranchAddress("K_plus_TRUEP_X",&K[0]);
+//     tree->SetBranchAddress("K_plus_TRUEP_Y",&K[1]);
+//     tree->SetBranchAddress("K_plus_TRUEP_Z",&K[2]); 
+//     tree->SetBranchAddress("K_plus_TRUEP_E",&K[3]); 
+//     tree->SetBranchAddress("K_plus_TRUEPT",&K[4]); 
+// 	
+//     tree->SetBranchAddress("pi_plus_TRUEP_X",&pip[0]);
+//     tree->SetBranchAddress("pi_plus_TRUEP_Y",&pip[1]);
+//     tree->SetBranchAddress("pi_plus_TRUEP_Z",&pip[2]); 
+//     tree->SetBranchAddress("pi_plus_TRUEP_E",&pip[3]); 
+//     tree->SetBranchAddress("pi_plus_TRUEPT",&pip[4]); 
+// 
+//     tree->SetBranchAddress("pi_minus_TRUEP_X",&pim[0]);
+//     tree->SetBranchAddress("pi_minus_TRUEP_Y",&pim[1]);
+//     tree->SetBranchAddress("pi_minus_TRUEP_Z",&pim[2]); 
+//     tree->SetBranchAddress("pi_minus_TRUEP_E",&pim[3]); 
+//     tree->SetBranchAddress("pi_minus_TRUEPT",&pim[4]); 
+// 	
+//     tree->SetBranchAddress("Ds_TRUEP_X",&Ds[0]);
+//     tree->SetBranchAddress("Ds_TRUEP_Y",&Ds[1]);
+//     tree->SetBranchAddress("Ds_TRUEP_Z",&Ds[2]); 
+//     tree->SetBranchAddress("Ds_TRUEP_E",&Ds[3]); 
+//     tree->SetBranchAddress("Ds_TRUEPT",&Ds[4]); 
+// 
+//     tree->SetBranchAddress("weight",&w); 
+// 
+//     TFile* output = new TFile("SelMC.root","RECREATE");
+//     TTree* summary_tree = tree->CloneTree(0);
+// 
+//     summary_tree->Branch("s_Kpipi", &s_Kpipi, "s_Kpipi/D");
+//     summary_tree->Branch("s_Kpi", &s_Kpi, "s_Kpi/D");
+//     summary_tree->Branch("s_pipi", &s_pipi, "s_pipi/D");
+//     summary_tree->Branch("s_Dspi", &s_Dspi, "s_Dspi/D");
+//     summary_tree->Branch("s_Dspipi", &s_Dspipi, "s_Dspipi/D");
+//     summary_tree->Branch("s_Dspip", &s_Dspip, "s_Dspip/D");
+//     summary_tree->Branch("s_DsK", &s_DsK, "s_DsK/D");
+//     summary_tree->Branch("s_DsKpi", &s_DsKpi, "s_DsKpi/D");
+//     summary_tree->Branch("s_Kpip", &s_Kpip, "s_Kpip/D");
+//     summary_tree->Branch("cos_theta_Kpi", &cos_theta_Kpi, "cos_theta_Kpi/D");
+//     summary_tree->Branch("cos_theta_Dspi", &cos_theta_Dspi, "cos_theta_Dspi/D");
+//     summary_tree->Branch("phi_Kpi_Dspi", &phi_Kpi_Dspi, "phi_Kpi_Dspi/D");
+//     summary_tree->Branch("cos_theta_pipi", &cos_theta_pipi, "cos_theta_pipi/D");
+//     summary_tree->Branch("cos_theta_DsK", &cos_theta_DsK, "cos_theta_DsK/D");
+//     summary_tree->Branch("phi_pipi_DsK", &phi_pipi_DsK, "phi_pipi_DsK/D");
+// 
+//     summary_tree->Branch("weight", &w, "weight/D");
+// 
+//     int numEvents = tree->GetEntries();
+//     for(int i=0; i< numEvents; i++)
+//     {
+//         tree->GetEntry(i);
+//         
+//         // Lorentz vectors: P=(Px,Py,Pz,E)
+//         TLorentzVector K_p(K[0],K[1],K[2],K[3]);
+//         TLorentzVector pip_p(pip[0],pip[1],pip[2],pip[3]);
+//         TLorentzVector pim_p(pim[0],pim[1],pim[2],pim[3]);
+//         TLorentzVector D_p(Ds[0],Ds[1],Ds[2],Ds[3]);
+//         TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+// 	
+// 	s_Kpipi = (K_p + pip_p + pim_p).M()*MeV;
+// 	s_Kpi = (K_p + pim_p).M()*MeV;
+// 	s_pipi = (pip_p + pim_p).M()*MeV;
+// 	s_Dspi = (D_p + pip_p ).M()*MeV;
+// 	s_Dspipi = (D_p + pip_p + pim_p).M()*MeV;
+// 
+// 	s_Dspip = (D_p + pip_p).M()*MeV;
+// 	s_DsKpi = (D_p + K_p + pim_p).M()*MeV;
+// 	s_DsK = (D_p + K_p).M()*MeV;
+// 	s_Kpip = (K_p + pip_p).M()*MeV;
+// 
+// 	cos_theta_Kpi = cosThetaAngle(K_p,pim_p,D_p,pip_p);
+// 	cos_theta_Dspi = cosThetaAngle(D_p,pip_p,K_p,pim_p);
+// 	phi_Kpi_Dspi = acoplanarityAngle(K_p,pim_p,D_p,pip_p);
+// 
+// 	cos_theta_pipi = cosThetaAngle(pip_p,pim_p,D_p,K_p);
+// 	cos_theta_DsK = cosThetaAngle(D_p,K_p,pip_p,pim_p);
+// 	phi_pipi_DsK = acoplanarityAngle(pip_p,pim_p,D_p,K_p);
+// 
+// 	if(cat != 20) continue;
+// 	if(s_Kpipi > 1950. || s_Kpi > 1200. || s_pipi > 1200.) continue;
+// 
+// 	summary_tree->Fill();
+//     }
+// 
+//     summary_tree->Write();
+//     output->Close();
+// 
+//     DalitzEventPattern pdg(531, -431, 321, 211, -211);
+//     DalitzEventList eventList;
+//     TFile *file_MINT =  TFile::Open("SignalIntegrationEvents_toys_phspCut.root");
+//     TTree* tree_MINT=dynamic_cast<TTree*>(file_MINT->Get("DalitzEventList"));
+// 
+//     TFile* output_MINT = new TFile("MintMC.root","RECREATE");
+//     TTree* summary_tree_MINT = tree_MINT->CloneTree();
+// 
+//     eventList.fromNtuple(tree_MINT,1);
+//     cout << " I've got " << eventList.size() << " events." << endl;
+//     file_MINT->Close();
+// 
+//     TBranch* b_Kpipi = summary_tree_MINT->Branch("s_Kpipi", &s_Kpipi, "s_Kpipi/D");
+//     TBranch* b_Kpi = summary_tree_MINT->Branch("s_Kpi", &s_Kpi, "s_Kpi/D");
+//     TBranch* b_pipi =summary_tree_MINT->Branch("s_pipi", &s_pipi, "s_pipi/D");
+//     TBranch* b_Dspi =summary_tree_MINT->Branch("s_Dspi", &s_Dspi, "s_Dspi/D");
+//     TBranch* b_Dspipi =summary_tree_MINT->Branch("s_Dspipi", &s_Dspipi, "s_Dspipi/D");
+//     TBranch* b_Dspip =summary_tree_MINT->Branch("s_Dspip", &s_Dspip, "s_Dspip/D");
+//     TBranch* b_DsK =summary_tree_MINT->Branch("s_DsK", &s_DsK, "s_DsK/D");
+//     TBranch* b_cos_theta_Kpi =summary_tree_MINT->Branch("cos_theta_Kpi", &cos_theta_Kpi, "cos_theta_Kpi/D");
+//     TBranch* b_cos_theta_Dspi =summary_tree_MINT->Branch("cos_theta_Dspi", &cos_theta_Dspi, "cos_theta_Dspi/D");
+//     TBranch* b_phi_Kpi_Dspi =summary_tree_MINT->Branch("phi_Kpi_Dspi", &phi_Kpi_Dspi, "phi_Kpi_Dspi/D");
+// 
+//     TBranch* b_w = summary_tree_MINT->Branch("weight", &w, "weight/D");
+// 
+// 
+//     vector<int> s234;
+//     s234.push_back(2);
+//     s234.push_back(3);
+//     s234.push_back(4);
+//     vector<int> s134;
+//     s134.push_back(1);
+//     s134.push_back(3);
+//     s134.push_back(4);
+// 
+//     for(int i=0; i<eventList.size();i++){
+// 
+// 	s_Kpipi = sqrt(eventList[i].sij(s234))*MeV;
+// 	s_Kpi = sqrt(eventList[i].s(2,4))*MeV;
+// 	s_pipi = sqrt(eventList[i].s(3,4))*MeV;
+// 	s_Dspi = sqrt(eventList[i].s(1,3))*MeV;
+// 	s_Dspipi = sqrt(eventList[i].sij(s134))*MeV;
+// 	s_Dspip = sqrt(eventList[i].s(1,4))*MeV;
+// 	s_DsK = sqrt(eventList[i].s(1,2))*MeV;
+// 	cos_theta_Kpi = cosThetaAngle(eventList[i],2,4,1,3);
+// 	cos_theta_Dspi = cosThetaAngle(eventList[i],1,3,2,4);
+// 	phi_Kpi_Dspi = acoplanarityAngle(eventList[i],2,4,1,3);
+// 	w = 1;
+// 
+// 	summary_tree_MINT->GetEntry(i);
+// 
+// 	b_w->Fill();
+// 	b_Kpipi->Fill();
+//         b_Kpi->Fill();
+//         b_pipi->Fill();
+//         b_Dspi->Fill();
+//         b_Dspipi->Fill();
+//         b_Dspip->Fill();
+//         b_DsK->Fill();
+//         b_cos_theta_Kpi->Fill();
+//         b_cos_theta_Dspi->Fill();
+//         b_phi_Kpi_Dspi->Fill();
+//     }
+//     summary_tree_MINT->Write();
+//     output_MINT->Close();
+// }
+// 
+//     NamedParameter<string> InputGenMC("InputGenMC", (std::string) "/auto/data/dargent/BsDsKpipi/EvtGen/GenMC_13266008_PG.root");
+// 
+//     TChain* tree_gen=new TChain("DecayTree");
+//     tree->Add(((string)InputFileName).c_str());
+// 		tree->SetBranchStatus("*",0);
+// 		tree->SetBranchStatus("N_Bs_sw",1);
+// 		tree->SetBranchStatus("year",1);
+// 		tree->SetBranchStatus("*DEC",1);
+// 		tree->SetBranchStatus("*PROB",1);
+// 		tree->SetBranchStatus("*OS*",1);
+// 		tree->SetBranchStatus("*TAU*",1);
+// 		tree->SetBranchStatus("*ID*",1);
+// 		tree->SetBranchStatus("weight",1);
+// 		tree->SetBranchStatus("Bs_DTF_MM",1);
+//     		tree->SetBranchStatus("BsDTF_*P*",1);
+//     double K[4];
+//     double pip[4];
+//     double pim[4];
+//     double Ds_Kp[4],Ds_Km[4],Ds_pim[4],Ds[4];
+//     
+// 		tree->SetBranchAddress("BsDTF_Kplus_PX",&K[0]);
+// 		tree->SetBranchAddress("BsDTF_Kplus_PY",&K[1]);
+// 		tree->SetBranchAddress("BsDTF_Kplus_PZ",&K[2]);
+// 		tree->SetBranchAddress("BsDTF_Kplus_PE",&K[3]);
+// 		
+// 		tree->SetBranchAddress("BsDTF_piplus_PX",&pip[0]);
+// 		tree->SetBranchAddress("BsDTF_piplus_PY",&pip[1]);
+// 		tree->SetBranchAddress("BsDTF_piplus_PZ",&pip[2]);
+// 		tree->SetBranchAddress("BsDTF_piplus_PE",&pip[3]);
+// 		
+// 		tree->SetBranchAddress("BsDTF_piminus_PX",&pim[0]);
+// 		tree->SetBranchAddress("BsDTF_piminus_PY",&pim[1]);
+// 		tree->SetBranchAddress("BsDTF_piminus_PZ",&pim[2]);
+// 		tree->SetBranchAddress("BsDTF_piminus_PE",&pim[3]);
+// 
+// 
+//     TFile* output_gen = new TFile("GenMC.root","RECREATE");
+//     TTree* summary_tree_gen = tree_gen->CloneTree(0);
+// 
+//     double s_Kpipi,s_Kpi,s_pipi,s_Dspi,s_Dspipi,s_Kpip,s_Dspip,s_DsK,s_DsKpi;
+//     double cos_theta_Kpi,cos_theta_Dspi,phi_Kpi_Dspi;
+//     double cos_theta_pipi,cos_theta_DsK,phi_pipi_DsK;
+//     double w;
+// 
+//     summary_tree_gen->Branch("s_Kpipi", &s_Kpipi, "s_Kpipi/D");
+//     summary_tree_gen->Branch("s_Kpi", &s_Kpi, "s_Kpi/D");
+//     summary_tree_gen->Branch("s_pipi", &s_pipi, "s_pipi/D");
+//     summary_tree_gen->Branch("s_Dspi", &s_Dspi, "s_Dspi/D");
+//     summary_tree_gen->Branch("s_Dspipi", &s_Dspipi, "s_Dspipi/D");
+//     summary_tree_gen->Branch("s_Dspip", &s_Dspip, "s_Dspip/D");
+//     summary_tree_gen->Branch("s_DsK", &s_DsK, "s_DsK/D");
+//     summary_tree_gen->Branch("s_DsKpi", &s_DsKpi, "s_DsKpi/D");
+//     summary_tree_gen->Branch("s_Kpip", &s_Kpip, "s_Kpip/D");
+// 
+//     summary_tree_gen->Branch("cos_theta_Kpi", &cos_theta_Kpi, "cos_theta_Kpi/D");
+//     summary_tree_gen->Branch("cos_theta_Dspi", &cos_theta_Dspi, "cos_theta_Dspi/D");
+//     summary_tree_gen->Branch("phi_Kpi_Dspi", &phi_Kpi_Dspi, "phi_Kpi_Dspi/D");
+// 
+//     summary_tree_gen->Branch("cos_theta_pipi", &cos_theta_pipi, "cos_theta_pipi/D");
+//     summary_tree_gen->Branch("cos_theta_DsK", &cos_theta_DsK, "cos_theta_DsK/D");
+//     summary_tree_gen->Branch("phi_pipi_DsK", &phi_pipi_DsK, "phi_pipi_DsK/D");
+//     summary_tree_gen->Branch("weight", &w, "weight/D");
+// 
+//     for(int i=0; i< tree_gen->GetEntries(); i++)
+//     {	
+//         tree_gen->GetEntry(i);
+// 
+//         TLorentzVector K_p(K_gen[0],K_gen[1],K_gen[2],K_gen[3]);
+//         TLorentzVector pip_p(pip_gen[0],pip_gen[1],pip_gen[2],pip_gen[3]);
+//         TLorentzVector pim_p(pim_gen[0],pim_gen[1],pim_gen[2],pim_gen[3]);
+//         TLorentzVector D_Kp_p(Ds_Kp_gen[0],Ds_Kp_gen[1],Ds_Kp_gen[2],Ds_Kp_gen[3]);
+//         TLorentzVector D_Km_p(Ds_Km_gen[0],Ds_Km_gen[1],Ds_Km_gen[2],Ds_Km_gen[3]);
+//         TLorentzVector D_pim_p(Ds_pim_gen[0],Ds_pim_gen[1],Ds_pim_gen[2],Ds_pim_gen[3]);
+//         TLorentzVector D_p = D_Kp_p + D_Km_p + D_pim_p;
+//         TLorentzVector B_p = K_p + pip_p + pim_p + D_p;
+// 
+// 	s_Kpipi = (K_p + pip_p + pim_p).M()*MeV;
+// 	s_Kpi = (K_p + pim_p).M()*MeV;
+// 	s_pipi = (pip_p + pim_p).M()*MeV;
+// 	s_Dspi = (D_p + pip_p ).M()*MeV;
+// 	s_Dspipi = (D_p + pip_p + pim_p).M()*MeV;
+// 
+// 	s_Dspip = (D_p + pip_p).M()*MeV;
+// 	s_DsKpi = (D_p + K_p + pim_p).M()*MeV;
+// 	s_DsK = (D_p + K_p).M()*MeV;
+// 	s_Kpip = (K_p + pip_p).M()*MeV;
+// 
+// 	cos_theta_Kpi = cosThetaAngle(K_p,pim_p,D_p,pip_p);
+// 	cos_theta_Dspi = cosThetaAngle(D_p,pip_p,K_p,pim_p);
+// 	phi_Kpi_Dspi = acoplanarityAngle(K_p,pim_p,D_p,pip_p);
+// 
+// 	cos_theta_pipi = cosThetaAngle(pip_p,pim_p,D_p,K_p);
+// 	cos_theta_DsK = cosThetaAngle(D_p,K_p,pip_p,pim_p);
+// 	phi_pipi_DsK = acoplanarityAngle(pip_p,pim_p,D_p,K_p);
+// 
+// 	if(s_Kpipi > 1950. || s_Kpi > 1200. || s_pipi > 1200.) continue;
+// 
+// 	w = 1;
+// 	summary_tree_gen->Fill();
+//     }
+// 
+//     summary_tree_gen->Write();
+//     output_gen->Close();
+// }
 
 void reweightGen(){
 	
     double s_Kpipi,s_Kpi,s_pipi,s_Dspi,s_Dspipi,s_Kpip,s_Dspip,s_DsK,s_DsKpi;
     double cos_theta_Kpi,cos_theta_Dspi,phi_Kpi_Dspi;
-    double BDTG;
+    double BDTG,w;
 
     TChain* tree_gen=new TChain("MCDecayTree");
     tree_gen->Add("GenMC_BDT.root");
@@ -409,6 +510,18 @@ void reweightGen(){
     tree->SetBranchAddress( "cos_theta_Dspi", &cos_theta_Dspi );
     tree->SetBranchAddress( "phi_Kpi_Dspi", &phi_Kpi_Dspi );
     tree->SetBranchAddress("BDTG",&BDTG);
+    tree->SetBranchAddress("weight",&w);
+
+    TChain* tree_data=new TChain("DecayTree");
+    tree_data->Add("signal_tagged_BDT.root");
+    tree_data->SetBranchAddress("m_Kpipi",&s_Kpipi);
+    tree_data->SetBranchAddress("m_Kpi",&s_Kpi);
+    tree_data->SetBranchAddress("m_pipi",&s_pipi);
+    tree_data->SetBranchAddress("m_Dspipi",&s_Dspipi);
+    tree_data->SetBranchAddress("m_Dspi",&s_Dspi);
+    tree_data->SetBranchAddress("BDTG_eff",&BDTG);
+    tree_data->SetBranchAddress("N_Bs_sw",&w);
+
 
     TChain* tree_MINT=new TChain("DalitzEventList");
     tree_MINT->Add("MintMC_BDT.root");
@@ -421,6 +534,7 @@ void reweightGen(){
     tree_MINT->SetBranchAddress( "cos_theta_Dspi", &cos_theta_Dspi );
     tree_MINT->SetBranchAddress( "phi_Kpi_Dspi", &phi_Kpi_Dspi );
     tree_MINT->SetBranchAddress("BDTG",&BDTG);
+
 
     TH1D* h_Kpipi= new TH1D("",";#left[m(K^{+} #pi^{+} #pi^{-})#right] (MeV);Events (norm.) ",40,1100,2000);
     TH1D* h_Kpipi_gen= new TH1D("","",40,1100,2000);
@@ -483,15 +597,15 @@ void reweightGen(){
     for(int i=0; i< tree->GetEntries(); i++)
     {	
         tree->GetEntry(i);
-	bdt_sel->Fill(BDTG);
-	h_Kpipi->Fill(s_Kpipi);
-	h_Dspipi->Fill(s_Dspipi);
-	h_Kpi->Fill(s_Kpi);
-	h_pipi->Fill(s_pipi);
-	h_Dspi->Fill(s_Dspi);
-	h_cosTheta_Kpi->Fill(cos_theta_Kpi);
-	h_cosTheta_Dspi->Fill(cos_theta_Dspi);
-	h_phi_Kpi_Dspi->Fill(phi_Kpi_Dspi);
+	bdt_sel->Fill(BDTG,w);
+	h_Kpipi->Fill(s_Kpipi,w);
+	h_Dspipi->Fill(s_Dspipi,w);
+	h_Kpi->Fill(s_Kpi,w);
+	h_pipi->Fill(s_pipi,w);
+	h_Dspi->Fill(s_Dspi,w);
+	h_cosTheta_Kpi->Fill(cos_theta_Kpi,w);
+	h_cosTheta_Dspi->Fill(cos_theta_Dspi,w);
+	h_phi_Kpi_Dspi->Fill(phi_Kpi_Dspi,w);
     }
     	
     TH1D *h_weight = (TH1D*)bdt_gen->Clone();
@@ -524,6 +638,36 @@ void reweightGen(){
 	h_cosTheta_Dspi_gen_rw->Fill(cos_theta_Dspi,weight);
 	h_phi_Kpi_Dspi_gen_rw->Fill(phi_Kpi_Dspi,weight);
     }
+
+   TFile *hFile = new TFile("signal_tagged_BDT_effCorr.root","RECREATE");
+//    tree_data->SetBranchStatus("N_Bs_sw",0);
+   TTree* new_tree = tree_data->CloneTree(0);
+//    tree_data->SetBranchStatus("N_Bs_sw",1);
+
+   double w_new;
+   new_tree->Branch("N_Bs_sw_new",&w_new, "w_new/D");
+ 
+
+   double sumw=0.;
+   double sumw2=0.;
+   for(int i=0; i< tree_data->GetEntries(); i++)
+    {	
+        tree_data->GetEntry(i);
+	double weight = h_weight->GetBinContent(h_weight->FindBin(BDTG));	
+	sumw = 1./weight;
+	sumw2 = pow(1./weight,2);
+    }
+
+   for(int i=0; i< tree_data->GetEntries(); i++)
+    {	
+        tree_data->GetEntry(i);
+	double weight = h_weight->GetBinContent(h_weight->FindBin(BDTG));	
+
+// 	w_new = (weight == 0.00000) ? w : w*1./weight;
+	w_new = w * 1./weight * sumw/sumw2;
+	new_tree->Fill();
+    }
+
 
     DalitzEventPattern pdg(531, -431, 321, 211, -211);
 
@@ -568,8 +712,8 @@ void reweightGen(){
         eventList_rw_CP.Add(evt);
     }
     
-    eventList_rw.saveAsNtuple("SignalIntegrationEvents_AccBDT2.root");
-    eventList_rw_CP.saveAsNtuple("SignalIntegrationEvents_AccBDT_CP2.root");
+    eventList_rw.saveAsNtuple("SignalIntegrationEvents_AccBDT_new.root");
+    eventList_rw_CP.saveAsNtuple("SignalIntegrationEvents_AccBDT_CP_new.root");
 
     bdt_sel->SetLineColor(kBlue);
     bdt_sel->DrawNormalized("hist",1);
@@ -740,8 +884,10 @@ int main(int argc, char** argv){
     gROOT->ProcessLine(".x ../lhcbStyle.C");
     gStyle->SetPalette(1);
 
-    //prepareFilesForBDT();
+//     prepareFilesForBDT();
+
     reweightGen();
+
 
     cout << "==============================================" << endl;
     cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;

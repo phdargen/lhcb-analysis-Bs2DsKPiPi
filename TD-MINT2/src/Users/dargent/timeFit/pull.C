@@ -261,7 +261,7 @@ TMatrixD pull::getAbsDiff(TMatrixD cov1,TMatrixD cov2){
 	return cov_diff;
 }
 
-TMatrixD pull::getCov(TString label){
+TMatrixD pull::getCov(TString label, double pull_max , bool scaleCov){
     
     if(fChain == 0){
             cout << "ERROR:: No file found" << endl;
@@ -288,6 +288,7 @@ TMatrixD pull::getCov(TString label){
     for (int n=0; n <N ;n++) {
         fChain->GetEntry(n);  
         for (int i = 0 ; i < _paraNames.size(); i++){
+	    if(pull_max > 0 && abs(*_pulls[i]) > pull_max)continue;
             h_pulls[i]->Fill(*_pulls[i]);
             for (int j = 0 ; j < _paraNames.size(); j++) {
                 cov[i][j] += (*_means[i] - *_inits[i]) * (*_means[j] - *_inits[j])/(N-1.);
@@ -327,12 +328,14 @@ TMatrixD pull::getCov(TString label){
 
     TMatrixD cov_prime(cov);
     for (int i = 0 ; i < _paraNames.size(); i++)
-        for (int j = 0 ; j < _paraNames.size(); j++) 
+        for (int j = 0 ; j < _paraNames.size(); j++){
             //cov_prime[i][j] = cov[i][j]*abs(fit_means[i])*abs(fit_means[j]);
 //             cov_prime[i][j] = fit_means[i]* fit_means[j];
-            cov_prime[i][j] = cov[i][j]/sqrt(cov[i][i])/sqrt(cov[j][j])*abs(fit_means[i])*abs(fit_means[j]);
+            if(scaleCov)cov_prime[i][j] = cov[i][j]/sqrt(cov[i][i])/sqrt(cov[j][j])*abs(fit_means[i])*abs(fit_means[j]);
+// 	    else cov_prime[i][j] = fit_means[i]* fit_means[j];
+	    else cov[i][j]/sqrt(cov[i][i])/sqrt(cov[j][j]);
+	}
 
-    
     return cov_prime;
 }
 

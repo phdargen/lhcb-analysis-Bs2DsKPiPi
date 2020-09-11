@@ -977,7 +977,7 @@ void fullTimeFit(int step=0, int step2=0, string mode = "fit"){
         if(trigger < min_trigger || trigger > max_trigger) continue;
         //if(Ds_finalState < min_Ds_finalState || Ds_finalState > max_Ds_finalState) continue;
         if(eta_SS < w_min || eta_SS > w_max )continue;
- 	if((string)channel=="signal")if(!(evt.phaseSpace() > 0.))continue;
+ 	//if((string)channel=="signal")if(!(evt.phaseSpace() > 0.))continue;
 
     	if(!(doToyStudy && mode == "fit"))run = (run == 2 && year == 17) ? 3 : run;
     	if(!(doToyStudy && mode == "fit"))run = (run == 2 && year == 18) ? 4 : run;

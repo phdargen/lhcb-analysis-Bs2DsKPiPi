@@ -126,7 +126,7 @@ TH1D* createBinning(){
         NamedParameter<int> minEventsPerBin("minEventsPerBin", 1000); 
 	int dim = 1;
 
-	TFile* file= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal_scaled.root");
+	TFile* file= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal_17_scaled.root");
 	TTree* tree= (TTree*) file->Get("DecayTree");
 	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("weight",1);
@@ -206,7 +206,7 @@ vector< TGraph* > fitSplineAcc(string CutString, string marginalPdfsPrefix = "",
 
 	// Read Dataset
     	TChain* tree=new TChain("DecayTree");
-    	tree->Add( ((string)InputDir + "Data/norm_18.root").c_str());
+    	tree->Add( ((string)InputDir + "Data/norm_newBDT.root").c_str());
 	tree->SetBranchStatus("*",0);
 	tree->SetBranchStatus("*TAU*",1);
 	tree->SetBranchStatus("*sw",1);
@@ -645,8 +645,8 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
     tree_norm->SetBranchStatus("TriggerCat",1);
     tree_norm->SetBranchStatus("run",1);    
 
-   // TFile* file_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal_18_newBDT.root");
-    TFile* file_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal_scaled.root");
+    //TFile* file_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal_newBDT_scaled.root");
+    TFile* file_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/signal_17_scaled.root");
     TTree* tree_mc = (TTree*) file_mc->Get("DecayTree");
     tree_mc->SetBranchStatus("*",0);
     tree_mc->SetBranchStatus("*TAU*",1);
@@ -656,8 +656,8 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
     tree_mc->SetBranchStatus("TriggerCat",1);
     tree_mc->SetBranchStatus("run",1);    
     
-    //TFile* file_norm_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_18_newBDT.root");
-    TFile* file_norm_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_scaled.root");
+    //TFile* file_norm_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_newBDT_scaled.root");
+    TFile* file_norm_mc= new TFile("/auto/data/dargent/BsDsKpipi/Final/MC/norm_17_scaled.root");
     TTree* tree_norm_mc = (TTree*) file_norm_mc->Get("DecayTree");
     tree_norm_mc->SetBranchStatus("*",0);
     tree_norm_mc->SetBranchStatus("*TAU*",1);
@@ -923,9 +923,9 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
         
         RooPlot* frame_m = Bs_TAU.frame();
 	if(decays[i]=="signal_B0") frame_m = B0_TAU.frame();	
-//         frame_m->GetXaxis()->SetLabelColor( kWhite);
+         frame_m->GetXaxis()->SetLabelColor( kWhite);
 /*        frame_m->GetYaxis()->SetTitleOffset(0.95);*/
-        frame_m->GetYaxis()->SetTitleOffset(1.5);
+        //frame_m->GetYaxis()->SetTitleOffset(1.5);
 
 	if(decays[i]=="signal_B0" && !fitB0){
         	data->plotOn(frame_m, Binning(nBins/3), Name("data_"+decays[i]));
@@ -969,12 +969,12 @@ RooFitResult * fitSplineAccRatio(string CutString, string CutStringMC, string ma
         if(decays[i]=="norm" || decays[i]=="norm_mc")leg.AddEntry(frame_m->findObject("spline_ratio_"+decays[i]),"R(t)","l");
 
 
-        frame_m->SetMinimum(0.0);
-        frame_m->GetYaxis()->SetTitleSize(0.05);
+        //frame_m->SetMinimum(0.0);
+        //frame_m->GetYaxis()->SetTitleSize(0.05);
 
-        frame_m->Draw();
-        leg.Draw();
-        canvas->SaveAs("Plot/timeAccRatioFit2_"+decays[i]+"_"+ marginalPdfsPrefix + "_" + (string)BinningName+ ".eps");
+//         frame_m->Draw();
+//         leg.Draw();
+//         canvas->SaveAs("Plot/timeAccRatioFit2_"+decays[i]+"_"+ marginalPdfsPrefix + "_" + (string)BinningName+ ".eps");
 
         double chi2 = frame_m->chiSquare("pdf_"+decays[i],"data_"+decays[i],values.size());
         cout << "chi2 = " << chi2 << endl;
@@ -1111,6 +1111,7 @@ void compareAcceptance(){
     cuts_year.push_back("(year == 15)");
     cuts_year.push_back("(year == 16)");  
     cuts_year.push_back("(year == 17)");  
+    cuts_year.push_back("(year == 18)");  
     
     vector<TString> legend_year;
     legend_year.push_back("Year 11");
@@ -1118,6 +1119,7 @@ void compareAcceptance(){
     legend_year.push_back("Year 15");
     legend_year.push_back("Year 16");
     legend_year.push_back("Year 17");
+    legend_year.push_back("Year 18");
 
 
     vector<TString> cuts_year_t0;
@@ -1126,6 +1128,7 @@ void compareAcceptance(){
     cuts_year_t0.push_back("(year == 15)&& TriggerCat == 0");
     cuts_year_t0.push_back("(year == 16) && TriggerCat == 0 ");  
     cuts_year_t0.push_back("(year == 17) && TriggerCat == 0 ");  
+    cuts_year_t0.push_back("(year == 18) && TriggerCat == 0 ");  
 
     vector<TString> cuts_year_t1;
     cuts_year_t1.push_back("(year == 11)&& TriggerCat == 1");
@@ -1133,6 +1136,7 @@ void compareAcceptance(){
     cuts_year_t1.push_back("(year == 15)&& TriggerCat == 1");
     cuts_year_t1.push_back("(year == 16) && TriggerCat == 1 ");  
     cuts_year_t1.push_back("(year == 17) && TriggerCat == 1 ");  
+    cuts_year_t1.push_back("(year == 18) && TriggerCat == 1 ");  
     
 
     // Compare different Ds final states
@@ -1184,18 +1188,18 @@ void compareAcceptance(){
 
     /// Combine cuts into vector to iterate over
     vector< vector<TString> > cut_set;    
-//     cut_set.push_back(cuts_year);
+//    cut_set.push_back(cuts_year);
 //     cut_set.push_back(cuts_year_t0);
-    cut_set.push_back(cuts_year_t1);    
+    cut_set.push_back(cuts_year_t0);    
 //      cut_set.push_back(cuts_Ds);
 //     cut_set.push_back(cuts_Ds_mod);
 //     cut_set.push_back(cuts_run);    
 //     cut_set.push_back(cuts_trigger);    
     
     vector< vector<TString> > legend_title_set;
-//     legend_title_set.push_back(legend_year);
-//      legend_title_set.push_back(legend_year);
      legend_title_set.push_back(legend_year);
+//      legend_title_set.push_back(legend_year);
+//     legend_title_set.push_back(legend_year);
 //     legend_title_set.push_back(legend_Ds);
 //     legend_title_set.push_back(legend_Ds_mod);
 //     legend_title_set.push_back(legend_run);
@@ -1203,8 +1207,8 @@ void compareAcceptance(){
         
     vector<TString> plot_titles;
 //      plot_titles.push_back("year");
-//     plot_titles.push_back("year_t0");
-     plot_titles.push_back("year_t1");
+     plot_titles.push_back("year_t0");
+//     plot_titles.push_back("year_t1");
 //     plot_titles.push_back("DsFinalState");
 //     plot_titles.push_back("DsFinalState_mod");
 //     plot_titles.push_back("run");
@@ -1236,10 +1240,11 @@ void compareAcceptance(){
 	    if(n == 1) color = kBlue;
 	    if(n == 2) color = kGreen;
 	    if(n == 3) color = kMagenta;
-	    if(n == 4) color = kGray+3;
+	    if(n == 4) color = kGray+1;
+	    if(n == 5) color = kOrange+1;
 
 	    myGraphs[0]->SetMinimum(0.);
-	    myGraphs[0]->SetMaximum(2.);
+	    myGraphs[0]->SetMaximum(1.8);
             myGraphs[0]->SetMarkerColor(color+2);
             myGraphs[0]->SetLineColor(color+2);
             if(n==0)myGraphs[0]->Draw("AP");
@@ -1782,43 +1787,43 @@ int main(int argc, char** argv){
     if(FitSplineAccRatio){
 
 	vector<string> dataCuts,mcCuts,marginalPdfs;
-	dataCuts.push_back(" run == 1 && TriggerCat == 0 ");
-	mcCuts.push_back(" run == 1 && TriggerCat == 0 ");
-	marginalPdfs.push_back("Run1_t0");
 
-	dataCuts.push_back(" run == 1 && TriggerCat == 1 ");
-	mcCuts.push_back(" run == 1 && TriggerCat == 1 ");
-	marginalPdfs.push_back("Run1_t1");
+	//dataCuts.push_back(" run == 1 && TriggerCat == 0 ");
+	//mcCuts.push_back(" run == 1 && TriggerCat == 0 ");
+	//marginalPdfs.push_back("Run1_t0");
 
-	dataCuts.push_back(" run == 2 && TriggerCat == 0 ");
-	mcCuts.push_back("run == 2 && TriggerCat == 0");
-	marginalPdfs.push_back("Run2_t0");
+	//dataCuts.push_back(" run == 1 && TriggerCat == 1 ");
+	//mcCuts.push_back(" run == 1 && TriggerCat == 1 ");
+	//marginalPdfs.push_back("Run1_t1");
 
-	dataCuts.push_back(" run == 2 && TriggerCat == 1 ");
-	mcCuts.push_back("run == 2 && TriggerCat == 1");
-	marginalPdfs.push_back("Run2_t1");
-
-// 	dataCuts.push_back(" (year == 15 || year == 16) && TriggerCat == 0 ");
+// 	dataCuts.push_back(" run == 2 && TriggerCat == 0");
 // 	mcCuts.push_back("run == 2 && TriggerCat == 0");
 // 	marginalPdfs.push_back("Run2_t0");
-// 	dataCuts.push_back(" (year == 15 || year == 16) && TriggerCat == 1 ");
-// 	mcCuts.push_back("run == 2 && TriggerCat == 1");
-// 	marginalPdfs.push_back("Run2_t1");
 // 
-// 	dataCuts.push_back(" (year == 17) && TriggerCat == 0 ");
-// 	mcCuts.push_back("run == 2 && TriggerCat == 0");
-// 	marginalPdfs.push_back("Run2_17_t0");
-// 	dataCuts.push_back(" (year == 17) && TriggerCat == 1 ");
-// 	mcCuts.push_back("run == 2 && TriggerCat == 1");
-// 	marginalPdfs.push_back("Run2_17_t1");
-// 
-// 	dataCuts.push_back(" (year == 18) && TriggerCat == 0 ");
-// 	mcCuts.push_back("run == 2 && TriggerCat == 0");
-// 	marginalPdfs.push_back("Run2_18_t0");
-// 	dataCuts.push_back(" (year == 18) && TriggerCat == 1 ");
-// 	mcCuts.push_back("run == 2 && TriggerCat == 1");
-// 	marginalPdfs.push_back("Run2_18_t1");
+//  	dataCuts.push_back(" run == 2 && TriggerCat == 1");
+//  	mcCuts.push_back("run == 2 && TriggerCat == 1");
+//  	marginalPdfs.push_back("Run2_t1");
 
+	dataCuts.push_back(" (year == 15 || year == 16) && TriggerCat == 0 ");
+	mcCuts.push_back("(year == 15 || year == 16) && TriggerCat == 0");
+	marginalPdfs.push_back("Run2_t0");
+	dataCuts.push_back(" (year == 15 || year == 16) && TriggerCat == 1 ");
+	mcCuts.push_back("(year == 15 || year == 16) && TriggerCat == 1");
+	marginalPdfs.push_back("Run2_t1");
+
+	dataCuts.push_back(" (year == 17) && TriggerCat == 0 ");
+	mcCuts.push_back("(year == 17) && TriggerCat == 0");
+	marginalPdfs.push_back("Run2_17_t0");
+	dataCuts.push_back(" (year == 17) && TriggerCat == 1 ");
+	mcCuts.push_back("(year == 17) && TriggerCat == 1");
+	marginalPdfs.push_back("Run2_17_t1");
+
+	dataCuts.push_back(" (year == 18) && TriggerCat == 0 ");
+	mcCuts.push_back("(year == 17) && TriggerCat == 0");
+	marginalPdfs.push_back("Run2_18_t0");
+	dataCuts.push_back(" (year == 18) && TriggerCat == 1 ");
+	mcCuts.push_back("(year == 17) && TriggerCat == 1");
+	marginalPdfs.push_back("Run2_18_t1");
 
 	//dataCuts.push_back("");
 	//mcCuts.push_back("");
