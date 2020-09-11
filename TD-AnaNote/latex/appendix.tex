@@ -846,23 +846,29 @@ The various decay channels considered in the model building are listed in Table 
 \renewcommand{\thetable}{J.\arabic{table}}
 
 \begin{table}[h]
-  \small
-  \centering
-  \caption{Decays considered in the LASSO model building. \label{tab:components}}
-           \begin{tabular} {@{\hspace{0.5cm}}l@{\hspace{0.25cm}}}
-     \hline \hline
-	 Decay channel  \\ \hline
-              %cascade 
+    \caption{Intermediate-state components considered for the $B_s \to D_s K \pi \pi$  LASSO model building procedure. The letters in square brackets refer to the relative orbital angular momentum of
+the decay products. 
+   If no angular momentum is specified, the lowest angular momentum state compatible with angular momentum conservation and, where appropriate, parity conservation, is used.}
+ \label{tab:ampsDsKpipiLASSO}
+\footnotesize
+	\renewcommand{\arraystretch}{1.25}
+    \begin{subtable}{.4\linewidth}
+      \centering
+%           \footnotesize
+        \caption{\small Cascade decays}
+        \begin{tabular}{ll}
+        \hline
               $B_s \to D_s^- \, [K_{1}(1270)^{+}[S,D]\to \pi^+ \, K^{*}(892)^{0}]$ \\
-              $B_s \to D_s^- \, [K_{1}(1270)^{+}\to \pi^+ \, K^{*}(1430)^{0}]$ \\
+              $B_s \to D_s^- \, [K_{1}(1270)^{+}\to \pi^+ \, K_0^{*}(1430)^{0}]$ \\
               $B_s \to D_s^- \, [K_{1}(1270)^{+}[S,D]\to K^+ \, \rho(770)^{0}]$ \\
-              $B_s \to D_s^- \, [K_{1}(1270)^{+}[S,D]\to K^+ \, \omega(782)]$ \\
+%              $B_s \to D_s^- \, [K_{1}(1270)^{+}[S,D]\to K^+ \, \omega(782)]$ \\
               $B_s \to D_s^- \, [K_{1}(1400)^{+}[S,D]\to \pi^+ \, K^{*}(892)^{0}]$ \\
               $B_s \to D_s^- \, [K_{1}(1400)^{+}[S,D]\to K^+ \, \rho(770)^{0}]$ \\
-              $B_s \to D_s^- \, [K(1460)^{+}\to \pi^+ \, \kappa]$ \\
-              $B_s \to D_s^- \, [K(1460)^{+}\to K^+ \, \sigma]$ \\
-              $B_s \to D_s^- \, [K(1460)^{+}\to \pi^+ \, K^{*}(892)^{0}]$ \\
+              $B_s \to D_s^- \, [K(1460)^{+}\to K^+ \, \sigma^0]$ \\
               $B_s \to D_s^- \, [K(1460)^{+}\to K^+ \, \rho(770)^{0}]$ \\
+              $B_s \to D_s^- \, [K(1460)^{+}\to \pi^+ \, K^{*}(892)^{0}]$ \\
+              $B_s \to D_s^- \, [K(1460)^{+}\to \pi^+ \, K^{*}(1430)^{0}]$ \\
+%
               $B_s \to D_s^- \, [K^{*}(1410)^+\to \pi^+\, K^{*}(892)^{0}]$ \\
               $B_s \to D_s^- \, [K^{*}(1410)^+\to K^+ \, \rho(770)^{0}]$ \\
               $B_s \to D_s^- \, [K_{2}^*(1430)^{+}\to \pi^+ \, K^{*}(892)^{0}]$ \\
@@ -871,17 +877,60 @@ The various decay channels considered in the model building are listed in Table 
               $B_s \to D_s^- \, [K^*(1680)^{+}\to K^+ \, \rho(770)^{0}]$ \\      
                $B_s \to D_s^- \, [K_{2}(1770)^{+}\to \pi^+ \, K^{*}(892)^{0}]$ \\
               $B_s \to D_s^- \, [K_{2}(1770)^{+}\to K^+ \, \rho(770)^{0}]$ \\
-%              %Single res. 
+               $B_s \to D_s^- \, [K_{2}(1770)^{+}\to \pi^+ \, K_2^{*}(1430)^{0}]$ \\
+              $B_s \to D_s^- \, [K_{2}(1770)^{+}\to K^+ \, f_2(1270)^0]$ \\
+%
+               $B_s \to D_s^- \, [K_{2}^*(1980)^{+}\to \pi^+ \, K^{*}(892)^{0}]$ \\
+              $B_s \to D_s^- \, [K_{2}^*(1980)^{+}\to K^+ \, \rho(770)^{0}]$ \\
+               $B_s \to D_s^- \, [K_{2}^*(1980)^{+}\to \pi^+ \, K_2^{*}(1430)^{0}]$ \\
+              $B_s \to D_s^- \, [K_{2}^*(1980)^{+}\to K^+ \, f_2(1270)]$ \\
+               $B_s \to K^+ [ D_{s1}(2536)^-\to  D_s^- \,  \, \rho(770)^{0}]$ \\
+               $B_s \to K^+ [ D_{s1}(2536)^-\to  D_s^- \,  \, \sigma^0]$ \\
+        \hline
+	  \end{tabular}
+    \end{subtable}%
+    \hfill
+    \begin{subtable}{.4\linewidth}
+      \centering
+%                 \footnotesize
+        \caption{\small Quasi two-body decays}
+        \begin{tabular}{ll}
+        \hline
               $B_s \to \sigma^{0} (D_s^- K^+)_S$ \\
-              $B_s[S,P,D] \to \sigma^{0} (D_s^- K^+)_V$ \\
+              $B_s \to \sigma^{0} (D_s^- K^+)_V$ \\
               $B_s \to \rho(770)^{0} (D_s^- K^+)_S$ \\
               $B_s[S,P,D] \to \rho(770)^{0} \, (D_s^- K^+)_V$\\
+              $B_s \to  f_2(1270)^0 (D_s^- K^+)_S$ \\
+%
+%              
+%              
               $B_s \to  K^{*}(892)^{0} \, (D_s^- \pi^+)_S$ \\
               $B_s[S,P,D]  \to  K^{*}(892)^{0} \, (D_s^- \pi^+)_V$ \\
+%
+              $B_s \to  K_0^{*}(1430)^{0} \, (D_s^- \pi^+)_S$ \\
+%              $B_s \to  K^{*}(1430)^{0} \, (D_s^- \pi^+)_V$ \\
+              $B_s \to  K_2^{*}(1430)^{0} \, (D_s^- \pi^+)_S$ \\
+
               %NonResNonRes
               $B_s \to (D_s^- K^+)_{S} \, (\pi^+ \pi^-)_{S}$ \\
-              \hline \hline
-           \end{tabular}
+        \hline
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+              \\
+	        \end{tabular}
+    \end{subtable} 
 \end{table}
 
 
