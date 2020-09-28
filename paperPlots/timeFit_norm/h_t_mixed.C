@@ -1,6 +1,7 @@
 {
 //=========Macro generated from canvas: c1/c1
 //=========  (Fri Sep 11 23:11:05 2020) by ROOT version5.34/10
+   gROOT->SetBatch(true);
    TCanvas *c1 = new TCanvas("c1", "c1",1,1,700,476);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
@@ -194,18 +195,19 @@
    ci = TColor::GetColor("#ff0000");
    h_t_mixed->SetMarkerColor(ci);
    h_t_mixed->SetMarkerStyle(20);
-   h_t_mixed->GetXaxis()->SetTitle("t [ps]");
+   h_t_mixed->GetXaxis()->SetTitle("#it{t} [ps]");
    h_t_mixed->GetXaxis()->SetNdivisions(505);
    h_t_mixed->GetXaxis()->SetLabelFont(132);
    h_t_mixed->GetXaxis()->SetLabelOffset(0.01);
-   h_t_mixed->GetXaxis()->SetLabelSize(0.06);
+   h_t_mixed->GetXaxis()->SetLabelSize(0.066);
    h_t_mixed->GetXaxis()->SetTitleSize(0.072);
    h_t_mixed->GetXaxis()->SetTitleOffset(0.95);
    h_t_mixed->GetXaxis()->SetTitleFont(132);
    h_t_mixed->GetYaxis()->SetTitle("Yield / (0.1 ps)");
    h_t_mixed->GetYaxis()->SetLabelFont(132);
    h_t_mixed->GetYaxis()->SetLabelOffset(0.01);
-   h_t_mixed->GetYaxis()->SetLabelSize(0.06);
+   h_t_mixed->GetYaxis()->SetTitleOffset(0.95);
+   h_t_mixed->GetYaxis()->SetLabelSize(0.066);
    h_t_mixed->GetYaxis()->SetTitleSize(0.072);
    h_t_mixed->GetYaxis()->SetTitleFont(132);
    h_t_mixed->GetZaxis()->SetLabelFont(132);
@@ -817,7 +819,7 @@
    entry->SetMarkerStyle(21);
    entry->SetMarkerSize(1);
    entry->SetTextFont(132);
-   entry=leg->AddEntry("h_t_unmixed","B^{0}_{s}(t)#rightarrow D_{s}^{-}#pi^{+}#pi^{-}#pi^{+}","l");
+   entry=leg->AddEntry("h_t_unmixed","#it{B^{0}_{s}#rightarrow D_{s}^{#minus}#pi^{+}#pi^{#minus}#pi^{+}}","l");
 
    ci = TColor::GetColor("#0000ff");
    entry->SetLineColor(ci);
@@ -831,7 +833,7 @@
    entry->SetTextColor(ci);
    entry->SetTextFont(132);
    entry->SetTextSize(0.05);
-   entry=leg->AddEntry("h_t_mixed","#bar{B^{0}_{s}}(t)#rightarrow D_{s}^{-}#pi^{+}#pi^{-}#pi^{+}","l");
+   entry=leg->AddEntry("h_t_mixed","#it{#bar{B}^{0}_{s}#rightarrow D_{s}^{-}#pi^{+}#pi^{-}#pi^{+}}","l");
 
    ci = TColor::GetColor("#ff0000");
    entry->SetLineColor(ci);
@@ -849,4 +851,7 @@
    c1->Modified();
    c1->cd();
    c1->SetSelected(c1);
+   c1->Print("h_t_mixed.pdf");
+   c1->Print("h_t_mixed.png");
+   c1->Print("h_t_mixed.eps");
 }

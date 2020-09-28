@@ -186,19 +186,20 @@
    h_t->SetStats(0);
    h_t->SetLineWidth(2);
    h_t->SetMarkerStyle(20);
-   h_t->GetXaxis()->SetTitle("t [ps]");
+   h_t->GetXaxis()->SetTitle("#it{t} [ps]");
    h_t->GetXaxis()->SetNdivisions(505);
    h_t->GetXaxis()->SetLabelFont(132);
    h_t->GetXaxis()->SetLabelOffset(0.01);
-   h_t->GetXaxis()->SetLabelSize(0.06);
+   h_t->GetXaxis()->SetLabelSize(0.066);
    h_t->GetXaxis()->SetTitleSize(0.072);
    h_t->GetXaxis()->SetTitleOffset(0.95);
    h_t->GetXaxis()->SetTitleFont(132);
    h_t->GetYaxis()->SetTitle("Yield / (0.1 ps)");
    h_t->GetYaxis()->SetLabelFont(132);
    h_t->GetYaxis()->SetLabelOffset(0.01);
-   h_t->GetYaxis()->SetLabelSize(0.06);
+   h_t->GetYaxis()->SetLabelSize(0.062);
    h_t->GetYaxis()->SetTitleSize(0.072);
+   h_t->GetYaxis()->SetTitleOffset(0.95);
    h_t->GetYaxis()->SetTitleFont(132);
    h_t->GetZaxis()->SetLabelFont(132);
    h_t->GetZaxis()->SetLabelSize(0.06);
@@ -531,4 +532,7 @@
    c1->Modified();
    c1->cd();
    c1->SetSelected(c1);
+   c1->Print("h_t.pdf");
+   c1->Print("h_t.png");
+   c1->Print("h_t.eps");
 }
