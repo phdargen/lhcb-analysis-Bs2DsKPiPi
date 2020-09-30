@@ -29,7 +29,7 @@
    frame_3e8a470__1->SetStats(0);
    frame_3e8a470__1->SetLineWidth(2);
    frame_3e8a470__1->SetMarkerStyle(20);
-   frame_3e8a470__1->GetXaxis()->SetTitle("#font[132]{t [ps]}");
+   frame_3e8a470__1->GetXaxis()->SetTitle("#font[132]{#it{t} [ps]}");
    frame_3e8a470__1->GetXaxis()->SetNdivisions(505);
    frame_3e8a470__1->GetXaxis()->SetLabelFont(132);
    frame_3e8a470__1->GetXaxis()->SetLabelOffset(0.01);
@@ -448,20 +448,20 @@
    frame_3e8a470__2->SetStats(0);
    frame_3e8a470__2->SetLineWidth(2);
    frame_3e8a470__2->SetMarkerStyle(20);
-   frame_3e8a470__2->GetXaxis()->SetTitle("#font[132]{t [ps]}");
+   frame_3e8a470__2->GetXaxis()->SetTitle("#font[132]{#it{t} [ps]}");
    frame_3e8a470__2->GetXaxis()->SetNdivisions(505);
    frame_3e8a470__2->GetXaxis()->SetLabelFont(132);
-   frame_3e8a470__2->GetXaxis()->SetLabelOffset(0.01);
-   frame_3e8a470__2->GetXaxis()->SetLabelSize(0.06);
-   frame_3e8a470__2->GetXaxis()->SetTitleSize(0.072);
-   frame_3e8a470__2->GetXaxis()->SetTitleOffset(0.95);
+   frame_3e8a470__2->GetXaxis()->SetLabelOffset(0.005);
+   frame_3e8a470__2->GetXaxis()->SetLabelSize(0.065);
+   frame_3e8a470__2->GetXaxis()->SetTitleSize(0.08);
+   frame_3e8a470__2->GetXaxis()->SetTitleOffset(0.9);
    frame_3e8a470__2->GetXaxis()->SetTitleFont(132);
    frame_3e8a470__2->GetYaxis()->SetTitle("Yield / ( 0.005 ps )");
    frame_3e8a470__2->GetYaxis()->SetLabelFont(132);
-   frame_3e8a470__2->GetYaxis()->SetLabelOffset(0.01);
-   frame_3e8a470__2->GetYaxis()->SetLabelSize(0.06);
-   frame_3e8a470__2->GetYaxis()->SetTitleSize(0.072);
-   frame_3e8a470__2->GetYaxis()->SetTitleOffset(1.02);
+   frame_3e8a470__2->GetYaxis()->SetLabelOffset(0.005);
+   frame_3e8a470__2->GetYaxis()->SetLabelSize(0.065);
+   frame_3e8a470__2->GetYaxis()->SetTitleSize(0.08);
+   frame_3e8a470__2->GetYaxis()->SetTitleOffset(0.9);
    frame_3e8a470__2->GetYaxis()->SetTitleFont(132);
    frame_3e8a470__2->GetZaxis()->SetLabelFont(132);
    frame_3e8a470__2->GetZaxis()->SetLabelSize(0.06);
@@ -470,16 +470,16 @@
    frame_3e8a470__2->GetZaxis()->SetTitleFont(132);
    frame_3e8a470__2->Draw("AXISSAME");
    
-   TLegend *leg = new TLegend(0.75,0.8,0.9,0.9,NULL,"brNDC");
+   TLegend *leg = new TLegend(0.7,0.8,0.9,0.9,NULL,"brNDC");
    leg->SetBorderSize(0);
    leg->SetTextFont(132);
-   leg->SetTextSize(0.06);
+   leg->SetTextSize(0.08);
    leg->SetLineColor(0);
    leg->SetLineStyle(0);
    leg->SetLineWidth(2);
    leg->SetFillColor(0);
    leg->SetFillStyle(1001);
-   TLegendEntry *entry=leg->AddEntry("NULL","#font[22]{LHCb}","");
+   TLegendEntry *entry=leg->AddEntry("NULL","#font[132]{LHCb}","");
    entry->SetLineColor(1);
    entry->SetLineStyle(1);
    entry->SetLineWidth(1);
@@ -491,4 +491,13 @@
    c1->Modified();
    c1->cd();
    c1->SetSelected(c1);
+    
+    c1->Print("resolution.pdf");
+    c1->Print("resolution.png");
+    c1->Print("resolution.eps");
+
+    c1->Print("Fig12.pdf");
+    c1->Print("Fig12.png");
+    c1->Print("Fig12.eps");
+    c1->Print("Fig12.C");    
 }

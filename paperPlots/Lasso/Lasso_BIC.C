@@ -74,27 +74,27 @@
    graph->SetPoint(40,142,77.43346723);
    graph->SetPoint(41,150,88.09272606);
    
-   TH1F *Graph_Graph1 = new TH1F("Graph_Graph1","",100,0.09,164.99);
+   TH1F *Graph_Graph1 = new TH1F("Graph_Graph1","",100,0.09,165);
    Graph_Graph1->SetMinimum(-10);
    Graph_Graph1->SetMaximum(96.902);
    Graph_Graph1->SetDirectory(0);
    Graph_Graph1->SetStats(0);
    Graph_Graph1->SetLineWidth(2);
    Graph_Graph1->SetMarkerStyle(20);
-   Graph_Graph1->GetXaxis()->SetTitle("#lambda");
+   Graph_Graph1->GetXaxis()->SetTitle("#it{#lambda}");
    Graph_Graph1->GetXaxis()->SetNdivisions(505);
    Graph_Graph1->GetXaxis()->SetLabelFont(132);
-   Graph_Graph1->GetXaxis()->SetLabelOffset(0.01);
-   Graph_Graph1->GetXaxis()->SetLabelSize(0.06);
-   Graph_Graph1->GetXaxis()->SetTitleSize(0.072);
-   Graph_Graph1->GetXaxis()->SetTitleOffset(1.2);
+   Graph_Graph1->GetXaxis()->SetLabelOffset(0.005);
+   Graph_Graph1->GetXaxis()->SetLabelSize(0.065);
+   Graph_Graph1->GetXaxis()->SetTitleSize(0.08);
+   Graph_Graph1->GetXaxis()->SetTitleOffset(0.9);
    Graph_Graph1->GetXaxis()->SetTitleFont(132);
-   Graph_Graph1->GetYaxis()->SetTitle("#DeltaBIC");
+   Graph_Graph1->GetYaxis()->SetTitle("#it{#DeltaBIC}");
    Graph_Graph1->GetYaxis()->SetLabelFont(132);
-   Graph_Graph1->GetYaxis()->SetLabelOffset(0.01);
-   Graph_Graph1->GetYaxis()->SetLabelSize(0.06);
-   Graph_Graph1->GetYaxis()->SetTitleSize(0.072);
-   Graph_Graph1->GetYaxis()->SetTitleOffset(1.02);
+   Graph_Graph1->GetYaxis()->SetLabelOffset(0.005);
+   Graph_Graph1->GetYaxis()->SetLabelSize(0.065);
+   Graph_Graph1->GetYaxis()->SetTitleSize(0.08);
+   Graph_Graph1->GetYaxis()->SetTitleOffset(0.9);
    Graph_Graph1->GetYaxis()->SetTitleFont(132);
    Graph_Graph1->GetZaxis()->SetLabelFont(132);
    Graph_Graph1->GetZaxis()->SetLabelSize(0.06);
@@ -105,15 +105,26 @@
    
    graph->Draw("apl");
    
-   TPaveText *pt = new TPaveText(0.17,0.85,0.3,0.9,"brNDC");
-   pt->SetFillColor(0);
-   pt->SetLineColor(0);
-   pt->SetLineWidth(2);
-   pt->SetTextFont(22);
-   pt->SetTextSize(0.06);
+    TPaveText *pt = new TPaveText(0.2,0.8,0.5,0.9,"brNDC");
+    pt->SetFillColor(0);
+    pt->SetLineColor(0);
+    pt->SetLineWidth(2);
+    pt->SetBorderSize(0);
+    pt->SetTextFont(132);
+    pt->SetTextSize(0.08);
+    pt->SetTextAlign(12);
    TText *text = pt->AddText("LHCb");
    pt->Draw();
    c1->Modified();
    c1->cd();
    c1->SetSelected(c1);
+    
+    c1->Print("Lasso_BIC.pdf");
+    c1->Print("Lasso_BIC.png");
+    c1->Print("Lasso_BIC.eps");
+    
+    c1->Print("Fig11a.pdf");
+    c1->Print("Fig11a.png");
+    c1->Print("Fig11a.eps");
+    c1->Print("Fig11a.C");
 }

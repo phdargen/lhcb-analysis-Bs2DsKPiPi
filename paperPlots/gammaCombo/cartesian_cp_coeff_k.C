@@ -140,21 +140,22 @@
 
    ci = TColor::GetColor("#000099");
    Graph_haxesUID261->SetLineColor(ci);
-   Graph_haxesUID261->GetXaxis()->SetTitle("#kappa");
+   Graph_haxesUID261->GetXaxis()->SetTitle("#it{#kappa}");
    Graph_haxesUID261->GetXaxis()->SetNdivisions(407);
-   Graph_haxesUID261->GetXaxis()->SetLabelFont(133);
-   Graph_haxesUID261->GetXaxis()->SetLabelSize(35);
-   Graph_haxesUID261->GetXaxis()->SetTitleSize(45);
+   Graph_haxesUID261->GetXaxis()->SetLabelFont(132);
+   Graph_haxesUID261->GetXaxis()->SetLabelSize(0.065);
+   Graph_haxesUID261->GetXaxis()->SetTitleSize(0.08);
    Graph_haxesUID261->GetXaxis()->SetTitleOffset(0.9);
-   Graph_haxesUID261->GetXaxis()->SetTitleFont(133);
-   Graph_haxesUID261->GetYaxis()->SetTitle("1#minusCL");
+   Graph_haxesUID261->GetXaxis()->SetTitleFont(132);
+    Graph_haxesUID261->GetXaxis()->SetLabelOffset(0.005);
+   Graph_haxesUID261->GetYaxis()->SetTitle("1 #minus CL");
    Graph_haxesUID261->GetYaxis()->SetNdivisions(407);
-   Graph_haxesUID261->GetYaxis()->SetLabelFont(133);
-   Graph_haxesUID261->GetYaxis()->SetLabelOffset(0.01);
-   Graph_haxesUID261->GetYaxis()->SetLabelSize(35);
-   Graph_haxesUID261->GetYaxis()->SetTitleSize(45);
-   Graph_haxesUID261->GetYaxis()->SetTitleOffset(0.85);
-   Graph_haxesUID261->GetYaxis()->SetTitleFont(133);
+   Graph_haxesUID261->GetYaxis()->SetLabelFont(132);
+   Graph_haxesUID261->GetYaxis()->SetLabelOffset(0.005);
+   Graph_haxesUID261->GetYaxis()->SetLabelSize(0.065);
+   Graph_haxesUID261->GetYaxis()->SetTitleSize(0.08);
+   Graph_haxesUID261->GetYaxis()->SetTitleOffset(0.9);
+   Graph_haxesUID261->GetYaxis()->SetTitleFont(132);
    Graph_haxesUID261->GetZaxis()->SetLabelFont(42);
    Graph_haxesUID261->GetZaxis()->SetLabelSize(0.035);
    Graph_haxesUID261->GetZaxis()->SetTitleSize(0.035);
@@ -189,7 +190,7 @@
    haxesUID32->GetZaxis()->SetLabelSize(0.035);
    haxesUID32->GetZaxis()->SetTitleSize(0.035);
    haxesUID32->GetZaxis()->SetTitleFont(42);
-   haxesUID32->Draw("axissame");
+   //haxesUID32->Draw("axissame");
    
    graph = new TGraph(105);
    graph->SetName("UID31");
@@ -333,7 +334,7 @@
    Graph_haxesUID322->GetZaxis()->SetTitleFont(42);
    graph->SetHistogram(Graph_haxesUID322);
    
-   graph->Draw(" l");
+   //graph->Draw(" l");
    TGaxis *gaxis = new TGaxis(0,1,1.1,1,0,1.1,407,"-U");
    gaxis->SetLabelOffset(0.005);
    gaxis->SetLabelSize(0.04);
@@ -344,7 +345,7 @@
    gaxis->SetTitleColor(1);
    gaxis->SetTitleFont(62);
    gaxis->SetName("axist");
-   gaxis->Draw();
+   //gaxis->Draw();
    gaxis = new TGaxis(1.1,0,1.1,1.3,0,1.3,407,"+");
    gaxis->SetLabelOffset(0.005);
    gaxis->SetLabelSize(0);
@@ -356,7 +357,7 @@
    gaxis->SetTitleFont(62);
    gaxis->SetName("axisr");
    gaxis->SetLabelColor(0);
-   gaxis->Draw();
+   //gaxis->Draw();
    
    TH1F *Graph_haxesUID322 = new TH1F("Graph_haxesUID322","",100,0,1.1);
    Graph_haxesUID322->SetMinimum(0);
@@ -401,7 +402,7 @@
    pt->SetTextFont(133);
    pt->SetTextSize(35);
    TText *text = pt->AddText("0.88^{+0.12}_{#font[122]{-}0.20}");
-   pt->Draw();
+   //pt->Draw();
    
    TLegend *leg = new TLegend(0.19,0.78,0.5,0.9440559,NULL,"brNDC");
    leg->SetBorderSize(0);
@@ -454,12 +455,12 @@
    line->SetLineStyle(3);
    line->Draw();
 
-   pt = new TPaveText(0.1,0.875,0.35,0.725,"BRNDC");
+   pt = new TPaveText(0.2,0.875,0.375,0.725,"BRNDC");
    pt->SetBorderSize(0);
    pt->SetFillStyle(0);
    pt->SetTextAlign(32);
-   pt->SetTextFont(133);
-   pt->SetTextSize(45);
+   pt->SetTextFont(132);
+   pt->SetTextSize(0.09);
    text = pt->AddText("LHCb");
    pt->Draw();
    cartesian_cp_coeff_kUID20->Modified();
@@ -469,4 +470,9 @@
     cartesian_cp_coeff_kUID20->Print("cartesian_cp_coeff_k.pdf");
     cartesian_cp_coeff_kUID20->Print("cartesian_cp_coeff_k.eps");
     cartesian_cp_coeff_kUID20->Print("cartesian_cp_coeff_k.png");  
+    
+    cartesian_cp_coeff_kUID20->Print("Fig8b.pdf");
+    cartesian_cp_coeff_kUID20->Print("Fig8b.eps");
+    cartesian_cp_coeff_kUID20->Print("Fig8b.png");
+    cartesian_cp_coeff_kUID20->Print("Fig8b.C");    
 }

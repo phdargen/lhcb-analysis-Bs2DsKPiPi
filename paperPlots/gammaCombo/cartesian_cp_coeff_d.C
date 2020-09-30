@@ -140,21 +140,22 @@
 
    ci = TColor::GetColor("#000099");
    Graph_haxesUID261->SetLineColor(ci);
-   Graph_haxesUID261->GetXaxis()->SetTitle("#delta [#circ]");
+   Graph_haxesUID261->GetXaxis()->SetTitle("#it{#delta} [#circ]");
    Graph_haxesUID261->GetXaxis()->SetNdivisions(0);
-   Graph_haxesUID261->GetXaxis()->SetLabelFont(133);
-   Graph_haxesUID261->GetXaxis()->SetLabelSize(35);
-   Graph_haxesUID261->GetXaxis()->SetTitleSize(45);
+   Graph_haxesUID261->GetXaxis()->SetLabelFont(132);
+   Graph_haxesUID261->GetXaxis()->SetLabelSize(0.065);
+   Graph_haxesUID261->GetXaxis()->SetTitleSize(0.08);
    Graph_haxesUID261->GetXaxis()->SetTitleOffset(0.9);
-   Graph_haxesUID261->GetXaxis()->SetTitleFont(133);
-   Graph_haxesUID261->GetYaxis()->SetTitle("1#minusCL");
+   Graph_haxesUID261->GetXaxis()->SetTitleFont(132);
+    Graph_haxesUID261->GetXaxis()->SetLabelOffset(0.005);
+   Graph_haxesUID261->GetYaxis()->SetTitle("1 #minus CL");
    Graph_haxesUID261->GetYaxis()->SetNdivisions(407);
-   Graph_haxesUID261->GetYaxis()->SetLabelFont(133);
-   Graph_haxesUID261->GetYaxis()->SetLabelOffset(0.01);
-   Graph_haxesUID261->GetYaxis()->SetLabelSize(35);
-   Graph_haxesUID261->GetYaxis()->SetTitleSize(45);
-   Graph_haxesUID261->GetYaxis()->SetTitleOffset(0.85);
-   Graph_haxesUID261->GetYaxis()->SetTitleFont(133);
+   Graph_haxesUID261->GetYaxis()->SetLabelFont(132);
+   Graph_haxesUID261->GetYaxis()->SetLabelOffset(0.005);
+   Graph_haxesUID261->GetYaxis()->SetLabelSize(0.065);
+   Graph_haxesUID261->GetYaxis()->SetTitleSize(0.08);
+   Graph_haxesUID261->GetYaxis()->SetTitleOffset(0.9);
+   Graph_haxesUID261->GetYaxis()->SetTitleFont(132);
    Graph_haxesUID261->GetZaxis()->SetLabelFont(42);
    Graph_haxesUID261->GetZaxis()->SetLabelSize(0.035);
    Graph_haxesUID261->GetZaxis()->SetTitleSize(0.035);
@@ -189,7 +190,7 @@
    haxesUID32->GetZaxis()->SetLabelSize(0.035);
    haxesUID32->GetZaxis()->SetTitleSize(0.035);
    haxesUID32->GetZaxis()->SetTitleFont(42);
-   haxesUID32->Draw("axissame");
+   //haxesUID32->Draw("axissame");
    
    graph = new TGraph(105);
    graph->SetName("UID31");
@@ -333,7 +334,7 @@
    Graph_haxesUID322->GetZaxis()->SetTitleFont(42);
    graph->SetHistogram(Graph_haxesUID322);
    
-   graph->Draw(" l");
+   //graph->Draw(" l");
    TGaxis *gaxis = new TGaxis(-1.570796,1,1.570796,1,-90,90,407,"-U");
    gaxis->SetLabelOffset(0.005);
    gaxis->SetLabelSize(0.04);
@@ -344,7 +345,7 @@
    gaxis->SetTitleColor(1);
    gaxis->SetTitleFont(62);
    gaxis->SetName("axist");
-   gaxis->Draw();
+   //gaxis->Draw();
    gaxis = new TGaxis(-1.570796,0,1.570796,0,-90,90,407,"");
    gaxis->SetLabelOffset(0.005);
    gaxis->SetLabelSize(35);
@@ -354,7 +355,7 @@
    gaxis->SetTitleSize(45);
    gaxis->SetTitleColor(1);
    gaxis->SetTitleFont(133);
-   gaxis->SetName("axisb");
+   //gaxis->SetName("axisb");
    //gaxis->SetTitle("#delta [#circ]");
    gaxis->SetLabelFont(133);
    gaxis->Draw();
@@ -369,7 +370,7 @@
    gaxis->SetTitleFont(62);
    gaxis->SetName("axisr");
    gaxis->SetLabelColor(0);
-   gaxis->Draw();
+   //gaxis->Draw();
    
    TH1F *Graph_haxesUID322 = new TH1F("Graph_haxesUID322","",100,-1.570796,1.570796);
    Graph_haxesUID322->SetMinimum(0);
@@ -397,7 +398,7 @@
    Graph_haxesUID322->GetZaxis()->SetLabelSize(0.035);
    Graph_haxesUID322->GetZaxis()->SetTitleSize(0.035);
    Graph_haxesUID322->GetZaxis()->SetTitleFont(42);
-   Graph_haxesUID322->Draw("axissame");
+   //Graph_haxesUID322->Draw("axissame");
    TLine *line = new TLine(-0.1026989,0,-0.1026989,1);
    line->Draw();
    line = new TLine(-0.3323805,0,-0.3323805,1);
@@ -414,7 +415,7 @@
    pt->SetTextFont(133);
    pt->SetTextSize(35);
    TText *text = pt->AddText("-5.9^{+9.8}_{#font[122]{-}13.1}");
-   pt->Draw();
+   //pt->Draw();
    
    TLegend *leg = new TLegend(0.19,0.78,0.5,0.9440559,NULL,"brNDC");
    leg->SetBorderSize(0);
@@ -471,8 +472,8 @@
    pt->SetBorderSize(0);
    pt->SetFillStyle(0);
    pt->SetTextAlign(32);
-   pt->SetTextFont(133);
-   pt->SetTextSize(45);
+   pt->SetTextFont(132);
+   pt->SetTextSize(0.09);
    text = pt->AddText("LHCb");
    pt->Draw();
    cartesian_cp_coeff_dUID20->Modified();
@@ -482,4 +483,9 @@
     cartesian_cp_coeff_dUID20->Print("cartesian_cp_coeff_d.pdf");
     cartesian_cp_coeff_dUID20->Print("cartesian_cp_coeff_d.eps");
     cartesian_cp_coeff_dUID20->Print("cartesian_cp_coeff_d.png");
+    
+    cartesian_cp_coeff_dUID20->Print("Fig8c.pdf");
+    cartesian_cp_coeff_dUID20->Print("Fig8c.eps");
+    cartesian_cp_coeff_dUID20->Print("Fig8c.png");
+    cartesian_cp_coeff_dUID20->Print("Fig8c.C");    
 }

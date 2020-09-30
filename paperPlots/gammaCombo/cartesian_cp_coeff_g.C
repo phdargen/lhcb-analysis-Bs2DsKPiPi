@@ -140,21 +140,22 @@
 
    ci = TColor::GetColor("#000099");
    Graph_haxesUID261->SetLineColor(ci);
-  Graph_haxesUID261->GetXaxis()->SetTitle("#gamma#minus2#beta_{s} [#circ]");
+  Graph_haxesUID261->GetXaxis()->SetTitle("#it{#gamma #minus2#beta_{s}} [#circ]");
    Graph_haxesUID261->GetXaxis()->SetNdivisions(0);
-   Graph_haxesUID261->GetXaxis()->SetLabelFont(133);
-   Graph_haxesUID261->GetXaxis()->SetLabelSize(35);
-   Graph_haxesUID261->GetXaxis()->SetTitleSize(45);
+   Graph_haxesUID261->GetXaxis()->SetLabelFont(132);
+   Graph_haxesUID261->GetXaxis()->SetLabelSize(0.065);
+   Graph_haxesUID261->GetXaxis()->SetTitleSize(0.08);
    Graph_haxesUID261->GetXaxis()->SetTitleOffset(0.9);
-   Graph_haxesUID261->GetXaxis()->SetTitleFont(133);
-   Graph_haxesUID261->GetYaxis()->SetTitle("1#minusCL");
+   Graph_haxesUID261->GetXaxis()->SetTitleFont(132);
+    Graph_haxesUID261->GetXaxis()->SetLabelOffset(0.005);
+   Graph_haxesUID261->GetYaxis()->SetTitle("1 #minus CL");
    Graph_haxesUID261->GetYaxis()->SetNdivisions(407);
-   Graph_haxesUID261->GetYaxis()->SetLabelFont(133);
-   Graph_haxesUID261->GetYaxis()->SetLabelOffset(0.01);
-   Graph_haxesUID261->GetYaxis()->SetLabelSize(35);
-   Graph_haxesUID261->GetYaxis()->SetTitleSize(45);
-   Graph_haxesUID261->GetYaxis()->SetTitleOffset(0.85);
-   Graph_haxesUID261->GetYaxis()->SetTitleFont(133);
+   Graph_haxesUID261->GetYaxis()->SetLabelFont(132);
+   Graph_haxesUID261->GetYaxis()->SetLabelOffset(0.005);
+   Graph_haxesUID261->GetYaxis()->SetLabelSize(0.065);
+   Graph_haxesUID261->GetYaxis()->SetTitleSize(0.088);
+   Graph_haxesUID261->GetYaxis()->SetTitleOffset(0.9);
+   Graph_haxesUID261->GetYaxis()->SetTitleFont(132);
    Graph_haxesUID261->GetZaxis()->SetLabelFont(42);
    Graph_haxesUID261->GetZaxis()->SetLabelSize(0.035);
    Graph_haxesUID261->GetZaxis()->SetTitleSize(0.035);
@@ -165,7 +166,7 @@
    
    TH1F *haxesUID32 = new TH1F("haxesUID32","",100,0,3.141593);
    haxesUID32->SetMinimum(0);
-   haxesUID32->SetMaximum(1.3);
+   haxesUID32->SetMaximum(1.);
    haxesUID32->SetStats(0);
 
    ci = TColor::GetColor("#000099");
@@ -189,7 +190,7 @@
    haxesUID32->GetZaxis()->SetLabelSize(0.035);
    haxesUID32->GetZaxis()->SetTitleSize(0.035);
    haxesUID32->GetZaxis()->SetTitleFont(42);
-   haxesUID32->Draw("axissame");
+   //haxesUID32->Draw("axissame");
    
    graph = new TGraph(105);
    graph->SetName("UID31");
@@ -307,7 +308,7 @@
    
    TH1F *Graph_haxesUID322 = new TH1F("Graph_haxesUID322","",100,0,3.141593);
    Graph_haxesUID322->SetMinimum(0);
-   Graph_haxesUID322->SetMaximum(1.3);
+   Graph_haxesUID322->SetMaximum(1.);
    Graph_haxesUID322->SetStats(0);
 
    ci = TColor::GetColor("#000099");
@@ -369,11 +370,11 @@
    gaxis->SetTitleFont(62);
    gaxis->SetName("axisr");
    gaxis->SetLabelColor(0);
-   gaxis->Draw();
+   //gaxis->Draw();
    
    TH1F *Graph_haxesUID322 = new TH1F("Graph_haxesUID322","",100,0,3.141593);
    Graph_haxesUID322->SetMinimum(0);
-   Graph_haxesUID322->SetMaximum(1.3);
+   Graph_haxesUID322->SetMaximum(1.);
    Graph_haxesUID322->SetStats(0);
 
    ci = TColor::GetColor("#000099");
@@ -397,7 +398,7 @@
    Graph_haxesUID322->GetZaxis()->SetLabelSize(0.035);
    Graph_haxesUID322->GetZaxis()->SetTitleSize(0.035);
    Graph_haxesUID322->GetZaxis()->SetTitleFont(42);
-   Graph_haxesUID322->Draw("axissame");
+   //Graph_haxesUID322->Draw("axissame");
    TLine *line = new TLine(0.7357937,0,0.7357937,1);
    line->Draw();
    line = new TLine(0.511693,0,0.511693,1);
@@ -414,7 +415,7 @@
    pt->SetTextFont(133);
    pt->SetTextSize(35);
    TText *text = pt->AddText("42^{+20}_{#font[122]{-}13}");
-   pt->Draw();
+   //pt->Draw();
    
    TLegend *leg = new TLegend(0.19,0.78,0.5,0.9440559,NULL,"brNDC");
    leg->SetBorderSize(0);
@@ -443,7 +444,7 @@
    entry->SetTextFont(133);
    //leg->Draw();
    
-   pt = new TPaveText(0.3141593,0.3373,1.884956,0.3873,"BR");
+   pt = new TPaveText(2.3141593,0.3373,3.884956,0.3873,"BR");
    pt->SetBorderSize(0);
    pt->SetFillStyle(0);
    pt->SetTextAlign(12);
@@ -455,7 +456,7 @@
    line->SetLineStyle(3);
    line->Draw();
    
-   pt = new TPaveText(0.3141593,0.0655,1.884956,0.1155,"BR");
+   pt = new TPaveText(2.3141593,0.0655,3.884956,0.1155,"BR");
    pt->SetBorderSize(0);
    pt->SetFillStyle(0);
    pt->SetTextAlign(12);
@@ -471,8 +472,8 @@
    pt->SetBorderSize(0);
    pt->SetFillStyle(0);
    pt->SetTextAlign(32);
-   pt->SetTextFont(133);
-   pt->SetTextSize(45);
+   pt->SetTextFont(132);
+   pt->SetTextSize(0.09);
    text = pt->AddText("LHCb");
    pt->Draw();
    cartesian_cp_coeff_gUID20->Modified();
@@ -482,4 +483,9 @@
     cartesian_cp_coeff_gUID20->Print("cartesian_cp_coeff_g.pdf");
     cartesian_cp_coeff_gUID20->Print("cartesian_cp_coeff_g.eps");
     cartesian_cp_coeff_gUID20->Print("cartesian_cp_coeff_g.png");
+
+    cartesian_cp_coeff_gUID20->Print("Fig8d.pdf");
+    cartesian_cp_coeff_gUID20->Print("Fig8d.eps");
+    cartesian_cp_coeff_gUID20->Print("Fig8d.png");
+    cartesian_cp_coeff_gUID20->Print("Fig8d.C");    
 }
