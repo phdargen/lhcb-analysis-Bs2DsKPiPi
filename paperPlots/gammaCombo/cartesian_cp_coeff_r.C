@@ -462,6 +462,10 @@
    pt->SetTextSize(0.09);
    text = pt->AddText("LHCb");
    pt->Draw();
+    
+    cartesian_cp_coeff_rUID20->SetTickx(1);
+    cartesian_cp_coeff_rUID20->SetTicky(1);
+    
    cartesian_cp_coeff_rUID20->Modified();
    cartesian_cp_coeff_rUID20->cd();
    cartesian_cp_coeff_rUID20->SetSelected(cartesian_cp_coeff_rUID20);

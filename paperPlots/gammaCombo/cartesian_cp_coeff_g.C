@@ -476,10 +476,17 @@
    pt->SetTextSize(0.09);
    text = pt->AddText("LHCb");
    pt->Draw();
-   cartesian_cp_coeff_gUID20->Modified();
+   
+    
+    cartesian_cp_coeff_gUID20->SetTickx(1);
+    cartesian_cp_coeff_gUID20->SetTicky(1);
+    
+    cartesian_cp_coeff_gUID20->Modified();
    cartesian_cp_coeff_gUID20->cd();
    cartesian_cp_coeff_gUID20->SetSelected(cartesian_cp_coeff_gUID20);
 
+    
+    
     cartesian_cp_coeff_gUID20->Print("cartesian_cp_coeff_g.pdf");
     cartesian_cp_coeff_gUID20->Print("cartesian_cp_coeff_g.eps");
     cartesian_cp_coeff_gUID20->Print("cartesian_cp_coeff_g.png");
